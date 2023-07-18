@@ -2,9 +2,11 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
@@ -13,6 +15,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -71,6 +74,30 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 		for (final DTOStundenplanSchienen s : schienen)
 			daten.add(dtoMapper.apply(s));
 		return daten;
+	}
+
+	/**
+	 * Mappt die Schienen eines Unterrichts auf die ID des Unterrichts anhand
+	 * einer Liste von Unterricht-IDs
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die Id des Stundenplans
+	 * @param unterrichtIds   die Ids der Unterrichte, für die die Schienen gesucht werden
+	 *
+	 * @return eine Map von StundenplanSchiene auf die entsprechenden UnterrichtIds
+	 */
+	public static Map<Long, List<StundenplanSchiene>> getSchienenByUnterrichtId(final @NotNull DBEntityManager conn,
+			final long idStundenplan, final List<Long> unterrichtIds) {
+		final Map<Long, StundenplanSchiene> schienenById = DataStundenplanSchienen.getSchienen(conn, idStundenplan)
+				.stream().collect(Collectors.toMap(s -> s.id, Function.identity()));
+		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId = new HashMap<>();
+		final List<DTOStundenplanUnterrichtSchiene> listSchienen = unterrichtIds.isEmpty() ? new ArrayList<>()
+				: conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtSchiene.class);
+		for (final DTOStundenplanUnterrichtSchiene dtoSUS : listSchienen) {
+			final List<StundenplanSchiene> schienen = schienenByUnterrichtId.computeIfAbsent(dtoSUS.Unterricht_ID, id -> new ArrayList<>());
+			schienen.add(schienenById.get(dtoSUS.Schiene_ID));
+		}
+		return schienenByUnterrichtId;
 	}
 
 

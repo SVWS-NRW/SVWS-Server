@@ -2,8 +2,11 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.data.DataManager;
@@ -11,6 +14,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -18,15 +22,16 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link StundenplanKlasse}.
+ * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * {@link StundenplanKlasse}.
  */
 public final class DataStundenplanKlassen extends DataManager<Long> {
 
 	private final Long stundenplanID;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanKlasse}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * {@link StundenplanKlasse}.
 	 *
 	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param stundenplanID   die ID des Stundenplans, dessen Klassen abgefragt werden
@@ -38,7 +43,8 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 
 
 	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKlassen} in einen Core-DTO {@link StundenplanKlasse}.
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKlassen} in
+	 * einen Core-DTO {@link StundenplanKlasse}.
 	 */
 	private static final Function<DTOKlassen, StundenplanKlasse> dtoMapper = (final DTOKlassen k) -> {
 		final StundenplanKlasse daten = new StundenplanKlasse();
@@ -53,6 +59,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 	public Response getAll() {
 		return this.getList();
 	}
+
 
 	/**
 	 * Gibt die Klassen des Stundenplans zurück.
@@ -86,9 +93,8 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 	@Override
 	public Response getList() {
 		final List<StundenplanKlasse> daten = getKlassen(conn, this.stundenplanID);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
-
 
 	@Override
 	public Response get(final Long id) {
@@ -101,7 +107,8 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		if (klasse == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde keine Klasse mit der ID %d gefunden.".formatted(id));
 		if (klasse.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
-			return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein.".formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
+			return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
+					.formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		// Jahrgänge bestimmen
 		final List<Long> jahrgangsIDs = new ArrayList<>();
 		if (klasse.Jahrgang_ID == null) {
@@ -112,13 +119,44 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);
 		daten.jahrgaenge.addAll(jahrgangsIDs);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Erstellt eine Map, in der Klassen den gegebenen UnterrichtIds eines
+	 * Stundenplans zugeordnet werden.
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param unterrichtIds   die unterrichte, denen die Klassen zugeordnet werden sollen
+	 *
+	 * @return eine Map, in der allen UnterrichtsIds die Klassen zugeordnet werden
+	 */
+	public static Map<Long, List<StundenplanKlasse>> getKlassenByUnterrichtIds(final DBEntityManager conn,
+			final Long idStundenplan, final List<Long> unterrichtIds) {
+		final Map<Long, List<StundenplanKlasse>> result = new HashMap<>();
+		if (unterrichtIds == null)
+			throw OperationError.NOT_FOUND.exception("Keine Unterricht-IDs gegeben.");
+		if (unterrichtIds.isEmpty())
+			return result;
+		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, idStundenplan);
+		if (klassen.isEmpty())
+			return result;
+		final Map<Long, StundenplanKlasse> klasseById = klassen.stream().collect(Collectors.toMap(k -> k.id, Function.identity()));
+		final List<DTOStundenplanUnterrichtKlasse> unterrichtKlassen = conn.queryNamed(
+				"DTOStundenplanUnterrichtKlasse.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtKlasse.class);
+		List<StundenplanKlasse> klassenByUnterrichtId;
+		for (final DTOStundenplanUnterrichtKlasse unterrichtKlasse : unterrichtKlassen) {
+			klassenByUnterrichtId = result.computeIfAbsent(unterrichtKlasse.Unterricht_ID, unterrichtId -> new ArrayList<>());
+			klassenByUnterrichtId.add(klasseById.get(unterrichtKlasse.Klasse_ID));
+		}
+		return result;
 	}
 
 }

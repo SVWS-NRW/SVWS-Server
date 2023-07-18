@@ -4,6 +4,7 @@ import { SchuelerStundenplanUnterricht } from '../../../core/data/stundenplan/Sc
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { IntegerComparator } from '../../../core/utils/stundenplan/IntegerComparator';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
@@ -64,21 +65,21 @@ export class SchuelerStundenplanManager extends JavaObject {
 	private maxWochentag : number = JavaInteger.MIN_VALUE;
 
 	/**
-	 *  Die minimale Unterrichtsstunde, die in den Stundenplandaten vorkommt, z.B. 1
-	 *  für die 1. Stunde
+	 *  Die minimale Unterrichtsstunde, die in den Stundenplandaten vorkommt,
+	 *  z.B. 1 für die 1. Stunde
 	 */
 	private minStunde : number = JavaInteger.MAX_VALUE;
 
 	/**
-	 *  Die maximale Unterrichtsstunde, die in den Stundenplandaten vorkommt, z.B. 9
-	 *  für die 9. Stunde
+	 *  Die maximale Unterrichtsstunde, die in den Stundenplandaten vorkommt,
+	 *  z.B. 9 für die 9. Stunde
 	 */
 	private maxStunde : number = JavaInteger.MIN_VALUE;
 
 
 	/**
-	 * Erstellt einen neuen Manager mit den angegebenen Stundenplandaten und erzeugt
-	 * die privaten Attribute.
+	 * Erstellt einen neuen Manager mit den angegebenen Stundenplandaten und
+	 * erzeugt die privaten Attribute.
 	 *
 	 * @param daten die Stundenplandaten
 	 */
@@ -203,7 +204,8 @@ export class SchuelerStundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Zeitraster liegen.
+	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die
+	 * im übergeben Zeitraster liegen.
 	 *
 	 * @param idZeitraster die ID des Zeitrasters
 	 *
@@ -214,9 +216,10 @@ export class SchuelerStundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
+	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die
+	 * im übergeben Wochentyp und im übergebenen Zeitraster liegen.
 	 *
-	 * @param wochentyp der Wochentyp
+	 * @param wochentyp    der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
 	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
@@ -224,12 +227,14 @@ export class SchuelerStundenplanManager extends JavaObject {
 	public getUnterrichtByWocheZeitrasterId(wochentyp : number, idZeitraster : number) : List<SchuelerStundenplanUnterricht> | null;
 
 	/**
-	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die im übergeben Wochentyp und im übergebenen Zeitraster liegen.
-	 * Je nach Parameter inklWoche0 wird die Liste um den Unterricht aus Woche 0 ergänzt.
+	 * Liefert eine Liste von allen SchuelerStundenplanUnterricht-Objekten, die
+	 * im übergeben Wochentyp und im übergebenen Zeitraster liegen. Je nach
+	 * Parameter inklWoche0 wird die Liste um den Unterricht aus Woche 0
+	 * ergänzt.
 	 *
-	 * @param wochentyp der Wochentyp
+	 * @param wochentyp    der Wochentyp
 	 * @param idZeitraster die ID des Zeitrasters
-	 * @param inklWoche0 Ergänzung des Unterrichts um Woche 0
+	 * @param inklWoche0   Ergänzung des Unterrichts um Woche 0
 	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
@@ -247,22 +252,13 @@ export class SchuelerStundenplanManager extends JavaObject {
 			const wochentyp : number = __param0 as number;
 			const idZeitraster : number = __param1 as number;
 			const inklWoche0 : boolean = __param2 as boolean;
-			const mapZeitrasterUnterricht_Wochentyp : JavaMap<number, List<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(wochentyp);
-			if (mapZeitrasterUnterricht_Wochentyp === null) {
-				return null;
-			}
+			const mapZeitrasterUnterricht_Wochentyp : JavaMap<number, List<SchuelerStundenplanUnterricht>> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapWocheZeitrasterUnterricht, wochentyp);
 			let retList : List<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht_Wochentyp.get(idZeitraster);
 			if (retList === null)
 				retList = new ArrayList();
 			if (wochentyp !== 0 && inklWoche0) {
-				const mapZeitrasterUnterricht_Woche0 : JavaMap<number, List<SchuelerStundenplanUnterricht>> | null = this._mapWocheZeitrasterUnterricht.get(0);
-				if (mapZeitrasterUnterricht_Woche0 === null) {
-					return retList;
-				}
-				const listUnterricht_Woche0 : List<SchuelerStundenplanUnterricht> | null = mapZeitrasterUnterricht_Woche0.get(idZeitraster);
-				if (listUnterricht_Woche0 === null) {
-					return retList;
-				}
+				const mapZeitrasterUnterricht_Woche0 : JavaMap<number, List<SchuelerStundenplanUnterricht>> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapWocheZeitrasterUnterricht, 0);
+				const listUnterricht_Woche0 : List<SchuelerStundenplanUnterricht> | null = DeveloperNotificationException.ifMapGetIsNull(mapZeitrasterUnterricht_Woche0, idZeitraster);
 				retList.addAll(listUnterricht_Woche0);
 			}
 			return retList;
@@ -281,17 +277,15 @@ export class SchuelerStundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Zeitraster-Objekt an dem übergebenen Wochentag in der übergebenen Stunde.
+	 * Liefert das Zeitraster-Objekt an dem übergebenen Wochentag in der
+	 * übergebenen Stunde.
 	 *
 	 * @param wochentag der Wochentag
-	 * @param stunde die Stunde
+	 * @param stunde    die Stunde
 	 * @return das Zeitraster-Objekt
 	 */
 	public getZeitrasterByWochentagStunde(wochentag : number, stunde : number) : StundenplanZeitraster | null {
-		const map : JavaMap<number, StundenplanZeitraster> | null = this._mapWochentagStundeZeitraster.get(wochentag);
-		if (map === null) {
-			return null;
-		}
+		const map : JavaMap<number, StundenplanZeitraster> | null = DeveloperNotificationException.ifMapGetIsNull(this._mapWochentagStundeZeitraster, wochentag);
 		return map.get(stunde);
 	}
 
@@ -320,8 +314,8 @@ export class SchuelerStundenplanManager extends JavaObject {
 	/**
 	 * Gibt zurück, ob es unterschiedliche Wochentypen gibt.
 	 *
-	 * @return {@code true}, falls es sich um unterschiedliche Wochentypen handelt,
-	 *         {@code false}, falls es nur einen Typen gibt
+	 * @return {@code true}, falls es sich um unterschiedliche Wochentypen
+	 *         handelt, {@code false}, falls es nur einen Typen gibt
 	 */
 	public isAbWochen() : boolean {
 		return this._mapWocheZeitrasterUnterricht.size() > 1;

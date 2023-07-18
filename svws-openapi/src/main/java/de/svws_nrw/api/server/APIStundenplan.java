@@ -3,6 +3,8 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.data.stundenplan.KlasseStundenplan;
+import de.svws_nrw.core.data.stundenplan.LehrerStundenplan;
 import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
@@ -17,6 +19,8 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.stundenplan.DataKlasseStundenplan;
+import de.svws_nrw.data.stundenplan.DataLehrerStundenplan;
 import de.svws_nrw.data.stundenplan.DataSchuelerStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanAufsichtsbereiche;
@@ -194,34 +198,6 @@ public class APIStundenplan {
     public Response getStundenplanZeitraster(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
     		return (new DataStundenplanZeitraster(conn, id)).getList();
-    	}
-    }
-
-
-    /**
-     * Die OpenAPI-Methode für die Abfrage des Stundenplans eines Schülers.
-     *
-     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id            die ID des Stundenplans
-     * @param schuelerID    die ID des Schülers
-     * @param request       die Informationen zur HTTP-Anfrage
-     *
-     * @return              der Stundenplan des Schülers
-     */
-    @GET
-    @Path("/{id : \\d+}/schueler/{schueler_id : \\d+}")
-    @Operation(summary = "Gibt den Stundeplan des Schülers zurück.",
-               description = "Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. "
-               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
-               		       + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Schüler-Stundenplan",
-                 content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = SchuelerStundenplan.class)))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
-    @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
-    public Response getSchuelerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("schueler_id") final long schuelerID, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerStundenplan(conn, id)).get(schuelerID);
     	}
     }
 
@@ -1050,6 +1026,86 @@ public class APIStundenplan {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Stundenplans eines Schülers.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Stundenplans
+     * @param schuelerID    die ID des Schülers
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return              der Stundenplan des Schülers
+     */
+    @GET
+    @Path("/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}")
+    @Operation(summary = "Gibt den Stundeplan des Schülers zurück.",
+               description = "Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Schüler-Stundenplan",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = SchuelerStundenplan.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
+    public Response getSchuelerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("schueler_id") final long schuelerID, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
+    		return (new DataSchuelerStundenplan(conn, id)).get(schuelerID);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Stundenplans eines Lehrers.
+     *
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID des Stundenplans
+     * @param lehrerID   die ID des Lehrers
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return der Stundenplan des Lehrers
+     */
+    @GET
+    @Path("/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}")
+    @Operation(summary = "Gibt den Stundeplan des Lehrers zurück.",
+               description = "Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Lehrer. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Lehrer-Stundenplan",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = LehrerStundenplan.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
+    public Response getLehrerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("lehrer_id") final long lehrerID, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataLehrerStundenplan(conn, id)).get(lehrerID);
+    	}
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Stundenplans einer Klasse.
+     *
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die ID des Stundenplans
+     * @param klasseID   die ID der Klasse
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return der Stundenplan der Klasse
+     */
+    @GET
+    @Path("/plaene/{id : \\d+}/klasse/{klasse_id : \\d+}")
+    @Operation(summary = "Gibt den Stundeplan der Klasse zurück.",
+               description = "Erstellt den angebebenen Stundeplan in Bezug auf die angegebene Klasse. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Klassen-Stundenplan",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = KlasseStundenplan.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
+    public Response getKlassenStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("klasse_id") final long klasseID, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN)) {
+    		return (new DataKlasseStundenplan(conn, id)).get(klasseID);
+    	}
+    }
 
 }
-

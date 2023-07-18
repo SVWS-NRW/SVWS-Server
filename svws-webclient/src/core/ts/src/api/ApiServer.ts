@@ -81,6 +81,7 @@ import { KindergartenbesuchKatalogEintrag } from '../core/data/schule/Kindergart
 import { KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
 import { KlassenListeEintrag } from '../core/data/klassen/KlassenListeEintrag';
+import { KlasseStundenplan } from '../core/data/stundenplan/KlasseStundenplan';
 import { KursartKatalogEintrag } from '../core/data/kurse/KursartKatalogEintrag';
 import { KursDaten } from '../core/data/kurse/KursDaten';
 import { KursListeEintrag } from '../core/data/kurse/KursListeEintrag';
@@ -102,6 +103,7 @@ import { LehrerKatalogZugangsgrundEintrag } from '../core/data/lehrer/LehrerKata
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
 import { LehrerPersonaldaten } from '../core/data/lehrer/LehrerPersonaldaten';
 import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
+import { LehrerStundenplan } from '../core/data/stundenplan/LehrerStundenplan';
 import { List } from '../java/util/List';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
@@ -9129,35 +9131,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchuelerStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/schueler/{schueler_id : \d+}
-	 *
-	 * Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Schüler-Stundenplan
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerStundenplan
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
-	 *   Code 404: Keinen Stundenplan gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} schueler_id - der Pfad-Parameter schueler_id
-	 *
-	 * @returns Der Schüler-Stundenplan
-	 */
-	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<SchuelerStundenplan> {
-		const path = "/db/{schema}/stundenplan/{id : \\d+}/schueler/{schueler_id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
-			.replace(/{schueler_id\s*(:[^}]+)?}/g, schueler_id.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return SchuelerStundenplan.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getStundenplanUnterrichte für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/unterrichte
 	 *
 	 * Gibt die Unterrichte des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -9597,6 +9570,93 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanPausenzeit.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getKlassenStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/plaene/{id : \d+}/klasse/{klasse_id : \d+}
+	 *
+	 * Erstellt den angebebenen Stundeplan in Bezug auf die angegebene Klasse. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Klassen-Stundenplan
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: KlasseStundenplan
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keinen Stundenplan gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} klasse_id - der Pfad-Parameter klasse_id
+	 *
+	 * @returns Der Klassen-Stundenplan
+	 */
+	public async getKlassenStundenplan(schema : string, id : number, klasse_id : number) : Promise<KlasseStundenplan> {
+		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/klasse/{klasse_id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{klasse_id\s*(:[^}]+)?}/g, klasse_id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return KlasseStundenplan.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/plaene/{id : \d+}/lehrer/{lehrer_id : \d+}
+	 *
+	 * Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Lehrer. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Lehrer-Stundenplan
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerStundenplan
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keinen Stundenplan gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} lehrer_id - der Pfad-Parameter lehrer_id
+	 *
+	 * @returns Der Lehrer-Stundenplan
+	 */
+	public async getLehrerStundenplan(schema : string, id : number, lehrer_id : number) : Promise<LehrerStundenplan> {
+		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{lehrer_id\s*(:[^}]+)?}/g, lehrer_id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerStundenplan.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/plaene/{id : \d+}/schueler/{schueler_id : \d+}
+	 *
+	 * Erstellt den angebebenen Stundeplan in Bezug auf den angegebenen Schüler. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Schüler-Stundenplan
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerStundenplan
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
+	 *   Code 404: Keinen Stundenplan gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} schueler_id - der Pfad-Parameter schueler_id
+	 *
+	 * @returns Der Schüler-Stundenplan
+	 */
+	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<SchuelerStundenplan> {
+		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{schueler_id\s*(:[^}]+)?}/g, schueler_id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuelerStundenplan.transpilerFromJSON(text);
 	}
 
 

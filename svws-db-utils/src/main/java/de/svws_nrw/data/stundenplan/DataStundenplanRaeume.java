@@ -2,11 +2,13 @@ package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.data.DataBasicMapper;
@@ -15,6 +17,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -59,6 +62,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		return this.getList();
 	}
 
+
 	/**
 	 * Gibt die Räume des Stundenplans zurück.
 	 *
@@ -73,6 +77,31 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		for (final DTOStundenplanRaum r : raeume)
 			daten.add(dtoMapper.apply(r));
 		return daten;
+	}
+
+
+	/**
+	 * Mappt die Stundenplanraeume auf die gegebenen UnterrichtIds
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param unterrichtIds   die Unterrichte, für die die Räume gesucht und gemappt werden sollen
+	 *
+	 * @return eine Map, in der die Räume der jeweiligen UnterrichtId zugeordnet ist
+	 */
+	public static Map<Long, List<StundenplanRaum>> getRaeumeByUnterrichtId(final @NotNull DBEntityManager conn,
+			final long idStundenplan, final List<Long> unterrichtIds) {
+		final Map<Long, StundenplanRaum> raumById = DataStundenplanRaeume.getRaeume(conn, idStundenplan).stream()
+				.collect(Collectors.toMap(r -> r.id, Function.identity()));
+		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = new HashMap<>();
+		final List<DTOStundenplanUnterrichtRaum> listRaeume = unterrichtIds.isEmpty() ? new ArrayList<>()
+				: conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtRaum.class);
+		for (final DTOStundenplanUnterrichtRaum r : listRaeume) {
+			final List<StundenplanRaum> raeume = raeumeByUnterrichtId.computeIfAbsent(r.Unterricht_ID, id -> new ArrayList<>());
+			if (raumById.containsKey(r.Raum_ID))
+				raeume.add(raumById.get(r.Raum_ID));
+		}
+		return raeumeByUnterrichtId;
 	}
 
 
