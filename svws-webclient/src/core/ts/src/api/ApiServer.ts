@@ -133,7 +133,6 @@ import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
 import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
 import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
-import { SchuelerStundenplan } from '../core/data/stundenplan/SchuelerStundenplan';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
@@ -148,6 +147,7 @@ import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/Sprachrefe
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
+import { StundenplanKomplett } from '../core/data/stundenplan/StundenplanKomplett';
 import { StundenplanLehrer } from '../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanListeEintrag } from '../core/data/stundenplan/StundenplanListeEintrag';
 import { StundenplanPausenaufsicht } from '../core/data/stundenplan/StundenplanPausenaufsicht';
@@ -9639,7 +9639,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Schüler-Stundenplan
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerStundenplan
+	 *     - Rückgabe-Typ: StundenplanKomplett
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
 	 *   Code 404: Keinen Stundenplan gefunden
 	 *
@@ -9649,14 +9649,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Schüler-Stundenplan
 	 */
-	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<SchuelerStundenplan> {
+	public async getSchuelerStundenplan(schema : string, id : number, schueler_id : number) : Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/schueler/{schueler_id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
 			.replace(/{schueler_id\s*(:[^}]+)?}/g, schueler_id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return SchuelerStundenplan.transpilerFromJSON(text);
+		return StundenplanKomplett.transpilerFromJSON(text);
 	}
 
 

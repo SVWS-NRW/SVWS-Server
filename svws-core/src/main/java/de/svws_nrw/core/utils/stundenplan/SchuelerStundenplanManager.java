@@ -5,29 +5,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
-import de.svws_nrw.core.data.stundenplan.SchuelerStundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Ein Manager zur Handhabung von Daten des Typs {@link SchuelerStundenplan}.
+ * Ein Manager zur Handhabung von Daten des Typs {@link StundenplanKomplett}.
  * Hierbei werden auch Hilfsmethoden zur Interpretation der Daten erzeugt.
  */
 public class SchuelerStundenplanManager {
 
 	/** Die Stundenplandaten, die im Manager vorhanden sind */
-	private final @NotNull SchuelerStundenplan _daten;
+	private final @NotNull StundenplanKomplett _daten;
 
-	/** Eine Map idUnterricht -> SchuelerStundenplanUnterricht */
-	private final @NotNull Map<@NotNull Long, @NotNull SchuelerStundenplanUnterricht> _mapUnterricht = new HashMap<>();
+	/** Eine Map idUnterricht -> StundenplanUnterricht */
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanUnterricht> _mapUnterricht = new HashMap<>();
+
+	/** Eine Map idFach -> StundenplanFach */
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanFach> _mapFaecher = new HashMap<>();
 
 	/** Eine Map idZeitraster -> Liste von Unterricht */
-	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> _mapZeitrasterUnterricht = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _mapZeitrasterUnterricht = new HashMap<>();
 
 	/** Eine Map wochentyp, idZeitraster -> Liste von Unterricht */
-	private final @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>>> _mapWocheZeitrasterUnterricht = new HashMap<>();
+	private final @NotNull Map<@NotNull Integer, @NotNull Map<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>>> _mapWocheZeitrasterUnterricht = new HashMap<>();
 
 	/** Eine Map idZeitraster -> Zeitraster */
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanZeitraster> _mapZeitraster = new HashMap<>();
@@ -71,7 +75,7 @@ public class SchuelerStundenplanManager {
 	 * @return die ID des Stundenplans
 	 */
 	public long getStundenplanID() {
-		return this._daten.idStundenplan;
+		return this._daten.daten.id;
 	}
 
 	/**
@@ -80,7 +84,7 @@ public class SchuelerStundenplanManager {
 	 * @return die ID des Schülers
 	 */
 	public long getSchuelerID() {
-		return this._daten.idSchueler;
+		return this._daten.unterrichtsverteilung.schueler.get(0).id;
 	}
 
 	/**
@@ -127,7 +131,7 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return das SchulerStundenplanUnterricht-Objekt
 	 */
-	public SchuelerStundenplanUnterricht getUnterrichtById(final long idUnterricht) {
+	public StundenplanUnterricht getUnterrichtById(final long idUnterricht) {
 		return _mapUnterricht.get(idUnterricht);
 	}
 
@@ -139,7 +143,7 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
-	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByZeitrasterId(final long idZeitraster) {
+	public List<@NotNull StundenplanUnterricht> getUnterrichtByZeitrasterId(final long idZeitraster) {
 		return _mapZeitrasterUnterricht.get(idZeitraster);
 	}
 
@@ -152,7 +156,7 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
-	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
+	public List<@NotNull StundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
 			final long idZeitraster) {
 		return getUnterrichtByWocheZeitrasterId(wochentyp, idZeitraster, false);
 	}
@@ -169,17 +173,17 @@ public class SchuelerStundenplanManager {
 	 *
 	 * @return Liste von SchuelerStundenplanUnterricht-Objekten
 	 */
-	public List<@NotNull SchuelerStundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
+	public List<@NotNull StundenplanUnterricht> getUnterrichtByWocheZeitrasterId(final int wochentyp,
 			final long idZeitraster, final boolean inklWoche0) {
-		final Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp = DeveloperNotificationException
+		final Map<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> mapZeitrasterUnterricht_Wochentyp = DeveloperNotificationException
 				.ifMapGetIsNull(_mapWocheZeitrasterUnterricht, wochentyp);
-		List<@NotNull SchuelerStundenplanUnterricht> retList = mapZeitrasterUnterricht_Wochentyp.get(idZeitraster);
+		List<@NotNull StundenplanUnterricht> retList = mapZeitrasterUnterricht_Wochentyp.get(idZeitraster);
 		if (retList == null)
 			retList = new ArrayList<>();
 		if (wochentyp != 0 && inklWoche0) {
-			final Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht_Woche0 = DeveloperNotificationException
+			final Map<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> mapZeitrasterUnterricht_Woche0 = DeveloperNotificationException
 					.ifMapGetIsNull(_mapWocheZeitrasterUnterricht, 0);
-			final List<@NotNull SchuelerStundenplanUnterricht> listUnterricht_Woche0 = DeveloperNotificationException
+			final List<@NotNull StundenplanUnterricht> listUnterricht_Woche0 = DeveloperNotificationException
 					.ifMapGetIsNull(mapZeitrasterUnterricht_Woche0, idZeitraster);
 			retList.addAll(listUnterricht_Woche0);
 		}
@@ -234,14 +238,27 @@ public class SchuelerStundenplanManager {
 	}
 
 	/**
+	 * Liefert das Stundenplan-Fach-Objekt zur übergebenen
+	 * Fach-ID
+	 *
+	 * @param idFach   die ID des Faches
+	 *
+	 * @return das StundenplanFach-Objekt
+	 */
+	public StundenplanFach getFachById(final long idFach) {
+		return _mapFaecher.get(idFach);
+	}
+
+
+	/**
 	 * Erstellt einen neuen Manager mit den angegebenen Stundenplandaten und
 	 * erzeugt die privaten Attribute.
 	 *
 	 * @param daten die Stundenplandaten
 	 */
-	public SchuelerStundenplanManager(final @NotNull SchuelerStundenplan daten) {
+	public SchuelerStundenplanManager(final @NotNull StundenplanKomplett daten) {
 		_daten = daten;
-		for (final StundenplanZeitraster sz : _daten.zeitraster) {
+		for (final StundenplanZeitraster sz : _daten.daten.zeitraster) {
 			if (sz.wochentag < minWochentag)
 				minWochentag = sz.wochentag;
 			if (sz.wochentag > maxWochentag)
@@ -276,9 +293,9 @@ public class SchuelerStundenplanManager {
 			mapStundeUnterricht.put(sz.unterrichtstunde, sz);
 		}
 
-		for (final SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
-			_mapUnterricht.put(ssu.idUnterricht, ssu);
-			List<@NotNull SchuelerStundenplanUnterricht> listZeitrasterUnterricht = _mapZeitrasterUnterricht
+		for (final StundenplanUnterricht ssu : _daten.unterrichte) {
+			_mapUnterricht.put(ssu.id, ssu);
+			List<@NotNull StundenplanUnterricht> listZeitrasterUnterricht = _mapZeitrasterUnterricht
 					.get(ssu.idZeitraster);
 			if (listZeitrasterUnterricht == null) {
 				listZeitrasterUnterricht = new ArrayList<>();
@@ -286,13 +303,13 @@ public class SchuelerStundenplanManager {
 			}
 			listZeitrasterUnterricht.add(ssu);
 
-			Map<@NotNull Long, @NotNull List<@NotNull SchuelerStundenplanUnterricht>> mapZeitrasterUnterricht = _mapWocheZeitrasterUnterricht
+			Map<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> mapZeitrasterUnterricht = _mapWocheZeitrasterUnterricht
 					.get(ssu.wochentyp);
 			if (mapZeitrasterUnterricht == null) {
 				mapZeitrasterUnterricht = new HashMap<>();
 				_mapWocheZeitrasterUnterricht.put(ssu.wochentyp, mapZeitrasterUnterricht);
 			}
-			List<@NotNull SchuelerStundenplanUnterricht> listWocheZeitrasterUnterricht = mapZeitrasterUnterricht
+			List<@NotNull StundenplanUnterricht> listWocheZeitrasterUnterricht = mapZeitrasterUnterricht
 					.get(ssu.idZeitraster);
 			if (listWocheZeitrasterUnterricht == null) {
 				listWocheZeitrasterUnterricht = new ArrayList<>();
@@ -301,24 +318,8 @@ public class SchuelerStundenplanManager {
 			listWocheZeitrasterUnterricht.add(ssu);
 		}
 
-		// _mapWocheUnterricht =
-		// _daten.unterricht.stream().collect(Collectors.groupingBy(u ->
-		// u.wochentyp));
-		/*
-		 * _mapWochenTypUnterricht = new HashMap<>(); for (final @NotNull *
-		 * SchuelerStundenplanUnterricht ssu : _daten.unterricht) {
-		 *
-		 * @NotNull List<@NotNull SchuelerStundenplanUnterricht> ssul =
-		 * _mapWochenTypUnterricht.get(ssu.wochentyp); if (ssul == null) { ssul
-		 * = new ArrayList<>(); _mapWochenTypUnterricht.put(ssu.wochentyp,
-		 * ssul); } ssul.add(ssu); } _woche0Unterricht =
-		 * _mapWochenTypUnterricht.get(0); _mapWochenTypUnterricht.remove(0); if
-		 * (_woche0Unterricht != null) { for (@NotNull List<@NotNull
-		 * SchuelerStundenplanUnterricht> l : _mapWochenTypUnterricht.values())
-		 * { l.addAll(_woche0Unterricht); } //
-		 * _mapWocheUnterricht.values().stream().forEach(l ->
-		 * l.addAll(_woche0Unterricht)); }
-		 */
+		for (final StundenplanFach f : _daten.unterrichtsverteilung.faecher)
+			_mapFaecher.put(f.id, f);
 	}
 
 	/**

@@ -5,10 +5,10 @@ import java.io.InputStream;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.stundenplan.KlasseStundenplan;
 import de.svws_nrw.core.data.stundenplan.LehrerStundenplan;
-import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -1044,7 +1044,7 @@ public class APIStundenplan {
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Der Schüler-Stundenplan",
                  content = @Content(mediaType = "application/json",
-                 schema = @Schema(implementation = SchuelerStundenplan.class)))
+                 schema = @Schema(implementation = StundenplanKomplett.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
     public Response getSchuelerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("schueler_id") final long schuelerID, @Context final HttpServletRequest request) {

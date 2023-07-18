@@ -1,33 +1,31 @@
 package de.svws_nrw.data.stundenplan;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.stundenplan.SchuelerStundenplan;
-import de.svws_nrw.core.data.stundenplan.SchuelerStundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
-import jakarta.persistence.TypedQuery;
+import de.svws_nrw.db.utils.OperationError;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
- * {@link SchuelerStundenplan}.
+ * {@link StundenplanKomplett}.
  */
 public final class DataSchuelerStundenplan extends DataManager<Long> {
 
@@ -35,11 +33,10 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
-	 * {@link SchuelerStundenplan}.
+	 * {@link StundenplanKomplett}.
 	 *
-	 * @param conn          die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param idStundenplan die ID des Stundenplans, dessen Zeitraster abgefragt
-	 *                      wird
+	 * @param conn            die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idStundenplan   die ID des Stundenplans, dessen Zeitraster abgefragt wird
 	 */
 	public DataSchuelerStundenplan(final DBEntityManager conn, final Long idStundenplan) {
 		super(conn);
@@ -58,96 +55,91 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long idSchueler) {
-		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+		// Bestimme den Schüler und die Daten des Stundenplans
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			return OperationError.NOT_FOUND.getResponse("Kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
 
+		// Bestimme den Schüler und die Daten des Stundenplans
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+		if (stundenplan == null)
+			return OperationError.NOT_FOUND.getResponse("Kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+
+		// Erzeuge damit das Grundgerüst für den Stundenplan
+		final @NotNull StundenplanKomplett daten = new StundenplanKomplett();
+		daten.daten.id = idStundenplan;
+		daten.daten.idSchuljahresabschnitt = stundenplan.Schuljahresabschnitts_ID;
+		daten.daten.gueltigAb = stundenplan.Beginn;
+		daten.daten.gueltigBis = stundenplan.Ende;
+		daten.daten.bezeichnungStundenplan = stundenplan.Beschreibung;
+		daten.daten.wochenTypModell = stundenplan.WochentypModell;
+
+		// Zeitraster ...
+		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);
+		daten.daten.zeitraster.addAll(zeitraster);
+		daten.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
+
+		// Bestime den Lernabschnitt des Schülers, um anschließend mithilfe de aktuellen Leistungsdaten den Stundenplan zu befüllen
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr IS NULL",
 				DTOSchuelerLernabschnittsdaten.class).setParameter("sja", stundenplan.Schuljahresabschnitts_ID)
 				.setParameter("sid", idSchueler).getResultList();
 		if ((lernabschnittsdaten == null) || (lernabschnittsdaten.size() != 1))
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan())
-					.build();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = lernabschnittsdaten.get(0);
 
-		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);
-
-		final ArrayList<SchuelerStundenplanUnterricht> spUnterricht = new ArrayList<>();
-
+		// Bestimme nun die Leistungsdaten zu dem Lernabschnitt
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id",
 				lernabschnitt.ID, DTOSchuelerLeistungsdaten.class);
 		if ((leistungsdaten == null) || (leistungsdaten.isEmpty()))
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new SchuelerStundenplan())
-					.build();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 
-		final List<Long> lehrer = leistungsdaten.stream().map(ld -> ld.Fachlehrer_ID).filter(l -> l != null).toList();
-		final Map<Long, DTOLehrer> mapLehrer = lehrer.isEmpty() ? new HashMap<>()
-				: conn.queryNamed("DTOLehrer.id.multiple", lehrer, DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		// Bestimme die Unterrichte, die zu den Leistungsdaten gehören ...
+		final List<StundenplanUnterricht> alleUnterrichte = DataStundenplanUnterricht.getUnterrichte(conn, idStundenplan);
+		// TODO Filtern anhand der Klassen-ID, falls es Fach-Unterricht ist
+		final Map<Long, List<StundenplanUnterricht>> mapUnterricht = alleUnterrichte.stream()
+				.filter(u -> (u.idKurs != null) || u.klassen.contains(lernabschnitt.Klassen_ID))
+				.collect(Collectors.groupingBy(u -> (u.idKurs != null ? u.idKurs : u.idFach)));
 
-		final List<Long> faecher = leistungsdaten.stream().map(ld -> ld.Fach_ID).filter(f -> f != null).toList();
-		final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecher, DTOFach.class).stream()
-				.collect(Collectors.toMap(f -> f.ID, f -> f));
+		// Gehe die Leistungsdaten und trage die Unterrichte ein
+		final Set<Long> lehrerIDs = new HashSet<>();
+		final Set<Long> klassenIDs = new HashSet<>();
+		final Set<Long> raumIDs = new HashSet<>();
+		final Set<Long> schienenIDs = new HashSet<>();
+		final Set<Long> fachIDs = new HashSet<>();
+		for (final DTOSchuelerLeistungsdaten ld : leistungsdaten) {
+			final List<StundenplanUnterricht> unterrichte = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
+			if (unterrichte == null)
+				continue;
+			fachIDs.add(ld.Fach_ID);
+			daten.unterrichte.addAll(unterrichte);
+			for (final StundenplanUnterricht u : unterrichte) {
+				lehrerIDs.addAll(u.lehrer);
+				klassenIDs.addAll(u.klassen);
+				raumIDs.addAll(u.raeume);
+				schienenIDs.addAll(u.schienen);
+			}
+		}
 
-		final List<Long> kursIDs = leistungsdaten.stream().map(ld -> ld.Kurs_ID).filter(k -> k != null).toList();
+		// Ergänze die Informationen zu den Lehrern, Klassen, Fächern, Räumen und Schienen
+		daten.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
+				.filter(l -> lehrerIDs.contains(l.id)).toList());
+		daten.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
+				.filter(k -> klassenIDs.contains(k.id)).toList());
+		daten.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
+				.filter(f -> fachIDs.contains(f.id)).toList());
+		daten.daten.raeume.addAll(DataStundenplanRaeume.getRaeume(conn, idStundenplan).stream()
+				.filter(r -> raumIDs.contains(r.id)).toList());
+		daten.daten.schienen.addAll(DataStundenplanSchienen.getSchienen(conn, idStundenplan).stream()
+				.filter(s -> schienenIDs.contains(s.id)).toList());
 
-		final String sqlKursIDs = !kursIDs.isEmpty() ? "e.Kurs_ID IN :kids OR " : "";
-
-		final List<DTOStundenplanUnterrichtKlasse> listSuk = conn.queryNamed("DTOStundenplanUnterrichtKlasse.klasse_id",
-				lernabschnitt.Klassen_ID, DTOStundenplanUnterrichtKlasse.class);
-
-		final String klIDs = !listSuk.isEmpty() ? "e.ID IN :klid" : "1=2";
-
-		final TypedQuery<DTOStundenplanUnterricht> tq = conn.query(
-				"SELECT e FROM DTOStundenplanUnterricht e JOIN DTOStundenplanZeitraster z ON e.Zeitraster_ID = z.ID AND z.Stundenplan_ID = :spid AND ("
-						+ sqlKursIDs + klIDs + ")",
-				DTOStundenplanUnterricht.class).setParameter("spid", stundenplan.ID);
-
-		if (!listSuk.isEmpty())
-			tq.setParameter("klid", listSuk.stream().map(suk -> suk.Unterricht_ID).toList());
-		if (!kursIDs.isEmpty())
-			tq.setParameter("kids", kursIDs);
-		final Map<Long, List<DTOStundenplanUnterricht>> mapUnterricht = tq.getResultList().stream()
-				.collect(Collectors.groupingBy(su -> (su.Kurs_ID != null ? su.Kurs_ID : su.Fach_ID)));
-
-		leistungsdaten.stream().forEach(ld -> {
-			final List<DTOStundenplanUnterricht> unterricht = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
-			if ((unterricht == null) || (leistungsdaten.isEmpty()))
-				return;
-			final DTOLehrer l = mapLehrer.get(ld.Fachlehrer_ID);
-			final DTOFach f = mapFaecher.get(ld.Fach_ID);
-			unterricht.stream().forEach(u -> {
-				final SchuelerStundenplanUnterricht ssu = new SchuelerStundenplanUnterricht();
-				ssu.fachBezeichnung = (f == null) ? "" : f.Bezeichnung;
-				ssu.fachKuerzel = (f == null) ? "" : f.Kuerzel;
-				ssu.fachKuerzelStatistik = (f == null) ? "" : f.StatistikFach.daten.kuerzelASD;
-				ssu.idFach = u.Fach_ID;
-				ssu.idLehrer = ld.Fachlehrer_ID;
-				ssu.idLeistungen = ld.ID;
-				ssu.idUnterricht = u.ID;
-				ssu.idZeitraster = u.Zeitraster_ID;
-				ssu.kursart = ld.Kursart;
-				ssu.lehrerKuerzel = (l == null) ? "" : l.Kuerzel;
-				ssu.lehrerNachname = (l == null) ? "" : l.Nachname;
-				ssu.lehrerVorname = (l == null) ? "" : l.Vorname;
-				ssu.wochentyp = u.Wochentyp;
-				spUnterricht.add(ssu);
-			});
-		});
-
-		// Erstelle das Core-DTO-Objekt für die Response
-		final SchuelerStundenplan daten = new SchuelerStundenplan();
-		daten.idStundenplan = idStundenplan;
-		daten.bezeichnungStundenplan = stundenplan.Beschreibung;
-		daten.gueltigAb = stundenplan.Beginn;
-		daten.gueltigBis = stundenplan.Ende;
-		daten.idKlasse = lernabschnitt.Klassen_ID;
-		daten.idSchueler = idSchueler;
-		daten.idSchuljahresabschnitt = lernabschnitt.Schuljahresabschnitts_ID;
-		daten.jahrgang = lernabschnitt.ASDJahrgang;
-		daten.nachname = schueler.Nachname;
-		daten.vorname = schueler.Vorname;
-		daten.unterricht = spUnterricht;
-		daten.zeitraster = zeitraster;
+		// Ergänze die Information zum Schüler
+		final StundenplanSchueler schueler = new StundenplanSchueler();
+		schueler.id = idSchueler;
+		schueler.nachname = dtoSchueler.Nachname;
+		schueler.vorname = dtoSchueler.Vorname;
+		schueler.idKlasse = lernabschnitt.Klassen_ID;
+		daten.unterrichtsverteilung.schueler.add(schueler);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

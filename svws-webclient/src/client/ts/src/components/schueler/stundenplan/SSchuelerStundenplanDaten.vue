@@ -1,8 +1,8 @@
 <template>
-	<div v-if="visible()" class="flex flex-row gap-4">
+	<div v-if="manager !== undefined" class="flex flex-row gap-4">
 		<div class="w-full flex-none sm:-mx-6 lg:-mx-8">
 			<div class="w-full inline-block py-2 align-middle sm:px-6 lg:px-8">
-				<div v-for="wochentyp in manager?.getWochentypen()" class="w-full rounded-lg shadow" :key="wochentyp">
+				<div v-for="wochentyp in manager.getWochentypen()" class="w-full rounded-lg shadow" :key="wochentyp">
 					<p class="text-lg" />
 					<table class="w-full table-auto border-collapse mb-5">
 						<thead>
@@ -16,12 +16,14 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr v-for="stunde in manager?.getMaxStunde()" :key="stunde">
+							<tr v-for="stunde in manager.getMaxStunde()" :key="stunde">
 								<th class="text-center border-2 border-collapse">{{ stunde }}</th>
-								<td class="text-center border-2 border-collapse" v-for="wochentag in manager?.getMaxWochentag()" :key="wochentag">
+								<td class="text-center border-2 border-collapse" v-for="wochentag in manager.getMaxWochentag()" :key="wochentag">
 									<table class="w-full">
 										<tr>
-											<s-unterricht v-for="unterricht in unterrichtsdaten(wochentyp, wochentag, stunde)" :key="unterricht.idUnterricht" :unterricht="unterricht" />
+											<td v-for="unterricht in unterrichtsdaten(wochentyp, wochentag, stunde)" :key="unterricht.id" class="text-center">
+												{{ manager.getFachById(unterricht.idFach)?.kuerzel }}
+											</td>
 										</tr>
 									</table>
 								</td>
@@ -47,10 +49,6 @@
 			return undefined;
 		const unterricht = props.manager.getUnterrichtByWocheZeitrasterId(wochentyp, zeitraster.id, true);
 		return (unterricht === null) ? undefined : unterricht;
-	}
-
-	function visible() : boolean {
-		return props.manager !== undefined;
 	}
 
 </script>

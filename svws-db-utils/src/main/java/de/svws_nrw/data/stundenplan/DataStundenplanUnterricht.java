@@ -48,7 +48,15 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		return this.getList();
 	}
 
-	private List<StundenplanUnterricht> getUnterrichte(final long idStundenplan) {
+	/**
+	 * Bestimmt zu dem Stundenplan mit der angegebenen ID die Liste der Unterrichte.
+	 *
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 *
+	 * @return die Liste der Unterrichte
+	 */
+	public static List<StundenplanUnterricht> getUnterrichte(final DBEntityManager conn, final long idStundenplan) {
 		final List<StundenplanUnterricht> daten = new ArrayList<>();
 		// Bestimme die Zeitraster-IDs des Stundenplans
 		final List<Long> zeitrasterIDs = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
@@ -99,7 +107,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<StundenplanUnterricht> daten = getUnterrichte(idStundenplan);
+		final List<StundenplanUnterricht> daten = getUnterrichte(conn, idStundenplan);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

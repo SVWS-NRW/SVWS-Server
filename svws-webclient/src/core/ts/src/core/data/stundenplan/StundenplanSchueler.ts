@@ -3,7 +3,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class StundenplanSchueler extends JavaObject {
 
 	/**
-	 * Die ID des Lehrers.
+	 * Die ID des Schülers.
 	 */
 	public id : number = -1;
 
