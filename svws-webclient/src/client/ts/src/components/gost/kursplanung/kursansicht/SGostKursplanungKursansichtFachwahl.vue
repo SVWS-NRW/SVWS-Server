@@ -370,6 +370,8 @@
 			return false;
 		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
 			return false;
+		if (!props.allowRegeln && (dragDataKursSchiene.value.kurs.id !== kurs.id))
+			return false;
 		return true;
 	});
 
