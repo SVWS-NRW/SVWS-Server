@@ -97,7 +97,7 @@ if [[ "$1" == "--update" ]]; then
     rm -rf $APP_PATH/app/svws-client*.zip
 
     # Erstelle einen symbolischen Link zur Konfigurationsdatei
-    ln $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
+    ln -f $CONF_PATH/svwsconfig.json $APP_PATH/svwsconfig.json
 
     cd $script_dir
 
