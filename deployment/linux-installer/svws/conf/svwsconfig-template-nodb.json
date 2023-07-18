@@ -12,6 +12,7 @@
   "ClientPath" : "./client",
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
+  "ServerMode" : "stable",
   "DBKonfiguration" : {
     "dbms" : "MARIA_DB",
     "location" : "${MariaDB_HOST}",
