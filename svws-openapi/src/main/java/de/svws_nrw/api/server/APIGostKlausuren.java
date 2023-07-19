@@ -686,17 +686,17 @@ public class APIGostKlausuren {
 	@Path("/raumstunden/{termin : -?\\d+}")
 	@Operation(summary = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus.", description = "Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Klausurraumstunden.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumstunde.class))))
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Der Termin-ID wurde nicht gefunden.")
-	public Response getGostKlausurenRaumstundenTermin(@PathParam("schema") final String schema, @PathParam("termin") final long termin,
+	public Response getGostKlausurenSchuelerraumstundenTermin(@PathParam("schema") final String schema, @PathParam("termin") final long termin,
 			@Context final HttpServletRequest request) {
 		// TODO Anpassung der Benutzerkompetenz / Einführung eines neuen
 		// Benutzerkompetenz für den Zugriff auf allgemeine Oberstufeninformationen
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)) {
-			return (new DataGostKlausurenRaumstunde(conn)).get(termin);
+			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).get(termin);
 		}
 	}
 

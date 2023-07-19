@@ -4,8 +4,6 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -23,7 +21,6 @@ import de.svws_nrw.core.utils.klausurplan.GostKlausurvorgabenManager;
 import de.svws_nrw.core.utils.klausurplan.GostKursklausurManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.DataManager;
-import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
@@ -211,83 +208,40 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @return die Liste der Klausurraumstunden
 	 */
-	private List<GostKlausurraumstunde> getKlausurraumstunden(final Long idTermin) {
+	private GostKlausurenCollectionSkrsKrs getSchuelerklausurraumstunden(final Long idTermin) {
+		final GostKlausurenCollectionSkrsKrs retCollection = new GostKlausurenCollectionSkrsKrs();
 
 		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeume(idTermin);
 
-		if (listRaeume.isEmpty()) {
+		if (!listRaeume.isEmpty()) {
 			// TODO Errorhandling nötig?
-			return new ArrayList<>();
+			return retCollection;
 		}
 
-		final List<DTOGostKlausurenRaeumeStunden> stunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(),
+		final List<DTOGostKlausurenRaeumeStunden> raumStunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(),
 				DTOGostKlausurenRaeumeStunden.class);
 
-		final List<GostKlausurraumstunde> daten = new ArrayList<>();
-		for (final DTOGostKlausurenRaeumeStunden s : stunden)
-			daten.add(DataGostKlausurenRaumstunde.dtoMapper.apply(s));
-		return daten;
+		for (final DTOGostKlausurenRaeumeStunden s : raumStunden)
+			retCollection.raumstunden.add(DataGostKlausurenRaumstunde.dtoMapper.apply(s));
+
+		final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> skrStunden = conn.queryNamed("DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple", raumStunden.stream().map(s -> s.ID).toList(),
+				DTOGostKlausurenSchuelerklausurenRaeumeStunden.class);
+
+		for (final DTOGostKlausurenSchuelerklausurenRaeumeStunden s : skrStunden)
+			retCollection.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(s));
+
+		return retCollection;
 	}
 
 	@Override
 	public Response get(final Long idTermin) {
-		// Klausurraumstunden zu einem Klausurtermin
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurraumstunden(idTermin)).build();
+		// Schuelerklausurraumstunden zu einem Klausurtermin
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getSchuelerklausurraumstunden(idTermin)).build();
 	}
 
 	@Override
 	public Response getList() {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Erstellt eine neue Gost-Klausurraumstunde
-	 *
-	 * @param is Das JSON-Objekt mit den Daten
-	 *
-	 * @return Eine Response mit der neuen Gost-Klausurraumstunde
-	 */
-	public Response create(final InputStream is) {
-		DTOGostKlausurenRaeumeStunden raumstunde = null;
-		try {
-			conn.transactionBegin();
-			// Bestimme die ID der neuen Klausurraumstunde
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-
-			long klausurraum_ID = -1;
-			long zeitraster_ID = -1;
-
-			final Map<String, Object> map = JSONMapper.toMap(is);
-			if (map.size() > 0) {
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-					case "idRaum" -> klausurraum_ID = JSONMapper.convertToLong(value, false);
-					case "idZeitraster" -> zeitraster_ID = JSONMapper.convertToLong(value, false);
-					case "id" -> {
-						/* do nothing */ }
-					default -> throw OperationError.BAD_REQUEST.exception();
-					}
-				}
-			}
-
-			raumstunde = new DTOGostKlausurenRaeumeStunden(id, klausurraum_ID, zeitraster_ID);
-
-			conn.transactionPersist(raumstunde);
-			if (!conn.transactionCommit())
-				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Gost-Klausurraumsstunde");
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webApplicationException)
-				return webApplicationException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
-
-		final GostKlausurraumstunde daten = DataGostKlausurenRaumstunde.dtoMapper.apply(raumstunde);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**

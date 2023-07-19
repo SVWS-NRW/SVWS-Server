@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurraumstunde;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
@@ -25,11 +27,14 @@ public class GostKlausurraumManager {
 	/** Die Kursklausuren, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKlausurraum> _raeume = new ArrayList<>();
 
-	/** Eine Map id -> GostKursklausur */
+	/** Eine Map id -> GostKlausurraum */
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraum> _mapIdRaum = new HashMap<>();
 
 	/** Die Klausurraumstunden, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKlausurraumstunde> _stunden = new ArrayList<>();
+
+	/** Eine Map id -> GostKlausurraumstunde */
+	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraumstunde> _mapIdRaumStunde = new HashMap<>();
 
 	/** Eine Map idRaum -> Liste von Stunden */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKlausurraumstunde>> _mapRaumStunden = new HashMap<>();
@@ -48,17 +53,24 @@ public class GostKlausurraumManager {
 	/** Eine Map Kursklausur-Id -> Liste von GostSchuelerklausuren */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausur>> _mapKkidSk = new HashMap<>();
 
+	/** Eine Map Raumstunde-Id -> Liste von Schuelerklausurraumstunden */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostSchuelerklausurraumstunde>> _mapidRsSkrs = new HashMap<>();
+
+	/** Eine Map Schuelerklausur-Id -> Liste von Raumstunden */
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKlausurraumstunde>> _mapidRsSkrsRevert = new HashMap<>();
+
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
-	 * @param raum            der Gost-Klausurraum
+	 * @param raum              der Gost-Klausurraum
 	 * @param stunden           die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 */
-	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
+			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
 		addKlausurraum(raum);
 		for (final @NotNull GostKlausurraumstunde s : stunden)
 			addKlausurraumstunde(s);
@@ -72,17 +84,20 @@ public class GostKlausurraumManager {
 	 *
 	 * @param raeume            die Liste der GostKlausurräume eines
 	 *                          Gost-Klausurtermins
-	 * @param stunden           die Liste der GostKlausurraumstunden eines
+	 * @param listRs           die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
+	 * @param listSkrs			die Liste der Schülerklausurraumstunden
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 */
-	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
-			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> listRs,
+			final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
 		for (final @NotNull GostKlausurraum r : raeume)
 			addKlausurraum(r);
-		for (final @NotNull GostKlausurraumstunde s : stunden)
+		for (final @NotNull GostKlausurraumstunde s : listRs)
 			addKlausurraumstunde(s);
+		for (final @NotNull GostSchuelerklausurraumstunde s : listSkrs)
+			addSchuelerklausurraumstunde(s);
 		for (final @NotNull GostSchuelerklausur k : schuelerklausuren)
 			addSchuelerklausur(k);
 	}
@@ -110,7 +125,7 @@ public class GostKlausurraumManager {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
-	 * @param idRaum die ID des Klausurraums
+	 * @param idRaum       die ID des Klausurraums
 	 * @param idZeitraster die ID des Zeitrasters
 	 *
 	 * @return die Klausurraumstunde
@@ -138,8 +153,21 @@ public class GostKlausurraumManager {
 	public void addKlausurraumstunde(final @NotNull GostKlausurraumstunde stunde) {
 		DeveloperNotificationException.ifListAddsDuplicate("_stunden", _stunden, stunde);
 		DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, stunde.idRaum);
+		DeveloperNotificationException.ifMapPutOverwrites(_mapIdRaumStunde, stunde.id, stunde);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumStundenList", MapUtils.getOrCreateArrayList(_mapRaumStunden, stunde.idRaum), stunde);
 		DeveloperNotificationException.ifMap2DPutOverwrites(_mapRaumZeitrasterStunde, stunde.idRaum, stunde.idZeitraster, stunde);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param stunde das Gost-Klausurraumstunde-Objekt
+	 */
+	public void addSchuelerklausurraumstunde(final @NotNull GostSchuelerklausurraumstunde stunde) {
+		DeveloperNotificationException.ifListAddsDuplicate("_mapidRsSkrsList", MapUtils.getOrCreateArrayList(_mapidRsSkrs, stunde.idRaumstunde), stunde);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapidRsSkrsRevertList", MapUtils.getOrCreateArrayList(_mapidRsSkrsRevert, stunde.idSchuelerklausur),
+				DeveloperNotificationException.ifMapGetIsNull(_mapIdRaumStunde, stunde.idRaumstunde));
+
 	}
 
 	/**
@@ -163,6 +191,38 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, r.id);
 		_raeume.add(r);
 		_mapIdRaum.put(r.id, r);
+	}
+
+	/**
+	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum geändert
+	 * hat.
+	 *
+	 * @param skids
+	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
+	 */
+	public void setzeRaumZuSchuelerklausuren(final @NotNull List<@NotNull Long> skids, final @NotNull GostKlausurenCollectionSkrsKrs collectionSkrsKrs) {
+		for (final long skid : skids) {
+			List<GostKlausurraumstunde> listKrs = _mapidRsSkrsRevert.get(skid);
+			if (listKrs == null)
+				continue;
+			for (final GostKlausurraumstunde rsid : listKrs) {
+				if (rsid == null)
+					continue;
+				final @NotNull List<@NotNull GostSchuelerklausurraumstunde> skrsList = DeveloperNotificationException.ifMapGetIsNull(_mapidRsSkrs, rsid.id);
+				final List<@NotNull GostSchuelerklausurraumstunde> toRemove = new ArrayList<>();
+				for (final @NotNull GostSchuelerklausurraumstunde skrs : skrsList)
+					if (skrs.idSchuelerklausur == skid)
+						toRemove.add(skrs);
+				skrsList.removeAll(toRemove);
+			}
+		}
+
+		final @NotNull List<@NotNull GostKlausurraumstunde> raumstunden = collectionSkrsKrs.raumstunden;
+		final @NotNull List<@NotNull GostSchuelerklausurraumstunde> skRaumstunden = collectionSkrsKrs.skRaumstunden;
+		for (final @NotNull GostKlausurraumstunde rs : raumstunden)
+			addKlausurraumstunde(rs);
+		for (final @NotNull GostSchuelerklausurraumstunde skrs : skRaumstunden)
+			addSchuelerklausurraumstunde(skrs);
 	}
 
 	/**

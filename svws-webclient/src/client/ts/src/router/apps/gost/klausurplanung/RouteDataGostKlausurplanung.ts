@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostCollectionSkrsKrs, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays } from "@core";
 
 import { api } from "~/router/Api";
@@ -358,19 +358,19 @@ export class RouteDataGostKlausurplanung {
 	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
 		api.status.start();
 		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
-		const stunden = await api.server.getGostKlausurenRaumstundenTermin(api.schema, termin.id);
+		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
 		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausuren(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, stunden, schuelerklausuren);
+		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren);
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum, sks: List<GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
 		api.status.start();
-		const schuelerklausuren = await api.server.setzeGostSchuelerklausurenZuRaum(Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur)), api.schema, raum.id);
+		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur)), api.schema, raum.id);
 		this.commit();
 		api.status.stop();
-		return schuelerklausuren;
+		return collectionSkrsKrs;
 	}
 
 }

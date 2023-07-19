@@ -25,7 +25,9 @@
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {
 		console.log(props.raummanager.getSchuelerklausurenByKursklausur(klausur.id));
-		await props.setzeRaumZuSchuelerklausuren(props.raum, props.raummanager.getSchuelerklausurenByKursklausur(klausur.id));
+		const collectionSkrsKrs = await props.setzeRaumZuSchuelerklausuren(props.raum, props.raummanager.getSchuelerklausurenByKursklausur(klausur.id));
+		console.log(collectionSkrsKrs);
+		console.log(props.raummanager);
 	};
 
 	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum));

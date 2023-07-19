@@ -4350,31 +4350,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostKlausurenRaumstundenTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/{termin : -?\d+}
+	 * Implementierung der GET-Methode getGostKlausurenSchuelerraumstundenTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/{termin : -?\d+}
 	 *
 	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Klausurraumstunden.
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKlausurraumstunde>
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
 	 *   Code 404: Der Termin-ID wurde nicht gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} termin - der Pfad-Parameter termin
 	 *
-	 * @returns Die Liste der Klausurraumstunden.
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async getGostKlausurenRaumstundenTermin(schema : string, termin : number) : Promise<List<GostKlausurraumstunde>> {
+	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{termin\s*(:[^}]+)?}/g, termin.toString());
 		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKlausurraumstunde>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurraumstunde.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
 	}
 
 
