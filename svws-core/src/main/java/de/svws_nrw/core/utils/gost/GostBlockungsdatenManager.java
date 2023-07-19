@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -1198,6 +1199,24 @@ public class GostBlockungsdatenManager {
 	 */
 	public void regelRemove(final @NotNull GostBlockungRegel regel)  throws DeveloperNotificationException, UserNotificationException {
 		regelRemoveByID(regel.id);
+	}
+
+	/**
+	 * Liefert zum Fach alle derzeitigen Kursarten.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return zum Fach alle derzeitigen Kursarten.
+	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
+	 */
+	public @NotNull List<@NotNull GostKursart> fachGetMengeKursarten(final long idFach) throws DeveloperNotificationException {
+		final @NotNull Set<@NotNull Integer> setKursarten = _map2d_idFach_idKursart_kurse.getKeySetOf(idFach);
+
+		final @NotNull List<@NotNull GostKursart> list = new ArrayList<>();
+		for (final @NotNull Integer idKursart : setKursarten)
+			list.add(GostKursart.fromID(idKursart));
+
+		return list;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -1178,6 +1179,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public regelRemove(regel : GostBlockungRegel) : void {
 		this.regelRemoveByID(regel.id);
+	}
+
+	/**
+	 * Liefert zum Fach alle derzeitigen Kursarten.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return zum Fach alle derzeitigen Kursarten.
+	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
+	 */
+	public fachGetMengeKursarten(idFach : number) : List<GostKursart> {
+		const setKursarten : JavaSet<number> = this._map2d_idFach_idKursart_kurse.getKeySetOf(idFach);
+		const list : List<GostKursart> = new ArrayList();
+		for (const idKursart of setKursarten)
+			list.add(GostKursart.fromID(idKursart!));
+		return list;
 	}
 
 	/**
