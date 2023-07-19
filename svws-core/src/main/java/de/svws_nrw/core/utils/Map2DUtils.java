@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -38,4 +39,23 @@ public final class Map2DUtils {
 		return listNeu;
 	}
 
+    /**
+     * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
+     *
+     * @param <K1>   Der Typ des 1. Schlüssels.
+     * @param <K2>   Der Typ des 2. Schlüssels.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     * @param map2D  Die Map, welche (K1, K2) auf "ArrayList of V" abbildet.
+     * @param key1   Der 1. Schlüssel.
+     * @param key2   Der 2. Schlüssel.
+     * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
+     */
+	public static <@NotNull K1, @NotNull K2, @NotNull V> void removeFromListAndTrimOrException(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull List<@NotNull V>> map2D, final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) {
+		final List<@NotNull V> list = map2D.getNonNullOrException(key1, key2);
+
+		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
+
+		if (list.isEmpty())
+			map2D.removeOrException(key1, key2);
+	}
 }

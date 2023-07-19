@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -25,6 +23,7 @@ import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -91,6 +90,9 @@ public class GostBlockungsdatenManager {
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Listen der Kurse, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs. */
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostBlockungKurs>> _map2d_idFach_idKursart_kurse = new HashMap2D<>();
+
+	/** Eine interne Hashmap zum schnellen Zugriff auf die Listen der Fachwahlen, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs. */
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull GostFachwahl>> _map2d_idFach_idKursart_fachwahlen = new HashMap2D<>();
 
 	/** Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID. */
 	private final @NotNull HashMap<@NotNull Long, @NotNull GostBlockungSchiene> _map_idSchiene_schiene = new HashMap<>();
@@ -476,14 +478,11 @@ public class GostBlockungsdatenManager {
 
 		// Hinzufügen des Kurses.
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idKurs_kurs, kurs.id, kurs);
-		List<@NotNull GostBlockungKurs> tmpKurse = _map2d_idFach_idKursart_kurse.getOrNull(kurs.fach_id, kurs.kursart);
-		if (tmpKurse == null) {
-			tmpKurse = new ArrayList<>();
-			_map2d_idFach_idKursart_kurse.put(kurs.fach_id, kurs.kursart, tmpKurse);
-		}
-		tmpKurse.add(kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_fach_kursart_kursnummer", _list_kurse_sortiert_fach_kursart_kursnummer, kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_kursart_fach_kursnummer", _list_kurse_sortiert_kursart_fach_kursnummer, kurs);
+		final List<@NotNull GostBlockungKurs> liste = Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
+		liste.add(kurs);
+		liste.sort(_compKursnummer);
 		_daten.kurse.add(kurs);
 	}
 
@@ -626,13 +625,10 @@ public class GostBlockungsdatenManager {
 	 * @param idKursart   die ID der Kursart
 	 *
 	 * @return die sortiere Liste der Kurse für das Fach und die Kursart
+	 * @throws DeveloperNotificationException falls es keinen Kurs mit (idFach, idKursart) gibt.
 	 */
-	public @NotNull List<@NotNull GostBlockungKurs> kursGetListeByFachUndKursart(final long idFach, final int idKursart) {
-		final List<@NotNull GostBlockungKurs> liste = _map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
-		if (liste == null)
-			return new ArrayList<>();
-		liste.sort(_compKursnummer);
-		return liste;
+	public @NotNull List<@NotNull GostBlockungKurs> kursGetListeByFachUndKursart(final long idFach, final int idKursart) throws DeveloperNotificationException {
+		return _map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart);
 	}
 
 	/**
@@ -772,10 +768,7 @@ public class GostBlockungsdatenManager {
 		final @NotNull GostBlockungKurs kurs = this.kursGet(idKurs);
 		_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
-		final @NotNull List<@NotNull GostBlockungKurs> tmpKurse = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
-		tmpKurse.remove(kurs);
-		if (tmpKurse.isEmpty())
-			_map2d_idFach_idKursart_kurse.removeOrException(kurs.fach_id, kurs.kursart);
+		Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
 		_map_idKurs_kurs.remove(idKurs);
 		_daten.kurse.remove(kurs);
 	}
@@ -1202,18 +1195,25 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert zum Fach alle derzeitigen Kursarten.
+	 * Liefert die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.
-	 * @return zum Fach alle derzeitigen Kursarten.
-	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
+	 *
+	 * @return die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 */
-	public @NotNull List<@NotNull GostKursart> fachGetMengeKursarten(final long idFach) throws DeveloperNotificationException {
-		final @NotNull Set<@NotNull Integer> setKursarten = _map2d_idFach_idKursart_kurse.getKeySetOf(idFach);
+	public @NotNull List<@NotNull GostKursart> fachGetMengeKursarten(final long idFach)  {
+		final @NotNull HashSet<@NotNull Integer> idKursarten = new HashSet<>();
+
+		if (_map2d_idFach_idKursart_kurse.containsKey1(idFach))
+			idKursarten.addAll(_map2d_idFach_idKursart_kurse.getKeySetOf(idFach));
+
+		if (_map2d_idFach_idKursart_fachwahlen.containsKey1(idFach))
+			idKursarten.addAll(_map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach));
 
 		final @NotNull List<@NotNull GostKursart> list = new ArrayList<>();
-		for (final @NotNull Integer idKursart : setKursarten)
-			list.add(GostKursart.fromID(idKursart));
+		for (final @NotNull GostKursart kursart : GostKursart.values())
+			if (idKursarten.contains(kursart.id))
+				list.add(kursart);
 
 		return list;
 	}
@@ -1238,6 +1238,9 @@ public class GostBlockungsdatenManager {
 		// _map_fachartID_fachwahlen
 		final long fachartID = GostKursart.getFachartIDByFachwahl(fachwahl);
 		fachwahlGetListeOfFachart(fachartID).add(fachwahl);
+
+		// _map2d_idFach_idKursart_kurse
+		Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
 
 		// fachwahlen
 		_daten.fachwahlen.add(fachwahl);

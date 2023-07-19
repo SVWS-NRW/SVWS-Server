@@ -1,6 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import type { JavaSet } from '../../../java/util/JavaSet';
 import { GostBlockungsergebnisListeneintrag } from '../../../core/data/gost/GostBlockungsergebnisListeneintrag';
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
@@ -21,6 +20,7 @@ import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
@@ -114,6 +114,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Listen der Kurse, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs.
 	 */
 	private readonly _map2d_idFach_idKursart_kurse : HashMap2D<number, number, List<GostBlockungKurs>> = new HashMap2D();
+
+	/**
+	 * Eine interne Hashmap zum schnellen Zugriff auf die Listen der Fachwahlen, welche Fach und Kursart gemeinsam haben, anhand der beiden IDs.
+	 */
+	private readonly _map2d_idFach_idKursart_fachwahlen : HashMap2D<number, number, List<GostFachwahl>> = new HashMap2D();
 
 	/**
 	 * Eine interne Hashmap zum schnellen Zugriff auf die Schienen anhand ihrer Datenbank-ID.
@@ -510,14 +515,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 		DeveloperNotificationException.ifGreater("pKurs.anzahlSchienen", kurs.anzahlSchienen, nSchienen);
 		DeveloperNotificationException.ifSmaller("pKurs.nummer", kurs.nummer, 1);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKurs_kurs, kurs.id, kurs);
-		let tmpKurse : List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(kurs.fach_id, kurs.kursart);
-		if (tmpKurse === null) {
-			tmpKurse = new ArrayList();
-			this._map2d_idFach_idKursart_kurse.put(kurs.fach_id, kurs.kursart, tmpKurse);
-		}
-		tmpKurse.add(kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_fach_kursart_kursnummer", this._list_kurse_sortiert_fach_kursart_kursnummer, kurs);
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_kursart_fach_kursnummer", this._list_kurse_sortiert_kursart_fach_kursnummer, kurs);
+		const liste : List<GostBlockungKurs> | null = Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
+		liste.add(kurs);
+		liste.sort(GostBlockungsdatenManager._compKursnummer);
 		this._daten.kurse.add(kurs);
 	}
 
@@ -654,13 +656,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param idKursart   die ID der Kursart
 	 *
 	 * @return die sortiere Liste der Kurse für das Fach und die Kursart
+	 * @throws DeveloperNotificationException falls es keinen Kurs mit (idFach, idKursart) gibt.
 	 */
 	public kursGetListeByFachUndKursart(idFach : number, idKursart : number) : List<GostBlockungKurs> {
-		const liste : List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
-		if (liste === null)
-			return new ArrayList();
-		liste.sort(GostBlockungsdatenManager._compKursnummer);
-		return liste;
+		return this._map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart);
 	}
 
 	/**
@@ -788,10 +787,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
-		const tmpKurse : List<GostBlockungKurs> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
-		tmpKurse.remove(kurs);
-		if (tmpKurse.isEmpty())
-			this._map2d_idFach_idKursart_kurse.removeOrException(kurs.fach_id, kurs.kursart);
+		Map2DUtils.removeFromListAndTrimOrException(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
 		this._map_idKurs_kurs.remove(idKurs);
 		this._daten.kurse.remove(kurs);
 	}
@@ -1182,17 +1178,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert zum Fach alle derzeitigen Kursarten.
+	 * Liefert die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.
-	 * @return zum Fach alle derzeitigen Kursarten.
-	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
+	 *
+	 * @return die Menge aller Kursarten des Faches, welche in Kursen oder Fachwahlen vorkommen.
 	 */
 	public fachGetMengeKursarten(idFach : number) : List<GostKursart> {
-		const setKursarten : JavaSet<number> = this._map2d_idFach_idKursart_kurse.getKeySetOf(idFach);
+		const idKursarten : HashSet<number> = new HashSet();
+		if (this._map2d_idFach_idKursart_kurse.containsKey1(idFach))
+			idKursarten.addAll(this._map2d_idFach_idKursart_kurse.getKeySetOf(idFach));
+		if (this._map2d_idFach_idKursart_fachwahlen.containsKey1(idFach))
+			idKursarten.addAll(this._map2d_idFach_idKursart_fachwahlen.getKeySetOf(idFach));
 		const list : List<GostKursart> = new ArrayList();
-		for (const idKursart of setKursarten)
-			list.add(GostKursart.fromID(idKursart!));
+		for (const kursart of GostKursart.values())
+			if (idKursarten.contains(kursart.id))
+				list.add(kursart);
 		return list;
 	}
 
@@ -1211,6 +1212,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		fachwahlenDesSchuelers.sort(this._compFachwahlen);
 		const fachartID : number = GostKursart.getFachartIDByFachwahl(fachwahl);
 		this.fachwahlGetListeOfFachart(fachartID).add(fachwahl);
+		Map2DUtils.getOrCreateArrayList(this._map2d_idFach_idKursart_fachwahlen, fachwahl.fachID, fachwahl.kursartID).add(fachwahl);
 		this._daten.fachwahlen.add(fachwahl);
 	}
 
