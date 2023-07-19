@@ -10,13 +10,13 @@
 			</template>
 			<template #filter>
 				<svws-ui-radio-group class="radio--row col-span-full">
+					<svws-ui-radio-option v-model="schuelerFilter.alle_toggle.value" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-radio-option v-model="schuelerFilter.kurs_toggle.value" value="kurs" name="Kurs" label="Kursfilter">
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
 					<svws-ui-radio-option v-model="schuelerFilter.fach_toggle.value" value="fach" name="Fach" label="Fachfilter">
 						<i-ri-filter-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="schuelerFilter.alle_toggle.value" value="alle" name="Alle" label="Alle" :icon="false" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter.kurs_toggle.value === 'kurs'">
 					<svws-ui-multi-select v-model="schuelerFilter.kurs" :items="schuelerFilter.getKurse()"
@@ -24,7 +24,7 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="schuelerFilter.fach_toggle.value === 'fach'">
 					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
-					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" />
+					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" removable />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">
@@ -87,7 +87,33 @@
 				</div>
 			</template>
 			<template #footer>
-				M: {{ schuelerFilter.statistics.value.m }} W: {{ schuelerFilter.statistics.value.w }} D: {{ schuelerFilter.statistics.value.d }} X: {{ schuelerFilter.statistics.value.x }} muendl: {{ schuelerFilter.statistics.value.muendlich }} schriftl: {{ schuelerFilter.statistics.value.schriftlich }}
+				Schriftlichkeit:
+				<svws-ui-tooltip>
+					<span class="badge badge--light badge--lg"> s: {{ schuelerFilter.statistics.value.schriftlich }}</span>
+					<template #content>schriftlich</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip>
+					<span class="badge badge--light badge--lg"> m: {{ schuelerFilter.statistics.value.muendlich }}</span>
+					<template #content>muendlich</template>
+				</svws-ui-tooltip>
+				<br>
+				Geschlecht:
+				<svws-ui-tooltip>
+					<span class="badge badge--light badge--lg"> m: {{ schuelerFilter.statistics.value.m }}</span>
+					<template #content>männlich</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip>
+					<span class="badge badge--light badge--lg"> w: {{ schuelerFilter.statistics.value.w }}</span>
+					<template #content>weiblich</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip v-if="schuelerFilter.statistics.value.d">
+					<span class="badge badge--light badge--lg"> d: {{ schuelerFilter.statistics.value.d }}</span>
+					<template #content>divers</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip v-if="schuelerFilter.statistics.value.x">
+					<span class="badge badge--light badge--lg"> x: {{ schuelerFilter.statistics.value.x }}</span>
+					<template #content>nicht angegeben</template>
+				</svws-ui-tooltip>
 			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-ungueltige-kurswahl-modal v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :get-ergebnismanager="getErgebnismanager" />
@@ -97,8 +123,8 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
-	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { ComputedRef, WritableComputedRef } from "vue";
+	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import { GostKursart, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 

@@ -76,7 +76,7 @@
 					</div>
 				</template>
 				<template v-else>
-					<div role="cell" class="data-table__td data-table__td__align-center" :class="{'border-b-transparent': kursOhneBorder(kurs).value}" />
+					<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer" :class="{'border-b-transparent': kursOhneBorder(kurs).value}" @click="toggle_active_fachwahl(kurs)" />
 					<div role="cell" class="data-table__td data-table__td__align-center" :class="{'border-b-transparent': kursOhneBorder(kurs).value}" />
 				</template>
 				<!-- Es folgen die einzelnen Tabellenzellen für die Schienen der Blockung -->
@@ -238,7 +238,7 @@
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
 		if (props.schuelerFilter === undefined)
 			return;
-		if (props.schuelerFilter.fach !== kurs.fach_id) {
+		if (props.schuelerFilter.fach !== kurs.fach_id || props.schuelerFilter.kursart?.id !== kurs.kursart) {
 			props.schuelerFilter.kursart = GostKursart.fromID(kurs.kursart);
 			props.schuelerFilter.fach = kurs.fach_id;
 		}

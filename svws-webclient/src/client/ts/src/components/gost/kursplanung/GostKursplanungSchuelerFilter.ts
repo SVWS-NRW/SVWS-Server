@@ -1,8 +1,7 @@
-import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag} from "@core";
+import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart} from "@core";
 import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-import { GostKursart, ArrayList } from "@core";
+import { ArrayList } from "@core";
 import { computed, ref } from "vue";
-import { t } from "vitest/dist/types-198fd1d9";
 
 
 export class GostKursplanungSchuelerFilter {
@@ -63,8 +62,6 @@ export class GostKursplanungSchuelerFilter {
 
 	set kursart(value: GostKursart | undefined) {
 		this._kursart.value = value;
-		if (value !== undefined)
-			this._kurs.value = undefined;
 	}
 
 	public filtered: ComputedRef<SchuelerListeEintrag[]> = computed(() => {
@@ -139,10 +136,10 @@ export class GostKursplanungSchuelerFilter {
 		if (value && (this.faecher.size() > 0)) {
 			this.setKursFilter(false);
 			this.fach = this.faecher.get(0).id;
-			this.kursart = GostKursart.GK;
+			// this.kursart = GostKursart.GK;
 		} else {
 			this.fach = undefined;
-			this.kursart = undefined;
+			// this.kursart = undefined;
 		}
 	}
 
@@ -171,7 +168,6 @@ export class GostKursplanungSchuelerFilter {
 
 	public kurs_toggle = computed({
 		get: () => {
-			console.log(this._kurs.value, "toggle")
 			if (this._kurs.value !== undefined) return "kurs"
 			else return undefined
 		},
