@@ -318,11 +318,14 @@ public class LupoMDB {
 		final Map<Long, DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		logger.modifyIndent(2);
 		for (final DTOKlassen kl : klassen) {
-			for (final DTOKlassenLeitung kll : mapKlassenLeitung.get(kl.ID)) {
-				logger.logLn("- Klassenlehrer der Klasse " + kl.Klasse + "...");
-				final DTOLehrer l = lehrer.get(kll.Lehrer_ID);
-				if (l != null)
-					conn.persist(new DTOGostJahrgangBeratungslehrer(abiJahrgang, l.ID));
+			final List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(kl.ID);
+			if (!klassenleitungen.isEmpty()) {
+				for (final DTOKlassenLeitung kll : klassenleitungen) {
+					logger.logLn("- Klassenlehrer der Klasse " + kl.Klasse + "...");
+					final DTOLehrer l = lehrer.get(kll.Lehrer_ID);
+					if (l != null)
+						conn.persist(new DTOGostJahrgangBeratungslehrer(abiJahrgang, l.ID));
+				}
 			}
 		}
 		logger.modifyIndent(-2);
