@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Sidebar/Secondary Menu">
+	<Story title="Sidebar/Secondary Menu" group="app">
 		<svws-ui-secondary-menu>
 			Secondary Menu
 		</svws-ui-secondary-menu>

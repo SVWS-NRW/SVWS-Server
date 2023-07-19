@@ -5,14 +5,12 @@
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		dropdownAction?: boolean;
 		// Typfehler beim Extract...?
 		//Extract<Size, 'small' | 'normal' | 'big'>;
 		size?: 'small' | 'normal' | 'big'
 	}>(),{
 		type: 'primary',
 		disabled: false,
-		dropdownAction: false,
 		size: 'normal'
 	});
 
@@ -37,7 +35,6 @@
 		'button--trash': type === 'trash',
 		'button--small': size === 'small',
 		'button--big': size === 'big',
-		'button--dropdown-action': dropdownAction === true,
 	}" :disabled="disabled" @click="onClick">
 		<slot v-if="type !== 'trash'" />
 		<svws-ui-icon v-if="type === 'trash'" class="button--trash-icon">
@@ -254,12 +251,6 @@
 		@apply opacity-25;
 		@apply cursor-not-allowed pointer-events-none;
 	}
-}
-
-.button--dropdown-action {
-	@apply relative z-20;
-	@apply rounded-r-none;
-	padding-right: 0.5em;
 }
 
 .hover--danger:hover {

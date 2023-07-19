@@ -11,7 +11,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Modal">
+	<Story title="Modal" group="app" :layout="{type: 'grid', width: '90%'}" icon="ri:fullscreen-line">
 		<div class="flex gap-2">
 			<svws-ui-button @click="modal.openModal()">Open Modal</svws-ui-button>
 			<svws-ui-button @click="modalDanger.openModal()" type="danger">Dangerous Action</svws-ui-button>

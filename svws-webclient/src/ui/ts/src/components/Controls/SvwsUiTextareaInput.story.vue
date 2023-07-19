@@ -10,33 +10,47 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Controls/Textarea Input">
+	<Story title="Textarea Input" icon="ri:align-left" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Empty">
-			<svws-ui-textarea-input model-value="" valid placeholder="Textarea Input Placeholder" resizeable="both" @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input model-value="" valid placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Filled">
-			<svws-ui-textarea-input v-model="modelValue" valid placeholder="Textarea Input Placeholder" resizeable="both" @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" valid placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Invalid">
-			<svws-ui-textarea-input v-model="modelValue" :valid="false" placeholder="Textarea Input Placeholder" resizeable="both" @input="onInput" />
-		</Variant>
-
-		<Variant title="Disabled">
-			<svws-ui-textarea-input v-model="modelValue" valid disabled placeholder="Textarea Input Placeholder" resizeable="both" @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" :valid="false" placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Statistics">
-			<svws-ui-textarea-input v-model="modelValue" valid statistics placeholder="Textarea Input Placeholder" resizeable="both" @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" valid statistics placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
+		</Variant>
+
+		<Variant title="Disabled">
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" valid disabled placeholder="Textarea Input Placeholder" resizeable="vertical" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Non-resizable">
-			<svws-ui-textarea-input v-model="modelValue" valid placeholder="Textarea Input Placeholder" resizeable="none" @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" valid placeholder="Textarea Input Placeholder" resizeable="none" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Autoresize">
-			<svws-ui-textarea-input v-model="modelValue" placeholder="Textarea Input Placeholder" resizeable="none" autoresize @input="onInput" />
+			<div class="py-4">
+				<svws-ui-textarea-input v-model="modelValue" placeholder="Textarea Input Placeholder" resizeable="none" autoresize @input="onInput" />
+			</div>
 		</Variant>
 	</Story>
 </template>

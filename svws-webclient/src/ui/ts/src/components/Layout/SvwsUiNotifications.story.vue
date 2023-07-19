@@ -1,52 +1,44 @@
 <template>
-	<Story title="SVWS UI/Layout/Notifications">
-		<svws-ui-app-layout>
-			<template #secondaryMenu>
-				<svws-ui-secondary-menu>
-					<template #headline>Sidebar</template>
-					<template #content>
-						<div class="px-6">
-							<div>
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam, atque
-								earum est, explicabo in iste laudantium maiores molestiae necessitatibus quaerat
-								quod ratione reprehenderit sapiente sit sunt temporibus tenetur voluptatum!
-							</div>
-						</div>
-					</template>
-				</svws-ui-secondary-menu>
-			</template>
-			<template #main>
-				<!--<div class="app--content--placeholder">
-					<i-ri-archive-line/>
-				</div>-->
-				<svws-ui-menu-header>
-					<span>Title</span>
-				</svws-ui-menu-header>
-				<div class="px-9">
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus aliquam, atque
-					earum est, explicabo in iste laudantium maiores molestiae necessitatibus quaerat
-					quod ratione reprehenderit sapiente sit sunt temporibus tenetur voluptatum!
-				</div>
-				<svws-ui-notifications>
-					<svws-ui-notification type="error">
-						Error
-					</svws-ui-notification>
-					<svws-ui-notification>
-						Info
-					</svws-ui-notification>
-					<svws-ui-notification type="error">
-						Error
-					</svws-ui-notification>
-					<svws-ui-notification type="error">
-						Error
-					</svws-ui-notification>
-				</svws-ui-notifications>
-			</template>
-		</svws-ui-app-layout>
+	<Story title="Notifications" group="app" :layout="{type: 'grid', width: '45%'}" icon="ri:notification-badge-line">
+		<Variant title="Success">
+			<svws-ui-notification type="success">
+				<template #header>
+					Success
+				</template>
+				<p>Das hat gut geklappt!</p>
+			</svws-ui-notification>
+		</Variant>
+		<Variant title="Info">
+			<svws-ui-notification type="info">
+				Info
+			</svws-ui-notification>
+		</Variant>
+		<Variant title="Error">
+			<svws-ui-notification type="error">
+				<template #header>
+					UserNotificationException
+				</template>
+				<p>Something went wrong. Das ist ein Beispiel für eine UserNotificationException.</p>
+			</svws-ui-notification>
+		</Variant>
+		<Variant title="Bug">
+			<svws-ui-notification type="bug">
+				<template #header>
+					DeveloperNotificationException
+				</template>
+				<p>Something went wrong. Das ist ein Beispiel für eine DeveloperNotificationException.</p>
+				<template #stack>
+					RouteManager@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:23:5
+					create@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:46:30
+					@http://localhost:3000/src/router/RouteManager.ts?t=1677784265352:196:43
+				</template>
+			</svws-ui-notification>
+		</Variant>
 	</Story>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 
 <style>
 html {

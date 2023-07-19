@@ -14,7 +14,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Sidebar/Menu Item">
+	<Story title="Sidebar/Menu Item" group="app">
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:title="title">

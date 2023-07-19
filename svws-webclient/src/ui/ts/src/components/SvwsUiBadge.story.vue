@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Typography/Badge" :layout="{type: 'grid', width: '40%'}">
+	<Story title="Badge" :layout="{type: 'grid', width: '45%'}" icon="ri:shield-line">
 		<Variant title="Primary">
 			<svws-ui-badge type="primary" size="normal">Badge</svws-ui-badge>
 		</Variant>

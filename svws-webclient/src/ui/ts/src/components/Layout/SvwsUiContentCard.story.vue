@@ -2,7 +2,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Content Card">
+	<Story title="Content Card" group="app" :layout="{type: 'grid', width: '90%'}" icon="ri:profile-line">
 		<svws-ui-content-card title="Title">
 			<template #actions>
 				<svws-ui-button type="secondary">Button</svws-ui-button>

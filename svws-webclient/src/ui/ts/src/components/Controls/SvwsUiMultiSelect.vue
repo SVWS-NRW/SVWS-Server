@@ -20,7 +20,6 @@
 		modelValue: Item[] | Item | undefined;
 		headless?: boolean;
 		removable?: boolean;
-		rounded?: boolean;
 		required?: boolean;
 		span?: 'full';
 	}>(), {
@@ -35,7 +34,6 @@
 		itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
 		headless: false,
 		removable: false,
-		rounded: false,
 		span: undefined
 	})
 
@@ -288,10 +286,9 @@
 					@keydown.left.prevent="onArrowUp"
 					@keydown.enter.prevent="selectCurrentActiveItem"
 					@keydown.esc.prevent="onEscape"
-					@keydown.space="onSpace"
-					:rounded="rounded" />
+					@keydown.space="onSpace" />
 			</div>
-			<div v-if="tags" class="tag-list-wrapper" :class="{'tag-list-wrapper--rounded': rounded}"
+			<div v-if="tags" class="tag-list-wrapper"
 				@click.self="toggleListbox" ref="inputElTags">
 				<div class="tag-list" @click.self="toggleListbox">
 					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
@@ -599,15 +596,6 @@
 	@apply cursor-pointer;
 	padding: 0.3em 1.7em 0.3em 0.35em;
 	min-height: 2.25em;
-
-	&--rounded {
-		@apply rounded-full;
-		padding: 0.5em 0.7em;
-
-		.dropdown-icon {
-			@apply right-0 top-0;
-		}
-	}
 }
 
 .wrapper--tag-list .dropdown-icon {

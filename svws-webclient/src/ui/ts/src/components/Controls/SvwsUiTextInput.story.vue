@@ -7,47 +7,60 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Controls/Text Input">
-		<Variant title="Empty">
-			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid @input="onInput" />
+	<Story title="Text Input" icon="ri:pencil-line" :layout="{type: 'grid', width: '45%'}">
+		<Variant title="Default">
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Filled">
-			<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Text Input Placeholder" valid @input="onInput" />
+			<div class="py-4">
+				<svws-ui-input-wrapper>
+					<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Text Input Placeholder" valid @input="onInput" />
+					<svws-ui-text-input type="email" model-value="buergermeister@bielefeld.de" placeholder="E-Mail-Adresse" @input="onInput" />
+				</svws-ui-input-wrapper>
+			</div>
 		</Variant>
 
 		<Variant title="Invalid">
-			<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Text Input Placeholder" :valid="false" @input="onInput" />
-		</Variant>
-
-		<Variant title="eMail">
-			<svws-ui-text-input type="email" model-value="buergermeister@bielefeld.de" placeholder="eMail-Adresse" @input="onInput" />
-		</Variant>
-
-		<Variant title="Disabled">
-			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid disabled @input="onInput" />
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="Text Input Value" placeholder="Text Input Placeholder" :valid="false" @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Statistics">
-			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid statistics @input="onInput" />
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid statistics @input="onInput" />
+			</div>
 		</Variant>
 
-		<Variant title="Prefix">
-			<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid url @input="onInput" />
-		</Variant>
-
-		<Variant title="MaxLen">
-			<svws-ui-text-input type="text" model-value="zu lang" placeholder="Text Input Placeholder" :max-len="5" @input="onInput" />
+		<Variant title="Disabled">
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid disabled @input="onInput" />
+			</div>
 		</Variant>
 
 		<Variant title="Headless">
-			<div class="bg-light p-8 font-bold">
-				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid headless @input="onInput" class="bg-highlight" />
+			<div class="bg-light p-4 font-bold">
+				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid headless @input="onInput" />
 			</div>
-			<p class="mt-2 italic">
-				Hintergrundfarbe des Headless Inputs ist immer transparent und zeigt die Hintergrundfarbe des Parent-Elements an.
-				<br>Mit einer spezifischen <code>bg-xyz</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
+			<p class="mt-2 opacity-50">
+				Info: Die Hintergrundfarbe des Headless Inputs ist transparent und zeigt so immer die Hintergrundfarbe des Parent-Elements.
+				Mit einer spezifischen <code class="bg-black/25 rounded">bg-xxxx</code> Klasse kann die Hintergrundfarbe des Headless Inputs geändert werden.
 			</p>
+		</Variant>
+
+		<Variant title="Maximal Length">
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="zu lang" placeholder="Text Input Placeholder" :max-len="5" @input="onInput" />
+			</div>
+		</Variant>
+
+		<Variant title="Prefix">
+			<div class="py-4">
+				<svws-ui-text-input type="text" model-value="" placeholder="Text Input Placeholder" valid url @input="onInput" />
+			</div>
 		</Variant>
 	</Story>
 </template>

@@ -477,7 +477,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/DataTable" icon="ri:table-2">
+	<Story title="Data Table" icon="ri:table-2">
 		<Variant title="Basic">
 			<section class="flex flex-col h-[50vh]">
 				<svws-ui-data-table v-model="selectedRows3"

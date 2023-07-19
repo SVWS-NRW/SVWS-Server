@@ -11,7 +11,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Sidebar/Menu">
+	<Story title="Sidebar/Menu" group="app">
 		<svws-ui-menu :collapsed="isCollapsed" @toggle="onToggle">
 			<template #header>
 				<svws-ui-menu-header :collapsed="isCollapsed">SVWS-NRW</svws-ui-menu-header>

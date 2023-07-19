@@ -120,12 +120,12 @@
 					<div role="cell" v-if="selectable"
 						class="data-table__td data-table__cell-select"
 						:key="`selectable__${row}_${index}`">
-						<label role="none" class="checkbox" @click.stop>
+						<label role="none" class="checkbox" :class="{'checkbox--checked': isRowSelected(row)}" @click.stop>
 							<input class="checkbox--control" type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)">
-							<div role="checkbox" class="icon">
+							<span role="checkbox" class="icon">
 								<i-ri-checkbox-fill v-if="isRowSelected(row)" />
 								<i-ri-checkbox-blank-line v-else />
-							</div>
+							</span>
 						</label>
 					</div>
 					<div role="cell" v-for="cell in row.cells"

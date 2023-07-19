@@ -1,4 +1,6 @@
 <script setup lang='ts'>
+	// DEPRECATED, NEVER USED
+
 	const props = withDefaults(defineProps<{
 		// size?: Extract<Size, 'normal' | 'small'>;
 		size?: 'normal' | 'small';

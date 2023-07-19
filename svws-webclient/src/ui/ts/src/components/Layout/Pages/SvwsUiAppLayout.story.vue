@@ -23,16 +23,10 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Pages/App">
+	<Story title="Layout" group="app" icon="ri:computer-line" :layout="{type: 'grid', width: '90%'}">
 		<svws-ui-app-layout>
 			<template #sidebar>
-				<svws-ui-menu
-					class="print:hidden">
-					<template #header>
-						<svws-ui-menu-header>
-							A
-						</svws-ui-menu-header>
-					</template>
+				<svws-ui-menu v-if="false">
 					<template #default>
 						<svws-ui-menu-item active>
 							<template #label>Menu Item Label</template>

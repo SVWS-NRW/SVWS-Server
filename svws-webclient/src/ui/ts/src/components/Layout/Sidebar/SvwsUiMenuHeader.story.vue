@@ -7,7 +7,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Layout/Sidebar/Menu Header">
+	<Story title="Sidebar/Menu Header" group="app">
 		<svws-ui-menu-header @click="onClick">Menu Header</svws-ui-menu-header>
 	</Story>
 </template>

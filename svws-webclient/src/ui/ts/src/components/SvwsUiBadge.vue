@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-	import type { Size, Type } from '../../types';
+	import type { Size, Type } from '../types';
 
 	const props = withDefaults(defineProps<{
 		type?: Type;

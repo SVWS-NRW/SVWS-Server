@@ -6,8 +6,8 @@
 		Secondary: { type: "secondary" },
 		Danger: { type: "danger" },
 		Transparent: { type: "transparent" },
-		'Dropdown Action': { type: "primary", dropdownAction: true },
 		Disabled: { type: "primary", disabled: true },
+		Icon: { type: "icon" },
 		Trash: { type: "trash" },
 	} as const;
 
@@ -17,11 +17,16 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Controls/Button">
+	<Story title="Button" icon="ri:cursor-line" :layout="{type: 'grid', width: '45%'}">
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
 			:title="title">
-			<svws-ui-button v-bind="props" @click="onClick">Button</svws-ui-button>
+			<svws-ui-button v-bind="props" @click="onClick">
+				<template v-if="props.type !== 'icon'">
+					Button
+				</template>
+				<i-ri-settings3-line v-else />
+			</svws-ui-button>
 		</Variant>
 	</Story>
 </template>

@@ -4,6 +4,22 @@
 	}
 }
 
+html {
+	font-size: initial !important;
+}
+
 .histoire-generic-render-story {
 	contain: layout;
+}
+
+.histoire-generic-render-story.dark {
+	@apply bg-black text-white;
+}
+
+.htw-dark .bind-preview-bg {
+	@apply bg-black !important;
+}
+
+.htw-m-auto {
+	margin-top: 0;
 }

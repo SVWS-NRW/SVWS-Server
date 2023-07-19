@@ -23,12 +23,12 @@
 				<div class="notification--text">
 					<slot />
 				</div>
-				<div class="mt-3 -mb-1 flex flex-wrap gap-4" v-if="$slots.stack || type === 'bug'">
-					<svws-ui-button v-if="type === 'bug'" type="secondary" class="-ml-3 -mb-1">
+				<div class="mt-3 -mb-1 flex flex-wrap gap-1" v-if="$slots.stack || type === 'bug'">
+					<svws-ui-button v-if="type === 'bug'" type="secondary">
 						Fehler melden
 						<i-ri-send-plane-fill />
 					</svws-ui-button>
-					<svws-ui-button type="transparent" @click="toggleStackOpen" v-if="$slots.stack" class="-mb-1" :class="type === 'bug' ? '' : '-ml-3'">
+					<svws-ui-button type="transparent" @click="toggleStackOpen" v-if="$slots.stack">
 						<span>Details</span>
 						<i-ri-arrow-up-s-line v-if="stackOpen" class="-ml-1" />
 						<i-ri-arrow-down-s-line v-else class="-ml-1" />
@@ -39,10 +39,8 @@
 				</div>
 			</div>
 			<div class="absolute top-0 right-0 p-1">
-				<svws-ui-button type="icon" @click="isOpen = false" tabindex="-1">
-					<svws-ui-icon class="notification--closeIcon">
-						<i-ri-close-line />
-					</svws-ui-icon>
+				<svws-ui-button type="icon" @click="isOpen = false" tabindex="-1" class="notification--close-button">
+					<i-ri-close-line />
 				</svws-ui-button>
 			</div>
 		</div>
@@ -107,7 +105,7 @@
 	}
 
 	&--success {
-		@apply bg-success text-black;
+		@apply bg-success text-white;
 
 		.button, .button--icon {
 			&:hover,
@@ -130,7 +128,7 @@
 
 .notification--content {
 	@apply flex-grow flex flex-wrap;
-	@apply px-4 py-2.5 overflow-hidden;
+	@apply px-4 py-2 overflow-hidden;
 
 	.notification--icon {
 		@apply inline-block mr-1 text-base leading-none -mb-1;
@@ -159,6 +157,10 @@
 	.notification--stack {
 		@apply whitespace-pre-wrap bg-black mt-4 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-md;
 	}
+}
+
+.notification--close-button {
+	@apply w-7 h-7;
 }
 
 </style>

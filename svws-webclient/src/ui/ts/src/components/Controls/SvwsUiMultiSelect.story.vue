@@ -3,12 +3,12 @@
 	import { ref, reactive } from "vue";
 
 	const items = reactive([
-		{ id: 1, text: "item1" },
-		{ id: 2, text: "item2" },
-		{ id: 3, text: "item3" },
-		{ id: 3, text: "item4" },
-		{ id: 3, text: "item5" },
-		{ id: 3, text: "item6" }
+		{ id: 1, text: "Item 1" },
+		{ id: 2, text: "Item 2" },
+		{ id: 3, text: "Item 3" },
+		{ id: 4, text: "Item 4" },
+		{ id: 5, text: "Item 5" },
+		{ id: 6, text: "Item 6" }
 	]);
 
 	const modelValue1 = ref(items[0]);
@@ -26,16 +26,16 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Controls/Multiselect">
-		<Variant title="Simple">
-			<div class="demo-wrapper">
-				v-model value: {{ modelValue1 }}
+	<Story title="Multiselect" :layout="{type: 'grid', width: '45%'}" icon="ri:expand-up-down-fill">
+		<Variant title="Default">
+			<div class="demo-wrapper flex flex-col gap-3">
 				<svws-ui-multi-select v-model="modelValue1"
 					title="Simple"
 					:item-text="item => item?.text || ''"
 					:items="items"
 					@input="onInput"
 					:removable="true" />
+				<pre>v-model value: {{ modelValue1 }}</pre>
 			</div>
 		</Variant>
 
@@ -50,22 +50,11 @@
 			</div>
 		</Variant>
 
-		<Variant title="Simple Text">
-			<div class="demo-wrapper">
-				<svws-ui-multi-select v-model="modelValue3"
-					title="Simple"
-					:items="items"
-					:item-text="(item: any) => item?.id"
-					:item-sort="(a: any, b: any) => a.text + b.text"
-					@input="onInput" />
-			</div>
-		</Variant>
-
-		<Variant title="Simple Autocomplete">
+		<Variant title="Autocomplete">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue4"
 					autocomplete
-					title="SimpleAutocomplete"
+					title="Autocomplete"
 					:items="items"
 					:item-text="item => item?.text || ''"
 					:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
@@ -75,63 +64,59 @@
 
 		<Variant title="Tags">
 			<div class="demo-wrapper">
-				<a href="#">Pre</a>
 				<svws-ui-multi-select v-model="modelValue5"
 					tags
 					title="Tags"
 					:item-text="item => item?.text || ''"
 					:items="items"
 					@input="onInput" />
-				<a href="#">Post</a>
 			</div>
 		</Variant>
 
-		<Variant title="TagsAutocomplete">
+		<Variant title="Tags with Autocomplete">
 			<div class="demo-wrapper">
-				<a href="#">Pre</a>
 				<svws-ui-multi-select v-model="modelValue6"
 					:item-text="item => item?.text || ''"
 					tags
 					autocomplete
-					title="TagsAutocomplete"
+					title="Tags with Autocomplete"
 					placeholder="Filters"
 					:items="items"
 					@input="onInput" />
-				<a href="#">Post</a>
 			</div>
 		</Variant>
 
-		<Variant title="SimpleHeadless">
+		<Variant title="Headless">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue7"
 					:item-text="item => item?.text || ''"
 					headless
-					title="SimpleHeadless"
+					title="Headless"
 					:items="items"
 					@input="onInput" />
 			</div>
 		</Variant>
 
-		<Variant title="TagsHeadless">
+		<Variant title="Tags Headless">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue8"
 					:item-text="item => item?.text || ''"
 					tags
 					autocomplete
 					headless
-					title="TagsHeadless"
+					title="Tags Headless"
 					:items="items"
 					@input="onInput" />
 			</div>
 		</Variant>
-		<Variant title="Statistics Mode">
+		<Variant title="Statistics">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue8"
 					:item-text="item => item?.text || ''"
 					tags
 					autocomplete
 					statistics
-					title="TagsHeadless"
+					title="Statistics"
 					:items="items"
 					@input="onInput" />
 			</div>
@@ -140,9 +125,7 @@
 </template>
 
 <style>
-	.demo-wrapper {
-		padding: 14px;
-		max-width: 500px;
-		min-height: 600px;
-	}
+.demo-wrapper {
+	@apply py-4;
+}
 </style>

@@ -41,7 +41,7 @@
 </script>
 
 <template>
-	<Story title="SVWS UI/Drag-n-Drop" auto-props-disabled>
+	<Story title="Drag & Drop" auto-props-disabled icon="ri:drag-drop-line">
 		<div class="h-screen w-screen">
 			<svws-ui-drop-data class="drop-zone" @drop="onDrop($event, 1)">
 				<div>List 1</div>

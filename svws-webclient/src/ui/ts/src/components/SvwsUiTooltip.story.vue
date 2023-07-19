@@ -1,66 +1,84 @@
 <template>
-	<Story title="SVWS UI/Tooltip">
-		<div class="flex flex-col gap-4 items-start">
+	<Story title="Tooltip" :layout="{type: 'grid', width: '45%'}" icon="ri:chat-4-line">
+		<Variant title="Default">
 			<svws-ui-tooltip>
 				Default Tooltip
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="Fixed Position">
 			<svws-ui-tooltip position="right">
 				Tooltip auf der rechten Seite
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="Without Arrow">
 			<svws-ui-tooltip :show-arrow="false">
-				Tooltip bubble ohne arrow
+				Tooltip Bubble ohne Arrow
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
-			<svws-ui-tooltip indicator="help">
-				Mit Help Icon
-				<template #content>
-					Tooltip Content
-				</template>
-			</svws-ui-tooltip>
-			<svws-ui-tooltip indicator="info">
-				Mit Info Icon
-				<template #content>
-					Tooltip Content
-				</template>
-			</svws-ui-tooltip>
-			<svws-ui-tooltip indicator="danger" color="danger">
-				Mit Danger Icon
-				<template #content>
-					Tooltip Content
-				</template>
-			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="With Indicator Icons">
+			<div class="flex flex-col gap-2 items-start">
+				<svws-ui-tooltip indicator="help">
+					Mit Help Icon
+					<template #content>
+						Tooltip Content
+					</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip indicator="info">
+					Mit Info Icon
+					<template #content>
+						Tooltip Content
+					</template>
+				</svws-ui-tooltip>
+				<svws-ui-tooltip indicator="danger" color="danger">
+					Mit Danger Icon
+					<template #content>
+						Tooltip Content
+					</template>
+				</svws-ui-tooltip>
+			</div>
+		</Variant>
+		<Variant title="Disabled Hover">
 			<svws-ui-tooltip :hover="false">
-				Disabled Hover
+				Zum Öffnen klicken
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="Color Dark">
 			<svws-ui-tooltip color="dark">
 				Dark Tooltip
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="Color Primary">
 			<svws-ui-tooltip color="primary">
 				Primary Color Tooltip
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
+		</Variant>
+		<Variant title="Color Danger">
 			<svws-ui-tooltip color="danger">
 				Danger Color Tooltip
 				<template #content>
 					Tooltip Content
 				</template>
 			</svws-ui-tooltip>
-		</div>
+		</Variant>
 	</Story>
 </template>
+<script setup lang="ts">
+</script>
