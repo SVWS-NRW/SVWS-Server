@@ -3,13 +3,15 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.stundenplan.KlasseStundenplan;
-import de.svws_nrw.core.data.stundenplan.KlasseStundenplanUnterricht;
+import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
+import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -17,9 +19,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
@@ -31,7 +31,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
- * {@link KlasseStundenplan}.
+ * {@link StundenplanKomplett}.
  */
 public final class DataKlasseStundenplan extends DataManager<Long> {
 
@@ -39,7 +39,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
-	 * {@link KlasseStundenplan}.
+	 * {@link StundenplanKomplett}.
 	 *
 	 * @param conn          die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idStundenplan die ID des Stundenplans, dessen Zeitraster abgefragt
@@ -62,29 +62,32 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-		final KlasseStundenplan result = new KlasseStundenplan();
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-		if (stundenplan == null)
+		final StundenplanKomplett stundenplan = new StundenplanKomplett();
+		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+		if (dtoStundenplan == null)
 			throw new NotFoundException("Kein Stundenplan mit angegebener ID gefunden");
-		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
-		if (klasse == null)
+		final DTOKlassen dtoKlasse = conn.queryByKey(DTOKlassen.class, id);
+		if (dtoKlasse == null)
 			throw new NotFoundException("Kein Klasse mit angegebener ID gefunden");
-		result.idStundenplan = stundenplan.ID;
-		result.idSchuljahresabschnitt = stundenplan.Schuljahresabschnitts_ID;
-		result.bezeichnungStundenplan = stundenplan.Beschreibung;
-		result.gueltigAb = stundenplan.Beginn;
-		result.gueltigBis = stundenplan.Ende;
-		result.idKlasse = klasse.ID;
-		result.klasseName = klasse.Klasse;
-		result.zeitraster = DataStundenplanZeitraster.getZeitraster(conn, idStundenplan);
-		result.unterricht = getUnterricht(klasse, result.zeitraster);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+		stundenplan.daten.id = dtoStundenplan.ID;
+		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
+		stundenplan.daten.bezeichnungStundenplan = dtoStundenplan.Beschreibung;
+		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
+		stundenplan.daten.gueltigBis = dtoStundenplan.Ende;
+		final StundenplanKlasse klasse = new StundenplanKlasse();
+		klasse.id = dtoKlasse.ID;
+		klasse.kuerzel = dtoKlasse.Klasse;
+		klasse.bezeichnung = dtoKlasse.Bezeichnung;
+		klasse.jahrgaenge.add(dtoKlasse.Jahrgang_ID);   // TODO Jahrgang in stundenplan.daten.jahrgaenge hinzufügen (StundenplanJahrgang)
+		stundenplan.unterrichtsverteilung.klassen.add(klasse);
+		stundenplan.daten.zeitraster.addAll(DataStundenplanZeitraster.getZeitraster(conn, idStundenplan));
+		if (!stundenplan.daten.zeitraster.isEmpty())
+			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
-	private @NotNull List<@NotNull KlasseStundenplanUnterricht> getUnterricht(final DTOKlassen klasse, final List<StundenplanZeitraster> zeitraster) {
-		final @NotNull List<@NotNull KlasseStundenplanUnterricht> result = new ArrayList<>();
-		if (zeitraster == null || zeitraster.isEmpty())
-			return result;
+	private void getUnterricht(final StundenplanKomplett stundenplan, final StundenplanKlasse klasse, final List<StundenplanZeitraster> zeitraster) {
+		final @NotNull List<@NotNull StundenplanUnterricht> result = new ArrayList<>();
 		final List<Long> zeitrasterIds = zeitraster.stream().map(z -> z.id).toList();
 		final List<DTOStundenplanUnterricht> unterrichte = conn.query(
 				"SELECT DISTINCT u FROM DTOStundenplanUnterricht u LEFT JOIN DTOStundenplanUnterrichtKlasse uk ON uk.Unterricht_ID = u.ID "
@@ -92,25 +95,12 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 						+ "LEFT JOIN DTOKlassen klasse ON klasse.Jahrgang_ID = kurs.Jahrgang_ID "
 						+ "WHERE (uk.Klasse_ID = :klasseId OR klasse.ID = :klasseId2) "
 						+ "AND u.Zeitraster_ID IN :zrids", DTOStundenplanUnterricht.class)
-				.setParameter("klasseId", klasse.ID).setParameter("klasseId2", klasse.ID)
+				.setParameter("klasseId", klasse.id).setParameter("klasseId2", klasse.id)
 				.setParameter("zrids", zeitrasterIds).getResultList();
 		final List<Long> unterrichtIds = unterrichte.stream().map(u -> u.ID).toList();
-		final Map<Long, DTOFach> fachById = conn.queryNamed("DTOFach.all", DTOFach.class).getResultList().stream()
-				.collect(Collectors.toMap(f -> f.ID, Function.identity()));
 
-		final List<Long> kursIds = unterrichte.stream().filter(u -> u.Kurs_ID != null).map(u -> u.Kurs_ID).toList();
-		final Map<Long, DTOKurs> kursById;
-		if (kursIds != null && !kursIds.isEmpty()) {
-			kursById = conn.queryNamed("DTOKurs.id.multiple", kursIds, DTOKurs.class).stream()
-					.collect(Collectors.toMap(k -> k.ID, Function.identity()));
-		} else {
-			kursById = new HashMap<>();
-		}
-
-		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen
-				.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
-		final Map<Long, StundenplanLehrer> lehrerById = DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
-				.collect(Collectors.toMap(l -> l.id, Function.identity()));
+		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
+		final Map<Long, StundenplanLehrer> lehrerById = DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
 		final List<DTOStundenplanUnterrichtLehrer> unterrichtLehrerList = unterrichtIds.isEmpty() ? new ArrayList<>()
 				: conn.queryNamed("DTOStundenplanUnterrichtLehrer.unterricht_id.multiple", unterrichtIds, DTOStundenplanUnterrichtLehrer.class);
 		final Map<Long, List<StundenplanLehrer>> lehrerByUnterrichtId = new HashMap<>();
@@ -120,33 +110,53 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 				listLehrer.add(lehrerById.get(ul.Lehrer_ID));
 		});
 
-		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId = DataStundenplanSchienen
-				.getSchienenByUnterrichtId(conn, idStundenplan, unterrichtIds);
-		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = DataStundenplanRaeume
-				.getRaeumeByUnterrichtId(conn, idStundenplan, unterrichtIds);
+		final Map<Long, List<StundenplanSchiene>> schienenByUnterrichtId = DataStundenplanSchienen.getSchienenByUnterrichtId(conn, idStundenplan, unterrichtIds);
+		final Map<Long, List<StundenplanRaum>> raeumeByUnterrichtId = DataStundenplanRaeume.getRaeumeByUnterrichtId(conn, idStundenplan, unterrichtIds);
 
-		for (final var unterricht : unterrichte) {
-			final KlasseStundenplanUnterricht u = new KlasseStundenplanUnterricht();
-			final DTOFach f = fachById.get(unterricht.Fach_ID);
-			if (f != null) {
-				u.fachBezeichnung = f.Bezeichnung;
-				u.fachKuerzel = f.Kuerzel;
-				u.fachKuerzelStatistik = f.StatistikFach.daten.kuerzel;
-				u.idFach = unterricht.Fach_ID;
-			}
-			u.idUnterricht = unterricht.ID;
+		final Set<Long> fachIDs = new HashSet<>();
+		final Set<Long> kursIDs = new HashSet<>();
+		final Set<StundenplanKlasse> setKlassen = new HashSet<>();
+		final Set<StundenplanSchiene> setSchienen = new HashSet<>();
+		final Set<StundenplanRaum> setRaeume = new HashSet<>();
+		final Set<StundenplanLehrer> setLehrer = new HashSet<>();
+		for (final DTOStundenplanUnterricht unterricht : unterrichte) {
+			final StundenplanUnterricht u = new StundenplanUnterricht();
+			u.id = unterricht.ID;
 			u.idZeitraster = unterricht.Zeitraster_ID;
 			u.wochentyp = unterricht.Wochentyp;
+			u.idKurs = unterricht.Kurs_ID;
+			if (u.idKurs != null)
+				kursIDs.add(u.idKurs);
+			u.idFach = unterricht.Fach_ID;
+			fachIDs.add(u.idFach);
 
-			if (kursById.containsKey(unterricht.Kurs_ID))
-				u.kursart = kursById.get(unterricht.Kurs_ID).KursartAllg;
-			u.klassen = klassenByUnterrichtIds.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
-			u.schiene = schienenByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
-			u.unterrichtsraeume = raeumeByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
-			u.lehrer = lehrerByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
+			final List<StundenplanKlasse> klassen = klassenByUnterrichtIds.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
+			setKlassen.addAll(klassen);
+			u.klassen.addAll(klassen.stream().map(k -> k.id).toList());
+			final List<StundenplanSchiene> schienen = schienenByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
+			setSchienen.addAll(schienen);
+			u.schienen.addAll(schienen.stream().map(s -> s.id).toList());
+			final List<StundenplanRaum> raeume = raeumeByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
+			setRaeume.addAll(raeume);
+			u.raeume.addAll(raeume.stream().map(r -> r.id).toList());
+			final List<StundenplanLehrer> lehrer = lehrerByUnterrichtId.computeIfAbsent(unterricht.ID, id -> new ArrayList<>());
+			setLehrer.addAll(lehrer);
+			u.lehrer.addAll(lehrer.stream().map(l -> l.id).toList());
 			result.add(u);
 		}
-		return result;
+		stundenplan.unterrichte.addAll(result);
+		for (final StundenplanSchiene s : setSchienen)
+			stundenplan.daten.schienen.add(s);
+		for (final StundenplanRaum r : setRaeume)
+			stundenplan.daten.raeume.add(r);
+		for (final StundenplanKlasse k : setKlassen)
+			stundenplan.unterrichtsverteilung.klassen.add(k);
+		for (final StundenplanLehrer l : setLehrer)
+			stundenplan.unterrichtsverteilung.lehrer.add(l);
+		stundenplan.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
+				.filter(k -> kursIDs.contains(k.id)).toList());
+		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
+				.filter(f -> fachIDs.contains(f.id)).toList());
 	}
 
 	@Override

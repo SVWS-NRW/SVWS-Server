@@ -96,7 +96,6 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 		// Bestimme die Unterrichte, die zu den Leistungsdaten gehören ...
 		final List<StundenplanUnterricht> alleUnterrichte = DataStundenplanUnterricht.getUnterrichte(conn, idStundenplan);
-		// TODO Filtern anhand der Klassen-ID, falls es Fach-Unterricht ist
 		final Map<Long, List<StundenplanUnterricht>> mapUnterricht = alleUnterrichte.stream()
 				.filter(u -> (u.idKurs != null) || u.klassen.contains(lernabschnitt.Klassen_ID))
 				.collect(Collectors.groupingBy(u -> (u.idKurs != null ? u.idKurs : u.idFach)));
@@ -104,6 +103,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		// Gehe die Leistungsdaten und trage die Unterrichte ein
 		final Set<Long> lehrerIDs = new HashSet<>();
 		final Set<Long> klassenIDs = new HashSet<>();
+		final Set<Long> kursIDs = new HashSet<>();
 		final Set<Long> raumIDs = new HashSet<>();
 		final Set<Long> schienenIDs = new HashSet<>();
 		final Set<Long> fachIDs = new HashSet<>();
@@ -111,6 +111,8 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 			final List<StundenplanUnterricht> unterrichte = mapUnterricht.get(ld.Kurs_ID != null ? ld.Kurs_ID : ld.Fach_ID);
 			if (unterrichte == null)
 				continue;
+			if (ld.Kurs_ID != null)
+				kursIDs.add(ld.Kurs_ID);
 			fachIDs.add(ld.Fach_ID);
 			daten.unterrichte.addAll(unterrichte);
 			for (final StundenplanUnterricht u : unterrichte) {
@@ -126,6 +128,8 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 				.filter(l -> lehrerIDs.contains(l.id)).toList());
 		daten.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
 				.filter(k -> klassenIDs.contains(k.id)).toList());
+		daten.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
+				.filter(k -> kursIDs.contains(k.id)).toList());
 		daten.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
 		daten.daten.raeume.addAll(DataStundenplanRaeume.getRaeume(conn, idStundenplan).stream()
