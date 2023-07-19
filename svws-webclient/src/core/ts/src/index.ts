@@ -305,8 +305,6 @@ export { Schuljahresabschnitt } from './core/data/schule/Schuljahresabschnitt';
 export { SchulstufeKatalogEintrag } from './core/data/schule/SchulstufeKatalogEintrag';
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
-export { LehrerStundenplan } from './core/data/stundenplan/LehrerStundenplan';
-export { LehrerStundenplanUnterricht } from './core/data/stundenplan/LehrerStundenplanUnterricht';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
 export { StundenplanFach } from './core/data/stundenplan/StundenplanFach';

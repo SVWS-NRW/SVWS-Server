@@ -43,6 +43,7 @@ public final class DataBetriebsliste extends DataManager<Long> {
 		eintrag.hausnr = b.hausnr;
 		eintrag.hausnrzusatz = b.hausnrzusatz;
 		eintrag.ort_id = b.ort_id;
+		eintrag.ortsteil_id = b.ortsteil_id;
 		return eintrag;
 	};
 

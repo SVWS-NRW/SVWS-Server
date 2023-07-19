@@ -439,14 +439,14 @@ public final class Schema {
 	/** Tabelle K_Ort */
 	public static final Tabelle_K_Ort tab_K_Ort = add(new Tabelle_K_Ort());
 
+	/** Tabelle K_Ortsteil */
+	public static final Tabelle_K_Ortsteil tab_K_Ortsteil = add(new Tabelle_K_Ortsteil());
+
 	/** Tabelle K_AllgAdresse */
 	public static final Tabelle_K_AllgAdresse tab_K_AllgAdresse = add(new Tabelle_K_AllgAdresse());
 
 	/** Tabelle AllgAdrAnsprechpartner */
 	public static final Tabelle_AllgAdrAnsprechpartner tab_AllgAdrAnsprechpartner = add(new Tabelle_AllgAdrAnsprechpartner());
-
-	/** Tabelle K_Ortsteil */
-	public static final Tabelle_K_Ortsteil tab_K_Ortsteil = add(new Tabelle_K_Ortsteil());
 
 	/** Tabelle K_Religion */
 	public static final Tabelle_K_Religion tab_K_Religion = add(new Tabelle_K_Religion());

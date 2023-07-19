@@ -102,7 +102,6 @@ import { LehrerKatalogZugangsgrundEintrag } from '../core/data/lehrer/LehrerKata
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
 import { LehrerPersonaldaten } from '../core/data/lehrer/LehrerPersonaldaten';
 import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
-import { LehrerStundenplan } from '../core/data/stundenplan/LehrerStundenplan';
 import { List } from '../java/util/List';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
 import { NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
@@ -9609,7 +9608,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Lehrer-Stundenplan
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: LehrerStundenplan
+	 *     - Rückgabe-Typ: StundenplanKomplett
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.
 	 *   Code 404: Keinen Stundenplan gefunden
 	 *
@@ -9619,14 +9618,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Lehrer-Stundenplan
 	 */
-	public async getLehrerStundenplan(schema : string, id : number, lehrer_id : number) : Promise<LehrerStundenplan> {
+	public async getLehrerStundenplan(schema : string, id : number, lehrer_id : number) : Promise<StundenplanKomplett> {
 		const path = "/db/{schema}/stundenplan/plaene/{id : \\d+}/lehrer/{lehrer_id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
 			.replace(/{lehrer_id\s*(:[^}]+)?}/g, lehrer_id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return LehrerStundenplan.transpilerFromJSON(text);
+		return StundenplanKomplett.transpilerFromJSON(text);
 	}
 
 

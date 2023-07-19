@@ -6,20 +6,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
 import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -102,7 +102,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	 */
 	public Response create(final InputStream is) {
 	    DTOKatalogAllgemeineAdresse betrieb = null;
-	 // Bestimme die ID des neuen Betriebs
+	 	// Bestimme die ID des neuen Betriebs
         final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_AllgAdresse");
         final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
@@ -208,17 +208,8 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
                         case "strassenname" -> betrieb.strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrStrassenname.datenlaenge());
                         case "hausnr" -> betrieb.hausnr = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrHausNr.datenlaenge());
                         case "hausnrzusatz" -> betrieb.hausnrzusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrHausNrZusatz.datenlaenge());
-                        case "ort_id" -> {
-                            final Long ort_id = JSONMapper.convertToLong(value, true);
-                            if (ort_id == null) {
-                                betrieb.ort_id = null;
-                            } else {
-                                final DTOOrt adressart = conn.queryByKey(DTOOrt.class, ort_id);
-                                if (adressart == null)
-                                    throw OperationError.NOT_FOUND.exception();
-                            }
-                            betrieb.ort_id = JSONMapper.convertToLong(value, true);
-                        }
+                        case "ort_id" -> setOrt(betrieb, JSONMapper.convertToLong(value, true), map.get("ortsteil_id") == null ? betrieb.ortsteil_id : ((Long) map.get("ortsteil_id")));
+                        case "ortsteil_id" -> setOrt(betrieb, map.get("ort_id") == null ? betrieb.ort_id : ((Long) map.get("ort_id")), JSONMapper.convertToLong(value, true));
                         case "ansprechpartner" ->  System.out.println("TODO");  // TODO Ansprechpartner
                         case "telefon1" -> betrieb.telefon1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon1.datenlaenge());
                         case "telefon2" -> betrieb.telefon2 = JSONMapper.convertToString(value, true, true, Schema.tab_K_AllgAdresse.col_AllgAdrTelefon2.datenlaenge());
@@ -259,6 +250,34 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	     return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 
 
+	}
+
+
+	/**
+	 * Setzt den Ort bei dem Betrieb und prüft dabei die Angabe des Ortsteils auf Korrektheit in Bezug auf die Ortsteile
+	 * in der Datenbank. Ggf. wird der Ortsteil auf null gesetzt.
+	 *
+	 * @param betrieb      das Betriebs-DTO der Datenbank
+	 * @param ortID    die zu setzende Ort-ID
+	 * @param ortsteilID   die zu setzende Ortsteil-ID
+	 *
+	 * @throws WebApplicationException   eine Exception mit dem HTTP-Fehlercode 409, falls die ID negative und damit ungültig ist
+	 */
+	private void setOrt(final DTOKatalogAllgemeineAdresse betrieb, final Long ortID, final Long ortsteilID) throws WebApplicationException {
+		if ((ortID != null) && (ortID < 0))
+			throw OperationError.CONFLICT.exception();
+		if ((ortsteilID != null) && (ortsteilID < 0))
+			throw OperationError.CONFLICT.exception();
+		betrieb.ort_id = ortID;
+		// Prüfe, ob die Ortsteil ID in Bezug auf die ortID gültig ist, wähle hierbei null-Verweise auf die K_Ort-Tabelle als überall gültig
+		Long ortsteilIDNeu = ortsteilID;
+		if (ortsteilIDNeu != null) {
+			final DTOOrtsteil ortsteil = conn.queryByKey(DTOOrtsteil.class, ortsteilIDNeu);
+			if ((ortsteil == null) || ((ortsteil.Ort_ID != null) && (!ortsteil.Ort_ID.equals(ortID)))) {
+				ortsteilIDNeu = null;
+			}
+		}
+		betrieb.ortsteil_id = ortsteilIDNeu;
 	}
 
 

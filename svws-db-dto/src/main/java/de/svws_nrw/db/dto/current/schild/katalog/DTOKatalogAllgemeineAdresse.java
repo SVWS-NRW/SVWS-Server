@@ -47,6 +47,8 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.hausnrzusatz.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.ort_id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id = :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.ort_id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ort_id IN :value")
+@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ortsteil_id", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id = :value")
+@NamedQuery(name = "DTOKatalogAllgemeineAdresse.ortsteil_id.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon1", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 = :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon1.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon1 IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.telefon2", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.telefon2 = :value")
@@ -85,7 +87,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.extid.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.all.migration", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "adressArt", "name1", "name2", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
+@JsonPropertyOrder({"ID", "adressArt", "name1", "name2", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "ortsteil_id", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
 public final class DTOKatalogAllgemeineAdresse {
 
 	/** ID der weiteren Adresse (Betriebe) */
@@ -128,6 +130,11 @@ public final class DTOKatalogAllgemeineAdresse {
 	@Column(name = "AllgAdrOrt_ID")
 	@JsonProperty
 	public Long ort_id;
+
+	/** OrtsteilID des Betriebs */
+	@Column(name = "AllgOrtsteil_ID")
+	@JsonProperty
+	public Long ortsteil_id;
 
 	/** Telefonnummer1 des Betriebs */
 	@Column(name = "AllgAdrTelefon1")
@@ -284,7 +291,7 @@ public final class DTOKatalogAllgemeineAdresse {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKatalogAllgemeineAdresse(ID=" + this.ID + ", adressArt=" + this.adressArt + ", name1=" + this.name1 + ", name2=" + this.name2 + ", strassenname=" + this.strassenname + ", hausnr=" + this.hausnr + ", hausnrzusatz=" + this.hausnrzusatz + ", ort_id=" + this.ort_id + ", telefon1=" + this.telefon1 + ", telefon2=" + this.telefon2 + ", fax=" + this.fax + ", email=" + this.email + ", bemerkungen=" + this.bemerkungen + ", sortierung=" + this.sortierung + ", ausbildungsbetrieb=" + this.ausbildungsbetrieb + ", bietetPraktika=" + this.bietetPraktika + ", branche=" + this.branche + ", zusatz1=" + this.zusatz1 + ", zusatz2=" + this.zusatz2 + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Massnahmentraeger=" + this.Massnahmentraeger + ", BelehrungISG=" + this.BelehrungISG + ", GU_ID=" + this.GU_ID + ", ErwFuehrungszeugnis=" + this.ErwFuehrungszeugnis + ", ExtID=" + this.ExtID + ")";
+		return "DTOKatalogAllgemeineAdresse(ID=" + this.ID + ", adressArt=" + this.adressArt + ", name1=" + this.name1 + ", name2=" + this.name2 + ", strassenname=" + this.strassenname + ", hausnr=" + this.hausnr + ", hausnrzusatz=" + this.hausnrzusatz + ", ort_id=" + this.ort_id + ", ortsteil_id=" + this.ortsteil_id + ", telefon1=" + this.telefon1 + ", telefon2=" + this.telefon2 + ", fax=" + this.fax + ", email=" + this.email + ", bemerkungen=" + this.bemerkungen + ", sortierung=" + this.sortierung + ", ausbildungsbetrieb=" + this.ausbildungsbetrieb + ", bietetPraktika=" + this.bietetPraktika + ", branche=" + this.branche + ", zusatz1=" + this.zusatz1 + ", zusatz2=" + this.zusatz2 + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", Massnahmentraeger=" + this.Massnahmentraeger + ", BelehrungISG=" + this.BelehrungISG + ", GU_ID=" + this.GU_ID + ", ErwFuehrungszeugnis=" + this.ErwFuehrungszeugnis + ", ExtID=" + this.ExtID + ")";
 	}
 
 }

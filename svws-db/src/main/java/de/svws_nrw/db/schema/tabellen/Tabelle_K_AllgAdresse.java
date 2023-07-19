@@ -68,6 +68,11 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 		.setJavaName("ort_id")
 		.setJavaComment("OrtID des Betriebs");
 
+	/** Die Definition der Tabellenspalte AllgOrtsteil_ID */
+	public SchemaTabelleSpalte col_AllgOrtsteil_ID = add("AllgOrtsteil_ID", SchemaDatentypen.BIGINT, false)
+		.setJavaName("ortsteil_id")
+		.setJavaComment("OrtsteilID des Betriebs");
+
 	/** Die Definition der Tabellenspalte AllgAdrPLZ */
 	public SchemaTabelleSpalte col_AllgAdrPLZ = add("AllgAdrPLZ", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setVeraltet(SchemaRevisionen.REV_3)
@@ -180,21 +185,28 @@ public class Tabelle_K_AllgAdresse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels K_AllgAdresse_K_Adressart_FK */
 	public SchemaTabelleFremdschluessel fk_K_AllgAdresse_K_Adressart_FK = addForeignKey(
-			"K_AllgAdresse_K_Adressart_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-			new Pair<>(col_AdressArt_ID, Schema.tab_K_Adressart.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+		"K_AllgAdresse_K_Adressart_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_AdressArt_ID, Schema.tab_K_Adressart.col_ID)
+	)
+	.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels K_AllgAdresse_Ort_FK */
 	public SchemaTabelleFremdschluessel fk_K_AllgAdresse_Ort_FK = addForeignKey(
-			"K_AllgAdresse_Ort_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-			new Pair<>(col_AllgAdrOrt_ID, Schema.tab_K_Ort.col_ID)
-		);
+		"K_AllgAdresse_Ort_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_AllgAdrOrt_ID, Schema.tab_K_Ort.col_ID)
+	);
 
+	/** Die Definition des Fremdschlüssels K_AllgAdresse_Ortsteil_FK */
+	public SchemaTabelleFremdschluessel fk_K_AllgAdresse_Ortsteil_FK = addForeignKey(
+		"K_AllgAdresse_Ortsteil_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_AllgOrtsteil_ID, Schema.tab_K_Ortsteil.col_ID)
+	);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle K_AllgAdresse.

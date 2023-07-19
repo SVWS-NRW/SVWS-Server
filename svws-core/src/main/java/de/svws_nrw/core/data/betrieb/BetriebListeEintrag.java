@@ -41,6 +41,10 @@ public class BetriebListeEintrag {
 	@Schema(description = " OrtID des Betriebs", example = "4711")
 	public Long ort_id;
 
+	/** Ortsteil-ID des Betriebs */
+	@Schema(description = " Ortsteil-ID des Betriebs", example = "4712")
+	public Long ortsteil_id;
+
 	/** Brache des Betriebs */
 	@Schema(description = " Brache des Betriebs ", example = "true")
 	public String branche;

@@ -38,6 +38,11 @@ export class BetriebListeEintrag extends JavaObject {
 	public ort_id : number | null = null;
 
 	/**
+	 * Ortsteil-ID des Betriebs
+	 */
+	public ortsteil_id : number | null = null;
+
+	/**
 	 * Brache des Betriebs
 	 */
 	public branche : string | null = null;
@@ -63,6 +68,7 @@ export class BetriebListeEintrag extends JavaObject {
 		result.hausnr = typeof obj.hausnr === "undefined" ? null : obj.hausnr === null ? null : obj.hausnr;
 		result.hausnrzusatz = typeof obj.hausnrzusatz === "undefined" ? null : obj.hausnrzusatz === null ? null : obj.hausnrzusatz;
 		result.ort_id = typeof obj.ort_id === "undefined" ? null : obj.ort_id === null ? null : obj.ort_id;
+		result.ortsteil_id = typeof obj.ortsteil_id === "undefined" ? null : obj.ortsteil_id === null ? null : obj.ortsteil_id;
 		result.branche = typeof obj.branche === "undefined" ? null : obj.branche === null ? null : obj.branche;
 		return result;
 	}
@@ -76,6 +82,7 @@ export class BetriebListeEintrag extends JavaObject {
 		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr + '"') + ',';
 		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz + '"') + ',';
 		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+		result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
 		result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -104,6 +111,9 @@ export class BetriebListeEintrag extends JavaObject {
 		}
 		if (typeof obj.ort_id !== "undefined") {
 			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+		}
+		if (typeof obj.ortsteil_id !== "undefined") {
+			result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
 		}
 		if (typeof obj.branche !== "undefined") {
 			result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';

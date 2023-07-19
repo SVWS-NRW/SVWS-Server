@@ -49,6 +49,8 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.hausnrzusatz.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.hausnrzusatz IN :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.ort_id", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ort_id = :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.ort_id.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ort_id IN :value")
+@NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.ortsteil_id", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id = :value")
+@NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.ortsteil_id.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ortsteil_id IN :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.plz", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.plz = :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.plz.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.plz IN :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.telefon1", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.telefon1 = :value")
@@ -91,7 +93,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.extid.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ExtID IN :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ID = ?1")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "AllgAdrAdressArt", "name1", "name2", "strasse", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "plz", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "SchulnrEigner", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
+@JsonPropertyOrder({"ID", "AllgAdrAdressArt", "name1", "name2", "strasse", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "ortsteil_id", "plz", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "SchulnrEigner", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
 public final class MigrationDTOKatalogAllgemeineAdresse {
 
 	/** ID der weiteren Adresse (Betriebe) */
@@ -139,6 +141,11 @@ public final class MigrationDTOKatalogAllgemeineAdresse {
 	@Column(name = "AllgAdrOrt_ID")
 	@JsonProperty
 	public Long ort_id;
+
+	/** OrtsteilID des Betriebs */
+	@Column(name = "AllgOrtsteil_ID")
+	@JsonProperty
+	public Long ortsteil_id;
 
 	/** DEPRECATED: PLZ des Betriebs */
 	@Column(name = "AllgAdrPLZ")
@@ -313,7 +320,7 @@ public final class MigrationDTOKatalogAllgemeineAdresse {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOKatalogAllgemeineAdresse(ID=" + this.ID + ", AllgAdrAdressArt=" + this.AllgAdrAdressArt + ", name1=" + this.name1 + ", name2=" + this.name2 + ", strasse=" + this.strasse + ", strassenname=" + this.strassenname + ", hausnr=" + this.hausnr + ", hausnrzusatz=" + this.hausnrzusatz + ", ort_id=" + this.ort_id + ", plz=" + this.plz + ", telefon1=" + this.telefon1 + ", telefon2=" + this.telefon2 + ", fax=" + this.fax + ", email=" + this.email + ", bemerkungen=" + this.bemerkungen + ", sortierung=" + this.sortierung + ", ausbildungsbetrieb=" + this.ausbildungsbetrieb + ", bietetPraktika=" + this.bietetPraktika + ", branche=" + this.branche + ", zusatz1=" + this.zusatz1 + ", zusatz2=" + this.zusatz2 + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", SchulnrEigner=" + this.SchulnrEigner + ", Massnahmentraeger=" + this.Massnahmentraeger + ", BelehrungISG=" + this.BelehrungISG + ", GU_ID=" + this.GU_ID + ", ErwFuehrungszeugnis=" + this.ErwFuehrungszeugnis + ", ExtID=" + this.ExtID + ")";
+		return "MigrationDTOKatalogAllgemeineAdresse(ID=" + this.ID + ", AllgAdrAdressArt=" + this.AllgAdrAdressArt + ", name1=" + this.name1 + ", name2=" + this.name2 + ", strasse=" + this.strasse + ", strassenname=" + this.strassenname + ", hausnr=" + this.hausnr + ", hausnrzusatz=" + this.hausnrzusatz + ", ort_id=" + this.ort_id + ", ortsteil_id=" + this.ortsteil_id + ", plz=" + this.plz + ", telefon1=" + this.telefon1 + ", telefon2=" + this.telefon2 + ", fax=" + this.fax + ", email=" + this.email + ", bemerkungen=" + this.bemerkungen + ", sortierung=" + this.sortierung + ", ausbildungsbetrieb=" + this.ausbildungsbetrieb + ", bietetPraktika=" + this.bietetPraktika + ", branche=" + this.branche + ", zusatz1=" + this.zusatz1 + ", zusatz2=" + this.zusatz2 + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", SchulnrEigner=" + this.SchulnrEigner + ", Massnahmentraeger=" + this.Massnahmentraeger + ", BelehrungISG=" + this.BelehrungISG + ", GU_ID=" + this.GU_ID + ", ErwFuehrungszeugnis=" + this.ErwFuehrungszeugnis + ", ExtID=" + this.ExtID + ")";
 	}
 
 }
