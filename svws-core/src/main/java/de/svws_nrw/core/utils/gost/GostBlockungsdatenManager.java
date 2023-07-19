@@ -1205,7 +1205,6 @@ public class GostBlockungsdatenManager {
 	 * Liefert zum Fach alle derzeitigen Kursarten.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.
-	 *
 	 * @return zum Fach alle derzeitigen Kursarten.
 	 * @throws DeveloperNotificationException Falls die Fachwahl-Daten inkonsistent sind.
 	 */
