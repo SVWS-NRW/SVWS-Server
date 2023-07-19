@@ -136,7 +136,7 @@ public class StundenplanManager {
 	 * @param pausenaufsichten      liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
 	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
-	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final @NotNull StundenplanUnterrichtsverteilung unterrichtsverteilung) {
+	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		stundenplanID = daten.id;
 		stundenplanWochenTypModell = daten.wochenTypModell;
 		stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -144,23 +144,30 @@ public class StundenplanManager {
 		stundenplanGueltigBis = daten.gueltigBis;
 		stundenplanBezeichnung = daten.bezeichnungStundenplan;
 
+		// Spezialfall: unterrichtsverteilung ist NULL
+		StundenplanUnterrichtsverteilung uv = unterrichtsverteilung;
+		if (uv == null) {
+			uv = new StundenplanUnterrichtsverteilung();
+			uv.id = stundenplanID;
+		}
+
 		// Spezielle Prüfungen.
-		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", daten.id != unterrichtsverteilung.id);
+		DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", daten.id != uv.id);
 
 		// Initialisierungen der Maps und Prüfung der Integrität.
 		initAll(daten.kalenderwochenZuordnung,
-				unterrichtsverteilung.faecher,
+				uv.faecher,
 				daten.jahrgaenge,
 				daten.zeitraster,
 				daten.raeume,
 				daten.pausenzeiten,
 				daten.aufsichtsbereiche,
-				unterrichtsverteilung.lehrer,
-				unterrichtsverteilung.schueler,
+				uv.lehrer,
+				uv.schueler,
 				daten.schienen,
-				unterrichtsverteilung.klassen,
+				uv.klassen,
 				pausenaufsichten,
-				unterrichtsverteilung.kurse,
+				uv.kurse,
 				unterrichte);
 
 	}
