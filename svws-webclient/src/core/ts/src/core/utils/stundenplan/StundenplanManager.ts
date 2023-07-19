@@ -229,10 +229,10 @@ export class StundenplanManager extends JavaObject {
 		this.initRaeume(listRaum);
 		this.initPausenzeiten(listPausenzeit);
 		this.initAufsichtsbereiche(listAufsichtsbereich);
+		this.initKlassen(listKlasse);
 		this.initLehrer(listLehrer);
 		this.initSchueler(listSchueler);
 		this.initSchienen(listSchiene);
-		this.initKlassen(listKlasse);
 		this.initPausenaufsichten(listPausenaufsicht);
 		this.initKurse(listKurs);
 		this.initUnterrichte(listUnterricht);

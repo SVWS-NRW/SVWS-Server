@@ -229,10 +229,10 @@ public class StundenplanManager {
 		initRaeume(listRaum);                          // ✔, referenziert ---
 		initPausenzeiten(listPausenzeit);              // ✔, referenziert ---
 		initAufsichtsbereiche(listAufsichtsbereich);   // ✔, referenziert ---
+		initKlassen(listKlasse);                       // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		initLehrer(listLehrer);                        // ✔, referenziert [Fach]
 		initSchueler(listSchueler);                    // ✔, referenziert Klasse
 		initSchienen(listSchiene);                     // ✔, referenziert Jahrgang
-		initKlassen(listKlasse);                       // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		initPausenaufsichten(listPausenaufsicht);      // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
 		initKurse(listKurs);                           // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
 		initUnterrichte(listUnterricht);               // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
