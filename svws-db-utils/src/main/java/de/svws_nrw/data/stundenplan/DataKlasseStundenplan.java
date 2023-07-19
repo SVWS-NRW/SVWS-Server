@@ -78,8 +78,10 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		klasse.id = dtoKlasse.ID;
 		klasse.kuerzel = dtoKlasse.Klasse;
 		klasse.bezeichnung = dtoKlasse.Bezeichnung;
-		klasse.jahrgaenge.add(dtoKlasse.Jahrgang_ID);   // TODO Jahrgang in stundenplan.daten.jahrgaenge hinzufügen (StundenplanJahrgang)
+		klasse.jahrgaenge.add(dtoKlasse.Jahrgang_ID);
 		stundenplan.unterrichtsverteilung.klassen.add(klasse);
+		stundenplan.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan));
+		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
 		stundenplan.daten.zeitraster.addAll(DataStundenplanZeitraster.getZeitraster(conn, idStundenplan));
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);
@@ -97,6 +99,8 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 						+ "AND u.Zeitraster_ID IN :zrids", DTOStundenplanUnterricht.class)
 				.setParameter("klasseId", klasse.id).setParameter("klasseId2", klasse.id)
 				.setParameter("zrids", zeitrasterIds).getResultList();
+		if (unterrichte.isEmpty())
+			return;
 		final List<Long> unterrichtIds = unterrichte.stream().map(u -> u.ID).toList();
 
 		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);

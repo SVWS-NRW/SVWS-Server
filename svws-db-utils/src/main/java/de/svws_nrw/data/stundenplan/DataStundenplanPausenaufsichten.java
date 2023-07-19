@@ -48,14 +48,14 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 
 
 	/**
-	 * Holt alle StundenplanPausenaufsichten eines gegebenen Stundenplans aus
-	 * der Datenbank.
+	 * Ermittelt alle Stundenplan-Pausenaufsichten für den angebenenen Stundenplan aus der Datenbank.
 	 *
-	 * @param idStundenplan die ID des Stundenplans
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return eine Liste aller Pausenaufsichten des Stundenplans
 	 */
-	List<StundenplanPausenaufsicht> getAufsichten(final long idStundenplan) {
+	public static List<StundenplanPausenaufsicht> getAufsichten(final DBEntityManager conn, final long idStundenplan) {
 		final List<StundenplanPausenaufsicht> daten = new ArrayList<>();
 		// Bestimme die Pausenzeiten des Stundenplans
 		final List<Long> pausenzeiten = conn.queryNamed("DTOStundenplanPausenzeit.stundenplan_id", idStundenplan, DTOStundenplanPausenzeit.class)
@@ -85,6 +85,21 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Ermittelt alle Stundenplan-Pausenaufsichten für den angegebenen Lehrer für den angebenenen
+	 * Stundenplan aus der Datenbank.
+	 *
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param idLehrer        die ID des Lehrers
+	 *
+	 * @return eine Liste der Pausenaufsichten des Lehrers bei dem Stundenplan
+	 */
+	public static List<StundenplanPausenaufsicht> getAufsichtenVonLehrer(final DBEntityManager conn, final long idStundenplan, final long idLehrer) {
+		return getAufsichten(conn, idStundenplan).stream().filter(a -> (a != null) && (a.idLehrer == idLehrer)).toList();
+	}
+
+
 	@Override
 	public Response getList() {
 		if (idStundenplan == null)
@@ -92,7 +107,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<StundenplanPausenaufsicht> daten = getAufsichten(idStundenplan);
+		final List<StundenplanPausenaufsicht> daten = getAufsichten(conn, idStundenplan);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

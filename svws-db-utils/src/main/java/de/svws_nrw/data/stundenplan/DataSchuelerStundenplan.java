@@ -127,7 +127,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		daten.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
 				.filter(l -> lehrerIDs.contains(l.id)).toList());
 		daten.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
-				.filter(k -> klassenIDs.contains(k.id)).toList());
+				.filter(k -> klassenIDs.contains(k.id) || (lernabschnitt.Klassen_ID == k.id)).toList());
 		daten.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
 				.filter(k -> kursIDs.contains(k.id)).toList());
 		daten.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
@@ -136,6 +136,11 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 				.filter(r -> raumIDs.contains(r.id)).toList());
 		daten.daten.schienen.addAll(DataStundenplanSchienen.getSchienen(conn, idStundenplan).stream()
 				.filter(s -> schienenIDs.contains(s.id)).toList());
+		final Set<Long> jahrgangIDs = new HashSet<>();
+		jahrgangIDs.addAll(daten.unterrichtsverteilung.klassen.stream().flatMap(j -> j.jahrgaenge.stream()).toList());
+		jahrgangIDs.addAll(daten.unterrichtsverteilung.kurse.stream().flatMap(j -> j.jahrgaenge.stream()).toList());
+		daten.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan).stream()
+				.filter(j -> jahrgangIDs.contains(j.id)).toList());
 
 		// Ergänze die Information zum Schüler
 		final StundenplanSchueler schueler = new StundenplanSchueler();

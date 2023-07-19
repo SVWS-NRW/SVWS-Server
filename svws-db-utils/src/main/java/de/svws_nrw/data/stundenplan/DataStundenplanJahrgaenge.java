@@ -82,18 +82,32 @@ public final class DataStundenplanJahrgaenge extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Ermittelt die Informationen zu dem angegebenen Jahrgang für den angegebenen Stundenplan.
+	 *
+	 * @param conn             die Datenbank-Verbindung
+	 * @param idStundenplan    die ID des Stundenplans
+	 * @param idJahrgang       die ID des Jahrgangs
+	 *
+	 * @return die Informationen zu dem angegebenen Jahrgang für den angegebenen Stundenplan
+	 */
+	public static StundenplanJahrgang getById(final DBEntityManager conn, final long idStundenplan, final long idJahrgang) {
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, idJahrgang);
+		if (jahrgang == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Jahrgang mit der ID %d gefunden.".formatted(idJahrgang));
+		// TODO Prüfe die Gültigkeit des Jahrgangs (Schuljahresabschnitt: GueltigVon - GueltigBis) in Bezug auf den Stundenplan (Datum: Beginn - Ende)
+		return dtoMapper.apply(jahrgang);
+	}
+
+
 	@Override
 	public Response get(final Long id) {
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
-		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Jahrgang mit der ID null ist unzulässig.");
-		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
-		if (jahrgang == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Jahrgang mit der ID %d gefunden.".formatted(id));
-		// TODO Prüfe die Gültigkeit des Jahrgangs (Schuljahresabschnitt: GueltigVon - GueltigBis) in Bezug auf den Stundenplan (Datum: Beginn - Ende)
-		final StundenplanJahrgang daten = dtoMapper.apply(jahrgang);
+		final StundenplanJahrgang daten = getById(conn, stundenplanID, id);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
