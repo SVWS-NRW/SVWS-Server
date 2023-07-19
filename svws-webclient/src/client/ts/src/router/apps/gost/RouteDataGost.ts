@@ -1,16 +1,16 @@
-import { shallowRef } from "vue";
 import type { RouteParams } from "vue-router";
-
 import type { GostJahrgang, GostJahrgangsdaten, JahrgangsListeEintrag, GostFach } from "@core";
+import type { RouteNode } from "~/router/RouteNode";
+import { shallowRef } from "vue";
 import { NullPointerException, DeveloperNotificationException, GostAbiturjahrUtils, Schulgliederung, GostFaecherManager, ArrayList, Jahrgaenge } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
+import { useDebounceFn } from "@vueuse/core";
 
 interface RouteStateGost {
 	params: RouteParams;
@@ -185,13 +185,12 @@ export class RouteDataGost {
 		return this._state.value.mapJahrgaengeOhneAbiJahrgang;
 	}
 
-	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
+	patchJahrgangsdaten = useDebounceFn((data: Partial<GostJahrgangsdaten>, abiturjahr: number)=> this._patchJahrgangsdaten(data, abiturjahr), 1000)
+	_patchJahrgangsdaten = (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten === undefined)
 			return false;
-		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr);
-		this.setPatchedState({
-			jahrgangsdaten: Object.assign(this.jahrgangsdaten, data)
-		})
+		void api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
+		void this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
 		return true;
 	}
 

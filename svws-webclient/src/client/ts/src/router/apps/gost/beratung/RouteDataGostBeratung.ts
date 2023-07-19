@@ -1,9 +1,7 @@
-import { shallowRef } from "vue";
-
-import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag, Sprachbelegung} from "@core";
+import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag } from "@core";
 import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr} from "@core";
-
+import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 
 

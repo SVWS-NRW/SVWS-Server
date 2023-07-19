@@ -1,4 +1,6 @@
 <script setup lang="ts">
+	// TODO: contenteditable funktioniert nicht wie es soll. Nach einem Patch, wandert der Cursor an den Anfang des Strings zurück,
+	// egal, wo er vorher war. Lösungen wie v-once funktionieren nicht.
 	import { ref, computed } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
@@ -39,7 +41,6 @@
 	}>();
 
 	const focused = ref(false);
-	const element = ref<HTMLElement | null>(null);
 	const tag = computed(() => (props.autoresize ? "span" : "textarea"));
 	const bindings = computed(() => {
 		return {
@@ -53,7 +54,8 @@
 			onKeydown,
 			...(props.autoresize
 				? {
-					contenteditable: !props.disabled
+					contenteditable: !props.disabled,
+					textContent: props.modelValue,
 				}
 				: {
 					rows: props.rows,
@@ -89,12 +91,6 @@
 	function onKeydown(event: KeyboardEvent) {
 		emit("keydown", event);
 	}
-
-	function updateContent(newcontent: string) {
-		if (element.value) {
-			element.value.innerText = newcontent;
-		}
-	}
 </script>
 
 <template>
@@ -112,7 +108,7 @@
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<component :is="tag" v-bind="bindings" class="textarea-input--control" ref="element" />
+		<component :is="tag" v-bind="bindings" class="textarea-input--control" />
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
