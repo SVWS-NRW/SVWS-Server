@@ -365,9 +365,11 @@ export class RouteDataGostKlausurplanung {
 		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren);
 	}
 
-	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum, sks: List<GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
+	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
 		api.status.start();
-		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur)), api.schema, raum.id);
+		const skids = Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur));
+		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum.id);
+		manager.setzeRaumZuSchuelerklausuren(skids, collectionSkrsKrs);
 		this.commit();
 		api.status.stop();
 		return collectionSkrsKrs;

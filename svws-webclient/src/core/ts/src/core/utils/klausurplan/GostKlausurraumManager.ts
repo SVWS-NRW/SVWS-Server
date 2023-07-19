@@ -7,6 +7,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { GostKlausurraumstunde } from '../../../core/data/gost/klausuren/GostKlausurraumstunde';
 import { GostSchuelerklausur } from '../../../core/data/gost/klausuren/GostSchuelerklausur';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausuren/GostKlausurenCollectionSkrsKrs';
 import { GostKursklausurManager } from '../../../core/utils/klausurplan/GostKursklausurManager';
@@ -43,6 +44,11 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Eine Map idRaum -> Liste von Stunden
 	 */
 	private readonly _mapRaumStunden : JavaMap<number, List<GostKlausurraumstunde>> = new HashMap();
+
+	/**
+	 * Eine Map idRaum, idKursklausur -> Liste von Schülerklausuren
+	 */
+	private readonly _mapRaumKursklausurSchuelerklausur : HashMap2D<number, number, List<GostSchuelerklausur>> = new HashMap2D();
 
 	/**
 	 * Eine Map idRaum, idZeitraster -> Klausurraumstunde
@@ -95,9 +101,9 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @param raeume            die Liste der GostKlausurräume eines
 	 *                          Gost-Klausurtermins
-	 * @param listRs           die Liste der GostKlausurraumstunden eines
+	 * @param listRs            die Liste der GostKlausurraumstunden eines
 	 *                          Gost-Klausurtermins
-	 * @param listSkrs			die Liste der Schülerklausurraumstunden
+	 * @param listSkrs          die Liste der Schülerklausurraumstunden
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 */
@@ -206,6 +212,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public addSchuelerklausur(klausur : GostSchuelerklausur) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_mapKkidSkList", MapUtils.getOrCreateArrayList(this._mapKkidSk, klausur.idKursklausur), klausur);
+		let raumstunden : List<GostKlausurraumstunde> | null = this._mapidRsSkrsRevert.get(klausur.idSchuelerklausur);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList", Map2DUtils.getOrCreateArrayList(this._mapRaumKursklausurSchuelerklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, klausur.idKursklausur), klausur);
 	}
 
 	/**
@@ -276,6 +284,22 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public getSchuelerklausurenByKursklausur(idKlausur : number) : List<GostSchuelerklausur> {
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapKkidSk, idKlausur);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idRaum die Id des Klausurraums
+	 * @param manager der Kursklausurmanager
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public getKursklausurenInRaum(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
+		let kursklausuren : List<GostKursklausur> | null = new ArrayList();
+		for (const idKK of this._mapRaumKursklausurSchuelerklausur.getKeySetOf(idRaum)) {
+			kursklausuren.add(manager.getKursklausurById(idKK));
+		}
+		return kursklausuren;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

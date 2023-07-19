@@ -25,7 +25,7 @@
 					:stundenplanmanager="stundenplanmanager"
 					:erzeuge-klausurraum="erzeugeKlausurraum"
 					:patch-klausurraum="patchKlausurraum"
-					:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />/>
+					:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
 			</div>
 		</svws-ui-content-card>
 	</div>

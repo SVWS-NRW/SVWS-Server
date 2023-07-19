@@ -17,7 +17,11 @@
 			:raum="raum"
 			:raummanager="(raummanager as GostKlausurraumManager)"
 			:patch-klausurraum="patchKlausurraum"
-			:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
+			:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren"
+			:faecher-manager="faecherManager"
+			:kursklausurmanager="kursklausurmanager"
+			:kursmanager="kursmanager"
+			:map-lehrer="mapLehrer" />
 	</div>
 </template>
 
@@ -40,7 +44,7 @@
 	}>();
 
 	//const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
-	const klausurenOhneRaum = props.raummanager.getKursklausuren(props.kursklausurmanager());
+	const klausurenOhneRaum = props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager());
 
 	const erzeugeNeuenRaum = async () => {
 		let nR = new GostKlausurraum();

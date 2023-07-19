@@ -213,12 +213,12 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 		final List<GostKlausurraum> listRaeume = new DataGostKlausurenRaum(conn).getKlausurraeume(idTermin);
 
-		if (!listRaeume.isEmpty()) {
+		if (listRaeume.isEmpty()) {
 			// TODO Errorhandling nötig?
 			return retCollection;
 		}
 
-		final List<DTOGostKlausurenRaeumeStunden> raumStunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.idTermin).toList(),
+		final List<DTOGostKlausurenRaeumeStunden> raumStunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.id).toList(),
 				DTOGostKlausurenRaeumeStunden.class);
 
 		for (final DTOGostKlausurenRaeumeStunden s : raumStunden)
