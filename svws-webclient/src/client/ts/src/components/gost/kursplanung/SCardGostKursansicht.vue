@@ -61,7 +61,7 @@
 							<template v-else>
 								<span class="underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
 							</template>
-							<svws-ui-icon v-if="allow_del_schiene(s)" class="opacity-25 hover:opacity-100 hover:text-error cursor-pointer -mr-2" @click="del_schiene(s)"><i-ri-delete-bin-line /></svws-ui-icon>
+							<span v-if="allow_del_schiene(s)" class="icon opacity-25 hover:opacity-100 hover:text-error cursor-pointer -mr-2" @click="del_schiene(s)"><i-ri-delete-bin-line /></span>
 						</div>
 						<template v-else>{{ s.nummer }}</template>
 					</div>

@@ -15,7 +15,6 @@ export {
 	SvwsUiAvatar,
 	SvwsUiContentCard,
 	SvwsUiHeader,
-	SvwsUiIcon,
 	SvwsUiModal,
 	SvwsUiNotifications,
 	SvwsUiNotification,

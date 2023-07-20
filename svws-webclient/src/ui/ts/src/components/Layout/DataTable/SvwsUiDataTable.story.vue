@@ -519,7 +519,7 @@
 							Button
 						</svws-ui-button>
 						<svws-ui-button type="icon">
-							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+							<span class="icon"><i-ri-add-line /></span>
 						</svws-ui-button>
 					</template>
 				</svws-ui-data-table>
@@ -656,7 +656,7 @@
 							Button
 						</svws-ui-button>
 						<svws-ui-button type="icon">
-							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+							<span class="icon"><i-ri-add-line /></span>
 						</svws-ui-button>
 					</template>
 				</svws-ui-data-table>
@@ -732,7 +732,7 @@
 							Button
 						</svws-ui-button>
 						<svws-ui-button type="icon">
-							<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+							<span class="icon"><i-ri-add-line /></span>
 						</svws-ui-button>
 					</template>
 				</svws-ui-data-table>
@@ -792,13 +792,13 @@
 			<svws-ui-data-table v-model="selectedRows2" :items="data" selectable>
 				<template #footerActions>
 					<button class="button button--icon">
-						<svws-ui-icon><i-ri-add-line /></svws-ui-icon>
+						<span class="icon"><i-ri-add-line /></span>
 					</button>
 					<button class="button button--icon">
-						<svws-ui-icon><i-ri-file-copy-line /></svws-ui-icon>
+						<span class="icon"><i-ri-file-copy-line /></span>
 					</button>
 					<button class="button button--icon">
-						<svws-ui-icon><i-ri-more-2-line /></svws-ui-icon>
+						<span class="icon"><i-ri-more-2-line /></span>
 					</button>
 				</template>
 			</svws-ui-data-table>
@@ -839,9 +839,9 @@
 			<svws-ui-data-table :items="data">
 				<template #header(age)="{ column: { label } }">
 					<div class="flex">
-						<svws-ui-icon>
+						<span class="icon">
 							<i-ri-alarm-line />
-						</svws-ui-icon>
+						</span>
 						{{ label }} 🥳
 					</div>
 				</template>
@@ -853,12 +853,12 @@
 					{{ value }}
 				</template>
 				<template #cell(age)="{ value }">
-					<svws-ui-icon v-if="value < 18">
+					<span class="icon" v-if="value < 18">
 						<i-ri-battery-low-fill />
-					</svws-ui-icon>
-					<svws-ui-icon v-else>
+					</span>
+					<span class="icon" v-else>
 						<i-ri-battery-fill />
-					</svws-ui-icon>
+					</span>
 				</template>
 			</svws-ui-data-table>
 		</Variant>
@@ -876,31 +876,6 @@
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
 					<svws-ui-text-input v-else v-model="rowData.name.age" />
 				</template>
-				<template #cell(actions)="{ rowData }">
-					<!-- <svws-ui-popover :hover="false"
-						placement="left-end"
-						:disable-click-away="false">
-						<template #trigger>
-							<svws-ui-button class="action-button">
-								<svws-ui-icon>
-									<i-ri-more-2-fill />
-								</svws-ui-icon>
-							</svws-ui-button>
-						</template>
-						<template #content>
-							<div class="action-items">
-								<div v-for="action in actions"
-									:key="action.action">
-									<svws-ui-button class="action-item"
-										type="transparent"
-										@click="execute(action.action, rowData)">
-										{{ action.label }}
-									</svws-ui-button>
-								</div>
-							</div>
-						</template>
-					</svws-ui-popover> -->
-				</template>
 			</svws-ui-data-table>
 		</Variant>
 		<Variant title="Headless Inputs">
@@ -916,31 +891,6 @@
 				<template #cell(age)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
 					<svws-ui-text-input v-else v-model="rowData.age" headless />
-				</template>
-				<template #cell(actions)="{ rowData }">
-					<!-- <svws-ui-popover :hover="false"
-						placement="left-end"
-						:disable-click-away="false">
-						<template #trigger>
-							<svws-ui-button class="action-button">
-								<svws-ui-icon>
-									<i-ri-more-2-fill />
-								</svws-ui-icon>
-							</svws-ui-button>
-						</template>
-						<template #content>
-							<div class="action-items">
-								<div v-for="action in actions"
-									:key="action.action">
-									<svws-ui-button class="action-item"
-										type="transparent"
-										@click="execute(action.action, rowData)">
-										{{ action.label }}
-									</svws-ui-button>
-								</div>
-							</div>
-						</template>
-					</svws-ui-popover> -->
 				</template>
 			</svws-ui-data-table>
 		</Variant>

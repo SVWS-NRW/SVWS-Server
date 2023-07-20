@@ -37,10 +37,10 @@
 		'button--big': size === 'big',
 	}" :disabled="disabled" @click="onClick">
 		<slot v-if="type !== 'trash'" />
-		<svws-ui-icon v-if="type === 'trash'" class="button--trash-icon">
+		<span v-if="type === 'trash'" class="icon button--trash-icon">
 			<i-ri-delete-bin-line class="icon--line" />
 			<i-ri-delete-bin-fill class="icon--fill" />
-		</svws-ui-icon>
+		</span>
 		<span v-if="$slots.badge" class="button--badge">
 			<slot name="badge" />
 		</span>

@@ -67,9 +67,9 @@
 							<slot name="modalTitle" />
 						</DialogTitle>
 						<svws-ui-button type="icon" @click="closeModal">
-							<svws-ui-icon class="modal--closeIcon">
+							<span class="icon modal--closeIcon">
 								<i-ri-close-line />
-							</svws-ui-icon>
+							</span>
 						</svws-ui-button>
 					</div>
 					<div class="modal--content-wrapper">

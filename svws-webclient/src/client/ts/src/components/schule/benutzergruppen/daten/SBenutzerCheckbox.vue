@@ -11,8 +11,8 @@
 			<span class="flex items-center w-full" :class="{'text-error': showIcon && !spalteLinks}">
 				<span class="flex-grow inline-flex gap-0.5 items-center">
 					{{ benutzer.name }}
-					<svws-ui-icon v-if="spalteLinks" v-show="showIcon"> <i-ri-add-circle-fill class="text-primary" /> </svws-ui-icon>
-					<svws-ui-icon v-if="!spalteLinks" v-show="showIcon"> <i-ri-close-circle-line /> </svws-ui-icon>
+					<span class="icon" v-if="spalteLinks" v-show="showIcon"> <i-ri-add-circle-fill class="text-primary" /> </span>
+					<span class="icon" v-if="!spalteLinks" v-show="showIcon"> <i-ri-close-circle-line /> </span>
 				</span>
 				<span class="font-mono inline-flex items-center gap-0.5">{{ benutzer.id }}</span>
 			</span>

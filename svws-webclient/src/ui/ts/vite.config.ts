@@ -69,10 +69,6 @@ export default defineConfig({
 				{
 					id: 'app',
 					title: 'App',
-				},
-				{
-					id: 'deprecated',
-					title: 'Deprecated',
 				}
 			],
 		},

@@ -296,9 +296,9 @@
 						<span class="tag-badge">
 							<span>{{ itemText(item) }}</span>
 							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen">
-								<svws-ui-icon>
+								<span class="icon">
 									<i-ri-close-line />
-								</svws-ui-icon>
+								</span>
 							</span>
 						</span>
 					</div>
@@ -309,14 +309,14 @@
 				</span>
 			</div>
 			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
-				<svws-ui-icon>
+				<span class="icon">
 					<i-ri-close-line />
-				</svws-ui-icon>
+				</span>
 			</div>
 			<div class="dropdown-icon" @click="toggleListbox">
-				<svws-ui-icon>
+				<span class="icon">
 					<i-ri-expand-up-down-fill />
-				</svws-ui-icon>
+				</span>
 			</div>
 		</div>
 		<Teleport to="body">

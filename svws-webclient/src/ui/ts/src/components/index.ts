@@ -11,7 +11,6 @@ export { default as SvwsUiToggle } from "./Controls/SvwsUiToggle.vue";
 export { default as SvwsUiAvatar } from "./Layout/SvwsUiAvatar.vue";
 export { default as SvwsUiContentCard } from "./Layout/SvwsUiContentCard.vue";
 export { default as SvwsUiHeader } from "./Layout/SvwsUiHeader.vue";
-export { default as SvwsUiIcon } from "./Layout/SvwsUiIcon.vue";
 export { default as SvwsUiModal } from "./Layout/Modal/SvwsUiModal.vue";
 export { default as SvwsUiNotifications } from "./Layout/SvwsUiNotifications.vue";
 export { default as SvwsUiNotification } from "./Layout/SvwsUiNotification.vue";

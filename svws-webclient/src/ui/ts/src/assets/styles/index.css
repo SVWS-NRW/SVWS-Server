@@ -34,3 +34,7 @@ html.dark {
 .text-sm-bold {
 	@apply uppercase;
 }
+
+.icon {
+	line-height: 1 !important;
+}

@@ -31,9 +31,9 @@
 	}" href="#" @click.prevent="onClick"
 		:title="disabled ? 'Nicht verfügbar' : ($slots.label?.()[0].children as unknown as string)">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
-			<svws-ui-icon>
+			<span class="icon">
 				<slot name="icon" />
-			</svws-ui-icon>
+			</span>
 		</span>
 		<span class="sidebar--menu-item--label">
 			<slot name="label" />

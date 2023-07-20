@@ -10,14 +10,14 @@
 		<div class="notification--content-wrapper flex justify-between items-start">
 			<div class="notification--content" :class="{'notification--content--has-header': $slots.header}">
 				<div class="notification--header">
-					<svws-ui-icon v-if="icon || type" class="notification--icon">
+					<span v-if="icon || type" class="icon notification--icon">
 						<i-ri-lock-2-line v-if="icon === 'login'" />
 						<i-ri-alert-fill v-else-if="icon === 'error' || type === 'error'" />
 						<i-ri-bug-fill v-else-if="icon === 'bug' || type === 'bug'" />
 						<i-ri-check-line v-else-if="icon === 'success' || type === 'success'" />
 						<i-ri-information-line v-else-if="icon === 'info' || type === 'info'" />
 						<i-ri-error-warning-line v-else-if="icon === 'warning' || type === 'warning'" />
-					</svws-ui-icon>
+					</span>
 					<slot name="header" />
 				</div>
 				<div class="notification--text">

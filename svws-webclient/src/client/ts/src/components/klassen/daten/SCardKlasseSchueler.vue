@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Klassenliste">
 		<svws-ui-data-table :columns="cols" :items="listSchueler">
 			<template #cell(nachname)="{ rowData }">
-				<svws-ui-icon @click.stop="gotoSchueler(rowData as Schueler)" class="mr-2 text-primary hover:opacity-50 cursor-pointer" title="Schüler ansehen"> <i-ri-link /> </svws-ui-icon> {{ rowData.nachname }}
+				<span @click.stop="gotoSchueler(rowData as Schueler)" class="icon mr-2 text-primary hover:opacity-50 cursor-pointer" title="Schüler ansehen"> <i-ri-link /> </span> {{ rowData.nachname }}
 			</template>
 			<template #cell(status)="{ value } : { value: number}">
 				<span>{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>

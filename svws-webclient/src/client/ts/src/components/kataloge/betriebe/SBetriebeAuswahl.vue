@@ -16,9 +16,9 @@
 				</template>
 				<template #footerActions>
 					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag" :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten="mapBeschaeftigungsarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile">
-						<button @click="openModal()" class="flex h-10 w-10 items-center justif-center">
-							<svws-ui-icon> <i-ri-add-line /></svws-ui-icon>
-						</button>
+						<svws-ui-button type="icon" @click="openModal()">
+							<i-ri-add-line />
+						</svws-ui-button>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
 							<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer"
 								:disabled="selected.length === 0" />

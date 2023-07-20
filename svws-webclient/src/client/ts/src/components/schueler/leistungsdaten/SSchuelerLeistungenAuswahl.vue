@@ -8,7 +8,6 @@
 			<svws-ui-tooltip v-if="row.wechselNr !== null">
 				<span class="opacity-50 ml-1 inline-block cursor-pointer">
 					(alt)
-					<svws-ui-icon name="info" />
 				</span>
 				<template #content>
 					Daten vor dem {{ row.wechselNr }}. Wechsel

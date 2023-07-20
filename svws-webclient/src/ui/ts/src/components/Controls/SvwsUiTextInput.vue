@@ -139,12 +139,12 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<svws-ui-icon v-if="type !== 'date' && hasIcon">
+		<span v-if="type !== 'date' && hasIcon" class="icon">
 			<slot />
-		</svws-ui-icon>
-		<svws-ui-icon v-else-if="type === 'date'" class="text-input--calendar-icon">
+		</span>
+		<span v-else-if="type === 'date'" class="icon text-input--calendar-icon">
 			<i-ri-calendar-line />
-		</svws-ui-icon>
+		</span>
 	</label>
 </template>
 

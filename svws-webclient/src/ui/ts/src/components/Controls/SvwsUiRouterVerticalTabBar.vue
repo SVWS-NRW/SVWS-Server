@@ -3,7 +3,7 @@
 		<div class="router-vertical-tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-up">
 				<button class="router-vertical-tab-bar--scroll-button" @click="scroll('up')">
-					<svws-ui-icon> <i-ri-arrow-up-line /> </svws-ui-icon>
+					<span class="icon"> <i-ri-arrow-up-line /> </span>
 				</button>
 			</div>
 			<div ref="contentEl" class="router-vertical-tab-bar--content">
@@ -13,7 +13,7 @@
 			<div v-if="!state.scrolledMax"
 				class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-down">
 				<button class="router-vertical-tab-bar--scroll-button" @click="scroll('down')">
-					<svws-ui-icon> <i-ri-arrow-down-line /> </svws-ui-icon>
+					<span class="icon"> <i-ri-arrow-down-line /> </span>
 				</button>
 			</div>
 		</div>

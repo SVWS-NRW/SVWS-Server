@@ -157,9 +157,9 @@
 							@click.stop>
 							<template #trigger>
 								<svws-ui-button type="icon" size="small" class="cursor-context-menu">
-									<svws-ui-icon>
+									<span class="icon">
 										<i-ri-more2-fill />
-									</svws-ui-icon>
+									</span>
 								</svws-ui-button>
 							</template>
 							<template #content>

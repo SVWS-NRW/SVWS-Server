@@ -2,6 +2,7 @@
 	<svws-ui-content-card title="Datenbank auswählen">
 		<div class="flex items-start gap-3">
 			<div class="flex flex-col gap-3">
+				<!--TODO: SvwsUISelectInput (deprecated) durch SvwsUIMultiselect austauschen-->
 				<svws-ui-select-input v-model="db" :options="[{index: 'mysql', label: 'MySQL'}, {index: 'mariadb', label: 'MariaDB'},{index: 'mssql', label: 'MSSQL'},{index: 'mdb', label: 'Access (MDB)'}]" @update:model-value="setDB" />
 				<div class="flex flex-col gap-3" v-if="db && db !== 'mdb'">
 					<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
