@@ -4,9 +4,9 @@
 	};
 </script>
 <script setup lang="ts">
-	import type { InputType } from "../../types";
+	import type { InputType } from "../types";
 	import { useSlots, ref, computed } from "vue";
-	import { genId } from "../../utils";
+	import { genId } from "../utils";
 
 	const props = withDefaults(defineProps<{
 		type?: InputType;

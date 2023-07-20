@@ -8,7 +8,6 @@ export {
 	SvwsUiProgressBar,
 	SvwsUiRadioGroup,
 	SvwsUiRadioOption,
-	SvwsUiSelectInput,
 	SvwsUiTextareaInput,
 	SvwsUiTextInput,
 	SvwsUiToggle,
@@ -38,6 +37,14 @@ export {
 	SvwsUiInputWrapper,
 	SvwsUiSpacing,
 	SvwsUiDashboardTile,
+	SvwsUiIcon, // deprecated
+	SvwsUiDropdown, // deprecated
+	SvwsUiDropdownItem, // deprecated
+	SvwsUiDropdownWithAction, // deprecated
+	SvwsUiSelectInput, // deprecated
+	SvwsUiTabBar, // deprecated
+	SvwsUiTabButton, // deprecated
+	SvwsUiTabPanel // deprecated
 } from './components'
 
-export type { DataTableColumn, DataTableItem } from './components/Layout/DataTable/types'
+export type { DataTableColumn, DataTableItem } from './components/DataTable/types'

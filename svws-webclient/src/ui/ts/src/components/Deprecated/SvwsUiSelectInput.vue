@@ -1,6 +1,8 @@
 <script setup lang='ts'>
 	import { computed, ref, onMounted } from 'vue';
 
+	throw new Error('Deprecated: SvwsUiSelectInput');
+
 	type Option = {
 		index: string;
 		label: string;

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-	import type { ButtonType } from '../../types';
-	import { Size } from '../../types';
+	import type { ButtonType } from '../types';
+	import { Size } from '../types';
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;

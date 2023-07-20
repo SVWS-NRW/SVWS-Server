@@ -3,7 +3,7 @@
 	import type TextInput from "./SvwsUiTextInput.vue";
 	import { computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { genId } from "../../utils";
+	import { genId } from "../utils";
 
 	const props = withDefaults(defineProps<{
 		placeholder?: string;

@@ -1,7 +1,7 @@
 <script setup lang='ts'>
-	import useCapturing from "../../composables/use-capturing";
-	import useUploading from "../../composables/use-uploading";
-	import imageFile from "../../assets/img/avatar_placeholder.svg";
+	import useCapturing from "../composables/use-capturing";
+	import useUploading from "../composables/use-uploading";
+	import imageFile from "../assets/img/avatar_placeholder.svg";
 
 	const props = withDefaults(defineProps<{
 		src?: string;
