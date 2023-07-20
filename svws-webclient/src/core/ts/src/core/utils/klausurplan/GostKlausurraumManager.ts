@@ -233,7 +233,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum geändert
 	 * hat.
 	 *
-	 * @param skids
+	 * @param skids die IDs der Schülerklausuren
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public setzeRaumZuSchuelerklausuren(skids : List<number>, collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
