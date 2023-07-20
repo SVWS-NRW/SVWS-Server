@@ -80,13 +80,16 @@ public final class DBUtilsFaecherGost {
 	 * von Typ {@link DTOGostJahrgangFaecher}. Dabei werden Informationen aus der übergebenen Liste
 	 * der Fächer verwendet.
 	 *
+	 * @param idFach     die ID des Faches
 	 * @param jf         das Datenbank-Objekt
 	 * @param faecher    eine Map mit Fach-Informationen
 	 *
 	 * @return das {@link GostFach}-Objekt
 	 */
-	public static GostFach mapFromDTOGostJahrgangFaecher(final DTOGostJahrgangFaecher jf, final Map<Long, DTOFach> faecher) {
-		final DTOFach fach = faecher.get(jf.Fach_ID);
+	public static GostFach mapFromDTOGostJahrgangFaecher(final long idFach, final DTOGostJahrgangFaecher jf, final Map<Long, DTOFach> faecher) {
+		if ((jf != null) && (idFach != jf.Fach_ID))
+			return null;
+		final DTOFach fach = faecher.get(idFach);
 		if (fach == null)
 			return null;
 		final GostFach eintrag = new GostFach();
@@ -98,17 +101,23 @@ public final class DBUtilsFaecherGost {
 		eintrag.istFremdsprache = fach.IstFremdsprache;
 		eintrag.istFremdSpracheNeuEinsetzend = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 		eintrag.biliSprache = ((fach.Unterichtssprache != null) && (!"".equals(fach.Unterichtssprache)) && (!"D".equals(fach.Unterichtssprache))) ? fach.Unterichtssprache.substring(0, 1) : null;
-		eintrag.istMoeglichAbiLK = jf.WaehlbarAbiLK;
-		eintrag.istMoeglichAbiGK = jf.WaehlbarAbiGK;
-		eintrag.istMoeglichEF1 = jf.WaehlbarEF1;
-		eintrag.istMoeglichEF2 = jf.WaehlbarEF2;
-		eintrag.istMoeglichQ11 = jf.WaehlbarQ11;
-		eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
-		eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
-		eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
+		if (jf != null) { // Ansonsten ist alles mit false initialisiert
+			eintrag.istMoeglichAbiLK = jf.WaehlbarAbiLK;
+			eintrag.istMoeglichAbiGK = jf.WaehlbarAbiGK;
+			eintrag.istMoeglichEF1 = jf.WaehlbarEF1;
+			eintrag.istMoeglichEF2 = jf.WaehlbarEF2;
+			eintrag.istMoeglichQ11 = jf.WaehlbarQ11;
+			eintrag.istMoeglichQ12 = jf.WaehlbarQ12;
+			eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
+			eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
+		}
 		final int defaultWochenstundenQ_GK = Jahrgaenge.JG_EF == fach.StatistikFach.getJahrgangAb() ? 4 : 3;
 		final int defaultWochenstundenQ = (fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_VX || fach.StatistikFach.getFachgruppe() == Fachgruppe.FG_PX) ? 2 : defaultWochenstundenQ_GK;
-		eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase == null ? defaultWochenstundenQ : jf.WochenstundenQPhase;
+		if ((jf == null) || (jf.WochenstundenQPhase == null)) {
+			eintrag.wochenstundenQualifikationsphase = fach.WochenstundenQualifikationsphase == null ? defaultWochenstundenQ : fach.WochenstundenQualifikationsphase;
+		} else {
+			eintrag.wochenstundenQualifikationsphase = jf.WochenstundenQPhase;
+		}
 		eintrag.projektKursLeitfach1ID = fach.ProjektKursLeitfach1_ID;
 		eintrag.projektKursLeitfach1Kuerzel = fach.ProjektKursLeitfach1_ID == null ? null : faecher.get(fach.ProjektKursLeitfach1_ID).StatistikFach.daten.kuerzelASD;
 		eintrag.projektKursLeitfach2ID = fach.ProjektKursLeitfach2_ID;
@@ -133,21 +142,16 @@ public final class DBUtilsFaecherGost {
     	if (faecher == null)
     		throw OperationError.NOT_FOUND.exception();
 		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
-	    	return new GostFaecherManager(faecher.values().stream()
-	    		.filter(fach -> fach.IstOberstufenFach)
-	    		.map(fach -> mapFromDTOFach(fach, faecher))
-	    		.filter(Objects::nonNull)
-	    		.toList()
+	    	return new GostFaecherManager(faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
+	    		.map(fach -> mapFromDTOFach(fach, faecher)).filter(Objects::nonNull).toList()
 	    	);
 		}
 
-		final List<DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class);
-		if (jahrgangfaecher == null)
-    		return new GostFaecherManager();
-    	return new GostFaecherManager(jahrgangfaecher.stream()
-   			.map(jf -> mapFromDTOGostJahrgangFaecher(jf, faecher))
-   			.filter(Objects::nonNull).toList()
-    	);
+		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class)
+				.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
+		final List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
+	    		.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
+    	return new GostFaecherManager(tmpFaecher);
     }
 
 }

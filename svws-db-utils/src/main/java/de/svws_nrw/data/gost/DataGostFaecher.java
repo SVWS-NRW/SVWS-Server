@@ -20,6 +20,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
@@ -81,11 +82,10 @@ public final class DataGostFaecher extends DataManager<Long> {
 		if (abijahr == -1) {
 	    	daten = DBUtilsFaecherGost.mapFromDTOFach(fach, faecher);
 		} else {
-	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
+    		if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null)
+    			throw OperationError.NOT_FOUND.exception();
 	    	final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
-	    	if (jf == null)
-	    		return OperationError.NOT_FOUND.getResponse();
-	    	daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(jf, faecher);
+	    	daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(id, jf, faecher);
 		}
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -129,8 +129,8 @@ public final class DataGostFaecher extends DataManager<Long> {
 			    			case "istMoeglichQ12" -> fach.IstMoeglichQ12 = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichQ21" -> fach.IstMoeglichQ21 = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichQ22" -> fach.IstMoeglichQ22 = JSONMapper.convertToBoolean(value, false);
-			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
-			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
+			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // derzeit nicht unterstützt
+			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // derzeit nicht unterstützt
 			    			case "wochenstundenQualifikationsphase" -> {
 			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();
 			    				fach.WochenstundenQualifikationsphase = JSONMapper.convertToInteger(value, false);
@@ -156,10 +156,13 @@ public final class DataGostFaecher extends DataManager<Long> {
 			    	}
 			    	conn.transactionPersist(fach);
 		    	} else {
-	    	    	// TODO Prüfe, ob der Abiturjahrgang abiturjahr gültig ist oder nicht
-	    	    	final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
-	    	    	if (jf == null)
-	    	    		throw OperationError.NOT_FOUND.exception();
+		    		if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null)
+		    			throw OperationError.BAD_REQUEST.exception();
+	    	    	DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
+	    	    	if (jf == null) {
+	    	    		jf = new DTOGostJahrgangFaecher(abijahr, fach.ID, false, false, false, false, false, false, false, false);
+	    	    		jf.WochenstundenQPhase = fach.WochenstundenQualifikationsphase;
+	    	    	}
 			    	for (final Entry<String, Object> entry : map.entrySet()) {
 			    		final String key = entry.getKey();
 			    		final Object value = entry.getValue();
@@ -185,8 +188,8 @@ public final class DataGostFaecher extends DataManager<Long> {
 			    			case "istMoeglichQ12" -> jf.WaehlbarQ12 = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichQ21" -> jf.WaehlbarQ21 = JSONMapper.convertToBoolean(value, false);
 			    			case "istMoeglichQ22" -> jf.WaehlbarQ22 = JSONMapper.convertToBoolean(value, false);
-			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
-			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // TODO derzeit nicht unterstützt
+			    			case "wochenstundenEF1" -> throw OperationError.BAD_REQUEST.exception();  // derzeit nicht unterstützt
+			    			case "wochenstundenEF2" -> throw OperationError.BAD_REQUEST.exception();  // derzeit nicht unterstützt
 			    			case "wochenstundenQualifikationsphase" -> {
 			    				// TODO Prüfe, ob die Wochenstunden bei dem Fach gesetzt werden dürfen (z.B. PJK) sonst: throw OperationError.BAD_REQUEST.exception();
 			    				jf.WochenstundenQPhase = JSONMapper.convertToInteger(value, false);
