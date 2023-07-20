@@ -255,7 +255,7 @@
 
 <template>
 	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList, 'col-span-full': span === 'full' }">
+		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
@@ -267,6 +267,7 @@
 					:headless="headless"
 					:disabled="disabled"
 					:removable="removable"
+					:class="{'text-input--control--multiselect-tags': tags}"
 					role="combobox"
 					:aria-label="placeholder"
 					:aria-expanded="showList"
@@ -292,10 +293,13 @@
 				@click.self="toggleListbox" ref="inputElTags">
 				<div class="tag-list" @click.self="toggleListbox">
 					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
+					<div class="opacity-50 pl-2 text-sm" v-if="!selectedItemList.size && showList">
+						Noch nichts ausgewählt.
+					</div>
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
 						<span class="tag-badge">
-							<span>{{ itemText(item) }}</span>
-							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen">
+							<span :class="{'pr-1': showList}">{{ itemText(item) }}</span>
+							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen" v-if="!showList">
 								<span class="icon">
 									<i-ri-close-line />
 								</span>
@@ -320,7 +324,8 @@
 			</div>
 		</div>
 		<Teleport to="body">
-			<div v-show="showList" class="multiselect--items-wrapper"
+			<div v-if="showList" class="multiselect--items-wrapper"
+				:class="{'multiselect--items-wrapper--statistics': statistics, 'multiselect--items-wrapper--tags': tags}"
 				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 				ref="floating">
 				<ul :id="listIdPrefix"
@@ -351,7 +356,7 @@
 						">
 						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
 						{{ itemText(item) }}
-						<i-ri-check-line v-if="selectedItemList.has(item)" class="opacity-50" />
+						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
 					</li>
 				</ul>
 			</div>
@@ -536,6 +541,10 @@
 		@apply text-base;
 		@apply py-1 my-1 px-2;
 
+		.multiselect--check {
+			@apply hidden -mt-0.5;
+		}
+
 		&.active {
 			@apply ring ring-svws/50 border-svws bg-svws text-white;
 
@@ -554,7 +563,7 @@
 		}
 
 		&.selected {
-			@apply font-bold bg-svws text-white flex w-full items-center justify-between gap-1;
+			@apply font-bold bg-svws text-white;
 
 			.page--statistik & {
 				@apply bg-violet-500;
@@ -563,23 +572,55 @@
 	}
 
 	&--tags {
+		.multiselect--item .multiselect--check {
+			@apply inline-block;
+		}
+
 		.multiselect--item.selected {
+			@apply bg-transparent text-svws dark:text-svws;
+
 			&.active {
-				@apply ring-black/25 dark:ring-white/10;
+				@apply ring-svws/25 dark:ring-svws/25;
 			}
 
-			&:hover,
-			&.active {
-				@apply border-black dark:border-white text-black dark:text-white bg-transparent dark:bg-transparent;
-
-				svg {
+			&:hover {
+				@apply bg-svws text-white dark:text-white;
+				/*svg {
 					@apply hidden;
 				}
 
 				&:after {
 					@apply opacity-75 font-normal;
-					content: '\0000a0entfernen \00D7';
-				}
+					content: '\0000a0entfernen';
+				}*/
+			}
+		}
+	}
+}
+
+.multiselect--items-wrapper--statistics {
+	.multiselect--item.active {
+		@apply ring-violet-500/50 border-violet-500 bg-violet-500;
+	}
+
+	.multiselect--item:hover {
+		@apply bg-violet-500;
+	}
+
+	.multiselect--item.selected {
+		@apply bg-violet-500;
+	}
+
+	&.multiselect--items-wrapper--tags {
+		.multiselect--item.selected {
+			@apply bg-transparent text-violet-500 dark:text-violet-500;
+
+			&.active {
+				@apply ring-violet-500/25 dark:ring-violet-500/25;
+			}
+
+			&:hover {
+				@apply bg-violet-500 text-white dark:text-white;
 			}
 		}
 	}
@@ -588,7 +629,7 @@
 .tag-list-wrapper {
 	@apply flex w-full items-center justify-between overflow-x-auto;
 	@apply bg-white dark:bg-black;
-	@apply rounded-md border;
+	@apply rounded-md border border-black/5 dark:border-white/5;
 	@apply w-full;
 	@apply text-base;
 	@apply whitespace-nowrap;
@@ -596,11 +637,29 @@
 	@apply cursor-pointer;
 	padding: 0.3em 1.7em 0.3em 0.35em;
 	min-height: 2.25em;
+
+	&:hover {
+		@apply border-black/25 dark:border-white/25;
+	}
 }
 
-.wrapper--tag-list .dropdown-icon {
-	.icon, svg {
-		@apply h-full;
+.wrapper--tag-list {
+	.input:not(.sr-only) {
+		& + .tag-list-wrapper {
+			@apply border-t-0 rounded-t-none;
+		}
+	}
+
+	&.wrapper--headless {
+		.tag-list-wrapper {
+			@apply border-black/25 dark:border-white/25 bg-white dark:bg-black;
+		}
+	}
+
+	.dropdown-icon {
+		.icon, svg {
+			@apply h-full;
+		}
 	}
 }
 
@@ -608,9 +667,15 @@
 	@apply rounded cursor-auto relative z-10;
 	@apply bg-svws/5 text-svws border-svws/25 border font-medium;
 	@apply flex items-center leading-none;
+	@apply max-w-sm;
 	padding: 0.2em 0.4em 0.2em 0.7em;
 
-	.page--statistik & {
+	> span:first-child {
+		@apply overflow-ellipsis overflow-hidden whitespace-nowrap;
+	}
+
+	.page--statistik &,
+	.multiselect-input-component--statistics & {
 		@apply bg-violet-500/5 text-violet-500 border-violet-500;
 	}
 
@@ -629,7 +694,8 @@
 	@apply inline-block mt-0 cursor-pointer;
 }
 
-.tag-remove .icon:hover {
+.tag-remove .icon:hover,
+.remove-icon:hover .icon {
 	@apply bg-black dark:bg-white text-white dark:text-black rounded;
 }
 
@@ -638,8 +704,8 @@
 	@apply cursor-pointer;
 	@apply flex items-center justify-center;
 	@apply opacity-50;
-	right: 1.4em;
-	font-size: 1em;
+	right: 1.7rem;
+	font-size: 1rem;
 
 	.data-table & {
 		right: 1em;
@@ -647,7 +713,7 @@
 	}
 
 	&:hover {
-		@apply opacity-100 text-error;
+		@apply opacity-100;
 	}
 
 	.icon {

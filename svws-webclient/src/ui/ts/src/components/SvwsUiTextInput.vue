@@ -153,7 +153,7 @@
 		@apply flex;
 		@apply relative;
 		@apply w-full;
-		@apply overflow-hidden whitespace-nowrap;
+		@apply overflow-hidden whitespace-nowrap text-base;
 
 		input::placeholder {
 			@apply text-black/25 dark:text-white/25;
@@ -213,9 +213,10 @@
 		@apply rounded-full;
 	}
 
-	.multiselect-input-component .text-input--control {
+	.multiselect-input-component .text-input--control,
+	.multiselect-input-component .text-input--headless {
 		@apply overflow-hidden text-ellipsis;
-		padding-right: 3.5em;
+		padding-right: 3.2rem;
 	}
 
 	.text-input-component:focus-within .text-input--control,
@@ -253,6 +254,10 @@
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input--filled .text-input--control {
 		@apply border-violet-500;
+	}
+
+	.text-input--control--multiselect-tags {
+		@apply border-b-0 rounded-b-none pt-1 pb-0;
 	}
 
 	.text-input--statistics {
@@ -325,6 +330,14 @@
 
 	.text-input-component:not(.text-input--filled) .text-input--placeholder {
 		@apply font-normal;
+
+		.wrapper--tag-list & {
+			@apply font-medium;
+		}
+
+		.wrapper--tag-list:not(.wrapper--filled) & {
+			@apply font-medium;
+		}
 	}
 
 	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {

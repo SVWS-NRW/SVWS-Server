@@ -4,7 +4,7 @@
 
 	const items = reactive([
 		{ id: 1, text: "Item 1" },
-		{ id: 2, text: "Item 2" },
+		{ id: 2, text: "Item 2 with a very, very, very, really long title that's way too big for the row. If this happens, the UI should be prepared" },
 		{ id: 3, text: "Item 3" },
 		{ id: 4, text: "Item 4" },
 		{ id: 5, text: "Item 5" },

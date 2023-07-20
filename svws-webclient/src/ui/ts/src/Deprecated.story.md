@@ -18,7 +18,7 @@ Icons können in den meisten Fällen direkt mit `<i-ri-icon-name/>` eingesetzt w
 
 ### **Dropdown**
 
-Empfohlene Alternative: [Multiselect](/story/src-components-controls-svwsuimultiselect-story-vue)
+Empfohlene Alternative: [Multiselect](/story/src-components-svwsuimultiselect-story-vue)
 
   * `<svws-ui-dropdown/>` entfernt
   * `<svws-ui-dropdownItem/>` entfernt
@@ -27,14 +27,14 @@ Empfohlene Alternative: [Multiselect](/story/src-components-controls-svwsuimulti
 
 ### **Select Input**
 
-Empfohlene Alternative: [Multiselect](/story/src-components-controls-svwsuimultiselect-story-vue)
+Empfohlene Alternative: [Multiselect](/story/src-components-svwsuimultiselect-story-vue)
 
   * `<svws-ui-select-input/>` entfernt
 
 
 ### **Tab Bar**
 
-Ersetzt durch [Router Tab Bar](/story/src-components-controls-svwsuiroutertabbar-story-vue)
+Ersetzt durch [Router Tab Bar](/story/src-components-app-svwsuiroutertabbar-story-vue)
 
   * `<svws-ui-tab-bar/>` entfernt
   * `<svws-ui-tab-button/>` entfernt
