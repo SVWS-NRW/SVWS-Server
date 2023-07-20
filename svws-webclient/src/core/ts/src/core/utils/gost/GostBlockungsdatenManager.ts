@@ -656,10 +656,13 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param idKursart   die ID der Kursart
 	 *
 	 * @return die sortiere Liste der Kurse für das Fach und die Kursart
-	 * @throws DeveloperNotificationException falls es keinen Kurs mit (idFach, idKursart) gibt.
 	 */
 	public kursGetListeByFachUndKursart(idFach : number, idKursart : number) : List<GostBlockungKurs> {
-		return this._map2d_idFach_idKursart_kurse.getNonNullOrException(idFach, idKursart);
+		const liste : List<GostBlockungKurs> | null = this._map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
+		if (liste === null)
+			return new ArrayList();
+		liste.sort(GostBlockungsdatenManager._compKursnummer);
+		return liste;
 	}
 
 	/**
