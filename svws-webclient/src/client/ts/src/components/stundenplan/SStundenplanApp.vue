@@ -1,12 +1,12 @@
 <template>
-	<div v-if="true" class="page--flex">
+	<div v-if="auswahl !== undefined" class="page--flex">
 		<svws-ui-header>
 			<div class="flex items-center">
 				<div>
-					<span class="inline-block mr-3"> {{ data().bezeichnungStundenplan }} </span>
+					<span class="inline-block mr-3"> {{ auswahl.bezeichnung }} </span>
 					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 						ID:
-						{{ data().id }}
+						{{ auswahl.id }}
 					</svws-ui-badge>
 				</div>
 			</div>
@@ -24,6 +24,6 @@
 
 	import type { StundenplanAppProps } from "./SStundenplanAppProps";
 
-	const props = defineProps<StundenplanAppProps>();
+	defineProps<StundenplanAppProps>();
 
 </script>

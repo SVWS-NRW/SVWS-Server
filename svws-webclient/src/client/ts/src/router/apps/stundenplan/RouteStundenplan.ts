@@ -84,7 +84,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 
 	public getProps(to: RouteLocationNormalized): StundenplanAppProps {
 		return {
-			data: () => this.data.daten,
+			auswahl: this.data.auswahl,
 			setTab: this.setTab,
 			tab: this.getTab(),
 			tabs: this.getTabs(),
