@@ -7,6 +7,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
+import { ServerMode } from "@core";
 
 
 export class RouteManager {
@@ -129,10 +130,8 @@ export class RouteManager {
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;
-		console.log("Routing:");
-		console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
-		console.log("  to: " + to_node.name + " params=" + JSON.stringify(to.params));
-		console.log("  to-path: " + to.fullPath);
+		if (api.mode !== ServerMode.STABLE)
+			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.beforeEach(to_node, to.params, from_node, from.params);
 		if (result !== true)
@@ -257,10 +256,8 @@ export class RouteManager {
 		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 		if (failure === undefined) {
-			console.log("Completed Routing:");
-			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
-			console.log("  to: " + to_node?.name + " params=" + JSON.stringify(to.params));
-			console.log("  to-path: " + to.fullPath);
+			if (api.mode !== ServerMode.STABLE)
+				console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 			if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
 				// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 				const equals = (to_node.name === from_node.name);
@@ -286,10 +283,8 @@ export class RouteManager {
 				}
 			}
 		} else {
-			console.log("Failed: " + failure.message);
-			console.log("  from: " + from_node?.name + " params=" + JSON.stringify(from.params));
-			console.log("  to: " + to_node?.name + " params=" + JSON.stringify(to.params));
-			console.log("  to-path: " + to.fullPath);
+			if (api.mode !== ServerMode.STABLE)
+				console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 		}
 		this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 	}
