@@ -67,21 +67,34 @@ public final class ConnectionManager {
 		return emf.createEntityManager();
 	}
 
-	EntityManager getNewJPAEntityManager(int retries, long timeout) {
+	/**
+	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird
+	 * innerhalb dieses Packages vom DBEntityManager bei der Erneuerung der
+	 * Verbindung verwendet.
+	 * Bei dieser Variante werden mehrere Versuche für einen Verbindungsaufbau
+	 * durchgeführt. Zwischen den Versuchen wird eine angebene Zeit in Millisekunden
+	 * abgewartet.
+	 *
+	 * @param retries   die Anzahl der Verbindungsversuche, bevor eine Exception weitergereicht wird
+	 * @param timeout   die Zeit in Millisekunden
+	 *
+	 * @return der neue JPA {@link EntityManager}
+	 */
+	EntityManager getNewJPAEntityManager(final int retries, final long timeout) {
 		PersistenceException resultingException = null;
 		int triesLeft = retries;
 		do {
 			triesLeft--;
 			try {
 				return getNewJPAEntityManager();
-			} catch (PersistenceException e) {
+			} catch (final PersistenceException e) {
 				resultingException = e;
 				if (triesLeft <= 0) {
 					throw resultingException;
 				}
 				try {
 					Thread.sleep(timeout);
-				} catch (InterruptedException ie) {
+				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
 					Thread.currentThread().interrupt();
 				}
 			}
