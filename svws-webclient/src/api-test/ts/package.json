@@ -1,6 +1,6 @@
 {
-	"name": "@svws-nrw/svws-core-test",
-	"description": "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients (Tests)",
+	"name": "@svws-nrw/svws-api-test",
+	"description": "SVWS-Server-Projekt: API Tests",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
 	"version": "0.6.12-SNAPSHOT",
@@ -11,7 +11,7 @@
 	"scripts": {
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
-		"test:runAgainstTestEnv": "VITE_svws_testing_api_schema=@vitest_schema@ VITE_svws_testing_api_host=@vitest_host@ VITE_svws_testing_api_port=@vitest_port@ NODE_TLS_REJECT_UNAUTHORIZED=0 vitest run --coverage.reporter=html",
+		"test:runAgainstTestEnv": "VITE_svws_testing_api_schema=gymabi VITE_svws_testing_api_host=https://svws-webclient-integration-test-svws VITE_svws_testing_api_port=8443 NODE_TLS_REJECT_UNAUTHORIZED=0 vitest run --coverage.reporter=html",
   	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
   	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",

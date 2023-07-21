@@ -6,12 +6,12 @@ export default defineConfig({
     globals: true,
     root: "../../../src",
     reporters: ["default", "junit"],
-    outputFile: "../build/coverage/core/junit.xml",
+    outputFile: "../build/coverage/api-test/junit.xml",
     coverage: {
       provider: "v8",
-      reportsDirectory: "../build/coverage/core",
+      reportsDirectory: "../build/coverage/api-test",
     },
-	exclude: ["api-test","browser-test"]
+	exclude: ["core-test","client-test","browser-test"]
   },
   resolve: {
 	alias: [{ find: "~", replacement: resolve(__dirname, '../../../src/core/ts/src') }],

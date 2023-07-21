@@ -9,3 +9,6 @@
 *.ico binary
 *.jpg binary
 *.png binary
+
+# Betrachte Zip-Files als Binarys
+*.zip binary

@@ -1,0 +1,109 @@
+// environment local, testing, ...?
+//TODO das environment darf nicht 'local' als default wert haben und gleichzeitig überall local.properties voraussetzen,
+// 		weil die nicht jeder eingerichtet hat
+def SVWS_TEST_ENVIRONMENT = project.hasProperty("environment") ? project.getProperty("environment") : "local"
+println '#################'
+println "SVWS_TEST_ENVIRONMENT=${SVWS_TEST_ENVIRONMENT}"
+
+def localProperties
+if('local'.equals(SVWS_TEST_ENVIRONMENT)) {
+	def propFile = new File("$projectDir/local.properties")
+	if(propFile.exists()){
+		localProperties = new Properties()
+		localProperties.load(propFile.newDataInputStream())
+	}else{
+		SVWS_TEST_ENVIRONMENT = "undefined";
+	}
+}
+// Helper, um sich Umgebungsvariablen abhängig von der Umgebung zu holen.
+// Für lokale Builds (alle Builds ohne -Penvironment Argument oder mit -Penvironment=local)
+// weist eine GradleException auf das fehlende Property in der local.properties hin.
+// Für alle anderen Builds wird das ein ProjectProperty gesucht, ist dies nicht vorhanden,
+// wird der Default-Value zurückgegeben.
+//TODO das environment darf nicht 'local' als default wert haben und gleichzeitig überall local.properties voraussetzen,
+// 		weil die nicht jeder eingerichtet hat
+def getEnvironmentProperty = { propName, defaultValue ->
+	if ('local'.equals(SVWS_TEST_ENVIRONMENT)) {
+		if (localProperties.containsKey(propName))
+			return localProperties.getProperty(propName)
+		else
+			logger.warn("local.properties in ${project.name} benötigt das Property ${propName}")
+	} else {
+		if (project.hasProperty(propName))
+			return project.getProperty(propName)
+		else
+			return defaultValue
+	}
+}
+project.ext.TESTING_SVWS_PORT = getEnvironmentProperty 'svws.testing.api.port','8443'
+project.ext.TESTING_SVWS_HOST = getEnvironmentProperty 'svws.testing.api.host', 'https://' + project.name + '-svws'
+project.ext.TESTING_SVWS_DB_PORT = getEnvironmentProperty 'svws.testing.db.port', '3306'
+
+def MariaDB_ROOT_PASSWORD = getEnvironmentProperty 'MariaDB_ROOT_PASSWORD', null
+def MariaDB_PASSWORD = getEnvironmentProperty 'MariaDB_PASSWORD', null
+def MariaDB_USER = getEnvironmentProperty 'MariaDB_USER', null
+def SVWS_TLS_KEYSTORE_PASSWORD = getEnvironmentProperty 'SVWS_TLS_KEYSTORE_PASSWORD', null
+def MDB_PASSWORD = getEnvironmentProperty 'MDB_PASSWORD', null
+def testumgebungPath = "$buildDir/testumgebung/${project.name}"
+
+task createEnv(){
+	doFirst {
+		project.mkdir testumgebungPath
+	}
+	doLast {
+		ant.propertyfile(file: "$testumgebungPath/.env") {
+			entry(key:"INIT_SCRIPTS_DIR", value: "/etc/app/svws/init-scripts/gymabi")
+			entry(key:"MariaDB_DATABASE", value: "gymabi")
+
+			entry(key:"SVWS_TLS_KEYSTORE_PATH", value: "/etc/app/svws/conf")
+			entry(key:"SVWS_TLS_KEY_ALIAS", value: "svws-server-local")
+
+			entry(key:"SVWS_TLS_KEYSTORE_PASSWORD", value: SVWS_TLS_KEYSTORE_PASSWORD)
+			entry(key:"MariaDB_ROOT_PASSWORD", value: MariaDB_ROOT_PASSWORD)
+			entry(key:"MariaDB_USER", value: MariaDB_USER)
+			entry(key:"MariaDB_PASSWORD", value: MariaDB_PASSWORD)
+
+			entry(key:"MariaDB_HOST", value: project.name + '-db')
+			entry(key:"SVWS_CONTAINER_NAME", value: project.name + '-svws')
+			entry(key:"DB_CONTAINER_NAME", value: project.name + '-db')
+
+			entry(key:"TESTDB_PASSWORD", value: MDB_PASSWORD)
+		}
+		if(SVWS_TEST_ENVIRONMENT.equals('local')) {
+			ant.propertyfile(file: "$testumgebungPath/.env") {
+				entry(key:"SVWS_PORT", value: project.TESTING_SVWS_PORT)
+				entry(key:"DB_PORT", value: project.TESTING_SVWS_DB_PORT)
+			}
+		}
+	}
+}
+
+task startTestumgebung(type: Exec){
+	dependsOn('createEnv',':testing:buildSVWSApplication')
+	group = 'testenvironment'
+	description = 'Starten der Datenbank und des Application-Servers im Docker' //TODO
+	workingDir "$testumgebungPath"
+	executable 'docker'
+	args 'compose', 'up','--force-recreate', '--wait' //-d (--wait includes -d)
+	doFirst{
+		copy {
+			from '../testumgebung/docker-compose.yml'
+			into "$testumgebungPath"
+		}
+		// für lokale Testumgebungen wird mit dem override der Port des Docker-Containers auf Localhost gebunden
+		if (SVWS_TEST_ENVIRONMENT.equals('local')) {
+			copy {
+				from '../testumgebung/docker-compose.override.yml'
+				into "$testumgebungPath"
+			}
+		}
+	}
+}
+
+task stopTestumgebung(type: Exec){
+	group = 'testenvironment'
+	description = 'Stoppen der Container der Testumgebung'
+	workingDir "$testumgebungPath"
+	executable 'docker'
+	args 'compose', 'down'
+}

@@ -9,7 +9,7 @@
 # https://gradle.org/
 # https://github.com/gradle/gradle
 
-image: eclipse-temurin:17
+image: svwsnrw/dockerrunner
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -33,23 +33,46 @@ before_script:
 
 stages:
   - build
+  - integration-tests
   - analyze
+
+integration-tests:
+  dependencies:
+  - build
+  stage: integration-tests
+  script: ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+  cache:
+    <<: *global_cache
+    policy: pull
+  artifacts:
+    when: always
+    expire_in: "7 days"
+    reports:
+      junit: ./testing/**/build/test-results/**/*.xml
+    paths:
+      - ./testing/**/build/**
+
 
 build:
   stage: build
-  script: ./gradlew --build-cache build
+  script: ./gradlew --build-cache build -Penvironment=build
   cache:
     <<: *global_cache
-    policy: pull    
+    policy: pull
+  when: always
   artifacts:
     when: always
     reports:
       junit: ./**/build/test-results/test/**/TEST-*.xml
+    paths:
+      - "./build/**"
+      - "./**/build/**"
+    expire_in: "1 days"
 
 sonarqube_analysis:
   stage: analyze
   only:
-    refs: 
+    refs:
       - dev
   when: manual
   script: ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace

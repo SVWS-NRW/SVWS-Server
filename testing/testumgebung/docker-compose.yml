@@ -1,0 +1,43 @@
+version: "3"
+services:
+  mariadb:
+    container_name: "${DB_CONTAINER_NAME}"
+    restart: always
+    image: mariadb:10.7.3
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MariaDB_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MariaDB_DATABASE}"
+      MYSQL_USER: "${MariaDB_USER}"
+      MYSQL_PASSWORD: "${MariaDB_PASSWORD}"
+    env_file:
+      - .env
+    healthcheck:
+      test: mariadb --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD -e 'SELECT 1' #ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 10s
+      retries: 15
+    networks:
+      - gitlab_runner_network
+
+  svwstestserver:
+    container_name: "${SVWS_CONTAINER_NAME}"
+    restart: always
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    links:
+      - mariadb
+    image: svwsapplication
+    healthcheck:
+      test: bash -c 'while [[ "$(curl --insecure -s -o /dev/null -w ''%{http_code}'' https://localhost:8443/status/alive)" != "200" ]]; do sleep 1; done'
+      interval: 10s
+      timeout: 200s
+      retries: 20 #TODO healthcheck überarbeiten
+    env_file:
+      - .env
+    networks:
+      - gitlab_runner_network
+
+networks:
+  gitlab_runner_network:
+    external: true

@@ -14,7 +14,7 @@ import io.restassured.http.ContentType;
 
 /**
  * Beispielklasse zum Einsatz von RestAssured zum Testen der API-Endpunkte
- * 
+ *
  */
 class APILehrerTest {
 	/**
@@ -22,10 +22,10 @@ class APILehrerTest {
 	 * Schema)
 	 */
 	private static ServerProps serverProps;
-	
+
 	/**
 	 * Initialisiert die Server Properties
-	 * 
+	 *
 	 * @throws FileNotFoundException vgl. {@link ServerProps#createFromSystemProperties()}
 	 * @throws IOException vgl. {@link ServerProps#createFromSystemProperties()}
 	 */
@@ -43,7 +43,7 @@ class APILehrerTest {
 				.baseUri(serverProps.getHost())
 				.port(serverProps.getPort())
 				.basePath("/db/" + serverProps.getSchema())
-				.auth().basic("Admin", "password")
+				.auth().basic("Admin", "")
 				.log().all()
 				.relaxedHTTPSValidation()
 				.when()

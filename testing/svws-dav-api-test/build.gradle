@@ -2,25 +2,28 @@ dependencies {
 	testImplementation 'io.rest-assured:rest-assured:5.3.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
 }
+apply from: ('../subproject-plugin.gradle')
+def targetSchema = 'gymabi'
 //exclude javadoc for generated model without comments
 testJavadoc {
-    exclude 'de/svws_nrw/api/**'
+    exclude 'de/svws_nrw/test/**'
 }
 
-
-test {
-	onlyIf { 
-		System.properties.containsKey('svws.testing.api.schema')
-		&& System.properties.containsKey('svws.testing.api.port')
-		&& System.properties.containsKey('svws.testing.api.host')
-	}
-	println 'Running DAV-API-Tests with Properties:'
-
-	println 'Host:' + System.getProperty('svws.testing.api.host')
-	println 'Port:' +  System.getProperty('svws.testing.api.port')
-	println 'Schema:' +  System.getProperty('svws.testing.api.schema')	
-	systemProperty 'svws.testing.api.host', System.getProperty('svws.testing.api.host')
-	systemProperty 'svws.testing.api.port', System.getProperty('svws.testing.api.port')
-	systemProperty 'svws.testing.api.schema', System.getProperty('svws.testing.api.schema')
+task apiTest(type: Test) {
+	group 'verification'
+	description 'Java API-Tests ausführen'
+	systemProperty "svws.testing.api.schema", targetSchema
+	systemProperty "svws.testing.api.port", project.TESTING_SVWS_PORT 
+	systemProperty "svws.testing.api.host", project.TESTING_SVWS_HOST
+	// Testergebnisse des letzten Laufs löschen, ApiTests sollen immer durchlaufen, 
+	// auch wenn aktuelle Testergebnisse vorhanden sind, bspw. um zu debuggen
+	useJUnitPlatform()
+	outputs.upToDateWhen {false}
+	testLogging{
+	    events 'passed', 'skipped', 'failed'
+    }
+	// fix for deprecation warning with gradle 9.0
+	// https://docs.gradle.org/8.2/userguide/upgrading_version_8.html#test_task_default_classpath
+	testClassesDirs = testing.suites.test.sources.output.classesDirs
+	classpath = testing.suites.test.sources.runtimeClasspath
 }
-

@@ -25,15 +25,20 @@ public class ServerProps {
 	 * <code>svws.testing.api.host</code><br>
 	 * <code>svws.testing.api.port</code><br>
 	 * <code>svws.testing.api.schema</code><br>
-	 * 
+	 *
 	 * @return die Serverprops, welche in den Systemproperties angegeben sind.
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
 	public static ServerProps createFromSystemProperties() throws FileNotFoundException, IOException {
-		if (System.getProperties().entrySet().contains(HOST_PROPERTY_KEY) &&
-				System.getProperties().entrySet().contains(PORT_PROPERTY_KEY) &&
-				System.getProperties().entrySet().contains(SCHEMA_PROPERTY_KEY)) {
+		System.out.println(System.getProperties().entrySet());
+		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY)) System.out.println(System.getProperty(HOST_PROPERTY_KEY));
+		if (System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) System.out.println(System.getProperty(PORT_PROPERTY_KEY));
+		if (System.getProperties().keySet().contains(SCHEMA_PROPERTY_KEY)) System.out.println(System.getProperty(SCHEMA_PROPERTY_KEY));
+
+		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY) &&
+				System.getProperties().keySet().contains(PORT_PROPERTY_KEY) &&
+				System.getProperties().keySet().contains(SCHEMA_PROPERTY_KEY)) {
 			System.out.println("Tests mit Systemproperties");
 			ServerProps p = new ServerProps();
 			p.host = System.getProperty(HOST_PROPERTY_KEY);
@@ -41,15 +46,26 @@ public class ServerProps {
 			p.schema = System.getProperty(SCHEMA_PROPERTY_KEY);
 			return p;
 		}
-		File file = new File("../local.properties");
-		System.out.println("Tests mit Properties aus " + file.getAbsolutePath());
+		File localPropertyFile = new File("local.properties");
+		System.out.println("Tests mit Properties aus " + localPropertyFile.getAbsolutePath());
+		if (!localPropertyFile.exists()) {
+			throw new FileNotFoundException("local.properties nicht gefunden.");
+		}
 		Properties localProperties = new Properties();
-		localProperties.load(new FileInputStream(file));
-		ServerProps p = new ServerProps();
-		p.host = localProperties.getProperty(HOST_PROPERTY_KEY);
-		p.port = Integer.parseInt(localProperties.getProperty(PORT_PROPERTY_KEY));
-		p.schema = localProperties.getProperty(SCHEMA_PROPERTY_KEY);
-		return p;
+		try (FileInputStream inStream = new FileInputStream(localPropertyFile)) {
+			localProperties.load(inStream);
+			inStream.close();
+			if (!localProperties.containsKey(HOST_PROPERTY_KEY) ||
+					!localProperties.containsKey(PORT_PROPERTY_KEY) ||
+					!localProperties.containsKey(SCHEMA_PROPERTY_KEY)) {
+				throw new IOException("Properties sind unvollständig.");
+			}
+			ServerProps p = new ServerProps();
+			p.host = localProperties.getProperty(HOST_PROPERTY_KEY);
+			p.port = Integer.parseInt(localProperties.getProperty(PORT_PROPERTY_KEY));
+			p.schema = localProperties.getProperty(SCHEMA_PROPERTY_KEY);
+			return p;
+		}
 	}
 
 	/**
@@ -78,6 +94,11 @@ public class ServerProps {
 	 */
 	public String getSchema() {
 		return schema;
+	}
+
+	@Override
+	public String toString() {
+		return "ServerProps [host=" + host + ", port=" + port + ", schema=" + schema + "]";
 	}
 
 }

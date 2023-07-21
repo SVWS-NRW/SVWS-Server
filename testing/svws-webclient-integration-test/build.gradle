@@ -1,0 +1,50 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+dependencies {
+	implementation project(':svws-webclient')
+}
+
+apply from: ('../subproject-plugin.gradle')
+
+def testResultSrc = '../../svws-webclient/build/coverage/api-test'
+def testResultTarget = 'build/test-results/svws-webclient-integration-test'
+
+// lokale variablen, um copyConfigApiTest zu ergänzen
+def targetHost = project.TESTING_SVWS_HOST
+def targetPort = project.TESTING_SVWS_PORT
+def targetSchema = 'gymabi'
+
+def propertyFile = "../testing/svws-webclient-integration-test/local.properties"
+
+tasks.getByPath(":svws-webclient:copyConfigApiTest").configure {
+	if(new File(propertyFile).exists()) {
+		inputs.file(propertyFile)
+	}
+	filter(ReplaceTokens, tokens: [
+		vitest_host: targetHost,
+		vitest_port: targetPort,
+		vitest_schema: targetSchema
+	])
+}
+
+task apiTest(type: Test) {
+	group 'verification'
+	description 'Webclient Api Tests aufrufen'
+	dependsOn(tasks.getByPath(':svws-webclient:testApi'))
+	tasks.getByPath(':svws-webclient:testApi').configure {
+		dependsOn(':testing:svws-webclient-integration-test:startTestumgebung')
+		ignoreExitValue = true
+		outputs.upToDateWhen {false}
+	}
+	reports.junitXml.outputLocation.set(file(testResultSrc))
+	finalizedBy.add('copyTestResults')
+}
+
+task copyTestResults(type: Copy) {
+	from testResultSrc  + '/junit.xml'
+	into testResultTarget
+}
+
+task cleanCopyTestResults() {
+	delete testResultTarget
+}

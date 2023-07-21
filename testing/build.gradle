@@ -1,4 +1,81 @@
-test {
-  println 'Running API Tests'
-  subprojects.each {dependsOn("${it.name}:test")}
+dependencies {
+	implementation project(':svws-server-app')
+}
+// alle Tests in diesem und den Unterprojekten sollen nicht während der globalen Buildphase durchlaufen 
+ext.excludeFromTestsDuringBuild=true
+// Liste der Auszuführenden Subproject-Tests
+def testTasks = ['svws-dav-api-test:apiTest', 'svws-webclient-integration-test:apiTest']
+
+//Baut ein docker image namens dockertest aus den sourcen im tmp folder
+task buildSVWSApplication(type: Exec){
+	group = 'testenvironment'
+	description = 'Erstellen des Dockerimage für den Application-Server' //TODO 
+	dependsOn('copyArtifacts')
+	executable 'docker'
+	args 'build', '-t', 'svwsapplication' ,'-f', './svws/Dockerfile','.'
+}
+
+task copyArtifacts(type: Copy) {
+	group = 'testenvironment'
+	description = 'Kopieren der aktuellen Artefakte'
+	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
+	mustRunAfter(':svws-webclient:doZip')
+	into "./build/tmp/extLibs/"
+	into ("lib/") {
+		from (configurations.runtimeClasspath) {
+			exclude "svws-*.jar"
+		}
+	}
+	into ("/") {
+		from (configurations.runtimeClasspath) {
+			include "svws-*.jar"
+		}
+		from "../svws-webclient/build/SVWS-Client.zip"
+	}
+}
+
+//startet db sowie svws application im docker
+task integrationTest() {
+	group 'verification'
+	description 'Integrationstests in definierter Testumgebung starten'
+	testTasks.each {testTask ->
+		//diesem Task alle TestTasks als dependency zufügen
+		dependsOn(testTask)
+		
+		// Konfigurationen für auszuführende Testtasks ergänzen
+		tasks.getByPath(testTask).configure {
+			dependsOn('startTestumgebung')
+			ignoreFailures = true
+			finalizedBy.add('stopTestumgebung')
+		}
+	}
+	finalizedBy 'analyzeTestResults'
+}
+
+
+task analyzeTestResults() {
+	doLast {
+		def totalFailures = 0
+		def totalErrors = 0
+		testTasks.each { taskName ->
+			def reportFolder = new File(tasks.getByPath(taskName).reports.junitXml.outputLocation.get() as String)
+			println "Collecting Failures from Folder ${reportFolder}"
+			if (reportFolder.listFiles() == null || reportFolder.listFiles().length == 0) {
+				throw new GradleException("Test Reports for project not found in ${reportFolder}")
+			}
+			reportFolder.listFiles().each { report ->
+				if (!report.isDirectory()) {
+					println "Collecting Failures from ${report.name}"
+					def attributes = (new XmlParser().parse(report) as Node).attributes()
+					def failures = attributes.failures.toInteger()
+					def errors = attributes.errors.toInteger()
+					totalFailures += failures
+					totalErrors += errors
+				}
+			}
+		}
+		if (totalFailures > 0 || totalErrors > 0) {
+			throw new GradleException("The build finished, but tests resulted with ${totalErrors} errors and ${totalFailures} failures! ")
+		}
+	}
 }

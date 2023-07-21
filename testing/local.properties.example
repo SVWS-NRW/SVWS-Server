@@ -1,0 +1,24 @@
+#Schema, auf das in diesem Testprojekt zugegriffen wird. Außerdem das Default Schema des SVWS-Servers und der DB
+svws.testing.api.schema=gymabi
+
+#Port des SVWS-Servers, der bei lokaler Ausführung dieses Testprojekts an den Host durchgereicht wird
+#  und den diese API-Tests nutzen sollen.
+svws.testing.api.port=28443
+
+# URL gegen welche dieses Testprojekt testen soll, https://localhost sollte immer richtig sein
+svws.testing.api.host=https://localhost
+
+# Der Port, auf dem der DB-Container auf dem Host-System erreichbar ist, um die Testdaten zu inspizieren.
+# Der SVWS-App-Container nutzt diesen Port nicht.
+svws.testing.db.port=23306
+
+# Das Root-Passwort der MariaDB Instanzen
+MariaDB_ROOT_PASSWORD=*****
+# Der MariaDB Nutzer
+MariaDB_USER=*****
+# Das User-Passwort der MariaDB-Instanzen
+MariaDB_PASSWORD=******
+# Das Passwort für den TLS-Keystore, welcher für den APP-Server generiert wird. WICHTIG: mindestens 6 Zeichen!!!!
+SVWS_TLS_KEYSTORE_PASSWORD=******
+# Das bekannte Passwort der *.mdb-Beispieldaten
+MDB_PASSWORD=*****

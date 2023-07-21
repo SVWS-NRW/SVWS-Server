@@ -107,6 +107,9 @@ allprojects {
 */
 
 	test {
+		onlyIf {
+			!project.hasProperty('excludeFromTestsDuringBuild')
+		}
 	    useJUnitPlatform()
 	}
 

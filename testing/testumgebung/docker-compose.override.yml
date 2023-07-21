@@ -1,0 +1,8 @@
+version: "3"
+services:
+  mariadb:
+    ports:
+      - "${DB_PORT}:3306"
+  svwstestserver:
+    ports:
+      - "${SVWS_PORT}:8443"

@@ -11,6 +11,7 @@
 	"scripts": {
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
+		"test:runAgainstTestEnv": "VITE_svws_testing_api_schema=@vitest_schema@ VITE_svws_testing_api_host=@vitest_host@ VITE_svws_testing_api_port=@vitest_port@ NODE_TLS_REJECT_UNAUTHORIZED=0 vitest run --coverage.reporter=html",
   	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
   	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",
