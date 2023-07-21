@@ -131,7 +131,9 @@ export class RouteManager {
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;
 		if (api.mode !== ServerMode.STABLE)
-			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
+			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
+		if (!to_node.checkServerMode())
+			return routeError.getRoute(new Error("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.beforeEach(to_node, to.params, from_node, from.params);
 		if (result !== true)
@@ -257,7 +259,7 @@ export class RouteManager {
 		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
 		if (failure === undefined) {
 			if (api.mode !== ServerMode.STABLE)
-				console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
+				console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 			if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
 				// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
 				const equals = (to_node.name === from_node.name);
@@ -284,7 +286,7 @@ export class RouteManager {
 			}
 		} else {
 			if (api.mode !== ServerMode.STABLE)
-				console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
+				console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 		}
 		this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 	}
