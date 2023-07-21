@@ -140,6 +140,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				maxEnd - minStart);
 
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
+		result.idKlausurraum = idRaum;
 
 		try {
 			conn.transactionBegin();

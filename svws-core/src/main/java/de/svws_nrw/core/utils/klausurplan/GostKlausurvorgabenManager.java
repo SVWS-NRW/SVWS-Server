@@ -92,7 +92,8 @@ public class GostKlausurvorgabenManager {
 	 */
 	public void addKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", _vorgaben, vorgabe);
-		_vorgaben.sort(_compVorgabe);
+		if (_faecherManager != null)
+			_vorgaben.sort(_compVorgabe);
 		DeveloperNotificationException.ifMapPutOverwrites(_mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
 
 		// Füllen von _mapQuartalKlausurvorgaben
@@ -102,7 +103,8 @@ public class GostKlausurvorgabenManager {
 		_mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
 
 		// Füllen von _mapKursartFachKlausurvorgaben
-		DeveloperNotificationException.ifListAddsDuplicate("_mapKursartFachKlausurvorgabenList", Map2DUtils.getOrCreateArrayList(_mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapKursartFachKlausurvorgabenList", Map2DUtils.getOrCreateArrayList(_mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach),
+				vorgabe);
 		_mapKursartFachKlausurvorgaben.getNonNullOrException(vorgabe.kursart, vorgabe.idFach).sort(_compVorgabe);
 	}
 

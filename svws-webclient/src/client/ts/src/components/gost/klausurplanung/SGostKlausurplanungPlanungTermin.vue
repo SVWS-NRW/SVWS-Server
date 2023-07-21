@@ -44,7 +44,7 @@
 	}>();
 
 	//const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
-	const klausurenOhneRaum = props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager());
+	const klausurenOhneRaum = computed(() => props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager()));
 
 	const erzeugeNeuenRaum = async () => {
 		let nR = new GostKlausurraum();

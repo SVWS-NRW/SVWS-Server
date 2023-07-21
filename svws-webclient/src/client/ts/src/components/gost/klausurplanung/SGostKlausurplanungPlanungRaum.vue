@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-drop-data @drop="setKlausurToRaum">
+	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false">
 		<svws-ui-content-card title="Kausurraum">
 			<svws-ui-multi-select title="Raum auswählen"
 				v-model="stundenplanRaumSelected"
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List, GostFaecherManager, GostKursklausurManager, KursManager, LehrerListeEintrag } from '@core';
 	import type { GostKlausurraum } from '@core';
-	import { ref } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
@@ -37,13 +37,11 @@
 	}>();
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {
-		console.log(props.raummanager.getSchuelerklausurenByKursklausur(klausur.id));
 		const collectionSkrsKrs = await props.setzeRaumZuSchuelerklausuren(props.raum, props.raummanager.getSchuelerklausurenByKursklausur(klausur.id), props.raummanager);
-		console.log(collectionSkrsKrs);
 		console.log(props.raummanager);
 	};
 
-	const klausurenImRaum = props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager());
+	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
 
 	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum));
 	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum) : null;

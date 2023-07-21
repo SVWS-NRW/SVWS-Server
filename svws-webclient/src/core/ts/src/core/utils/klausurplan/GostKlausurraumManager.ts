@@ -68,6 +68,11 @@ export class GostKlausurraumManager extends JavaObject {
 	private readonly _schuelerklausuren : List<GostSchuelerklausur> = new ArrayList();
 
 	/**
+	 * Eine Map Schülerklausur-Id -> GostSchuelerklausuren
+	 */
+	private readonly _mapIdSchuelerklausur : JavaMap<number, GostSchuelerklausur> = new HashMap();
+
+	/**
 	 * Eine Map Kursklausur-Id -> Liste von GostSchuelerklausuren
 	 */
 	private readonly _mapKkidSk : JavaMap<number, List<GostSchuelerklausur>> = new HashMap();
@@ -211,6 +216,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param klausur das Gost-Klausurraum-Objekt
 	 */
 	public addSchuelerklausur(klausur : GostSchuelerklausur) : void {
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdSchuelerklausur, klausur.idSchuelerklausur, klausur);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapKkidSkList", MapUtils.getOrCreateArrayList(this._mapKkidSk, klausur.idKursklausur), klausur);
 		let raumstunden : List<GostKlausurraumstunde> | null = this._mapidRsSkrsRevert.get(klausur.idSchuelerklausur);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList", Map2DUtils.getOrCreateArrayList(this._mapRaumKursklausurSchuelerklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, klausur.idKursklausur), klausur);
@@ -233,23 +239,29 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum geändert
 	 * hat.
 	 *
-	 * @param skids die IDs der Schülerklausuren
+	 * @param skids             die IDs der Schülerklausuren
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public setzeRaumZuSchuelerklausuren(skids : List<number>, collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
 		for (const skid of skids) {
+			const schuelerklausur : GostSchuelerklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdSchuelerklausur, skid);
 			let listKrs : List<GostKlausurraumstunde | null> | null = this._mapidRsSkrsRevert.get(skid);
-			if (listKrs === null)
+			if (listKrs === null) {
+				DeveloperNotificationException.ifMap2DGetIsNull(this._mapRaumKursklausurSchuelerklausur, -1, schuelerklausur.idKursklausur).remove(schuelerklausur);
 				continue;
+			}
+			DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrsRevert, skid);
 			for (const rsid of listKrs) {
 				if (rsid === null)
 					continue;
 				const skrsList : List<GostSchuelerklausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._mapidRsSkrs, rsid.id);
 				const toRemove : List<GostSchuelerklausurraumstunde> | null = new ArrayList();
-				for (const skrs of skrsList)
+				for (const skrs of skrsList) {
 					if (skrs.idSchuelerklausur === skid)
 						toRemove.add(skrs);
+				}
 				skrsList.removeAll(toRemove);
+				DeveloperNotificationException.ifMap2DGetIsNull(this._mapRaumKursklausurSchuelerklausur, rsid.idRaum, schuelerklausur.idKursklausur).remove(schuelerklausur);
 			}
 		}
 		const raumstunden : List<GostKlausurraumstunde> = collectionSkrsKrs.raumstunden;
@@ -258,6 +270,10 @@ export class GostKlausurraumManager extends JavaObject {
 			this.addKlausurraumstunde(rs);
 		for (const skrs of skRaumstunden)
 			this.addSchuelerklausurraumstunde(skrs);
+		for (const skid of skids) {
+			const schuelerklausur : GostSchuelerklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdSchuelerklausur, skid);
+			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList", Map2DUtils.getOrCreateArrayList(this._mapRaumKursklausurSchuelerklausur, collectionSkrsKrs.idKlausurraum, schuelerklausur.idKursklausur), schuelerklausur);
+		}
 	}
 
 	/**
@@ -289,15 +305,18 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
-	 * @param idRaum die Id des Klausurraums
+	 * @param idRaum  die Id des Klausurraums
 	 * @param manager der Kursklausurmanager
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
 	public getKursklausurenInRaum(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
 		let kursklausuren : List<GostKursklausur> | null = new ArrayList();
+		if (!this._mapRaumKursklausurSchuelerklausur.containsKey1(idRaum))
+			return kursklausuren;
 		for (const idKK of this._mapRaumKursklausurSchuelerklausur.getKeySetOf(idRaum)) {
-			kursklausuren.add(manager.getKursklausurById(idKK));
+			if (!this._mapRaumKursklausurSchuelerklausur.getNonNullOrException(idRaum, idKK).isEmpty())
+				kursklausuren.add(manager.getKursklausurById(idKK));
 		}
 		return kursklausuren;
 	}

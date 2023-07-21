@@ -16,6 +16,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	 */
 	public skRaumstunden : List<GostSchuelerklausurraumstunde> = new ArrayList();
 
+	/**
+	 * Die ID der Klausurraumstunde.
+	 */
+	public idKlausurraum : number = -1;
+
 
 	public constructor() {
 		super();
@@ -38,6 +43,9 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.skRaumstunden?.add(GostSchuelerklausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (typeof obj.idKlausurraum === "undefined")
+			 throw new Error('invalid json format, missing attribute idKlausurraum');
+		result.idKlausurraum = obj.idKlausurraum;
 		return result;
 	}
 
@@ -67,6 +75,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,6 +110,9 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.idKlausurraum !== "undefined") {
+			result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

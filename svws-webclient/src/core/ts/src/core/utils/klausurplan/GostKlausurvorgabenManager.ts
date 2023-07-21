@@ -99,7 +99,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", this._vorgaben, vorgabe);
-		this._vorgaben.sort(this._compVorgabe);
+		if (this._faecherManager !== null)
+			this._vorgaben.sort(this._compVorgabe);
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKlausurvorgabenList", MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
 		this._mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
