@@ -156,19 +156,6 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	}
 
 	/**
-	 * Prüft, ob der Modus, in welchem der Server betrieben wird die Verwendung
-	 * dieser Route erlaubt oder nicht.
-	 *
-	 * @returns true, falls die Nutzung der Route erlaubt ist, ansonsten false
-	 */
-	public checkServerMode(): boolean {
-		return (api.mode == ServerMode.STABLE) && (this.mode === ServerMode.STABLE)
-			|| (api.mode == ServerMode.BETA) && (this.mode !== ServerMode.DEV) && (this.mode !== ServerMode.ALPHA)
-			|| (api.mode == ServerMode.ALPHA) && (this.mode !== ServerMode.DEV)
-			|| (api.mode == ServerMode.DEV);
-	}
-
-	/**
      * Setzt die Kind-Knoten für diesen Knoten in Bezug auf das
      * "Nested"-Routing.
      *
@@ -192,7 +179,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public get children() : RouteNode<unknown, any>[] {
 		const result : RouteNode<unknown, any>[] = [];
 		for (const node of this._children) {
-			if (api.authenticated && (!node.checkServerMode() || !node.hatSchulform() || !node.hatEineKompetenz()))
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
 				continue;
 			result.push(node);
 		}
@@ -218,7 +205,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public get menu() : RouteNode<unknown, any>[] {
 		const result: RouteNode<unknown, any>[] = [];
 		for (const node of this._menu)
-			if (node.checkServerMode())
+			if (node.mode.checkServerMode(api.mode))
 				result.push(node);
 		return result;
 	}

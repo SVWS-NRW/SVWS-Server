@@ -132,7 +132,7 @@ export class RouteManager {
 			return false;
 		if (api.mode !== ServerMode.STABLE)
 			console.log("Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node.name + " " + JSON.stringify(to.params)
-		if (!to_node.checkServerMode())
+		if (!to_node.mode.checkServerMode(api.mode))
 			return routeError.getRoute(new Error("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
 		let result: any = await to_node.beforeEach(to_node, to.params, from_node, from.params);
