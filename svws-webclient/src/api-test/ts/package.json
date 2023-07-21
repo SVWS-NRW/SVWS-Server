@@ -11,7 +11,7 @@
 	"scripts": {
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
-		"test:runAgainstTestEnv": "VITE_svws_testing_api_schema=gymabi VITE_svws_testing_api_host=https://svws-webclient-integration-test-svws VITE_svws_testing_api_port=8443 NODE_TLS_REJECT_UNAUTHORIZED=0 vitest run --coverage.reporter=html",
+		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
   	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
   	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",

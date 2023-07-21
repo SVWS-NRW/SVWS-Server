@@ -16,18 +16,10 @@ def targetSchema = 'gymabi'
 
 def propertyFile = "../testing/svws-webclient-integration-test/local.properties"
 
-tasks.getByPath(":svws-webclient:copyConfigApiTest").configure {
+task apiTest(type: Test) {
 	if(new File(propertyFile).exists()) {
 		inputs.file(propertyFile)
 	}
-	filter(ReplaceTokens, tokens: [
-		vitest_host: targetHost,
-		vitest_port: targetPort,
-		vitest_schema: targetSchema
-	])
-}
-
-task apiTest(type: Test) {
 	group 'verification'
 	description 'Webclient Api Tests aufrufen'
 	dependsOn(tasks.getByPath(':svws-webclient:testApi'))
@@ -35,6 +27,11 @@ task apiTest(type: Test) {
 		dependsOn(':testing:svws-webclient-integration-test:startTestumgebung')
 		ignoreExitValue = true
 		outputs.upToDateWhen {false}
+		
+		environment NODE_TLS_REJECT_UNAUTHORIZED: 0
+		environment VITE_svws_testing_api_schema: targetSchema
+		environment VITE_svws_testing_api_host: targetHost
+		environment VITE_svws_testing_api_port: targetPort
 	}
 	reports.junitXml.outputLocation.set(file(testResultSrc))
 	finalizedBy.add('copyTestResults')
