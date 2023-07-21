@@ -1,27 +1,27 @@
 # SVWS Testumgebung
-1. [TLDR; Quickstart](#quickstart)
-2. [Aufbau des Projekts](#aufbau)
+1. [Quickstart](#quickstart)
+2. [Aufbau des Projekts](#aufbau-des-projekts)
    1. [Docker Runner](#docker-runner)
-   2. [Compose & Override, .env](#compose)
+   2. [Compose & Override, .env](#compose-override-und-umgebungsvariablen)
    2. [Gradle Plugin](#gradle-plugin)
-   3. [Globales Gradle](#gradle-global)
-   4. [Testspezifisches Gradle](#gradle-test)
-   5. [Buildumgebungen](#buildenv)
+   3. [Globales Gradle](#globales-gradle)
+   4. [Testspezifisches Gradle](#testspezifisches-gradle)
+   5. [Buildumgebungen](#buildumgebungen)
    6. [local.properties](#local-properties)
-   7. [gitlab-ci.yml](#gitci)
-   8. [Vergleich local.properties vs gitlab-ci.yml](#gitci-vs-local)
-3. [Änderungen an anderen Gradle-Modulen](#module-changes)
-4. [Neue Subprojekte zufügen](#addProject)
+   7. [gitlab-ci.yml](#gitlab-ci-yml)
+   8. [Vergleich local.properties vs gitlab-ci.yml](#vergleich-local-properties-vs-gitlab-ci-yml)
+3. [Änderungen an anderen Gradle-Modulen](#aenderungen-an-anderen-gradle-modulen)
+4. [Neue Subprojekte zufügen](#neue-subprojekte-zufuegen)
 
-## TLDR; Quickstart <a name="quickstart"></a>
-### TLDR;
+## Quickstart
+### Quickstart Testumgebung einrichten - kurz
 1. [Docker Installation](https://docs.docker.com/desktop/)
 2. `docker network create gitlab_runner_network`
 3. Kopieren und anpassen von `local.properties` aus `local.properties.example` nach `testing/svws-*/`
 4. `./gradlew build`
 5. `./gradlew testing:integrationTest`
 
-### Quickstart
+### Quickstart Testumgebung einrichten - lang
 Die Testumgebung benötigt eine lokale Dockerinstallation, siehe [Docker Installation](https://docs.docker.com/desktop/).  Installieren und prüfen, ob die Installation geklappt hat:
 ```
 critter@critter-Virtual-Machine:~$ docker --version
@@ -73,12 +73,12 @@ Darüber hinaus haben die Subprojekte einzelne Tasks, mit denen die Container f�
 
 
 
-## Aufbau des Projekts <a name="aufbau"></a>
-### Docker Runner <a name="docker-runner"></a>
+## Aufbau des Projekts
+### Docker Runner
 Dieses Repository enthält die Dateien für einen Docker Runner, der in einem Docker Container auf Basis von Eclipse Temurin 17 läuft. Der Docker Runner ist mit der Docker CLI ausgestattet und kann über eine Socket-Verbindung auf den Docker Daemon des Hosts zugreifen. Dies ermöglicht das Erstellen, Bauen und Stoppen von Docker Containern innerhalb der Testumgebung.
 
 Das Image wird unter https://hub.docker.com/r/svwsnrw/dockerrunner gehostet und wird in der CI Pipeline verwendet.
-### Compose & Override, .env <a name="compose"></a>
+### Compose, Override und Umgebungsvariablen
 Die Tests werden mithilfe von Docker Compose ausgeführt, wobei zwei Container gestartet werden: ein Container für die MariaDB-Datenbank und ein Container für die Anwendung "svwstestserver", gegen die die Tests durchgeführt werden. Die Compose Files befinden sich unter **/testing/testumgebung**
 
 #### Verwendete Komponenten
@@ -86,7 +86,8 @@ Die Tests werden mithilfe von Docker Compose ausgeführt, wobei zwei Container g
 
 #### Konfiguration der Container
 Die Container werden über ein **.env** File mit den benötigten Daten (Ports, Namen etc.) versorgt. Dieses wird über den Gradle task **createEnv** erzeugt. Da lokal die Ports der Container im von außerhalb erreichbar sein sollen werden diese per override errichtbar gemacht (**docker.override.yml**). 
-### Gradle Plugin <a name="gradle-plugin"></a>
+
+### Gradle Plugin
 Die Tasks für die einzelnen Subprojekte sind in `testing/subproject-plugin.gradle` definiert. Darüber hinaus wird in diesem Skript die Umgebung anhand des vorhandensein der `local.properties` und/oder der Gradle-Umgebungsvariable `-Penvironment` analysiert und die für die Projekte notwendigen Umgebungsvariablen gesetzt.
 - wenn `project.hasProperty("environment")` wird dieses genutzt
 - sonst wird versucht die `local.propertie` zu lesen
@@ -98,7 +99,7 @@ Tasks:
 - `stopTestumgebung` führt ein `docker compose down` aus
 
 
-### Globales Gradle <a name="gradle-global"></a>
+### Globales Gradle
 In `SVWS-Server/testing/build.gradle` sind die auszuführenden Test-Tasks aufgelistet. Außerdem gibt es Tasks:
 - `copyArtifacts` zum Kopieren der Build-Artefakte, 
 - `buildSVWSApplication` zum Erstellen des Images des App-Containers, 
@@ -118,14 +119,14 @@ Zu guter letzt definiert dieses build.gradle die Variable `ext.excludeFromTestsD
    ```
 
 
-### Testspezifisches Gradle <a name="gradle-test"></a>
+### Testspezifisches Gradle
 Das 
-### Buildumgebungen <a name="buildenv"></a>
-### local.properties <a name="local-properties"></a>
-### gitlab-ci.yml <a name="gitci"></a>
-### Vergleich local.properties vs gitlab-ci.yml <a name="gitci-vs-local"></a>
-## Änderungen an anderen Gradle-Modulen <a name="module-changes"></a>
-## Neue Subprojekte zufügen <a name="addProject"></a>
+### Buildumgebungen
+### local.properties
+### gitlab-ci.yml
+### Vergleich local.properties vs gitlab-ci.yml
+## Aenderungen an anderen Gradle-Modulen
+## Neue Subprojekte zufuegen
 |                |ASCII                          |HTML                         |
 |----------------|-------------------------------|-----------------------------|
 |Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
