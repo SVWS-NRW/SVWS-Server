@@ -12,6 +12,7 @@ import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
 import de.svws_nrw.davapi.api.DavUriBuilder;
@@ -73,7 +74,7 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
@@ -102,7 +103,7 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -129,7 +130,7 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
 			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -165,7 +166,7 @@ public class APIKalender {
 			@HeaderParam("If-None-Match") final String ifNonMatchHeader, @HeaderParam("If-Match") final String ifMatchHeader,
 			@Context final HttpServletRequest request) {
 
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
 				InputStream inputStream = getInputStream(request)) {
 			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
 
@@ -222,7 +223,7 @@ public class APIKalender {
 	public Response deleteOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUID,
 			@HeaderParam("If-Match") final String ifMatchHeader, @Context final HttpServletRequest request) {
-		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request,
+		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
 			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
 			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId, kalenderEintragUID, ifMatchHeader);
@@ -254,7 +255,7 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response deleteOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request,
+		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
 			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
 			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId);

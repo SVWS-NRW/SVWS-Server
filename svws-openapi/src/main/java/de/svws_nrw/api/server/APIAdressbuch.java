@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.IOException;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
 import de.svws_nrw.davapi.api.DavUriBuilder;
@@ -50,7 +51,7 @@ public class APIAdressbuch {
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnRoot(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final PropfindDavRootDispatcher dispatcher = createPropfindDavRootDispatcher(conn);
 			final Object result = dispatcher.dispatchCollection(inputStream);
@@ -79,7 +80,7 @@ public class APIAdressbuch {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnPrincipal(@PathParam("schema") final String schema, @PathParam("benutzerId") final String benutzerId,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final PropfindPrincipalDispatcher dispatcher = createPropfindPrincipalDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, benutzerId);
@@ -105,7 +106,7 @@ public class APIAdressbuch {
 	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnAddressbooks(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
@@ -134,7 +135,7 @@ public class APIAdressbuch {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
@@ -163,7 +164,7 @@ public class APIAdressbuch {
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
@@ -193,7 +194,7 @@ public class APIAdressbuch {
 	public Response reportOnContact(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @PathParam("resourceId") final String kontaktId,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
 				ServletInputStream inputStream = request.getInputStream()) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);

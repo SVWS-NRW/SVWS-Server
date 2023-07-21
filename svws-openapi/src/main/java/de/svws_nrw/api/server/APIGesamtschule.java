@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.ge.DataGEAbschlussFaecher;
 import de.svws_nrw.db.DBEntityManager;
@@ -52,7 +53,7 @@ public class APIGesamtschule {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getGesamtschuleSchuelerPrognoseLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                               @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataGEAbschlussFaecher(conn)).get(id);
     	}
     }
@@ -83,7 +84,7 @@ public class APIGesamtschule {
     public Response getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("id") final long id,
     																@PathParam("abschnittID") final long abschnittID,
     		                                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
     		return (new DataGEAbschlussFaecher(conn)).getByAbschnitt(id, abschnittID);
     	}
     }

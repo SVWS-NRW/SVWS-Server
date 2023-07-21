@@ -37,6 +37,24 @@ public enum ServerMode {
 		return text;
 	}
 
+
+	/**
+	 * Prüft, ob der Modus, in welchem der Server betrieben wird ausreicht, um
+	 * eine Funktion, welche in diesem Modus unterstützt werden soll,
+	 * zu unterstützen oder nicht.
+	 *
+	 * @param serverMode   der Modus, in welchem der Server betrieben wird
+	 *
+	 * @return true, falls die Nutzung erlaubt ist, ansonsten false
+	 */
+	public boolean checkServerMode(final ServerMode serverMode) {
+		return (serverMode == ServerMode.STABLE) && (this == ServerMode.STABLE)
+			|| (serverMode == ServerMode.BETA) && (this != ServerMode.DEV) && (this != ServerMode.ALPHA)
+			|| (serverMode == ServerMode.ALPHA) && (this != ServerMode.DEV)
+			|| (serverMode == ServerMode.DEV);
+	}
+
+
 	/**
 	 * Liefert das {@link ServerMode}-Objekt anhand des übergebenen Textes.
 	 * Der Vergleich des Textes erfolgt dabei case-insensitive. Ist der übergebene

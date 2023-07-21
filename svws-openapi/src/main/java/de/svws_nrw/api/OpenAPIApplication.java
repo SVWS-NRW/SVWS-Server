@@ -37,6 +37,7 @@ import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStundenplan;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -180,11 +181,14 @@ public final class OpenAPIApplication extends Application {
 	/**
 	 * Ermittelt den aktuellen SVWS-Benutzer anhand des HTTP-Requests.
 	 *
-	 * @param request das HTTP-Request-Objekt
+	 * @param request   das HTTP-Request-Objekt
+	 * @param mode      der benötigte Server-Mode für den API-Zugriff
 	 *
 	 * @return der aktuelle SVWS-Benutzer
 	 */
-	private static Benutzer getSVWSUser(final HttpServletRequest request) {
+	private static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode) {
+		if (!mode.checkServerMode(SVWSKonfiguration.get().getServerMode()))
+			throw OperationError.SERVICE_UNAVAILABLE.exception("Der Dienst ist noch nicht verfügbar, da er sich zur Zeit noch in der Entwicklung befindet (Stand: %s).".formatted(mode.name()));
 		if (request.getUserPrincipal() instanceof final OpenAPIPrincipal openAPIPrincipal) {
 			final Benutzer user = openAPIPrincipal.getUser();
 			if (user == null)
@@ -204,6 +208,7 @@ public final class OpenAPIApplication extends Application {
 	 * entweder Admin-Rechte oder eine der übergebenen Kompetenzen besitzt.
 	 *
 	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
 	 *
 	 * @return der aktuelle SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
@@ -211,8 +216,8 @@ public final class OpenAPIApplication extends Application {
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUser(final HttpServletRequest request, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
-		final Benutzer user = getSVWSUser(request);
+	public static Benutzer getSVWSUser(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
+		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
 		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)))
 			throw OperationError.FORBIDDEN.exception();
@@ -225,6 +230,7 @@ public final class OpenAPIApplication extends Application {
 	 * dem Benutzer mit der übergebenen Benutzer-ID.
 	 *
 	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
 	 * @param user_id       die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
 	 *
@@ -233,8 +239,8 @@ public final class OpenAPIApplication extends Application {
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
-		final Benutzer user = getSVWSUser(request);
+	public static Benutzer getSVWSUserAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
+		final Benutzer user = getSVWSUser(request, mode);
 		final Set<BenutzerKompetenz> setKompetenzen = new HashSet<>(Arrays.asList(kompetenzen));
 		if ((user == null) || (!setKompetenzen.contains(BenutzerKompetenz.KEINE)) && (!user.pruefeKompetenz(setKompetenzen)) && (user.getId() != user_id))
 			throw OperationError.FORBIDDEN.exception();
@@ -248,6 +254,7 @@ public final class OpenAPIApplication extends Application {
 	 * {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
 	 *
 	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
 	 *
 	 * @return die Datenbankverbindung für den aktuellen SVWS-Benutzer, falls ein Benutzer mit der Kompetenz angemeldet ist
@@ -255,8 +262,8 @@ public final class OpenAPIApplication extends Application {
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnection(final HttpServletRequest request, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
-		return getSVWSUser(request, kompetenzen).getEntityManager();
+	public static DBEntityManager getDBConnection(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
+		return getSVWSUser(request, mode, kompetenzen).getEntityManager();
 	}
 
 
@@ -267,6 +274,7 @@ public final class OpenAPIApplication extends Application {
 	 * Anschließend wird eine {@link DBEntityManager} Instanz für den Datenbankzugriff zurückgegeben.
 	 *
 	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
 	 * @param user_id       die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
 	 * @param kompetenzen   die zu prüfenden Kompetenzen
 	 *
@@ -275,8 +283,8 @@ public final class OpenAPIApplication extends Application {
 	 * @throws WebApplicationException   Ist kein Benutzer angemeldet oder besitzt nicht die erforderliche Kompetenz,
 	 *                                   so wird eine WebApplicationException mit dem HTTP Status Code FORBIDDEN (403) generiert
 	 */
-	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
-		return getSVWSUserAllowSelf(request, user_id, kompetenzen).getEntityManager();
+	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
+		return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
 	}
 
 }

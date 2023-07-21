@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.svws_nrw.core.data.benutzer.Credentials;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DataBenutzerDaten;
@@ -71,7 +72,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Benutzerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Benutzer-Einträge gefunden")
     public Response getBenutzerliste(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerliste(conn).getList());
         }
     }
@@ -95,7 +96,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag gefunden")
     public Response getBenutzerDatenEigene(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
         	final Benutzer user = conn.getUser();
         	if (user == null)
         		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
@@ -123,7 +124,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn).get(id));
         }
     }
@@ -146,7 +147,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Benutzergruppendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Benutzergruppen-Einträge gefunden")
     public Response getBenutzergruppenliste(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeliste(conn).getList());
         }
     }
@@ -171,7 +172,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzergruppeDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-       try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+       try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn).get(id));
         }
     }
@@ -197,7 +198,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerMitGruppenID(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerliste(conn).getListMitGruppenID(id));
         }
     }
@@ -226,7 +227,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anzeigename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setAnzeigename(id, JSONMapper.toString(is));
         }
     }
@@ -255,7 +256,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setAnmeldename(id, JSONMapper.toString(is));
         }
     }
@@ -283,7 +284,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
@@ -311,7 +312,7 @@ public class APIBenutzer {
     public Response addBenutzerAdmin(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).addAdmin(id);
         }
     }
@@ -338,7 +339,7 @@ public class APIBenutzer {
     public Response removeBenutzerAdmin(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).removeAdmin(id);
         }
     }
@@ -366,7 +367,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).addKompetenzen(id, kids);
         }
     }
@@ -396,7 +397,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).removeKompetenzen(id, kids);
         }
     }
@@ -425,7 +426,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, id, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).setPassword(id, JSONMapper.toString(is));
         }
     }
@@ -450,7 +451,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     public Response getKatalogBenutzerkompetenzen(@PathParam("schema") final String schema,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
             return (new DataBenutzerkompetenzliste().getList());
         }
     }
@@ -473,7 +474,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     public Response getKatalogBenutzerkompetenzgruppen(@PathParam("schema") final String schema,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
             return (new DataBenutzerkompetenzGruppenliste().getList());
         }
     }
@@ -505,7 +506,7 @@ public class APIBenutzer {
             @RequestBody(description = "Die Bezeichnung der Benutzergruppe.", required = true,
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).setBezeichnung(id, JSONMapper.toString(is));
         }
     }
@@ -534,7 +535,7 @@ public class APIBenutzer {
     public Response addBenutzergruppeAdmin(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
            @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).addAdmin(id);
         }
     }
@@ -562,7 +563,7 @@ public class APIBenutzer {
     public Response removeBenutzergruppeAdmin(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).removeAdmin(id);
         }
     }
@@ -590,7 +591,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).addKompetenzen(id, kids);
         }
     }
@@ -618,7 +619,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).removeKompetenzen(id, kids);
         }
     }
@@ -647,7 +648,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).addBenutzer(id, bids);
         }
     }
@@ -676,7 +677,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).removeBenutzer(id, bids);
         }
     }
@@ -711,7 +712,7 @@ public class APIBenutzer {
             @RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Credentials.class))) final Credentials daten,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
             return (new DataBenutzerDaten(conn)).createBenutzerAllgemein(daten, anzeigename);
         }
     }
@@ -738,7 +739,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzerDaten(conn)).removeBenutzerAllgemein(bids);
         }
     }
@@ -768,7 +769,7 @@ public class APIBenutzer {
             @RequestBody(description = "Der Post für die Benutzergruppe-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzergruppeDaten.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) { // TODO Anpassung der Benutzerrechte
              return (new DataBenutzergruppeDaten(conn)).create(is);
         }
     }
@@ -795,7 +796,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Benutzergruppen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bgids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.ADMIN)) {
+        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
             return (new DataBenutzergruppeDaten(conn)).remove(bgids);
         }
     }

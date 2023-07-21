@@ -1,6 +1,7 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -89,10 +90,9 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 */
 	public Response getBySchuelerIDAsResponse(final Long aLong) {
 		try {
-			final List<SchuelerKAoADaten> daten = this.getBySchuelerID(aLong);
-			if (daten == null || daten.isEmpty()) {
-				return Response.status(Response.Status.NOT_FOUND).build();
-			}
+			List<SchuelerKAoADaten> daten = this.getBySchuelerID(aLong);
+			if (daten == null || daten.isEmpty())
+				daten = new ArrayList<>();
 			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (@SuppressWarnings("unused") final Exception e) {
 			return Response.status(Response.Status.NOT_FOUND).build();

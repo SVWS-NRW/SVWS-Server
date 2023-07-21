@@ -5,6 +5,7 @@ import java.util.List;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
@@ -60,7 +61,7 @@ public class APISchema {
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     public List<String> updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, BenutzerKompetenz.ADMIN);
+    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = revision;
@@ -137,7 +138,7 @@ public class APISchema {
     	schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
     public Long revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
@@ -168,7 +169,7 @@ public class APISchema {
     	schema = @Schema(implementation = Boolean.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
     public boolean isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final DTODBVersion version = conn.querySingle(DTODBVersion.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());

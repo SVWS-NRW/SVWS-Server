@@ -60,6 +60,19 @@ export class ServerMode extends JavaObject implements JavaEnum<ServerMode> {
 	}
 
 	/**
+	 * Prüft, ob der Modus, in welchem der Server betrieben wird ausreicht, um
+	 * eine Funktion, welche in diesem Modus unterstützt werden soll,
+	 * zu unterstützen oder nicht.
+	 *
+	 * @param serverMode   der Modus, in welchem der Server betrieben wird
+	 *
+	 * @return true, falls die Nutzung erlaubt ist, ansonsten false
+	 */
+	public checkServerMode(serverMode : ServerMode | null) : boolean {
+		return (serverMode as unknown === ServerMode.STABLE as unknown) && (this as unknown === ServerMode.STABLE as unknown) || (serverMode as unknown === ServerMode.BETA as unknown) && (this as unknown !== ServerMode.DEV as unknown) && (this as unknown !== ServerMode.ALPHA as unknown) || (serverMode as unknown === ServerMode.ALPHA as unknown) && (this as unknown !== ServerMode.DEV as unknown) || (serverMode as unknown === ServerMode.DEV as unknown);
+	}
+
+	/**
 	 * Liefert das {@link ServerMode}-Objekt anhand des übergebenen Textes.
 	 * Der Vergleich des Textes erfolgt dabei case-insensitive. Ist der übergebene
 	 * Wert ungültig, so wird als Default STABLE zurückgegeben, so dass ein
