@@ -36,9 +36,11 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOKatalogPausenzeit.beginn.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Beginn IN :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.ende", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende = :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.ende.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Ende IN :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.bezeichnung", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Bezeichnung = :value")
+@NamedQuery(name = "DTOKatalogPausenzeit.bezeichnung.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Bezeichnung IN :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.primaryKeyQuery", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOKatalogPausenzeit.all.migration", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Tag", "Beginn", "Ende"})
+@JsonPropertyOrder({"ID", "Tag", "Beginn", "Ende", "Bezeichnung"})
 public final class DTOKatalogPausenzeit {
 
 	/** Eine ID, die einen Pausenzeit-Eintrag eindeutig identifiziert */
@@ -68,6 +70,11 @@ public final class DTOKatalogPausenzeit {
 	@JsonDeserialize(using = UhrzeitConverterDeserializer.class)
 	public Integer Ende;
 
+	/** Eine kurze Bezeichnung, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause) */
+	@Column(name = "Bezeichnung")
+	@JsonProperty
+	public String Bezeichnung;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKatalogPausenzeit ohne eine Initialisierung der Attribute.
 	 */
@@ -81,8 +88,9 @@ public final class DTOKatalogPausenzeit {
 	 * @param Tag   der Wert für das Attribut Tag
 	 * @param Beginn   der Wert für das Attribut Beginn
 	 * @param Ende   der Wert für das Attribut Ende
+	 * @param Bezeichnung   der Wert für das Attribut Bezeichnung
 	 */
-	public DTOKatalogPausenzeit(final long ID, final int Tag, final Integer Beginn, final Integer Ende) {
+	public DTOKatalogPausenzeit(final long ID, final int Tag, final Integer Beginn, final Integer Ende, final String Bezeichnung) {
 		this.ID = ID;
 		this.Tag = Tag;
 		if (Beginn == null) {
@@ -93,6 +101,10 @@ public final class DTOKatalogPausenzeit {
 			throw new NullPointerException("Ende must not be null");
 		}
 		this.Ende = Ende;
+		if (Bezeichnung == null) {
+			throw new NullPointerException("Bezeichnung must not be null");
+		}
+		this.Bezeichnung = Bezeichnung;
 	}
 
 
@@ -124,7 +136,7 @@ public final class DTOKatalogPausenzeit {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKatalogPausenzeit(ID=" + this.ID + ", Tag=" + this.Tag + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ")";
+		return "DTOKatalogPausenzeit(ID=" + this.ID + ", Tag=" + this.Tag + ", Beginn=" + this.Beginn + ", Ende=" + this.Ende + ", Bezeichnung=" + this.Bezeichnung + ")";
 	}
 
 }

@@ -34,6 +34,12 @@ public class Tabelle_Katalog_Pausenzeiten extends SchemaTabelle {
 		.setConverter(UhrzeitConverter.class)
 		.setJavaComment("Die Uhrzeit, wann die Pausenzeit endet");
 
+	/** Die Definition der Tabellenspalte Bezeichnung */
+	public SchemaTabelleSpalte col_Bezeichnung = add("Bezeichnung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(40)
+		.setNotNull()
+		.setDefault("Pause")
+		.setJavaComment("Eine kurze Bezeichnung, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause)");
+
 
 	/** Die Definition des Unique-Index Katalog_Pausenzeiten_UC1 */
 	public SchemaTabelleUniqueIndex unique_Katalog_Pausenzeiten_UC1 = addUniqueIndex("Katalog_Pausenzeiten_UC1",

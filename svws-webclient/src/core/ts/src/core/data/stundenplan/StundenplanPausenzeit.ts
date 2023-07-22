@@ -22,6 +22,11 @@ export class StundenplanPausenzeit extends JavaObject {
 	 */
 	public ende : number | null = null;
 
+	/**
+	 * Die Bezeichnung der Pausenzeit, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause).
+	 */
+	public bezeichnung : string = "Pause";
+
 
 	public constructor() {
 		super();
@@ -42,6 +47,9 @@ export class StundenplanPausenzeit extends JavaObject {
 		result.wochentag = obj.wochentag;
 		result.beginn = typeof obj.beginn === "undefined" ? null : obj.beginn === null ? null : obj.beginn;
 		result.ende = typeof obj.ende === "undefined" ? null : obj.ende === null ? null : obj.ende;
+		if (typeof obj.bezeichnung === "undefined")
+			 throw new Error('invalid json format, missing attribute bezeichnung');
+		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
 
@@ -51,6 +59,7 @@ export class StundenplanPausenzeit extends JavaObject {
 		result += '"wochentag" : ' + obj.wochentag + ',';
 		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
 		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
+		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,6 +78,9 @@ export class StundenplanPausenzeit extends JavaObject {
 		}
 		if (typeof obj.ende !== "undefined") {
 			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
+		}
+		if (typeof obj.bezeichnung !== "undefined") {
+			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

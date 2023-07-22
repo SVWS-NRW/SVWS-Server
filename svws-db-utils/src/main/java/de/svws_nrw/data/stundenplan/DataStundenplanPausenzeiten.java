@@ -50,6 +50,7 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		daten.wochentag = p.Tag;
 		daten.beginn = p.Beginn;
 		daten.ende = p.Ende;
+		daten.bezeichnung = p.Bezeichnung;
 		return daten;
 	};
 
@@ -101,7 +102,8 @@ public final class DataStundenplanPausenzeiten extends DataManager<Long> {
 		}),
 		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
 		Map.entry("beginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-		Map.entry("ende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+		Map.entry("ende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+		Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 40))
 	);
 
 	@Override
