@@ -1,5 +1,5 @@
-import type { SchuelerStundenplanManager } from "@core";
+import type { StundenplanManager } from "@core";
 
 export interface SchuelerStundenplanDatenProps {
-	manager: SchuelerStundenplanManager | undefined
+	manager: () => StundenplanManager
 }

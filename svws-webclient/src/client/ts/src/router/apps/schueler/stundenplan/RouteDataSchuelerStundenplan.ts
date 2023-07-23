@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { StundenplanListeEintrag} from "@core";
-import { SchuelerStundenplanManager } from "@core";
+import { StundenplanManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,14 +12,16 @@ import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenpla
 
 
 interface RouteStateSchuelerDataStundenplan {
+	idSchueler: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
-	manager: SchuelerStundenplanManager | undefined;
+	manager: StundenplanManager | undefined;
 }
 
 export class RouteDataSchuelerStundenplan {
 
 	private static _defaultState: RouteStateSchuelerDataStundenplan = {
+		idSchueler: undefined,
 		auswahl: undefined,
 		mapStundenplaene: new Map(),
 		manager: undefined,
@@ -45,7 +47,9 @@ export class RouteDataSchuelerStundenplan {
 		return this._state.value.auswahl;
 	}
 
-	get manager(): SchuelerStundenplanManager | undefined {
+	get manager(): StundenplanManager {
+		if (this._state.value.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Stunden-Manager nicht vorhanden, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
 		return this._state.value.manager;
 	}
 
@@ -59,19 +63,29 @@ export class RouteDataSchuelerStundenplan {
 		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapStundenplaene });
+		this.setPatchedDefaultState({ idSchueler: this._state.value.idSchueler, auswahl, mapStundenplaene });
 	}
 
 	public async setEintrag(idSchueler: number, idStundenplan?: number) {
-		if (((idStundenplan === undefined) && (this.manager === undefined)) ||
-		((this.manager !== undefined) && (this.manager.getSchuelerID() === idSchueler) && (this.manager.getStundenplanID() === idStundenplan)))
+		// Prüfe, ob die vorge Auswahl mit der neuen Auswahl übereinstimmt. In diesem Fall ist keine Aktion nötig
+		const vorige_auswahl = this._state.value.auswahl;
+		if ((vorige_auswahl !== undefined) && (this._state.value.idSchueler === idSchueler) && (vorige_auswahl.id === idStundenplan))
 			return;
-		const auswahl = this.mapStundenplaene.get(idStundenplan || -1);
-		if (auswahl !== undefined) {
-			const daten = await api.server.getSchuelerStundenplan(api.schema, auswahl.id, idSchueler);
-			const manager = new SchuelerStundenplanManager(daten);
-			this.setPatchedState({auswahl, manager});
-		} else this.setPatchedState({auswahl: undefined, manager: undefined})
+		// Prüfe, ob der Stundenplan deselektiert wird. In diesem Fall muss der interne State zurückgesetzt werden.
+		if (idStundenplan === undefined) {
+			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined });
+			return;
+		}
+		// Ermittle aus der Liste der Stundenpläne den Stundenplan
+		const auswahl = this.mapStundenplaene.get(idStundenplan);
+		if (auswahl === undefined) {
+			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined });
+			return;
+		}
+		// Lade den Lehrer-Stundenplan
+		const daten = await api.server.getSchuelerStundenplan(api.schema, auswahl.id, idSchueler);
+		const manager = new StundenplanManager(daten);
+		this.setPatchedState({ idSchueler, auswahl, manager });
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {

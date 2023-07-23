@@ -5,9 +5,9 @@ import { type StundenplanListeEintrag, StundenplanManager} from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
-import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
+import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 
 
 interface RouteStateLehrerDataStundenplan {
@@ -84,11 +84,11 @@ export class RouteDataLehrerStundenplan {
 		// Lade den Lehrer-Stundenplan
 		const daten = await api.server.getLehrerStundenplan(api.schema, auswahl.id, idLehrer);
 		const manager = new StundenplanManager(daten);
-		this.setPatchedState({idLehrer, auswahl, manager});
+		this.setPatchedState({ idLehrer, auswahl, manager });
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeSchuelerStundenplanDaten.name, params: { id: routeSchueler.data.stammdaten.id, idStundenplan: value?.id } });
+		await RouteManager.doRoute({ name: routeLehrerStundenplanDaten.name, params: { id: routeLehrer.data.stammdaten.id, idStundenplan: value?.id } });
 	}
 
 }
