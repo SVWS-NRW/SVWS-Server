@@ -8,6 +8,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 import { RouteDataKlassen } from "~/router/apps/klassen/RouteDataKlassen";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
@@ -27,7 +28,8 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKlasseDaten
+			routeKlasseDaten,
+			routeKlassenStundenplan
 		];
 		super.defaultChild = routeKlasseDaten;
 	}
