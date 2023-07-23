@@ -131,7 +131,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public getKlausurvorgaben() : List<GostKlausurvorgabe>;
+	public getKlausurvorgaben() : List<GostKlausurvorgabe> {
+		return this._vorgaben;
+	}
 
 	/**
 	 * Liefert eine Liste von GostKlausurvorgabe-Objekten zum übergebenen Quartal
@@ -140,18 +142,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public getKlausurvorgaben(quartal : number) : List<GostKlausurvorgabe> | null;
-
-	/**
-	 * Implementation for method overloads of 'getKlausurvorgaben'
-	 */
-	public getKlausurvorgaben(__param0? : number) : List<GostKlausurvorgabe> | null {
-		if ((typeof __param0 === "undefined")) {
-			return this._vorgaben;
-		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number")) {
-			const quartal : number = __param0 as number;
-			return this._mapQuartalKlausurvorgaben.get(quartal);
-		} else throw new Error('invalid method overload');
+	public getKlausurvorgabenByQuartal(quartal : number) : List<GostKlausurvorgabe> | null {
+		if (quartal === 0)
+			return this.getKlausurvorgaben();
+		return this._mapQuartalKlausurvorgaben.get(quartal);
 	}
 
 	/**

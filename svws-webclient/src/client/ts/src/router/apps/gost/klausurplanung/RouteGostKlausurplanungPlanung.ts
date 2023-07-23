@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode, Vector } from "@core";
 
@@ -16,13 +16,18 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 		super.text = "Detailplanung";
 	}
 
+	public checkHidden(params?: RouteParams) {
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		return (abiturjahr === undefined) || (abiturjahr === -1);
+	}
+
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			jahrgangsdaten: routeGostKlausurplanung.data.hatJahrgangsdaten ? routeGostKlausurplanung.data.jahrgangsdaten : undefined,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,

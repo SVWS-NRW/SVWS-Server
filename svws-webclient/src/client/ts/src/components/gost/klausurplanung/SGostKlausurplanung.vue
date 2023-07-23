@@ -1,13 +1,4 @@
 <template>
-	<div class="router-tab-bar--subnav">
-		<!--TODO: "Ansicht" auswahl aus Sidebar hier anzeigen-->
-		<svws-ui-radio-group id="ansicht" :row="true">
-			<!-- Statisches Beispiel:
-			<svws-ui-radio-option name="ansicht" v-model="ansicht" label="Klausurdaten" value="klausurdaten" icon-type="view"/>
-			<svws-ui-radio-option name="ansicht" v-model="ansicht" label="Schienen" value="schienen" icon-type="view" />
-			<svws-ui-radio-option name="ansicht" v-model="ansicht" label="Kalender" value="kalender" icon-type="view" />-->
-		</svws-ui-radio-group>
-	</div>
 	<router-view />
 </template>
 

@@ -1,7 +1,7 @@
-import { shallowRef } from "vue";
+import { computed, shallowRef } from "vue";
 
 import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays } from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -27,6 +27,7 @@ interface RouteStateGostKlausurplanung {
 	klausurvorgabenmanager: GostKlausurvorgabenManager | undefined;
 	stundenplanmanager: StundenplanManager | undefined;
 	kursmanager: KursManager;
+	quartalsauswahl: 0 | 1 | 2 ;
 	view: RouteNode<any, any>;
 }
 
@@ -43,6 +44,7 @@ export class RouteDataGostKlausurplanung {
 		klausurvorgabenmanager: undefined,
 		stundenplanmanager: undefined,
 		kursmanager: new KursManager(),
+		quartalsauswahl: 0,
 		view: routeGostKlausurplanungKlausurdaten,
 	}
 
@@ -82,43 +84,50 @@ export class RouteDataGostKlausurplanung {
 			this._state.value = RouteDataGostKlausurplanung._defaultState;
 			return;
 		}
-		api.status.start();
-		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
-		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
-		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
-		const faecherManager = new GostFaecherManager(listFaecher);
-		const mapSchueler = new Map<number, SchuelerListeEintrag>();
-		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
-		let view: RouteNode<any, any> = this._state.value.view;
-		// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
-		const listKurse = await api.server.getKurse(api.schema);
-		const kursManager = new KursManager(listKurse);
+		try {
+			api.status.start();
+			// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
+			const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
+			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
+			const faecherManager = new GostFaecherManager(listFaecher);
+			const mapSchueler = new Map<number, SchuelerListeEintrag>();
+			const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
+			let view: RouteNode<any, any> = this._state.value.view;
+			// TODO schieben in getHalbjahr und durch getKurseFuerAbschnitt ersetzen
+			const listKurse = await api.server.getKurse(api.schema);
+			const kursManager = new KursManager(listKurse);
 
-		if (abiturjahr !== -1) {
-			const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
-			// Lade die Schülerliste des Abiturjahrgangs
-			for (const s of listSchueler)
-				mapSchueler.set(s.id, s);
+			if (abiturjahr !== -1) {
+				const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
+				// Lade die Schülerliste des Abiturjahrgangs
+				for (const s of listSchueler)
+					mapSchueler.set(s.id, s);
+				// Lade die Lehrerliste
+				const listLehrer = await api.server.getLehrer(api.schema);
+				for (const l of listLehrer)
+					mapLehrer.set(l.id, l);
+			} else {
+				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungKlausurdaten))
+					view = routeGostKlausurplanungKlausurdaten;
+			}
+			// Setze den State neu
+			this.setPatchedDefaultState({
+				abiturjahr: abiturjahr,
+				jahrgangsdaten: jahrgangsdaten,
+				mapSchueler: mapSchueler,
+				faecherManager: faecherManager,
+				mapLehrer: mapLehrer,
+				halbjahr: this._state.value.halbjahr,
+				kursmanager: kursManager,
+				view: view,
+			});
+		} finally {
 			api.status.stop();
-			// Lade die Lehrerliste
-			const listLehrer = await api.server.getLehrer(api.schema);
-			for (const l of listLehrer)
-				mapLehrer.set(l.id, l);
-		} else {
-			if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungKlausurdaten))
-				view = routeGostKlausurplanungKlausurdaten;
 		}
-		// Setze den State neu
-		this.setPatchedDefaultState({
-			abiturjahr: abiturjahr,
-			jahrgangsdaten: jahrgangsdaten,
-			mapSchueler: mapSchueler,
-			faecherManager: faecherManager,
-			mapLehrer: mapLehrer,
-			halbjahr: this._state.value.halbjahr,
-			kursmanager: kursManager,
-			view: view,
-		});
+	}
+
+	public get hatJahrgangsdaten(): boolean {
+		return this._state.value.jahrgangsdaten !== undefined;
 	}
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
@@ -154,44 +163,52 @@ export class RouteDataGostKlausurplanung {
 		if (halbjahr === this._state.value.halbjahr)
 			return false;
 
-		api.status.start();
-		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-		const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
-		const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-		if (abschnitt === undefined) {
-			// TODO reagiere beim Routing ensprechend auf diesen Fehler
-			api.status.stop();
-			throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
-		}
-		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
-		if (listStundenplaene.isEmpty()) {
-			api.status.stop();
+		try {
+			api.status.start();
+			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
+			if (this._state.value.abiturjahr === -1) {
+				this.setPatchedState({
+					halbjahr: halbjahr,
+					kursklausurmanager: undefined,
+					stundenplanmanager: undefined,
+					klausurvorgabenmanager: klausurvorgabenmanager,
+				});
+				return true;
+			}
+			const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
+			const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+			if (abschnitt === undefined)
+				throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
+			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
+			if (listStundenplaene.isEmpty()) {
+				this.setPatchedState({
+					halbjahr: halbjahr,
+					kursklausurmanager: undefined,
+					stundenplanmanager: undefined,
+					klausurvorgabenmanager: undefined,
+				});
+				return true;
+			}
+			const stundenplan = listStundenplaene.get(0);
+			const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
+			const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
+			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
+			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
+			const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
+			const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
+			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({
 				halbjahr: halbjahr,
-				kursklausurmanager: undefined,
-				stundenplanmanager: undefined,
-				klausurvorgabenmanager: undefined,
+				kursklausurmanager,
+				stundenplanmanager,
+				klausurvorgabenmanager,
 			});
 			return true;
+		} finally {
+			api.status.stop();
 		}
-		const stundenplan = listStundenplaene.get(0);
-		const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
-		const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
-		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
-		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
-		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
-		const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
-		const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-		const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
-		api.status.stop();
-		this.setPatchedState({
-			halbjahr: halbjahr,
-			kursklausurmanager,
-			stundenplanmanager,
-			klausurvorgabenmanager,
-		});
-		return true;
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -224,6 +241,14 @@ export class RouteDataGostKlausurplanung {
 			throw new Error("Es wurde noch keine Daten geladen, so dass kein Klausur-Vorgaben-Manager zur Verfügung steht.");
 		return this._state.value.klausurvorgabenmanager;
 	}
+
+	quartalsauswahl = computed({
+		get: () : 0 | 1 | 2 => this._state.value.quartalsauswahl,
+		set: (value: 0 | 1 | 2): void => {
+			this._state.value.quartalsauswahl = value;
+			this.commit();
+		}
+	  });
 
 	public async setView(view: RouteNode<any,any>) {
 		if ((view !== routeGostKlausurplanungKlausurdaten) &&

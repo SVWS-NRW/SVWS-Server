@@ -1,11 +1,16 @@
 <template>
+	<Teleport to=".router-tab-bar--subnav-target">
+		<svws-ui-sub-nav>
+			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+			<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
+			<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
+			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-daten-hilfe /> </svws-ui-modal-hilfe>
+		</svws-ui-sub-nav>
+	</Teleport>
+
 	<div class="flex gap-x-8 2xl:gap-x-16">
 		<div class="flex-grow">
 			<svws-ui-content-card>
-				<div class="flex flex-wrap gap-2 mb-4">
-					<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
-					<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
-				</div>
 				<svws-ui-data-table :items="vorgaben" :columns="[{key:'idFach', label: 'Fach', sortable: true},{key: 'kursart', label: 'Kursart', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 					<template #cell(idFach)="{ value }">
 						{{ faecherManager.get(value)?.bezeichnung }}
@@ -100,24 +105,15 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostJahrgangsdaten, GostKlausurvorgabenManager, GostFach } from "@core";
+	import type { GostFach } from "@core";
 	import type { Ref , WritableComputedRef } from 'vue'
 	import { ArrayList, GostKlausurvorgabe } from "@core";
 	import { computed, ref } from 'vue';
+	import type { GostKlausurplanungDatenProps } from "./SGostKlausurplanungDatenProps";
 
-	const props = defineProps<{
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		kursklausurmanager: () => GostKursklausurManager;
-		klausurvorgabenmanager: () => GostKlausurvorgabenManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		erzeugeKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<GostKlausurvorgabe>;
-		patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<boolean>;
-		loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
-		erzeugeVorgabenAusVorlage: () => Promise<boolean>;
-	}>();
+	const props = defineProps<GostKlausurplanungDatenProps>();
 
-	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgaben());
+	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgabenByQuartal(props.quartalsauswahl.value));
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());

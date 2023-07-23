@@ -50,27 +50,23 @@
 				</svws-ui-button>
 			</template>
 		</svws-ui-modal>
+
+		<Teleport to=".router-tab-bar--subnav-target">
+			<svws-ui-sub-nav>
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+				<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
+				<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
+				<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartalsauswahl.value <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+				<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
+				<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
+			</svws-ui-sub-nav>
+		</Teleport>
+
 		<svws-ui-content-card>
-			<div class="flex flex-wrap justify-between items-start">
-				<div class="flex flex-wrap items-center gap-2">
-					<label class="font-bold" for="rgQuartalAuswahl">Quartal:</label>
-					<svws-ui-radio-group id="rgQuartalAuswahl" :row="true">
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="Beide" value="0" @input="chooseQuartal(0)" :model-value="quartal.toString()" />
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="1." value="1" @input="chooseQuartal(1)" :model-value="quartal.toString()" />
-						<svws-ui-radio-option name="rgQuartalAuswahl" label="2." value="2" @input="chooseQuartal(2)" :model-value="quartal.toString()" />
-					</svws-ui-radio-group>
-				</div>
-				<div class="flex flex-wrap items-center gap-2">
-					<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartal)">Erstelle Klausuren</svws-ui-button>
-					<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartal)" :disabled="quartal <= 0">Neuer Termin</svws-ui-button>
-					<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartal <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
-					<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
-				</div>
-			</div>
 			<div class="flex flex-row gap-8 mt-4">
 				<div class="flex flex-col">
 					<div class="text-headline-md">Zu verplanen:</div>
-					<s-gost-klausurplanung-schienen-termin :quartal="quartal"
+					<s-gost-klausurplanung-schienen-termin :quartal="quartalsauswahl.value"
 						:kursklausurmanager="kursklausurmanager"
 						:termin="null"
 						:alle-termine="termine"
@@ -119,9 +115,6 @@
 
 	const loading = ref<boolean>(false);
 
-	const quartal = ref(0);
-	const chooseQuartal = (q: number) => quartal.value = q;
-
 	const dragKlausur = ref<GostKursklausur | null>(null);
 
 	const dragStartKlausur = (e: DragEvent, klausur: GostKursklausur) =>	{
@@ -138,7 +131,7 @@
 		"opacity-40": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
 	});
 
-	const termine = computed(() => quartal.value <= 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(quartal.value));
+	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value));
 
 	const algMode = ref("algNormal");
 	const lkgkMode = ref("lkgkMix");
@@ -147,7 +140,7 @@
 	const blocken = async () => {
 		loading.value = true;
 		modal.value.closeModal();
-		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(quartal.value);
+		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
 		if (algMode.value === "algNormal")
@@ -172,7 +165,7 @@
 		console.log(blockConfig.get_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin());
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
 		for await (const klausurList of klausurTermine) {
-			const termin = await props.erzeugeKlausurtermin(quartal.value);
+			const termin = await props.erzeugeKlausurtermin(props.quartalsauswahl.value);
 			for await (const klausurId of klausurList) {
 				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
 				if (klausur !== null) {

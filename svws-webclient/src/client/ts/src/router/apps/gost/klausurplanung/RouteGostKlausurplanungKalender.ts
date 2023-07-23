@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
 
@@ -14,6 +14,11 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
+	}
+
+	public checkHidden(params?: RouteParams) {
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {

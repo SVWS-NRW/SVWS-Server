@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 
 import type { GostKlausurplanungSchienenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungSchienenProps";
+import { routeError } from "~/router/error/RouteError";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
@@ -18,14 +19,19 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 		super.text = "Schienen";
 	}
 
+	public checkHidden(params?: RouteParams) {
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		return (abiturjahr === undefined) || (abiturjahr === -1);
+	}
+
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
-			return new Error("Fehler: Die Parameter dürfen keine Arrays sein");
+			return routeError.getRoute(new Error("Fehler: Die Parameter dürfen keine Arrays sein"));
 		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
 		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			return new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+			return routeError.getRoute(new Error("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein."));
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
@@ -44,6 +50,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
+			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
 	}
 
