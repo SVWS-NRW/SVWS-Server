@@ -103,7 +103,7 @@ public class ExportDB {
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUsername = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false);
+			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false, 0, 0);
 
 		    // Lese den Namen für die SQLite-Datenbank ein
 			final String filename = cmdLine.getValue("f", "svws_export.sqlite");

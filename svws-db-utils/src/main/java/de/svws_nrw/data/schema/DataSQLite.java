@@ -143,7 +143,7 @@ public final class DataSQLite {
     	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
 
     	// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
-		final DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, tmpDirectory + "/" + tmpFilename, null, false, null, null, true, false);
+		final DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, tmpDirectory + "/" + tmpFilename, null, false, null, null, true, false, 0, 0);
 
 		// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
 		final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());

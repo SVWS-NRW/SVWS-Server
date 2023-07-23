@@ -58,7 +58,7 @@ public class ImportLupoMDB {
 			final String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false);
+			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false, 0, 0);
 			final Benutzer user = Benutzer.create(tgtConfig);
 
 		    // Lese den Namen für der LuPO-Datei ein und öffne die Datei

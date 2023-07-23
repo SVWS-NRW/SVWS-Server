@@ -366,10 +366,10 @@ public final class DBRootManager {
 	 */
 	private static DBConfig getDBRootConfig(final DBDriver driver, final String db_location, final String user_root, final String pw_root) {
 		return switch (driver) {
-			case MARIA_DB, MYSQL -> new DBConfig(driver, db_location, "mysql", false, user_root == null ? "root" : user_root, pw_root, true, false);
-			case MDB -> new DBConfig(driver, db_location, null, false, null, "", true, true);
-			case MSSQL -> new DBConfig(driver, db_location, "master", false, user_root == null ? "sa" : user_root, pw_root, true, false);
-			case SQLITE -> new DBConfig(driver, db_location, null, false, null, null, true, true);
+			case MARIA_DB, MYSQL -> new DBConfig(driver, db_location, "mysql", false, user_root == null ? "root" : user_root, pw_root, true, false, 0, 0);
+			case MDB -> new DBConfig(driver, db_location, null, false, null, "", true, true, 0, 0);
+			case MSSQL -> new DBConfig(driver, db_location, "master", false, user_root == null ? "sa" : user_root, pw_root, true, false, 0, 0);
+			case SQLITE -> new DBConfig(driver, db_location, null, false, null, null, true, true, 0, 0);
 			default -> null;
 		};
 	}

@@ -118,7 +118,7 @@ public class MigrateDB {
 			final String srcDB = cmdLine.getValue("ss", "PUBLIC");
 			final String srcUser = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false);
+			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false, 0, 0);
 
 		    // Lese die Optionen für die Ziel-Datenbank ein
 		    final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
@@ -130,7 +130,7 @@ public class MigrateDB {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
+			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true, 0, 0);
 
 			// Führe die Migration mithilfe des Schema-Managers durch.
 			DBMigrationManager.migrate(srcConfig, tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, schulNr, logger);

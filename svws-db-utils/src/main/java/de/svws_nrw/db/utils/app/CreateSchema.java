@@ -109,7 +109,7 @@ public class CreateSchema {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
+			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true, 0, 0);
 
 			// Führe das Erstellen mithilfe des Schema-Managers durch.
 			DBSchemaManager.createNewSchema(tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, logger);

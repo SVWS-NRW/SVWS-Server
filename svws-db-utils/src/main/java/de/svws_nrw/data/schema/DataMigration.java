@@ -88,7 +88,7 @@ public final class DataMigration {
     	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
 
     	// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
-		final DBConfig srcConfig = new DBConfig(DBDriver.MDB, mdbdirectory + "/" + mdbFilename, "PUBLIC", false, "admin", srcDBPassword, true, false);
+		final DBConfig srcConfig = new DBConfig(DBDriver.MDB, mdbdirectory + "/" + mdbFilename, "PUBLIC", false, "admin", srcDBPassword, true, false, 0, 0);
 
 		// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
 		final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
@@ -144,7 +144,7 @@ public final class DataMigration {
     	}
 
 		final DBConfig srcConfig = new DBConfig(srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false, verbindungsdaten.username,
-				verbindungsdaten.password, true, false);
+				verbindungsdaten.password, true, false, 0, 0);
     	return migrateInto(conn, schemaname, srcConfig, schulnummer);
     }
 

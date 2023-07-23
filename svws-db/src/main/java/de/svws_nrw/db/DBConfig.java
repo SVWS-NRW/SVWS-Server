@@ -41,45 +41,11 @@ public final class DBConfig {
 	private final boolean create_db_file;
 
 	/** Gibt an, wieviele wiederholte Verbindungsversuche zur Datenbank stattfinden */
-	private int connectionRetries;
+	private final int connectionRetries;
 
 	/** Gibt an, in welchem zeitlichen Abstand wiederholte Verbindungsversuche stattfinden */
-	private long retryTimeout;
+	private final long retryTimeout;
 
-	/**
-	 * Erstellt eine Datenbank-Konfiguration mit den angegebenen Parametern
-	 *
-	 * @param dbDriver       der Typ des DBMS für den Datenbankzugriff
-	 * @param dbLocation     der Ort, an dem sich die Datenbank befindet
-	 * @param dbSchema       das Schema in der Datenbank, das verwendet werden soll
-	 * @param useDBLogin     gibt an, dass der SVWS-Benutzername und das Kennwort auch für die Datenbankverbindung verwendet werden
-	 * @param username       der Benutzername für die Datenbankverbindung
-	 * @param password       das Password für die Datenbankverbindung
-	 * @param useDBLogging   gibt an, ob der Datenbankzugriff geloggt werden soll
-	 * @param createDBFile   gibt an, ob bei der Verbindung zu der Datenbank automatisch eine
-	 *                       neue Datenbankdatei erzeugt werden soll, falls zuvor keine Datei
-	 *                       vorhanden war
-	 */
-	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username, final String password,
-			final boolean useDBLogging, final boolean createDBFile) {
-		this.db_driver = (dbDriver == null) ? DEFAULT_DB_DRIVER : dbDriver;
-		this.db_location = ((dbLocation == null) || "".equals(dbLocation.trim())) ? DEFAULT_DB_LOCATION : dbLocation;
-		switch (this.db_driver) {
-			case MSSQL, MARIA_DB, MYSQL:
-				this.db_schema = ((dbSchema == null) || "".equals(dbSchema.trim())) ? this.db_driver.getRootSchema() : dbSchema;
-				this.create_db_file = false;
-				break;
-			case MDB, SQLITE:
-			default:
-				this.db_schema = this.db_driver.getRootSchema();
-				this.create_db_file = createDBFile;
-				break;
-		}
-		this.use_db_login = useDBLogin;
-		this.username = username;
-		this.password = password;
-		this.use_db_logging = useDBLogging;
-	}
 
 	/**
 	 * Erstellt eine Datenbank-Konfiguration mit den angegebenen Parametern
@@ -99,9 +65,8 @@ public final class DBConfig {
 	 *                          automatisch eine neue Datenbankdatei erzeugt
 	 *                          werden soll, falls zuvor keine Datei vorhanden
 	 *                          war
-	 * @param connectionRetries gibt an, wieviele wiederholte
-	 *                          Verbindungsversuche zur Datenbank stattfinden
-	 *                          sollen
+	 * @param connectionRetries gibt an, wieviele wiederholte Verbindungsversuche
+	 *                          zur Datenbank stattfinden sollen
 	 * @param retryTimeout      gibt an, wie hoch die Wartezeit zwischen zwei
 	 *                          wiederholten Verbindungsversuchen in
 	 *                          Millisekunden sein soll
@@ -109,10 +74,28 @@ public final class DBConfig {
 	 */
 	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username, final String password,
 			final boolean useDBLogging, final boolean createDBFile, final int connectionRetries, final long retryTimeout) {
-		this(dbDriver, dbLocation, dbSchema, useDBLogin, username, password, useDBLogging, createDBFile);
+		this.db_driver = (dbDriver == null) ? DEFAULT_DB_DRIVER : dbDriver;
+		this.db_location = ((dbLocation == null) || "".equals(dbLocation.trim())) ? DEFAULT_DB_LOCATION : dbLocation;
+		switch (this.db_driver) {
+			case MSSQL, MARIA_DB, MYSQL:
+				this.db_schema = ((dbSchema == null) || "".equals(dbSchema.trim())) ? this.db_driver.getRootSchema() : dbSchema;
+				this.create_db_file = false;
+				break;
+			case MDB, SQLITE:
+			default:
+				this.db_schema = this.db_driver.getRootSchema();
+				this.create_db_file = createDBFile;
+				break;
+		}
+		this.use_db_login = useDBLogin;
+		this.username = username;
+		this.password = password;
+		this.use_db_logging = useDBLogging;
 		this.connectionRetries = connectionRetries;
 		this.retryTimeout = retryTimeout;
 	}
+
+
 	/**
 	 * Gibt den Datenbank-Treiber ({@link DBDriver}) der Konfiguration zurück.
 	 *
