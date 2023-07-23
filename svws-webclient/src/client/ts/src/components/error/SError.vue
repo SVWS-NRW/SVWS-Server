@@ -3,7 +3,7 @@
 		<template #main>
 			<div class="error-wrapper">
 				<div class="error-container">
-					<div class="error-form modal modal--md">
+					<div class="error-form modal modal--lg">
 						<div class="modal--content-wrapper">
 							<div class="modal--content">
 								<div class="error-form-header mb-8 px-8 py-4 mt-6">
@@ -18,7 +18,7 @@
 									<div> Fehler : {{ error.name }} </div>
 									<div> Message : {{ error.message }} </div>
 									<div> Stack Trace : </div>
-									<div class="ml-5"> {{ error.stack }} </div>
+									<div class="ml-5" style="white-space: pre;"> {{ error.stack }} </div>
 								</div>
 							</div>
 						</div>
