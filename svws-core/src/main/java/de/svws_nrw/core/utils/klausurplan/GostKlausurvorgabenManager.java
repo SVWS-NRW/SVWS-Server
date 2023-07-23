@@ -149,7 +149,9 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public List<@NotNull GostKlausurvorgabe> getKlausurvorgaben(final int quartal) {
+	public List<@NotNull GostKlausurvorgabe> getKlausurvorgabenByQuartal(final int quartal) {
+		if (quartal == 0)
+			return getKlausurvorgaben();
 		return _mapQuartalKlausurvorgaben.get(quartal);
 	}
 
