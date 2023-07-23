@@ -19,6 +19,9 @@ export class RouteKlasseDaten extends RouteNode<unknown, RouteKlassen> {
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		// Prüfe, ob diese Route als aktuelle View für die Tab-Bar gesetzt ist
+		if (routeKlassen.data.view !== this)
+			await routeKlassen.data.setView(this);
 		if (routeKlassen.data.auswahl === undefined)
 			return routeKlassen.getRoute(undefined)
 	}

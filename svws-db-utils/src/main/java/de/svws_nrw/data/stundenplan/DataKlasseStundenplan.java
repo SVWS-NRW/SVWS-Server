@@ -76,17 +76,14 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
 		stundenplan.daten.gueltigBis = dtoStundenplan.Ende;
 		stundenplan.daten.wochenTypModell = dtoStundenplan.WochentypModell;
-		final StundenplanKlasse klasse = new StundenplanKlasse();
-		klasse.id = dtoKlasse.ID;
-		klasse.kuerzel = dtoKlasse.Klasse;
-		klasse.bezeichnung = dtoKlasse.Bezeichnung;
-		klasse.jahrgaenge.add(dtoKlasse.Jahrgang_ID);
-		stundenplan.unterrichtsverteilung.klassen.add(klasse);
+		final StundenplanKlasse klasse = DataStundenplanKlassen.getById(conn, idStundenplan, id);
 		stundenplan.daten.jahrgaenge.addAll(DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan));
 		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
 		stundenplan.daten.zeitraster.addAll(DataStundenplanZeitraster.getZeitraster(conn, idStundenplan));
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);
+		if (stundenplan.unterrichtsverteilung.klassen.isEmpty())
+			stundenplan.unterrichtsverteilung.klassen.add(klasse);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 

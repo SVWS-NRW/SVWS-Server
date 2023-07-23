@@ -96,18 +96,24 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-	@Override
-	public Response get(final Long id) {
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+	/**
+	 * Ermittelt die Informationen zu der angegebenen Klasse für den angegebenen Stundenplan.
+	 *
+	 * @param conn             die Datenbank-Verbindung
+	 * @param idStundenplan    die ID des Stundenplans
+	 * @param idKlasse         die ID der Klasse
+	 *
+	 * @return die Informationen zu der angegebenen Klasse für den angegebenen Stundenplan
+	 */
+	public static StundenplanKlasse getById(final DBEntityManager conn, final long idStundenplan, final long idKlasse) {
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
-		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Klasse mit der ID null ist unzulässig.");
-		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, id);
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde keine Klasse mit der ID %d gefunden.".formatted(id));
+			throw OperationError.NOT_FOUND.exception("Es wurde keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		if (klasse.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
-			return OperationError.BAD_REQUEST.getResponse("Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
+			throw OperationError.BAD_REQUEST.exception("Der Schuljahresabschnitt %d der Klasse mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
 					.formatted(klasse.Schuljahresabschnitts_ID, klasse.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
 		// Jahrgänge bestimmen
 		final List<Long> jahrgangsIDs = new ArrayList<>();
@@ -119,6 +125,14 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);
 		daten.jahrgaenge.addAll(jahrgangsIDs);
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einer Klasse mit der ID null ist unzulässig.");
+		final StundenplanKlasse daten = getById(conn, stundenplanID, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

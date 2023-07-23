@@ -49,7 +49,12 @@ export class RouteKlassenStundenplanDaten extends RouteNode<unknown, RouteKlasse
 		await routeKlassenStundenplan.data.setEintrag(-1, undefined);
 	}
 
-	public getRoute(id: number, idStundenplan: number) : RouteLocationRaw {
+	public getRoute(id: number, idStundenplan?: number) : RouteLocationRaw {
+		if (idStundenplan === undefined) {
+			if (routeKlassenStundenplan.data.hatAuswahl)
+				return { name: this.name, params: { id, idStundenplan: routeKlassenStundenplan.data.auswahl.id }};
+			return { name: routeKlassenStundenplan.name, params : { id } };
+		}
 		return { name: this.name, params: { id, idStundenplan }};
 	}
 

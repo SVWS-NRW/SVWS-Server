@@ -49,7 +49,7 @@ export class RouteDataKurse {
 		if (routeKurse.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für die Kurse gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {

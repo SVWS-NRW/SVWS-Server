@@ -40,6 +40,10 @@ export class RouteDataKlassenStundenplan {
 		this._state.value = { ... this._state.value };
 	}
 
+	get hatAuswahl(): boolean {
+		return (this._state.value.auswahl !== undefined);
+	}
+
 	get auswahl(): StundenplanListeEintrag {
 		if (this._state.value.auswahl === undefined)
 			throw new Error("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");

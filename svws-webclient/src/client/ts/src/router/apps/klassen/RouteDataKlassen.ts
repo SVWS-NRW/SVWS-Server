@@ -50,7 +50,7 @@ export class RouteDataKlassen {
 		if (routeKlassen.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für die Religionen gewählte Ansicht wird nicht unterstützt.");
+			throw new Error("Diese für die Klassen gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {
@@ -98,13 +98,17 @@ export class RouteDataKlassen {
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge })
 	}
 
-	setEintrag = async (auswahl: KlassenListeEintrag) => {
+	setEintrag = async (auswahl: KlassenListeEintrag | undefined) => {
+		if (auswahl === undefined) {
+			this.setPatchedState({ auswahl: undefined, daten: undefined })
+			return;
+		}
 		const daten = await api.server.getKlasse(api.schema, auswahl.id)
 		this.setPatchedState({ auswahl, daten })
 	}
 
 	gotoEintrag = async (eintrag: KlassenListeEintrag) => {
-		await RouteManager.doRoute(routeKlassen.getRoute(eintrag.id));
+		await RouteManager.doRoute(this._state.value.view.getRoute(eintrag.id));
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {
