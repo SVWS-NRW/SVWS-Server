@@ -70,10 +70,12 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		if (dtoKlasse == null)
 			throw new NotFoundException("Kein Klasse mit angegebener ID gefunden");
 		stundenplan.daten.id = dtoStundenplan.ID;
+		stundenplan.unterrichtsverteilung.id = dtoStundenplan.ID;
 		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
 		stundenplan.daten.bezeichnungStundenplan = dtoStundenplan.Beschreibung;
 		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
 		stundenplan.daten.gueltigBis = dtoStundenplan.Ende;
+		stundenplan.daten.wochenTypModell = dtoStundenplan.WochentypModell;
 		final StundenplanKlasse klasse = new StundenplanKlasse();
 		klasse.id = dtoKlasse.ID;
 		klasse.kuerzel = dtoKlasse.Klasse;
@@ -161,6 +163,16 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 				.filter(k -> kursIDs.contains(k.id)).toList());
 		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
+		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen
+		final Set<Long> schuelerIDs = new HashSet<>();
+		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.schueler.stream()).toList());
+		stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
+				.filter(s -> schuelerIDs.contains(s.id)).toList());
+		final Set<Long> weitereKlassenIDs = new HashSet<>();
+		weitereKlassenIDs.addAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.idKlasse).toList());
+		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
+		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
+				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());
 	}
 
 	@Override

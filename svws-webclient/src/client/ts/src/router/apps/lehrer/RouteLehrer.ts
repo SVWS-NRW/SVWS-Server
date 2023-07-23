@@ -11,6 +11,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 
 import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndividualdaten";
 import { routeLehrerPersonaldaten } from "~/router/apps/lehrer/RouteLehrerPersonaldaten";
+import { routeLehrerStundenplan } from "./stundenplan/RouteLehrerStundenplan";
 import { routeLehrerUnterrichtsdaten } from "~/router/apps/lehrer/RouteLehrerUnterrichtsdaten";
 
 import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
@@ -35,6 +36,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		super.children = [
 			routeLehrerIndividualdaten,
 			routeLehrerPersonaldaten,
+			routeLehrerStundenplan,
 			routeLehrerUnterrichtsdaten
 		];
 		super.defaultChild = routeLehrerIndividualdaten;
