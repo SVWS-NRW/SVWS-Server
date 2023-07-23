@@ -20,7 +20,7 @@
 								<table class="w-full">
 									<tr>
 										<td v-for="unterricht in unterrichtsdaten(wochentag, stunde)" :key="unterricht.id" class="text-center">
-											{{ manager().fachGet(unterricht.idFach)?.kuerzel }}
+											{{ manager().fachGetByIdOrException(unterricht.idFach)?.kuerzel }}
 										</td>
 									</tr>
 								</table>
@@ -47,16 +47,16 @@
 	}
 
 	function getRangeWochentage(): Wochentag[] {
-		const min = props.manager().getZeitrasterWochentagMin().id;
-		const max = props.manager().getZeitrasterWochentagMax().id;
+		const min = props.manager().zeitrasterGetWochentagMin();
+		const max = props.manager().zeitrasterGetWochentagMax();
 		return Array.from({ length: (max-min+1) }, (value, index) => Wochentag.fromIDorException(min + index));
 	}
 
 	function unterrichtsdaten(wochentag: Wochentag, stunde: number) : List<StundenplanUnterricht> | undefined {
-		const zeitraster = props.manager().getZeitrasterByWochentagStunde(wochentag, stunde);
-		if (zeitraster === null)
+		if (!props.manager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde))
 			return undefined;
-		const unterricht = null; // TODO Stundenplan-Manager-Methode für props.manager().getUnterrichtByWocheZeitrasterId(wochentyp, zeitraster.id, true);
+		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+		const unterricht = props.manager().unterrichtGetMengeByZeitrasterIdOrEmptyList(zeitraster.id);
 		return (unterricht === null) ? undefined : unterricht;
 	}
 
