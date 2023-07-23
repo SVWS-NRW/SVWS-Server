@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -56,6 +57,24 @@ public final class MapUtils {
 		final @NotNull ArrayList<@NotNull V> listNeu = new ArrayList<>();
 		map.put(key, listNeu);
 		return listNeu;
+	}
+
+    /**
+     * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
+     *
+     * @param <K>    Der Typ des 1. Schlüssels.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     * @param map    Die Map, welche K auf "ArrayList of V" abbildet.
+     * @param key    Der 1. Schlüssel.
+     * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
+     */
+	public static <@NotNull K, @NotNull V> void removeFromListAndTrimOrException(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<@NotNull V> list = DeveloperNotificationException.ifMapGetIsNull(map, key);
+
+		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
+
+		if (list.isEmpty())
+			DeveloperNotificationException.ifMapRemoveFailes(map, key);
 	}
 
     /**

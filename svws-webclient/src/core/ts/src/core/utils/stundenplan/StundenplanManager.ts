@@ -20,8 +20,10 @@ import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from 
 import { HashSet } from '../../../java/util/HashSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
+import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
@@ -109,8 +111,6 @@ export class StundenplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
-	private readonly _map_fachID_zu_fach : HashMap<number, StundenplanFach> = new HashMap();
-
 	private readonly _map_klasseID_zu_klasse : HashMap<number, StundenplanKlasse> = new HashMap();
 
 	private readonly _map_jahrgangID_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
@@ -120,10 +120,6 @@ export class StundenplanManager extends JavaObject {
 	private readonly _map_schuelerID_zu_schueler : HashMap<number, StundenplanSchueler> = new HashMap();
 
 	private readonly _map_kursID_zu_kurs : HashMap<number, StundenplanKurs> = new HashMap();
-
-	private readonly _map_zeitrasterID_zu_zeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
-
-	private readonly _map_wochentag_stunde_zu_zeitraster : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
 
 	private readonly _map_pausenzeitID_zu_pausenzeit : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
@@ -137,21 +133,53 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_jahr_kw_zu_kwz : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
+	private readonly _map_pausenaufsichtID_zu_pausenaufsicht : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
+
+	private readonly _map_fachID_zu_fach : HashMap<number, StundenplanFach> = new HashMap();
+
+	private readonly _list_faecher : List<StundenplanFach> = new ArrayList();
+
+	private readonly _map_zeitrasterID_zu_zeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
+
+	private readonly _map2d_wochentag_stunde_zu_zeitraster : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
+
+	private readonly _map_wochentag_zu_zeitrastermenge : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+
+	private readonly _map_stunde_zu_zeitrastermenge : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
+
+	private readonly _list_zeitraster : List<StundenplanZeitraster> = new ArrayList();
+
+	private _zeitrasterWochentagMin : number = Wochentag.MONTAG.id;
+
+	private _zeitrasterWochentagMax : number = Wochentag.MONTAG.id;
+
+	private _zeitrasterStundeMin : number = 1;
+
+	private _zeitrasterStundeMax : number = 1;
+
+	private _unterrichtHatMultiWochen : boolean = false;
+
 	private readonly _map_kursID_zu_unterrichte : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
-	private readonly _map_pausenaufsichtID_zu_pausenaufsicht : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
+	private readonly _map_idUnterricht_zu_unterricht : HashMap<number, StundenplanUnterricht> = new HashMap();
+
+	private readonly _map2d_idZeitraster_wochentyp_zu_unterrichte : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+
+	private readonly _map_idZeitraster_zu_unterrichte : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+
+	private readonly _list_unterricht : List<StundenplanUnterricht> = new ArrayList();
 
 	private readonly _list_pausenaufsichten : List<StundenplanPausenaufsicht> = new ArrayList();
 
 	private readonly _list_raeume : List<StundenplanRaum> = new ArrayList();
-
-	private readonly _list_zeitraster : List<StundenplanZeitraster> = new ArrayList();
 
 	private readonly _list_pausenzeiten : List<StundenplanPausenzeit> = new ArrayList();
 
 	private readonly _list_aufsichtsbereiche : List<StundenplanAufsichtsbereich> = new ArrayList();
 
 	private readonly _list_kalenderwochenzuordnungen : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
+
+	private readonly _list_schueler : List<StundenplanSchueler> = new ArrayList();
 
 	private readonly stundenplanID : number;
 
@@ -222,10 +250,10 @@ export class StundenplanManager extends JavaObject {
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", this.stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", this.stundenplanWochenTypModell === 1);
-		this.initKalenderwochenZuordnungen(listKWZ);
-		this.initFaecher(listFach);
+		this.kalenderwochenzuordnungAddAll(listKWZ);
+		this.fachAddAll(listFach);
 		this.initJahrgaenge(listJahrgang);
-		this.initZeitraster(listZeitraster);
+		this.zeitrasterAddAll(listZeitraster);
 		this.initRaeume(listRaum);
 		this.initPausenzeiten(listPausenzeit);
 		this.initAufsichtsbereiche(listAufsichtsbereich);
@@ -238,33 +266,82 @@ export class StundenplanManager extends JavaObject {
 		this.initUnterrichte(listUnterricht);
 	}
 
-	private initKalenderwochenZuordnungen(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
-		this._map_kwzID_zu_kwz.clear();
-		this._map_jahr_kw_zu_kwz.clear();
-		this._list_kalenderwochenzuordnungen.clear();
-		for (const kwz of listKWZ) {
-			DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
-			DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
-			DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
-			DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > this.stundenplanWochenTypModell);
-			DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
-			this._list_kalenderwochenzuordnungen.add(kwz);
-		}
-		this._list_kalenderwochenzuordnungen.sort(StundenplanManager._compKWZ);
+	private fachAddOhneUpdate(fach : StundenplanFach) : void {
+		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
+		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_fachID_zu_fach, fach.id, fach);
 	}
 
-	private initFaecher(listFach : List<StundenplanFach>) : void {
-		this._map_fachID_zu_fach.clear();
+	/**
+	 * Fügt ein {@link StundenplanFach}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public fachAdd(fach : StundenplanFach) : void {
+		this.fachAddOhneUpdate(fach);
+		this.fachUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public fachAddAll(listFach : List<StundenplanFach>) : void {
+		for (const fach of listFach)
+			this.fachAddOhneUpdate(fach);
+		this.fachUpdate();
+	}
+
+	private fachUpdate() : void {
 		const setFachKuerzel : HashSet<string> = new HashSet();
-		for (const fach of listFach) {
-			DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-			DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
-			DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+		for (const fach of this._list_faecher)
 			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_fachID_zu_fach, fach.id, fach);
-		}
+	}
+
+	private kalenderwochenzuordnungAddOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
+		DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
+		DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
+		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
+		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > this.stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
+		this._list_kalenderwochenzuordnungen.add(kwz);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKalenderwochenzuordnung}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public kalenderwochenzuordnungAdd(kwz : StundenplanKalenderwochenzuordnung) : void {
+		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKalenderwochenzuordnung}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param listKWZ  Die Menge der {@link StundenplanKalenderwochenzuordnung}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public kalenderwochenzuordnungAddAll(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
+		for (const kwz of listKWZ)
+			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
+	 */
+	private kalenderwochenzuordnungUpdate() : void {
+		this._list_kalenderwochenzuordnungen.sort(StundenplanManager._compKWZ);
 	}
 
 	private initJahrgaenge(listJahrgang : List<StundenplanJahrgang>) : void {
@@ -315,12 +392,14 @@ export class StundenplanManager extends JavaObject {
 
 	private initSchueler(listSchueler : List<StundenplanSchueler>) : void {
 		this._map_schuelerID_zu_schueler.clear();
+		this._list_schueler.clear();
 		for (const schueler of listSchueler) {
 			DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 			DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 			DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
 			DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", this._map_klasseID_zu_klasse, schueler.idKlasse);
 			DeveloperNotificationException.ifMapPutOverwrites(this._map_schuelerID_zu_schueler, schueler.id, schueler);
+			this._list_schueler.add(schueler);
 		}
 	}
 
@@ -348,26 +427,6 @@ export class StundenplanManager extends JavaObject {
 			for (const idSchuelerDesKurses of kurs.schueler)
 				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", this._map_schuelerID_zu_schueler, idSchuelerDesKurses);
 		}
-	}
-
-	private initZeitraster(listZeitraster : List<StundenplanZeitraster>) : void {
-		this._map_zeitrasterID_zu_zeitraster.clear();
-		this._map_wochentag_stunde_zu_zeitraster.clear();
-		this._list_zeitraster.clear();
-		for (const zeit of listZeitraster) {
-			DeveloperNotificationException.ifInvalidID("zeit.id", zeit.id);
-			Wochentag.fromIDorException(zeit.wochentag);
-			DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29));
-			if ((zeit.stundenbeginn !== null) && (zeit.stundenende !== null)) {
-				const beginn : number = zeit.stundenbeginn.valueOf();
-				const ende : number = zeit.stundenende.valueOf();
-				DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
-			}
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeit.id, zeit);
-			DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeit.wochentag, zeit.unterrichtstunde, zeit);
-			this._list_zeitraster.add(zeit);
-		}
-		this._list_zeitraster.sort(StundenplanManager._compZeitraster);
 	}
 
 	private initRaeume(listRaum : List<StundenplanRaum>) : void {
@@ -417,6 +476,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private initUnterrichte(listUnterricht : List<StundenplanUnterricht>) : void {
+		this._map_idUnterricht_zu_unterricht.clear();
+		this._map_idZeitraster_zu_unterrichte.clear();
+		this._map2d_idZeitraster_wochentyp_zu_unterrichte.clear();
 		this._map_kursID_zu_unterrichte.clear();
 		for (const idKurs of this._map_kursID_zu_kurs.keySet())
 			this._map_kursID_zu_unterrichte.put(idKurs, new ArrayList());
@@ -439,7 +501,12 @@ export class StundenplanManager extends JavaObject {
 				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", this._map_raumID_zu_raum, idRaumDesUnterrichts);
 			for (const idSchieneDesUnterrichts of u.schienen)
 				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", this._map_schieneID_zu_schiene, idSchieneDesUnterrichts);
+			DeveloperNotificationException.ifMapPutOverwrites(this._map_idUnterricht_zu_unterricht, u.id, u);
+			MapUtils.getOrCreateArrayList(this._map_idZeitraster_zu_unterrichte, u.idZeitraster).add(u);
+			Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichte, u.idZeitraster, u.wochentyp).add(u);
+			this._list_unterricht.add(u);
 		}
+		this.unterrichtUpdate();
 	}
 
 	private initPausenaufsichten(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
@@ -459,15 +526,6 @@ export class StundenplanManager extends JavaObject {
 			this._list_pausenaufsichten.add(pa);
 		}
 		this._list_pausenaufsichten.sort(this._compPausenaufsicht);
-	}
-
-	/**
-	 * Liefert die ID des Stundenplans.
-	 *
-	 * @return die ID des Stundenplans.
-	 */
-	public getID() : number {
-		return this.stundenplanID;
 	}
 
 	/**
@@ -667,7 +725,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public testKursHatUnterrichtAm(idKurs : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
 		for (const u of this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp)) {
-			const z : StundenplanZeitraster = this.getZeitraster(u.idZeitraster);
+			const z : StundenplanZeitraster = this.zeitrasterGetByIdOrException(u.idZeitraster);
 			if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === unterrichtstunde))
 				return true;
 		}
@@ -720,54 +778,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanZeitraster}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte.
-	 */
-	public getListZeitraster() : List<StundenplanZeitraster> {
-		return this._list_zeitraster;
-	}
-
-	/**
-	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
-	 *
-	 * @param wochentag der Wochentag der gewünschten Zeitraster-Objekte
-	 *
-	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
-	 */
-	public getListZeitrasterZuWochentag(wochentag : Wochentag) : List<StundenplanZeitraster> {
-		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) });
-	}
-
-	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berühren.
-	 *
-	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
-	 * @param minutenVerstrichen Die verstrichene Zeit (in Minuten) seit der "startzeit" .
-	 *
-	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
-	 */
-	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const wochentag : Wochentag | null = Wochentag.fromIDorException(zeitrasterStart.wochentag);
-		const startzeit : number = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn).valueOf();
-		return this.getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
-	}
-
-	/**
-	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren.<br>
-	 *
-	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
-	 * @param beginn             Der Beginn des Zeit-Intervalls.
-	 * @param minutenVerstrichen Daraus ergibt sich das Ende des Zeit-Intervalls.
-	 *
-	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
-	 */
-	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
-		const ende : number = beginn + minutenVerstrichen;
-		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) && this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
-	}
-
-	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des angefragten-Objektes.
@@ -809,133 +819,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getKalenderwochenzuordnung(idKWZ : number) : StundenplanKalenderwochenzuordnung {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_kwzID_zu_kwz, idKWZ);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
-	 *
-	 * @param idZeitraster Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
-	 */
-	public getZeitraster(idZeitraster : number) : StundenplanZeitraster {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
-	}
-
-	/**
-	 * Liefert den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
-	 *
-	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
-	 */
-	public getZeitrasterMinutenMin() : number {
-		for (const z of this._list_zeitraster)
-			if (z.stundenbeginn !== null) {
-				let min : number = z.stundenbeginn.valueOf();
-				for (const z2 of this._list_zeitraster)
-					if ((z2.stundenbeginn !== null) && (z2.stundenbeginn < min))
-						min = z2.stundenbeginn.valueOf();
-				return min;
-			}
-		return 480;
-	}
-
-	/**
-	 * Liefert den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
-	 *
-	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
-	 */
-	public getZeitrasterMinutenMax() : number {
-		for (const z of this._list_zeitraster)
-			if (z.stundenende !== null) {
-				let max : number = z.stundenende.valueOf();
-				for (const z2 of this._list_zeitraster)
-					if ((z2.stundenende !== null) && (z2.stundenende > max))
-						max = z2.stundenende.valueOf();
-				return max;
-			}
-		return 480;
-	}
-
-	/**
-	 * Liefert den kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
-	 *
-	 * @return den kleinsten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
-	 */
-	public getZeitrasterWochentagMin() : Wochentag {
-		if (this._list_zeitraster.isEmpty())
-			return Wochentag.MONTAG;
-		let min : number = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", this._list_zeitraster).wochentag;
-		for (const z of this._list_zeitraster)
-			min = Math.min(min, z.wochentag);
-		return Wochentag.fromIDorException(min);
-	}
-
-	/**
-	 * Liefert den größten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
-	 *
-	 * @return den größten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
-	 */
-	public getZeitrasterWochentagMax() : Wochentag {
-		if (this._list_zeitraster.isEmpty())
-			return Wochentag.MONTAG;
-		let max : number = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", this._list_zeitraster).wochentag;
-		for (const z of this._list_zeitraster)
-			max = Math.max(max, z.wochentag);
-		return Wochentag.fromIDorException(max);
-	}
-
-	/**
-	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
-	 *
-	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
-	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
-	 *
-	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
-	 */
-	public testZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : boolean {
-		return this._map_wochentag_stunde_zu_zeitraster.contains(wochentag.id, stunde);
-	}
-
-	/**
-	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
-	 *
-	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
-	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
-	 *
-	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
-	 */
-	public getZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : StundenplanZeitraster {
-		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag.id, stunde);
-	}
-
-	/**
-	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
-	 *
-	 * @param zeitraster Das aktuelle {@link StundenplanZeitraster}-Objekt.
-	 *
-	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
-	 */
-	public getZeitrasterNext(zeitraster : StundenplanZeitraster) : StundenplanZeitraster {
-		return this._map_wochentag_stunde_zu_zeitraster.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
-	}
-
-	/**
-	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
-	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
-	 *
-	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
-	 */
-	public testIntervalleSchneidenSich(beginn1 : number, ende1 : number, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
-		const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", iBeginn2).valueOf();
-		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2).valueOf();
-		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
-		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
-		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
-		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
-		return !((ende1 < beginn2) || (ende2 < beginn1));
 	}
 
 	/**
@@ -983,18 +866,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan eine neues {@link StundenplanZeitraster} hinzu.
-	 *
-	 * @param zeitraster Das StundenplanZeitraster, das hinzugefügt werden soll.
-	 */
-	public addZeitraster(zeitraster : StundenplanZeitraster) : void {
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._map_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
-		this._list_zeitraster.add(zeitraster);
-		this._list_zeitraster.sort(StundenplanManager._compZeitraster);
-	}
-
-	/**
 	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des {@link StundenplanRaum}-Objekts.
@@ -1039,18 +910,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanZeitraster}-Objekt.
-	 *
-	 * @param idZeitraster Die ID des {@link StundenplanZeitraster}-Objekts.
-	 */
-	public removeZeitraster(idZeitraster : number) : void {
-		const zr : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", this._map_zeitrasterID_zu_zeitraster.get(idZeitraster));
-		this._map_wochentag_stunde_zu_zeitraster.removeOrException(zr.wochentag, zr.unterrichtstunde);
-		this._map_zeitrasterID_zu_zeitraster.remove(idZeitraster);
-		this._list_zeitraster.remove(zr);
-	}
-
-	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
 	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
@@ -1088,16 +947,6 @@ export class StundenplanManager extends JavaObject {
 	public patchKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
 		this.removeKalenderwochenzuordnung(kwz.id);
 		this.addKalenderwochenzuordnung(kwz);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
-	 *
-	 * @param zeitraster Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public patchZeitraster(zeitraster : StundenplanZeitraster) : void {
-		this.removeZeitraster(zeitraster.id);
-		this.addZeitraster(zeitraster);
 	}
 
 	/**
@@ -1173,13 +1022,218 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die ID des Stundenplans.
+	 *
+	 * @deprecated use {@link #stundenplanGetID()}
+	 * @return die ID des Stundenplans.
+	 */
+	public getID() : number {
+		return this.stundenplanID;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanZeitraster}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte.
+	 */
+	public getListZeitraster() : List<StundenplanZeitraster> {
+		return this._list_zeitraster;
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
+	 *
+	 * @param wochentag der Wochentag der gewünschten Zeitraster-Objekte
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
+	 */
+	public getListZeitrasterZuWochentag(wochentag : Wochentag) : List<StundenplanZeitraster> {
+		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) });
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berühren.
+	 *
+	 * @param zeitrasterStart    Das {@link StundenplanZeitraster} zu dem es startet.
+	 * @param minutenVerstrichen Die verstrichene Zeit (in Minuten) seit der "startzeit" .
+	 *
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten.
+	 */
+	public getZeitrasterByStartVerstrichen(zeitrasterStart : StundenplanZeitraster, minutenVerstrichen : number) : List<StundenplanZeitraster> {
+		const wochentag : Wochentag | null = Wochentag.fromIDorException(zeitrasterStart.wochentag);
+		const startzeit : number = DeveloperNotificationException.ifNull("zeitrasterStart.stundenbeginn ist NULL", zeitrasterStart.stundenbeginn).valueOf();
+		return this.getZeitrasterByWochentagStartVerstrichen(wochentag, startzeit, minutenVerstrichen);
+	}
+
+	/**
+	 * Liefert die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Zeit-Intervall berühren.<br>
+	 *
+	 * @param wochentag          Der {@link Wochentag} des Zeit-Intervalls.
+	 * @param beginn             Der Beginn des Zeit-Intervalls.
+	 * @param minutenVerstrichen Daraus ergibt sich das Ende des Zeit-Intervalls.
+	 *
+	 * @return die passende Menge an {@link StundenplanZeitraster}-Objekten, welche das Intervall berührt.
+	 */
+	public getZeitrasterByWochentagStartVerstrichen(wochentag : Wochentag, beginn : number, minutenVerstrichen : number) : List<StundenplanZeitraster> {
+		const ende : number = beginn + minutenVerstrichen;
+		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) && this.testIntervalleSchneidenSich(beginn, ende, z.stundenbeginn, z.stundenende) });
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @deprecated use {@link #zeitrasterGetByIdOrException(long)}
+	 */
+	public getZeitraster(idZeitraster : number) : StundenplanZeitraster {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
+	}
+
+	/**
+	 * Liefert den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public getZeitrasterMinutenMin() : number {
+		for (const z of this._list_zeitraster)
+			if (z.stundenbeginn !== null) {
+				let min : number = z.stundenbeginn.valueOf();
+				for (const z2 of this._list_zeitraster)
+					if ((z2.stundenbeginn !== null) && (z2.stundenbeginn < min))
+						min = z2.stundenbeginn.valueOf();
+				return min;
+			}
+		return 480;
+	}
+
+	/**
+	 * Liefert den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 *
+	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 */
+	public getZeitrasterMinutenMax() : number {
+		for (const z of this._list_zeitraster)
+			if (z.stundenende !== null) {
+				let max : number = z.stundenende.valueOf();
+				for (const z2 of this._list_zeitraster)
+					if ((z2.stundenende !== null) && (z2.stundenende > max))
+						max = z2.stundenende.valueOf();
+				return max;
+			}
+		return 480;
+	}
+
+	/**
+	 * Liefert den kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 *
+	 * @return den kleinsten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
+	 * @deprecated use {@link #zeitrasterGetWochentagMinEnum()}
+	 */
+	public getZeitrasterWochentagMin() : Wochentag {
+		return this.zeitrasterGetWochentagMinEnum();
+	}
+
+	/**
+	 * Liefert den größten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
+	 *
+	 * @return den größten {@link Wochentag}, oder den Montag falls es keine Zeitraster gibt.
+	 * @deprecated use {@link #zeitrasterGetWochentagMaxEnum()}
+	 */
+	public getZeitrasterWochentagMax() : Wochentag {
+		return this.zeitrasterGetWochentagMaxEnum();
+	}
+
+	/**
+	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 * @deprecated use {@link #zeitrasterExistsByWochentagAndStunde(int, int)}
+	 */
+	public testZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : boolean {
+		return this.zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde);
+	}
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag Der {@link Wochentag} des Zeitrasters.
+	 * @param stunde    Die Unterrichtsstunde Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @deprecated use {@link #zeitrasterGetByWochentagAndStundeOrException(int, int)}
+	 */
+	public getZeitrasterByWochentagStunde(wochentag : Wochentag, stunde : number) : StundenplanZeitraster {
+		return this.zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+	}
+
+	/**
+	 * Liefert das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 *
+	 * @param zeitraster Das aktuelle {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @return das {@link StundenplanZeitraster}-Objekt der nächsten Stunde am selben Wochentag.
+	 */
+	public getZeitrasterNext(zeitraster : StundenplanZeitraster) : StundenplanZeitraster {
+		return this._map2d_wochentag_stunde_zu_zeitraster.getNonNullOrException(zeitraster.wochentag, zeitraster.unterrichtstunde + 1);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 *
+	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 * @deprecated use {@link #zeitrasterGetSchneidenSich(int, int, Integer, Integer)}
+	 */
+	public testIntervalleSchneidenSich(beginn1 : number, ende1 : number, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
+		return this.zeitrasterGetSchneidenSich(beginn1, ende1, iBeginn2, iEnde2);
+	}
+
+	/**
+	 * Fügt dem Stundenplan eine neues {@link StundenplanZeitraster} hinzu.
+	 *
+	 * @param zeitraster Das StundenplanZeitraster, das hinzugefügt werden soll.
+	 * @deprecated use {@link #zeitrasterAdd(StundenplanZeitraster)}
+	 */
+	public addZeitraster(zeitraster : StundenplanZeitraster) : void {
+		this.zeitrasterAdd(zeitraster);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster Die ID des {@link StundenplanZeitraster}-Objekts.
+	 * @deprecated use {@link #zeitrasterRemove(long)}
+	 */
+	public removeZeitraster(idZeitraster : number) : void {
+		this.zeitrasterRemove(idZeitraster);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param zeitraster Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
+	 * @deprecated use {@link #zeitrasterPatch(StundenplanZeitraster)}
+	 */
+	public patchZeitraster(zeitraster : StundenplanZeitraster) : void {
+		this.zeitrasterPatch(zeitraster);
+	}
+
+	/**
 	 * Liefert das Fach mit der übergebenen ID.
 	 *
 	 * @param idFach  Die Datenbank-ID des Faches.
 	 *
 	 * @return  das Fach mit der übergebenen ID.
 	 */
-	public fachGet(idFach : number) : StundenplanFach {
+	public fachGetByIdOrException(idFach : number) : StundenplanFach {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_fachID_zu_fach, idFach);
 	}
 
@@ -1236,40 +1290,407 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die größte Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * Liefert die Datenbank-ID des Schülers.<br>
+	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
 	 *
-	 * @return die größte Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * @return die Datenbank-ID des Schülers.
+	 */
+	public schuelerGetIDorException() : number {
+		const size : number = this._list_schueler.size();
+		DeveloperNotificationException.ifTrue("getSchuelerID() geht nicht bei " + size + " Schülern!", size !== 1);
+		return this._list_schueler.get(0).id;
+	}
+
+	/**
+	 * Liefert das globale WochenTyp-Modell (0: alle Wochen sehen gleich aus, 2 und größer: Die Wochen sehen verschieden aus).
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das globale WochenTyp-Modell.
 	 */
 	public stundenplanGetWochenTypModell() : number {
 		return this.stundenplanWochenTypModell;
 	}
 
 	/**
+	 * Liefert die Datenbank-ID des Stundenplans.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die Datenbank-ID des Stundenplans.
+	 */
+	public stundenplanGetID() : number {
+		return this.stundenplanID;
+	}
+
+	/**
+	 * Liefert TRUE, falls es {@link StundenplanUnterricht} gibt, der einen Wochentyp > 0 hat.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @deprecated Sollte nicht benutzt werden. Stattdessen sollte man pro Zeitraster (Zelle) arbeiten.
+	 * @return TRUE, falls es {@link StundenplanUnterricht} gibt, der einen Wochentyp > 0 hat.
+	 */
+	public unterrichtHatMultiWochen() : boolean {
+		return this._unterrichtHatMultiWochen;
+	}
+
+	/**
+	 * Liefert die Anzahl an Wochentypen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @deprecated Sollte nicht benutzt werden.  Stattdessen sollte man pro Zeitraster (Zelle) arbeiten.
+	 * @return die Anzahl an Wochentypen.
+	 */
+	public unterrichtGetAnzahlWochentypen() : number {
+		return this.unterrichtHatMultiWochen() ? this.stundenplanWochenTypModell : 1;
+	}
+
+	/**
+	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
+	 * <br>Laufzeit: O(1)
+	 * <br>Hinweis: Unnötige Methode, denn man bekommt ddie Objekte über Zeitraster abfragen.
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
+	 */
+	public unterrichtGetByIdOrException(idUnterricht : number) : StundenplanUnterricht {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergebenen Zeitraster liegen.
+	 * <br>Hinweis: Diese Methode sollte der Client nicht benutzen, denn dann müsste er den Wochentyp parsen.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergebenen Zeitraster liegen.
+	 */
+	public unterrichtGetMengeByZeitrasterIdOrEmptyList(idZeitraster : number) : List<StundenplanUnterricht> {
+		return MapUtils.getOrCreateArrayList(this._map_idZeitraster_zu_unterrichte, idZeitraster);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 */
+	public unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster : number, wochentyp : number) : List<StundenplanUnterricht> {
+		return Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichte, idZeitraster, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
+	 * Falls der Parameter inklWoche0 TRUE ist, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 * <br>Hinweis: Diese Methode sollte der Client nicht benutzen. Der Client sollte sich nach dem Wochentyp des Zeitrasters informieren
+	 *              und dann entsprechend {@link #unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(long, int)} aufrufen.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 * @param wochentyp     Der Wochentyp
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
+	 */
+	public unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(idZeitraster : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		if ((wochentyp === 0) || (!inklWoche0))
+			return this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp);
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp));
+		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, 0));
+		return list;
+	}
+
+	/**
+	 * Liefert die Wochentypen ohne Typ 0 zurück, außer es gibt nur Typ 0.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @deprecated Sollte nicht benutzt werden.  Stattdessen sollte man pro Zeitraster (Zelle) arbeiten.
+	 * @return die Wochentypen ohne Typ 0 zurück, außer es gibt nur Typ 0.
+	 */
+	public unterrichtGetWochentypenMenge() : List<number> {
+		const list : List<number> | null = new ArrayList();
+		if (this._unterrichtHatMultiWochen) {
+			for (let i : number = 1; i <= this.stundenplanWochenTypModell; i++)
+				list.add(i);
+		} else {
+			list.add(0);
+		}
+		return list;
+	}
+
+	/**
+	 * Aktualisiert verschiedene Werte nachdem sich die {@link StundenplanUnterricht}-Menge verändert hat.
+	 */
+	private unterrichtUpdate() : void {
+		this._unterrichtHatMultiWochen = false;
+		for (const u of this._list_unterricht)
+			if (u.wochentyp > 0)
+				this._unterrichtHatMultiWochen = true;
+	}
+
+	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {
+		DeveloperNotificationException.ifInvalidID("zeit.id", zeitraster.id);
+		Wochentag.fromIDorException(zeitraster.wochentag);
+		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
+		if ((zeitraster.stundenbeginn !== null) && (zeitraster.stundenende !== null)) {
+			const beginn : number = zeitraster.stundenbeginn.valueOf();
+			const ende : number = zeitraster.stundenende.valueOf();
+			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+		}
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
+		MapUtils.getOrCreateArrayList(this._map_wochentag_zu_zeitrastermenge, zeitraster.wochentag).add(zeitraster);
+		MapUtils.getOrCreateArrayList(this._map_stunde_zu_zeitrastermenge, zeitraster.unterrichtstunde).add(zeitraster);
+		this._list_zeitraster.add(zeitraster);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanZeitraster}-Objekt hinzu.
+	 * <br>Laufzeit: O(|Zeitraster| * log ), da zeitrasterUpdate() aufgerufen wird.
+	 *
+	 * @param zeitraster  Das {@link StundenplanZeitraster}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public zeitrasterAdd(zeitraster : StundenplanZeitraster) : void {
+		this.zeitrasterAddOhneUpdate(zeitraster);
+		this.zeitrasterUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanZeitraster}-Objekte hinzu.
+	 * <br>Laufzeit: O(|Zeitraster| * log ), da zeitrasterUpdate() aufgerufen wird.
+	 *
+	 * @param listZeitraster  Die Menge der {@link StundenplanZeitraster}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public zeitrasterAddAll(listZeitraster : List<StundenplanZeitraster>) : void {
+		for (const zeitraster of listZeitraster)
+			this.zeitrasterAddOhneUpdate(zeitraster);
+		this.zeitrasterUpdate();
+	}
+
+	/**
 	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetStundeMin() : number {
-		if (this._list_zeitraster.isEmpty())
-			return 1;
-		let min : number = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", this._list_zeitraster).unterrichtstunde;
-		for (const z of this._list_zeitraster)
-			min = Math.min(min, z.unterrichtstunde);
-		return min;
+		return this._zeitrasterStundeMin;
 	}
 
 	/**
 	 * Liefert die größte Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @return die größte Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetStundeMax() : number {
-		if (this._list_zeitraster.isEmpty())
-			return 1;
-		let max : number = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", this._list_zeitraster).unterrichtstunde;
-		for (const z of this._list_zeitraster)
-			max = Math.max(max, z.unterrichtstunde);
-		return max;
+		return this._zeitrasterStundeMax;
+	}
+
+	/**
+	 * Liefert die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetWochentagMin() : number {
+		return this._zeitrasterWochentagMin;
+	}
+
+	/**
+	 * Liefert den kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetWochentagMinEnum() : Wochentag {
+		return Wochentag.fromIDorException(this._zeitrasterWochentagMin);
+	}
+
+	/**
+	 * Liefert die ID des größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die ID des größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetWochentagMax() : number {
+		return this._zeitrasterWochentagMax;
+	}
+
+	/**
+	 * Liefert den größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return den größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetWochentagMaxEnum() : Wochentag {
+		return Wochentag.fromIDorException(this._zeitrasterWochentagMax);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
+	 */
+	public zeitrasterGetByIdOrException(idZeitraster : number) : StundenplanZeitraster {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
+	}
+
+	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt, falls es existiert, sonst NULL.
+	 *
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des gesuchten Zeitrasters.
+	 * @param stunde     Die Unterrichtsstunde des gesuchten Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt, falls es existiert, sonst NULL.
+	 */
+	public zeitrasterGetByWochentagAndStundeOrException(wochentag : number, stunde : number) : StundenplanZeitraster {
+		return this._map2d_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag, stunde);
+	}
+
+	/**
+	 * Liefert die Liste aller {@link StundenplanZeitraster}-Objekte des Wochentags.
+	 *
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag}.
+	 *
+	 * @deprecated Sollte nicht benutzt werden, stattdessen {@link #zeitrasterGetByWochentagAndStundeOrException(int, int)}
+	 * @return die Liste aller {@link StundenplanZeitraster}-Objekte des Wochentags.
+	 */
+	public zeitrasterGetMengeByWochentag(wochentag : number) : List<StundenplanZeitraster> {
+		return MapUtils.getOrCreateArrayList(this._map_wochentag_zu_zeitrastermenge, wochentag);
+	}
+
+	/**
+	 * Liefert die Liste aller {@link StundenplanZeitraster}-Objekte der Unterrichtsstunde.
+	 *
+	 * @param stunde  Die Unterrichtsstunde.
+	 *
+	 * @deprecated Sollte nicht benutzt werden, stattdessen {@link #zeitrasterGetByWochentagAndStundeOrException(int, int)}
+	 * @return die Liste aller {@link StundenplanZeitraster}-Objekte der Unterrichtsstunde.
+	 */
+	public zeitrasterGetMengeByStunde(stunde : number) : List<StundenplanZeitraster> {
+		return MapUtils.getOrCreateArrayList(this._map_stunde_zu_zeitrastermenge, stunde);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 *
+	 * @param beginn1  Der Anfang (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param ende1    Das Ende (inklusive) des ersten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iBeginn2 Der Anfang (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 * @param iEnde2   Das Ende (inklusive) des zweiten Intervalls (in Minuten) seit 0 Uhr.
+	 *
+	 * @return TRUE, falls die Intervalle [beginn1, ende1] und [beginn2, ende2] sich schneiden.
+	 */
+	public zeitrasterGetSchneidenSich(beginn1 : number, ende1 : number, iBeginn2 : number | null, iEnde2 : number | null) : boolean {
+		const beginn2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenbeginn ist NULL!", iBeginn2).valueOf();
+		const ende2 : number = DeveloperNotificationException.ifNull("zeitraster.stundenende ist NULL!", iEnde2).valueOf();
+		DeveloperNotificationException.ifTrue("beginn1 < 0", beginn1 < 0);
+		DeveloperNotificationException.ifTrue("beginn2 < 0", beginn2 < 0);
+		DeveloperNotificationException.ifTrue("beginn1 > ende1", beginn1 > ende1);
+		DeveloperNotificationException.ifTrue("beginn2 > ende2", beginn2 > ende2);
+		return !((ende1 < beginn2) || (ende2 < beginn1));
+	}
+
+	/**
+	 * Liefert TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp0(idZeitraster : number) : boolean {
+		return !Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichte, idZeitraster, 0).isEmpty();
+	}
+
+	/**
+	 * Liefert TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
+	 *
+	 * @return TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp1BisN(idZeitraster : number) : boolean {
+		for (let wochentyp : number = 1; wochentyp <= this.stundenplanWochenTypModell; wochentyp++)
+			if (!Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichte, idZeitraster, wochentyp).isEmpty())
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 *
+	 * @param wochentag  Der ENUM-ID des {@link Wochentag} des Zeitrasters.
+	 * @param stunde     Die Unterrichtsstunde des Zeitrasters.
+	 *
+	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
+	 */
+	public zeitrasterExistsByWochentagAndStunde(wochentag : number, stunde : number) : boolean {
+		return this._map2d_wochentag_stunde_zu_zeitraster.contains(wochentag, stunde);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public zeitrasterPatch(zeitraster : StundenplanZeitraster) : void {
+		this.zeitrasterRemoveOhneUpdate(zeitraster.id);
+		this.zeitrasterAddOhneUpdate(zeitraster);
+		this.zeitrasterUpdate();
+	}
+
+	private zeitrasterRemoveOhneUpdate(idZeitraster : number) : void {
+		const z : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", this._map_zeitrasterID_zu_zeitraster.get(idZeitraster));
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_wochentag_stunde_zu_zeitraster, z.wochentag, z.unterrichtstunde);
+		MapUtils.removeFromListAndTrimOrException(this._map_wochentag_zu_zeitrastermenge, z.wochentag, z);
+		MapUtils.removeFromListAndTrimOrException(this._map_stunde_zu_zeitrastermenge, z.unterrichtstunde, z);
+		DeveloperNotificationException.ifListRemoveFailes("_list_zeitraster", this._list_zeitraster, z);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan ein existierendes {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des {@link StundenplanZeitraster}-Objekts.
+	 */
+	public zeitrasterRemove(idZeitraster : number) : void {
+		this.zeitrasterRemoveOhneUpdate(idZeitraster);
+		this.zeitrasterUpdate();
+	}
+
+	/**
+	 * Aktualisiert verschiedene Werte nachdem sich die Menge der Zeitraster verändert hat.
+	 * <br>Laufzeit: O(|Zeitraster| * log)
+	 */
+	private zeitrasterUpdate() : void {
+		if (this._list_zeitraster.isEmpty()) {
+			this._zeitrasterWochentagMin = Wochentag.MONTAG.id;
+			this._zeitrasterWochentagMax = Wochentag.MONTAG.id;
+			this._zeitrasterStundeMin = 1;
+			this._zeitrasterStundeMax = 1;
+		} else {
+			this._list_zeitraster.sort(StundenplanManager._compZeitraster);
+			const first : StundenplanZeitraster = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", this._list_zeitraster);
+			let minWT : number = first.wochentag;
+			let maxWT : number = first.wochentag;
+			let minSt : number = first.unterrichtstunde;
+			let maxSt : number = first.unterrichtstunde;
+			this._unterrichtHatMultiWochen = false;
+			for (const z of this._list_zeitraster) {
+				minWT = Math.min(minWT, z.wochentag);
+				maxWT = Math.max(maxWT, z.wochentag);
+				minSt = Math.min(minSt, z.unterrichtstunde);
+				maxSt = Math.max(maxSt, z.unterrichtstunde);
+			}
+			this._zeitrasterWochentagMin = minWT;
+			this._zeitrasterWochentagMax = maxWT;
+			this._zeitrasterStundeMin = minSt;
+			this._zeitrasterStundeMax = maxSt;
+		}
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

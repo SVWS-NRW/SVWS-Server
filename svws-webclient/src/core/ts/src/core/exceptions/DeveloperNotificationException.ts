@@ -261,6 +261,25 @@ export class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Versucht des Mapping (K1, K2) zu löschen.
+	 * Wirft eine DeveloperNotificationException, falls das Mapping(K1, K2) nicht existiert.
+	 *
+	 * @param <K1>  Der Typ des 1. Schlüssels.
+	 * @param <K2>  Der Typ des 2. Schlüssels.
+	 * @param <V>   Der Typ des zugeordneten Wertes.
+	 * @param map   Die Map.
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 *
+	 * @throws DeveloperNotificationException falls das Mapping(K1, K2) nicht existiert.
+	 */
+	public static ifMap2DRemoveFailes<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : void {
+		if (!map.contains(key1, key2))
+			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
+		map.removeOrException(key1, key2);
+	}
+
+	/**
 	 * Liefert den zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel (K1, K2, K3) nichts oder NULL zugeordnet ist.
 	 *

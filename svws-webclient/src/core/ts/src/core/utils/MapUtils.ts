@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -48,6 +49,22 @@ export class MapUtils extends JavaObject {
 		const listNeu : ArrayList<V> = new ArrayList();
 		map.put(key, listNeu);
 		return listNeu;
+	}
+
+	/**
+	 * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
+	 *
+	 * @param <K>    Der Typ des 1. Schlüssels.
+	 * @param <V>    Der Typ der Objekte in der ArrayList.
+	 * @param map    Die Map, welche K auf "ArrayList of V" abbildet.
+	 * @param key    Der 1. Schlüssel.
+	 * @param value  Der Wert, welcher aus der Liste von (K1, K2) entfernt werden soll.
+	 */
+	public static removeFromListAndTrimOrException<K, V>(map : JavaMap<K, List<V>>, key : K, value : V) : void {
+		const list : List<V> | null = DeveloperNotificationException.ifMapGetIsNull(map, key);
+		DeveloperNotificationException.ifListRemoveFailes("list", list, value);
+		if (list.isEmpty())
+			DeveloperNotificationException.ifMapRemoveFailes(map, key);
 	}
 
 	/**
