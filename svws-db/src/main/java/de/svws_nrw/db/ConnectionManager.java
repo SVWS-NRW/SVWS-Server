@@ -75,14 +75,14 @@ public final class ConnectionManager {
 	 * durchgeführt. Zwischen den Versuchen wird eine angebene Zeit in Millisekunden
 	 * abgewartet.
 	 *
-	 * @param retries   die Anzahl der Verbindungsversuche, bevor eine Exception weitergereicht wird
-	 * @param timeout   die Zeit in Millisekunden
+	 * @param connectionRetries   die Anzahl der Verbindungsversuche, bevor eine Exception weitergereicht wird
+	 * @param retryTimeout   die Zeit in Millisekunden
 	 *
 	 * @return der neue JPA {@link EntityManager}
 	 */
-	EntityManager getNewJPAEntityManager(final int retries, final long timeout) {
+	EntityManager getNewJPAEntityManager(final int connectionRetries, final long retryTimeout) {
 		PersistenceException resultingException = null;
-		int triesLeft = retries;
+		int triesLeft = connectionRetries + 1;
 		do {
 			triesLeft--;
 			try {
@@ -93,7 +93,7 @@ public final class ConnectionManager {
 					throw resultingException;
 				}
 				try {
-					Thread.sleep(timeout);
+					Thread.sleep(retryTimeout);
 				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
 					Thread.currentThread().interrupt();
 				}

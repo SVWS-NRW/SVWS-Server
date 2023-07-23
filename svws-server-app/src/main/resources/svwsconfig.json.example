@@ -19,6 +19,8 @@
     "dbms" : "MARIA_DB",
     "location" : "localhost",
     "defaultschema" : "svwsdb",
+    "connectionRetries" : 0,
+    "retryTimeout" : 5000,
     "SchemaKonfiguration" : [ {
       "name" : "svwsdb",
       "svwslogin" : false,

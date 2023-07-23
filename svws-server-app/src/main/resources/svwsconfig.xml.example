@@ -53,6 +53,12 @@
 		
 		<!-- Gibt das Default-Schema an, sofern mehr als ein Schema definiert wurde -->
 		<defaultschema>svwsdb</defaultschema>
+		
+		<!-- Gibt die Anzahl an wiederholten Verbindungsversuchen zur Datenbank an - Default: 0-->
+		<connectionRetries>0</connectionRetries>
+		
+		<!-- Gibt die Zeit in Millisekunden zwischen zwei wiederholten Verbindungsversuchen zur Datenbank an - Default: 0 -->
+		<retryTimeout>0</retryTimeout>
 	
 		<SchemaKonfiguration>
 			<!-- Der Name des Datenbank-Schemas für den SVWS-Benutzer -->

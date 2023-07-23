@@ -29,4 +29,12 @@ class SVWSKonfigurationDatabaseDTO {
 	@JacksonXmlElementWrapper(useWrapping = false)
 	List<SVWSKonfigurationSchemaDTO> schemata;
 
+	/** Gibt an, wieviele wiederholte Verbindungsversuche zur Datenbank stattfinden sollen */
+	@JsonProperty("connectionRetries")
+	int connectionRetries;
+
+	/** Gibt an, wie hoch die Zeit zwischen zwei Verbindungsversuchen in Millisekunden sein soll */
+	@JsonProperty("retryTimeout")
+	public long retryTimeout;
+
 }

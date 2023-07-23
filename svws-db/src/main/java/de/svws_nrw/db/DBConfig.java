@@ -40,7 +40,11 @@ public final class DBConfig {
 	 * soll, falls zuvor keine Datei vorhanden war */
 	private final boolean create_db_file;
 
+	/** Gibt an, wieviele wiederholte Verbindungsversuche zur Datenbank stattfinden */
+	private int connectionRetries;
 
+	/** Gibt an, in welchem zeitlichen Abstand wiederholte Verbindungsversuche stattfinden */
+	private long retryTimeout;
 
 	/**
 	 * Erstellt eine Datenbank-Konfiguration mit den angegebenen Parametern
@@ -77,7 +81,38 @@ public final class DBConfig {
 		this.use_db_logging = useDBLogging;
 	}
 
-
+	/**
+	 * Erstellt eine Datenbank-Konfiguration mit den angegebenen Parametern
+	 *
+	 * @param dbDriver          der Typ des DBMS für den Datenbankzugriff
+	 * @param dbLocation        der Ort, an dem sich die Datenbank befindet
+	 * @param dbSchema          das Schema in der Datenbank, das verwendet
+	 *                          werden soll
+	 * @param useDBLogin        gibt an, dass der SVWS-Benutzername und das
+	 *                          Kennwort auch für die Datenbankverbindung
+	 *                          verwendet werden
+	 * @param username          der Benutzername für die Datenbankverbindung
+	 * @param password          das Password für die Datenbankverbindung
+	 * @param useDBLogging      gibt an, ob der Datenbankzugriff geloggt werden
+	 *                          soll
+	 * @param createDBFile      gibt an, ob bei der Verbindung zu der Datenbank
+	 *                          automatisch eine neue Datenbankdatei erzeugt
+	 *                          werden soll, falls zuvor keine Datei vorhanden
+	 *                          war
+	 * @param connectionRetries gibt an, wieviele wiederholte
+	 *                          Verbindungsversuche zur Datenbank stattfinden
+	 *                          sollen
+	 * @param retryTimeout      gibt an, wie hoch die Wartezeit zwischen zwei
+	 *                          wiederholten Verbindungsversuchen in
+	 *                          Millisekunden sein soll
+	 *
+	 */
+	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username, final String password,
+			final boolean useDBLogging, final boolean createDBFile, final int connectionRetries, final long retryTimeout) {
+		this(dbDriver, dbLocation, dbSchema, useDBLogin, username, password, useDBLogging, createDBFile);
+		this.connectionRetries = connectionRetries;
+		this.retryTimeout = retryTimeout;
+	}
 	/**
 	 * Gibt den Datenbank-Treiber ({@link DBDriver}) der Konfiguration zurück.
 	 *
@@ -137,6 +172,23 @@ public final class DBConfig {
 		return password;
 	}
 
+	/**
+	 * Gibt die Zeit in Millisekunden zwischen zwei wiederholten Verbindungsversuchen für die Datenbankverbindung zurück
+	 *
+	 * @return Zeit in Millisekunden zwischen zwei wiederholten Verbindungsversuchen
+	 */
+	public long getRetryTimeout() {
+		return this.retryTimeout;
+	}
+
+	/**
+	 * Gibt die Anzahl an wiederholten Verbindungsversuchen für die Datenbankverbindung zurück
+	 *
+	 * @return anzahl an wiederholten Verbindungsversuchen
+	 */
+	public int getConnectionRetries() {
+		return this.connectionRetries;
+	}
 
 	/**
 	 * Gibt zurück, ob der Datenbankzugriff geloggt werden soll oder nicht
@@ -167,7 +219,7 @@ public final class DBConfig {
 	 * @return  eine Kopie der Konfiguration mit den neuen Benutzerinformationen
 	 */
 	public DBConfig switchUser(final String username, final String password) {
-		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file);
+		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries, retryTimeout);
 	}
 
 
@@ -180,13 +232,13 @@ public final class DBConfig {
 	 * @return die Kopie der Konfiguration mit dem neu ausgewählten Schema-Namen.
 	 */
 	public DBConfig switchSchema(final String dbSchema) {
-		return new DBConfig(db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file);
+		return new DBConfig(db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries, retryTimeout);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username);
+		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username, connectionRetries, retryTimeout);
 	}
 
 	@Override
@@ -201,7 +253,8 @@ public final class DBConfig {
 		return create_db_file == other.create_db_file && db_driver == other.db_driver
 				&& Objects.equals(db_location, other.db_location) && Objects.equals(db_schema, other.db_schema)
 				&& Objects.equals(password, other.password) && use_db_logging == other.use_db_logging
-				&& use_db_login == other.use_db_login && Objects.equals(username, other.username);
+				&& use_db_login == other.use_db_login && Objects.equals(username, other.username)
+				&& connectionRetries == other.connectionRetries && retryTimeout == other.retryTimeout;
 	}
 
 }
