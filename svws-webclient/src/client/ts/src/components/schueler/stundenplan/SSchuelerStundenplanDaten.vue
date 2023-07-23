@@ -18,7 +18,12 @@
 							<th class="text-center border-2 border-collapse">{{ stunde }}</th>
 							<td class="text-center border-2 border-collapse" v-for="wochentag in getRangeWochentage()" :key="wochentag.id">
 								<table class="w-full">
-									<tr>
+									<tr v-if="hatWochentypAllgemein(wochentag, stunde)">
+										<td v-for="unterricht in unterrichtsdaten(wochentag, stunde)" :key="unterricht.id" class="text-center">
+											{{ manager().fachGetByIdOrException(unterricht.idFach)?.kuerzel }}
+										</td>
+									</tr>
+									<tr v-if="hatWochentypSpeziell(wochentag, stunde)">
 										<td v-for="unterricht in unterrichtsdaten(wochentag, stunde)" :key="unterricht.id" class="text-center">
 											{{ manager().fachGetByIdOrException(unterricht.idFach)?.kuerzel }}
 										</td>
@@ -50,6 +55,20 @@
 		const min = props.manager().zeitrasterGetWochentagMin();
 		const max = props.manager().zeitrasterGetWochentagMax();
 		return Array.from({ length: (max-min+1) }, (value, index) => Wochentag.fromIDorException(min + index));
+	}
+
+	function hatWochentypAllgemein(wochentag: Wochentag, stunde: number) : boolean {
+		if (!props.manager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde))
+			return false;
+		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+		return props.manager().zeitrasterHatUnterrichtMitWochentyp0(zeitraster.id);
+	}
+
+	function hatWochentypSpeziell(wochentag: Wochentag, stunde: number) : boolean {
+		if (!props.manager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde))
+			return false;
+		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisN(zeitraster.id);
 	}
 
 	function unterrichtsdaten(wochentag: Wochentag, stunde: number) : List<StundenplanUnterricht> | undefined {
