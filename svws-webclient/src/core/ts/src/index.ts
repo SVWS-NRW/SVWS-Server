@@ -510,7 +510,6 @@ export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';
-export { SchuelerStundenplanManager } from './core/utils/stundenplan/SchuelerStundenplanManager';
 export { StundenplanManager } from './core/utils/stundenplan/StundenplanManager';
 export { StundenplanblockungManager } from './core/utils/stundenplanblockung/StundenplanblockungManager';
 export { StundenplanblockungManagerFach } from './core/utils/stundenplanblockung/StundenplanblockungManagerFach';
