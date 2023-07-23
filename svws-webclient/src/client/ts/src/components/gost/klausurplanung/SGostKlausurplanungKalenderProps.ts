@@ -1,24 +1,22 @@
+
 import type {
 	GostFaecherManager,
+	GostJahrgangsdaten,
 	GostKlausurtermin,
-	GostKursklausur,
 	GostKursklausurManager,
 	KursManager,
 	LehrerListeEintrag,
-	SchuelerListeEintrag,
+	StundenplanManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
-export interface GostKlausurplanungSchienenProps {
+export interface GostKlausurplanungKalenderProps {
+	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	kursklausurmanager: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
-	erzeugeKlausurtermin: (quartal: number) => Promise<GostKlausurtermin>;
-	loescheKlausurtermin: (termin: GostKlausurtermin) => Promise<boolean>;
-	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<boolean>;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
 	kursmanager: KursManager;
 	patchKlausurterminDatum: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
+	stundenplanmanager: StundenplanManager;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

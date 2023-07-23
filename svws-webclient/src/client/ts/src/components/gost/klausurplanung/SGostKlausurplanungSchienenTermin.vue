@@ -60,7 +60,7 @@
 		kursmanager: KursManager;
 		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
 		loescheKlausurtermin?: (termin: GostKlausurtermin) => Promise<boolean>;
-		patchKlausurtermin?: (termin: Partial<GostKlausurtermin>, id: number) => Promise<boolean>;
+		patchKlausurterminDatum?: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
 		quartal?: number;
 		alleTermine: List<GostKlausurtermin>;
 		dragKlausur?: GostKursklausur | null;

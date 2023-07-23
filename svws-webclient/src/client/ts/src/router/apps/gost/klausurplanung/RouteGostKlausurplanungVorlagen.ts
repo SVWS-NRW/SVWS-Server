@@ -4,17 +4,17 @@ import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, 
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
-import type { GostKlausurplanungDatenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungDatenProps";
+import type { GostKlausurplanungVorlagenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungVorlagenProps";
 
-const SGostKlausurplanungDaten = () => import("~/components/gost/klausurplanung/SGostKlausurplanungDaten.vue");
+const SGostKlausurplanungVorlagen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungVorlagen.vue");
 
-export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungVorlagen extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.klausurdaten", "klausurdaten", SGostKlausurplanungDaten);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.vorlagen", "vorlagen", SGostKlausurplanungVorlagen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klausurdaten";
+		super.text = "Klausurvorlagen";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -26,7 +26,7 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungDatenProps {
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungVorlagenProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
@@ -43,5 +43,5 @@ export class RouteGostKlausurplanungKlausurdaten extends RouteNode<unknown, Rout
 
 }
 
-export const routeGostKlausurplanungKlausurdaten = new RouteGostKlausurplanungKlausurdaten();
+export const routeGostKlausurplanungVorlagen = new RouteGostKlausurplanungVorlagen();
 

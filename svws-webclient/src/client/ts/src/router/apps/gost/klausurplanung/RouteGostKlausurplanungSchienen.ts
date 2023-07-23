@@ -16,7 +16,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Schienen";
+		super.text = "Klausurschienen";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -43,7 +43,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new ArrayList(), new ArrayList())},
 			setTerminToKursklausur: routeGostKlausurplanung.data.setTerminToKursklausur,
-			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
+			patchKlausurterminDatum: routeGostKlausurplanung.data.patchKlausurterminDatum,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermin: routeGostKlausurplanung.data.loescheKlausurtermin,
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,

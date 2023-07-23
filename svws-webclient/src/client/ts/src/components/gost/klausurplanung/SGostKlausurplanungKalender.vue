@@ -1,9 +1,16 @@
 <template>
+	<Teleport to=".router-tab-bar--subnav-target">
+		<svws-ui-sub-nav>
+			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+			<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
+				<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
+				<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
+			</svws-ui-radio-group>
+			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
+		</svws-ui-sub-nav>
+	</Teleport>
+
 	<svws-ui-content-card @click="dragTermin = null" class="h-full">
-		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
-			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
-			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
-		</svws-ui-radio-group>
 		<div class="flex gap-4 mt-4 h-screen">
 			<div class="flex flex-col w-1/4 h-full">
 				<div class="text-headline-md">Zu verplanen:</div>
@@ -82,16 +89,9 @@
 	import type { GostJahrgangsdaten, GostKursklausurManager, GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, StundenplanZeitraster} from "@core";
 	import { ArrayList} from "@core";
 	import { Wochentag } from "@core";
+	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 
-	const props = defineProps<{
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		kursklausurmanager: () => GostKursklausurManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		kursmanager: KursManager;
-		patchKlausurterminDatum: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
-		stundenplanmanager: StundenplanManager;
-	}>();
+	const props = defineProps<GostKlausurplanungKalenderProps>();
 
 	const displayPeriodUom = ref("month");
 
@@ -150,7 +150,7 @@
 
 	const dragTermin = ref<GostKlausurtermin | null>(null);
 
-	const termineOhne = computed(() => (props.kursklausurmanager().getKlausurtermine().toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
+	const termineOhne = computed(() => (props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
 
 	const termineMit = computed(() => {
 		const terms = props.kursklausurmanager().getKlausurtermine();

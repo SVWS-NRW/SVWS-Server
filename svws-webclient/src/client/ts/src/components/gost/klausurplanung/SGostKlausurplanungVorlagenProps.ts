@@ -9,7 +9,7 @@ import type {
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
-export interface GostKlausurplanungDatenProps {
+export interface GostKlausurplanungVorlagenProps {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	kursklausurmanager: () => GostKursklausurManager;
 	klausurvorgabenmanager: () => GostKlausurvorgabenManager;

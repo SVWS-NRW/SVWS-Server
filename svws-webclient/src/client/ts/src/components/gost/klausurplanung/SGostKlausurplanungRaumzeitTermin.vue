@@ -11,7 +11,7 @@
 	Termin {{ termin.id }}
 	<div class="flex flex-col flex-wrap gap-4 w-full">
 		<svws-ui-button type="primary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum</svws-ui-button>
-		<s-gost-klausurplanung-planung-raum v-for="raum in raummanager?.getKlausurraeume()"
+		<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager?.getKlausurraeume()"
 			:key="raum.id"
 			:stundenplanmanager="stundenplanmanager"
 			:raum="raum"
@@ -40,7 +40,7 @@
 		raummanager: GostKlausurraumManager;
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
+		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 	}>();
 
 	//const klausurenOhneRaum = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);

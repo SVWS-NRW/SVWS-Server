@@ -4,6 +4,7 @@ import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, Server
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
+import type { GostKlausurplanungKalenderProps } from "~/components/gost/klausurplanung/SGostKlausurplanungKalenderProps";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -25,7 +26,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungKalenderProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
@@ -34,6 +35,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 			patchKlausurterminDatum: routeGostKlausurplanung.data.patchKlausurterminDatum,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
+			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
 	}
 

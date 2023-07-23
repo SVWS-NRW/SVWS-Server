@@ -1,4 +1,11 @@
 <template>
+	<Teleport to=".router-tab-bar--subnav-target">
+		<svws-ui-sub-nav>
+			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
+		</svws-ui-sub-nav>
+	</Teleport>
+
 	<div class="flex h-full gap-4 mt-4">
 		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">
 			<ul class="flex flex-col gap-y-1">
@@ -16,7 +23,7 @@
 		<svws-ui-content-card title="&nbsp;">
 			<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
 			<div v-else>
-				<s-gost-klausurplanung-planung-termin :termin="selectedTermin"
+				<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
 					:kursklausurmanager="kursklausurmanager"
 					:faecher-manager="faecherManager"
 					:map-lehrer="mapLehrer"
@@ -32,22 +39,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostSchuelerklausur, List, GostKlausurenCollectionSkrsKrs } from '@core';
-	import type { GostKlausurraum } from '@core';
+	import type { GostKlausurtermin, GostKlausurraumManager } from '@core';
 	import { computed, ref } from 'vue';
+	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 
-	const props = defineProps<{
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
-		kursklausurmanager: () => GostKursklausurManager;
-		faecherManager: GostFaecherManager;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		kursmanager: KursManager;
-		stundenplanmanager: StundenplanManager;
-		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
-		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
-		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
-	}>();
+	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
 	const raummanager = ref<GostKlausurraumManager | null>(null);
 
@@ -62,7 +58,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = computed(() => props.kursklausurmanager().getKlausurtermineMitDatum());
+	const termine = computed(() => props.kursklausurmanager().getKlausurtermineMitDatumByQuartal(props.quartalsauswahl.value));
 
 	const calculatCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,

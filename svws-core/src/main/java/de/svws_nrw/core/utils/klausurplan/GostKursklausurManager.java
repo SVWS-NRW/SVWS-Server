@@ -486,7 +486,9 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public @NotNull List<@NotNull GostKlausurtermin> getKlausurtermineByQuartal(final int quartal) {
-		final List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+		if (quartal == 0)
+			return getKlausurtermine();
+		final List<@NotNull GostKlausurtermin> termine = _mapQuartalKlausurtermine.get(quartal);
 		return termine != null ? termine : new ArrayList<>();
 	}
 

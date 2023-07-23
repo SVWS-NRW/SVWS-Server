@@ -8,9 +8,9 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-import { routeGostKlausurplanungKlausurdaten } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKlausurdaten";
+import { routeGostKlausurplanungVorlagen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorlagen";
 import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
-import { routeGostKlausurplanungPlanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungPlanung";
+import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 
 interface RouteStateGostKlausurplanung {
@@ -45,7 +45,7 @@ export class RouteDataGostKlausurplanung {
 		stundenplanmanager: undefined,
 		kursmanager: new KursManager(),
 		quartalsauswahl: 0,
-		view: routeGostKlausurplanungKlausurdaten,
+		view: routeGostKlausurplanungVorlagen,
 	}
 
 	private _state = shallowRef<RouteStateGostKlausurplanung>(RouteDataGostKlausurplanung._defaultState);
@@ -107,8 +107,8 @@ export class RouteDataGostKlausurplanung {
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
 			} else {
-				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungKlausurdaten))
-					view = routeGostKlausurplanungKlausurdaten;
+				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorlagen))
+					view = routeGostKlausurplanungVorlagen;
 			}
 			// Setze den State neu
 			this.setPatchedDefaultState({
@@ -251,10 +251,10 @@ export class RouteDataGostKlausurplanung {
 	  });
 
 	public async setView(view: RouteNode<any,any>) {
-		if ((view !== routeGostKlausurplanungKlausurdaten) &&
+		if ((view !== routeGostKlausurplanungVorlagen) &&
 			(view !== routeGostKlausurplanungSchienen) &&
 			(view !== routeGostKlausurplanungKalender) &&
-			(view !== routeGostKlausurplanungPlanung) &&
+			(view !== routeGostKlausurplanungRaumzeit) &&
 			(view !== routeGostKlausurplanungKonflikte))
 			throw new Error("Die gewählte Ansicht für die Klausurplanung wird nicht unterstützt. ");
 		this.setPatchedState({ view: view });

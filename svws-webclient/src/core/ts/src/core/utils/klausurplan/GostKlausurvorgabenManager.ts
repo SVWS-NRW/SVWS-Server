@@ -142,10 +142,11 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public getKlausurvorgabenByQuartal(quartal : number) : List<GostKlausurvorgabe> | null {
+	public getKlausurvorgabenByQuartal(quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0)
 			return this.getKlausurvorgaben();
-		return this._mapQuartalKlausurvorgaben.get(quartal);
+		let vorgaben : List<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(quartal);
+		return vorgaben !== null ? vorgaben : new ArrayList();
 	}
 
 	/**

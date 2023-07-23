@@ -4,16 +4,17 @@ import { BenutzerKompetenz, GostKursklausurManager, Schulform, ServerMode, Vecto
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
+import type { GostKlausurplanungRaumzeitProps } from "~/components/gost/klausurplanung/SGostKlausurplanungRaumzeitProps";
 
-const SGostKlausurplanungPlanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanungPlanung.vue");
+const SGostKlausurplanungRaumzeit = () => import("~/components/gost/klausurplanung/SGostKlausurplanungRaumzeit.vue");
 
-export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.planung", "planung", SGostKlausurplanungPlanung);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.raumzeit", "raumzeit", SGostKlausurplanungRaumzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Detailplanung";
+		super.text = "Klausurräume und -startzeiten";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -25,23 +26,23 @@ export class RouteGostKlausurplanungPlanung extends RouteNode<unknown, RouteGost
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.hatJahrgangsdaten ? routeGostKlausurplanung.data.jahrgangsdaten : undefined,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
-			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 			erzeugeKlausurraum: routeGostKlausurplanung.data.erzeugeKlausurraum,
 			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
 			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,
+			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 		}
 	}
 
 }
 
-export const routeGostKlausurplanungPlanung = new RouteGostKlausurplanungPlanung();
+export const routeGostKlausurplanungRaumzeit = new RouteGostKlausurplanungRaumzeit();
 

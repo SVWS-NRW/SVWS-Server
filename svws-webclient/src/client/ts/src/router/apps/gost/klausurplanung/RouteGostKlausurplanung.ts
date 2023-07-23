@@ -7,10 +7,10 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 
-import { routeGostKlausurplanungKlausurdaten } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKlausurdaten";
+import { routeGostKlausurplanungVorlagen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorlagen";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-import { routeGostKlausurplanungPlanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungPlanung";
+import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
 
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteDataGostKlausurplanung";
@@ -31,13 +31,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		super.setView("gost_child_auswahl", SGostKlausurplanungAuswahl, (route) => this.getAuswahlProps(route));
 		super.text = "Klausurplanung";
 		super.children = [
-			routeGostKlausurplanungKlausurdaten,
+			routeGostKlausurplanungVorlagen,
 			routeGostKlausurplanungSchienen,
 			routeGostKlausurplanungKalender,
-			routeGostKlausurplanungPlanung,
-			routeGostKlausurplanungKonflikte
+			routeGostKlausurplanungRaumzeit,
 		];
-		super.defaultChild = routeGostKlausurplanungKlausurdaten;
+		super.defaultChild = routeGostKlausurplanungVorlagen;
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
@@ -107,7 +106,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	private getChildData(): GostKlausurplanungAuswahlChildData[] {
 		const result: GostKlausurplanungAuswahlChildData[] = [];
 		if (this.data.abiturjahr === -1) {
-			result.push(routeGostKlausurplanungKlausurdaten);
+			result.push(routeGostKlausurplanungVorlagen);
 			// result.push(routeGostKlausurplanungKalender);
 			return result;
 		}

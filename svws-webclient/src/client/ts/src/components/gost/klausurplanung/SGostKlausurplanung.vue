@@ -10,6 +10,6 @@
 
 	// const props = defineProps<GostKlausurplanungAuswahlProps>();
 
-	const ansicht = ref("klausurdaten");
+	const ansicht = ref("klausurvorlagen");
 
 </script>

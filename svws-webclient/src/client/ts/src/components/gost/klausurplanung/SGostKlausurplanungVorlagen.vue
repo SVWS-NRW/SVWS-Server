@@ -4,7 +4,7 @@
 			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 			<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
 			<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-daten-hilfe /> </svws-ui-modal-hilfe>
+			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-vorlagen-hilfe /> </svws-ui-modal-hilfe>
 		</svws-ui-sub-nav>
 	</Teleport>
 
@@ -109,9 +109,9 @@
 	import type { Ref , WritableComputedRef } from 'vue'
 	import { ArrayList, GostKlausurvorgabe } from "@core";
 	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungDatenProps } from "./SGostKlausurplanungDatenProps";
+	import type { GostKlausurplanungVorlagenProps } from "./SGostKlausurplanungVorlagenProps";
 
-	const props = defineProps<GostKlausurplanungDatenProps>();
+	const props = defineProps<GostKlausurplanungVorlagenProps>();
 
 	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgabenByQuartal(props.quartalsauswahl.value));
 
@@ -134,7 +134,7 @@
 
 	const faecherSortiert = computed(() => {
 		const f = new ArrayList(props.faecherManager.faecher());
-		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
+		//		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
 		return f;
 	});
 

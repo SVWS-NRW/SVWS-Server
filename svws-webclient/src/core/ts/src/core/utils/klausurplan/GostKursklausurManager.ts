@@ -460,7 +460,9 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
 	public getKlausurtermineByQuartal(quartal : number) : List<GostKlausurtermin> {
-		const termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal <= 0 ? -1 : quartal);
+		if (quartal === 0)
+			return this.getKlausurtermine();
+		const termine : List<GostKlausurtermin> | null = this._mapQuartalKlausurtermine.get(quartal);
 		return termine !== null ? termine : new ArrayList();
 	}
 
