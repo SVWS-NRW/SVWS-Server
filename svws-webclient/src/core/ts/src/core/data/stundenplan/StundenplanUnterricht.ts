@@ -20,7 +20,7 @@ export class StundenplanUnterricht extends JavaObject {
 	public wochentyp : number = -1;
 
 	/**
-	 * Die ID des Kurses, sofern es sich um Kursunterricht handelt
+	 * Die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.
 	 */
 	public idKurs : number | null = null;
 

@@ -30,8 +30,8 @@ public class StundenplanUnterricht {
 	@Schema(description = "der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
 	public int wochentyp = -1;
 
-	/** Die ID des Kurses, sofern es sich um Kursunterricht handelt */
-	@Schema(description = "die ID des Kurses, sofern es sich um Kursunterricht handelt", example = "89")
+	/** Die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.*/
+	@Schema(description = "die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.", example = "89")
 	public Long idKurs = null;
 
 	/** Die ID des Faches */

@@ -113,8 +113,6 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_klasseID_zu_klasse : HashMap<number, StundenplanKlasse> = new HashMap();
 
-	private readonly _map_jahrgangID_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
-
 	private readonly _map_lehrerID_zu_lehrer : HashMap<number, StundenplanLehrer> = new HashMap();
 
 	private readonly _map_schuelerID_zu_schueler : HashMap<number, StundenplanSchueler> = new HashMap();
@@ -138,6 +136,10 @@ export class StundenplanManager extends JavaObject {
 	private readonly _map_fachID_zu_fach : HashMap<number, StundenplanFach> = new HashMap();
 
 	private readonly _list_faecher : List<StundenplanFach> = new ArrayList();
+
+	private readonly _map_jahrgangID_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
+
+	private readonly _list_jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
 
 	private readonly _map_zeitrasterID_zu_zeitraster : HashMap<number, StundenplanZeitraster> = new HashMap();
 
@@ -252,7 +254,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", this.stundenplanWochenTypModell === 1);
 		this.kalenderwochenzuordnungAddAll(listKWZ);
 		this.fachAddAll(listFach);
-		this.initJahrgaenge(listJahrgang);
+		this.jahrgangAddAll(listJahrgang);
 		this.zeitrasterAddAll(listZeitraster);
 		this.initRaeume(listRaum);
 		this.initPausenzeiten(listPausenzeit);
@@ -266,11 +268,49 @@ export class StundenplanManager extends JavaObject {
 		this.initUnterrichte(listUnterricht);
 	}
 
+	private jahrgangAddOhneUpdate(jahrgang : StundenplanJahrgang) : void {
+		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_jahrgaenge", this._list_jahrgaenge, jahrgang);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanJahrgang}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param jahrgang  Das {@link StundenplanJahrgang}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public jahrgangAdd(jahrgang : StundenplanJahrgang) : void {
+		this.jahrgangAddOhneUpdate(jahrgang);
+		this.jahrgangUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public jahrgangAddAll(listJahrgang : List<StundenplanJahrgang>) : void {
+		for (const jahrgang of listJahrgang)
+			this.jahrgangAddOhneUpdate(jahrgang);
+		this.jahrgangUpdate();
+	}
+
+	private jahrgangUpdate() : void {
+		const setJahrgangKuerzel : HashSet<string> = new HashSet();
+		for (const jahrgang of this._list_jahrgaenge)
+			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
+	}
+
 	private fachAddOhneUpdate(fach : StundenplanFach) : void {
 		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
 		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
 		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_fachID_zu_fach, fach.id, fach);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", this._list_faecher, fach);
 	}
 
 	/**
@@ -342,18 +382,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	private kalenderwochenzuordnungUpdate() : void {
 		this._list_kalenderwochenzuordnungen.sort(StundenplanManager._compKWZ);
-	}
-
-	private initJahrgaenge(listJahrgang : List<StundenplanJahrgang>) : void {
-		this._map_jahrgangID_zu_jahrgang.clear();
-		const setJahrgangKuerzel : HashSet<string> = new HashSet();
-		for (const jahrgang of listJahrgang) {
-			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
-			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
-			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
-			DeveloperNotificationException.ifMapPutOverwrites(this._map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
-		}
 	}
 
 	private initLehrer(listLehrer : List<StundenplanLehrer>) : void {
@@ -1417,6 +1445,24 @@ export class StundenplanManager extends JavaObject {
 			list.add(0);
 		}
 		return list;
+	}
+
+	/**
+	 * Liefert das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 */
+	public unterrichtGetByIDStringFach(idUnterricht : number) : string {
+		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
+		if (unterricht.idKurs === null) {
+			const fach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._map_fachID_zu_fach, unterricht.idFach);
+			return fach.kuerzel;
+		}
+		const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_zu_kurs, unterricht.idKurs);
+		return kurs.bezeichnung;
 	}
 
 	/**

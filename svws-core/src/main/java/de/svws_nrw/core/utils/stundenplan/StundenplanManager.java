@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.gost.GostBlockungKurs;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
@@ -27,6 +29,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
@@ -99,7 +102,6 @@ public class StundenplanManager {
 
 	// Maps
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_klasseID_zu_klasse = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_jahrgangID_zu_jahrgang = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _map_lehrerID_zu_lehrer = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_kursID_zu_kurs = new HashMap<>();
@@ -111,11 +113,15 @@ public class StundenplanManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_kwz = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsicht> _map_pausenaufsichtID_zu_pausenaufsicht = new HashMap<>();
 
-	// Fach
+	// StundenplanFach
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_fachID_zu_fach = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
 
-	// Zeitraster
+	// StundenplanJahrgang
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_jahrgangID_zu_jahrgang = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanJahrgang> _list_jahrgaenge = new ArrayList<>();
+
+	// StundenplanZeitraster
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map2d_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_wochentag_zu_zeitrastermenge = new HashMap<>();
@@ -167,7 +173,7 @@ public class StundenplanManager {
 		stundenplanGueltigBis = daten.gueltigBis;
 		stundenplanBezeichnung = daten.bezeichnungStundenplan;
 
-		// Spezialfall: unterrichtsverteilung ist NULL
+		// Spezialfall: "unterrichtsverteilung" ist NULL
 		StundenplanUnterrichtsverteilung uv = unterrichtsverteilung;
 		if (uv == null) {
 			uv = new StundenplanUnterrichtsverteilung();
@@ -247,7 +253,7 @@ public class StundenplanManager {
 
 		kalenderwochenzuordnungAddAll(listKWZ);        // ✔, referenziert ---
 		fachAddAll(listFach);                          // ✔, referenziert ---
-		initJahrgaenge(listJahrgang);                  // ✔, referenziert ---
+		jahrgangAddAll(listJahrgang);                  // ✔, referenziert ---
 		zeitrasterAddAll(listZeitraster);              // ✔, referenziert ---
 		initRaeume(listRaum);                          // ✔, referenziert ---
 		initPausenzeiten(listPausenzeit);              // ✔, referenziert ---
@@ -261,11 +267,50 @@ public class StundenplanManager {
 		initUnterrichte(listUnterricht);               // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
 	}
 
+	private void jahrgangAddOhneUpdate(@NotNull final StundenplanJahrgang jahrgang) {
+		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_jahrgaenge", _list_jahrgaenge, jahrgang);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanJahrgang}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param jahrgang  Das {@link StundenplanJahrgang}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void jahrgangAdd(final @NotNull StundenplanJahrgang jahrgang) {
+		jahrgangAddOhneUpdate(jahrgang);
+		jahrgangUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void jahrgangAddAll(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
+		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
+			jahrgangAddOhneUpdate(jahrgang);
+		jahrgangUpdate();
+	}
+
+	private void jahrgangUpdate() {
+		// Überprüfe, ob doppelte StundenplanJahrgang-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanJahrgang jahrgang : _list_jahrgaenge)
+			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
+	}
+
 	private void fachAddOhneUpdate(final @NotNull StundenplanFach fach) {
 		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
 		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
 		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
 		DeveloperNotificationException.ifMapPutOverwrites(_map_fachID_zu_fach, fach.id, fach);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", _list_faecher, fach);
 	}
 
 	/**
@@ -292,7 +337,7 @@ public class StundenplanManager {
 	}
 
 	private void fachUpdate() {
-		// Überprüfe, ob doppelte Fach-Kürzel vorhanden sind.
+		// Überprüfe, ob doppelte StundenplanFach-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanFach fach: _list_faecher)
 			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
@@ -344,17 +389,7 @@ public class StundenplanManager {
 		_list_kalenderwochenzuordnungen.sort(_compKWZ);
 	}
 
-	private void initJahrgaenge(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
-		_map_jahrgangID_zu_jahrgang.clear();
-		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang) {
-			DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-			DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
-			DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
-			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
-			DeveloperNotificationException.ifMapPutOverwrites(_map_jahrgangID_zu_jahrgang, jahrgang.id, jahrgang);
-		}
-	}
+
 
 	private void initLehrer(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
 		_map_lehrerID_zu_lehrer.clear();
@@ -1507,6 +1542,29 @@ public class StundenplanManager {
 
 		return list;
 	}
+
+	/**
+	 * Liefert das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 */
+	public @NotNull String unterrichtGetByIDStringFach(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_map_idUnterricht_zu_unterricht, idUnterricht);
+
+		// Klassenunterricht?
+		if (unterricht.idKurs == null) {
+			final @NotNull StundenplanFach fach =  DeveloperNotificationException.ifMapGetIsNull(_map_fachID_zu_fach, unterricht.idFach);
+			return fach.kuerzel;
+		}
+
+		// Kursunterricht
+		final @NotNull StundenplanKurs kurs =  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_zu_kurs, unterricht.idKurs);
+		return kurs.bezeichnung;
+	}
+
 
 	/**
 	 * Aktualisiert verschiedene Werte nachdem sich die {@link StundenplanUnterricht}-Menge verändert hat.
