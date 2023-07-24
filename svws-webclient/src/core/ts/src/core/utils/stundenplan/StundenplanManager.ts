@@ -1326,6 +1326,34 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "09:30" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
+	 *
+	 * @return die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 */
+	public pausenzeitGetByIdStringOfUhrzeitBeginn(idPausenzeit : number) : string {
+		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_pausenzeitID_zu_pausenzeit, idPausenzeit);
+		return (pausenzeit.beginn === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.beginn);
+	}
+
+	/**
+	 * Liefert die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "10:15" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
+	 *
+	 * @return die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 */
+	public pausenzeitGetByIdStringOfUhrzeitEnde(idPausenzeit : number) : string {
+		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_pausenzeitID_zu_pausenzeit, idPausenzeit);
+		return (pausenzeit.ende === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.ende);
+	}
+
+	/**
 	 * Liefert die Datenbank-ID des Schülers.<br>
 	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
 	 *
@@ -1382,7 +1410,7 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert das {@link StundenplanUnterricht}-Objekt zur übergebenen ID.
 	 * <br>Laufzeit: O(1)
-	 * <br>Hinweis: Unnötige Methode, denn man bekommt ddie Objekte über Zeitraster abfragen.
+	 * <br>Hinweis: Unnötige Methode, denn man bekommt die Objekte über Zeitraster-Abfragen.
 	 *
 	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
 	 *
@@ -1399,6 +1427,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergebenen Zeitraster liegen.
+	 * @deprecated Sollte nicht benutzt werden.  Stattdessen sollte man pro Zeitraster (Zelle) und Wochentyp arbeiten.
 	 */
 	public unterrichtGetMengeByZeitrasterIdOrEmptyList(idZeitraster : number) : List<StundenplanUnterricht> {
 		return MapUtils.getOrCreateArrayList(this._map_idZeitraster_zu_unterrichtmenge, idZeitraster);
