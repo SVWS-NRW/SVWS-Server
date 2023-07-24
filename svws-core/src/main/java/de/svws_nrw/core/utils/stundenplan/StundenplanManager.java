@@ -2241,7 +2241,7 @@ public class StundenplanManager {
 		final @NotNull String sBeginn = (zeitraster.stundenbeginn == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		final @NotNull String sEnde = (zeitraster.stundenende == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 
-		return sBeginn + "-" + sEnde;
+		return sBeginn + " - " + sEnde + " Uhr";
 	}
 
 }

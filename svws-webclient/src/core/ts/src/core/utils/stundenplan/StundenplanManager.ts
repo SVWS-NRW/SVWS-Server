@@ -2092,7 +2092,7 @@ export class StundenplanManager extends JavaObject {
 			return "???";
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-		return sBeginn! + "-" + sEnde!;
+		return sBeginn! + " - " + sEnde! + " Uhr";
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
