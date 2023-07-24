@@ -56,6 +56,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
 			gotoStundenplan: this.data.gotoStundenplan,
+			manager: () => routeSchuelerStundenplan.data.manager,
 		};
 	}
 

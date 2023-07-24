@@ -1,8 +1,16 @@
 <template>
 	<svws-ui-sub-nav>
-		<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" span="full" headless
-			class="w-144 border-l-svws-700 border p-1 pl-2 rounded-md"
-			:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
+		<template v-if="stundenplan !== undefined">
+			<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" headless
+				class="w-144 border-l-svws-700 border p-1 pl-2 rounded-md"
+				:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
+			<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" headless
+				class="w-48 border-l-svws-700 border p-1 pl-2 rounded-md"
+				:item-text="(wt) => getWochentypString(wt)" />
+			<svws-ui-multi-select title="Kalenderwochen" v-model="kwAuswahl" :items="kalenderwochen()" headless
+				class="w-84 border-l-svws-700 border p-1 pl-2 rounded-md"
+				:item-text="(kw) => getKalenderwochenString(kw)" />
+		</template>
 		<svws-ui-modal-hilfe class="ml-auto"> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 	<div class="w-full pl-9 pr-9 pt-8 pb-16">
@@ -19,7 +27,7 @@
 
 	import { type WritableComputedRef, computed } from "vue";
 	import type { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
-	import { DateUtils, DeveloperNotificationException, type StundenplanListeEintrag } from "@core";
+	import { ArrayList, DateUtils, DeveloperNotificationException, StundenplanKalenderwochenzuordnung, type List, type StundenplanListeEintrag } from "@core";
 
 	const props = defineProps<SchuelerStundenplanAuswahlProps>();
 
@@ -43,6 +51,57 @@
 		},
 		set: (value : StundenplanListeEintrag) => {
 			void props.gotoStundenplan(value);
+		}
+	});
+
+	function wochentypen(): List<number> {
+		let modell = props.manager().getWochenTypModell();
+		if (modell <= 1)
+			modell = 0;
+		const result = new ArrayList<number>();
+		for (let n = 0; n <= modell; n++)
+			result.add(n);
+		return result;
+	}
+
+	function getWochentypString(wochentyp: number): string {
+		switch (wochentyp) {
+			case 0: return "alle";
+			case 1: return "nur A-Woche";
+			case 2: return "nur B-Woche";
+			case 3: return "nur C-Woche";
+			case 4: return "nur D-Woche";
+			case 5: return "nur E-Woche";
+			case 6: return "nur F-Woche";
+			case 7: return "nur G-Woche";
+			case 8: return "nur H-Woche";
+			default: return "nur Wochentyp " + wochentyp;
+		}
+	}
+
+	const wochentypAuswahl : WritableComputedRef<number> = computed({
+		get: () : number => {
+			return 0;
+		},
+		set: (value : number) => {
+			console.log("Auswahl des Wochentyps: " + value);
+		}
+	});
+
+	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
+		return props.manager().getListKalenderwochenzuordnung();
+	}
+
+	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung): string {
+		return "Mo. ??.??.???? - So. ??.??.???? (KW " + kw.kw + ")";
+	}
+
+	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung> = computed({
+		get: () : StundenplanKalenderwochenzuordnung => {
+			return kalenderwochen().get(0);
+		},
+		set: (value : StundenplanKalenderwochenzuordnung) => {
+			console.log("Auswahl der Kalenderwoche: " + value);
 		}
 	});
 
