@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="w-full pl-9 pr-9 pt-8 pb-16">
 		<div v-if="stundenplan === undefined">
 			Derzeit liegt kein Stundenplan für diesen Lernabschnitt vor.
 		</div>
