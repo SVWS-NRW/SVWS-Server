@@ -41,18 +41,6 @@
 
 	const props = defineProps<SchuelerStundenplanDatenProps>();
 
-	function getRangeStunden(): number[] {
-		const min = props.manager().zeitrasterGetStundeMin();
-		const max = props.manager().zeitrasterGetStundeMax();
-		return Array.from({ length: (max-min+1) }, (value, index) => min + index);
-	}
-
-	function getRangeWochentage(): Wochentag[] {
-		const min = props.manager().zeitrasterGetWochentagMin();
-		const max = props.manager().zeitrasterGetWochentagMax();
-		return Array.from({ length: (max-min+1) }, (value, index) => Wochentag.fromIDorException(min + index));
-	}
-
 	const cols = computed(() => {
 		const colcount = (getRangeWochentage().length + 1);
 		const result = {
@@ -66,6 +54,18 @@
 		};
 		return result;
 	});
+
+	function getRangeStunden(): number[] {
+		const min = props.manager().zeitrasterGetStundeMin();
+		const max = props.manager().zeitrasterGetStundeMax();
+		return Array.from({ length: (max-min+1) }, (value, index) => min + index);
+	}
+
+	function getRangeWochentage(): Wochentag[] {
+		const min = props.manager().zeitrasterGetWochentagMin();
+		const max = props.manager().zeitrasterGetWochentagMax();
+		return Array.from({ length: (max-min+1) }, (value, index) => Wochentag.fromIDorException(min + index));
+	}
 
 	function hatWochentypAllgemein(wochentag: Wochentag, stunde: number) : boolean {
 		if (!props.manager().zeitrasterExistsByWochentagAndStunde(wochentag.id, stunde))
