@@ -2,10 +2,15 @@
 	<div class="grid gap-4 rounded-md select-none" :class="cols">
 		<div class="text-center rounded-md"> &ndash; </div>
 		<div v-for="wochentag in getRangeWochentage()" :key="wochentag.id" class="text-center rounded-md bg-svws-300">
-			{{ wochentage[wochentag.id] }}
+			<div> {{ wochentage[wochentag.id] }} </div>
 		</div>
 		<template v-for="stunde in getRangeStunden()" :key="stunde">
-			<div class="text-center rounded-md bg-yellow-200"> {{ stunde }} </div>
+			<div class="grid gap-1 grid-cols-1 text-center rounded-md bg-yellow-200">
+				<div> {{ stunde }} </div>
+				<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten">
+					{{ zeiten }}
+				</div>
+			</div>
 			<div v-for="wochentag in getRangeWochentage()" :key="wochentag.id" class="bg-yellow-100">
 				<div v-if="hatWochentypAllgemein(wochentag, stunde)" class="flex flex-col gap-2">
 					<div v-for="unterricht in unterrichtsdaten(wochentag, stunde, 0)" :key="unterricht.id"
