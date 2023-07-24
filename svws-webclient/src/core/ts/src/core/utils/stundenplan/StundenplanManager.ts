@@ -1,7 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
-import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -13,6 +12,7 @@ import { DateUtils } from '../../../core/utils/DateUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
+import { StringUtils } from '../../../core/utils/StringUtils';
 import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
@@ -1482,12 +1482,25 @@ export class StundenplanManager extends JavaObject {
 			const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_klasseID_zu_klasse, idKlasse);
 			kuerzel.add(klasse.kuerzel);
 		}
-		const sb : StringBuilder = new StringBuilder();
-		if (!kuerzel.isEmpty())
-			sb.append(DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
-		while (!kuerzel.isEmpty())
-			sb.append(", " + DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst())!);
-		return sb.toString();
+		return StringUtils.toKommaSeperatedString(kuerzel);
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "1.01" bei einem Raum und "T1, T2" bei mehreren (z.B. Sporthallen...)
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
+	 */
+	public unterrichtGetByIDStringOfRaeume(idUnterricht : number) : string {
+		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
+		const kuerzel : AVLSet<string> = new AVLSet();
+		for (const idRaum of unterricht.raeume) {
+			const raum : StundenplanRaum = DeveloperNotificationException.ifMapGetIsNull(this._map_raumID_zu_raum, idRaum);
+			kuerzel.add(raum.kuerzel);
+		}
+		return StringUtils.toKommaSeperatedString(kuerzel);
 	}
 
 	/**

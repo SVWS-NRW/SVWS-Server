@@ -18,7 +18,7 @@ public class StundenplanRaum {
 	@Schema(description = "die ID des Raumes", example = "4711")
 	public long id = -1;
 
-	/** Das Raumkürzel. */
+	/** Das Raumkürzel. Darf nicht "blank" sein.*/
 	@Schema(description = "das Raumkürzel", example = "R042")
 	public @NotNull String kuerzel = "";
 

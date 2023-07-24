@@ -6,12 +6,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.set.AVLSet;
-import de.svws_nrw.core.data.gost.GostBlockungKurs;
-import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
@@ -31,11 +28,11 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
+import de.svws_nrw.core.utils.StringUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -1585,13 +1582,28 @@ public class StundenplanManager {
 			kuerzel.add(klasse.kuerzel);
 		}
 
-		// Umwandeln zu einem String.
-		final @NotNull StringBuilder sb = new StringBuilder();
-		if (!kuerzel.isEmpty()) // Fall 0 oder 1 Klasse.
-			sb.append(DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
-		while (!kuerzel.isEmpty())  // Fall 2 oder mehr Klassen.
-			sb.append(", " + DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
-		return sb.toString();
+		return StringUtils.toKommaSeperatedString(kuerzel);
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "1.01" bei einem Raum und "T1, T2" bei mehreren (z.B. Sporthallen...)
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Raummenge des {@link StundenplanUnterricht}.
+	 */
+	public @NotNull String unterrichtGetByIDStringOfRaeume(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_map_idUnterricht_zu_unterricht, idUnterricht);
+
+		// Klassenkürzel sammeln und sortieren.
+		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
+		for (final @NotNull Long idRaum : unterricht.raeume) {
+			final @NotNull StundenplanRaum raum =  DeveloperNotificationException.ifMapGetIsNull(_map_raumID_zu_raum, idRaum);
+			kuerzel.add(raum.kuerzel);
+		}
+
+		return StringUtils.toKommaSeperatedString(kuerzel);
 	}
 
 	/**

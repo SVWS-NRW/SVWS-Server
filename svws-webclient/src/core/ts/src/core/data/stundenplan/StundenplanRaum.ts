@@ -8,7 +8,7 @@ export class StundenplanRaum extends JavaObject {
 	public id : number = -1;
 
 	/**
-	 * Das Raumkürzel.
+	 * Das Raumkürzel. Darf nicht "blank" sein.
 	 */
 	public kuerzel : string = "";
 
