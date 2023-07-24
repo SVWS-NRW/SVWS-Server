@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils;
 
-import java.util.Set;
+import java.util.Collection;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -15,16 +15,16 @@ public final class StringUtils {
 	}
 
 	/**
-	 * Liefert einen durch Komma getrennten String aller Inhalte des übergebenen Sets.
+	 * Liefert einen durch Komma getrennten String aller Inhalte der übergebenen {@link Collection}.
 	 *
-	 * @param set  Das Set der zu verbindenden Inhalte.
+	 * @param collection  Die zu verbindenden Inhalte.
 	 *
-	 * @return einen durch Komma getrennten String aller Inhalte des übergebenen Sets.
+	 * @return einen durch Komma getrennten String aller Inhalte der übergebenen {@link Collection}.
 	 */
-	public static @NotNull String toKommaSeperatedString(final @NotNull Set<@NotNull String> set) {
+	public static @NotNull String collectionToCommaSeparatedString(final @NotNull Collection<@NotNull String> collection) {
 		final @NotNull StringBuilder sb = new StringBuilder();
 
-		for (final @NotNull String s : set)
+		for (final @NotNull String s : collection)
 			if (sb.isEmpty())
 				sb.append(s);
 			else

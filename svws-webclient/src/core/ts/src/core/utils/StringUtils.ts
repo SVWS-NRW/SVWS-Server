@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
-import type { JavaSet } from '../../java/util/JavaSet';
 import { StringBuilder } from '../../java/lang/StringBuilder';
+import type { Collection } from '../../java/util/Collection';
 
 export class StringUtils extends JavaObject {
 
@@ -10,15 +10,15 @@ export class StringUtils extends JavaObject {
 	}
 
 	/**
-	 * Liefert einen durch Komma getrennten String aller Inhalte des übergebenen Sets.
+	 * Liefert einen durch Komma getrennten String aller Inhalte der übergebenen {@link Collection}.
 	 *
-	 * @param set  Das Set der zu verbindenden Inhalte.
+	 * @param collection  Die zu verbindenden Inhalte.
 	 *
-	 * @return einen durch Komma getrennten String aller Inhalte des übergebenen Sets.
+	 * @return einen durch Komma getrennten String aller Inhalte der übergebenen {@link Collection}.
 	 */
-	public static toKommaSeperatedString(set : JavaSet<string>) : string {
+	public static collectionToCommaSeparatedString(collection : Collection<string>) : string {
 		const sb : StringBuilder = new StringBuilder();
-		for (const s of set)
+		for (const s of collection)
 			if (sb.isEmpty())
 				sb.append(s);
 			else
