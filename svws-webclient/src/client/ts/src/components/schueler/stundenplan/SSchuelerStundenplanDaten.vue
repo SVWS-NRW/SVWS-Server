@@ -17,7 +17,7 @@
 						<div v-for="unterricht in unterrichtsdaten(wochentag, stunde, wochentyp)" :key="unterricht.id"
 							class="grid gap-1 grid-cols-2 text-center rounded-md">
 							<div class="col-span-2"> ({{ wochentyp }}) </div>
-							<div> {{ manager().fachGetByIdOrException(unterricht.idFach)?.kuerzel }} </div>
+							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 						</div>
 					</div>
 				</div>
