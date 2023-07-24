@@ -5,8 +5,8 @@
 				class="w-144 border-l-svws-700 border p-1 pl-2 rounded-md"
 				:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
 			<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" headless
-				class="w-48 border-l-svws-700 border p-1 pl-2 rounded-md"
-				:item-text="(wt) => getWochentypString(wt)" />
+				class="w-32 border-l-svws-700 border p-1 pl-2 rounded-md"
+				:item-text="(wt) => manager().stundenplanGetWochenTypAsString(wt)" />
 			<svws-ui-multi-select title="Kalenderwochen" v-model="kwAuswahl" :items="kalenderwochen()" headless
 				class="w-84 border-l-svws-700 border p-1 pl-2 rounded-md"
 				:item-text="(kw) => getKalenderwochenString(kw)" />
@@ -62,21 +62,6 @@
 		for (let n = 0; n <= modell; n++)
 			result.add(n);
 		return result;
-	}
-
-	function getWochentypString(wochentyp: number): string {
-		switch (wochentyp) {
-			case 0: return "Alle";
-			case 1: return "nur A-Woche";
-			case 2: return "nur B-Woche";
-			case 3: return "nur C-Woche";
-			case 4: return "nur D-Woche";
-			case 5: return "nur E-Woche";
-			case 6: return "nur F-Woche";
-			case 7: return "nur G-Woche";
-			case 8: return "nur H-Woche";
-			default: return "nur Wochentyp " + wochentyp;
-		}
 	}
 
 	const wochentypAuswahl : WritableComputedRef<number> = computed({
