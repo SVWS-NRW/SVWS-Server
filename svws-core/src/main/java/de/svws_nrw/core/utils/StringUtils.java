@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class StringUtils {
 
+	private static final @NotNull String @NotNull [] buchstaben = new String[] {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+			                                                          "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+			                                                          "U", "V", "W", "X", "Y", "Z"};
+
 	private StringUtils() {
 	}
 
@@ -33,4 +37,25 @@ public final class StringUtils {
 		return sb.toString();
 	}
 
+	/**
+	 * Liefert die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
+	 *
+	 * @param number  Die umzuwandelnde Zahl.
+	 *
+	 * @return die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
+	 */
+	public static @NotNull String numberToLetterIndex0(final int number) {
+		return (number < 0) || (number > 25) ? "" : buchstaben[number];
+	}
+
+	/**
+	 * Liefert die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
+	 *
+	 * @param number  Die umzuwandelnde Zahl.
+	 *
+	 * @return die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
+	 */
+	public static @NotNull String numberToLetterIndex1(final int number) {
+		return (number < 1) || (number > 26) ? "" : buchstaben[number - 1];
+	}
 }

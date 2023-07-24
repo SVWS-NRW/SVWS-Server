@@ -4,6 +4,8 @@ import type { Collection } from '../../java/util/Collection';
 
 export class StringUtils extends JavaObject {
 
+	private static readonly buchstaben : Array<string> = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
 
 	private constructor() {
 		super();
@@ -24,6 +26,28 @@ export class StringUtils extends JavaObject {
 			else
 				sb.append(", " + s!);
 		return sb.toString();
+	}
+
+	/**
+	 * Liefert die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
+	 *
+	 * @param number  Die umzuwandelnde Zahl.
+	 *
+	 * @return die umgewandelte Zahl aus dem Bereich 0=A bis 25=Z in einen Buchstaben um.
+	 */
+	public static numberToLetterIndex0(number : number) : string {
+		return (number < 0) || (number > 25) ? "" : StringUtils.buchstaben[number];
+	}
+
+	/**
+	 * Liefert die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
+	 *
+	 * @param number  Die umzuwandelnde Zahl.
+	 *
+	 * @return die umgewandelte Zahl aus dem Bereich 1=A bis 26=Z in einen Buchstaben um.
+	 */
+	public static numberToLetterIndex1(number : number) : string {
+		return (number < 1) || (number > 26) ? "" : StringUtils.buchstaben[number - 1];
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

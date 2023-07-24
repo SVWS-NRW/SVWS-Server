@@ -179,7 +179,7 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterStundenRange : Array<number> = [1];
 
-	private _zeitrasterWochentageAlsEnumRange : Array<Wochentag | null> = [Wochentag.MONTAG];
+	private _zeitrasterWochentageAlsEnumRange : Array<Wochentag> = [Wochentag.MONTAG];
 
 	private _unterrichtHatMultiWochen : boolean = false;
 
@@ -1527,6 +1527,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert zum übergebenen Wochentyp einen passenden String.
+	 * <br>Beispiel: 0 -> "Alle", 1 -> "A-Woche", ...
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
+	 *
+	 * @return zum übergebenen Wochentyp einen passenden String.
+	 */
+	public stundenplanGetWochenTypAsString(wochenTyp : number) : string {
+		if (wochenTyp <= 0)
+			return "Alle";
+		const zahl : number = wochenTyp - 1;
+		const z2 : number = Math.trunc(zahl / 26);
+		const z1 : number = zahl - z2 * 26;
+		return StringUtils.numberToLetterIndex1(z2)! + StringUtils.numberToLetterIndex0(z1)! + "-Woche";
+	}
+
+	/**
 	 * Liefert die Datenbank-ID des Stundenplans.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -1594,6 +1612,19 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster : number, wochentyp : number) : List<StundenplanUnterricht> {
 		return Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, idZeitraster, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 */
+	public unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number) : List<StundenplanUnterricht> {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
+		return (zeitraster === null) ? new ArrayList() : this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(zeitraster.id, wochentyp);
 	}
 
 	/**
@@ -1948,6 +1979,28 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
+	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMin()} bis {@link #zeitrasterGetStundeMax()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
+	 */
+	public zeitrasterGetStundenRange() : Array<number> {
+		return this._zeitrasterStundenRange;
+	}
+
+	/**
+	 * Liefert alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanZeitraster}.
+	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #zeitrasterGetWochentagMin} bis {@link #zeitrasterGetWochentagMax()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanZeitraster}.
+	 */
+	public zeitrasterGetWochentageAlsEnumRange() : Array<Wochentag> {
+		return this._zeitrasterWochentageAlsEnumRange;
+	}
+
+	/**
 	 * Liefert TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
 	 *
 	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
@@ -1956,6 +2009,19 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public zeitrasterHatUnterrichtMitWochentyp0(idZeitraster : number) : boolean {
 		return !Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, idZeitraster, 0).isEmpty();
+	}
+
+	/**
+	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
+	 *
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
+		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp0(zeitraster.id);
 	}
 
 	/**
@@ -1970,6 +2036,19 @@ export class StundenplanManager extends JavaObject {
 			if (!Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, idZeitraster, wochentyp).isEmpty())
 				return true;
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 *
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
+		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp1BisN(zeitraster.id);
 	}
 
 	/**
@@ -2105,67 +2184,6 @@ export class StundenplanManager extends JavaObject {
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 		return sBeginn! + " - " + sEnde! + " Uhr";
-	}
-
-	/**
-	 * Liefert alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
-	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMin()} bis {@link #zeitrasterGetStundeMax()}.
-	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
-	 *
-	 * @return alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
-	 */
-	public zeitrasterGetStundenRange() : Array<number> {
-		return this._zeitrasterStundenRange;
-	}
-
-	/**
-	 * Liefert alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanZeitraster}.
-	 * Das Array beinhaltet alle {@link Wochentag}-Objekte von {@link #zeitrasterGetWochentagMin} bis {@link #zeitrasterGetWochentagMax()}.
-	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
-	 *
-	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanZeitraster}.
-	 */
-	public zeitrasterGetWochentageAlsEnumRange() : Array<Wochentag | null> {
-		return this._zeitrasterWochentageAlsEnumRange;
-	}
-
-	/**
-	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
-	 *
-	 * @param wochentag  Der {@link Wochentag}-ENUM.
-	 * @param stunde     Die Unterrichtsstunde.
-	 *
-	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
-	 */
-	public zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
-		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
-		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp0(zeitraster.id);
-	}
-
-	/**
-	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
-	 *
-	 * @param wochentag  Der {@link Wochentag}-ENUM.
-	 * @param stunde     Die Unterrichtsstunde.
-	 *
-	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
-	 */
-	public zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
-		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
-		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp1BisN(zeitraster.id);
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
-	 * @param wochentag  Der {@link Wochentag}-ENUM.
-	 * @param stunde     Die Unterrichtsstunde.
-	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
-	 */
-	public unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number) : List<StundenplanUnterricht> {
-		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
-		return (zeitraster === null) ? new ArrayList() : this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(zeitraster.id, wochentyp);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

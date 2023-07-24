@@ -134,7 +134,7 @@ public final class DateUtils {
 	 */
 	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
 		DeveloperNotificationException.ifSmaller("minuten", minuten, 0);
-		DeveloperNotificationException.ifGreater("minuten", minuten, 24 * 60);
+		DeveloperNotificationException.ifGreater("minuten", minuten, 24L * 60L);
 		final int h = minuten / 60;
 		final int m = minuten - h * 60;
 		final String sStunden = (h < 10 ? "0" : "") + h;
