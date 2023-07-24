@@ -109,6 +109,24 @@ export class DateUtils extends JavaObject {
 		return (jahr < 1900) || (jahr > 2900);
 	}
 
+	/**
+	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 * <br>Beispiel: 1000 Minuten --> "16:40"
+	 *
+	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
+	 *
+	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 */
+	public static getStringOfUhrzeitFromMinuten(minuten : number) : string {
+		DeveloperNotificationException.ifSmaller("minuten", minuten, 0);
+		DeveloperNotificationException.ifGreater("minuten", minuten, 24 * 60);
+		const h : number = Math.trunc(minuten / 60);
+		const m : number = minuten - h * 60;
+		const sStunden : string | null = (h < 10 ? "0" : "") + h;
+		const sMinuten : string | null = (m < 10 ? "0" : "") + m;
+		return sStunden! + ":" + sMinuten!;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}

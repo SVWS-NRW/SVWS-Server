@@ -124,4 +124,22 @@ public final class DateUtils {
 		return (jahr < 1900) || (jahr > 2900);
 	}
 
+	/**
+	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 * <br>Beispiel: 1000 Minuten --> "16:40"
+	 *
+	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
+	 *
+	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 */
+	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
+		DeveloperNotificationException.ifSmaller("minuten", minuten, 0);
+		DeveloperNotificationException.ifGreater("minuten", minuten, 24 * 60);
+		final int h = minuten / 60;
+		final int m = minuten - h * 60;
+		final String sStunden = (h < 10 ? "0" : "") + h;
+		final String sMinuten = (m < 10 ? "0" : "") + m;
+		return sStunden + ":" + sMinuten;
+	}
+
 }

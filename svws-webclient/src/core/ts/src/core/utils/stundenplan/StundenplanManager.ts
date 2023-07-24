@@ -1624,6 +1624,34 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Beginn-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "09:30" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des {@link StundenplanZeitraster}.
+	 *
+	 * @return die Beginn-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
+	 */
+	public zeitrasterGetByIdStringOfUhrzeitBeginn(idZeitraster : number) : string {
+		const zeitraster : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
+		return (zeitraster.stundenbeginn === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
+	}
+
+	/**
+	 * Liefert die End-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "10:15" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idZeitraster  Die Datenbank-ID des {@link StundenplanZeitraster}.
+	 *
+	 * @return die End-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
+	 */
+	public zeitrasterGetByIdStringOfUhrzeitEnde(idZeitraster : number) : string {
+		const zeitraster : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._map_zeitrasterID_zu_zeitraster, idZeitraster);
+		return (zeitraster.stundenende === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
+	}
+
+	/**
 	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt, falls es existiert, sonst NULL.
 	 *
 	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des gesuchten Zeitrasters.
