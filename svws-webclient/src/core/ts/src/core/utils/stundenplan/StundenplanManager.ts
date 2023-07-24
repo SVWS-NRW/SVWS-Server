@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { StundenplanUnterrichtsverteilung, cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan/StundenplanUnterrichtsverteilung';
+import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { HashMap } from '../../../java/util/HashMap';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -18,6 +19,7 @@ import { cast_java_util_List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
 import { HashSet } from '../../../java/util/HashSet';
+import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { MapUtils } from '../../../core/utils/MapUtils';
@@ -1448,14 +1450,14 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * Liefert eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
 	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
 	 * <br>Laufzeit: O(1)
 	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
 	 *
-	 * @return das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * @return eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
 	 */
-	public unterrichtGetByIDStringFach(idUnterricht : number) : string {
+	public unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht : number) : string {
 		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
 		if (unterricht.idKurs === null) {
 			const fach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._map_fachID_zu_fach, unterricht.idFach);
@@ -1463,6 +1465,29 @@ export class StundenplanManager extends JavaObject {
 		}
 		const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_kursID_zu_kurs, unterricht.idKurs);
 		return kurs.bezeichnung;
+	}
+
+	/**
+	 * Liefert eine String-Repräsentation der Klassenmenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "5a" bei einer Klasse und "7a,7b" bei mehreren (z.B. Französisch...)
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Klassenmenge des {@link StundenplanUnterricht}.
+	 */
+	public unterrichtGetByIDStringOfKlassen(idUnterricht : number) : string {
+		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
+		const kuerzel : AVLSet<string> = new AVLSet();
+		for (const idKlasse of unterricht.klassen) {
+			const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_klasseID_zu_klasse, idKlasse);
+			kuerzel.add(klasse.kuerzel);
+		}
+		const sb : StringBuilder = new StringBuilder();
+		if (!kuerzel.isEmpty())
+			sb.append(DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
+		while (!kuerzel.isEmpty())
+			sb.append(", " + DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst())!);
+		return sb.toString();
 	}
 
 	/**

@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.adt.set.AVLSet;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
@@ -1544,14 +1546,14 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * Liefert eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
 	 * <br>Beispiel: "M-LK1-Suffix" bei Kursen und "M" Fachkürzel bei Klassenunterricht.
 	 * <br>Laufzeit: O(1)
 	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
 	 *
-	 * @return das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
+	 * @return eine String-Repräsentation des das Fach- oder Kurs-Kürzel eines {@link StundenplanUnterricht}.
 	 */
-	public @NotNull String unterrichtGetByIDStringFach(final long idUnterricht) {
+	public @NotNull String unterrichtGetByIDStringOfFachOderKursKuerzel(final long idUnterricht) {
 		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_map_idUnterricht_zu_unterricht, idUnterricht);
 
 		// Klassenunterricht?
@@ -1565,6 +1567,32 @@ public class StundenplanManager {
 		return kurs.bezeichnung;
 	}
 
+	/**
+	 * Liefert eine String-Repräsentation der Klassenmenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "5a" bei einer Klasse und "7a,7b" bei mehreren (z.B. Französisch...)
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Klassenmenge des {@link StundenplanUnterricht}.
+	 */
+	public @NotNull String unterrichtGetByIDStringOfKlassen(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_map_idUnterricht_zu_unterricht, idUnterricht);
+
+		// Klassenkürzel sammeln und sortieren.
+		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
+		for (final @NotNull Long idKlasse : unterricht.klassen) {
+			final @NotNull StundenplanKlasse klasse =  DeveloperNotificationException.ifMapGetIsNull(_map_klasseID_zu_klasse, idKlasse);
+			kuerzel.add(klasse.kuerzel);
+		}
+
+		// Umwandeln zu einem String.
+		final @NotNull StringBuilder sb = new StringBuilder();
+		if (!kuerzel.isEmpty()) // Fall 0 oder 1 Klasse.
+			sb.append(DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
+		while (!kuerzel.isEmpty())  // Fall 2 oder mehr Klassen.
+			sb.append(", " + DeveloperNotificationException.ifNull("kuerzel.pollFirst()", kuerzel.pollFirst()));
+		return sb.toString();
+	}
 
 	/**
 	 * Aktualisiert verschiedene Werte nachdem sich die {@link StundenplanUnterricht}-Menge verändert hat.
