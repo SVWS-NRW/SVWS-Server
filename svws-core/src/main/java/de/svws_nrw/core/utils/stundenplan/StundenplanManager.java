@@ -753,6 +753,7 @@ public class StundenplanManager {
 				final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
 				MapUtils.getOrCreateArrayList(_map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
 			}
+
 			_list_unterricht.add(u);
 		}
 
