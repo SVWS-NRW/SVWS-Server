@@ -6,7 +6,7 @@
 		</div>
 		<template v-for="stunde in getRangeStunden()" :key="stunde">
 			<div class="grid gap-1 grid-cols-1 text-center rounded-md bg-yellow-200">
-				<div> {{ stunde }} </div>
+				<div> {{ stunde }}. Stunde </div>
 				<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten">
 					{{ zeiten }}
 				</div>
