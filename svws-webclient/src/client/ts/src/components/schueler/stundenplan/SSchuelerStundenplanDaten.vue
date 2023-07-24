@@ -8,8 +8,11 @@
 			<div class="text-center rounded-md bg-yellow-200"> {{ stunde }} </div>
 			<div v-for="wochentag in getRangeWochentage()" :key="wochentag.id" class="bg-yellow-100">
 				<div v-if="hatWochentypAllgemein(wochentag, stunde)" class="flex flex-col gap-2">
-					<div v-for="unterricht in unterrichtsdaten(wochentag, stunde, 0)" :key="unterricht.id" class="text-center rounded-md bg-cyan-100">
-						{{ manager().fachGetByIdOrException(unterricht.idFach)?.kuerzel }}
+					<div v-for="unterricht in unterrichtsdaten(wochentag, stunde, 0)" :key="unterricht.id"
+						class="grid gap-1 grid-cols-2 text-center rounded-md bg-cyan-100">
+						<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+						<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+						<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 					</div>
 				</div>
 				<div v-else-if="hatWochentypSpeziell(wochentag, stunde)" class="flex flex-row gap-2">
@@ -18,6 +21,8 @@
 							class="grid gap-1 grid-cols-2 text-center rounded-md">
 							<div class="col-span-2"> ({{ wochentyp }}) </div>
 							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+							<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 						</div>
 					</div>
 				</div>
