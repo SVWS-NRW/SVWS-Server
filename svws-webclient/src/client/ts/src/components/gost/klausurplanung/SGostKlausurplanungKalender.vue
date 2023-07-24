@@ -10,7 +10,7 @@
 		</svws-ui-sub-nav>
 	</Teleport>
 
-	<svws-ui-content-card @click="dragTermin = null" class="h-full">
+	<svws-ui-content-card @click="dragTermin = null" class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex gap-4 mt-4 h-screen">
 			<div class="flex flex-col w-1/4 h-full">
 				<div class="text-headline-md">Zu verplanen:</div>

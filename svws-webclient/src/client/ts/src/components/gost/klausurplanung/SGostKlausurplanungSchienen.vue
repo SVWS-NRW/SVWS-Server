@@ -62,7 +62,7 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 
-		<svws-ui-content-card>
+		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 			<div class="flex flex-row gap-8 mt-4">
 				<div class="flex flex-col">
 					<div class="text-headline-md">Zu verplanen:</div>

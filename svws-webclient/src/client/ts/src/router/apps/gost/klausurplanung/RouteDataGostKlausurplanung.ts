@@ -8,7 +8,7 @@ import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-import { routeGostKlausurplanungVorlagen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorlagen";
+import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
@@ -45,7 +45,7 @@ export class RouteDataGostKlausurplanung {
 		stundenplanmanager: undefined,
 		kursmanager: new KursManager(),
 		quartalsauswahl: 0,
-		view: routeGostKlausurplanungVorlagen,
+		view: routeGostKlausurplanungVorgaben,
 	}
 
 	private _state = shallowRef<RouteStateGostKlausurplanung>(RouteDataGostKlausurplanung._defaultState);
@@ -107,8 +107,8 @@ export class RouteDataGostKlausurplanung {
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
 			} else {
-				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorlagen))
-					view = routeGostKlausurplanungVorlagen;
+				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorgaben))
+					view = routeGostKlausurplanungVorgaben;
 			}
 			// Setze den State neu
 			this.setPatchedDefaultState({
@@ -251,7 +251,7 @@ export class RouteDataGostKlausurplanung {
 	  });
 
 	public async setView(view: RouteNode<any,any>) {
-		if ((view !== routeGostKlausurplanungVorlagen) &&
+		if ((view !== routeGostKlausurplanungVorgaben) &&
 			(view !== routeGostKlausurplanungSchienen) &&
 			(view !== routeGostKlausurplanungKalender) &&
 			(view !== routeGostKlausurplanungRaumzeit) &&

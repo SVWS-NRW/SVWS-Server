@@ -6,7 +6,7 @@
 		</svws-ui-sub-nav>
 	</Teleport>
 
-	<div class="flex h-full gap-4 mt-4">
+	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">
 			<ul class="flex flex-col gap-y-1">
 				<li v-for="termin in termine" :key="termin.id">

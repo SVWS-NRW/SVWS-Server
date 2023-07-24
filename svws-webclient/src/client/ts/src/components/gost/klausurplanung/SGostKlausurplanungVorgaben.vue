@@ -2,13 +2,15 @@
 	<Teleport to=".router-tab-bar--subnav-target">
 		<svws-ui-sub-nav>
 			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-			<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Klausurvorgabe</svws-ui-button>
-			<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben erzeugen</svws-ui-button>
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-vorlagen-hilfe /> </svws-ui-modal-hilfe>
+			<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Vorgabe</svws-ui-button>
+			<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0">Vorgabe speichern</svws-ui-button>
+			<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0"><i-ri-delete-bin-line />Vorgabe löschen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben kopieren</svws-ui-button>
+			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 		</svws-ui-sub-nav>
 	</Teleport>
 
-	<div class="flex gap-x-8 2xl:gap-x-16">
+	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex-grow">
 			<svws-ui-content-card>
 				<svws-ui-data-table :items="vorgaben" :columns="[{key:'idFach', label: 'Fach', sortable: true},{key: 'kursart', label: 'Kursart', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
@@ -53,53 +55,47 @@
 				</svws-ui-data-table>
 			</svws-ui-content-card>
 		</div>
-		<div class="w-1/4" v-if="activeVorgabe.idVorgabe >= 0">
-			<svws-ui-content-card title="Klausurvorgabe" class="w-full">
-				<template #actions>
-					<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" v-if="selectedVorgabeRow !== undefined"><i-ri-delete-bin-line />Löschen</svws-ui-button>
-				</template>
-				<div class="flex flex-col gap-4">
-					<svws-ui-input-wrapper>
-						<svws-ui-radio-group id="rbgKursart" :row="true">
-							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" />
-						</svws-ui-radio-group>
-						<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" />
-					</svws-ui-input-wrapper>
-					<svws-ui-radio-group id="rbgQuartal" :row="true">
-						<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" />
+		<svws-ui-content-card title="Vorgabe bearbeiten" class="w-1/4">
+			<template #actions>
+				<svws-ui-button type="secondary" @click="cancelEdit" :disabled="activeVorgabe.idVorgabe < 0">Abbrechen</svws-ui-button>
+			</template>
+			<div class="flex flex-col gap-4">
+				<svws-ui-input-wrapper>
+					<svws-ui-radio-group id="rbgKursart" :row="true">
+						<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.idVorgabe < 0" />
 					</svws-ui-radio-group>
-					<svws-ui-input-wrapper>
-						<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" />
-						<svws-ui-text-input placeholder="Auswahlzeit" type="number" v-model:modelValue="activeVorgabe.auswahlzeit" />
-					</svws-ui-input-wrapper>
-					<div class="flex flex-col gap-1">
-						<div class="flex flex-row items-center">
-							<label for="rbgMdlPruefung">Mündliche Prüfung: </label>
-							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.istMdlPruefung = value.key" />
-							</svws-ui-radio-group>
-						</div>
-						<div class="flex flex-row items-center">
-							<label for="rbgAudioNotwendig">Audio notwendig: </label>
-							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istAudioNotwendig = value.key" />
-							</svws-ui-radio-group>
-						</div>
-						<div class="flex flex-row items-center">
-							<label for="rbgVideoNotwendig">Video notwendig: </label>
-							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istVideoNotwendig = value.key" />
-							</svws-ui-radio-group>
-						</div>
+					<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" :disabled="activeVorgabe.idVorgabe < 0" />
+				</svws-ui-input-wrapper>
+				<svws-ui-radio-group id="rbgQuartal" :row="true">
+					<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe < 0" />
+				</svws-ui-radio-group>
+				<svws-ui-input-wrapper>
+					<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-text-input placeholder="Auswahlzeit" type="number" v-model:modelValue="activeVorgabe.auswahlzeit" :disabled="activeVorgabe.idVorgabe < 0" />
+				</svws-ui-input-wrapper>
+				<div class="flex flex-col gap-1">
+					<div class="flex flex-row items-center">
+						<label for="rbgMdlPruefung">Mündliche Prüfung: </label>
+						<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+						</svws-ui-radio-group>
 					</div>
-					<svws-ui-textarea-input placeholder="Bemerkungen" v-model="activeVorgabe.bemerkungVorgabe" resizeable="vertical">dasdas</svws-ui-textarea-input>
+					<div class="flex flex-row items-center">
+						<label for="rbgAudioNotwendig">Audio notwendig: </label>
+						<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+						</svws-ui-radio-group>
+					</div>
+					<div class="flex flex-row items-center">
+						<label for="rbgVideoNotwendig">Video notwendig: </label>
+						<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+						</svws-ui-radio-group>
+					</div>
 				</div>
-				<div class="flex flex-wrap gap-2 mt-8">
-					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="saveKlausurvorgabe">Speichern</svws-ui-button>
-				</div>
-			</svws-ui-content-card>
-		</div>
+				<svws-ui-textarea-input placeholder="Bemerkungen" v-model="activeVorgabe.bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+			</div>
+		</svws-ui-content-card>
 	</div>
 </template>
 
@@ -109,9 +105,9 @@
 	import type { Ref , WritableComputedRef } from 'vue'
 	import { ArrayList, GostKlausurvorgabe } from "@core";
 	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungVorlagenProps } from "./SGostKlausurplanungVorlagenProps";
+	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
-	const props = defineProps<GostKlausurplanungVorlagenProps>();
+	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
 	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgabenByQuartal(props.quartalsauswahl.value));
 

@@ -4,17 +4,17 @@ import { BenutzerKompetenz, GostKlausurvorgabenManager, GostKursklausurManager, 
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
-import type { GostKlausurplanungVorlagenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungVorlagenProps";
+import type { GostKlausurplanungVorgabenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenProps";
 
-const SGostKlausurplanungVorlagen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungVorlagen.vue");
+const SGostKlausurplanungVorgaben = () => import("~/components/gost/klausurplanung/SGostKlausurplanungVorgaben.vue");
 
-export class RouteGostKlausurplanungVorlagen extends RouteNode<unknown, RouteGostKlausurplanung> {
+export class RouteGostKlausurplanungVorgaben extends RouteNode<unknown, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.vorlagen", "vorlagen", SGostKlausurplanungVorlagen);
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.vorgaben", "vorgaben", SGostKlausurplanungVorgaben);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klausurvorlagen";
+		super.text = "Klausurvorgaben";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -26,7 +26,7 @@ export class RouteGostKlausurplanungVorlagen extends RouteNode<unknown, RouteGos
 		return { name: this.name, params: { abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungVorlagenProps {
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungVorgabenProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
@@ -43,5 +43,5 @@ export class RouteGostKlausurplanungVorlagen extends RouteNode<unknown, RouteGos
 
 }
 
-export const routeGostKlausurplanungVorlagen = new RouteGostKlausurplanungVorlagen();
+export const routeGostKlausurplanungVorgaben = new RouteGostKlausurplanungVorgaben();
 
