@@ -2041,6 +2041,60 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
+	/**
+	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 * <br>Beispiel:  "08:00-8:45", falls sie nicht abweichen.
+	 * <br>Beispiel:  "Mo.-Mi. 08:00-8:45", "Do. 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
+	 *
+	 * @param stunde  Die Nr. der Unterrichtsstunde.
+	 *
+	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 */
+	public unterrichtsstundeGetUhrzeitenAsStrings(stunde : number) : List<string> {
+		const listUhrzeit : List<string> = new ArrayList();
+		const listWochentagVon : List<string> = new ArrayList();
+		const listWochentagBis : List<string> = new ArrayList();
+		for (let wochentag : number = this._zeitrasterWochentagMin; wochentag <= this._zeitrasterWochentagMax; wochentag++) {
+			const sUhrzeit : string = this.unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
+			const sWochentag : string = Wochentag.fromIDorException(wochentag).kuerzel;
+			if (listUhrzeit.isEmpty()) {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+				continue;
+			}
+			const sUhrzeitDavor : string = DeveloperNotificationException.ifListGetLastFailes("listUhrzeit", listUhrzeit);
+			if (JavaObject.equalsTranspiler(sUhrzeitDavor, (sUhrzeit))) {
+				listWochentagBis.set(listWochentagBis.size() - 1, sWochentag);
+			} else {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+			}
+		}
+		if (listUhrzeit.size() <= 1)
+			return listUhrzeit;
+		for (let i : number = 0; i < listUhrzeit.size(); i++) {
+			const sUhrzeit : string = listUhrzeit.get(i);
+			const sWochentagVon : string = listWochentagVon.get(i);
+			const sWochentagBis : string = listWochentagBis.get(i);
+			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
+				listUhrzeit.set(i, sWochentagVon! + ". " + sUhrzeit!);
+			else
+				listUhrzeit.set(i, sWochentagVon! + ".-" + sWochentagBis! + ". " + sUhrzeit!);
+		}
+		return listUhrzeit;
+	}
+
+	private unterrichtsstundeGetUhrzeitAsString(wochentag : number, stunde : number) : string {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag, stunde);
+		if (zeitraster === null)
+			return "???";
+		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
+		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
+		return sBeginn! + "-" + sEnde!;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}

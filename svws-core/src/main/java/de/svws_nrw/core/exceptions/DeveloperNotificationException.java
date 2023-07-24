@@ -375,6 +375,26 @@ public class DeveloperNotificationException extends RuntimeException {
 	}
 
 	/**
+	 * Liefert das letzte NICHT-NULL Element der Liste.
+	 *
+	 * @param <E>      Der Typ der Elemente der Liste
+	 * @param listName Der Name der Liste.
+	 * @param list     Die Liste.
+	 *
+	 * @return das letzte NICHT-NULL Element der Liste.
+	 *
+	 * @throws DeveloperNotificationException falls kein letztes NICHT-NULL Element existiert.
+	 */
+	public static <@NotNull E> @NotNull E ifListGetLastFailes(final @NotNull String listName, @NotNull final List<@NotNull E> list) throws DeveloperNotificationException {
+		if (list.isEmpty())
+			throw new DeveloperNotificationException(listName + " hat kein letztes Element!");
+		final E last = list.get(list.size() - 1);
+		if (last == null)
+			throw new DeveloperNotificationException(listName + " hat zwar ein letztes Element, aber es ist NULL!");
+		return last;
+	}
+
+	/**
 	 * Wirft eine Exception, falls die übergebene Liste leer ist.
 	 *
 	 * @param <E>         Der Typ der Elemente der Liste.
