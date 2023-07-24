@@ -85,7 +85,7 @@
 	function generateInputText() {
 		return props.tags
 			? [...selectedItemList].map(item => props.itemText(item)).join(", ")
-			: selectedItem.value
+			: (selectedItem.value !== undefined)
 				? props.itemText(selectedItem.value)
 				: "";
 	}
@@ -95,9 +95,9 @@
 		searchText.value = "" + value;
 	}
 
-	const selectedItem: ShallowRef<Item|undefined> = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
+	const selectedItem: ShallowRef<Item | undefined> = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
 	const selectedItemList = shallowReactive(
-		new Set<Item>(Array.isArray(props.modelValue) ? props.modelValue : props.modelValue ? [props.modelValue] : [])
+		new Set<Item>(Array.isArray(props.modelValue) ? props.modelValue : props.modelValue !== undefined ? [props.modelValue] : [])
 	);
 	watch(
 		() => props.modelValue,
@@ -106,7 +106,7 @@
 			selectedItemList.clear();
 			if (Array.isArray(newVal)) {
 				newVal.forEach(item => selectedItemList.add(item));
-			} else if (newVal) {
+			} else if (newVal !== undefined) {
 				selectedItemList.add(newVal);
 			}
 		}
@@ -120,17 +120,17 @@
 			arr = [...props.items.values()];
 		else
 			arr = [...props.items];
-		if (props.itemSort) return arr.sort(props.itemSort);
+		if (props.itemSort)
+			return arr.sort(props.itemSort);
 		return arr;
 	});
 
 	const filteredList: ComputedRef<Item[]> = computed(() => {
 		if (props.autocomplete) {
-			if (props.itemFilter) return props.itemFilter(sortedList.value, searchText.value);
+			if (props.itemFilter)
+				return props.itemFilter(sortedList.value, searchText.value);
 			else
-				return sortedList.value.filter(i => {
-					return props.itemText(i).startsWith(searchText.value ?? "");
-				});
+				return sortedList.value.filter(i => props.itemText(i).startsWith(searchText.value ?? ""));
 		} else {
 			return sortedList.value;
 		}
@@ -138,7 +138,7 @@
 
 	function openListbox() {
 		showList.value = true;
-		if (selectedItem.value) {
+		if (selectedItem.value !== undefined) {
 			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
@@ -153,18 +153,21 @@
 	}
 
 	function selectCurrentActiveItem() {
-		if (!showList.value) return;
+		if (!showList.value)
+			return;
 		selectItem(filteredList.value[activeItemIndex.value]);
-		if (!props.tags) closeListbox();
+		if (!props.tags)
+			closeListbox();
 	}
 
 	function selectItem(item: Item | undefined) {
 		selectedItem.value = item;
-		if (item) {
+		if (item !== undefined) {
 			if (props.tags) {
-				if (selectedItemList.has(item)) {
+				if (selectedItemList.has(item))
 					selectedItemList.delete(item);
-				} else selectedItemList.add(item);
+				else
+					selectedItemList.add(item);
 			} else {
 				selectedItemList.clear();
 				selectedItemList.add(item);
@@ -189,15 +192,19 @@
 			return;
 		}
 		const listLength = filteredList.value.length;
-		if (activeItemIndex.value < listLength - 1) activeItemIndex.value++;
-		else activeItemIndex.value = 0;
+		if (activeItemIndex.value < listLength - 1)
+			activeItemIndex.value++;
+		else
+			activeItemIndex.value = 0;
 		scrollToActiveItem();
 	}
 
 	function onArrowUp() {
 		const listLength = filteredList.value.length;
-		if (activeItemIndex.value === 0) activeItemIndex.value = listLength - 1;
-		else if (activeItemIndex.value >= 1) activeItemIndex.value--;
+		if (activeItemIndex.value === 0)
+			activeItemIndex.value = listLength - 1;
+		else if (activeItemIndex.value >= 1)
+			activeItemIndex.value--;
 		scrollToActiveItem();
 	}
 
@@ -255,9 +262,9 @@
 
 <template>
 	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': !!selectedItem || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
+		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': (selectedItem !== undefined) || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
 		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': !!selectedItem, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': selectedItem !== undefined, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
 			<div :class="['input', !showInput ? 'sr-only' : '']">
 				<svws-ui-text-input ref="inputEl"
 					:model-value="dynModelValue"
@@ -292,8 +299,8 @@
 			<div v-if="tags" class="tag-list-wrapper"
 				@click.self="toggleListbox" ref="inputElTags">
 				<div class="tag-list" @click.self="toggleListbox">
-					<slot v-if="!selectedItemList.size && !showList" name="no-content" />
-					<div class="opacity-50 pl-2 text-sm" v-if="!selectedItemList.size && showList">
+					<slot v-if="(selectedItemList.size === 0) && !showList" name="no-content" />
+					<div class="opacity-50 pl-2 text-sm" v-if="(selectedItemList.size === 0) && showList">
 						Noch nichts ausgewählt.
 					</div>
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
@@ -312,7 +319,7 @@
 					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
 				</span>
 			</div>
-			<div v-if="removable && modelValue" @click="removeItem" class="remove-icon">
+			<div v-if="removable && (modelValue !== undefined)" @click="removeItem" class="remove-icon">
 				<span class="icon">
 					<i-ri-close-line />
 				</span>

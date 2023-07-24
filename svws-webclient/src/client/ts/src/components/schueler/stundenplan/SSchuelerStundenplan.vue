@@ -27,7 +27,7 @@
 
 	import { type WritableComputedRef, computed } from "vue";
 	import type { SchuelerStundenplanAuswahlProps } from "./SSchuelerStundenplanAuswahlProps";
-	import { ArrayList, DateUtils, DeveloperNotificationException, StundenplanKalenderwochenzuordnung, type List, type StundenplanListeEintrag } from "@core";
+	import { ArrayList, DateUtils, DeveloperNotificationException, type StundenplanKalenderwochenzuordnung, type List, type StundenplanListeEintrag } from "@core";
 
 	const props = defineProps<SchuelerStundenplanAuswahlProps>();
 
@@ -66,7 +66,7 @@
 
 	function getWochentypString(wochentyp: number): string {
 		switch (wochentyp) {
-			case 0: return "alle";
+			case 0: return "Alle";
 			case 1: return "nur A-Woche";
 			case 2: return "nur B-Woche";
 			case 3: return "nur C-Woche";
