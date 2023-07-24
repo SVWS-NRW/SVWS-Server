@@ -1,11 +1,15 @@
 <template>
+	<svws-ui-sub-nav>
+		<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" span="full" headless
+			class="w-144 border-l-svws-700 border p-1 pl-2 rounded-md"
+			:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
+		<svws-ui-modal-hilfe class="ml-auto"> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
+	</svws-ui-sub-nav>
 	<div class="w-full pl-9 pr-9 pt-8 pb-16">
 		<div v-if="stundenplan === undefined">
 			Derzeit liegt kein Stundenplan für diesen Lernabschnitt vor.
 		</div>
 		<div v-else class="flex flex-col">
-			<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" span="full"
-				:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
 			<div class="mt-2"> <router-view :key="$route.hash" /> </div>
 		</div>
 	</div>

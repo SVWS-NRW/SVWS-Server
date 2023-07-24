@@ -1,5 +1,5 @@
 <template>
-	<div class="grid gap-4 rounded-md" :class="cols">
+	<div class="grid gap-4 rounded-md select-none" :class="cols">
 		<div class="text-center rounded-md"> &ndash; </div>
 		<div v-for="wochentag in getRangeWochentage()" :key="wochentag.id" class="text-center rounded-md bg-svws-300">
 			{{ wochentage[wochentag.id] }}
