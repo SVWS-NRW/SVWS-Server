@@ -47,13 +47,17 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
-
 		return Long.compare(a.id, b.id);
 	};
 
 	// StundenplanFach
 	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_idFach_zu_fach = new HashMap<>();
+	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
+		final int result = a.kuerzel.compareTo(b.kuerzel);
+		if (result != 0) return result;
+		return Long.compare(a.id, b.id);
+	};
 
 	// StundenplanJahrgang
 	private final @NotNull List<@NotNull StundenplanJahrgang> _list_jahrgaenge = new ArrayList<>();
@@ -66,13 +70,10 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ = (final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
 		if (a.jahr < b.jahr) return -1;
 		if (a.jahr > b.jahr) return +1;
-
 		if (a.kw < b.kw) return -1;
 		if (a.kw > b.kw) return +1;
-
 		if (a.wochentyp < b.wochentyp) return -1;
 		if (a.wochentyp > b.wochentyp) return +1;
-
 		return Long.compare(a.id, b.id);
 	};
 
@@ -99,12 +100,10 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit = (final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
 		if (a.wochentag < b.wochentag) return -1;
 		if (a.wochentag > b.wochentag) return +1;
-
 		final int beginnA = a.beginn == null ? -1 : a.beginn;
 		final int beginnB = b.beginn == null ? -1 : b.beginn;
 		if (beginnA < beginnB) return -1;
 		if (beginnA > beginnB) return +1;
-
 		return Long.compare(a.id, b.id);
 	};
 
@@ -114,7 +113,6 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
-
 		return Long.compare(a.id, b.id);
 	};
 
@@ -150,10 +148,8 @@ public class StundenplanManager {
 	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
 		if (a.wochentag < b.wochentag) return -1;
 		if (a.wochentag > b.wochentag) return +1;
-
 		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
 		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
-
 		return Long.compare(a.id, b.id);
 	};
 
@@ -357,7 +353,7 @@ public class StundenplanManager {
 	 * Entfernt ein {@link StundenplanAufsichtsbereich}-Objekt anhand seiner ID.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
-	 * @param idAufsichtsbereich  Das Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
+	 * @param idAufsichtsbereich  Die Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
 	 */
 	public void aufsichtsbereichRemove(final long idAufsichtsbereich) {
 		aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
@@ -372,6 +368,90 @@ public class StundenplanManager {
 
 		// Sortieren
 		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
+	}
+
+	private void fachAddOhneUpdate(final @NotNull StundenplanFach fach) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
+		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idFach_zu_fach, fach.id, fach);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", _list_faecher, fach);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanFach}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void fachAdd(final @NotNull StundenplanFach fach) {
+		fachAddOhneUpdate(fach);
+		fachUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void fachAddAll(final @NotNull List<@NotNull StundenplanFach> listFach) {
+		for (final @NotNull StundenplanFach fach : listFach)
+			fachAddOhneUpdate(fach);
+		fachUpdate();
+	}
+
+	/**
+	 * Liefert das Fach mit der übergebenen ID.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return  das Fach mit der übergebenen ID.
+	 */
+	public @NotNull StundenplanFach fachGetByIdOrException(final long idFach) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
+	}
+
+	private void fachRemoveOhneUpdate(final long idFach) {
+		// Get
+		final @NotNull StundenplanFach f = DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idFach_zu_fach, f.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_faecher", _list_faecher, f);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanFach}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param idFach  Die Datenbank-ID des {@link StundenplanFach}-Objekts, welches entfernt werden soll.
+	 */
+	public void fachRemove(final long idFach) {
+		fachRemoveOhneUpdate(idFach);
+		fachUpdate();
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
+		return _list_faecher;
+	}
+
+	private void fachUpdate() {
+		// Überprüfe, ob doppelte StundenplanFach-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanFach fach: _list_faecher)
+			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
+
+		// Sortieren
+		_list_faecher.sort(_compFach);
 	}
 
 	private void unterrichtAddOhneUpdate(final @NotNull StundenplanUnterricht u) {
@@ -784,47 +864,6 @@ public class StundenplanManager {
 		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
 		for (final @NotNull StundenplanJahrgang jahrgang : _list_jahrgaenge)
 			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
-	}
-
-	private void fachAddOhneUpdate(final @NotNull StundenplanFach fach) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
-		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idFach_zu_fach, fach.id, fach);
-		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", _list_faecher, fach);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanFach}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void fachAdd(final @NotNull StundenplanFach fach) {
-		fachAddOhneUpdate(fach);
-		fachUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void fachAddAll(final @NotNull List<@NotNull StundenplanFach> listFach) {
-		for (final @NotNull StundenplanFach fach : listFach)
-			fachAddOhneUpdate(fach);
-		fachUpdate();
-	}
-
-	private void fachUpdate() {
-		// Überprüfe, ob doppelte StundenplanFach-Kürzel vorhanden sind.
-		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanFach fach: _list_faecher)
-			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
 	}
 
 	private void kalenderwochenzuordnungAddOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
@@ -1556,17 +1595,6 @@ public class StundenplanManager {
 	@Deprecated (forRemoval = true)
 	public void patchZeitraster(final @NotNull StundenplanZeitraster zeitraster) {
 		zeitrasterPatch(zeitraster);
-	}
-
-	/**
-	 * Liefert das Fach mit der übergebenen ID.
-	 *
-	 * @param idFach  Die Datenbank-ID des Faches.
-	 *
-	 * @return  das Fach mit der übergebenen ID.
-	 */
-	public @NotNull StundenplanFach fachGetByIdOrException(final long idFach) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
 	}
 
 	private void pausenaufsichtAddOhneUpdate(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {

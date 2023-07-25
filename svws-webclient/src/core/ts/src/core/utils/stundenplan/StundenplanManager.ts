@@ -51,6 +51,13 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idFach_zu_fach : HashMap<number, StundenplanFach> = new HashMap();
 
+	private static readonly _compFach : Comparator<StundenplanFach> = { compare : (a: StundenplanFach, b: StundenplanFach) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
 
 	private readonly _map_idJahrgang_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
@@ -336,7 +343,7 @@ export class StundenplanManager extends JavaObject {
 	 * Entfernt ein {@link StundenplanAufsichtsbereich}-Objekt anhand seiner ID.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
-	 * @param idAufsichtsbereich  Das Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
+	 * @param idAufsichtsbereich  Die Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
 	 */
 	public aufsichtsbereichRemove(idAufsichtsbereich : number) : void {
 		this.aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
@@ -348,6 +355,81 @@ export class StundenplanManager extends JavaObject {
 		for (const aufsicht of this._list_aufsichtsbereiche)
 			DeveloperNotificationException.ifSetAddsDuplicate("setAufsichtKuerzel", setAufsichtKuerzel, aufsicht.kuerzel);
 		this._list_aufsichtsbereiche.sort(StundenplanManager._compAufsichtsbereich);
+	}
+
+	private fachAddOhneUpdate(fach : StundenplanFach) : void {
+		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
+		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idFach_zu_fach, fach.id, fach);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", this._list_faecher, fach);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanFach}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public fachAdd(fach : StundenplanFach) : void {
+		this.fachAddOhneUpdate(fach);
+		this.fachUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public fachAddAll(listFach : List<StundenplanFach>) : void {
+		for (const fach of listFach)
+			this.fachAddOhneUpdate(fach);
+		this.fachUpdate();
+	}
+
+	/**
+	 * Liefert das Fach mit der übergebenen ID.
+	 *
+	 * @param idFach  Die Datenbank-ID des Faches.
+	 *
+	 * @return  das Fach mit der übergebenen ID.
+	 */
+	public fachGetByIdOrException(idFach : number) : StundenplanFach {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idFach_zu_fach, idFach);
+	}
+
+	private fachRemoveOhneUpdate(idFach : number) : void {
+		const f : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._map_idFach_zu_fach, idFach);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idFach_zu_fach, f.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_faecher", this._list_faecher, f);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanFach}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
+	 *
+	 * @param idFach  Die Datenbank-ID des {@link StundenplanFach}-Objekts, welches entfernt werden soll.
+	 */
+	public fachRemove(idFach : number) : void {
+		this.fachRemoveOhneUpdate(idFach);
+		this.fachUpdate();
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
+	 */
+	public fachGetMengeAsList() : List<StundenplanFach> {
+		return this._list_faecher;
+	}
+
+	private fachUpdate() : void {
+		const setFachKuerzel : HashSet<string> = new HashSet();
+		for (const fach of this._list_faecher)
+			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
+		this._list_faecher.sort(StundenplanManager._compFach);
 	}
 
 	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
@@ -714,43 +796,6 @@ export class StundenplanManager extends JavaObject {
 		const setJahrgangKuerzel : HashSet<string> = new HashSet();
 		for (const jahrgang of this._list_jahrgaenge)
 			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
-	}
-
-	private fachAddOhneUpdate(fach : StundenplanFach) : void {
-		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
-		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idFach_zu_fach, fach.id, fach);
-		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", this._list_faecher, fach);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanFach}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public fachAdd(fach : StundenplanFach) : void {
-		this.fachAddOhneUpdate(fach);
-		this.fachUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public fachAddAll(listFach : List<StundenplanFach>) : void {
-		for (const fach of listFach)
-			this.fachAddOhneUpdate(fach);
-		this.fachUpdate();
-	}
-
-	private fachUpdate() : void {
-		const setFachKuerzel : HashSet<string> = new HashSet();
-		for (const fach of this._list_faecher)
-			DeveloperNotificationException.ifSetAddsDuplicate("setFachKuerzel", setFachKuerzel, fach.kuerzel);
 	}
 
 	private kalenderwochenzuordnungAddOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
@@ -1450,17 +1495,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public patchZeitraster(zeitraster : StundenplanZeitraster) : void {
 		this.zeitrasterPatch(zeitraster);
-	}
-
-	/**
-	 * Liefert das Fach mit der übergebenen ID.
-	 *
-	 * @param idFach  Die Datenbank-ID des Faches.
-	 *
-	 * @return  das Fach mit der übergebenen ID.
-	 */
-	public fachGetByIdOrException(idFach : number) : StundenplanFach {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_idFach_zu_fach, idFach);
 	}
 
 	private pausenaufsichtAddOhneUpdate(pausenaufsicht : StundenplanPausenaufsicht) : void {
