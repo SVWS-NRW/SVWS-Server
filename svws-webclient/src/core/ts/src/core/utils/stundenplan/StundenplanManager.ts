@@ -284,16 +284,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
-	 *
-	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
-	 * @deprecated use {@link #aufsichtsbereichAdd(StundenplanAufsichtsbereich)}
-	 */
-	public addAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		this.aufsichtsbereichAdd(aufsichtsbereich);
-	}
-
-	/**
 	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
@@ -308,18 +298,6 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
 	 *
-	 * @param idAufsichtsbereich Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 * @deprecated use {@link #aufsichtsbereichGetByIdOrException(long)}
-	 */
-	public getAufsichtsbereich(idAufsichtsbereich : number) : StundenplanAufsichtsbereich {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
 	 * @param idAufsichtsbereich  Die Datenbank-ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
@@ -329,14 +307,12 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
+	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 *
-	 * @param aufsichtsbereich Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
-	 * @deprecated use {@link #aufsichtsbereichPatch(StundenplanAufsichtsbereich)}
+	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
-	public patchAufsichtsbereich(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		this.removeAufsichtsbereich(aufsichtsbereich.id);
-		this.addAufsichtsbereich(aufsichtsbereich);
+	public aufsichtsbereichGetMengeAsList() : List<StundenplanAufsichtsbereich> {
+		return this._list_aufsichtsbereiche;
 	}
 
 	/**
@@ -365,16 +341,6 @@ export class StundenplanManager extends JavaObject {
 	public aufsichtsbereichRemove(idAufsichtsbereich : number) : void {
 		this.aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
 		this.aufsichtsbereichUpdate();
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
-	 * @param idAufsichtsbereich Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
-	 * @deprecated use {@link #aufsichtsbereichRemove(long)}
-	 */
-	public removeAufsichtsbereich(idAufsichtsbereich : number) : void {
-		this.aufsichtsbereichRemove(idAufsichtsbereich);
 	}
 
 	private aufsichtsbereichUpdate() : void {
@@ -1069,15 +1035,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getListPausenzeit() : List<StundenplanPausenzeit> {
 		return this._list_pausenzeiten;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
-	 */
-	public getListAufsichtbereich() : List<StundenplanAufsichtsbereich> {
-		return this._list_aufsichtsbereiche;
 	}
 
 	/**

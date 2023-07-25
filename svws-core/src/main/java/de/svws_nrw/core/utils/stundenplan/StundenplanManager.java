@@ -302,17 +302,6 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
-	 *
-	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
-	 * @deprecated use {@link #aufsichtsbereichAdd(StundenplanAufsichtsbereich)}
-	 */
-	@Deprecated (forRemoval = true)
-	public void addAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		aufsichtsbereichAdd(aufsichtsbereich);
-	}
-
-	/**
 	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
@@ -327,19 +316,6 @@ public class StundenplanManager {
 	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
 	 *
-	 * @param idAufsichtsbereich Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 * @deprecated use {@link #aufsichtsbereichGetByIdOrException(long)}
-	 */
-	@Deprecated (forRemoval = true)
-	public @NotNull StundenplanAufsichtsbereich getAufsichtsbereich(final long idAufsichtsbereich) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
 	 * @param idAufsichtsbereich  Die Datenbank-ID des angefragten-Objektes.
 	 *
 	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
@@ -349,15 +325,12 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
+	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 *
-	 * @param aufsichtsbereich Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
-	 * @deprecated use {@link #aufsichtsbereichPatch(StundenplanAufsichtsbereich)}
+	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
-	@Deprecated (forRemoval = true)
-	public void patchAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		removeAufsichtsbereich(aufsichtsbereich.id);
-		addAufsichtsbereich(aufsichtsbereich);
+	public @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichGetMengeAsList() {
+		return _list_aufsichtsbereiche;
 	}
 
 	/**
@@ -389,17 +362,6 @@ public class StundenplanManager {
 	public void aufsichtsbereichRemove(final long idAufsichtsbereich) {
 		aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
 		aufsichtsbereichUpdate();
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
-	 * @param idAufsichtsbereich Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
-	 * @deprecated use {@link #aufsichtsbereichRemove(long)}
-	 */
-	@Deprecated (forRemoval = true)
-	public void removeAufsichtsbereich(final long idAufsichtsbereich) {
-		aufsichtsbereichRemove(idAufsichtsbereich);
 	}
 
 	private void aufsichtsbereichUpdate() {
@@ -1154,15 +1116,6 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanPausenzeit> getListPausenzeit() {
 		return _list_pausenzeiten;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanAufsichtsbereich}-Objekte.
-	 */
-	public @NotNull List<@NotNull StundenplanAufsichtsbereich> getListAufsichtbereich() {
-		return _list_aufsichtsbereiche;
 	}
 
 	/**

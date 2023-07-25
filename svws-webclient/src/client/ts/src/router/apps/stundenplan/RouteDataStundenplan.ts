@@ -125,8 +125,8 @@ export class RouteDataStundenplan {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		await api.server.patchStundenplanAufsichtsbereich(data, api.schema, id);
-		const aufsichtsbereich = this.stundenplanManager.getAufsichtsbereich(id);
-		this.stundenplanManager.patchAufsichtsbereich(Object.assign(aufsichtsbereich, data));
+		const aufsichtsbereich = this.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
+		this.stundenplanManager.aufsichtsbereichPatch(Object.assign(aufsichtsbereich, data));
 		this.commit();
 	}
 
@@ -167,7 +167,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete aufsichtsbereich.id;
 		const _aufsichtsbereich = await api.server.addStundenplanAufsichtsbereich(aufsichtsbereich, api.schema, id)
-		this.stundenplanManager.addAufsichtsbereich(_aufsichtsbereich);
+		this.stundenplanManager.aufsichtsbereichAdd(_aufsichtsbereich);
 		this.commit();
 	}
 
@@ -203,7 +203,7 @@ export class RouteDataStundenplan {
 	removeAufsichtsbereiche = async (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => {
 		for (const aufsichtsbereich of aufsichtsbereiche) {
 			await api.server.deleteStundenplanAufsichtsbereich(api.schema, aufsichtsbereich.id);
-			this.stundenplanManager.removeAufsichtsbereich(aufsichtsbereich.id);
+			this.stundenplanManager.aufsichtsbereichRemove(aufsichtsbereich.id);
 		}
 		this.commit();
 	}
