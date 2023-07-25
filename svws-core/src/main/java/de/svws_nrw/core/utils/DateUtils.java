@@ -10,6 +10,12 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DateUtils {
 
+	/** Das kleinste gültige Jahr für das alle Datumsberechnungen geprüft wurden. */
+	public static final int MIN_GUELTIGES_JAHR = 1900;
+
+	/** Das größte gültige Jahr für das alle Datumsberechnungen geprüft wurden. */
+	public static final int MAX_GUELTIGES_JAHR = 1900;
+
 	/**
 	 * Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>
 	 * [0][3] bedeutet, dass im März bereits 59 Tage vergangen sind (kein Schaltjahr).<br>
@@ -35,7 +41,7 @@ public final class DateUtils {
 	 * Index 5: kalenderwoche = 1 bis 52 oder 53<br>
 	 * Index 6: kalenderwochenjahr = 1900 bis 2900 (das Jahr der Kalenderwoche)<br>
 	 * <br>
-	 * Auszug aus Wikipedia:: Da ISO 8601 den Montag als ersten Tag der Woche definiert, ist dies somit die erste Woche,
+	 * Auszug aus Wikipedia: Da ISO 8601 den Montag als ersten Tag der Woche definiert, ist dies somit die erste Woche,
 	 * von der mehr Tage (mindestens vier) auf das neue Jahr fallen als auf das alte Jahr.
 	 *  Äquivalent hierzu sind die folgenden Definitionen:<br>
      * - jene Woche, die den 4. Januar enthält<br>
@@ -62,7 +68,7 @@ public final class DateUtils {
 		final int tagImJahr = monat_zu_vergangene_tage[schaltjahr][monat] + tagImMonat;
 		final int tagInWoche = (jahr + schalttage1 + tagImJahr  + 5) % 7 + 1;
 
-		final int tagImJahrAmJanuar4 = monat_zu_vergangene_tage[schaltjahr][1] + 4;
+		final int tagImJahrAmJanuar4 = 4;
 		final int wochentagAmJanuar4 = (jahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
 		final int tagImJahrAmMontagDerKW1 = tagImJahrAmJanuar4 - wochentagAmJanuar4 + 1;
 		final int kalenderwochen = gibKalenderwochenOfJahr(jahr);
@@ -114,6 +120,102 @@ public final class DateUtils {
 	}
 
 	/**
+	 * Liefert das Datum im ISO8601-Format (uuuu-MM-dd)des Montags der Kalenderwoche des Jahres.
+	 * <br>Hinweis: Der Montag kann bei der 1. KW im Vorjahr liegen!
+	 * <br>Beispiel 1: Der Montag der 1. KW im 2023 ist der 02.01.2023
+	 * <br>Beispiel 2: Der Montag der 1. KW im 2024 ist der 01.01.2024
+	 * <br>Beispiel 3: Der Montag der 1. KW im 2025 ist der 30.12.2023!
+	 *
+	 * @param kalenderwochenjahr  Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche       Die Kalenderwoche.
+	 *
+	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) des Montags der Kalenderwoche des Jahres.
+	 */
+	public static @NotNull String gibDatumDesMontagsOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche) {
+		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
+		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
+		// Der 4. Januar ist immer in der 1. Kalenderwoche
+		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
+		final int tagImJahrAmJanuar4 = 4;
+		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
+		final int tagImJahr = 7 * kalenderwoche - 2 - wochentagAmJanuar4;
+		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
+	}
+
+	/**
+	 * Liefert das Datum im ISO8601-Format (uuuu-MM-dd) des Sonntags der Kalenderwoche des Jahres.
+	 * <br>Hinweis: Der Sonntag kann bei der 52/53. KW im Folgejahr liegen!
+	 * <br>Beispiel 1: Der Sonntag der 52. KW im 2023 ist der 31.12.2023
+	 * <br>Beispiel 2: Der Sonntag der 52. KW im 2024 ist der 29.12.2024
+	 * <br>Beispiel 3: Der Sonntag der 52. KW im 2025 ist der 28.12.2025
+	 * <br>Beispiel 4: Der Sonntag der 53. KW im 2026 ist der 03.01.2027!
+	 * <br>Beispiel 5: Der Sonntag der 52. KW im 2027 ist der 02.01.2028!
+	 *
+	 * @param kalenderwochenjahr  Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche       Die Kalenderwoche.
+	 *
+	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) des Sonntags der Kalenderwoche des Jahres.
+	 */
+	public static @NotNull String gibDatumDesSonntagsOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche) {
+		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
+		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
+		// Der 4. Januar ist immer in der 1. Kalenderwoche
+		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
+		final int tagImJahrAmJanuar4 = 4;
+		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
+		final int tagImJahr = 7 * kalenderwoche + 4 - wochentagAmJanuar4;
+		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
+	}
+
+	/**
+	 * Liefert das Datum im ISO8601-Format (uuuu-MM-dd) eines Tages im Jahres.
+	 * <br> Hinweis: Die Methode erlaubt Werte die zum Vorjahr oder Folgejahr führen.
+	 *
+	 * @param jahr       Das Jahr.
+	 * @param tagImJahr  Der jeweilige Tag im Jahr. Meistens zwischen 1 und 365, aber nicht zwingend!
+	 *
+	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) eines Tages im Jahres.
+	 */
+	public static @NotNull String gibDatumDesTagesOfJahr(final int jahr, final int tagImJahr) {
+		// Korrigiere ggf. das Jahr und den Tag im Jahr.
+		int j = jahr;
+		int t = tagImJahr;
+
+		if (t <= 0) {
+			j--;
+			t = t + gibTageOfJahr(j);
+		}
+
+		DeveloperNotificationException.ifTrue("Man kann maximal ins Vorjahr springen!", t <= 0);
+
+		if (t > gibTageOfJahr(j)) {
+			t = t - gibTageOfJahr(j);
+			j++;
+		}
+
+		final int tageDesJahres = gibTageOfJahr(j);
+
+		DeveloperNotificationException.ifTrue("Man kann maximal ins Folgejahr springen!", t > tageDesJahres);
+
+		// Der Tag t liegt nun im Bereich 1 bis gibTageOfJahr(j).
+		// Berechne nun den zugehörigen Monat "monat".
+
+		final int[] vergangeneTage = (tageDesJahres == 365) ? monat_zu_vergangene_tage[0] : monat_zu_vergangene_tage[1];
+
+		int monat = 12;
+		for (int i = 2; i <= 12; i++)
+			if (vergangeneTage[i] >= t) {
+				monat = i - 1;
+				break;
+			}
+
+		// Berechne nun den zugehörigen Tag des Monat "tagDesMonats".
+		final int tagDesMonats = t - vergangeneTage[monat];
+
+		return StringUtils.padZahl(j, 4) + "-" + StringUtils.padZahl(monat, 2) + "-" + StringUtils.padZahl(tagDesMonats, 2);
+	}
+
+	/**
 	 * Liefert TRUE, falls das Jahr ungültig ist.
 	 *
 	 * @param jahr  Das Jahr.
@@ -121,7 +223,7 @@ public final class DateUtils {
 	 * @return TRUE, falls das Jahr ungültig ist.
 	 */
 	public static boolean gibIstJahrUngueltig(final int jahr) {
-		return (jahr < 1900) || (jahr > 2900);
+		return (jahr < MIN_GUELTIGES_JAHR) || (jahr > MAX_GUELTIGES_JAHR);
 	}
 
 	/**
@@ -140,6 +242,21 @@ public final class DateUtils {
 		final String sStunden = (h < 10 ? "0" : "") + h;
 		final String sMinuten = (m < 10 ? "0" : "") + m;
 		return sStunden + ":" + sMinuten;
+	}
+
+	/**
+	 * Liefert das nach "DIN 5008 optional" konvertierte Datumsformat, z.B. 2023-02-28 zu 28.02.2023.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2023-02-28).
+	 *
+	 * @return das nach "DIN 5008 optional" konvertierte Datumsformat, z.B. 2023-02-28 zu 28.02.2023.
+	 */
+	public static @NotNull String gibDatumGermanFormat(final @NotNull String datumISO8601) {
+		final @NotNull int[] info = extractFromDateISO8601(datumISO8601);
+		final int jahr = info[0];
+		final int monat = info[1];
+		final int tagImMonat = info[2];
+		return StringUtils.padZahl(tagImMonat, 2) + "." + StringUtils.padZahl(monat, 2) + "." + StringUtils.padZahl(jahr, 4);
 	}
 
 }

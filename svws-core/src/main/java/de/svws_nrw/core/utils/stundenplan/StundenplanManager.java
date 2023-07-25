@@ -677,6 +677,25 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine String-Darstellung der Kalenderwoche.
+	 * <br>Beispiel:  Jahr 2023, KW 5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
+	 * <br>Beispiel:  Jahr 2025, KW 1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
+	 * <br>Laufzeit: O(1)
+
+	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return eine String-Darstellung der Kalenderwoche.
+	 */
+	public @NotNull String kalenderwochenzuordnungGetWocheAsString(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		final @NotNull String sMo = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		final @NotNull String sSo = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		final @NotNull String sMoGer = DateUtils.gibDatumGermanFormat(sMo);
+		final @NotNull String sSoGer = DateUtils.gibDatumGermanFormat(sSo);
+		final @NotNull String sJahrKW = "(KW " + kwz.jahr + "." + kwz.kw + ")";
+		return sMoGer + " - " + sSoGer + " " + sJahrKW;
+	}
+
+	/**
 	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
 	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
 	 */
@@ -2336,14 +2355,5 @@ public class StundenplanManager {
 
 		return sBeginn + " - " + sEnde + " Uhr";
 	}
-
-	/*
-Danach brauche ist für einen Filter die folgenden Methoden:
-
-
-    kw -> string, z.B. KW 5 -> "30.1.2023 - 5.2.2023 (KW 5)"
-    Chronologische Liste aller (!) Kalenderwochen, wo der Stundenplan definiert ist
-
-	 */
 
 }

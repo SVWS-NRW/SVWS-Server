@@ -50,6 +50,23 @@ export class StringUtils extends JavaObject {
 		return (number < 1) || (number > 26) ? "" : StringUtils.buchstaben[number - 1];
 	}
 
+	/**
+	 * Liefert einen String der Zahl, welche ggf. mit Nullen vorne aufgefüllt wurde.
+	 *
+	 * @param zahl        Die umzuwandelnde Zahl.
+	 * @param minGroesse  Die Mindestgröße des Ergebnis-Strings.
+	 *
+	 * @return einen String der Zahl, welche ggf. mit Nullen vorne aufgefüllt wurde.
+	 */
+	public static padZahl(zahl : number, minGroesse : number) : string {
+		const sNumber : string | null = "" + zahl;
+		const sb : StringBuilder | null = new StringBuilder();
+		while (sb.length() + sNumber.length < minGroesse)
+			sb.append('0');
+		sb.append(sNumber);
+		return sb.toString();
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.StringUtils'].includes(name);
 	}

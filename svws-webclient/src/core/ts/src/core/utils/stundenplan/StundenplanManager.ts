@@ -625,6 +625,25 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine String-Darstellung der Kalenderwoche.
+	 * <br>Beispiel:  Jahr 2023, KW 5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
+	 * <br>Beispiel:  Jahr 2025, KW 1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return eine String-Darstellung der Kalenderwoche.
+	 */
+	public kalenderwochenzuordnungGetWocheAsString(kwz : StundenplanKalenderwochenzuordnung) : string {
+		const sMo : string = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		const sSo : string = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
+		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
+		const sJahrKW : string = "(KW " + kwz.jahr + "." + kwz.kw + ")";
+		return sMoGer! + " - " + sSoGer! + " " + sJahrKW!;
+	}
+
+	/**
 	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
 	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
 	 */

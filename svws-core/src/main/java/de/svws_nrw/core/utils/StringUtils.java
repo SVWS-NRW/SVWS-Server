@@ -58,4 +58,23 @@ public final class StringUtils {
 	public static @NotNull String numberToLetterIndex1(final int number) {
 		return (number < 1) || (number > 26) ? "" : buchstaben[number - 1];
 	}
+
+	/**
+	 * Liefert einen String der Zahl, welche ggf. mit Nullen vorne aufgefüllt wurde.
+	 *
+	 * @param zahl        Die umzuwandelnde Zahl.
+	 * @param minGroesse  Die Mindestgröße des Ergebnis-Strings.
+	 *
+	 * @return einen String der Zahl, welche ggf. mit Nullen vorne aufgefüllt wurde.
+	 */
+	public static @NotNull String padZahl(final int zahl, final int minGroesse) {
+		final String sNumber = "" + zahl;
+
+		final StringBuilder sb = new StringBuilder();
+		while (sb.length() + sNumber.length() < minGroesse)
+			sb.append('0');
+		sb.append(sNumber);
+
+	    return sb.toString();
+	}
 }
