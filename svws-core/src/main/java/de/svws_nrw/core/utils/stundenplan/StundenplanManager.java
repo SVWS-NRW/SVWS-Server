@@ -678,9 +678,9 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine String-Darstellung der Kalenderwoche.
-	 * <br>Beispiel:  Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
-	 * <br>Beispiel:  Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
-	 * <br>Beispiel:  Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
+	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
+	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
+	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
 	 * <br>Laufzeit: O(1)
 
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
