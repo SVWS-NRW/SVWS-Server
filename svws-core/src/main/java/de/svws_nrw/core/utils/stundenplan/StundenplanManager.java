@@ -415,6 +415,26 @@ public class StundenplanManager {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
 	}
 
+	/**
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
+		return _list_faecher;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanFach}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param fach  Das neue {@link StundenplanFach}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void fachPatch(final @NotNull StundenplanFach fach) {
+		fachRemoveOhneUpdate(fach.id);
+		fachAddOhneUpdate(fach);
+		fachUpdate();
+	}
+
 	private void fachRemoveOhneUpdate(final long idFach) {
 		// Get
 		final @NotNull StundenplanFach f = DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
@@ -435,15 +455,6 @@ public class StundenplanManager {
 		fachUpdate();
 	}
 
-	/**
-	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
-	 */
-	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
-		return _list_faecher;
-	}
-
 	private void fachUpdate() {
 		// Überprüfe, ob doppelte StundenplanFach-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
@@ -452,6 +463,98 @@ public class StundenplanManager {
 
 		// Sortieren
 		_list_faecher.sort(_compFach);
+	}
+
+	private void jahrgangAddOhneUpdate(final @NotNull StundenplanJahrgang jahrgang) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idJahrgang_zu_jahrgang, jahrgang.id, jahrgang);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_jahrgaenge", _list_jahrgaenge, jahrgang);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanJahrgang}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param jahrgang  Das {@link StundenplanJahrgang}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void jahrgangAdd(final @NotNull StundenplanJahrgang jahrgang) {
+		jahrgangAddOhneUpdate(jahrgang);
+		jahrgangUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void jahrgangAddAll(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
+		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
+			jahrgangAddOhneUpdate(jahrgang);
+		jahrgangUpdate();
+	}
+
+	/**
+	 * Liefert das {@link StundenplanJahrgang}-Objekt mit der übergebenen ID.
+	 *
+	 * @param idJahrgang  Die Datenbank-ID des {@link StundenplanJahrgang}-Objekts.
+	 *
+	 * @return das {@link StundenplanJahrgang}-Objekt mit der übergebenen ID.
+	 */
+	public @NotNull StundenplanJahrgang jahrgangGetByIdOrException(final long idJahrgang) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idJahrgang_zu_jahrgang, idJahrgang);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanJahrgang}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanJahrgang}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanJahrgang> jahrgangGetMengeAsList() {
+		return _list_jahrgaenge;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanJahrgang}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void jahrgangPatch(final @NotNull StundenplanJahrgang jahrgang) {
+		jahrgangRemoveOhneUpdate(jahrgang.id);
+		jahrgangAddOhneUpdate(jahrgang);
+		jahrgangUpdate();
+	}
+
+	private void jahrgangRemoveOhneUpdate(final long idJahrgang) {
+		// Get
+		final @NotNull StundenplanJahrgang j = DeveloperNotificationException.ifMapGetIsNull(_map_idJahrgang_zu_jahrgang, idJahrgang);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idJahrgang_zu_jahrgang, j.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_jahrgaenge", _list_jahrgaenge, j);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanJahrgang}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
+	 *
+	 * @param idJahrgang  Die Datenbank-ID des {@link StundenplanJahrgang}-Objekts, welches entfernt werden soll.
+	 */
+	public void jahrgangRemove(final long idJahrgang) {
+		jahrgangRemoveOhneUpdate(idJahrgang);
+		jahrgangUpdate();
+	}
+
+	private void jahrgangUpdate() {
+		// Überprüfe, ob doppelte StundenplanJahrgang-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanJahrgang jahrgang : _list_jahrgaenge)
+			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
 	}
 
 	private void unterrichtAddOhneUpdate(final @NotNull StundenplanUnterricht u) {
@@ -823,47 +926,6 @@ public class StundenplanManager {
 
 		// Sortieren
 		_list_raeume.sort(_compRaum);
-	}
-
-	private void jahrgangAddOhneUpdate(final @NotNull StundenplanJahrgang jahrgang) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
-		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idJahrgang_zu_jahrgang, jahrgang.id, jahrgang);
-		DeveloperNotificationException.ifListAddsDuplicate("_list_jahrgaenge", _list_jahrgaenge, jahrgang);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanJahrgang}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
-	 *
-	 * @param jahrgang  Das {@link StundenplanJahrgang}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void jahrgangAdd(final @NotNull StundenplanJahrgang jahrgang) {
-		jahrgangAddOhneUpdate(jahrgang);
-		jahrgangUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
-	 *
-	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void jahrgangAddAll(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
-		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
-			jahrgangAddOhneUpdate(jahrgang);
-		jahrgangUpdate();
-	}
-
-	private void jahrgangUpdate() {
-		// Überprüfe, ob doppelte StundenplanJahrgang-Kürzel vorhanden sind.
-		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanJahrgang jahrgang : _list_jahrgaenge)
-			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
 	}
 
 	private void kalenderwochenzuordnungAddOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
