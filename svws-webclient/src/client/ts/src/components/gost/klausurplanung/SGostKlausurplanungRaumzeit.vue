@@ -1,10 +1,8 @@
 <template>
-	<Teleport to=".router-tab-bar--subnav-target">
-		<svws-ui-sub-nav>
-			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
-		</svws-ui-sub-nav>
-	</Teleport>
+	<svws-ui-sub-nav>
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
+	</svws-ui-sub-nav>
 
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">

@@ -1,14 +1,12 @@
 <template>
-	<Teleport to=".router-tab-bar--subnav-target">
-		<svws-ui-sub-nav>
-			<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-			<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
-				<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
-				<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
-			</svws-ui-radio-group>
-			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
-		</svws-ui-sub-nav>
-	</Teleport>
+	<svws-ui-sub-nav>
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
+			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
+			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
+		</svws-ui-radio-group>
+		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
+	</svws-ui-sub-nav>
 
 	<svws-ui-content-card @click="dragTermin = null" class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex gap-4 mt-4 h-screen">

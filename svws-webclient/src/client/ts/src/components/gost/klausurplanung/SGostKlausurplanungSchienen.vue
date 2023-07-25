@@ -1,4 +1,13 @@
 <template>
+	<svws-ui-sub-nav>
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+		<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
+		<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
+		<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartalsauswahl.value <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+		<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
+		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
+	</svws-ui-sub-nav>
+
 	<div>
 		<svws-ui-modal ref="modal" size="small">
 			<template #modalTitle>
@@ -50,17 +59,6 @@
 				</svws-ui-button>
 			</template>
 		</svws-ui-modal>
-
-		<Teleport to=".router-tab-bar--subnav-target">
-			<svws-ui-sub-nav>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-				<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
-				<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
-				<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartalsauswahl.value <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
-				<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
-				<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
-			</svws-ui-sub-nav>
-		</Teleport>
 
 		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 			<div class="flex flex-row gap-8 mt-4">
