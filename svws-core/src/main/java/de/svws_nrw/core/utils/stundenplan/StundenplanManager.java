@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.set.AVLSet;
@@ -42,28 +41,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanManager {
 
-	/** Ein Comparator für die Räume. */
-	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
-		final int result = a.kuerzel.compareTo(b.kuerzel);
-		if (result != 0) return result;
-
-		return Long.compare(a.id, b.id);
-	};
-
-	/** Ein Comparator für die Pausenzeiten. */
-	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit = (final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
-		if (a.wochentag < b.wochentag) return -1;
-		if (a.wochentag > b.wochentag) return +1;
-
-		final int beginnA = a.beginn == null ? -1 : a.beginn;
-		final int beginnB = b.beginn == null ? -1 : b.beginn;
-		if (beginnA < beginnB) return -1;
-		if (beginnA > beginnB) return +1;
-
-		return Long.compare(a.id, b.id);
-	};
-
-	/** Ein Comparator für die Aufsichtsbereiche. */
+	// StundenplanAufsichtsbereich
+	private final @NotNull List<@NotNull StundenplanAufsichtsbereich> _list_aufsichtsbereiche = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_idAufsichtsbereich_zu_aufsichtsbereich = new HashMap<>();
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
@@ -71,21 +51,18 @@ public class StundenplanManager {
 		return Long.compare(a.id, b.id);
 	};
 
-	/** Ein Comparator für die Pausenaufsichten. */
-	private final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
+	// StundenplanFach
+	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_idFach_zu_fach = new HashMap<>();
 
-	/** Ein Comparator für die Zeitraster. */
-	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
-		if (a.wochentag < b.wochentag) return -1;
-		if (a.wochentag > b.wochentag) return +1;
+	// StundenplanJahrgang
+	private final @NotNull List<@NotNull StundenplanJahrgang> _list_jahrgaenge = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_idJahrgang_zu_jahrgang = new HashMap<>();
 
-		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
-		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
-
-		return Long.compare(a.id, b.id);
-	};
-
-	/** Ein Comparator für die StundenplanKalenderwochenzuordnung. */
+	// StundenplanKalenderwochenzuordnung
+	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kalenderwochenzuordnungen = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_kwzID_zu_kwz = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_kwz = new HashMap2D<>();
 	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ = (final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
 		if (a.jahr < b.jahr) return -1;
 		if (a.jahr > b.jahr) return +1;
@@ -100,58 +77,69 @@ public class StundenplanManager {
 	};
 
 	// StundenplanKlasse
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_idKlasse_zu_klasse = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanKlasse> _list_klasse = new ArrayList<>();
-
-	// StundenplanLehrer
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _map_idLehrer_zu_lehrer = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanLehrer> _list_lehrer = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_idKlasse_zu_klasse = new HashMap<>();
 
 	// StundenplanKurs
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_kursID_zu_kurs = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanKurs> _list_kurse = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_idKurs_zu_kurs = new HashMap<>();
+
+	// StundenplanLehrer
+	private final @NotNull List<@NotNull StundenplanLehrer> _list_lehrer = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _map_idLehrer_zu_lehrer = new HashMap<>();
+
+	// StundenplanPausenaufsicht
+	private final @NotNull List<@NotNull StundenplanPausenaufsicht> _list_pausenaufsichten = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsicht> _map_pausenaufsichtID_zu_pausenaufsicht = new HashMap<>();
+	private final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
+
+	// StundenplanPausenzeit
+	private final @NotNull List<@NotNull StundenplanPausenzeit> _list_pausenzeiten = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_idPausenzeit_zu_pausenzeit = new HashMap<>();
+	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit = (final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
+		if (a.wochentag < b.wochentag) return -1;
+		if (a.wochentag > b.wochentag) return +1;
+
+		final int beginnA = a.beginn == null ? -1 : a.beginn;
+		final int beginnB = b.beginn == null ? -1 : b.beginn;
+		if (beginnA < beginnB) return -1;
+		if (beginnA > beginnB) return +1;
+
+		return Long.compare(a.id, b.id);
+	};
+
+	// StundenplanRaum
+	private final @NotNull List<@NotNull StundenplanRaum> _list_raeume = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_idRaum_zu_raum = new HashMap<>();
+	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
+		final int result = a.kuerzel.compareTo(b.kuerzel);
+		if (result != 0) return result;
+
+		return Long.compare(a.id, b.id);
+	};
 
 	// StundenplanSchiene
+	private final @NotNull List<@NotNull StundenplanSchiene> _list_schienen = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_idSchiene_zu_schiene = new HashMap<>();
 
 	// StundenplanSchueler
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanSchueler> _list_schueler = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
 
-	// StundenplanPausenzeit
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_pausenzeitID_zu_pausenzeit = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanPausenzeit> _list_pausenzeiten = new ArrayList<>();
-
-	// StundenplanRaum
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_idRaum_zu_raum = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanRaum> _list_raeume = new ArrayList<>();
-
-	// StundenplanAufsichtsbereich
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_aufsichtsbereichID_zu_aufsichtsbereich = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanAufsichtsbereich> _list_aufsichtsbereiche = new ArrayList<>();
-
-	// StundenplanPausenaufsicht
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenaufsicht> _map_pausenaufsichtID_zu_pausenaufsicht = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanPausenaufsicht> _list_pausenaufsichten = new ArrayList<>();
-
-	// StundenplanFach
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_idFach_zu_fach = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
-
-	// StundenplanJahrgang
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_idJahrgang_zu_jahrgang = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanJahrgang> _list_jahrgaenge = new ArrayList<>();
-
-	// StundenplanKalenderwochenzuordnung
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_kwzID_zu_kwz = new HashMap<>();
-	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map_jahr_kw_zu_kwz = new HashMap2D<>();
-	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kalenderwochenzuordnungen = new ArrayList<>();
+	// StundenplanUnterricht
+	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idKurs_zu_unterrichtmenge = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
 
 	// StundenplanZeitraster
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_zeitrasterID_zu_zeitraster = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanZeitraster> _list_zeitraster = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_idZeitraster_zu_zeitraster = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map2d_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_wochentag_zu_zeitrastermenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_stunde_zu_zeitrastermenge = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanZeitraster> _list_zeitraster = new ArrayList<>();
 	private int _zeitrasterWochentagMin = Wochentag.MONTAG.id;
 	private int _zeitrasterWochentagMax = Wochentag.MONTAG.id;
 	private int _zeitrasterStundeMin = 1;
@@ -159,14 +147,15 @@ public class StundenplanManager {
 	private @NotNull int @NotNull [] _zeitrasterStundenRange = new int[] {1};
 	private @NotNull Wochentag @NotNull [] _zeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
 	private boolean _unterrichtHatMultiWochen = false;
+	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
+		if (a.wochentag < b.wochentag) return -1;
+		if (a.wochentag > b.wochentag) return +1;
 
-	// Unterricht
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idKurs_zu_unterrichtmenge = new HashMap<>();
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
+		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
+		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
+
+		return Long.compare(a.id, b.id);
+	};
 
 	// Weiteres
 	private final long stundenplanID;
@@ -280,12 +269,293 @@ public class StundenplanManager {
 		klasseAddAll(listKlasse);                      // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		lehrerAddAll(listLehrer);                      // ✔, referenziert [Fach]
 		schuelerAddAll(listSchueler);                  // ✔, referenziert Klasse
-		initSchienen(listSchiene);                     // ✔, referenziert Jahrgang
-		initPausenaufsichten(listPausenaufsicht);      // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
-		initKurse(listKurs);                           // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
-		initUnterrichte(listUnterricht);               // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		schieneAddAll(listSchiene);                    // ✔, referenziert Jahrgang
+		pausenaufsichtAddAll(listPausenaufsicht);      // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
+		kursAddAll(listKurs);                          // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
+		unterrichtAddAll(listUnterricht);              // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
 	}
 
+	// #####################################################################
+	// #################### StundenplanAufsichtsbereich ####################
+	// #####################################################################
+
+	private void aufsichtsbereichAddOhneUpdate(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		// Prüfen
+		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
+		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
+		// aufsicht.beschreibung darf "blank" sein
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idAufsichtsbereich_zu_aufsichtsbereich, aufsichtsbereich.id, aufsichtsbereich);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_aufsichtsbereiche", _list_aufsichtsbereiche, aufsichtsbereich);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanAufsichtsbereich}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
+	 *
+	 * @param aufsichtsbereich  Das {@link StundenplanAufsichtsbereich}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void aufsichtsbereichAdd(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+		aufsichtsbereichUpdate();
+	}
+
+	/**
+	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
+	 *
+	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
+	 * @deprecated use {@link #aufsichtsbereichAdd(StundenplanAufsichtsbereich)}
+	 */
+	@Deprecated (forRemoval = true)
+	public void addAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		aufsichtsbereichAdd(aufsichtsbereich);
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
+	 *
+	 * @param listAufsichtsbereich  Die Menge der {@link StundenplanAufsichtsbereich}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void aufsichtsbereichAddAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
+			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+		aufsichtsbereichUpdate();
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 *
+	 * @param idAufsichtsbereich Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 * @deprecated use {@link #aufsichtsbereichGetByIdOrException(long)}
+	 */
+	@Deprecated (forRemoval = true)
+	public @NotNull StundenplanAufsichtsbereich getAufsichtsbereich(final long idAufsichtsbereich) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 *
+	 * @param idAufsichtsbereich  Die Datenbank-ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
+	 */
+	public @NotNull StundenplanAufsichtsbereich aufsichtsbereichGetByIdOrException(final long idAufsichtsbereich) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param aufsichtsbereich Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
+	 * @deprecated use {@link #aufsichtsbereichPatch(StundenplanAufsichtsbereich)}
+	 */
+	@Deprecated (forRemoval = true)
+	public void patchAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		removeAufsichtsbereich(aufsichtsbereich.id);
+		addAufsichtsbereich(aufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void aufsichtsbereichPatch(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		aufsichtsbereichRemoveOhneUpdate(aufsichtsbereich.id);
+		aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+		aufsichtsbereichUpdate();
+	}
+
+	private void aufsichtsbereichRemoveOhneUpdate(final long idAufsichtsbereich) {
+		// Get
+		final @NotNull StundenplanAufsichtsbereich a = DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idAufsichtsbereich_zu_aufsichtsbereich, a.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_aufsichtsbereiche", _list_aufsichtsbereiche, a);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanAufsichtsbereich}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
+	 *
+	 * @param idAufsichtsbereich  Das Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
+	 */
+	public void aufsichtsbereichRemove(final long idAufsichtsbereich) {
+		aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
+		aufsichtsbereichUpdate();
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
+	 *
+	 * @param idAufsichtsbereich Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
+	 * @deprecated use {@link #aufsichtsbereichRemove(long)}
+	 */
+	@Deprecated (forRemoval = true)
+	public void removeAufsichtsbereich(final long idAufsichtsbereich) {
+		aufsichtsbereichRemove(idAufsichtsbereich);
+	}
+
+	private void aufsichtsbereichUpdate() {
+		// Überprüfe, ob doppelte StundenplanAufsichtsbereich-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setAufsichtKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanAufsichtsbereich aufsicht : _list_aufsichtsbereiche)
+			DeveloperNotificationException.ifSetAddsDuplicate("setAufsichtKuerzel", setAufsichtKuerzel, aufsicht.kuerzel);
+
+		// Sortieren
+		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
+	}
+
+	private void unterrichtAddOhneUpdate(final @NotNull StundenplanUnterricht u) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("u.id", u.id);
+		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_idZeitraster_zu_zeitraster, u.idZeitraster);
+		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
+
+		// Ist es Kurs-Unterricht?
+		if (u.idKurs != null) {
+			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_idKurs_zu_kurs, u.idKurs);
+			final @NotNull List<@NotNull StundenplanUnterricht> unterrichtDesKurses = MapUtils.getOrCreateArrayList(_map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("unterrichtDesKurses", unterrichtDesKurses, u);
+		}
+
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, u.idFach);
+		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
+			DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
+		for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
+			DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
+		for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
+			DeveloperNotificationException.ifMapNotContains("_map_idRaum_zu_raum", _map_idRaum_zu_raum, idRaumDesUnterrichts);
+		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idUnterricht_zu_unterricht, u.id, u);
+		MapUtils.getOrCreateArrayList(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
+		Map2DUtils.getOrCreateArrayList(_map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
+		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer) {
+			final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
+			MapUtils.getOrCreateArrayList(_map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
+		}
+		_list_unterricht.add(u);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanUnterricht}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param unterricht  Das {@link StundenplanUnterricht}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void unterrichtAdd(final @NotNull StundenplanUnterricht unterricht) {
+		unterrichtAddOhneUpdate(unterricht);
+		unterrichtUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanUnterricht}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param listUnterricht  Die Menge der {@link StundenplanUnterricht}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void unterrichtAddAll(final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
+		for (final @NotNull StundenplanUnterricht unterricht : listUnterricht)
+			unterrichtAddOhneUpdate(unterricht);
+		unterrichtUpdate();
+	}
+
+	private void kursAddOhneUpdate(final @NotNull StundenplanKurs kurs) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
+		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
+		for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesKurses);
+		for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
+			DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDesKurses);
+		for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
+			DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idKurs_zu_kurs, kurs.id, kurs);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_kurse", _list_kurse, kurs);
+
+		for (final @NotNull Long idKurs : _map_idKurs_zu_kurs.keySet())
+			_map_idKurs_zu_unterrichtmenge.put(idKurs, new ArrayList<>());
+
+
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKurs}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKurs|), da kursUpdate() aufgerufen wird.
+	 *
+	 * @param kurs  Das {@link StundenplanKurs}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void kursAdd(final @NotNull StundenplanKurs kurs) {
+		kursAddOhneUpdate(kurs);
+		kursUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKurs}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKurs|), da kursUpdate() aufgerufen wird.
+	 *
+	 * @param listKurs  Die Menge der {@link StundenplanKurs}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void kursAddAll(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
+		for (final @NotNull  StundenplanKurs kurs : listKurs)
+			kursAddOhneUpdate(kurs);
+		kursUpdate();
+	}
+
+	private void kursUpdate() {
+		// ...
+	}
+
+	private void schieneAddOhneUpdate(final @NotNull StundenplanSchiene schiene) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
+		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
+		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
+		DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, schiene.idJahrgang);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idSchiene_zu_schiene, schiene.id, schiene);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_schienen", _list_schienen, schiene);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanSchiene}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanSchiene|), da schienenUpdate() aufgerufen wird.
+	 *
+	 * @param schiene  Das {@link StundenplanSchiene}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void schieneAdd(final @NotNull StundenplanSchiene schiene) {
+		schieneAddOhneUpdate(schiene);
+		schieneUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanSchiene}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanSchiene|), da schienenUpdate() aufgerufen wird.
+	 *
+	 * @param listSchiene  Die Menge der {@link StundenplanSchiene}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void schieneAddAll(final @NotNull List<@NotNull StundenplanSchiene> listSchiene) {
+		for (final @NotNull StundenplanSchiene schiene : listSchiene)
+			schieneAddOhneUpdate(schiene);
+		schieneUpdate();
+	}
+
+	private void schieneUpdate() {
+		// ...
+	}
 
 	private void schuelerAddOhneUpdate(final @NotNull StundenplanSchueler schueler) {
 		// Überprüfen
@@ -424,50 +694,6 @@ public class StundenplanManager {
 		}
 	}
 
-	private void aufsichtsbereichAddOhneUpdate(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		// Prüfen
-		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
-		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
-		// aufsicht.beschreibung darf "blank" sein
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereich.id, aufsichtsbereich);
-		_list_aufsichtsbereiche.add(aufsichtsbereich);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanAufsichtsbereich}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
-	 *
-	 * @param aufsichtsbereich  Das {@link StundenplanAufsichtsbereich}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void aufsichtsbereichAdd(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
-		aufsichtsbereichUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
-	 *
-	 * @param listAufsichtsbereich  Die Menge der {@link StundenplanAufsichtsbereich}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void aufsichtsbereichAddAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
-		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
-			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
-		aufsichtsbereichUpdate();
-	}
-
-	private void aufsichtsbereichUpdate() {
-		// Überprüfe, ob doppelte StundenplanAufsichtsbereich-Kürzel vorhanden sind.
-		final @NotNull HashSet<@NotNull String> setAufsichtKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanAufsichtsbereich aufsicht : _list_aufsichtsbereiche)
-			DeveloperNotificationException.ifSetAddsDuplicate("setAufsichtKuerzel", setAufsichtKuerzel, aufsicht.kuerzel);
-
-		// Sortieren
-		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
-	}
-
 	private void pausenzeitAddOhneUpdate(final @NotNull StundenplanPausenzeit pausenzeit) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
@@ -479,7 +705,7 @@ public class StundenplanManager {
 		}
 
 		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		_list_pausenzeiten.add(pausenzeit);
 	}
 
@@ -705,112 +931,6 @@ public class StundenplanManager {
 		_list_kalenderwochenzuordnungen.sort(_compKWZ);
 	}
 
-	private void initSchienen(final @NotNull List<@NotNull StundenplanSchiene> listSchiene) {
-		_map_idSchiene_zu_schiene.clear();
-		for (final @NotNull StundenplanSchiene schiene : listSchiene) {
-			DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
-			DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
-			DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
-			DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, schiene.idJahrgang);
-			DeveloperNotificationException.ifMapPutOverwrites(_map_idSchiene_zu_schiene, schiene.id, schiene);
-		}
-	}
-
-	private void initKurse(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
-		_map_kursID_zu_kurs.clear();
-		for (final @NotNull StundenplanKurs kurs : listKurs) {
-			DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
-			DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
-			DeveloperNotificationException.ifMapPutOverwrites(_map_kursID_zu_kurs, kurs.id, kurs);
-
-			// Konsistenz der Referenzen überprüfen.
-			for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
-				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesKurses);
-			for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDesKurses);
-			for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
-				DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
-		}
-	}
-
-	private void initUnterrichte(final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
-		// Leere Listen pro Kurs-ID zuordnen.
-		_map_idUnterricht_zu_unterricht.clear();
-		_map_idZeitraster_zu_unterrichtmenge.clear();
-		_map2d_idZeitraster_wochentyp_zu_unterrichtmenge.clear();
-		_map_idKurs_zu_unterrichtmenge.clear();
-		for (final @NotNull Long idKurs : _map_kursID_zu_kurs.keySet())
-			_map_idKurs_zu_unterrichtmenge.put(idKurs, new ArrayList<>());
-
-		for (final @NotNull StundenplanUnterricht u : listUnterricht) {
-			// Konsistenz der Attribute überprüfen.
-			DeveloperNotificationException.ifInvalidID("u.id", u.id);
-			DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_zeitrasterID_zu_zeitraster, u.idZeitraster);
-			DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > stundenplanWochenTypModell);
-			DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
-
-			// Ist es Kurs-Unterricht?
-			if (u.idKurs != null) {
-				DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_kursID_zu_kurs, u.idKurs);
-				final @NotNull List<@NotNull StundenplanUnterricht> unterrichtDesKurses = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, u.idKurs);
-				DeveloperNotificationException.ifListAddsDuplicate("listDerUnterrichte", unterrichtDesKurses, u);
-			}
-
-			DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_idFach_zu_fach, u.idFach);
-			for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
-				DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
-			for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
-				DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", _map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
-			for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
-				DeveloperNotificationException.ifMapNotContains("_map_raumID_zu_raum", _map_idRaum_zu_raum, idRaumDesUnterrichts);
-			for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
-				DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
-
-			// Hinzufügen
-			DeveloperNotificationException.ifMapPutOverwrites(_map_idUnterricht_zu_unterricht, u.id, u);
-			MapUtils.getOrCreateArrayList(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
-			Map2DUtils.getOrCreateArrayList(_map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
-
-			for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer) {
-				final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
-				MapUtils.getOrCreateArrayList(_map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
-			}
-
-			_list_unterricht.add(u);
-		}
-
-		unterrichtUpdate();
-	}
-
-	private void initPausenaufsichten(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
-		// Löschen.
-		_map_pausenaufsichtID_zu_pausenaufsicht.clear();
-		_list_pausenaufsichten.clear();
-
-		for (final @NotNull StundenplanPausenaufsicht pa : listPausenaufsicht) {
-			// Prüfen.
-			DeveloperNotificationException.ifInvalidID("aufsicht.id", pa.id);
-			DeveloperNotificationException.ifMapNotContains("_map_pausenzeitID_zu_pausenzeit", _map_pausenzeitID_zu_pausenzeit, pa.idPausenzeit);
-			DeveloperNotificationException.ifMapNotContains("_map_lehrerID_zu_lehrer", _map_idLehrer_zu_lehrer, pa.idLehrer);
-			DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell));
-
-			final @NotNull HashSet<@NotNull Long> setBereicheDieserAufsicht = new HashSet<>();
-			for (final @NotNull Long idAufsichtsbereich : pa.bereiche) {
-				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", _map_aufsichtsbereichID_zu_aufsichtsbereich, idAufsichtsbereich);
-				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
-			}
-
-			// Hinzufügen.
-			DeveloperNotificationException.ifMapPutOverwrites(_map_pausenaufsichtID_zu_pausenaufsicht, pa.id, pa);
-			_list_pausenaufsichten.add(pa);
-		}
-
-		// Sortieren.
-		_list_pausenaufsichten.sort(_compPausenaufsicht);
-	}
-
-
-
 	/**
 	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
 	 *
@@ -1019,15 +1139,6 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert eine Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich} für den aktuell ausgewählten Stundenplan.
-	 *
-	 * @return eine Map der Aufsichtsbereiche {@link StundenplanAufsichtsbereich}
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull StundenplanAufsichtsbereich> getMapAufsichtsbereich() {
-		return _map_aufsichtsbereichID_zu_aufsichtsbereich;
-	}
-
-	/**
 	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
 	 *
 	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
@@ -1083,18 +1194,7 @@ public class StundenplanManager {
 	 * @return das zur ID zugehörige {@link StundenplanPausenzeit}-Objekt.
 	 */
 	public @NotNull StundenplanPausenzeit getPausenzeit(final long idPausenzeit) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_pausenzeitID_zu_pausenzeit, idPausenzeit);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
-	 * @param idAufsichtsbereich Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanAufsichtsbereich}-Objekt.
-	 */
-	public @NotNull StundenplanAufsichtsbereich getAufsichtsbereich(final long idAufsichtsbereich) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_aufsichtsbereichID_zu_aufsichtsbereich, idAufsichtsbereich);
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, idPausenzeit);
 	}
 
 	/**
@@ -1125,20 +1225,9 @@ public class StundenplanManager {
 	 * @param pausenzeit Die Pausenzeit, die hinzugefügt werden soll.
 	 */
 	public void addPausenzeit(final @NotNull StundenplanPausenzeit pausenzeit) {
-		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenzeitID_zu_pausenzeit, pausenzeit.id, pausenzeit);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		_list_pausenzeiten.add(pausenzeit);
 		_list_pausenzeiten.sort(_compPausenzeit);
-	}
-
-	/**
-	 * Fügt dem Stundenplan einen neuen {@link StundenplanAufsichtsbereich} hinzu.
-	 *
-	 * @param aufsichtsbereich Der Aufsichtsbereich, der hinzugefügt werden soll.
-	 */
-	public void addAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		DeveloperNotificationException.ifMapPutOverwrites(_map_aufsichtsbereichID_zu_aufsichtsbereich, aufsichtsbereich.id, aufsichtsbereich);
-		_list_aufsichtsbereiche.add(aufsichtsbereich);
-		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
 	}
 
 	/**
@@ -1169,20 +1258,9 @@ public class StundenplanManager {
 	 * @param idPausenzeit Die ID des {@link StundenplanPausenzeit}-Objekts.
 	 */
 	public void removePausenzeit(final long idPausenzeit) {
-		final @NotNull StundenplanPausenzeit pausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + idPausenzeit + ")", _map_pausenzeitID_zu_pausenzeit.get(idPausenzeit));
-		_map_pausenzeitID_zu_pausenzeit.remove(idPausenzeit);
+		final @NotNull StundenplanPausenzeit pausenzeit = DeveloperNotificationException.ifNull("_map_pausenzeitID_zu_pausenzeit.get(" + idPausenzeit + ")", _map_idPausenzeit_zu_pausenzeit.get(idPausenzeit));
+		_map_idPausenzeit_zu_pausenzeit.remove(idPausenzeit);
 		_list_pausenzeiten.remove(pausenzeit); // Neusortierung nicht nötig.
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan einen existierendes {@link StundenplanAufsichtsbereich}-Objekt.
-	 *
-	 * @param idAufsichtsbereich Die ID des {@link StundenplanAufsichtsbereich}-Objekts.
-	 */
-	public void removeAufsichtsbereich(final long idAufsichtsbereich) {
-		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = DeveloperNotificationException.ifNull("_map_aufsichtID_zu_aufsicht.get(" + idAufsichtsbereich + ")", _map_aufsichtsbereichID_zu_aufsichtsbereich.get(idAufsichtsbereich));
-		_map_aufsichtsbereichID_zu_aufsichtsbereich.remove(idAufsichtsbereich);
-		_list_aufsichtsbereiche.remove(aufsichtsbereich); // Neusortierung nicht nötig.
 	}
 
 	/**
@@ -1214,16 +1292,6 @@ public class StundenplanManager {
 	public void patchPausenzeit(final @NotNull StundenplanPausenzeit pausenzeit) {
 		removePausenzeit(pausenzeit.id);
 		addPausenzeit(pausenzeit);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
-	 *
-	 * @param aufsichtsbereich Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public void patchAufsichtsbereich(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		removeAufsichtsbereich(aufsichtsbereich.id);
-		addAufsichtsbereich(aufsichtsbereich);
 	}
 
 	/**
@@ -1391,7 +1459,7 @@ public class StundenplanManager {
 	 */
 	@Deprecated (forRemoval = true)
 	public @NotNull StundenplanZeitraster getZeitraster(final long idZeitraster) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_zeitrasterID_zu_zeitraster, idZeitraster);
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_zeitraster, idZeitraster);
 	}
 
 	/**
@@ -1548,6 +1616,56 @@ public class StundenplanManager {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
 	}
 
+	private void pausenaufsichtAddOhneUpdate(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit);
+		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
+		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > stundenplanWochenTypModell));
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", _list_pausenaufsichten, pausenaufsicht);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanPausenaufsicht}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
+	 *
+	 * @param pausenaufsicht  Das {@link StundenplanPausenaufsicht}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void pausenaufsichtAdd(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
+		pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		pausenaufsichtUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanPausenaufsicht}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
+	 *
+	 * @param listPausenaufsicht  Die Menge der {@link StundenplanPausenaufsicht}-Objekte, welche hinzugefügt werden soll.
+	 */
+	private void pausenaufsichtAddAll(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
+		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : listPausenaufsicht)
+			pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		pausenaufsichtUpdate();
+	}
+
+	private void pausenaufsichtUpdate() {
+		// Überprüfe, ob eine StundenplanPausenaufsicht Dopplungen hat.
+		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : _list_pausenaufsichten) {
+			final @NotNull HashSet<@NotNull Long> setBereicheDieserAufsicht = new HashSet<>();
+			for (final @NotNull Long idAufsichtsbereich : pausenaufsicht.bereiche) {
+				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", _map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
+				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
+			}
+		}
+
+		// Sortieren
+		_list_pausenaufsichten.sort(_compPausenaufsicht);
+
+	}
+
 	/**
 	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 *
@@ -1555,17 +1673,6 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMenge() {
 		return _list_pausenaufsichten;
-	}
-
-	/**
-	 * Fügt dem Stundenplan eine neue {@link StundenplanPausenaufsicht} hinzu und sortiert die Liste der Pausenaufsichten.
-	 *
-	 * @param pausenaufsicht Die StundenplanPausenaufsicht, die hinzugefügt werden soll.
-	 */
-	public void pausenaufsichtAdd(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
-		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
-		_list_pausenaufsichten.add(pausenaufsicht);
-		_list_pausenaufsichten.sort(_compPausenaufsicht);
 	}
 
 	/**
@@ -1610,7 +1717,7 @@ public class StundenplanManager {
 	 * @return die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String pausenzeitGetByIdStringOfUhrzeitBeginn(final long idPausenzeit) {
-		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_map_pausenzeitID_zu_pausenzeit, idPausenzeit);
+		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, idPausenzeit);
 		return (pausenzeit.beginn == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.beginn);
 	}
 
@@ -1624,7 +1731,7 @@ public class StundenplanManager {
 	 * @return die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String pausenzeitGetByIdStringOfUhrzeitEnde(final long idPausenzeit) {
-		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_map_pausenzeitID_zu_pausenzeit, idPausenzeit);
+		final @NotNull StundenplanPausenzeit pausenzeit =  DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, idPausenzeit);
 		return (pausenzeit.ende == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.ende);
 	}
 
@@ -1818,7 +1925,7 @@ public class StundenplanManager {
 		}
 
 		// Kursunterricht
-		final @NotNull StundenplanKurs kurs =  DeveloperNotificationException.ifMapGetIsNull(_map_kursID_zu_kurs, unterricht.idKurs);
+		final @NotNull StundenplanKurs kurs =  DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, unterricht.idKurs);
 		return kurs.bezeichnung;
 	}
 
@@ -1942,7 +2049,7 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
 		}
 		// Hinzufügen.
-		DeveloperNotificationException.ifMapPutOverwrites(_map_zeitrasterID_zu_zeitraster, zeitraster.id, zeitraster);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_zeitraster, zeitraster.id, zeitraster);
 		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
 		MapUtils.getOrCreateArrayList(_map_wochentag_zu_zeitrastermenge, zeitraster.wochentag).add(zeitraster);
 		MapUtils.getOrCreateArrayList(_map_stunde_zu_zeitrastermenge, zeitraster.unterrichtstunde).add(zeitraster);
@@ -2040,7 +2147,7 @@ public class StundenplanManager {
 	 * @return das zur ID zugehörige {@link StundenplanZeitraster}-Objekt.
 	 */
 	public @NotNull StundenplanZeitraster zeitrasterGetByIdOrException(final long idZeitraster) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_zeitrasterID_zu_zeitraster, idZeitraster);
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_zeitraster, idZeitraster);
 	}
 
 	/**
@@ -2053,7 +2160,7 @@ public class StundenplanManager {
 	 * @return die Beginn-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String zeitrasterGetByIdStringOfUhrzeitBeginn(final long idZeitraster) {
-		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_map_zeitrasterID_zu_zeitraster, idZeitraster);
+		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_zeitraster, idZeitraster);
 		return (zeitraster.stundenbeginn == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 	}
 
@@ -2067,7 +2174,7 @@ public class StundenplanManager {
 	 * @return die End-Uhrzeit des {@link StundenplanZeitraster} oder den leeren String, falls diese NULL ist.
 	 */
 	public @NotNull String zeitrasterGetByIdStringOfUhrzeitEnde(final long idZeitraster) {
-		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_map_zeitrasterID_zu_zeitraster, idZeitraster);
+		final @NotNull StundenplanZeitraster zeitraster =  DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_zeitraster, idZeitraster);
 		return (zeitraster.stundenende == null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 	}
 
@@ -2227,10 +2334,10 @@ public class StundenplanManager {
 
 	private void zeitrasterRemoveOhneUpdate(final long idZeitraster) {
 		// Get
-		final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", _map_zeitrasterID_zu_zeitraster.get(idZeitraster));
+		final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", _map_idZeitraster_zu_zeitraster.get(idZeitraster));
 
 		// Remove
-		DeveloperNotificationException.ifMapRemoveFailes(_map_zeitrasterID_zu_zeitraster, idZeitraster);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idZeitraster_zu_zeitraster, idZeitraster);
 		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_wochentag_stunde_zu_zeitraster, z.wochentag, z.unterrichtstunde);
 		MapUtils.removeFromListAndTrimOrException(_map_wochentag_zu_zeitrastermenge, z.wochentag, z);
 		MapUtils.removeFromListAndTrimOrException(_map_stunde_zu_zeitrastermenge, z.unterrichtstunde, z);
