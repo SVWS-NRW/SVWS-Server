@@ -12,7 +12,6 @@ import java.util.Properties;
  *
  */
 public class ServerProps {
-	private static final String SCHEMA_PROPERTY_KEY = "svws.testing.api.schema";
 	private static final String PORT_PROPERTY_KEY = "svws.testing.api.port";
 	private static final String HOST_PROPERTY_KEY = "svws.testing.api.host";
 	private String host;
@@ -34,16 +33,13 @@ public class ServerProps {
 		System.out.println(System.getProperties().entrySet());
 		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY)) System.out.println(System.getProperty(HOST_PROPERTY_KEY));
 		if (System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) System.out.println(System.getProperty(PORT_PROPERTY_KEY));
-		if (System.getProperties().keySet().contains(SCHEMA_PROPERTY_KEY)) System.out.println(System.getProperty(SCHEMA_PROPERTY_KEY));
-
 		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY) &&
-				System.getProperties().keySet().contains(PORT_PROPERTY_KEY) &&
-				System.getProperties().keySet().contains(SCHEMA_PROPERTY_KEY)) {
+				System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) {
 			System.out.println("Tests mit Systemproperties");
 			ServerProps p = new ServerProps();
 			p.host = System.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(System.getProperty(PORT_PROPERTY_KEY));
-			p.schema = System.getProperty(SCHEMA_PROPERTY_KEY);
+			p.schema = "gymabi";
 			return p;
 		}
 		File localPropertyFile = new File("local.properties");
@@ -56,14 +52,13 @@ public class ServerProps {
 			localProperties.load(inStream);
 			inStream.close();
 			if (!localProperties.containsKey(HOST_PROPERTY_KEY) ||
-					!localProperties.containsKey(PORT_PROPERTY_KEY) ||
-					!localProperties.containsKey(SCHEMA_PROPERTY_KEY)) {
+					!localProperties.containsKey(PORT_PROPERTY_KEY)) {
 				throw new IOException("Properties sind unvollständig.");
 			}
 			ServerProps p = new ServerProps();
 			p.host = localProperties.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(localProperties.getProperty(PORT_PROPERTY_KEY));
-			p.schema = localProperties.getProperty(SCHEMA_PROPERTY_KEY);
+			p.schema = "gymabi";
 			return p;
 		}
 	}

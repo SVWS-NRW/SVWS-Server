@@ -12,8 +12,6 @@ def testResultTarget = 'build/test-results/svws-webclient-integration-test'
 // lokale variablen, um copyConfigApiTest zu ergänzen
 def targetHost = project.TESTING_SVWS_HOST
 def targetPort = project.TESTING_SVWS_PORT
-def targetSchema = 'gymabi'
-
 def propertyFile = "../testing/svws-webclient-integration-test/local.properties"
 
 task apiTest(type: Test) {
@@ -27,9 +25,8 @@ task apiTest(type: Test) {
 		dependsOn(':testing:svws-webclient-integration-test:startTestumgebung')
 		ignoreExitValue = true
 		outputs.upToDateWhen {false}
-		
+
 		environment NODE_TLS_REJECT_UNAUTHORIZED: 0
-		environment VITE_svws_testing_api_schema: targetSchema
 		environment VITE_svws_testing_api_host: targetHost
 		environment VITE_svws_testing_api_port: targetPort
 	}

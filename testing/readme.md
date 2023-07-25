@@ -44,7 +44,7 @@ NETWORK ID     NAME                    DRIVER    SCOPE
 *
 ```
 
-Für die lokale Ausführung sind in den einzelnen Subprojekten lokale Property-Files anzulegen, ein dokumentiertes Beispiel findet sich in `SVWS-Server/testing/local.properties.example`. 
+Für die lokale Ausführung sind in den einzelnen Subprojekten lokale Property-Files anzulegen, ein dokumentiertes Beispiel findet sich in `SVWS-Server/testing/local.properties.example`.
 
 **Wichtig:** Mit diesen Propertyfiles werden die Host-Ports zur Testdurchführung gesteuert, so dass mehrere Testumgebungen parallel gestartet sein können. Freie Ports des Hostsystems nutzen, sowohl für die DB-Container als auch für den SVWS-Container.
 
@@ -54,11 +54,11 @@ Es gibt eine Reihe von Gradle-Tasks, welche für die lokale Ausführung von Bede
 `./gradlew testing:integrationTest` ist der grundlegende Task, um alle Tests der Subprojekte auszuführen. Dabei werden:
 
 1. die Docker-Container mit den nötigen Umgebungsvariablen vorbereitet
-2. die Testumgebungen mit DB und Container hochgefahren, 
+2. die Testumgebungen mit DB und Container hochgefahren,
 3. die Tests gegen die definierten Systeme ausgeführt,
-4. die Testergebnisse (junit.xml) eingesammelt 
+4. die Testergebnisse (junit.xml) eingesammelt
 5. und im Anschluss die Testumgebungen runtergefahren
-6. sollten die Tests `failure` oder `error`gehabt haben, gibt es folgende Fehlermeldung: 
+6. sollten die Tests `failure` oder `error`gehabt haben, gibt es folgende Fehlermeldung:
 `"The build finished, but tests resulted with ${totalErrors} errors and ${totalFailures} failures! "`.
 
 Testergebnisse finden sich in ``SVWS-Server/testing/subproject/build/test-results/``
@@ -72,12 +72,6 @@ Darüber hinaus haben die Subprojekte einzelne Tasks, mit denen die Container f�
 `testing:svws-webclient-integration-test:stopTestumgebung` stoppt die Container.
 
 `testing:svws-webclient-integration-test:apiTest` führt die Tests des Subprojekts gegen die konfigurierte Umgebung durch. Dieser Task startet sich eine eigene Testumgebung, auch eine vorhandene Umgebung wird neu gestartet, im Anschluss wird die Testumgebung heruntergefahren.
-
-
-**TODO** Es kommt vor, dass Docker Compose trotz --force-recreate nicht mit neuen Properties arbeitet, da kann es helfen, mit `docker ps --all` die vorhandenen Images zu sehen und die Images namens `$project.name-db` und `$project.name-svws` mit  `docker container rm <image-name>` zu entfernen.
-
-
-
 
 ## Aufbau des Projekts
 ### Docker Runner
@@ -126,7 +120,7 @@ Die Tasks für die einzelnen Subprojekte sind in `testing/subproject-plugin.grad
 Tasks:
 - `createEnv` erstellt das `.env` für das `docker compose` in `testing/svws-*/build/testumgebung`
 - `startTestumgebung` kopiert das `docker-compose.yml` und bei lokaler Umgebung das `docker-compose.override.yml` nach `testing/svws-*/build/testumgebung/${project.name}` und führt ein `docker compose up --force-recreate --wait` aus
-- `stopTestumgebung` führt ein `docker compose down` aus. 
+- `stopTestumgebung` führt ein `docker compose down` aus.
 
 
 ### Testing build.gradle
@@ -178,12 +172,6 @@ Die `SVWS-Server/gitlab-ci.yml` wurde um eine weitere Stage `integration-tests` 
 - `-PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD`
 - `-PMariaDB_USER=$MariaDB_USER`
 
-**TODO** Hier ergeben sich derzeit einige TODOs,
-- derzeit geben wir zum analysieren von Fehlern den gesamten Buildordner der Subprojekte mit aus
-- das Log des App-Containers, des startup.sh, der DB und ggf. das request.log sollten Artefakte sein
-- die Artefakte der Build-Stage sind mit 50MB recht groß (und ungefiltert), werden aber nur einen Tag aufbewahrt
-
-
 ### Vergleich local.properties vs gitlab-ci.yml
 Die in der `gitlab-ci.yaml`(#gitlab-ci-yml) beschriebenen Parameter für das Gradle-Skript finden sich für lokale Ausführung auch im `local.properties`. Darüber hinaus wird im `local.properties` die Ports des Hostsystems für DB- und App-Container des jeweiligen Testprojekts, sowie die der Hostname mit Protokoll angegeben und an die Tests durchgereicht. Da innerhalb der CI die Ausführung der Tests im selben Dockernetwork stattfindet, müssen die Hostnamen und Ports nicht konfigurierbar gehalten werden, sondern sind über den Container-Namen und Standard-Ports (8443 bzw 3306) erreichbar. Die lokale Ausführung kann sowohl aus der Entwicklungsumgebung heraus als auch mit den vorhandenen Gradle-Tasks stattfinden und muss daher konfigurierbar bleiben, bspw. gegen andere DB-Schemas oder andere SVWS-App-Instanzen (sowohl in Containern als auch anderweitig gehostete).
 
@@ -205,7 +193,6 @@ Die vorhandenen API-Tests im Client wurden paramtriert. Dies wird mit den Umgebu
 
 ```
 environment NODE_TLS_REJECT_UNAUTHORIZED: 0
-environment VITE_svws_testing_api_schema: targetSchema
 environment VITE_svws_testing_api_host: targetHost
 environment VITE_svws_testing_api_port: targetPort
 ```
@@ -237,14 +224,14 @@ Anhand der Beispiele `testing/svws-dav-api-test` für Java-Tests und `testing/sv
 - anlegen des Unterordners in `testing`
 - anlegen des `build.gradle`
   - die Abhängigkeit zum Plugin ergänzen `apply from: ('../subproject-plugin.gradle')` ergänzen
-  - einen Task vom Typ `Test` konfigurieren, dieser 
+  - einen Task vom Typ `Test` konfigurieren, dieser
     - sollte entweder direkt auf eine Testausführung verweisen (bspw. `useJUnitPlatform()`)
     - oder ein `dependsOn(...)` auf einen vorhandenen Task enthalten
       - muss `ignoreExitValue true` enthalten, damit die gesamte Testausführung durch Fehler nicht abgebrochen wird
       - muss `outputs.upToDateWhen {false}` enthalten, damit Tests wiederholbar ausgeführt werden können trotz vorhandenem Ergebnis
     - benötigt ggf. ein `finalizedBy` zu einem weiteren Task, um die Reports im junit.xml-Format zu kopieren
   - weitere Konfiguration und Abhängigkeiten, bspw. zu anderen Modulen oder Bibliotheken konfigurieren
-- den erstellten Task vom Typ Test in `testing/build.gradle` in der Liste `testTasks` anfügen (**TODO** könnte durch Namenskonvention gelöst werden)
+- den erstellten Task vom Typ Test in `testing/build.gradle` in der Liste `testTasks` anfügen 
 - ergänzen des `SVWS-Server/settings.gradle` um die Referenz zum neuen Subprojekt
 - optional: für eigene DB-Schemas mit ggf. eigenen Datenbanken bzw. abweichenden Inhalten muss ein entsprechendes Init-Script im Ordner `init-scripts` angelegt werden
 

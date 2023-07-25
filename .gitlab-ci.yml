@@ -49,9 +49,6 @@ integration-tests:
     expire_in: "7 days"
     reports:
       junit: ./testing/**/build/test-results/**/*.xml
-    paths:
-      - ./testing/**/build/**
-
 
 build:
   stage: build

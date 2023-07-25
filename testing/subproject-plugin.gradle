@@ -52,7 +52,7 @@ task createEnv(){
 	}
 	doLast {
 		ant.propertyfile(file: "$testumgebungPath/.env") {
-			entry(key:"INIT_SCRIPTS_DIR", value: "/etc/app/svws/init-scripts/gymabi")
+			entry(key:"INIT_SCRIPTS_DIR", value: "/etc/app/svws/init-scripts/$project.name")
 			entry(key:"MariaDB_DATABASE", value: "gymabi")
 
 			entry(key:"SVWS_TLS_KEYSTORE_PATH", value: "/etc/app/svws/conf")
@@ -105,5 +105,5 @@ task stopTestumgebung(type: Exec){
 	description = 'Stoppen der Container der Testumgebung'
 	workingDir "$testumgebungPath"
 	executable 'docker'
-	args 'compose', 'down'
+	args 'compose', 'down', '-v'
 }

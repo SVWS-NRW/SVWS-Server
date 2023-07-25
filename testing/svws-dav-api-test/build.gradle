@@ -3,7 +3,6 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
 }
 apply from: ('../subproject-plugin.gradle')
-def targetSchema = 'gymabi'
 //exclude javadoc for generated model without comments
 testJavadoc {
     exclude 'de/svws_nrw/test/**'
@@ -12,10 +11,9 @@ testJavadoc {
 task apiTest(type: Test) {
 	group 'verification'
 	description 'Java API-Tests ausführen'
-	systemProperty "svws.testing.api.schema", targetSchema
-	systemProperty "svws.testing.api.port", project.TESTING_SVWS_PORT 
+	systemProperty "svws.testing.api.port", project.TESTING_SVWS_PORT
 	systemProperty "svws.testing.api.host", project.TESTING_SVWS_HOST
-	// Testergebnisse des letzten Laufs löschen, ApiTests sollen immer durchlaufen, 
+	// Testergebnisse des letzten Laufs löschen, ApiTests sollen immer durchlaufen,
 	// auch wenn aktuelle Testergebnisse vorhanden sind, bspw. um zu debuggen
 	useJUnitPlatform()
 	outputs.upToDateWhen {false}

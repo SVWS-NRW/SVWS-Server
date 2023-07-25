@@ -15,7 +15,7 @@ import {
 
 const username = "Admin";
 const password = "";
-const schema = import.meta.env.VITE_svws_testing_api_schema;
+const schema = "gymabi"
 const url = import.meta.env.VITE_svws_testing_api_host + ":" + import.meta.env.VITE_svws_testing_api_port;
 
 const server = new ApiServer(url, username, password);

@@ -1,7 +1,7 @@
 dependencies {
 	implementation project(':svws-server-app')
 }
-// alle Tests in diesem und den Unterprojekten sollen nicht während der globalen Buildphase durchlaufen 
+// alle Tests in diesem und den Unterprojekten sollen nicht während der globalen Buildphase durchlaufen
 ext.excludeFromTestsDuringBuild=true
 // Liste der Auszuführenden Subproject-Tests
 def testTasks = ['svws-dav-api-test:apiTest', 'svws-webclient-integration-test:apiTest']
@@ -9,8 +9,24 @@ def testTasks = ['svws-dav-api-test:apiTest', 'svws-webclient-integration-test:a
 //Baut ein docker image namens dockertest aus den sourcen im tmp folder
 task buildSVWSApplication(type: Exec){
 	group = 'testenvironment'
-	description = 'Erstellen des Dockerimage für den Application-Server' //TODO 
+	description = 'Erstellen des Dockerimage für den Application-Server' //TODO
 	dependsOn('copyArtifacts')
+	doFirst {
+		def subprojects = project.subprojects
+		subprojects.each { subproject ->
+			def initScriptsDir = file("$subproject.projectDir/init-scripts")
+			copy {
+				from ("./svws/init-scripts")
+				into ("$buildDir/dockerimage/init-scripts/$subproject.name")
+			}
+			copy {
+				from initScriptsDir
+				into("$buildDir/dockerimage/init-scripts/$subproject.name")
+			}
+		}
+
+
+	}
 	executable 'docker'
 	args 'build', '-t', 'svwsapplication' ,'-f', './svws/Dockerfile','.'
 }
@@ -41,7 +57,7 @@ task integrationTest() {
 	testTasks.each {testTask ->
 		//diesem Task alle TestTasks als dependency zufügen
 		dependsOn(testTask)
-		
+
 		// Konfigurationen für auszuführende Testtasks ergänzen
 		tasks.getByPath(testTask).configure {
 			dependsOn('startTestumgebung')
