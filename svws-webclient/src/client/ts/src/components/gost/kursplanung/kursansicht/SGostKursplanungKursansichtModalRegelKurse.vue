@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modal" size="small" v-once>
+	<svws-ui-modal ref="modal" size="small">
 		<template #modalTitle>Regel erstellen für Kurse</template>
 		<template #modalDescription>
 			<div class="">

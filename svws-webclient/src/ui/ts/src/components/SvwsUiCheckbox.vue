@@ -51,17 +51,17 @@
 			'col-span-full': span === 'full'
 		}">
 		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
-		<div v-if="value === 'indeterminate' && value !== undefined" role="checkbox" class="icon">
+		<span v-if="value === 'indeterminate' && value !== undefined" role="checkbox" class="icon">
 			<i-ri-checkbox-indeterminate-fill />
-		</div>
-		<div v-else-if="value" role="checkbox" class="icon">
+		</span>
+		<span v-else-if="value" role="checkbox" class="icon">
 			<i-ri-checkbox-fill v-if="!circle" />
 			<i-ri-checkbox-circle-line v-if="circle" />
-		</div>
-		<div v-else-if="!value" role="checkbox" class="icon">
+		</span>
+		<span v-else-if="!value" role="checkbox" class="icon">
 			<i-ri-checkbox-blank-line v-if="!circle" />
 			<i-ri-checkbox-blank-circle-line v-if="circle" />
-		</div>
+		</span>
 		<span class="checkbox--label" v-if="$slots.default || statistics || title">
 			<template v-if="$slots.default">
 				<slot />

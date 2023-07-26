@@ -62,7 +62,7 @@
 				</template>
 
 				<template #modalActions>
-					<svws-ui-button type="secondary" @click="modal?.closeModal()">Abbrechen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="modalDanger?.closeModal()">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="onClick">Weiter</svws-ui-button>
 				</template>
 			</svws-ui-modal>

@@ -46,25 +46,23 @@
 
 <style lang="postcss">
 .sidebar--menu-item {
-	@apply flex items-center flex-col;
-	@apply p-2 rounded my-1;
-	@apply cursor-pointer;
+	@apply flex items-center flex-col cursor-pointer p-2 rounded my-1;
 	padding: 0.25rem 0.1rem;
 
 	@media (orientation: portrait) {
 		@apply my-0 px-1 min-w-[4.5rem] justify-center;
 	}
-}
 
-.sidebar--menu-item:last-child {
-	@apply mb-0;
-}
+	&:last-child {
+		@apply mb-0;
+	}
 
-.sidebar--menu-item--active {
-	@apply bg-svws/10 text-svws dark:bg-svws/20;
+	&--active {
+		@apply bg-svws/10 text-svws dark:bg-svws/20;
 
-	&.sidebar--menu-item--statistik {
-		@apply bg-violet-500/20 text-violet-500;
+		&.sidebar--menu-item--statistik {
+			@apply bg-violet-500/20 text-violet-500;
+		}
 	}
 }
 
@@ -80,12 +78,7 @@
 }
 
 .sidebar--menu-item--label {
-	@apply text-ellipsis overflow-hidden;
-	max-width: 100%;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
-	word-break: break-all;
+	@apply text-ellipsis max-w-full overflow-hidden;
 	font-size: 0.78rem;
 }
 
@@ -103,7 +96,7 @@
 		@apply bg-light dark:bg-white/5;
 	}
 
-	&.sidebar--menu-item--active {
+	&--active {
 		@apply bg-svws/5 text-svws;
 	}
 }
@@ -115,20 +108,17 @@
 .sidebar--menu-item--icon {
 	@apply mr-0 mt-1;
 	font-size: 1.2rem;
-}
 
-@media (min-width: 1280px) {
-	.sidebar--menu-item--icon {
+	@media (min-width: 1280px) {
 		font-size: 1.4rem;
 	}
-}
 
-@media (min-width: 2000px) {
-	.sidebar--menu-item--icon {
+	@media (min-width: 2000px) {
 		@apply mb-1;
 		font-size: 1.5rem;
 	}
 }
+
 
 .sidebar--menu-item--subline {
 	@apply text-sm font-normal;

@@ -39,18 +39,18 @@
 	</a>
 </template>
 
-<style>
+<style lang="postcss">
 .app--menu--initials {
 	@apply flex flex-col items-center w-full justify-center mx-auto relative;
-}
 
-.app--menu--initials .app--menu--initials--icon {
-	@apply flex flex-col items-center w-full justify-center mx-auto relative;
-	@apply rounded-lg overflow-hidden bg-white text-black dark:text-white dark:bg-white/5 border border-black/10 dark:border-white/10 font-bold;
-	@apply w-12 h-12 xl:w-14 xl:h-14;
-}
+	.app--menu--initials--icon {
+		@apply flex flex-col items-center w-full justify-center mx-auto relative;
+		@apply rounded-lg overflow-hidden bg-white text-black dark:text-white dark:bg-white/5 border border-black/10 dark:border-white/10 font-bold;
+		@apply w-12 h-12 xl:w-14 xl:h-14;
+	}
 
-.app--menu--initials svg {
-	@apply w-3/4 mx-auto hidden;
+	svg {
+		@apply w-3/4 mx-auto hidden;
+	}
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
 	<div class="h-full flex flex-col">
-		<h1 class="secondary-menu--headline">
-			<slot name="headline" />
+		<div class="secondary-menu--headline">
+			<h1>
+				<slot name="headline" />
+			</h1>
 			<div v-if="$slots.abschnitt" class="input--schule-abschnitte">
 				<slot name="abschnitt" />
 			</div>
-		</h1>
+		</div>
 		<div class="secondary-menu--header">
 			<slot name="header" />
 		</div>

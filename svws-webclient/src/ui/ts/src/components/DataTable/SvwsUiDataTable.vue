@@ -24,7 +24,7 @@
 					<svws-ui-button type="transparent" @click="filterReset" title="Filter zurücksetzen"
 						class="justify-center mr-auto">
 						<i-ri-filter-off-line />
-						Zurücksetzen
+						<span>Zurücksetzen</span>
 					</svws-ui-button>
 				</template>
 			</div>
@@ -289,12 +289,12 @@
 	const {rowsComputed} = useRows(columnsComputed, props);
 
 	const {
-		// sortBy, sortingOrder,
+		sortBy, sortingOrder,
 		toggleSorting, sortedRows} = useSortable(
-		columnsComputed,
-		rowsComputed,
-		props
-	);
+			columnsComputed,
+			rowsComputed,
+			props
+		);
 
 	const filterOpenRef = toRef(props, 'filterOpen');
 

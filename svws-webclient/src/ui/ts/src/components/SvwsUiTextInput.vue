@@ -149,7 +149,7 @@
 				'text-input--placeholder--required': required,
 				'text-input--placeholder--prefix': url
 			}">
-			{{ placeholder }}
+			<span>{{ placeholder }}</span>
 			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" class="ml-0.5" />
 			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${modelValue?.toLocaleString() ? modelValue?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">

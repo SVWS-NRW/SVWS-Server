@@ -98,7 +98,7 @@
 			:class="{
 				'textarea-input--placeholder--required': required
 			}">
-			{{ placeholder }}
+			<span>{{ placeholder }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />

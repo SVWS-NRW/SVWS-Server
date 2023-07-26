@@ -38,7 +38,7 @@
 	<label class="radio--label" :class="{
 		'radio--label--disabled': disabled,
 		'radio--statistics': statistics,
-		'radio--label--checked': forceChecked || modelValue === value,
+		'radio--label--checked-': forceChecked || modelValue === value || checked,
 		'radio--label--no-icon': !icon,
 		'radio--icon-type-view': iconType === 'view'
 	}">
@@ -57,7 +57,7 @@
 	</label>
 </template>
 
-<style>
+<style lang="postcss">
 .radio--label {
 	@apply cursor-pointer relative;
 	@apply select-none;
@@ -81,6 +81,7 @@
 	&:focus {
 		@apply ring-svws/50;
 
+		.radio--statistics &,
 		.page--statistik & {
 			@apply ring-violet-500/50;
 		}
@@ -89,15 +90,11 @@
 
 .radio--label:hover {
 	.radio--label--text {
-		@apply bg-transparent;
+		@apply bg-light dark:bg-white/10;
 	}
 
 	.radio--indicator ~ .radio--indicator-icon {
-		@apply opacity-100 text-svws;
-
-		.page--statistik & {
-			@apply text-violet-500;
-		}
+		@apply opacity-100
 	}
 }
 
@@ -113,6 +110,7 @@
 .radio--label--checked .radio--label--text {
 	@apply bg-svws/5 text-svws;
 
+	.radio--statistics &,
 	.page--statistik & {
 		@apply bg-violet-500/5 text-violet-500;
 	}
@@ -136,16 +134,25 @@
 	@apply hidden;
 }
 
+.radio--indicator:checked ~ .radio--indicator-icon,
 .radio--label--checked .radio--indicator-icon {
 	@apply opacity-100 text-svws;
 
-	.page--statistik {
+	.radio--statistics &,
+	.page--statistik & {
 		@apply text-violet-500;
 	}
 }
 
-.radio--label--checked .radio--indicator-icon .radio--indicator-icon--blank {
-	@apply hidden;
+.radio--indicator:checked ~ .radio--indicator-icon,
+.radio--label--checked .radio--indicator-icon {
+	.radio--indicator-icon--blank {
+		@apply hidden;
+	}
+
+	.radio--indicator-icon--checked {
+		@apply block;
+	}
 }
 
 .radio--label--disabled {

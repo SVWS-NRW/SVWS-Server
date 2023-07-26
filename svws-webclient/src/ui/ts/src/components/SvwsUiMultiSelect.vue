@@ -320,7 +320,7 @@
 					</div>
 				</div>
 				<span v-if="!showInput" class="multiselect-tags--placeholder">
-					{{ title }}
+					<span>{{ title }}</span>
 					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
 				</span>
 			</div>
@@ -345,9 +345,9 @@
 					:class="{'multiselect--items-list--tags' : tags}"
 					role="listbox"
 					@mouseenter="activeItemIndex = -1">
-					<span v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
+					<li v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
 						Keine Ergebnisse
-					</span>
+					</li>
 					<li v-for="(item, index) in filteredList"
 						:id="`${listIdPrefix}-${index}`"
 						:key="index"
@@ -367,7 +367,7 @@
 							}
 						">
 						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
-						{{ itemText(item) }}
+						<span>{{ itemText(item) }}</span>
 						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
 					</li>
 				</ul>

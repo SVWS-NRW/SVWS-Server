@@ -117,72 +117,77 @@
 	@apply relative z-50;
 	@apply rounded-lg;
 	@apply shadow-xl shadow-black/10 dark:shadow-white/5;
-}
 
-.modal--sm {
-	@apply w-full max-w-modal-sm;
-}
-
-.modal--md {
-	@apply w-full max-w-modal-md;
-	@apply rounded-xl;
-}
-
-.modal--lg {
-	@apply w-full max-w-modal-lg;
-	@apply rounded-xl;
-}
-
-.modal--help {
-	@apply m-0 h-full;
-	@apply shadow-xl;
-	@apply border border-black/25 dark:border-white/25;
-	@apply pointer-events-auto rounded-lg;
-
-	.modal--description,
-	.modal--content {
-		@apply text-left text-base;
+	&--sm {
+		@apply w-full max-w-modal-sm;
 	}
-}
 
-.modal--titlebar {
-	@apply p-2 border-b-2 border-light dark:border-white/10;
+	&--md {
+		@apply w-full max-w-modal-md;
+		@apply rounded-xl;
+	}
 
-	.button {
-		@apply rounded-md;
+	&--lg {
+		@apply w-full max-w-modal-lg;
+		@apply rounded-xl;
+	}
 
-		&:focus {
-			@apply outline-none ring-0 border-0;
+	&--help {
+		@apply m-0 h-full;
+		@apply shadow-xl;
+		@apply border border-black/25 dark:border-white/25;
+		@apply pointer-events-auto rounded-lg;
+
+		.modal--description,
+		.modal--content {
+			@apply text-left text-base;
 		}
 	}
-}
 
-.modal--title {
-	@apply flex-grow px-2;
-	@apply text-headline-sm;
-}
+	&--danger {
+		@apply border-2 border-error dark:border-error;
+	}
 
-.modal--content-wrapper {
-	@apply h-full overflow-y-auto w-full;
-	-webkit-overflow-scrolling: touch;
-}
+	.modal--titlebar {
+		@apply p-2 border-b-2 border-light dark:border-white/10;
 
-.modal--description {
-	@apply px-4 py-5 text-headline-sm text-center;
-}
+		.button {
+			@apply rounded-md;
 
-.modal--content {
-	@apply w-full text-base px-4 py-5 text-center;
-}
+			&:focus {
+				@apply outline-none ring-0 border-0;
+			}
+		}
+	}
 
-.modal--wrapper {
-	@apply fixed inset-0 z-50 pointer-events-none;
-	@apply overflow-y-auto;
-	-webkit-overflow-scrolling: touch;
-}
+	&--title {
+		@apply flex-grow px-2;
+		@apply text-headline-sm;
+	}
 
-.modal--actions {
-	@apply flex items-center justify-center p-4 pb-6 gap-2;
+	&--content-wrapper {
+		@apply h-full overflow-y-auto w-full;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	&--description {
+		@apply px-4 py-5 text-headline-sm text-center;
+	}
+
+	&--content {
+		@apply w-full text-base px-4 py-5 text-center;
+	}
+
+	&--wrapper {
+		@apply fixed inset-0 z-50 pointer-events-none;
+		@apply overflow-y-auto;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	&--actions {
+		@apply flex items-center justify-center p-4 pb-6 gap-2;
+	}
+
 }
 
 .modal--description + .modal--content,
