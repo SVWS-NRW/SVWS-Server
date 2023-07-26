@@ -8,7 +8,7 @@
 				class="w-32 border-l-svws-700 border p-1 pl-2 rounded-md"
 				:item-text="(wt) => manager().stundenplanGetWochenTypAsString(wt)" />
 			<svws-ui-multi-select title="Kalenderwochen" v-model="kwAuswahl" :items="kalenderwochen()" headless
-				class="w-84 border-l-svws-700 border p-1 pl-2 rounded-md"
+				class="w-96 border-l-svws-700 border p-1 pl-2 rounded-md"
 				:item-text="(kw) => getKalenderwochenString(kw)" />
 		</template>
 		<svws-ui-modal-hilfe class="ml-auto"> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
@@ -78,7 +78,7 @@
 	}
 
 	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung): string {
-		return "Mo. ??.??.???? - So. ??.??.???? (KW " + kw.kw + ")";
+		return props.manager().kalenderwochenzuordnungGetWocheAsString(kw);
 	}
 
 	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung> = computed({
