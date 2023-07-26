@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { StundenplanListeEintrag} from "@core";
+import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag} from "@core";
 import { StundenplanManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -16,6 +16,8 @@ interface RouteStateSchuelerDataStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	manager: StundenplanManager | undefined;
+	wochentyp: number;
+	kalenderwoche: StundenplanKalenderwochenzuordnung | undefined,
 }
 
 export class RouteDataSchuelerStundenplan {
@@ -25,6 +27,8 @@ export class RouteDataSchuelerStundenplan {
 		auswahl: undefined,
 		mapStundenplaene: new Map(),
 		manager: undefined,
+		wochentyp: 0,
+		kalenderwoche: undefined,
 	}
 
 	private _state = shallowRef(RouteDataSchuelerStundenplan._defaultState);
@@ -39,6 +43,14 @@ export class RouteDataSchuelerStundenplan {
 
 	private commit(): void {
 		this._state.value = { ... this._state.value };
+	}
+
+	get wochentyp(): number {
+		return this._state.value.wochentyp;
+	}
+
+	get kalenderwoche(): StundenplanKalenderwochenzuordnung | undefined {
+		return this._state.value.kalenderwoche;
 	}
 
 	get auswahl(): StundenplanListeEintrag {
@@ -66,30 +78,61 @@ export class RouteDataSchuelerStundenplan {
 		this.setPatchedDefaultState({ idSchueler: this._state.value.idSchueler, auswahl, mapStundenplaene });
 	}
 
-	public async setEintrag(idSchueler: number, idStundenplan?: number) {
+	public async setEintrag(idSchueler: number, idStundenplan: number | undefined, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) {
 		// Prüfe, ob die vorge Auswahl mit der neuen Auswahl übereinstimmt. In diesem Fall ist keine Aktion nötig
 		const vorige_auswahl = this._state.value.auswahl;
-		if ((vorige_auswahl !== undefined) && (this._state.value.idSchueler === idSchueler) && (vorige_auswahl.id === idStundenplan))
+		if ((vorige_auswahl !== undefined) && (this._state.value.idSchueler === idSchueler) && (vorige_auswahl.id === idStundenplan)) {
+			if ((wochentyp !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
+				|| (kw !== this._state.value.kalenderwoche?.kw)) {
+				// TODO Wochentyp und Kalenderwoche prüfen...
+				const tmpKalenderwoche: StundenplanKalenderwochenzuordnung | undefined = undefined;
+				const tmpWochentyp = wochentyp;
+				// if (tmpKalenderwoche !== undefined)
+				// 	tmpWochentyp = tmpKalenderwoche.wochentyp;
+				if ((tmpWochentyp < 0) || (tmpWochentyp > this.manager.getWochenTypModell()))
+					throw new Error("Der Wochentyp passt nicht zum Wochentyp-Modell des Stundenplans");
+				this.setPatchedState({ wochentyp: tmpWochentyp, kalenderwoche: tmpKalenderwoche });
+				return;
+			}
 			return;
+		}
 		// Prüfe, ob der Stundenplan deselektiert wird. In diesem Fall muss der interne State zurückgesetzt werden.
 		if (idStundenplan === undefined) {
-			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined });
+			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined, wochentyp: 0, kalenderwoche: undefined });
 			return;
 		}
 		// Ermittle aus der Liste der Stundenpläne den Stundenplan
 		const auswahl = this.mapStundenplaene.get(idStundenplan);
 		if (auswahl === undefined) {
-			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined });
+			this.setPatchedState({ idSchueler: undefined, auswahl: undefined, manager: undefined, wochentyp: 0, kalenderwoche: undefined });
 			return;
 		}
 		// Lade den Lehrer-Stundenplan
 		const daten = await api.server.getSchuelerStundenplan(api.schema, auswahl.id, idSchueler);
 		const manager = new StundenplanManager(daten);
-		this.setPatchedState({ idSchueler, auswahl, manager });
+		// TODO Wochentyp und Kalenderwoche prüfen...
+		const tmpKalenderwoche: StundenplanKalenderwochenzuordnung | undefined = undefined;
+		const tmpWochentyp = wochentyp;
+		// if (tmpKalenderwoche !== undefined)
+		// 	tmpWochentyp = tmpKalenderwoche.wochentyp;
+		if ((tmpWochentyp < 0) || (tmpWochentyp > manager.getWochenTypModell()))
+			throw new Error("Der Wochentyp passt nicht zum Wochentyp-Modell des Stundenplans");
+		this.setPatchedState({ idSchueler, auswahl, manager, wochentyp: tmpWochentyp, kalenderwoche: tmpKalenderwoche });
 	}
 
-	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeSchuelerStundenplanDaten.name, params: { id: routeSchueler.data.stammdaten.id, idStundenplan: value?.id } });
+	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
+		await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute(routeSchueler.data.stammdaten.id, value.id, 0));
+	}
+
+	public gotoWochentyp = async (value: number) => {
+		await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute(routeSchueler.data.stammdaten.id, this.auswahl.id, value));
+	}
+
+	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
+		if (value === undefined)
+			await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute(routeSchueler.data.stammdaten.id, this.auswahl.id, this.wochentyp));
+		else
+			await RouteManager.doRoute(routeSchuelerStundenplanDaten.getRoute(routeSchueler.data.stammdaten.id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
 	}
 
 }

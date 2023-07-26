@@ -8,7 +8,7 @@
 				class="w-32 border-l-svws-700 border p-1 pl-2 rounded-md"
 				:item-text="(wt) => manager().stundenplanGetWochenTypAsString(wt)" />
 			<svws-ui-multi-select title="Kalenderwochen" v-model="kwAuswahl" :items="kalenderwochen()" headless
-				class="w-96 border-l-svws-700 border p-1 pl-2 rounded-md"
+				class="w-96 border-l-svws-700 border p-1 pl-2 rounded-md" removable
 				:item-text="(kw) => getKalenderwochenString(kw)" />
 		</template>
 		<svws-ui-modal-hilfe class="ml-auto"> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
@@ -66,27 +66,28 @@
 
 	const wochentypAuswahl : WritableComputedRef<number> = computed({
 		get: () : number => {
-			return 0;
+			return props.wochentyp();
 		},
 		set: (value : number) => {
-			console.log("Auswahl des Wochentyps: " + value);
-		}
+			void props.gotoWochentyp(value);		}
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
 		return props.manager().kalenderwochenzuordnungGetMengeAsList();
 	}
 
-	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung): string {
+	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung | undefined): string {
+		if (kw === undefined)
+			return "&ndash;&ndash;&ndash;";
 		return props.manager().kalenderwochenzuordnungGetWocheAsString(kw);
 	}
 
-	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung> = computed({
-		get: () : StundenplanKalenderwochenzuordnung => {
-			return kalenderwochen().get(0);
+	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung | undefined> = computed({
+		get: () : StundenplanKalenderwochenzuordnung | undefined => {
+			return props.kalenderwoche();
 		},
-		set: (value : StundenplanKalenderwochenzuordnung) => {
-			console.log("Auswahl der Kalenderwoche: " + value);
+		set: (value : StundenplanKalenderwochenzuordnung | undefined) => {
+			void props.gotoKalenderwoche(value);
 		}
 	});
 

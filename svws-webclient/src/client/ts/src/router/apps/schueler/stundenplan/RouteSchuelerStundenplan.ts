@@ -42,13 +42,13 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			if (routeSchuelerStundenplan.data.mapStundenplaene.size !== 0) {
 				const stundenplan = routeSchuelerStundenplan.data.mapStundenplaene.entries().next().value;
 				if (stundenplan !== undefined)
-					return routeSchuelerStundenplanDaten.getRoute(idSchueler, stundenplan.id);
+					return routeSchuelerStundenplanDaten.getRoute(idSchueler, stundenplan.id, 0);
 			}
 		}
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+		return { name: this.defaultChild!.name, params: { id: id, wochentyp: 0 }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerStundenplanAuswahlProps {
@@ -56,7 +56,11 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
 			gotoStundenplan: this.data.gotoStundenplan,
-			manager: () => routeSchuelerStundenplan.data.manager,
+			gotoWochentyp: this.data.gotoWochentyp,
+			gotoKalenderwoche: this.data.gotoKalenderwoche,
+			manager: () => this.data.manager,
+			wochentyp: () => this.data.wochentyp,
+			kalenderwoche: () => this.data.kalenderwoche,
 		};
 	}
 
