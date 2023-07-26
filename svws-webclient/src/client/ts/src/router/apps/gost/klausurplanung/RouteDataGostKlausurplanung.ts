@@ -1,7 +1,7 @@
 import { computed, shallowRef } from "vue";
 
 import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag } from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -191,7 +191,9 @@ export class RouteDataGostKlausurplanung {
 				});
 				return true;
 			}
-			const stundenplan = listStundenplaene.get(0);
+			const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
+			if (stundenplan === null)
+				throw new Error("Es konnte kein aktiver Stundenplan gefunden werden.");
 			const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
 			const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
 			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
