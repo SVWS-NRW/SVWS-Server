@@ -134,7 +134,7 @@
 				kursIds.add(klausur.idKurs);
 			}
 		}
-		return props.stundenplanmanager.getKurseGefiltert( kursIds, 1, Wochentag.fromIDorException(day.getDay()), stunde);
+		return props.stundenplanmanager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde( kursIds, 1, Wochentag.fromIDorException(day.getDay()), stunde);
 	}
 
 	function sumSchreiber(day: any, stunde: number) {
