@@ -678,6 +678,96 @@ export class StundenplanManager extends JavaObject {
 		this._list_kwz.sort(StundenplanManager._compKWZ);
 	}
 
+	private klasseAddOhneUpdate(klasse : StundenplanKlasse) : void {
+		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klasse, klasse.id, klasse);
+		this._list_klasse.add(klasse);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKlasse}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param klasse  Das {@link StundenplanKlasse}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public klasseAdd(klasse : StundenplanKlasse) : void {
+		this.klasseAddOhneUpdate(klasse);
+		this.klasseUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public klasseAddAll(listKlasse : List<StundenplanKlasse>) : void {
+		for (const klasse of listKlasse)
+			this.klasseAddOhneUpdate(klasse);
+		this.klasseUpdate();
+	}
+
+	/**
+	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
+	 *
+	 * @param idKlasse  Die Datenbank-ID des {@link StundenplanKlasse}-Objekts.
+	 *
+	 * @return das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
+	 */
+	public klasseGetByIdOrException(idKlasse : number) : StundenplanKlasse {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlasse}-Objekte.
+	 */
+	public klasseGetMengeAsList() : List<StundenplanKlasse> {
+		return this._list_klasse;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanKlasse}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public klassePatch(klasse : StundenplanKlasse) : void {
+		this.klasseRemoveOhneUpdate(klasse.id);
+		this.klasseAddOhneUpdate(klasse);
+		this.klasseUpdate();
+	}
+
+	private klasseRemoveOhneUpdate(idKlasse : number) : void {
+		const k : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, idKlasse);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klasse, k.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_klasse", this._list_klasse, k);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKlasse}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param idKlasse  Die Datenbank-ID des {@link StundenplanKlasse}-Objekts, welches entfernt werden soll.
+	 */
+	public klasseRemove(idKlasse : number) : void {
+		this.klasseRemoveOhneUpdate(idKlasse);
+		this.klasseUpdate();
+	}
+
+	private klasseUpdate() : void {
+		const setKlasseKuerzel : HashSet<string> = new HashSet();
+		for (const klasse of this._list_klasse) {
+			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
+			const setJahrgaengeDerKlasse : HashSet<number> = new HashSet();
+			for (const idJahrgangDerKlasse of klasse.jahrgaenge) {
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_idJahrgang_zu_jahrgang, idJahrgangDerKlasse);
+				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
+			}
+		}
+	}
+
 	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
 		DeveloperNotificationException.ifInvalidID("u.id", u.id);
 		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_idZeitraster_zu_zeitraster, u.idZeitraster);
@@ -884,48 +974,6 @@ export class StundenplanManager extends JavaObject {
 			for (const idFachDerLehrkraft of lehrer.faecher) {
 				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", this._map_idFach_zu_fach, idFachDerLehrkraft);
 				DeveloperNotificationException.ifSetAddsDuplicate("setFaecherDerLehrkraft", setFaecherDerLehrkraft, idFachDerLehrkraft);
-			}
-		}
-	}
-
-	private klasseAddOhneUpdate(klasse : StundenplanKlasse) : void {
-		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klasse, klasse.id, klasse);
-		this._list_klasse.add(klasse);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanKlasse}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
-	 *
-	 * @param klasse  Das {@link StundenplanKlasse}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public klasseAdd(klasse : StundenplanKlasse) : void {
-		this.klasseAddOhneUpdate(klasse);
-		this.klasseUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
-	 *
-	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public klasseAddAll(listKlasse : List<StundenplanKlasse>) : void {
-		for (const klasse of listKlasse)
-			this.klasseAddOhneUpdate(klasse);
-		this.klasseUpdate();
-	}
-
-	private klasseUpdate() : void {
-		const setKlasseKuerzel : HashSet<string> = new HashSet();
-		for (const klasse of this._list_klasse) {
-			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
-			const setJahrgaengeDerKlasse : HashSet<number> = new HashSet();
-			for (const idJahrgangDerKlasse of klasse.jahrgaenge) {
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", this._map_idJahrgang_zu_jahrgang, idJahrgangDerKlasse);
-				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
 			}
 		}
 	}

@@ -724,6 +724,106 @@ public class StundenplanManager {
 		_list_kwz.sort(_compKWZ);
 	}
 
+	private void klasseAddOhneUpdate(final @NotNull StundenplanKlasse klasse) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
+		// klasse.bezeichnung darf "blank" sein
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klasse, klasse.id, klasse);
+		_list_klasse.add(klasse);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKlasse}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param klasse  Das {@link StundenplanKlasse}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void klasseAdd(final @NotNull StundenplanKlasse klasse) {
+		klasseAddOhneUpdate(klasse);
+		klasseUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void klasseAddAll(final @NotNull List<@NotNull StundenplanKlasse> listKlasse) {
+		for (final @NotNull StundenplanKlasse klasse : listKlasse)
+			klasseAddOhneUpdate(klasse);
+		klasseUpdate();
+	}
+
+	/**
+	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
+	 *
+	 * @param idKlasse  Die Datenbank-ID des {@link StundenplanKlasse}-Objekts.
+	 *
+	 * @return das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
+	 */
+	public @NotNull StundenplanKlasse klasseGetByIdOrException(final long idKlasse) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klasse, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKlasse}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlasse}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeAsList() {
+		return _list_klasse;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanKlasse}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void klassePatch(final @NotNull StundenplanKlasse klasse) {
+		klasseRemoveOhneUpdate(klasse.id);
+		klasseAddOhneUpdate(klasse);
+		klasseUpdate();
+	}
+
+	private void klasseRemoveOhneUpdate(final long idKlasse) {
+		// Get
+		final @NotNull StundenplanKlasse k = DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klasse, idKlasse);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idKlasse_zu_klasse, k.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_klasse", _list_klasse, k);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKlasse}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
+	 *
+	 * @param idKlasse  Die Datenbank-ID des {@link StundenplanKlasse}-Objekts, welches entfernt werden soll.
+	 */
+	public void klasseRemove(final long idKlasse) {
+		klasseRemoveOhneUpdate(idKlasse);
+		klasseUpdate();
+	}
+
+	private void klasseUpdate() {
+		// Überprüfe, ob doppelte StundenplanKlasse-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setKlasseKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanKlasse klasse : _list_klasse) {
+			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
+
+			// Überprüfen, ob die Klasse doppelte Jahrgänge hat.
+			final @NotNull HashSet<@NotNull Long> setJahrgaengeDerKlasse = new HashSet<>();
+			for (final @NotNull Long idJahrgangDerKlasse : klasse.jahrgaenge) {
+				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDerKlasse);
+				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
+			}
+		}
+	}
+
 	private void unterrichtAddOhneUpdate(final @NotNull StundenplanUnterricht u) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("u.id", u.id);
@@ -953,55 +1053,6 @@ public class StundenplanManager {
 			for (final @NotNull Long idFachDerLehrkraft : lehrer.faecher) {
 				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_idFach_zu_fach, idFachDerLehrkraft);
 				DeveloperNotificationException.ifSetAddsDuplicate("setFaecherDerLehrkraft", setFaecherDerLehrkraft, idFachDerLehrkraft);
-			}
-		}
-	}
-
-	private void klasseAddOhneUpdate(final @NotNull StundenplanKlasse klasse) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
-		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
-		// klasse.bezeichnung darf "blank" sein
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klasse, klasse.id, klasse);
-		_list_klasse.add(klasse);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanKlasse}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
-	 *
-	 * @param klasse  Das {@link StundenplanKlasse}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void klasseAdd(final @NotNull StundenplanKlasse klasse) {
-		klasseAddOhneUpdate(klasse);
-		klasseUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanKlasse|), da klasseUpdate() aufgerufen wird.
-	 *
-	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void klasseAddAll(final @NotNull List<@NotNull StundenplanKlasse> listKlasse) {
-		for (final @NotNull StundenplanKlasse klasse : listKlasse)
-			klasseAddOhneUpdate(klasse);
-		klasseUpdate();
-	}
-
-	private void klasseUpdate() {
-		// Überprüfe, ob doppelte StundenplanKlasse-Kürzel vorhanden sind.
-		final @NotNull HashSet<@NotNull String> setKlasseKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanKlasse klasse : _list_klasse) {
-			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
-
-			// Konsistenz der Jahrgänge der Klasse überprüfen.
-			final @NotNull HashSet<@NotNull Long> setJahrgaengeDerKlasse = new HashSet<>();
-			for (final @NotNull Long idJahrgangDerKlasse : klasse.jahrgaenge) {
-				DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDerKlasse);
-				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
 			}
 		}
 	}
