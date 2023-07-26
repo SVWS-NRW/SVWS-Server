@@ -436,8 +436,9 @@ echo "richte SVWS als Service ein ..."
 
 # Erstellen der Gruppe "svws" und des Nutzers "svws" ohne Login Shell (-s /bin/false)
 # Der Nutzer wird der Gruppe "svws" zugewiesen und besitzt Lese-/Schreibzugriff auf die relevanten Verzeichnisse
-groupadd -r svws
-useradd -r -s /bin/false -g svws svws
+/usr/sbin/groupadd -r svws
+/usr/sbin/useradd -r -s /bin/false -g svws svws
+
 chown -R svws:svws $APP_PATH
 chown -R svws:svws $CONF_PATH
 
