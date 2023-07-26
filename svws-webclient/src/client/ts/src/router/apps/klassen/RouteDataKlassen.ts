@@ -5,7 +5,6 @@ import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerLi
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { type RouteNode } from "~/router/RouteNode";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
@@ -13,6 +12,7 @@ import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 
 
 interface RouteStateKlassen {
+	idAbschnitt: number | undefined;
 	auswahl: KlassenListeEintrag | undefined;
 	daten: KlassenDaten | undefined;
 	mapKatalogeintraege: Map<number, KlassenListeEintrag>;
@@ -24,6 +24,7 @@ interface RouteStateKlassen {
 export class RouteDataKlassen {
 
 	private static _defaultState: RouteStateKlassen = {
+		idAbschnitt: undefined,
 		auswahl: undefined,
 		daten: undefined,
 		mapKatalogeintraege: new Map(),
@@ -57,6 +58,10 @@ export class RouteDataKlassen {
 		return this._state.value.view;
 	}
 
+	get hatAuswahl() : boolean {
+		return this._state.value.auswahl !== undefined;
+	}
+
 	get auswahl(): KlassenListeEintrag | undefined {
 		return this._state.value.auswahl;
 	}
@@ -79,32 +84,56 @@ export class RouteDataKlassen {
 		return this._state.value.daten;
 	}
 
-	public async ladeListe() {
-		const listKatalogeintraege = await api.server.getKlassenFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
-		const mapKatalogeintraege = new Map<number, KlassenListeEintrag>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		// Laden der Jahrgänge
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const mapJahrgaenge = new Map();
-		for (const j of listJahrgaenge)
-			mapJahrgaenge.set(j.id, j);
-		// Laden des Lehrer-Katalogs
-		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapLehrer, mapJahrgaenge })
+	public leave() : void {
+		// Speicher die Auswahl, so dass die Route zur der Klasse ggf. wieder aktiviert wird...
+		this.setPatchedDefaultState({ auswahl: this._state.value.auswahl });
 	}
 
-	setEintrag = async (auswahl: KlassenListeEintrag | undefined) => {
-		if (auswahl === undefined) {
-			this.setPatchedState({ auswahl: undefined, daten: undefined })
-			return;
+	setEintrag = async (idAbschnitt : number, idKlasse: number | undefined) => {
+		let changed = false;
+		// Prüfe, ob die Abschnitts-spezifischen Daten zu laden sind
+		let mapKatalogeintraege = this._state.value.mapKatalogeintraege;
+		let mapLehrer = this._state.value.mapLehrer;
+		let mapJahrgaenge = this._state.value.mapJahrgaenge;
+		if (idAbschnitt !== this._state.value.idAbschnitt) {
+			const listKatalogeintraege = await api.server.getKlassenFuerAbschnitt(api.schema, idAbschnitt);
+			mapKatalogeintraege = new Map<number, KlassenListeEintrag>();
+			for (const l of listKatalogeintraege)
+				mapKatalogeintraege.set(l.id, l);
+			// Laden der Jahrgänge
+			const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+			mapJahrgaenge = new Map();
+			for (const j of listJahrgaenge)
+				mapJahrgaenge.set(j.id, j);
+			// Laden des Lehrer-Katalogs
+			const listLehrer = await api.server.getLehrer(api.schema);
+			mapLehrer = new Map();
+			for (const l of listLehrer)
+				mapLehrer.set(l.id, l);
+			changed = true;
 		}
-		const daten = await api.server.getKlasse(api.schema, auswahl.id)
-		this.setPatchedState({ auswahl, daten })
+		// Prüfe, ob die Klassen-Daten sich durch die Auswahl verändert haben
+		let auswahl = this._state.value.auswahl;
+		let daten = this._state.value.daten;
+		if ((idKlasse === undefined) || (daten?.id !== idKlasse)) {
+			changed = true;
+			if (idKlasse !== undefined) {
+				if (!mapKatalogeintraege.has(idKlasse))
+					throw new Error("Die Klasse mit der ID " + idKlasse + " kann nicht gefunden werden!");
+				auswahl = mapKatalogeintraege.get(idKlasse);
+			} else if ((auswahl === undefined) || (!mapKatalogeintraege.has(auswahl.id))) {
+				auswahl = undefined;
+				for (const k of mapKatalogeintraege) {
+					// TODO if ... prüfe eintrag.istSichtbar und den Sichtbarkeitsfilter
+					auswahl = k[1];
+					break;
+				}
+			}
+			daten = (auswahl === undefined) ? undefined
+				: await api.server.getKlasse(api.schema, auswahl.id);
+		}
+		if (changed)
+			this.setPatchedState({ idAbschnitt, auswahl, daten, mapKatalogeintraege, mapLehrer, mapJahrgaenge })
 	}
 
 	gotoEintrag = async (eintrag: KlassenListeEintrag) => {

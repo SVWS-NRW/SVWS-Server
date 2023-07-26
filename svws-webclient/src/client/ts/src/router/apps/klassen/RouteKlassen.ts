@@ -35,43 +35,25 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.defaultChild = routeKlasseDaten;
 	}
 
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
-	}
-
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			if (to_params.id instanceof Array)
 				throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-			const idKlasse = to_params.id === undefined ? undefined : parseInt(to_params.id);
-			// Prüfe, ob die Liste der Klassen überhaupt Einträge hat
-			if (this.data.mapKatalogeintraege.size < 1) {
-				if (idKlasse === undefined)
-					return;
-				throw new Error("Es wurde keine Klasse mit der ID " + idKlasse + " gefunden.");
+			const idKlasse = (to_params.id === undefined) || (to_params.id === "") ? undefined : parseInt(to_params.id);
+			await this.data.setEintrag(routeApp.data.aktAbschnitt.value.id, idKlasse);
+			if ((this.data.hatAuswahl) && (this.data.auswahl?.id !== idKlasse)) {
+				to_params.id = this.data.auswahl!.id.toString();
+				return { name: to.name, params: to_params };
 			}
-			// Prüfe, ob keine Klasse angegeben ist. Wenn dies der Fall ist, dann reaktivere einen alten Eintrag oder wähle den ersten sichtbaren Eintrag aus der Liste aus
-			if (idKlasse === undefined) {
-				if (this.data.auswahl)
-					return this.getRoute(this.data.auswahl.id);
-				const eintrag = this.data.mapKatalogeintraege.get(0);
-				if (eintrag !== undefined) {
-					// TODO prüfe eintrag.istSichtbar und den Sichtbarkeitsfilter
-					return this.getRoute(eintrag?.id);
-				}
-				return; // Es konnte keine Klasse gefunden werden, also bleibe bei dieser Route
-			}
-			// Prüfe, ob die angegebene Klasse mit dieser übereinstimmt. In diesem Fall muss hier keine neue Route gewählt werden...
-			if (idKlasse === this.data.auswahl?.id)
-				return;
-			// Bestimmte die Klasse mit der neuen ID
-			const eintrag = this.data.mapKatalogeintraege.get(idKlasse);
-			if (eintrag === undefined)
-				throw new Error("Es wurde keine Klasse mit der ID " + idKlasse + " gefunden.");
-			await this.data.setEintrag(eintrag);
+			if ((to.name === this.name) && (this.data.hatAuswahl))
+				return this.getRoute(this.data.auswahl?.id);
 		} catch (e) {
 			return routeError.getRoute(e instanceof Error ? e : new Error("Unbekannter Fehler beim Aktualisieren der Route."));
 		}
+	}
+
+	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
+		this.data.leave();
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
