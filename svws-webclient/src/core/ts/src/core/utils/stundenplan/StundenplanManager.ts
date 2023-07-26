@@ -768,58 +768,6 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
-		DeveloperNotificationException.ifInvalidID("u.id", u.id);
-		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_idZeitraster_zu_zeitraster, u.idZeitraster);
-		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > this.stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
-		if (u.idKurs !== null) {
-			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", this._map_idKurs_zu_kurs, u.idKurs);
-			const unterrichtDesKurses : List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
-			DeveloperNotificationException.ifListAddsDuplicate("unterrichtDesKurses", unterrichtDesKurses, u);
-		}
-		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", this._map_idFach_zu_fach, u.idFach);
-		for (const idLehrkraftDesUnterrichts of u.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
-		for (const idKlasseDesUnterrichts of u.klassen)
-			DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", this._map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
-		for (const idRaumDesUnterrichts of u.raeume)
-			DeveloperNotificationException.ifMapNotContains("_map_idRaum_zu_raum", this._map_idRaum_zu_raum, idRaumDesUnterrichts);
-		for (const idSchieneDesUnterrichts of u.schienen)
-			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", this._map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idUnterricht_zu_unterricht, u.id, u);
-		MapUtils.getOrCreateArrayList(this._map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
-		Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
-		for (const idLehrkraftDesUnterrichts of u.lehrer) {
-			const lehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
-			MapUtils.getOrCreateArrayList(this._map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
-		}
-		this._list_unterricht.add(u);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanUnterricht}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
-	 *
-	 * @param unterricht  Das {@link StundenplanUnterricht}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public unterrichtAdd(unterricht : StundenplanUnterricht) : void {
-		this.unterrichtAddOhneUpdate(unterricht);
-		this.unterrichtUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanUnterricht}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
-	 *
-	 * @param listUnterricht  Die Menge der {@link StundenplanUnterricht}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public unterrichtAddAll(listUnterricht : List<StundenplanUnterricht>) : void {
-		for (const unterricht of listUnterricht)
-			this.unterrichtAddOhneUpdate(unterricht);
-		this.unterrichtUpdate();
-	}
-
 	private kursAddOhneUpdate(kurs : StundenplanKurs) : void {
 		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
@@ -856,6 +804,112 @@ export class StundenplanManager extends JavaObject {
 		for (const kurs of listKurs)
 			this.kursAddOhneUpdate(kurs);
 		this.kursUpdate();
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
+	 *
+	 * @param idKkurs   Die ID des Kurses.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDesKursesByWochentyp(idKkurs : number, wochentyp : number) : List<StundenplanUnterricht> {
+		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this.stundenplanWochenTypModell);
+		const list : List<StundenplanUnterricht> = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", this._map_idKurs_zu_unterrichtmenge.get(idKkurs));
+		return CollectionUtils.toFilteredArrayList(list, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 *
+	 * @param idKurs        Die ID des Kurses.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDesKursesByKW(idKurs : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
+		return this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 *
+	 * @param idsKurs   Die IDs aller Kurse.
+	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
+	 */
+	public getUnterrichtDerKurseByWochentyp(idsKurs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
+		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
+		for (const idKurs of idsKurs)
+			result.addAll(this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp));
+		return result;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 *
+	 * @param idsKurs       Die IDs aller Kurse.
+	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
+	 */
+	public getUnterrichtDerKurseByKW(idsKurs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
+		return this.getUnterrichtDerKurseByWochentyp(idsKurs, wochentyp);
+	}
+
+	/**
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 *
+	 * @param idsKurs          Die Liste aller Kurs-IDs.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
+	 */
+	public getKurseGefiltert(idsKurs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
+		return CollectionUtils.toFilteredArrayList(idsKurs, { test : (idKurs: number) => this.testKursHatUnterrichtAm(idKurs!, wochentyp, wochentag, unterrichtstunde) });
+	}
+
+	/**
+	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 *
+	 * @param idsKurs          Die Liste aller Kurs-IDs.
+	 * @param datumISO8601     Das Datum. Daraus ergibt sich (Wochentyp / Wochentag).
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
+	 */
+	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
+		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
+		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
+		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
+	}
+
+	/**
+	 * Liefert TRUE, falls der übergebene Kurs am (Wochentyp / Wochentag / Unterrichtsstunde)  hat.
+	 *
+	 * @param idKurs           Die ID des Kurses.
+	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
+	 * @param wochentag        Der gewünschte {@link Wochentag}.
+	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls der übergebene Kurs am (wochentyp / wochentag / Unterrichtsstunde)  hat.
+	 */
+	public testKursHatUnterrichtAm(idKurs : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
+		for (const u of this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp)) {
+			const z : StundenplanZeitraster = this.zeitrasterGetByIdOrException(u.idZeitraster);
+			if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === unterrichtstunde))
+				return true;
+		}
+		return false;
 	}
 
 	private kursUpdate() : void {
@@ -1101,127 +1155,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getWochenTypModell() : number {
 		return this.stundenplanWochenTypModell;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
-	 *
-	 * @param idKkurs   Die ID des Kurses.
-	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
-	 */
-	public getUnterrichtDesKursesByWochentyp(idKkurs : number, wochentyp : number) : List<StundenplanUnterricht> {
-		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this.stundenplanWochenTypModell);
-		const list : List<StundenplanUnterricht> = DeveloperNotificationException.ifNull("_map_kursID_zu_unterrichte.get(kursID)==NULL", this._map_idKurs_zu_unterrichtmenge.get(idKkurs));
-		return CollectionUtils.toFilteredArrayList(list, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
-	 *
-	 * @param idKurs        Die ID des Kurses.
-	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
-	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
-	 */
-	public getUnterrichtDesKursesByKW(idKurs : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
-		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
-		return this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp);
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
-	 *
-	 * @param idsKurs   Die IDs aller Kurse.
-	 * @param wochentyp Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge mit einem bestimmten Wochentyp.
-	 */
-	public getUnterrichtDerKurseByWochentyp(idsKurs : Array<number>, wochentyp : number) : List<StundenplanUnterricht> {
-		const result : ArrayList<StundenplanUnterricht> = new ArrayList();
-		for (const idKurs of idsKurs)
-			result.addAll(this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp));
-		return result;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
-	 *
-	 * @param idsKurs       Die IDs aller Kurse.
-	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
-	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
-	 */
-	public getUnterrichtDerKurseByKW(idsKurs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
-		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
-		return this.getUnterrichtDerKurseByWochentyp(idsKurs, wochentyp);
-	}
-
-	/**
-	 * Liefert alle Unterrichte des Schülers bezüglich einer bestimmten Stundenplanzelle.<br>
-	 * Die Liste sollte 0 oder 1 Element (in der Regel) enthalten.
-	 *
-	 * @param idSchueler        Die Datenbank-ID des Schülers.
-	 * @param wochentyp         Der Typ der Woche (beispielsweise bei AB-Wochen).
-	 * @param wochentag         Der gewünschte {@link Wochentag}.
-	 * @param unterrichtstunde  Die gewünschte Unterrichtsstunde.
-	 *
-	 * @return alle Unterrichte des Schülers bezüglich einer bestimmten Stundenplanzelle.
-	 */
-	public unterrichtGetMengeBySchuelerIDWochentypWochentagUnterrichtsstunde(idSchueler : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<StundenplanUnterricht> {
-		return new ArrayList();
-	}
-
-	/**
-	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
-	 *
-	 * @param idsKurs          Die Liste aller Kurs-IDs.
-	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
-	 * @param wochentag        Der gewünschte {@link Wochentag}.
-	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
-	 *
-	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
-	 */
-	public getKurseGefiltert(idsKurs : List<number>, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : List<number> {
-		return CollectionUtils.toFilteredArrayList(idsKurs, { test : (idKurs: number) => this.testKursHatUnterrichtAm(idKurs!, wochentyp, wochentag, unterrichtstunde) });
-	}
-
-	/**
-	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
-	 *
-	 * @param idsKurs          Die Liste aller Kurs-IDs.
-	 * @param datumISO8601     Das Datum. Daraus ergibt sich (Wochentyp / Wochentag).
-	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
-	 *
-	 * @return gefilterte Kurs-IDs, deren Unterricht zu (Datum / Unterrichtsstunde) passt.
-	 */
-	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
-		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
-		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
-		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
-		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
-	}
-
-	/**
-	 * Liefert TRUE, falls der übergebene Kurs am (Wochentyp / Wochentag / Unterrichtsstunde)  hat.
-	 *
-	 * @param idKurs           Die ID des Kurses.
-	 * @param wochentyp        Der Typ der Woche (beispielsweise bei AB-Wochen).
-	 * @param wochentag        Der gewünschte {@link Wochentag}.
-	 * @param unterrichtstunde Die gewünschte Unterrichtsstunde.
-	 *
-	 * @return TRUE, falls der übergebene Kurs am (wochentyp / wochentag / Unterrichtsstunde)  hat.
-	 */
-	public testKursHatUnterrichtAm(idKurs : number, wochentyp : number, wochentag : Wochentag, unterrichtstunde : number) : boolean {
-		for (const u of this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp)) {
-			const z : StundenplanZeitraster = this.zeitrasterGetByIdOrException(u.idZeitraster);
-			if ((z.wochentag === wochentag.id) && (z.unterrichtstunde === unterrichtstunde))
-				return true;
-		}
-		return false;
 	}
 
 	/**
@@ -1765,6 +1698,58 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanGetID() : number {
 		return this.stundenplanID;
+	}
+
+	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
+		DeveloperNotificationException.ifInvalidID("u.id", u.id);
+		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_idZeitraster_zu_zeitraster, u.idZeitraster);
+		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > this.stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
+		if (u.idKurs !== null) {
+			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", this._map_idKurs_zu_kurs, u.idKurs);
+			const unterrichtDesKurses : List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("unterrichtDesKurses", unterrichtDesKurses, u);
+		}
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", this._map_idFach_zu_fach, u.idFach);
+		for (const idLehrkraftDesUnterrichts of u.lehrer)
+			DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
+		for (const idKlasseDesUnterrichts of u.klassen)
+			DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", this._map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
+		for (const idRaumDesUnterrichts of u.raeume)
+			DeveloperNotificationException.ifMapNotContains("_map_idRaum_zu_raum", this._map_idRaum_zu_raum, idRaumDesUnterrichts);
+		for (const idSchieneDesUnterrichts of u.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", this._map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idUnterricht_zu_unterricht, u.id, u);
+		MapUtils.getOrCreateArrayList(this._map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
+		Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
+		for (const idLehrkraftDesUnterrichts of u.lehrer) {
+			const lehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
+			MapUtils.getOrCreateArrayList(this._map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
+		}
+		this._list_unterricht.add(u);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanUnterricht}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param unterricht  Das {@link StundenplanUnterricht}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public unterrichtAdd(unterricht : StundenplanUnterricht) : void {
+		this.unterrichtAddOhneUpdate(unterricht);
+		this.unterrichtUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanUnterricht}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanUnterricht|), da unterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param listUnterricht  Die Menge der {@link StundenplanUnterricht}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public unterrichtAddAll(listUnterricht : List<StundenplanUnterricht>) : void {
+		for (const unterricht of listUnterricht)
+			this.unterrichtAddOhneUpdate(unterricht);
+		this.unterrichtUpdate();
 	}
 
 	/**

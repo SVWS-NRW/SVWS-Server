@@ -12,7 +12,7 @@ export class DateUtils extends JavaObject {
 	/**
 	 * Das größte gültige Jahr für das alle Datumsberechnungen geprüft wurden.
 	 */
-	public static readonly MAX_GUELTIGES_JAHR : number = 1900;
+	public static readonly MAX_GUELTIGES_JAHR : number = 2900;
 
 	/**
 	 *  Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>

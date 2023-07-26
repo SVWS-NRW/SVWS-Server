@@ -14,7 +14,7 @@ public final class DateUtils {
 	public static final int MIN_GUELTIGES_JAHR = 1900;
 
 	/** Das größte gültige Jahr für das alle Datumsberechnungen geprüft wurden. */
-	public static final int MAX_GUELTIGES_JAHR = 1900;
+	public static final int MAX_GUELTIGES_JAHR = 2900;
 
 	/**
 	 * Liefert für den jeweiligen Monat im Jahr die Summe der vergangenen Tage.<br>

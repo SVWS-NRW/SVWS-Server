@@ -40,7 +40,9 @@ class TestDateUtils {
 		final Calendar cal = new GregorianCalendar(Locale.GERMANY);
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		String datumCurrent = "1900-01-01";
+		final String sJahr = StringUtils.padZahl(DateUtils.MIN_GUELTIGES_JAHR, 4);
+		String datumCurrent =  sJahr + "-01-01";
+
 		cal.setTime(sdf.parse(datumCurrent));
 		while (true) {
 			final int jahr = cal.get(Calendar.YEAR);
