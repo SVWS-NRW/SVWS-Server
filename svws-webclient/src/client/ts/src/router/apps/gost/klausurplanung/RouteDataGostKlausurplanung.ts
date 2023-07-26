@@ -179,8 +179,16 @@ export class RouteDataGostKlausurplanung {
 			const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
 			const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-			if (abschnitt === undefined)
-				throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
+			if (abschnitt === undefined) {
+				this.setPatchedState({
+					halbjahr: halbjahr,
+					kursklausurmanager: undefined,
+					stundenplanmanager: undefined,
+					klausurvorgabenmanager: klausurvorgabenmanager,
+				});
+				return true;
+			}
+			//				throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
 				this.setPatchedState({
