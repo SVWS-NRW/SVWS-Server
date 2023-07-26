@@ -74,7 +74,7 @@
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
-		return props.manager().getListKalenderwochenzuordnung();
+		return props.manager().kalenderwochenzuordnungGetMengeAsList();
 	}
 
 	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung): string {

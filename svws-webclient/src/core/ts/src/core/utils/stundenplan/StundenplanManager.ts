@@ -62,11 +62,11 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idJahrgang_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
 
-	private readonly _list_kalenderwochenzuordnungen : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
+	private readonly _list_kwz : List<StundenplanKalenderwochenzuordnung> = new ArrayList();
 
-	private readonly _map_kwzID_zu_kwz : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
+	private readonly _map_idKWZ_zu_kwz : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap();
 
-	private readonly _map_jahr_kw_zu_kwz : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
+	private readonly _map2d_jahr_kw_zu_kwz : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
 	private static readonly _compKWZ : Comparator<StundenplanKalenderwochenzuordnung> = { compare : (a: StundenplanKalenderwochenzuordnung, b: StundenplanKalenderwochenzuordnung) => {
 		if (a.jahr < b.jahr)
@@ -528,6 +528,156 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
 	}
 
+	private kalenderwochenzuordnungAddOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
+		DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
+		DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
+		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
+		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > this.stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKWZ_zu_kwz, kwz.id, kwz);
+		this._list_kwz.add(kwz);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKalenderwochenzuordnung}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public kalenderwochenzuordnungAdd(kwz : StundenplanKalenderwochenzuordnung) : void {
+		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKalenderwochenzuordnung}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param listKWZ  Die Menge der {@link StundenplanKalenderwochenzuordnung}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public kalenderwochenzuordnungAddAll(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
+		for (const kwz of listKWZ)
+			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @param idKWZ Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 */
+	public kalenderwochenzuordnungGetByIdOrException(idKWZ : number) : StundenplanKalenderwochenzuordnung {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKWZ_zu_kwz, idKWZ);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public kalenderwochenzuordnungGetMengeAsList() : List<StundenplanKalenderwochenzuordnung> {
+		return this._list_kwz;
+	}
+
+	/**
+	 * Liefert eine String-Darstellung der Kalenderwoche.
+	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
+	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
+	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return eine String-Darstellung der Kalenderwoche.
+	 */
+	public kalenderwochenzuordnungGetWocheAsString(kwz : StundenplanKalenderwochenzuordnung) : string {
+		const sMo : string = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		const sSo : string = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
+		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
+		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
+		const sJahrKW : string = "(KW " + kwz.jahr + "." + kwz.kw + ")";
+		return sMoGer! + " - " + sSoGer! + " " + sJahrKW!;
+	}
+
+	/**
+	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
+	 *
+	 * @param jahr          Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+	 *
+	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp.
+	 */
+	public kalenderwochenzuordnungGetWochentypOrDefault(jahr : number, kalenderwoche : number) : number {
+		DeveloperNotificationException.ifSmaller("jahr", jahr, DateUtils.MIN_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifGreater("jahr", jahr, DateUtils.MAX_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifSmaller("kalenderwoche", kalenderwoche, 1);
+		DeveloperNotificationException.ifGreater("kalenderwoche", kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
+		if (this.stundenplanWochenTypModell === 0)
+			return 0;
+		const z : StundenplanKalenderwochenzuordnung | null = this._map2d_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
+		if (z !== null)
+			return z.wochentyp;
+		const wochentyp : number = kalenderwoche % this.stundenplanWochenTypModell;
+		return wochentyp === 0 ? this.stundenplanWochenTypModell : wochentyp;
+	}
+
+	/**
+	 * Liefert TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
+	 *
+	 * @param jahr          Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+	 *
+	 * @return TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
+	 */
+	public kalenderwochenzuordnungGetWochentypUsesMapping(jahr : number, kalenderwoche : number) : boolean {
+		DeveloperNotificationException.ifSmaller("jahr", jahr, DateUtils.MIN_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifGreater("jahr", jahr, DateUtils.MAX_GUELTIGES_JAHR);
+		DeveloperNotificationException.ifSmaller("kalenderwoche", kalenderwoche, 1);
+		DeveloperNotificationException.ifGreater("kalenderwoche", kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
+		const z : StundenplanKalenderwochenzuordnung | null = this._map2d_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
+		return (this.stundenplanWochenTypModell >= 2) && (z !== null);
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
+	 *
+	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public kalenderwochenzuordnungPatch(kwz : StundenplanKalenderwochenzuordnung) : void {
+		this.kalenderwochenzuordnungRemoveOhneUpdate(kwz.id);
+		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	private kalenderwochenzuordnungRemoveOhneUpdate(idKWZ : number) : void {
+		const k : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifMapGetIsNull(this._map_idKWZ_zu_kwz, idKWZ);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKWZ_zu_kwz, k.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_jahr_kw_zu_kwz, k.jahr, k.kw);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kalenderwochenzuordnungen", this._list_kwz, k);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung|), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param idKWZ  Die Datenbank-ID des {@link StundenplanKalenderwochenzuordnung}-Objekts, welches entfernt werden soll.
+	 */
+	public kalenderwochenzuordnungRemove(idKWZ : number) : void {
+		this.jahrgangRemoveOhneUpdate(idKWZ);
+		this.jahrgangUpdate();
+	}
+
+	/**
+	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
+	 */
+	private kalenderwochenzuordnungUpdate() : void {
+		this._list_kwz.sort(StundenplanManager._compKWZ);
+	}
+
 	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
 		DeveloperNotificationException.ifInvalidID("u.id", u.id);
 		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", this._map_idZeitraster_zu_zeitraster, u.idZeitraster);
@@ -857,68 +1007,6 @@ export class StundenplanManager extends JavaObject {
 		this._list_raeume.sort(StundenplanManager._compRaum);
 	}
 
-	private kalenderwochenzuordnungAddOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
-		DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
-		DeveloperNotificationException.ifTrue("(kwz.jahr < 2000) || (kwz.jahr > 3000)", (kwz.jahr < 2000) || (kwz.jahr > 3000));
-		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > 53)", (kwz.kw < 1) || (kwz.kw > 53));
-		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > this.stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("kwz.wochentyp <= 0", kwz.wochentyp <= 0);
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._map_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
-		this._list_kalenderwochenzuordnungen.add(kwz);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanKalenderwochenzuordnung}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
-	 *
-	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public kalenderwochenzuordnungAdd(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
-		this.kalenderwochenzuordnungUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanKalenderwochenzuordnung}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log ), da kalenderwochenzuordnungUpdate() aufgerufen wird.
-	 *
-	 * @param listKWZ  Die Menge der {@link StundenplanKalenderwochenzuordnung}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public kalenderwochenzuordnungAddAll(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
-		for (const kwz of listKWZ)
-			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
-		this.kalenderwochenzuordnungUpdate();
-	}
-
-	/**
-	 * Liefert eine String-Darstellung der Kalenderwoche.
-	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
-	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
-	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 *
-	 * @return eine String-Darstellung der Kalenderwoche.
-	 */
-	public kalenderwochenzuordnungGetWocheAsString(kwz : StundenplanKalenderwochenzuordnung) : string {
-		const sMo : string = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
-		const sSo : string = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
-		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
-		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
-		const sJahrKW : string = "(KW " + kwz.jahr + "." + kwz.kw + ")";
-		return sMoGer! + " - " + sSoGer! + " " + sJahrKW!;
-	}
-
-	/**
-	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
-	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
-	 */
-	private kalenderwochenzuordnungUpdate() : void {
-		this._list_kalenderwochenzuordnungen.sort(StundenplanManager._compKWZ);
-	}
-
 	/**
 	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
 	 *
@@ -968,41 +1056,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
-	 *
-	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
-	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
-	 *
-	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp.
-	 */
-	public getWochentypOrDefault(jahr : number, kalenderwoche : number) : number {
-		DeveloperNotificationException.ifTrue("(jahr < 2000) || (jahr > 3000)", (jahr < 2000) || (jahr > 3000));
-		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
-		if (this.stundenplanWochenTypModell === 0)
-			return 0;
-		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
-		if (z !== null)
-			return z.wochentyp;
-		const wochentyp : number = kalenderwoche % this.stundenplanWochenTypModell;
-		return wochentyp === 0 ? this.stundenplanWochenTypModell : wochentyp;
-	}
-
-	/**
-	 * Liefert TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
-	 *
-	 * @param jahr          Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
-	 * @param kalenderwoche Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
-	 *
-	 * @return TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" auf "Kalenderwoche" verwendet wird.
-	 */
-	public getWochentypUsesMapping(jahr : number, kalenderwoche : number) : boolean {
-		DeveloperNotificationException.ifTrue("(jahr < 2000) || (jahr > 3000)", (jahr < 2000) || (jahr > 3000));
-		DeveloperNotificationException.ifTrue("(kalenderwoche < 1) || (kalenderwoche > 53)", (kalenderwoche < 1) || (kalenderwoche > 53));
-		const z : StundenplanKalenderwochenzuordnung | null = this._map_jahr_kw_zu_kwz.getOrNull(jahr, kalenderwoche);
-		return (this.stundenplanWochenTypModell >= 2) && (z !== null);
-	}
-
-	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
 	 * @param idKkurs   Die ID des Kurses.
@@ -1026,7 +1079,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} eines Kurses in einer bestimmten Kalenderwoche.
 	 */
 	public getUnterrichtDesKursesByKW(idKurs : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
-		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return this.getUnterrichtDesKursesByWochentyp(idKurs, wochentyp);
 	}
 
@@ -1055,7 +1108,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht} einer Kursmenge in einer bestimmten Kalenderwoche.
 	 */
 	public getUnterrichtDerKurseByKW(idsKurs : Array<number>, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
-		const wochentyp : number = this.getWochentypOrDefault(jahr, kalenderwoche);
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
 		return this.getUnterrichtDerKurseByWochentyp(idsKurs, wochentyp);
 	}
 
@@ -1099,7 +1152,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getKurseGefiltertByDatum(idsKurs : List<number>, datumISO8601 : string, unterrichtstunde : number) : List<number> {
 		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
-		const wochentyp : number = this.getWochentypOrDefault(e[6], e[5]);
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
 		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.getKurseGefiltert(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
@@ -1142,15 +1195,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
-	 */
-	public getListKalenderwochenzuordnung() : List<StundenplanKalenderwochenzuordnung> {
-		return this._list_kalenderwochenzuordnungen;
-	}
-
-	/**
 	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des angefragten-Objektes.
@@ -1170,17 +1214,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getPausenzeit(idPausenzeit : number) : StundenplanPausenzeit {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, idPausenzeit);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 *
-	 * @param idKWZ Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 */
-	public getKalenderwochenzuordnung(idKWZ : number) : StundenplanKalenderwochenzuordnung {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_kwzID_zu_kwz, idKWZ);
 	}
 
 	/**
@@ -1206,17 +1239,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt dem Stundenplan eine neue {@link StundenplanKalenderwochenzuordnung} hinzu.
-	 *
-	 * @param kwz Die Kalenderwochenzuordnung, die hinzugefügt werden soll.
-	 */
-	public addKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_kwzID_zu_kwz, kwz.id, kwz);
-		this._list_kalenderwochenzuordnungen.add(kwz);
-		this._list_kalenderwochenzuordnungen.sort(StundenplanManager._compKWZ);
-	}
-
-	/**
 	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
 	 *
 	 * @param idRaum Die ID des {@link StundenplanRaum}-Objekts.
@@ -1239,17 +1261,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 *
-	 * @param idKWZ Die ID des {@link StundenplanKalenderwochenzuordnung}-Objekts.
-	 */
-	public removeKalenderwochenzuordnung(idKWZ : number) : void {
-		const kwz : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifNull("_map_kwzID_zu_kwz.get(" + idKWZ + ")", this._map_kwzID_zu_kwz.get(idKWZ));
-		this._map_kwzID_zu_kwz.remove(idKWZ);
-		this._list_kalenderwochenzuordnungen.remove(kwz);
-	}
-
-	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
 	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
@@ -1267,16 +1278,6 @@ export class StundenplanManager extends JavaObject {
 	public patchPausenzeit(pausenzeit : StundenplanPausenzeit) : void {
 		this.removePausenzeit(pausenzeit.id);
 		this.addPausenzeit(pausenzeit);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
-	 *
-	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public patchKalenderwochenzuordnung(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.removeKalenderwochenzuordnung(kwz.id);
-		this.addKalenderwochenzuordnung(kwz);
 	}
 
 	/**
