@@ -65,8 +65,10 @@ public class StundenplanManager {
 
 	// StundenplanKalenderwochenzuordnung
 	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kwz = new ArrayList<>();
+	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kwza = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_idKWZ_zu_kwz = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map2d_jahr_kw_zu_kwz = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map2d_jahr_kw_zu_kwza = new HashMap2D<>();
 	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ = (final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
 		if (a.jahr < b.jahr) return -1;
 		if (a.jahr > b.jahr) return +1;
@@ -256,6 +258,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", stundenplanWochenTypModell == 1);
 
 		kalenderwochenzuordnungAddAll(listKWZ);        // ✔, referenziert ---
+		kalenderwochenzuordnungauswahlErzeugeMenge();  // ✔, referenziert Kalenderwochenzuordnung (wg. Default-Wochentyp-Bestimmung)
 		fachAddAll(listFach);                          // ✔, referenziert ---
 		jahrgangAddAll(listJahrgang);                  // ✔, referenziert ---
 		zeitrasterAddAll(listZeitraster);              // ✔, referenziert ---
@@ -557,6 +560,54 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifSetAddsDuplicate("setJahrgangKuerzel", setJahrgangKuerzel, jahrgang.kuerzel);
 	}
 
+
+	private void kalenderwochenzuordnungauswahlErzeugeMenge() {
+		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(stundenplanGueltigAb);
+		final @NotNull int[] infoBis = DateUtils.extractFromDateISO8601(stundenplanGueltigBis);
+		final int jahrVon = infoVon[6]; // 6 = kalenderwochenjahr
+		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
+		final int kwVon = infoVon[5]; // 5 = kalenderwoche
+		final int kwBis = infoBis[5]; // 5 = kalenderwoche
+		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
+		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon == jahrBis) && (kwVon > kwBis));
+
+		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
+			final int von = (jahr == jahrVon) ? kwVon : 1;
+			final int bis = (jahr == jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
+			for (int kw = von; kw <= bis; kw++) {
+				final @NotNull StundenplanKalenderwochenzuordnung kwz = new StundenplanKalenderwochenzuordnung();
+				kwz.id = -1;
+				kwz.jahr = jahr;
+				kwz.kw = kw;
+				kwz.wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
+				DeveloperNotificationException.ifListAddsDuplicate("_list_kwza", _list_kwza, kwz);
+				DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_jahr_kw_zu_kwza, jahr, kw, kwz);
+			}
+		}
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, die im Bereich {@link #stundenplanGueltigAb} und {@link #stundenplanGueltigBis} liegen.
+	 *
+	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, die im Bereich {@link #stundenplanGueltigAb} und {@link #stundenplanGueltigBis} liegen.
+	 */
+	public @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungauswahlGetMenge() {
+		return _list_kwza;
+	}
+
+	/**
+	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge.
+	 * <br>Hinweis: Alle Objekte dieser Menge haben die ID = -1.
+	 *
+	 * @param jahr          Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche Die gewünschten Kalenderwoche.
+	 *
+	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge.
+	 */
+	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungauswahlGetByJahrAndKWOrException(final int jahr, final int kalenderwoche) {
+		return DeveloperNotificationException.ifMap2DGetIsNull(_map2d_jahr_kw_zu_kwza, jahr, kalenderwoche);
+	}
+
 	private void kalenderwochenzuordnungAddOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("kw.id", kwz.id);
@@ -635,12 +686,12 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp.
+	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp, welcher sich aus der Kalenderwoche berechnet.
 	 *
 	 * @param jahr          Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
 	 * @param kalenderwoche Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
 	 *
-	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp.
+	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp, welcher sich aus der Kalenderwoche berechnet.
 	 */
 	public int kalenderwochenzuordnungGetWochentypOrDefault(final int jahr, final int kalenderwoche) {
 		// Überprüfen
