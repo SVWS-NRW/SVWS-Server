@@ -325,16 +325,17 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public aufsichtsbereichPatch(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		this.aufsichtsbereichRemoveOhneUpdate(aufsichtsbereich.id);
+		this.aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
 		this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
 		this.aufsichtsbereichUpdate();
 	}
 
-	private aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich : number) : void {
+	private aufsichtsbereichRemoveOhneUpdateById(idAufsichtsbereich : number) : void {
 		const a : StundenplanAufsichtsbereich = DeveloperNotificationException.ifMapGetIsNull(this._map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idAufsichtsbereich_zu_aufsichtsbereich, a.id);
 		DeveloperNotificationException.ifListRemoveFailes("_list_aufsichtsbereiche", this._list_aufsichtsbereiche, a);
@@ -346,8 +347,8 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idAufsichtsbereich  Die Datenbank-ID des {@link StundenplanAufsichtsbereich}-Objekts, welches entfernt werden soll.
 	 */
-	public aufsichtsbereichRemove(idAufsichtsbereich : number) : void {
-		this.aufsichtsbereichRemoveOhneUpdate(idAufsichtsbereich);
+	public aufsichtsbereichRemoveById(idAufsichtsbereich : number) : void {
+		this.aufsichtsbereichRemoveOhneUpdateById(idAufsichtsbereich);
 		this.aufsichtsbereichUpdate();
 	}
 
@@ -411,16 +412,17 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanFach}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param fach  Das neue {@link StundenplanFach}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public fachPatch(fach : StundenplanFach) : void {
-		this.fachRemoveOhneUpdate(fach.id);
+		this.fachRemoveOhneUpdateById(fach.id);
 		this.fachAddOhneUpdate(fach);
 		this.fachUpdate();
 	}
 
-	private fachRemoveOhneUpdate(idFach : number) : void {
+	private fachRemoveOhneUpdateById(idFach : number) : void {
 		const f : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._map_idFach_zu_fach, idFach);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idFach_zu_fach, f.id);
 		DeveloperNotificationException.ifListRemoveFailes("_list_faecher", this._list_faecher, f);
@@ -432,8 +434,8 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idFach  Die Datenbank-ID des {@link StundenplanFach}-Objekts, welches entfernt werden soll.
 	 */
-	public fachRemove(idFach : number) : void {
-		this.fachRemoveOhneUpdate(idFach);
+	public fachRemoveById(idFach : number) : void {
+		this.fachRemoveOhneUpdateById(idFach);
 		this.fachUpdate();
 	}
 
@@ -497,16 +499,17 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanJahrgang}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public jahrgangPatch(jahrgang : StundenplanJahrgang) : void {
-		this.jahrgangRemoveOhneUpdate(jahrgang.id);
+		this.jahrgangRemoveOhneUpdateById(jahrgang.id);
 		this.jahrgangAddOhneUpdate(jahrgang);
 		this.jahrgangUpdate();
 	}
 
-	private jahrgangRemoveOhneUpdate(idJahrgang : number) : void {
+	private jahrgangRemoveOhneUpdateById(idJahrgang : number) : void {
 		const j : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._map_idJahrgang_zu_jahrgang, idJahrgang);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idJahrgang_zu_jahrgang, j.id);
 		DeveloperNotificationException.ifListRemoveFailes("_list_jahrgaenge", this._list_jahrgaenge, j);
@@ -518,8 +521,8 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idJahrgang  Die Datenbank-ID des {@link StundenplanJahrgang}-Objekts, welches entfernt werden soll.
 	 */
-	public jahrgangRemove(idJahrgang : number) : void {
-		this.jahrgangRemoveOhneUpdate(idJahrgang);
+	public jahrgangRemoveById(idJahrgang : number) : void {
+		this.jahrgangRemoveOhneUpdateById(idJahrgang);
 		this.jahrgangUpdate();
 	}
 
@@ -605,8 +608,8 @@ export class StundenplanManager extends JavaObject {
 	 * Liefert das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 *
-	 * @param jahr          Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche.
+	 * @param jahr           Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche.
 	 *
 	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge.
 	 */
@@ -625,7 +628,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine String-Darstellung der Kalenderwoche.
+	 * Liefert eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
 	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
 	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
 	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
@@ -633,7 +636,7 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
 	 *
-	 * @return eine String-Darstellung der Kalenderwoche.
+	 * @return eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
 	 */
 	public kalenderwochenzuordnungGetWocheAsString(kwz : StundenplanKalenderwochenzuordnung) : string {
 		const sMo : string = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
@@ -647,8 +650,8 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert den zugeordneten Wochentyp, oder den Default-Wochentyp, welcher sich aus der Kalenderwoche berechnet.
 	 *
-	 * @param jahr          Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+	 * @param jahr           Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
 	 *
 	 * @return den zugeordneten Wochentyp, oder den Default-Wochentyp, welcher sich aus der Kalenderwoche berechnet.
 	 */
@@ -670,8 +673,8 @@ export class StundenplanManager extends JavaObject {
 	 * Liefert TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" den Wochentyp verwendet wird.
 	 * <br>Hinweis: Das Mapping muss existieren UND {@link #stundenplanWochenTypModell} muss mindestens 2 sein.
 	 *
-	 * @param jahr          Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
-	 * @param kalenderwoche Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+	 * @param jahr           Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
 	 *
 	 * @return TRUE, falls intern ein Mapping von "Jahr, Kalenderwoche" den Wochentyp verwendet wird.
 	 */
@@ -685,7 +688,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
+	 * Entfernt anhand das alte {@link StundenplanKalenderwochenzuordnung}-Objekt anhand der ID und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Ein patchen der ID ist nicht erlaubt. Hierfür muss die
+	 * {@link #kalenderwochenzuordnungReplace(StundenplanKalenderwochenzuordnung, StundenplanKalenderwochenzuordnung)}-Methode verwendet werden.
 	 *
 	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
 	 */
@@ -757,7 +762,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
 		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
 		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klasse, klasse.id, klasse);
-		this._list_klassen.add(klasse);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_klassen", this._list_klassen, klasse);
 	}
 
 	/**
@@ -805,16 +810,17 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanKlasse}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public klassePatch(klasse : StundenplanKlasse) : void {
-		this.klasseRemoveOhneUpdate(klasse.id);
+		this.klasseRemoveOhneUpdateById(klasse.id);
 		this.klasseAddOhneUpdate(klasse);
 		this.klasseUpdate();
 	}
 
-	private klasseRemoveOhneUpdate(idKlasse : number) : void {
+	private klasseRemoveOhneUpdateById(idKlasse : number) : void {
 		const k : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, idKlasse);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klasse, k.id);
 		DeveloperNotificationException.ifListRemoveFailes("_list_klasse", this._list_klassen, k);
@@ -826,8 +832,8 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idKlasse  Die Datenbank-ID des {@link StundenplanKlasse}-Objekts, welches entfernt werden soll.
 	 */
-	public klasseRemove(idKlasse : number) : void {
-		this.klasseRemoveOhneUpdate(idKlasse);
+	public klasseRemoveById(idKlasse : number) : void {
+		this.klasseRemoveOhneUpdateById(idKlasse);
 		this.klasseUpdate();
 	}
 
@@ -951,20 +957,21 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanKurs}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param kurs  Das neue {@link StundenplanKurs}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public kursPatch(kurs : StundenplanKurs) : void {
-		this.kursRemoveOhneUpdate(kurs.id);
+		this.kursRemoveOhneUpdateById(kurs.id);
 		this.kursAddOhneUpdate(kurs);
 		this.kursUpdate();
 	}
 
-	private kursRemoveOhneUpdate(idKurs : number) : void {
-		const k : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, idKurs);
-		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_zu_kurs, k.id);
-		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_zu_unterrichtmenge, k.id);
-		DeveloperNotificationException.ifListRemoveFailes("_list_kurse", this._list_kurse, k);
+	private kursRemoveOhneUpdateById(idKurs : number) : void {
+		const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, idKurs);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_zu_kurs, kurs.id);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_zu_unterrichtmenge, kurs.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kurse", this._list_kurse, kurs);
 	}
 
 	/**
@@ -973,8 +980,8 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idKurs  Die Datenbank-ID des {@link StundenplanKurs}-Objekts, welches entfernt werden soll.
 	 */
-	public kursRemove(idKurs : number) : void {
-		this.kursRemoveOhneUpdate(idKurs);
+	public kursRemoveById(idKurs : number) : void {
+		this.kursRemoveOhneUpdateById(idKurs);
 		this.kursUpdate();
 	}
 
@@ -1309,6 +1316,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
 	 */
@@ -1680,6 +1688,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
 	 */
@@ -2386,6 +2395,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
 	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
 	 */

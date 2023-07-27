@@ -203,7 +203,7 @@ export class RouteDataStundenplan {
 	removeAufsichtsbereiche = async (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => {
 		for (const aufsichtsbereich of aufsichtsbereiche) {
 			await api.server.deleteStundenplanAufsichtsbereich(api.schema, aufsichtsbereich.id);
-			this.stundenplanManager.aufsichtsbereichRemove(aufsichtsbereich.id);
+			this.stundenplanManager.aufsichtsbereichRemoveById(aufsichtsbereich.id);
 		}
 		this.commit();
 	}
