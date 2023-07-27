@@ -1058,6 +1058,109 @@ public class StundenplanManager {
 		// ...
 	}
 
+	private void lehrerAddOhneUpdate(final @NotNull StundenplanLehrer lehrer) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idLehrer_zu_lehrer, lehrer.id, lehrer);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_lehrer", _list_lehrer, lehrer);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanLehrer}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanLehrer|), da lehrerUpdate() aufgerufen wird.
+	 *
+	 * @param lehrer  Das {@link StundenplanLehrer}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void lehrerAdd(final @NotNull StundenplanLehrer lehrer) {
+		lehrerAddOhneUpdate(lehrer);
+		lehrerUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanLehrer}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanLehrer|), da lehrerUpdate() aufgerufen wird.
+	 *
+	 * @param listLehrer  Die Menge der {@link StundenplanLehrer}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void lehrerAddAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
+		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
+			lehrerAddOhneUpdate(lehrer);
+		lehrerUpdate();
+	}
+
+	/**
+	 * Liefert das {@link StundenplanLehrer}-Objekt mit der übergebenen ID.
+	 *
+	 * @param idLehrer  Die Datenbank-ID des {@link StundenplanLehrer}-Objekts.
+	 *
+	 * @return das {@link StundenplanLehrer}-Objekt mit der übergebenen ID.
+	 */
+	public @NotNull StundenplanLehrer lehrerGetByIdOrException(final long idLehrer) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrer);
+	}
+
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanLehrer}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanLehrer}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeAsList() {
+		return _list_lehrer;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanLehrer}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 *
+	 * @param lehrer  Das neue {@link StundenplanLehrer}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void lehrerPatch(final @NotNull StundenplanLehrer lehrer) {
+		lehrerRemoveOhneUpdateById(lehrer.id);
+		lehrerAddOhneUpdate(lehrer);
+		lehrerUpdate();
+	}
+
+	private void lehrerRemoveOhneUpdateById(final long idLehrer) {
+		// Get
+		final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrer);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idLehrer_zu_lehrer, lehrer.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_lehrer", _list_lehrer, lehrer);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanLehrer}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanLehrer|), da lehrerUpdate() aufgerufen wird.
+	 *
+	 * @param idLehrer  Die Datenbank-ID des {@link StundenplanLehrer}-Objekts, welches entfernt werden soll.
+	 */
+	public void lehrerRemoveById(final long idLehrer) {
+		lehrerRemoveOhneUpdateById(idLehrer);
+		lehrerUpdate();
+	}
+
+	private void lehrerUpdate() {
+		final @NotNull HashSet<@NotNull String> setLehrerKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanLehrer lehrer : _list_lehrer) {
+			// Überprüfe, ob ein Lehrer-Kürzel doppelt vorkommt.
+			DeveloperNotificationException.ifSetAddsDuplicate("setLehrerKuerzel", setLehrerKuerzel, lehrer.kuerzel);
+
+			// Überprüfe, ob die Lehrkraft Fächer doppelt hat.
+			final @NotNull HashSet<@NotNull Long> setFaecherDerLehrkraft = new HashSet<>();
+			for (final @NotNull Long idFachDerLehrkraft : lehrer.faecher) {
+				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_idFach_zu_fach, idFachDerLehrkraft);
+				DeveloperNotificationException.ifSetAddsDuplicate("setFaecherDerLehrkraft", setFaecherDerLehrkraft, idFachDerLehrkraft);
+			}
+		}
+	}
+
 	private void schieneAddOhneUpdate(final @NotNull StundenplanSchiene schiene) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
@@ -1134,55 +1237,6 @@ public class StundenplanManager {
 
 	private void schuelerUpdate() {
 		// noch leer, später O(|StundenplanSchueler|) Checks.
-	}
-
-	private void lehrerAddOhneUpdate(final @NotNull StundenplanLehrer lehrer) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idLehrer_zu_lehrer, lehrer.id, lehrer);
-		DeveloperNotificationException.ifListAddsDuplicate("_list_lehrer", _list_lehrer, lehrer);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanLehrer}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanLehrer|), da lehrerUpdate() aufgerufen wird.
-	 *
-	 * @param lehrer  Das {@link StundenplanLehrer}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void lehrerAdd(final @NotNull StundenplanLehrer lehrer) {
-		lehrerAddOhneUpdate(lehrer);
-		lehrerUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanLehrer}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanLehrer|), da lehrerUpdate() aufgerufen wird.
-	 *
-	 * @param listLehrer  Die Menge der {@link StundenplanLehrer}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void lehrerAddAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
-		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
-			lehrerAddOhneUpdate(lehrer);
-		lehrerUpdate();
-	}
-
-	private void lehrerUpdate() {
-		final @NotNull HashSet<@NotNull String> setLehrerKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanLehrer lehrer : _list_lehrer) {
-			DeveloperNotificationException.ifSetAddsDuplicate("setLehrerKuerzel", setLehrerKuerzel, lehrer.kuerzel);
-
-			// Konsistenz der Fächer der Lehrkraft überprüfen.
-			final @NotNull HashSet<@NotNull Long> setFaecherDerLehrkraft = new HashSet<>();
-			for (final @NotNull Long idFachDerLehrkraft : lehrer.faecher) {
-				DeveloperNotificationException.ifMapNotContains("_map_fachID_zu_fach", _map_idFach_zu_fach, idFachDerLehrkraft);
-				DeveloperNotificationException.ifSetAddsDuplicate("setFaecherDerLehrkraft", setFaecherDerLehrkraft, idFachDerLehrkraft);
-			}
-		}
 	}
 
 	private void pausenzeitAddOhneUpdate(final @NotNull StundenplanPausenzeit pausenzeit) {
