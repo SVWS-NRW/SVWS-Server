@@ -734,6 +734,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Ersetzt das alte {@link StundenplanKalenderwochenzuordnung}-Objekt durch das neue Objekt.
+	 *
+	 * @param kwzAlt  Das alte {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 * @param kwzNeu  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public kalenderwochenzuordnungReplace(kwzAlt : StundenplanKalenderwochenzuordnung, kwzNeu : StundenplanKalenderwochenzuordnung) : void {
+		this.kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(kwzAlt.jahr, kwzAlt.kw);
+		this.kalenderwochenzuordnungAddOhneUpdate(kwzNeu);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
 	 * Aktualisiert verschiedene Werte nachdem sich die Menge der {@link StundenplanKalenderwochenzuordnung} verändert hat.
 	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung| * log)
 	 */
