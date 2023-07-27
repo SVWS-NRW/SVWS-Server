@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Pausenzeiten">
-		<svws-ui-data-table :columns="cols" :items="stundenplanManager().getListPausenzeit()" clickable v-model:clicked="zeit" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
+		<svws-ui-data-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" clickable v-model:clicked="zeit" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(wochentag)="{ rowData }">
 				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 			</template>

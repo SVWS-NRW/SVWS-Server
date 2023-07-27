@@ -116,8 +116,8 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete data.id;
 		await api.server.patchStundenplanPausenzeit(data, api.schema, id);
-		const pausenzeit = this.stundenplanManager.getPausenzeit(id);
-		this.stundenplanManager.patchPausenzeit(Object.assign(pausenzeit, data));
+		const pausenzeit = this.stundenplanManager.pausenzeitGetByIdOrException(id);
+		this.stundenplanManager.pausenzeitPatch(Object.assign(pausenzeit, data));
 		this.commit();
 	}
 
@@ -157,7 +157,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete pausenzeit.id;
 		const _pausenzeit = await api.server.addStundenplanPausenzeit(pausenzeit, api.schema, id)
-		this.stundenplanManager.addPausenzeit(_pausenzeit);
+		this.stundenplanManager.pausenzeitAdd(_pausenzeit);
 		this.commit();
 	}
 
@@ -195,7 +195,7 @@ export class RouteDataStundenplan {
 	removePausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {
 		for (const pausenzeit of pausenzeiten) {
 			await api.server.deleteStundenplanPausenzeit(api.schema, pausenzeit.id);
-			this.stundenplanManager.removePausenzeit(pausenzeit.id);
+			this.stundenplanManager.pausenzeitRemoveById(pausenzeit.id);
 		}
 		this.commit();
 	}
