@@ -543,7 +543,7 @@ export class StundenplanManager extends JavaObject {
 			const von : number = (jahr === jahrVon) ? kwVon : 1;
 			const bis : number = (jahr === jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
 			for (let kw : number = von; kw <= bis; kw++)
-				if (this._map2d_jahr_kw_zu_kwz.contains(jahr, kw)) {
+				if (!this._map2d_jahr_kw_zu_kwz.contains(jahr, kw)) {
 					const kwz : StundenplanKalenderwochenzuordnung = new StundenplanKalenderwochenzuordnung();
 					kwz.id = -1;
 					kwz.jahr = jahr;
@@ -685,31 +685,51 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
+	 * Entfernt anhand das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
 	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public kalenderwochenzuordnungPatch(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungRemoveOhneUpdate(kwz);
+		this.kalenderwochenzuordnungRemoveOhneUpdateById(kwz.id);
 		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
 		this.kalenderwochenzuordnungUpdate();
 	}
 
-	private kalenderwochenzuordnungRemoveOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
-		if (kwz.id !== -1)
-			DeveloperNotificationException.ifMapRemoveFailes(this._map_idKWZ_zu_kwz, kwz.id);
-		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_jahr_kw_zu_kwz, kwz.jahr, kwz.kw);
-		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", this._list_kwz, kwz);
+	private kalenderwochenzuordnungRemoveOhneUpdateById(idKWZ : number) : void {
+		const k : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifMapGetIsNull(this._map_idKWZ_zu_kwz, idKWZ);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKWZ_zu_kwz, k.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_jahr_kw_zu_kwz, k.jahr, k.kw);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", this._list_kwz, k);
+	}
+
+	private kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(jahr : number, kalenderwoche : number) : void {
+		const k : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_jahr_kw_zu_kwz, jahr, kalenderwoche);
+		if (k.id !== -1)
+			DeveloperNotificationException.ifMapRemoveFailes(this._map_idKWZ_zu_kwz, k.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_jahr_kw_zu_kwz, k.jahr, k.kw);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", this._list_kwz, k);
 	}
 
 	/**
-	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt anhand seiner Datenbank-ID.
 	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung|), da kalenderwochenzuordnungUpdate() aufgerufen wird.
 	 *
-	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekts, welches entfernt werden soll.
+	 * @param idKWZ  Die Datenbank-ID des {@link StundenplanKalenderwochenzuordnung}-Objekts, welches entfernt werden soll.
 	 */
-	public kalenderwochenzuordnungRemove(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungRemoveOhneUpdate(kwz);
+	public kalenderwochenzuordnungRemoveById(idKWZ : number) : void {
+		this.kalenderwochenzuordnungRemoveOhneUpdateById(idKWZ);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt anhand der Parameter (jahr, kalenderwoche).
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung|), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche.
+	 */
+	public kalenderwochenzuordnungRemoveByJahrAndKW(jahr : number, kalenderwoche : number) : void {
+		this.kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(jahr, kalenderwoche);
 		this.kalenderwochenzuordnungUpdate();
 	}
 

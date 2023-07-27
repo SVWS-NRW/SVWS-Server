@@ -577,7 +577,7 @@ public class StundenplanManager {
 			final int von = (jahr == jahrVon) ? kwVon : 1;
 			final int bis = (jahr == jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
 			for (int kw = von; kw <= bis; kw++)
-				if (_map2d_jahr_kw_zu_kwz.contains(jahr, kw)) { // Überschreibe Objekte der DB nicht!
+				if (!_map2d_jahr_kw_zu_kwz.contains(jahr, kw)) { // Überschreibe Objekte der DB nicht!
 					final @NotNull StundenplanKalenderwochenzuordnung kwz = new StundenplanKalenderwochenzuordnung();
 					kwz.id = -1;
 					kwz.jahr = jahr;
@@ -733,32 +733,57 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
+	 * Entfernt anhand das alte {@link StundenplanKalenderwochenzuordnung}-Objekt und fügt dann das neue Objekt hinzu.
 	 *
 	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
 	 */
 	public void kalenderwochenzuordnungPatch(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungRemoveOhneUpdate(kwz);
+		kalenderwochenzuordnungRemoveOhneUpdateById(kwz.id);
 		kalenderwochenzuordnungAddOhneUpdate(kwz);
 		kalenderwochenzuordnungUpdate();
 	}
 
-	private void kalenderwochenzuordnungRemoveOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+	private void kalenderwochenzuordnungRemoveOhneUpdateById(final long idKWZ) {
+		// Holen
+		final @NotNull StundenplanKalenderwochenzuordnung k = DeveloperNotificationException.ifMapGetIsNull(_map_idKWZ_zu_kwz, idKWZ);
+
 		// Entfernen
-		if (kwz.id != -1)
-			DeveloperNotificationException.ifMapRemoveFailes(_map_idKWZ_zu_kwz, kwz.id);
-		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_jahr_kw_zu_kwz, kwz.jahr, kwz.kw);
-		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", _list_kwz, kwz);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idKWZ_zu_kwz, k.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_jahr_kw_zu_kwz, k.jahr, k.kw);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", _list_kwz, k);
+	}
+
+	private void kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(final int jahr, final int kalenderwoche) {
+		// Holen
+		final @NotNull StundenplanKalenderwochenzuordnung k = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_jahr_kw_zu_kwz, jahr, kalenderwoche);
+
+		// Entfernen
+		if (k.id != -1)
+			DeveloperNotificationException.ifMapRemoveFailes(_map_idKWZ_zu_kwz, k.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_jahr_kw_zu_kwz, k.jahr, k.kw);
+		DeveloperNotificationException.ifListRemoveFailes("_list_kwz", _list_kwz, k);
 	}
 
 	/**
-	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt anhand seiner Datenbank-ID.
 	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung|), da kalenderwochenzuordnungUpdate() aufgerufen wird.
 	 *
-	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekts, welches entfernt werden soll.
+	 * @param idKWZ  Die Datenbank-ID des {@link StundenplanKalenderwochenzuordnung}-Objekts, welches entfernt werden soll.
 	 */
-	public void kalenderwochenzuordnungRemove(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungRemoveOhneUpdate(kwz);
+	public void kalenderwochenzuordnungRemoveById(final long idKWZ) {
+		kalenderwochenzuordnungRemoveOhneUpdateById(idKWZ);
+		kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKalenderwochenzuordnung}-Objekt anhand der Parameter (jahr, kalenderwoche).
+	 * <br>Laufzeit: O(|StundenplanKalenderwochenzuordnung|), da kalenderwochenzuordnungUpdate() aufgerufen wird.
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche.
+	 */
+	public void kalenderwochenzuordnungRemoveByJahrAndKW(final int jahr, final int kalenderwoche) {
+		kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(jahr, kalenderwoche);
 		kalenderwochenzuordnungUpdate();
 	}
 
