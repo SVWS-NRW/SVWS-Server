@@ -1082,6 +1082,98 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
+	private pausenaufsichtAddOhneUpdate(pausenaufsicht : StundenplanPausenaufsicht) : void {
+		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit);
+		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
+		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > this.stundenplanWochenTypModell));
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", this._list_pausenaufsichten, pausenaufsicht);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanPausenaufsicht}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
+	 *
+	 * @param pausenaufsicht  Das {@link StundenplanPausenaufsicht}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public pausenaufsichtAdd(pausenaufsicht : StundenplanPausenaufsicht) : void {
+		this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		this.pausenaufsichtUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanPausenaufsicht}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
+	 *
+	 * @param listPausenaufsicht  Die Menge der {@link StundenplanPausenaufsicht}-Objekte, welche hinzugefügt werden soll.
+	 */
+	private pausenaufsichtAddAll(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
+		for (const pausenaufsicht of listPausenaufsicht)
+			this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		this.pausenaufsichtUpdate();
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
+	 *
+	 * @param idPausenaufsicht Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
+	 */
+	public pausenaufsichtGetByIdOrException(idPausenaufsicht : number) : StundenplanPausenaufsicht {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
+	 */
+	public pausenaufsichtGetMengeAsList() : List<StundenplanPausenaufsicht> {
+		return this._list_pausenaufsichten;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 *
+	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public pausenaufsichtPatch(pausenaufsicht : StundenplanPausenaufsicht) : void {
+		this.pausenaufsichtRemoveOhneUpdateById(pausenaufsicht.id);
+		this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		this.pausenaufsichtUpdate();
+	}
+
+	private pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht : number) : void {
+		const pausenaufsicht : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_pausenaufsichten", this._list_pausenaufsichten, pausenaufsicht);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsicht}-Objekt.
+	 *
+	 * @param idPausenaufsicht Die ID des {@link StundenplanPausenaufsicht}-Objekts.
+	 */
+	public pausenaufsichtRemove(idPausenaufsicht : number) : void {
+		const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifNull("_map_pausenaufsichtID_zu_pausenaufsicht.get(" + idPausenaufsicht + ")", this._map_pausenaufsichtID_zu_pausenaufsicht.get(idPausenaufsicht));
+		this._map_pausenaufsichtID_zu_pausenaufsicht.remove(idPausenaufsicht);
+		this._list_pausenaufsichten.remove(pa);
+	}
+
+	private pausenaufsichtUpdate() : void {
+		for (const pausenaufsicht of this._list_pausenaufsichten) {
+			const setBereicheDieserAufsicht : HashSet<number> = new HashSet();
+			for (const idAufsichtsbereich of pausenaufsicht.bereiche) {
+				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", this._map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
+				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
+			}
+		}
+		this._list_pausenaufsichten.sort(this._compPausenaufsicht);
+	}
+
 	private schieneAddOhneUpdate(schiene : StundenplanSchiene) : void {
 		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
@@ -1187,6 +1279,34 @@ export class StundenplanManager extends JavaObject {
 		for (const pausenzeit of listPausenzeit)
 			this.pausenzeitAddOhneUpdate(pausenzeit);
 		this.pausenzeitUpdate();
+	}
+
+	/**
+	 * Liefert die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "09:30" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
+	 *
+	 * @return die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 */
+	public pausenzeitGetByIdStringOfUhrzeitBeginn(idPausenzeit : number) : string {
+		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, idPausenzeit);
+		return (pausenzeit.beginn === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.beginn);
+	}
+
+	/**
+	 * Liefert die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 * <br>Beispiel: "10:15" oder ""
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
+	 *
+	 * @return die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
+	 */
+	public pausenzeitGetByIdStringOfUhrzeitEnde(idPausenzeit : number) : string {
+		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, idPausenzeit);
+		return (pausenzeit.ende === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.ende);
 	}
 
 	private pausenzeitUpdate() : void {
@@ -1382,58 +1502,6 @@ export class StundenplanManager extends JavaObject {
 	public patchPausenzeit(pausenzeit : StundenplanPausenzeit) : void {
 		this.removePausenzeit(pausenzeit.id);
 		this.addPausenzeit(pausenzeit);
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte.
-	 *
-	 * @deprecated use {@link #pausenaufsichtGetMenge()}
-	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte.
-	 */
-	public getListPausenaufsicht() : List<StundenplanPausenaufsicht> {
-		return this.pausenaufsichtGetMenge();
-	}
-
-	/**
-	 * Fügt dem Stundenplan eine neue {@link StundenplanPausenaufsicht} hinzu.
-	 *
-	 * @deprecated use {@link #pausenaufsichtAdd(StundenplanPausenaufsicht)}
-	 * @param pausenaufsicht Die StundenplanPausenaufsicht, die hinzugefügt werden soll.
-	 */
-	public addPausenaufsicht(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtAdd(pausenaufsicht);
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsicht}-Objekt.
-	 *
-	 * @deprecated use {@link #pausenaufsichtRemove(long)}
-	 * @param idPausenaufsicht Die ID des {@link StundenplanPausenaufsicht}-Objekts.
-	 */
-	public removePausenaufsicht(idPausenaufsicht : number) : void {
-		this.pausenaufsichtRemove(idPausenaufsicht);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
-	 *
-	 * @deprecated use {@link #pausenaufsichtGet(long)}
-	 * @param idPausenaufsicht Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
-	 */
-	public getPausenaufsicht(idPausenaufsicht : number) : StundenplanPausenaufsicht {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
-	 *
-	 * @deprecated use {@link #pausenaufsichtPatch(StundenplanPausenaufsicht)}
-	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public patchPausenaufsicht(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtPatch(pausenaufsicht);
 	}
 
 	/**
@@ -1659,119 +1727,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public patchZeitraster(zeitraster : StundenplanZeitraster) : void {
 		this.zeitrasterPatch(zeitraster);
-	}
-
-	private pausenaufsichtAddOhneUpdate(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit);
-		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
-		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > this.stundenplanWochenTypModell));
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
-		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", this._list_pausenaufsichten, pausenaufsicht);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanPausenaufsicht}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
-	 *
-	 * @param pausenaufsicht  Das {@link StundenplanPausenaufsicht}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public pausenaufsichtAdd(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
-		this.pausenaufsichtUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanPausenaufsicht}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanPausenaufsicht|), da pausenaufsichtUpdate() aufgerufen wird.
-	 *
-	 * @param listPausenaufsicht  Die Menge der {@link StundenplanPausenaufsicht}-Objekte, welche hinzugefügt werden soll.
-	 */
-	private pausenaufsichtAddAll(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
-		for (const pausenaufsicht of listPausenaufsicht)
-			this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
-		this.pausenaufsichtUpdate();
-	}
-
-	private pausenaufsichtUpdate() : void {
-		for (const pausenaufsicht of this._list_pausenaufsichten) {
-			const setBereicheDieserAufsicht : HashSet<number> = new HashSet();
-			for (const idAufsichtsbereich of pausenaufsicht.bereiche) {
-				DeveloperNotificationException.ifMapNotContains("_map_aufsichtsbereichID_zu_aufsichtsbereich", this._map_idAufsichtsbereich_zu_aufsichtsbereich, idAufsichtsbereich);
-				DeveloperNotificationException.ifSetAddsDuplicate("setBereicheDieserAufsicht", setBereicheDieserAufsicht, idAufsichtsbereich);
-			}
-		}
-		this._list_pausenaufsichten.sort(this._compPausenaufsicht);
-	}
-
-	/**
-	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
-	 *
-	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
-	 */
-	public pausenaufsichtGetMenge() : List<StundenplanPausenaufsicht> {
-		return this._list_pausenaufsichten;
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanPausenaufsicht}-Objekt.
-	 *
-	 * @param idPausenaufsicht Die ID des {@link StundenplanPausenaufsicht}-Objekts.
-	 */
-	public pausenaufsichtRemove(idPausenaufsicht : number) : void {
-		const pa : StundenplanPausenaufsicht = DeveloperNotificationException.ifNull("_map_pausenaufsichtID_zu_pausenaufsicht.get(" + idPausenaufsicht + ")", this._map_pausenaufsichtID_zu_pausenaufsicht.get(idPausenaufsicht));
-		this._map_pausenaufsichtID_zu_pausenaufsicht.remove(idPausenaufsicht);
-		this._list_pausenaufsichten.remove(pa);
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
-	 *
-	 * @param idPausenaufsicht Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
-	 */
-	public pausenaufsichtGet(idPausenaufsicht : number) : StundenplanPausenaufsicht {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
-	 *
-	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public pausenaufsichtPatch(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtRemove(pausenaufsicht.id);
-		this.pausenaufsichtAdd(pausenaufsicht);
-	}
-
-	/**
-	 * Liefert die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
-	 * <br>Beispiel: "09:30" oder ""
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
-	 *
-	 * @return die Beginn-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
-	 */
-	public pausenzeitGetByIdStringOfUhrzeitBeginn(idPausenzeit : number) : string {
-		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, idPausenzeit);
-		return (pausenzeit.beginn === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.beginn);
-	}
-
-	/**
-	 * Liefert die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
-	 * <br>Beispiel: "10:15" oder ""
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param idPausenzeit  Die Datenbank-ID des {@link StundenplanPausenzeit}.
-	 *
-	 * @return die End-Uhrzeit der {@link StundenplanPausenzeit} oder den leeren String, falls diese NULL ist.
-	 */
-	public pausenzeitGetByIdStringOfUhrzeitEnde(idPausenzeit : number) : string {
-		const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, idPausenzeit);
-		return (pausenzeit.ende === null) ? "" : DateUtils.getStringOfUhrzeitFromMinuten(pausenzeit.ende);
 	}
 
 	/**
