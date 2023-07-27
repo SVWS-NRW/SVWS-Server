@@ -81,7 +81,7 @@ export class RouteDataSchuelerStundenplan {
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
 		const result : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } = {};
 		try {
-			result.kalenderwoche = manager.kalenderwochenzuordnungauswahlGetByJahrAndKWOrException(kwjahr === undefined ? -1 : kwjahr, kw === undefined ? -1 : kw);
+			result.kalenderwoche = manager.kalenderwochenzuordnungGetByJahrAndKWOrException(kwjahr === undefined ? -1 : kwjahr, kw === undefined ? -1 : kw);
 			result.wochentyp = result.kalenderwoche.wochentyp;
 		} catch (e) {
 			result.kalenderwoche = undefined;
