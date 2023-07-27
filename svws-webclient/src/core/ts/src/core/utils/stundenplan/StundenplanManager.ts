@@ -1287,6 +1287,93 @@ export class StundenplanManager extends JavaObject {
 		this._list_pausenzeiten.sort(StundenplanManager._compPausenzeit);
 	}
 
+	private raumAddOhneUpdate(raum : StundenplanRaum) : void {
+		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
+		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
+		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRaum_zu_raum, raum.id, raum);
+		this._list_raeume.add(raum);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanRaum}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param raum  Das {@link StundenplanRaum}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public raumAdd(raum : StundenplanRaum) : void {
+		this.raumAddOhneUpdate(raum);
+		this.raumUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public raumAddAll(listRaum : List<StundenplanRaum>) : void {
+		for (const raum of listRaum)
+			this.raumAddOhneUpdate(raum);
+		this.raumUpdate();
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt.
+	 */
+	public raumGetByIdOrException(idRaum : number) : StundenplanRaum {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idRaum_zu_raum, idRaum);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
+	 */
+	public raumGetMengeAsList() : List<StundenplanRaum> {
+		return this._list_raeume;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 *
+	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public raumPatch(raum : StundenplanRaum) : void {
+		this.raumRemoveOhneUpdateById(raum.id);
+		this.raumAddOhneUpdate(raum);
+		this.raumUpdate();
+	}
+
+	private raumRemoveOhneUpdateById(idRaum : number) : void {
+		const raum : StundenplanRaum = DeveloperNotificationException.ifMapGetIsNull(this._map_idRaum_zu_raum, idRaum);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idRaum_zu_raum, raum.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_raeume", this._list_raeume, raum);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanRaum}-Objekt.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param idRaum  Die ID des {@link StundenplanRaum}-Objekts.
+	 */
+	public raumRemoveById(idRaum : number) : void {
+		this.raumRemoveOhneUpdateById(idRaum);
+		this.raumUpdate();
+	}
+
+	private raumUpdate() : void {
+		const setRaumKuerzel : HashSet<string> = new HashSet();
+		for (const raum of this._list_raeume)
+			DeveloperNotificationException.ifSetAddsDuplicate("setRaumKuerzel", setRaumKuerzel, raum.kuerzel);
+		this._list_raeume.sort(StundenplanManager._compRaum);
+	}
+
 	private schieneAddOhneUpdate(schiene : StundenplanSchiene) : void {
 		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
@@ -1359,44 +1446,6 @@ export class StundenplanManager extends JavaObject {
 		// empty block
 	}
 
-	private raumAddOhneUpdate(raum : StundenplanRaum) : void {
-		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
-		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
-		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRaum_zu_raum, raum.id, raum);
-		this._list_raeume.add(raum);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanRaum}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
-	 *
-	 * @param raum  Das {@link StundenplanRaum}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public raumAdd(raum : StundenplanRaum) : void {
-		this.raumAddOhneUpdate(raum);
-		this.raumUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
-	 *
-	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public raumAddAll(listRaum : List<StundenplanRaum>) : void {
-		for (const raum of listRaum)
-			this.raumAddOhneUpdate(raum);
-		this.raumUpdate();
-	}
-
-	private raumUpdate() : void {
-		const setRaumKuerzel : HashSet<string> = new HashSet();
-		for (const raum of this._list_raeume)
-			DeveloperNotificationException.ifSetAddsDuplicate("setRaumKuerzel", setRaumKuerzel, raum.kuerzel);
-		this._list_raeume.sort(StundenplanManager._compRaum);
-	}
-
 	/**
 	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
 	 *
@@ -1443,59 +1492,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getWochenTypModell() : number {
 		return this.stundenplanWochenTypModell;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
-	 */
-	public getListRaum() : List<StundenplanRaum> {
-		return this._list_raeume;
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
-	 *
-	 * @param idRaum Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur raumID zugehörige {@link StundenplanRaum}-Objekt.
-	 */
-	public getRaum(idRaum : number) : StundenplanRaum {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_idRaum_zu_raum, idRaum);
-	}
-
-	/**
-	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
-	 *
-	 * @param raum Der Raum, der hinzugefügt werden soll.
-	 */
-	public addRaum(raum : StundenplanRaum) : void {
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idRaum_zu_raum, raum.id, raum);
-		this._list_raeume.add(raum);
-		this._list_raeume.sort(StundenplanManager._compRaum);
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
-	 *
-	 * @param idRaum Die ID des {@link StundenplanRaum}-Objekts.
-	 */
-	public removeRaum(idRaum : number) : void {
-		const raum : StundenplanRaum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + idRaum + ")", this._map_idRaum_zu_raum.get(idRaum));
-		this._map_idRaum_zu_raum.remove(idRaum);
-		this._list_raeume.remove(raum);
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
-	 *
-	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public patchRaum(raum : StundenplanRaum) : void {
-		this.removeRaum(raum.id);
-		this.addRaum(raum);
 	}
 
 	/**

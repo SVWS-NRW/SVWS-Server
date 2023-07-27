@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Räume">
-		<svws-ui-data-table :columns="cols" :items="stundenplanManager().getListRaum()" clickable v-model:clicked="raum" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
+		<svws-ui-data-table :columns="cols" :items="stundenplanManager().raumGetMengeAsList()" clickable v-model:clicked="raum" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(kuerzel)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.kuerzel" @update:model-value="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
 			</template>

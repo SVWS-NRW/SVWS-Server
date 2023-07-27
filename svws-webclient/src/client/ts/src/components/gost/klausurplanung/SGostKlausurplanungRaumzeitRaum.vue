@@ -5,7 +5,7 @@
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-				:items="stundenplanmanager.getListRaum()" />
+				:items="stundenplanmanager.raumGetMengeAsList()" />
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Klausuren im Raum">
 			<table>
@@ -43,7 +43,7 @@
 
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
 
-	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum));
-	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.getRaum(props.raum.idStundenplanRaum) : null;
+	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
+	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum) : null;
 
 </script>

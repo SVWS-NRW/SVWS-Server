@@ -1383,6 +1383,103 @@ public class StundenplanManager {
 		_list_pausenzeiten.sort(_compPausenzeit);
 	}
 
+	private void raumAddOhneUpdate(final @NotNull StundenplanRaum raum) {
+		// Überprüfen
+		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
+		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
+		// raum.beschreibung darf "blank" sein!
+		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idRaum_zu_raum, raum.id, raum);
+		_list_raeume.add(raum);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanRaum}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param raum  Das {@link StundenplanRaum}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void raumAdd(final @NotNull StundenplanRaum raum) {
+		raumAddOhneUpdate(raum);
+		raumUpdate();
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
+	 */
+	public void raumAddAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
+		for (final @NotNull StundenplanRaum raum : listRaum)
+			raumAddOhneUpdate(raum);
+		raumUpdate();
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
+	 *
+	 * @param idRaum Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanRaum}-Objekt.
+	 */
+	public @NotNull StundenplanRaum raumGetByIdOrException(final long idRaum) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idRaum_zu_raum, idRaum);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanRaum> raumGetMengeAsList() {
+		return _list_raeume;
+	}
+
+	/**
+	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
+	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 *
+	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void raumPatch(final @NotNull StundenplanRaum raum) {
+		raumRemoveOhneUpdateById(raum.id);
+		raumAddOhneUpdate(raum);
+		raumUpdate();
+	}
+
+	private void raumRemoveOhneUpdateById(final long idRaum) {
+		// Get
+		final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifMapGetIsNull(_map_idRaum_zu_raum, idRaum);
+
+		// Entfernen
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idRaum_zu_raum, raum.id);
+		DeveloperNotificationException.ifListRemoveFailes("_list_raeume", _list_raeume, raum);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanRaum}-Objekt.
+	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
+	 *
+	 * @param idRaum  Die ID des {@link StundenplanRaum}-Objekts.
+	 */
+	public void raumRemoveById(final long idRaum) {
+		raumRemoveOhneUpdateById(idRaum);
+		raumUpdate();
+	}
+
+	private void raumUpdate() {
+		// Überprüfe, ob doppelte StundenplanRaum-Kürzel vorhanden sind.
+		final @NotNull HashSet<@NotNull String> setRaumKuerzel = new HashSet<>();
+		for (final @NotNull StundenplanRaum raum : _list_raeume)
+			DeveloperNotificationException.ifSetAddsDuplicate("setRaumKuerzel", setRaumKuerzel, raum.kuerzel);
+
+		// Sortieren
+		_list_raeume.sort(_compRaum);
+	}
+
 	private void schieneAddOhneUpdate(final @NotNull StundenplanSchiene schiene) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
@@ -1461,51 +1558,6 @@ public class StundenplanManager {
 		// noch leer, später O(|StundenplanSchueler|) Checks.
 	}
 
-	private void raumAddOhneUpdate(final @NotNull StundenplanRaum raum) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
-		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
-		// raum.beschreibung darf "blank" sein!
-		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
-
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idRaum_zu_raum, raum.id, raum);
-		_list_raeume.add(raum);
-	}
-
-	/**
-	 * Fügt ein {@link StundenplanRaum}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
-	 *
-	 * @param raum  Das {@link StundenplanRaum}-Objekt, welches hinzugefügt werden soll.
-	 */
-	public void raumAdd(final @NotNull StundenplanRaum raum) {
-		raumAddOhneUpdate(raum);
-		raumUpdate();
-	}
-
-	/**
-	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanRaum|), da raumUpdate() aufgerufen wird.
-	 *
-	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
-	 */
-	public void raumAddAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
-		for (final @NotNull StundenplanRaum raum : listRaum)
-			raumAddOhneUpdate(raum);
-		raumUpdate();
-	}
-
-	private void raumUpdate() {
-		// Überprüfe, ob doppelte StundenplanRaum-Kürzel vorhanden sind.
-		final @NotNull HashSet<@NotNull String> setRaumKuerzel = new HashSet<>();
-		for (final @NotNull StundenplanRaum raum : _list_raeume)
-			DeveloperNotificationException.ifSetAddsDuplicate("setRaumKuerzel", setRaumKuerzel, raum.kuerzel);
-
-		// Sortieren
-		_list_raeume.sort(_compRaum);
-	}
-
 	/**
 	 * Liefert die ID des Schuljahresabschnitts des Stundenplans.
 	 *
@@ -1552,59 +1604,6 @@ public class StundenplanManager {
 	 */
 	public int getWochenTypModell() {
 		return stundenplanWochenTypModell;
-	}
-
-	/**
-	 * Liefert eine Liste aller {@link StundenplanRaum}-Objekte.
-	 *
-	 * @return eine Liste aller {@link StundenplanRaum}-Objekte.
-	 */
-	public @NotNull List<@NotNull StundenplanRaum> getListRaum() {
-		return _list_raeume;
-	}
-
-	/**
-	 * Liefert das zur ID zugehörige {@link StundenplanRaum}-Objekt.
-	 *
-	 * @param idRaum Die ID des angefragten-Objektes.
-	 *
-	 * @return das zur raumID zugehörige {@link StundenplanRaum}-Objekt.
-	 */
-	public @NotNull StundenplanRaum getRaum(final long idRaum) {
-		return DeveloperNotificationException.ifMapGetIsNull(_map_idRaum_zu_raum, idRaum);
-	}
-
-	/**
-	 * Fügt dem Stundenplan einen neuen {@link StundenplanRaum} hinzu.
-	 *
-	 * @param raum Der Raum, der hinzugefügt werden soll.
-	 */
-	public void addRaum(final @NotNull StundenplanRaum raum) {
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idRaum_zu_raum, raum.id, raum);
-		_list_raeume.add(raum);
-		_list_raeume.sort(_compRaum);
-	}
-
-	/**
-	 * Entfernt aus dem Stundenplan einen existierenden {@link StundenplanRaum}-Objekt.
-	 *
-	 * @param idRaum Die ID des {@link StundenplanRaum}-Objekts.
-	 */
-	public void removeRaum(final long idRaum) {
-		final @NotNull StundenplanRaum raum = DeveloperNotificationException.ifNull("_map_raumID_zu_raum.get(" + idRaum + ")", _map_idRaum_zu_raum.get(idRaum));
-		_map_idRaum_zu_raum.remove(idRaum);
-		_list_raeume.remove(raum); // Neusortierung nicht nötig.
-	}
-
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
-	 *
-	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public void patchRaum(final @NotNull StundenplanRaum raum) {
-		removeRaum(raum.id);
-		addRaum(raum);
 	}
 
 	/**

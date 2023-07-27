@@ -106,8 +106,8 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete data.id;
 		await api.server.patchStundenplanRaum(data, api.schema, id);
-		const raum = this.stundenplanManager.getRaum(id);
-		this.stundenplanManager.patchRaum(Object.assign(raum, data));
+		const raum = this.stundenplanManager.raumGetByIdOrException(id);
+		this.stundenplanManager.raumPatch(Object.assign(raum, data));
 		this.commit();
 	}
 
@@ -147,7 +147,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete raum.id;
 		const _raum = await api.server.addStundenplanRaum(raum, api.schema, id)
-		this.stundenplanManager.addRaum(_raum);
+		this.stundenplanManager.raumAdd(_raum);
 		this.commit();
 	}
 
@@ -187,7 +187,7 @@ export class RouteDataStundenplan {
 	removeRaeume = async (raeume: StundenplanRaum[]) => {
 		for (const raum of raeume) {
 			await api.server.deleteStundenplanRaum(api.schema, raum.id);
-			this.stundenplanManager.removeRaum(raum.id);
+			this.stundenplanManager.raumRemoveById(raum.id);
 		}
 		this.commit();
 	}
