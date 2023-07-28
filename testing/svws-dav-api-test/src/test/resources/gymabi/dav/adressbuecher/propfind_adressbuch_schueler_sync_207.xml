@@ -1,0 +1,10 @@
+<sync-collection xmlns="DAV:"
+	xmlns:card="urn:ietf:params:xml:ns:carddav"
+	xmlns:cs="http://calendarserver.org/ns/" xmlns:d="DAV:">
+	<sync-token>0</sync-token>
+	<sync-level>1</sync-level>
+	<prop>
+		<getetag />
+		<card:address-data />
+	</prop>
+</sync-collection>

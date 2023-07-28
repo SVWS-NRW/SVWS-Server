@@ -1,0 +1,11 @@
+<card:addressbook-multiget
+	xmlns:card="urn:ietf:params:xml:ns:carddav"
+	xmlns:cs="http://calendarserver.org/ns/"
+	xmlns:d="DAV:">
+	<d:prop>
+		<d:getetag/>
+		<card:address-data/>
+	</d:prop>
+	<d:href>/db/gymabi/dav/adressbuecher/schueler/Schueler_1001.vcf</d:href>
+	<d:href>/db/gymabi/dav/adressbuecher/schueler/Schueler_1002.vcf</d:href>
+</card:addressbook-multiget>

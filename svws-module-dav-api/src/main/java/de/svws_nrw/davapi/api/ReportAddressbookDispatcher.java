@@ -13,7 +13,6 @@ import de.svws_nrw.davapi.model.dav.card.AddressbookMultiget;
 import de.svws_nrw.davapi.model.dav.card.CardAddressData;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
 import de.svws_nrw.davapi.util.vcard.VCard;
-import jakarta.servlet.ServletInputStream;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +59,7 @@ public class ReportAddressbookDispatcher extends DavDispatcher {
 	 *         Antwort-XML repräsentiert.
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
-	public Object dispatch(final ServletInputStream inputStream, final String ressourceId) throws IOException {
+	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
 		final CollectionRessourceQueryParameters queryParameters = CollectionRessourceQueryParameters.INCLUDE_RESSOURCES_INCLUDE_PAYLOAD;
 		final Optional<Adressbuch> adressbuch = this.repository.getAdressbuchById(ressourceId, queryParameters);
 		if (adressbuch.isEmpty()) {

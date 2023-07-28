@@ -45,6 +45,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import javassist.tools.reflect.Reflection;
 
 /**
  * Die Klasse spezifiziert die CardDAV-API-Schnittstelle für den Zugriff auf
@@ -104,7 +105,7 @@ public class APIKalender {
 	public Response propfindOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request)) {
+				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
@@ -131,7 +132,7 @@ public class APIKalender {
 	public Response reportOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request)) {
+				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
 			return buildResponse(result);
@@ -167,7 +168,7 @@ public class APIKalender {
 			@Context final HttpServletRequest request) {
 
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN, BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request)) {
+				InputStream inputStream = getInputStream(request, "kalenderId="+kalenderId, "kalenderEintragUId=" + kalenderEintragUId, "ifNonMatchHeader="+ ifNonMatchHeader, "ifMatchHeader="+ifMatchHeader)) {
 			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
 
 			if (ifNonMatchHeader != null && "*".equals(ifNonMatchHeader)) {
@@ -225,6 +226,7 @@ public class APIKalender {
 			@HeaderParam("If-Match") final String ifMatchHeader, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+			try (var is = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragId=" + kalenderEintragUID, "ifMatchHeader=" + ifMatchHeader)) {};
 			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
 			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId, kalenderEintragUID, ifMatchHeader);
 			if (dispatched.isPresent()) {
@@ -234,7 +236,7 @@ public class APIKalender {
 			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
@@ -257,6 +259,7 @@ public class APIKalender {
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+			try (var is = getInputStream(request, "kalenderId=" + kalenderId)) {};
 			final DeleteRessourceDispatcher dispatcher = createDeleteOnDavRessourceDispatcher(dbConnection, schema);
 			final Optional<Multistatus> dispatched = dispatcher.dispatch(kalenderId);
 			if (dispatched.isPresent()) {
@@ -266,7 +269,7 @@ public class APIKalender {
 			}
 			// kein ergebnis zeigt erfolgreiches löschen an
 			return Response.status(Response.Status.NO_CONTENT).type(MediaType.TEXT_PLAIN).build();
-		} catch (final Exception e) {
+		} catch (final IOException e) {
 			// atm nur bad request, eventuell noch andere zufügen
 			return buildBadRequest(e);
 		}
@@ -412,25 +415,39 @@ public class APIKalender {
 	/**
 	 * Debug Option, damit Requests nach Insomnia übertragen werden können
 	 */
-	private static final boolean LOG_INPUTSTREAM = true;
+	private static final boolean LOG_INPUTSTREAM = false;
 
 	/**
 	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie
 	 * Inputstream des Requests
 	 *
 	 * @param request der request
+	 * @param string
 	 * @return ein ungelesener Inputstream des Requests
 	 * @throws IOException
 	 */
-	private static InputStream getInputStream(final HttpServletRequest request) throws IOException {
+	private static InputStream getInputStream(final HttpServletRequest request, String... params) throws IOException {
 		InputStream result = request.getInputStream();
 		if (LOG_INPUTSTREAM) {
+			String methodName = getApiMethodName(2);
+			logger.log(LogLevel.WARNING, methodName);
+			for (String s: params)
+				logger.log(LogLevel.WARNING, s);
 			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
+			logger.log(methodName + "\n");
 			logger.log(LogLevel.WARNING, request.toString());
 			logger.log(LogLevel.WARNING, input);
 			result = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
 		}
 		return result;
+	}
+
+	private static String getApiMethodName(long n) {
+		StackWalker walker = StackWalker.getInstance();
+	    Optional<String> methodName = walker.walk(frames -> frames
+	    	      .skip(n).findFirst()
+	    	      .map(StackWalker.StackFrame::getMethodName));
+	    return methodName.get();
 	}
 
 	private static Logger createLogger() {

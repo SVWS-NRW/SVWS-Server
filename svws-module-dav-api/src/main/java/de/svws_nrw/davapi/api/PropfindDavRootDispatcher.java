@@ -1,6 +1,7 @@
 package de.svws_nrw.davapi.api;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.svws_nrw.davapi.model.dav.Collection;
 import de.svws_nrw.davapi.model.dav.CurrentUserPrincipal;
@@ -13,7 +14,6 @@ import de.svws_nrw.davapi.model.dav.Resourcetype;
 import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.cal.CalendarHomeSet;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
-import jakarta.servlet.ServletInputStream;
 
 /**
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
@@ -42,7 +42,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 	 * @return Das Objekt zur Repräsentation der XML-Antwort
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
-	public Object dispatchCollection(final ServletInputStream inputStream) throws IOException {
+	public Object dispatchCollection(final InputStream inputStream) throws IOException {
 		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 
 		final Multistatus ms = new Multistatus();

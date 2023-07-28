@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.DeserializationConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,9 +154,11 @@ public final class XmlUnmarshallingUtil {
 		final JacksonXmlModule module = new JacksonXmlModule();
 		module.setDefaultUseWrapper(false);
 		final ObjectMapper mapper = new XmlMapper(module);
-		mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
 		mapper.registerModule(new JakartaXmlBindAnnotationModule());
 		mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+		DeserializationConfig deserializationConfig = mapper.getDeserializationConfig();
+		deserializationConfig.with(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+		mapper.setConfig(deserializationConfig);
 		return mapper;
 	}
 

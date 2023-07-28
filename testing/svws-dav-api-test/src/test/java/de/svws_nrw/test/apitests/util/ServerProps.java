@@ -16,14 +16,12 @@ public class ServerProps {
 	private static final String HOST_PROPERTY_KEY = "svws.testing.api.host";
 	private String host;
 	private int port;
-	private String schema;
 
 	/**
 	 * Utility zum Erstellen der Serverproperties aus den Systemproperties. <br>
 	 * Dazu sind folgende Systemproperties anzugeben:<br>
 	 * <code>svws.testing.api.host</code><br>
 	 * <code>svws.testing.api.port</code><br>
-	 * <code>svws.testing.api.schema</code><br>
 	 *
 	 * @return die Serverprops, welche in den Systemproperties angegeben sind.
 	 * @throws IOException
@@ -39,11 +37,9 @@ public class ServerProps {
 			ServerProps p = new ServerProps();
 			p.host = System.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(System.getProperty(PORT_PROPERTY_KEY));
-			p.schema = "gymabi";
 			return p;
 		}
 		File localPropertyFile = new File("local.properties");
-		System.out.println("Tests mit Properties aus " + localPropertyFile.getAbsolutePath());
 		if (!localPropertyFile.exists()) {
 			throw new FileNotFoundException("local.properties nicht gefunden.");
 		}
@@ -58,7 +54,6 @@ public class ServerProps {
 			ServerProps p = new ServerProps();
 			p.host = localProperties.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(localProperties.getProperty(PORT_PROPERTY_KEY));
-			p.schema = "gymabi";
 			return p;
 		}
 	}
@@ -84,16 +79,9 @@ public class ServerProps {
 		return port;
 	}
 
-	/**
-	 * @return the schema
-	 */
-	public String getSchema() {
-		return schema;
-	}
-
 	@Override
 	public String toString() {
-		return "ServerProps [host=" + host + ", port=" + port + ", schema=" + schema + "]";
+		return "ServerProps [host=" + host + ", port=" + port + "]";
 	}
 
 }

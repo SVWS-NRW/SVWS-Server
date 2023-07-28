@@ -75,7 +75,8 @@ public class DeleteRessourceDispatcher extends DavDispatcher {
 		// im Moment kein Löschen von RessourceCollections erlaubt
 		final Error e = new Error();
 		e.setAny("Das Löschen von Ressourcensammlungen ist nicht erlaubt.");
-		return createMultiStatus(e, DavUriBuilder.getCalendarEntryUri(uriParameter));
+		uriParameter.setResourceCollectionId(ressourceCollectionID);
+		return createMultiStatus(e, DavUriBuilder.getCalendarUri(uriParameter));
 	}
 
 	/**

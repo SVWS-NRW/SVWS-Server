@@ -7,9 +7,9 @@ import de.svws_nrw.davapi.model.dav.Response;
 import de.svws_nrw.davapi.model.dav.cal.CalendarHomeSet;
 import de.svws_nrw.davapi.model.dav.card.AddressbookHomeSet;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
-import jakarta.servlet.ServletInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Dispatcher-Klasse für die Verarbeitung von Requests auf das DAV-API mittels
@@ -41,7 +41,7 @@ public final class PropfindPrincipalDispatcher extends DavDispatcher {
 	 *         Antwort-XML repräsentiert,
 	 * @throws IOException bei der Verarbeitung des InputStreams/XML-Unmarshalling
 	 */
-	public Object dispatch(final ServletInputStream inputStream, final String ressourceId) throws IOException {
+	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
 		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 		// TODO: Ergänzen einer Prüfung, ob Schema und Benutzer gefunden werden
 		final Multistatus ms = new Multistatus();

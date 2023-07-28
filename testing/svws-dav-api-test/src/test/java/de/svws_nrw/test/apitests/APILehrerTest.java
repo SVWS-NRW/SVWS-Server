@@ -18,8 +18,7 @@ import io.restassured.http.ContentType;
  */
 class APILehrerTest {
 	/**
-	 * Eigenschaften des Servers gegen den getestet werden soll (Hostname, Port,
-	 * Schema)
+	 * Eigenschaften des Servers gegen den getestet werden soll (Hostname, Port)
 	 */
 	private static ServerProps serverProps;
 
@@ -42,8 +41,8 @@ class APILehrerTest {
 		RestAssured.given()
 				.baseUri(serverProps.getHost())
 				.port(serverProps.getPort())
-				.basePath("/db/" + serverProps.getSchema())
-				.auth().basic("Admin", "")
+				.basePath("/db/gymabi")
+				.auth().basic("Admin", "password")
 				.log().all()
 				.relaxedHTTPSValidation()
 				.when()
@@ -65,7 +64,7 @@ class APILehrerTest {
 		RestAssured.given()
 				.baseUri(serverProps.getHost())
 				.port(serverProps.getPort())
-				.basePath("/db/" + serverProps.getSchema())
+				.basePath("/db/gymabi")
 				.log().all()
 				.relaxedHTTPSValidation()
 				.when()

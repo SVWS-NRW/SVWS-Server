@@ -20,9 +20,9 @@ import de.svws_nrw.davapi.model.dav.card.CardAddressbook;
 import de.svws_nrw.davapi.model.dav.card.SupportedAddressData;
 import de.svws_nrw.davapi.model.dav.cs.Getctag;
 import de.svws_nrw.davapi.util.XmlUnmarshallingUtil;
-import jakarta.servlet.ServletInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -84,7 +84,7 @@ public class PropfindAddressbookDispatcher extends DavDispatcher {
 	 *         Zielobjekt vor der Verarbeitung nicht festgestellt wird
 	 * @throws IOException bei Fehlern in der Streambehandlung/dem XML-Unmarshalling
 	 */
-	public Object dispatch(final ServletInputStream inputStream, final String ressourceId) throws IOException {
+	public Object dispatch(final InputStream inputStream, final String ressourceId) throws IOException {
 		final Propfind propfind = XmlUnmarshallingUtil.unmarshal(inputStream, Propfind.class);
 		if (ressourceId == null || ressourceId.isBlank()) {
 			// ohne Ressource ID wird die Liste der Adressbuecher zurückgegeben

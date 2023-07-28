@@ -1,0 +1,9 @@
+<propfind xmlns="DAV:"
+	xmlns:card="urn:ietf:params:xml:ns:carddav"
+	xmlns:cs="http://calendarserver.org/ns/" xmlns:d="DAV:">
+	<prop>
+		<resourcetype />
+		<getetag />
+		<cs:getctag />
+	</prop>
+</propfind>

@@ -1,8 +1,15 @@
 package de.svws_nrw.api.server;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.logger.LogConsumerConsole;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.davapi.api.DavExtendedHttpStatus;
@@ -20,7 +27,6 @@ import de.svws_nrw.davapi.model.dav.Error;
 import de.svws_nrw.davapi.model.dav.Multistatus;
 import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Path;
@@ -38,6 +44,12 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APIAdressbuch {
 
+
+	/**
+	 * Logger für diese Klasse
+	 */
+	private static final Logger logger = createLogger();
+
 	/**
 	 * Die CardDAV-API Methode zur Abfrage von Eigenschaften der Root-Ressource.
 	 *
@@ -52,7 +64,7 @@ public class APIAdressbuch {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnRoot(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request)) {
 			final PropfindDavRootDispatcher dispatcher = createPropfindDavRootDispatcher(conn);
 			final Object result = dispatcher.dispatchCollection(inputStream);
 			return buildResponse(result);
@@ -81,7 +93,7 @@ public class APIAdressbuch {
 	public Response propfindOnPrincipal(@PathParam("schema") final String schema, @PathParam("benutzerId") final String benutzerId,
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request, "benutzerId=+benutzerId")) {
 			final PropfindPrincipalDispatcher dispatcher = createPropfindPrincipalDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, benutzerId);
 			return buildResponse(result);
@@ -107,7 +119,7 @@ public class APIAdressbuch {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnAddressbooks(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request)) {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
 			return buildResponse(result);
@@ -136,7 +148,7 @@ public class APIAdressbuch {
 	public Response propfindOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request, "adressbuchId="+adressbuchId)) {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -165,7 +177,7 @@ public class APIAdressbuch {
 	public Response reportOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request, "adressbuchId="+ adressbuchId)) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -195,7 +207,7 @@ public class APIAdressbuch {
 			@PathParam("resourceCollectionId") final String adressbuchId, @PathParam("resourceId") final String kontaktId,
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				ServletInputStream inputStream = request.getInputStream()) {
+				InputStream inputStream = getInputStream(request, "adressbuchId="+adressbuchId, "kontaktId="+kontaktId)) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -305,5 +317,49 @@ public class APIAdressbuch {
 	 */
 	private static IAdressbuchRepository createAdressbuchRepository(final DBEntityManager conn) {
 		return new AdressbuchWithCategoriesRepository(conn);
+	}
+
+	/**
+	 * Debug Option, damit Requests nach Insomnia übertragen werden können
+	 */
+	private static final boolean LOG_INPUTSTREAM = false;
+
+	/**
+	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie
+	 * Inputstream des Requests
+	 *
+	 * @param request der request
+	 * @param string
+	 * @return ein ungelesener Inputstream des Requests
+	 * @throws IOException
+	 */
+	private static InputStream getInputStream(final HttpServletRequest request, String... params) throws IOException {
+		InputStream result = request.getInputStream();
+		if (LOG_INPUTSTREAM) {
+			String methodName = getApiMethodName(2);
+			logger.log(LogLevel.WARNING, methodName);
+			for (String s: params)
+				logger.log(LogLevel.WARNING, s);
+			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
+			logger.log(methodName + "\n");
+			logger.log(LogLevel.WARNING, request.toString());
+			logger.log(LogLevel.WARNING, input);
+			result = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
+		}
+		return result;
+	}
+
+	private static String getApiMethodName(long n) {
+		StackWalker walker = StackWalker.getInstance();
+	    Optional<String> methodName = walker.walk(frames -> frames
+	    	      .skip(n).findFirst()
+	    	      .map(StackWalker.StackFrame::getMethodName));
+	    return methodName.get();
+	}
+
+	private static Logger createLogger() {
+		final Logger logger = new Logger();
+		logger.addConsumer(new LogConsumerConsole(true, false));
+		return logger;
 	}
 }
