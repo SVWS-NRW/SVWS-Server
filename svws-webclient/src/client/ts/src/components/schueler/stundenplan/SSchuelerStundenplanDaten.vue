@@ -16,18 +16,19 @@
 					<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)" :key="unterricht.id"
 						class="grid gap-1 grid-cols-2 text-center rounded-md bg-cyan-100">
 						<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-						<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+						<div> &nbsp; </div>
 						<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+						<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 					</div>
 				</div>
 				<div v-else-if="manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)" class="flex flex-row gap-2">
 					<div v-for="wochentyp in manager().getWochenTypModell()" :key="wochentyp" class="flex flex-col gap-2 bg-cyan-100">
 						<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp)" :key="unterricht.id"
 							class="grid gap-1 grid-cols-2 text-center rounded-md">
-							<div class="col-span-2"> ({{ wochentyp }}) </div>
 							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+							<div> ({{ wochentyp }}) </div>
 							<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 						</div>
 					</div>
 				</div>
