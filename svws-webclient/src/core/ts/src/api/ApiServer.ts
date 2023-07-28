@@ -4687,7 +4687,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode copyGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
+	 * Implementierung der POST-Methode copyGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
 	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
@@ -4701,14 +4701,16 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 * @param {number} quartal - der Pfad-Parameter quartal
 	 *
 	 * @returns Gost-Klausurvorgabe wurde erfolgreich angelegt.
 	 */
-	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number) : Promise<boolean | null> {
-		const path = "/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
+	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<boolean | null> {
+		const path = "/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
+			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
 		const result : string = await super.postJSON(path, null);
 		const text = result;
 		return (text === "true");

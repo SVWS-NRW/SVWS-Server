@@ -346,6 +346,18 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return erfolgreich / nicht erfolgreich
 	 */
 	public boolean copyVorgabenToJahrgang(final GostHalbjahr halbjahr) {
+
+		return copyVorgabenToJahrgang(halbjahr, 0);
+	}
+
+	/**
+	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param quartal das Quartal, 0 für das gesamte Halbjahr
+	 *
+	 * @return erfolgreich / nicht erfolgreich
+	 */
+	public boolean copyVorgabenToJahrgang(final GostHalbjahr halbjahr, final int quartal) {
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
 		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
 
@@ -357,7 +369,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 			for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
-				if (halbjahr != null && vorgabe.Halbjahr != halbjahr)
+				if (halbjahr != null && vorgabe.Halbjahr != halbjahr || quartal > 0 && quartal != vorgabe.Quartal)
 					continue;
 				boolean exists = false;
 				for (final DTOGostKlausurenVorgaben v : vorgabenJg) {

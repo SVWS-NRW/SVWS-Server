@@ -18,6 +18,6 @@ export interface GostKlausurplanungVorgabenProps {
 	erzeugeKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<GostKlausurvorgabe>;
 	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<boolean>;
 	loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
-	erzeugeVorgabenAusVorlage: () => Promise<boolean>;
+	erzeugeVorgabenAusVorlage: (quartal: number) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }
