@@ -1954,8 +1954,6 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
 	 * Falls der Parameter inklWoche0 TRUE ist, wird Unterricht des Wochentyps 0 hinzugefügt.
-	 * <br>Hinweis: Diese Methode sollte der Client nicht benutzen. Der Client sollte sich nach dem Wochentyp des Zeitrasters informieren
-	 *              und dann entsprechend {@link #unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(long, int)} aufrufen.
 	 *
 	 * @param idZeitraster  Die Datenbank-ID des Zeitrasters.
 	 * @param wochentyp     Der Wochentyp
@@ -1970,6 +1968,22 @@ export class StundenplanManager extends JavaObject {
 		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, wochentyp));
 		list.addAll(this.unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster, 0));
 		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
+	 * Falls der Parameter inklWoche0 TRUE ist, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @param wochentag
+	 * @param stunde
+	 * @param wochentyp     Der Wochentyp
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
+	 */
+	public unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const idZeit : number = this.zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde).id;
+		return this.unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(idZeit, wochentyp, inklWoche0);
 	}
 
 	/**
@@ -2106,6 +2120,60 @@ export class StundenplanManager extends JavaObject {
 		for (const u of this._list_unterricht)
 			if (u.wochentyp > 0)
 				this._unterrichtHatMultiWochen = true;
+	}
+
+	/**
+	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 * <br>Beispiel:  "08:00-8:45", falls sie nicht abweichen.
+	 * <br>Beispiel:  "Mo.-Mi. 08:00-8:45", "Do. 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
+	 *
+	 * @param stunde  Die Nr. der Unterrichtsstunde.
+	 *
+	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
+	 */
+	public unterrichtsstundeGetUhrzeitenAsStrings(stunde : number) : List<string> {
+		const listUhrzeit : List<string> = new ArrayList();
+		const listWochentagVon : List<string> = new ArrayList();
+		const listWochentagBis : List<string> = new ArrayList();
+		for (let wochentag : number = this._zeitrasterWochentagMin; wochentag <= this._zeitrasterWochentagMax; wochentag++) {
+			const sUhrzeit : string = this.unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
+			const sWochentag : string = Wochentag.fromIDorException(wochentag).kuerzel;
+			if (listUhrzeit.isEmpty()) {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+				continue;
+			}
+			const sUhrzeitDavor : string = DeveloperNotificationException.ifListGetLastFailes("listUhrzeit", listUhrzeit);
+			if (JavaObject.equalsTranspiler(sUhrzeitDavor, (sUhrzeit))) {
+				listWochentagBis.set(listWochentagBis.size() - 1, sWochentag);
+			} else {
+				listUhrzeit.add(sUhrzeit);
+				listWochentagVon.add(sWochentag);
+				listWochentagBis.add(sWochentag);
+			}
+		}
+		if (listUhrzeit.size() <= 1)
+			return listUhrzeit;
+		for (let i : number = 0; i < listUhrzeit.size(); i++) {
+			const sUhrzeit : string = listUhrzeit.get(i);
+			const sWochentagVon : string = listWochentagVon.get(i);
+			const sWochentagBis : string = listWochentagBis.get(i);
+			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
+				listUhrzeit.set(i, sWochentagVon! + ". " + sUhrzeit!);
+			else
+				listUhrzeit.set(i, sWochentagVon! + ".-" + sWochentagBis! + ". " + sUhrzeit!);
+		}
+		return listUhrzeit;
+	}
+
+	private unterrichtsstundeGetUhrzeitAsString(wochentag : number, stunde : number) : string {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag, stunde);
+		if (zeitraster === null)
+			return "???";
+		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
+		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
+		return sBeginn! + " - " + sEnde! + " Uhr";
 	}
 
 	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {
@@ -2376,6 +2444,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls es in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" gibt.
+	 *
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return TRUE, falls es in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" gibt.
+	 */
+	public zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag : Wochentag, stunde : number, wochentyp : number) : boolean {
+		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag.id, stunde);
+		if (zeitraster === null)
+			return false;
+		return !Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, zeitraster.id, wochentyp).isEmpty();
+	}
+
+	/**
 	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
 	 *
 	 * @param wochentag  Der ENUM-ID des {@link Wochentag} des Zeitrasters.
@@ -2455,60 +2539,6 @@ export class StundenplanManager extends JavaObject {
 			for (let i : number = 0; i < this._zeitrasterWochentageAlsEnumRange.length; i++)
 				this._zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(minWT + i);
 		}
-	}
-
-	/**
-	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
-	 * <br>Beispiel:  "08:00-8:45", falls sie nicht abweichen.
-	 * <br>Beispiel:  "Mo.-Mi. 08:00-8:45", "Do. 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
-	 *
-	 * @param stunde  Die Nr. der Unterrichtsstunde.
-	 *
-	 * @return eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
-	 */
-	public unterrichtsstundeGetUhrzeitenAsStrings(stunde : number) : List<string> {
-		const listUhrzeit : List<string> = new ArrayList();
-		const listWochentagVon : List<string> = new ArrayList();
-		const listWochentagBis : List<string> = new ArrayList();
-		for (let wochentag : number = this._zeitrasterWochentagMin; wochentag <= this._zeitrasterWochentagMax; wochentag++) {
-			const sUhrzeit : string = this.unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
-			const sWochentag : string = Wochentag.fromIDorException(wochentag).kuerzel;
-			if (listUhrzeit.isEmpty()) {
-				listUhrzeit.add(sUhrzeit);
-				listWochentagVon.add(sWochentag);
-				listWochentagBis.add(sWochentag);
-				continue;
-			}
-			const sUhrzeitDavor : string = DeveloperNotificationException.ifListGetLastFailes("listUhrzeit", listUhrzeit);
-			if (JavaObject.equalsTranspiler(sUhrzeitDavor, (sUhrzeit))) {
-				listWochentagBis.set(listWochentagBis.size() - 1, sWochentag);
-			} else {
-				listUhrzeit.add(sUhrzeit);
-				listWochentagVon.add(sWochentag);
-				listWochentagBis.add(sWochentag);
-			}
-		}
-		if (listUhrzeit.size() <= 1)
-			return listUhrzeit;
-		for (let i : number = 0; i < listUhrzeit.size(); i++) {
-			const sUhrzeit : string = listUhrzeit.get(i);
-			const sWochentagVon : string = listWochentagVon.get(i);
-			const sWochentagBis : string = listWochentagBis.get(i);
-			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
-				listUhrzeit.set(i, sWochentagVon! + ". " + sUhrzeit!);
-			else
-				listUhrzeit.set(i, sWochentagVon! + ".-" + sWochentagBis! + ". " + sUhrzeit!);
-		}
-		return listUhrzeit;
-	}
-
-	private unterrichtsstundeGetUhrzeitAsString(wochentag : number, stunde : number) : string {
-		const zeitraster : StundenplanZeitraster | null = this._map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag, stunde);
-		if (zeitraster === null)
-			return "???";
-		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
-		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-		return sBeginn! + " - " + sEnde! + " Uhr";
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
