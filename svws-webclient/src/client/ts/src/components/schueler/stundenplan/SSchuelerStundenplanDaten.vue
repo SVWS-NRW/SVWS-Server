@@ -12,7 +12,16 @@
 				</div>
 			</div>
 			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="bg-yellow-100">
-				<div v-if="manager().zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag, stunde)" class="flex flex-col gap-2">
+				<div v-if="(wochentyp() !== 0) && (manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, 0) || manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, wochentyp()))" class="flex flex-col gap-2">
+					<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)" :key="unterricht.id"
+						class="grid gap-1 grid-cols-2 text-center rounded-md bg-cyan-100">
+						<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+						<div> {{ unterricht.wochentyp !== 0 ? "" + unterricht.wochentyp : "&nbsp;" }} </div>
+						<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+						<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+					</div>
+				</div>
+				<div v-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag, stunde)" class="flex flex-col gap-2">
 					<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)" :key="unterricht.id"
 						class="grid gap-1 grid-cols-2 text-center rounded-md bg-cyan-100">
 						<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -21,12 +30,12 @@
 						<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 					</div>
 				</div>
-				<div v-else-if="manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)" class="flex flex-row gap-2">
-					<div v-for="wochentyp in manager().getWochenTypModell()" :key="wochentyp" class="flex flex-col gap-2 bg-cyan-100">
-						<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp)" :key="unterricht.id"
+				<div v-else-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)" class="flex flex-row gap-2">
+					<div v-for="wt in manager().getWochenTypModell()" :key="wt" class="flex flex-col gap-2 bg-cyan-100">
+						<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)" :key="unterricht.id"
 							class="grid gap-1 grid-cols-2 text-center rounded-md">
 							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-							<div> ({{ wochentyp }}) </div>
+							<div> {{ wt }} </div>
 							<div> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 						</div>
