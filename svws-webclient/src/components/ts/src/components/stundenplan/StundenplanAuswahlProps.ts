@@ -1,6 +1,6 @@
 import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag, StundenplanManager } from "@core";
 
-export interface SchuelerStundenplanAuswahlProps {
+export interface StundenplanAuswahlProps {
 	stundenplan: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	gotoStundenplan: (value: StundenplanListeEintrag) => Promise<void>;

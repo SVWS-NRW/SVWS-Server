@@ -8,7 +8,7 @@ import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteS
 import { routeSchuelerStundenplanDaten } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplanDaten";
 import { RouteDataSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteDataSchuelerStundenplan";
 
-import type { SchuelerStundenplanAuswahlProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanAuswahlProps";
+import type { StundenplanAuswahlProps } from "@comp";
 
 const SSchuelerStundenplan = () => import("~/components/schueler/stundenplan/SSchuelerStundenplan.vue");
 
@@ -51,7 +51,7 @@ export class RouteSchuelerStundenplan extends RouteNode<RouteDataSchuelerStunden
 		return { name: this.defaultChild!.name, params: { id: id, wochentyp: 0 }};
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerStundenplanAuswahlProps {
+	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
 		return {
 			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
