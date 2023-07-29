@@ -18,7 +18,7 @@ export class StundenplanListUtils extends JavaObject {
 	 * @param eintraege die Liste der Stundenplanlisten-Einträge
 	 * @param datum     das Datum, für das der gültige Plan gesucht wird
 	 *
-	 * @return den StundenplanListeEintrag, der für das angegegebene Datum gültig
+	 * @return den StundenplanListeEintrag, der für das angegebene Datum gültig
 	 *         ist oder der letzte gültige Plan, falls die Gültigkeit aller Pläne
 	 *         abgelaufen ist.
 	 */
