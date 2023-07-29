@@ -45,7 +45,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchue
 			// Prüfe, ob die Stundenplan-ID definiert ist, wenn nicht, dann versuche einen zu laden
 			if (to_params.idStundenplan === undefined) {
 				if (routeSchuelerStundenplan.data.mapStundenplaene.size === 0)
-					return routeError.getRoute(new Error("Fehler: Kein Stundenplan für die angegebene ID gefunden."));
+					throw new Error("Fehler: Kein Stundenplan für die angegebene ID gefunden.");
 				return this.getRoute(idSchueler, routeSchuelerStundenplan.data.auswahl.id,
 					routeSchuelerStundenplan.data.wochentyp, routeSchuelerStundenplan.data.kalenderwoche?.jahr,
 					routeSchuelerStundenplan.data.kalenderwoche?.kw);

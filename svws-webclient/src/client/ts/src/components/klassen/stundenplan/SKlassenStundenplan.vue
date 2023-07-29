@@ -1,11 +1,14 @@
 <template>
-	<div class="page--content">
+	<svws-ui-sub-nav>
+		<stundenplan-auswahl :stundenplan="stundenplan" :map-stundenplaene="mapStundenplaene" :goto-stundenplan="gotoStundenplan" :goto-wochentyp="gotoWochentyp"
+			:goto-kalenderwoche="gotoKalenderwoche" :manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" />
+		<svws-ui-modal-hilfe class="ml-auto"> <hilfe-klassen-stundenplan /> </svws-ui-modal-hilfe>
+	</svws-ui-sub-nav>
+	<div class="w-full pl-9 pr-9 pt-8 pb-16">
 		<div v-if="stundenplan === undefined">
 			Derzeit liegt kein Stundenplan für diesen Lernabschnitt vor.
 		</div>
 		<div v-else class="flex flex-col">
-			<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" span="full"
-				:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
 			<div class="mt-2"> <router-view :key="$route.hash" /> </div>
 		</div>
 	</div>
@@ -13,33 +16,8 @@
 
 <script setup lang="ts">
 
-	import { type WritableComputedRef, computed } from "vue";
-	import type { KlassenStundenplanAuswahlProps } from "./SKlassenStundenplanAuswahlProps";
-	import { DateUtils, DeveloperNotificationException, type StundenplanListeEintrag } from "@core";
+	import type { StundenplanAuswahlProps } from "@comp";
 
-	const props = defineProps<KlassenStundenplanAuswahlProps>();
-
-	const wochentag = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.', 'So.' ];
-
-	function toDateStr(iso: string) : string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return wochentag[date[3] % 7] + " " + date[2] + "." + date[1] + "." + date[0];
-	}
-
-	function toKW(iso: string) : string {
-		const date = DateUtils.extractFromDateISO8601(iso);
-		return "" + date[5];
-	}
-
-	const stundenplan_auswahl : WritableComputedRef<StundenplanListeEintrag> = computed({
-		get: () : StundenplanListeEintrag => {
-			if (props.stundenplan === undefined)
-				throw new DeveloperNotificationException("Unerwarteter Fehler: Kein Stundenplan an dieser Stelle definiert.");
-			return props.stundenplan;
-		},
-		set: (value : StundenplanListeEintrag) => {
-			void props.gotoStundenplan(value);
-		}
-	});
+	defineProps<StundenplanAuswahlProps>();
 
 </script>

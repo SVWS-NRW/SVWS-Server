@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import { type StundenplanListeEintrag, StundenplanManager} from "@core";
+import { type StundenplanListeEintrag, StundenplanManager, type StundenplanKalenderwochenzuordnung } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -15,6 +15,8 @@ interface RouteStateKlassenDataStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
 	manager: StundenplanManager | undefined;
+	wochentyp: number;
+	kalenderwoche: StundenplanKalenderwochenzuordnung | undefined,
 }
 
 export class RouteDataKlassenStundenplan {
@@ -24,6 +26,8 @@ export class RouteDataKlassenStundenplan {
 		auswahl: undefined,
 		mapStundenplaene: new Map(),
 		manager: undefined,
+		wochentyp: 0,
+		kalenderwoche: undefined,
 	}
 
 	private _state = shallowRef(RouteDataKlassenStundenplan._defaultState);
@@ -38,6 +42,14 @@ export class RouteDataKlassenStundenplan {
 
 	private commit(): void {
 		this._state.value = { ... this._state.value };
+	}
+
+	get wochentyp(): number {
+		return this._state.value.wochentyp;
+	}
+
+	get kalenderwoche(): StundenplanKalenderwochenzuordnung | undefined {
+		return this._state.value.kalenderwoche;
 	}
 
 	get hatAuswahl(): boolean {
@@ -69,30 +81,65 @@ export class RouteDataKlassenStundenplan {
 		this.setPatchedDefaultState({ idKlasse: this._state.value.idKlasse, auswahl, mapStundenplaene });
 	}
 
-	public async setEintrag(idKlasse: number, idStundenplan?: number) {
+	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {
+		const result : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } = {};
+		try {
+			result.kalenderwoche = manager.kalenderwochenzuordnungGetByJahrAndKWOrException(kwjahr === undefined ? -1 : kwjahr, kw === undefined ? -1 : kw);
+			result.wochentyp = result.kalenderwoche.wochentyp;
+		} catch (e) {
+			result.kalenderwoche = undefined;
+			result.wochentyp = wochentyp;
+		}
+		if ((result.wochentyp < 0) || (result.wochentyp > manager.getWochenTypModell()))
+			throw new Error("Der Wochentyp " + result.wochentyp + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell() + " des Stundenplans");
+		return result;
+	}
+
+	public async setEintrag(idKlasse: number, idStundenplan: number | undefined, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) {
 		// Prüfe, ob die vorge Auswahl mit der neuen Auswahl übereinstimmt. In diesem Fall ist keine Aktion nötig
 		const vorige_auswahl = this._state.value.auswahl;
-		if ((vorige_auswahl !== undefined) && (this._state.value.idKlasse === idKlasse) && (vorige_auswahl.id === idStundenplan))
+		if ((vorige_auswahl !== undefined) && (this._state.value.idKlasse === idKlasse) && (vorige_auswahl.id === idStundenplan)) {
+			if ((wochentyp !== this._state.value.wochentyp) || (kwjahr !== this._state.value.kalenderwoche?.jahr)
+				|| (kw !== this._state.value.kalenderwoche?.kw)) {
+				const tmpKW = this.getKalenderWoche(this.manager, wochentyp, kwjahr, kw);
+				this.setPatchedState({ wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
+				return;
+			}
 			return;
+		}
 		// Prüfe, ob der Stundenplan deselektiert wird. In diesem Fall muss der interne State zurückgesetzt werden.
 		if (idStundenplan === undefined) {
-			this.setPatchedState({ idKlasse: undefined, auswahl: undefined, manager: undefined });
+			this.setPatchedState({ idKlasse: undefined, auswahl: undefined, manager: undefined, wochentyp: 0, kalenderwoche: undefined });
 			return;
 		}
 		// Ermittle aus der Liste der Stundenpläne den Stundenplan
 		const auswahl = this.mapStundenplaene.get(idStundenplan);
 		if (auswahl === undefined) {
-			this.setPatchedState({ idKlasse: undefined, auswahl: undefined, manager: undefined });
+			this.setPatchedState({ idKlasse: undefined, auswahl: undefined, manager: undefined, wochentyp: 0, kalenderwoche: undefined });
 			return;
 		}
 		// Lade den Klassen-Stundenplan
 		const daten = await api.server.getKlassenStundenplan(api.schema, auswahl.id, idKlasse);
 		const manager = new StundenplanManager(daten);
-		this.setPatchedState({idKlasse, auswahl, manager});
+		// Wochentyp und Kalenderwoche prüfen...
+		const tmpKW = this.getKalenderWoche(manager, wochentyp, kwjahr, kw);
+		// Und zuletzt den internen State anpassen, um die Raktivität der vue-Komponenten zu triggern
+		this.setPatchedState({ idKlasse, auswahl, manager, wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {
 		await RouteManager.doRoute({ name: routeKlassenStundenplanDaten.name, params: { id: routeKlassen.data.daten.id, idStundenplan: value?.id } });
+	}
+
+	public gotoWochentyp = async (value: number) => {
+		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.daten.id, this.auswahl.id, value));
+	}
+
+	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
+		if (value === undefined)
+			await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.daten.id, this.auswahl.id, this.wochentyp));
+		else
+			await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.daten.id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
 	}
 
 }
