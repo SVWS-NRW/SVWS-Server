@@ -148,7 +148,7 @@ public class APIAdressbuch {
 	public Response propfindOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request, "adressbuchId="+adressbuchId)) {
+				InputStream inputStream = getInputStream(request, "adressbuchId=" + adressbuchId)) {
 			final PropfindAddressbookDispatcher dispatcher = createPropfindAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -177,7 +177,7 @@ public class APIAdressbuch {
 	public Response reportOnAddressbook(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String adressbuchId, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request, "adressbuchId="+ adressbuchId)) {
+				InputStream inputStream = getInputStream(request, "adressbuchId=" + adressbuchId)) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -207,7 +207,7 @@ public class APIAdressbuch {
 			@PathParam("resourceCollectionId") final String adressbuchId, @PathParam("resourceId") final String kontaktId,
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADRESSDATEN_ANSEHEN);
-				InputStream inputStream = getInputStream(request, "adressbuchId="+adressbuchId, "kontaktId="+kontaktId)) {
+				InputStream inputStream = getInputStream(request, "adressbuchId=" + adressbuchId, "kontaktId=" + kontaktId)) {
 			final ReportAddressbookDispatcher dispatcher = createReportAddressbookDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, adressbuchId);
 			return buildResponse(result);
@@ -328,17 +328,19 @@ public class APIAdressbuch {
 	 * Loggt abhängig von {@link #LOG_INPUTSTREAM} den Informationen sowie
 	 * Inputstream des Requests
 	 *
-	 * @param request der request
-	 * @param string
+	 * @param request   der request
+	 * @param params    string
+	 *
 	 * @return ein ungelesener Inputstream des Requests
+	 *
 	 * @throws IOException
 	 */
-	private static InputStream getInputStream(final HttpServletRequest request, String... params) throws IOException {
+	private static InputStream getInputStream(final HttpServletRequest request, final String... params) throws IOException {
 		InputStream result = request.getInputStream();
 		if (LOG_INPUTSTREAM) {
-			String methodName = getApiMethodName(2);
+			final String methodName = getApiMethodName(2);
 			logger.log(LogLevel.WARNING, methodName);
-			for (String s: params)
+			for (final String s: params)
 				logger.log(LogLevel.WARNING, s);
 			final String input = new String(result.readAllBytes(), StandardCharsets.UTF_8);
 			logger.log(methodName + "\n");
@@ -349,9 +351,9 @@ public class APIAdressbuch {
 		return result;
 	}
 
-	private static String getApiMethodName(long n) {
-		StackWalker walker = StackWalker.getInstance();
-	    Optional<String> methodName = walker.walk(frames -> frames
+	private static String getApiMethodName(final long n) {
+		final StackWalker walker = StackWalker.getInstance();
+	    final Optional<String> methodName = walker.walk(frames -> frames
 	    	      .skip(n).findFirst()
 	    	      .map(StackWalker.StackFrame::getMethodName));
 	    return methodName.get();
