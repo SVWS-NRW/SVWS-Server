@@ -13,7 +13,7 @@ import type { StundenplanAnsichtProps } from "@comp";
 export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.stundenplan.daten", ":idStundenplan(\\d+)?", StundenplanAnsicht);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
