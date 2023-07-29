@@ -8,7 +8,7 @@ import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer"
 import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplanDaten";
 import { RouteDataLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteDataLehrerStundenplan";
 
-import type { LehrerStundenplanAuswahlProps } from "~/components/lehrer/stundenplan/SLehrerStundenplanAuswahlProps";
+import type { StundenplanAuswahlProps } from "@comp";
 
 const SLehrerStundenplan = () => import("~/components/lehrer/stundenplan/SLehrerStundenplan.vue");
 
@@ -42,20 +42,25 @@ export class RouteLehrerStundenplan extends RouteNode<RouteDataLehrerStundenplan
 			if (routeLehrerStundenplan.data.mapStundenplaene.size !== 0) {
 				const stundenplan = routeLehrerStundenplan.data.mapStundenplaene.entries().next().value;
 				if (stundenplan !== undefined)
-					return routeLehrerStundenplanDaten.getRoute(idLehrer, stundenplan.id);
+					return routeLehrerStundenplanDaten.getRoute(idLehrer, stundenplan.id, 0);
 			}
 		}
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+		return { name: this.defaultChild!.name, params: { id: id, wochentyp: 0 }};
 	}
 
-	public getProps(to: RouteLocationNormalized): LehrerStundenplanAuswahlProps {
+	public getProps(to: RouteLocationNormalized): StundenplanAuswahlProps {
 		return {
 			stundenplan: this.data.mapStundenplaene.size === 0 ? undefined : this.data.auswahl,
 			mapStundenplaene: this.data.mapStundenplaene,
 			gotoStundenplan: this.data.gotoStundenplan,
+			gotoWochentyp: this.data.gotoWochentyp,
+			gotoKalenderwoche: this.data.gotoKalenderwoche,
+			manager: () => this.data.manager,
+			wochentyp: () => this.data.wochentyp,
+			kalenderwoche: () => this.data.kalenderwoche,
 		};
 	}
 

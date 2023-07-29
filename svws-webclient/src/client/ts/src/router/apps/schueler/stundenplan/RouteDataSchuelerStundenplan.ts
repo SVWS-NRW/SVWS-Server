@@ -1,7 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { StundenplanKalenderwochenzuordnung, StundenplanListeEintrag} from "@core";
-import { StundenplanManager } from "@core";
+import { type StundenplanKalenderwochenzuordnung, type StundenplanListeEintrag, StundenplanManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -120,7 +119,7 @@ export class RouteDataSchuelerStundenplan {
 		const manager = new StundenplanManager(daten);
 		// Wochentyp und Kalenderwoche prüfen...
 		const tmpKW = this.getKalenderWoche(manager, wochentyp, kwjahr, kw);
-		// Und zuletzt den internen State anpassen, um die Raktivität der vue-Komponenten zu triggern
+		// Und zuletzt den internen State anpassen, um die Reaktivität der vue-Komponenten zu triggern
 		this.setPatchedState({ idSchueler, auswahl, manager, wochentyp: tmpKW.wochentyp, kalenderwoche: tmpKW.kalenderwoche });
 	}
 
