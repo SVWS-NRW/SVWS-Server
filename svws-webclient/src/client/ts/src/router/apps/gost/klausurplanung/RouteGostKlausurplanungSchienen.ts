@@ -45,7 +45,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			setTerminToKursklausur: routeGostKlausurplanung.data.setTerminToKursklausur,
 			patchKlausurterminDatum: routeGostKlausurplanung.data.patchKlausurterminDatum,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
-			loescheKlausurtermin: routeGostKlausurplanung.data.loescheKlausurtermin,
+			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,

@@ -42,13 +42,15 @@ public class GostKlausurvorgabenManager {
 
 	/** Ein Comparator für die Klausurvorgaben. */
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
-		final GostFach aFach = _faecherManager.get(a.idFach);
-		final GostFach bFach = _faecherManager.get(b.idFach);
-		if (aFach != null && bFach != null) {
-			if (aFach.sortierung > bFach.sortierung)
-				return +1;
-			if (aFach.sortierung < bFach.sortierung)
-				return -1;
+		if (_faecherManager != null) {
+			final GostFach aFach = _faecherManager.get(a.idFach);
+			final GostFach bFach = _faecherManager.get(b.idFach);
+			if (aFach != null && bFach != null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
 		}
 		if (a.kursart.compareTo(b.kursart) < 0)
 			return +1;
@@ -92,8 +94,8 @@ public class GostKlausurvorgabenManager {
 	 */
 	public void addKlausurvorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
 		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", _vorgaben, vorgabe);
-		if (_faecherManager != null)
-			_vorgaben.sort(_compVorgabe);
+
+		_vorgaben.sort(_compVorgabe);
 		DeveloperNotificationException.ifMapPutOverwrites(_mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
 
 		// Füllen von _mapQuartalKlausurvorgaben

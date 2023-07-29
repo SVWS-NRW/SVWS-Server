@@ -202,19 +202,31 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	/**
 	 * Löscht einen Gost-Klausurtermin *
 	 *
-	 * @param id 	die ID des zu löschenden Klausurtermins
+	 * @param ids die IDs der zu löschenden Klausurtermine
 	 *
 	 * @return die Response
 	 */
-	public Response delete(final Long id) {
-		// TODO use transaction
+	public Response delete(final List<Long> ids) {
 		// Bestimme den Termin
-		final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
-		if (termin == null)
-			return OperationError.NOT_FOUND.getResponse();
-		// Entferne den Termin
-		conn.remove(termin);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
+		try {
+		conn.transactionBegin();
+		for (final long id : ids) {
+			final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
+			if (termin == null)
+				return OperationError.NOT_FOUND.getResponse();
+			// Entferne den Termin
+			conn.transactionRemove(termin);
+		}
+		if (!conn.transactionCommit())
+			return OperationError.NOT_FOUND.getResponse("Datenbankfehler beim Löschen der Gost-Klausurtermine");
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webApplicationException)
+				return webApplicationException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(ids).build();
 	}
 
 }

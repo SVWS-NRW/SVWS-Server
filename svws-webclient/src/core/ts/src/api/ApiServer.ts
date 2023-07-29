@@ -4572,29 +4572,31 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/delete/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteGostKlausurenKlausurtermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/delete
 	 *
-	 * Löscht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 * Löscht Gost-Klausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Long
+	 *     - Rückgabe-Typ: List<Long>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenKlausurtermin(schema : string, id : number) : Promise<number | null> {
-		const path = "/db/{schema}/gost/klausuren/termine/delete/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return parseFloat(JSON.parse(text));
+	public async deleteGostKlausurenKlausurtermine(data : List<number>, schema : string) : Promise<List<number>> {
+		const path = "/db/{schema}/gost/klausuren/termine/delete"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<number>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		return ret;
 	}
 
 

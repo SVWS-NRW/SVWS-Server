@@ -287,10 +287,11 @@ export class RouteDataGostKlausurplanung {
 		return termin;
 	}
 
-	loescheKlausurtermin = async (termin: GostKlausurtermin): Promise<boolean> => {
+	loescheKlausurtermine = async (termine: List<GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
-		const result = await api.server.deleteGostKlausurenKlausurtermin(api.schema, termin.id);
-		this.kursklausurmanager.removeKlausurtermin(termin.id);
+		const terminIds = Arrays.asList((termine.toArray() as GostKlausurtermin[]).map((termin) => termin.id));
+		const result = await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
+		this.kursklausurmanager.removeKlausurtermine(terminIds);
 		this.commit();
 		api.status.stop();
 		return true;

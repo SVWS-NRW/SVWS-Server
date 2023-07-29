@@ -150,6 +150,18 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Löscht mehrere GostKlausurtermin-Objekte aus den internen Strukturen.
+	 *
+	 * @param terminIds die IDs des GostKlausurtermin-Objekte
+	 */
+	public void removeKlausurtermine(final @NotNull List<@NotNull Long> terminIds) {
+		for (final long id : terminIds) {
+			removeKlausurtermin(id);
+		}
+	}
+
+
+	/**
 	 * Löscht ein GostKlausurtermin-Objekt aus den internen Strukturen.
 	 *
 	 * @param id die ID des GostKlausurtermin-Objekts

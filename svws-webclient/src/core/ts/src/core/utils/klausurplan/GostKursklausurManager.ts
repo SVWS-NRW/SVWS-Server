@@ -160,6 +160,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Löscht mehrere GostKlausurtermin-Objekte aus den internen Strukturen.
+	 *
+	 * @param terminIds die IDs des GostKlausurtermin-Objekte
+	 */
+	public removeKlausurtermine(terminIds : List<number>) : void {
+		for (const id of terminIds) {
+			this.removeKlausurtermin(id);
+		}
+	}
+
+	/**
 	 * Löscht ein GostKlausurtermin-Objekt aus den internen Strukturen.
 	 *
 	 * @param id die ID des GostKlausurtermin-Objekts

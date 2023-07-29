@@ -2,7 +2,7 @@
 	<div class="flex flex-col border border-blue-900 border-solid w-72 shrink-0">
 		<svws-ui-drop-data @drop="setKlausurToTermin" class="h-full">
 			<div class="">
-				<svws-ui-button v-if="loescheKlausurtermin !== undefined && termin !== null" class="float-right" type="danger" size="small" @click="loescheKlausurtermin(termin)"><i-ri-delete-bin-line /></svws-ui-button>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== null" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin]))"><i-ri-delete-bin-line /></svws-ui-button>
 				<svws-ui-badge class="-m-2 z-10 float-right"
 					v-if="(termin?.quartal === dragKlausur?.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin > 0)"
 					type="error"
@@ -48,8 +48,9 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, GostFaecherManager, LehrerListeEintrag, SchuelerListeEintrag, List, KursManager} from "@core";
+	import { type GostKursklausurManager, type GostKursklausur, type GostKlausurtermin, type GostFaecherManager, type LehrerListeEintrag, type SchuelerListeEintrag, type List, type KursManager, Arrays} from "@core";
 	import { computed, ref } from 'vue';
+import { ArrayList } from "../../../../../../core/ts/src/java/util/ArrayList";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin | null;
@@ -59,7 +60,7 @@
 		mapSchueler: Map<number, SchuelerListeEintrag>;
 		kursmanager: KursManager;
 		setTerminToKursklausur: (idTermin: number | null, klausur: GostKursklausur) => Promise<boolean>;
-		loescheKlausurtermin?: (termin: GostKlausurtermin) => Promise<boolean>;
+		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<boolean>;
 		patchKlausurterminDatum?: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
 		quartal?: number;
 		alleTermine: List<GostKlausurtermin>;
@@ -113,12 +114,5 @@
 	const konflikteTermin = computed(() =>
 		props.termin !== null ? props.kursklausurmanager().gibAnzahlKonflikteZuTermin(props.termin.id) : 0
 	);
-
-	const loescheTermin = async() => {
-		if (props.loescheKlausurtermin !== undefined && props.termin !== null)
-			await props.loescheKlausurtermin(props.termin);
-	};
-
-
 
 </script>

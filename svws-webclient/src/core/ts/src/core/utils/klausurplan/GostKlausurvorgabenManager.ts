@@ -48,13 +48,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 * Ein Comparator für die Klausurvorgaben.
 	 */
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
-		const aFach : GostFach | null = this._faecherManager.get(a.idFach);
-		const bFach : GostFach | null = this._faecherManager.get(b.idFach);
-		if (aFach !== null && bFach !== null) {
-			if (aFach.sortierung > bFach.sortierung)
-				return +1;
-			if (aFach.sortierung < bFach.sortierung)
-				return -1;
+		if (this._faecherManager !== null) {
+			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
+			const bFach : GostFach | null = this._faecherManager.get(b.idFach);
+			if (aFach !== null && bFach !== null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
 		}
 		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
 			return +1;
@@ -99,8 +101,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", this._vorgaben, vorgabe);
-		if (this._faecherManager !== null)
-			this._vorgaben.sort(this._compVorgabe);
+		this._vorgaben.sort(this._compVorgabe);
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKlausurvorgabenList", MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
 		this._mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);

@@ -3,7 +3,7 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 		<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
 		<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
-		<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="quartalsauswahl.value <= 0 || termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
+		<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
 		<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
@@ -88,7 +88,7 @@
 							:set-termin-to-kursklausur="setTerminToKursklausur"
 							:drag-klausur="dragKlausur"
 							:map-schueler="mapSchueler"
-							:loesche-klausurtermin="loescheKlausurtermin"
+							:loesche-klausurtermine="loescheKlausurtermine"
 							:patch-klausurtermin-datum="patchKlausurterminDatum"
 							@drag-start-klausur="dragStartKlausur"
 							@drag-end-klausur="dragEndKlausur"
@@ -158,9 +158,6 @@
 		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		console.log(blockConfig.get_algorithmus());
-		console.log(blockConfig.get_lk_gk_modus());
-		console.log(blockConfig.get_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin());
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
 		for await (const klausurList of klausurTermine) {
 			const termin = await props.erzeugeKlausurtermin(props.quartalsauswahl.value);
@@ -174,11 +171,7 @@
 		loading.value = false;
 	};
 
-	const loescheTermine = async () => {
-		for (const termin of termine.value.toArray()) {
-			await props.loescheKlausurtermin(termin as GostKlausurtermin);
-		}
-	}
+	const loescheTermine = async () => await props.loescheKlausurtermine(termine.value);
 
 
 </script>
