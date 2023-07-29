@@ -48,12 +48,12 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerStundenplanDatenProps } from "./SSchuelerStundenplanDatenProps";
+	import type { StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 	import { computed } from "vue";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
-	const props = defineProps<SchuelerStundenplanDatenProps>();
+	const props = defineProps<StundenplanAnsichtProps>();
 
 	const cols = computed(() => {
 		const colcount = (props.manager().zeitrasterGetWochentageAlsEnumRange().length + 1);

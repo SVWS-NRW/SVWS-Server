@@ -7,15 +7,13 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 
-import type { SchuelerStundenplanDatenProps } from "~/components/schueler/stundenplan/SSchuelerStundenplanDatenProps";
-
-
-const SSchuelerStundenplanDaten = () => import("~/components/schueler/stundenplan/SSchuelerStundenplanDaten.vue");
+import { StundenplanAnsicht } from "@comp";
+import type { StundenplanAnsichtProps } from "@comp";
 
 export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", SSchuelerStundenplanDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -70,7 +68,7 @@ export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchue
 		return { name: this.name, params: { id, idStundenplan, wochentyp, kw: tmpKW }};
 	}
 
-	public getProps(to: RouteLocationNormalized): SchuelerStundenplanDatenProps {
+	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
 		return {
 			manager: () => routeSchuelerStundenplan.data.manager,
 			wochentyp: () => routeSchuelerStundenplan.data.wochentyp,
