@@ -19,20 +19,35 @@ import io.restassured.path.xml.XmlPath;
  * in Zusammenhang mit dem XMLPath zugrundeliegenden {@link XmlSlurper} zu
  * unnötig viel, schlecht lesbarem Code beim Testen führen würden.
  */
-public class XmlPathWalker extends XmlPath {
+public final class XmlPathWalker extends XmlPath {
 
+	/**
+	 * TODO
+	 *
+	 * @param string
+	 */
 	public XmlPathWalker(final String string) {
 		super(string);
 	}
 
 	private String node = "";
 
+	/**
+	 * TODO
+	 *
+	 * @return the node
+	 */
 	public String getNode() {
 		return this.node;
 	}
 
+	/**
+	 * TODO
+	 *
+	 * @return the XmlPathWalker
+	 */
 	public XmlPathWalker up() {
-		int idx = node.lastIndexOf('.');
+		final int idx = node.lastIndexOf('.');
 		if (idx > 0) {
 			this.node = node.substring(0, idx);
 		}
@@ -40,7 +55,7 @@ public class XmlPathWalker extends XmlPath {
 	}
 
 	@Override
-	public <T> T get(String path) {
+	public <T> T get(final String path) {
 		if (node == null || node.isBlank()) {
 			this.node = path;
 		} else {
@@ -49,36 +64,64 @@ public class XmlPathWalker extends XmlPath {
 		return super.get(this.node);
 	}
 
-	public <T> T getNodeUp(int steps) {
+	/**
+	 * TODO
+	 * @param <T>
+	 * @param steps
+	 * @return the upper node
+	 */
+	public <T> T getNodeUp(final int steps) {
 		for (int i = 0; i < steps; i++) {
 			up();
 		}
 		return this.get(node);
 	}
 
+	/**
+	 * TODO
+	 */
 	public void backToDocRoot() {
 		this.node = "";
 	}
 
-	public boolean nodeExistsAndUp(String path) {
-		var nodeBuff = node;
-		var res = !getBoolean(path + ".isEmpty()");
+	/**
+	 * TODO
+	 * @param path
+	 * @return true or false
+	 */
+	public boolean nodeExistsAndUp(final String path) {
+		final var nodeBuff = node;
+		final var res = !getBoolean(path + ".isEmpty()");
 		this.node = nodeBuff;
 		return res;
 	}
 
-	public String getStringAndUp(String string) {
-		String res = getString(string);
+	/**
+	 * TODO
+	 * @param string
+	 * @return the string
+	 */
+	public String getStringAndUp(final String string) {
+		final String res = getString(string);
 		up();
 		return res;
 	}
 
-	public int getIntAndUp(String string) {
-		int res = getInt(string);
+	/**
+	 * TODO
+	 * @param string
+	 * @return the int
+	 */
+	public int getIntAndUp(final String string) {
+		final int res = getInt(string);
 		up();
 		return res;
 	}
 
+	/**
+	 * TODO
+	 * @return the result
+	 */
 	public TypeSafeMatcher<String> nodeExists() {
 		return new TypeSafeMatcher<>() {
 
@@ -88,7 +131,7 @@ public class XmlPathWalker extends XmlPath {
 			}
 
 			@Override
-			public void describeTo(Description description) {
+			public void describeTo(final Description description) {
 				description.appendText("node existing");
 			}
 		};

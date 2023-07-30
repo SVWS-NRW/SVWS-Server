@@ -11,7 +11,7 @@ import java.util.Properties;
  * API-Tests nötig sind.
  *
  */
-public class ServerProps {
+public final class ServerProps {
 	private static final String PORT_PROPERTY_KEY = "svws.testing.api.port";
 	private static final String HOST_PROPERTY_KEY = "svws.testing.api.host";
 	private String host;
@@ -31,27 +31,27 @@ public class ServerProps {
 		System.out.println(System.getProperties().entrySet());
 		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY)) System.out.println(System.getProperty(HOST_PROPERTY_KEY));
 		if (System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) System.out.println(System.getProperty(PORT_PROPERTY_KEY));
-		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY) &&
-				System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) {
+		if (System.getProperties().keySet().contains(HOST_PROPERTY_KEY)
+				&& System.getProperties().keySet().contains(PORT_PROPERTY_KEY)) {
 			System.out.println("Tests mit Systemproperties");
-			ServerProps p = new ServerProps();
+			final ServerProps p = new ServerProps();
 			p.host = System.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(System.getProperty(PORT_PROPERTY_KEY));
 			return p;
 		}
-		File localPropertyFile = new File("local.properties");
+		final File localPropertyFile = new File("local.properties");
 		if (!localPropertyFile.exists()) {
 			throw new FileNotFoundException("local.properties nicht gefunden.");
 		}
-		Properties localProperties = new Properties();
+		final Properties localProperties = new Properties();
 		try (FileInputStream inStream = new FileInputStream(localPropertyFile)) {
 			localProperties.load(inStream);
 			inStream.close();
-			if (!localProperties.containsKey(HOST_PROPERTY_KEY) ||
-					!localProperties.containsKey(PORT_PROPERTY_KEY)) {
+			if (!localProperties.containsKey(HOST_PROPERTY_KEY)
+					|| !localProperties.containsKey(PORT_PROPERTY_KEY)) {
 				throw new IOException("Properties sind unvollständig.");
 			}
-			ServerProps p = new ServerProps();
+			final ServerProps p = new ServerProps();
 			p.host = localProperties.getProperty(HOST_PROPERTY_KEY);
 			p.port = Integer.parseInt(localProperties.getProperty(PORT_PROPERTY_KEY));
 			return p;

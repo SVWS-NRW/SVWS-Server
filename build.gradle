@@ -38,7 +38,7 @@ allprojects {
 	apply plugin: 'svws.gradle.svwsmavenrepo.plugin'
 	apply plugin: 'svws.gradle.svwseclipse.plugin'
 	apply plugin: 'org.sonarqube'
-//	apply plugin: 'checkstyle'
+	apply plugin: 'checkstyle'
 	// TODO Support JPMS-Modules
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 

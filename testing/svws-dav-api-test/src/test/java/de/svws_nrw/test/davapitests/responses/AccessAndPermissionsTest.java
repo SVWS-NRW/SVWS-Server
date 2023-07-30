@@ -23,7 +23,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 * BIConsumer für, um alle API-Methoden aufzurufen und einen Statuscode zu
 	 * erwarten.
 	 */
-	private BiConsumer<RequestSpecification, Integer> givenGiven_thenStatusCode = (given, expectedStatusCode) -> {
+	private final BiConsumer<RequestSpecification, Integer> givenGiven_thenStatusCode = (given, expectedStatusCode) -> {
 		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/").then().statusCode(expectedStatusCode);
 		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/benutzer/-1").then().statusCode(expectedStatusCode);
 		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/adressbuecher").then().statusCode(expectedStatusCode);
@@ -54,7 +54,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenInvalidPasswordAllEndpoints_then401() {
-		RequestSpecification givenz = given(user, "---");
+		final RequestSpecification givenz = given(user, "---");
 		givenGiven_thenStatusCode.accept(givenz, 401);
 	}
 
@@ -64,7 +64,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenAllEndpointsAuthenticatedUserMissingPrivileges_then403() {
-		RequestSpecification givenz = given("ALEN", "password");
+		final RequestSpecification givenz = given("ALEN", "password");
 		givenGiven_thenStatusCode.accept(givenz, 403);
 	}
 
@@ -74,17 +74,17 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenPrivilegedUserAccessingOtherUsersData() {
-		String kalender = "db/gymabi/dav/kalender";
+		final String kalender = "db/gymabi/dav/kalender";
 		String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 		Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
 		XmlPathWalker path = new XmlPathWalker(response.asString());
-		String gemeinsamerKalender = path.getString(
+		final String gemeinsamerKalender = path.getString(
 				"multistatus.response.find {it.propstat[0].prop.displayname == 'Gemeinsamer Kalender'} .href");
 
 		body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_207.xml", this);
 		response = given("Admin", "password").when().body(body).request(PROPFIND, gemeinsamerKalender);
-		String responseBody = response.asString();
+		final String responseBody = response.asString();
 		path = new XmlPathWalker(responseBody);
 		// only error node
 		assertThat("error", path.nodeExists());
@@ -98,21 +98,21 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	@Test
 	void givenUserReadOnlyCalendar_thenNoWritePermission() {
 		// check: Nutzer hat nur Leserechte auf den Gemeinsamen Kalender:
-		String kalender = "db/gymabi/dav/kalender";
-		String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
+		final String kalender = "db/gymabi/dav/kalender";
+		final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 
-		Response response = given("BAGI", "password").when().body(body).request(PROPFIND, kalender);
-		String responseString = response.asString();
+		final Response response = given("BAGI", "password").when().body(body).request(PROPFIND, kalender);
+		final String responseString = response.asString();
 		response.then().statusCode(207);
 		// erwarte 2 Responses in Multistatus für Admin (1 Kalender Root, 1
 		// Eigener Kalender
-		XmlPathWalker path = new XmlPathWalker(responseString);
-		int responses = path.getIntAndUp("multistatus.response.size()");
+		final XmlPathWalker path = new XmlPathWalker(responseString);
+		final int responses = path.getIntAndUp("multistatus.response.size()");
 		assertThat(responses, equalTo(3));
 		path.up();
 		for (int i = 0; i < responses; i++) {
-			String displayname = path.getStringAndUp("response[" + i + "].propstat[0].prop.displayName");
+			final String displayname = path.getStringAndUp("response[" + i + "].propstat[0].prop.displayName");
 			if ("Gemeinsamer Kalender".equals(displayname)) {
 				assertThat("current-user-privilege-set.privilege.write", not(path.nodeExists()));
 				assertThat("read", path.nodeExists());
@@ -128,17 +128,17 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenUserNoPermissionCalendar_thenCalendarNotShown() {
-		String kalender = "db/gymabi/dav/kalender";
-		String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
+		final String kalender = "db/gymabi/dav/kalender";
+		final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 
-		Response response = given("Admin", "password").when().body(body).request(PROPFIND, kalender);
-		String responseString = response.asString();
+		final Response response = given("Admin", "password").when().body(body).request(PROPFIND, kalender);
+		final String responseString = response.asString();
 		response.then().statusCode(207);
 		// erwarte 2 Responses in Multistatus für Admin (1 Kalender Root, 1
 		// Eigener Kalender
-		XmlPathWalker path = new XmlPathWalker(responseString);
-		int responses = path.getIntAndUp("multistatus.response.size()");
+		final XmlPathWalker path = new XmlPathWalker(responseString);
+		final int responses = path.getIntAndUp("multistatus.response.size()");
 		assertThat(responses, equalTo(2));
 		assertThat(
 				path.getIntAndUp(

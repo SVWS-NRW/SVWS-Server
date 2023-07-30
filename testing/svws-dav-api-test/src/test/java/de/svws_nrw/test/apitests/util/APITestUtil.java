@@ -18,10 +18,10 @@ public final class APITestUtil {
 	 * @param o            eine aufrufende Objektinstanz aus diesem Projekt
 	 * @return der eingelesene String des Dateiinhalts
 	 */
-	public static String readStringFromResourceFile(String resourceName, Object o) {
+	public static String readStringFromResourceFile(final String resourceName, final Object o) {
 		try (InputStream is = o.getClass().getClassLoader().getResourceAsStream(resourceName)) {
 			return new String(is.readAllBytes(), StandardCharsets.UTF_8);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			fail(e);
 			return null;
 		}

@@ -41,7 +41,7 @@ public class BaseApiUtil {
 	 * @param password das Passwort für die BasicAut
 	 * @return die Requestspezifikation
 	 */
-	public static RequestSpecification given(String user, String password) {
+	public static RequestSpecification given(final String user, final String password) {
 		return given(user, password, "application/xml");
 	}
 
@@ -55,7 +55,7 @@ public class BaseApiUtil {
 	 * @param contentType der Contenttype
 	 * @return die Requestspezifikation
 	 */
-	protected static RequestSpecification given(String user, String password, String contentType) {
+	protected static RequestSpecification given(final String user, final String password, final String contentType) {
 		return RestAssured.given().baseUri(serverProps.getHost()).port(serverProps.getPort()).auth()
 				.basic(user, password).log().all().relaxedHTTPSValidation().contentType(contentType);
 	}

@@ -37,13 +37,13 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 	@Test
 	void whenPropfindOnDavRoot_thenMultiStatusWith3Responses() {
 		String davRoot = "db/gymabi/dav";
-		Response response = given(user, password).when()
+		final Response response = given(user, password).when()
 				.body(APITestUtil.readStringFromResourceFile("gymabi/dav/propfind_dav_207.xml", this))
 				.request(PROPFIND, davRoot);
 		davRoot = "/" + davRoot;
-		String responseString = response.asString();
+		final String responseString = response.asString();
 		response.then().statusCode(207);
-		XmlPathWalker path = new XmlPathWalker(responseString);
+		final XmlPathWalker path = new XmlPathWalker(responseString);
 		// erwarte 3 Responses in Multistatus
 		assertThat(path.getIntAndUp("multistatus.response.size()"), equalTo(3));
 		path.up();
@@ -51,7 +51,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		// sein
 		final List<String> hrefs = new ArrayList<>();
 		for (int responseIdx = 0; responseIdx < 3; responseIdx++) {
-			String href = path.getStringAndUp("response[" + responseIdx + "].href");
+			final String href = path.getStringAndUp("response[" + responseIdx + "].href");
 			hrefs.add(href);
 			if (href.equals(davRoot)) {
 				// generell sollten 200 als erstes und 404 als 2. ergebnis
@@ -121,14 +121,14 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		@Test
 		void whenPropfindOnAddressbooks_thenMultistatusWith3Addressbooks() {
 			String adressbuecher = "db/gymabi/dav/adressbuecher";
-			Response response = given(user, password).when()
+			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/propfind_adressbuecher_207.xml", this))
 					.request(PROPFIND, adressbuecher);
 			adressbuecher = "/" + adressbuecher;
-			String responseString = response.asString();
+			final String responseString = response.asString();
 			response.then().statusCode(207);
-			XmlPathWalker path = new XmlPathWalker(responseString);
+			final XmlPathWalker path = new XmlPathWalker(responseString);
 			// erwarte 3 Responses in Multistatus
 			assertThat(path.getIntAndUp("multistatus.response.size()"), equalTo(3));
 			path.up();
@@ -137,7 +137,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			// sein
 			final List<String> hrefs = new ArrayList<>();
 			for (int responseIdx = 0; responseIdx < 3; responseIdx++) {
-				String href = path.getStringAndUp("response[" + responseIdx + "].href");
+				final String href = path.getStringAndUp("response[" + responseIdx + "].href");
 				hrefs.add(href);
 				if (href.equals(adressbuecher + "/schueler")) {
 					assertThat(path.getStringAndUp("propstat.prop.displayname"), equalTo("Schüler"));
@@ -169,22 +169,22 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		@Test
 		void givenPropfindOnAddressbook_thenMultistatus() {
 			String adressbuchHref = "db/gymabi/dav/adressbuecher/schueler";
-			Response response = given(user, password).when()
+			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/propfind_adressbuch_schueler_207.xml", this))
 					.request(PROPFIND, adressbuchHref);
 			adressbuchHref = "/" + adressbuchHref;
-			String responseString = response.asString();
+			final String responseString = response.asString();
 			response.then().statusCode(207);
-			XmlPathWalker path = new XmlPathWalker(responseString);
+			final XmlPathWalker path = new XmlPathWalker(responseString);
 			// erwarte Responses in Multistatus - eine Response sollte auf die
 			// Collection verweisen, alle anderen auf je ein .vcf
-			int responseCount = path.getIntAndUp("multistatus.response.size()");
+			final int responseCount = path.getIntAndUp("multistatus.response.size()");
 			path.up();
 
 			final List<String> hrefs = new ArrayList<>();
 			for (int responseIdx = 0; responseIdx < responseCount; responseIdx++) {
-				String href = path.getStringAndUp("response[" + responseIdx + "].href");
+				final String href = path.getStringAndUp("response[" + responseIdx + "].href");
 				hrefs.add(href);
 				if (adressbuchHref.equals(href)) {
 					// die Beschreibung der Collection
@@ -224,14 +224,14 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		@Test
 		void givenReportOnAddressbook_thenMultistatusAndVcf() {
 			String adressbuchHref = "db/gymabi/dav/adressbuecher/schueler";
-			Response response = given(user, password).when()
+			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/report_adressbuch_schueler_207.xml", this))
 					.request(REPORT, adressbuchHref);
 			adressbuchHref = "/" + adressbuchHref;
-			String responseString = response.asString();
+			final String responseString = response.asString();
 			response.then().statusCode(207);
-			XmlPathWalker path = new XmlPathWalker(responseString);
+			final XmlPathWalker path = new XmlPathWalker(responseString);
 			assertThat(path.getIntAndUp("multistatus.response.size()"), equalTo(2));
 			for (int i = 0; i < 2; i++) {
 				path.up().get("response[" + i + "]");
@@ -253,7 +253,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		@Test
 		@Disabled("SyncCollection ist noch nicht implementiert")
 		void givenPropfindSyncCollectionOnAddressbook_then207() {
-			var body = """
+			final var body = """
 					<sync-collection xmlns="DAV:" xmlns:card="urn:ietf:params:xml:ns:carddav" xmlns:cs="http://calendarserver.org/ns/" xmlns:d="DAV:">
 					  <sync-token>0</sync-token>
 					  <sync-level>1</sync-level>
@@ -280,7 +280,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		@Test
 		void givenPropfindOnCalendarCollection_then207() {
 			String kalender = "db/gymabi/dav/kalender";
-			String body = APITestUtil
+			final String body = APITestUtil
 					.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml", this);
 
 			Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
@@ -296,8 +296,8 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			String hrefGemeinsamerKalender = null;
 			for (int responseIdx = 0; responseIdx < responses; responseIdx++) {
 				path.get("response[" + responseIdx + "]");
-				String href = path.getStringAndUp("href");
-				String name = path.getStringAndUp("propstat[0].prop.displayname");
+				final String href = path.getStringAndUp("href");
+				final String name = path.getStringAndUp("propstat[0].prop.displayname");
 				if ((name == null || name.isBlank()) && kalender.equals(href)) {
 					// referenz auf die collection
 					path.get("resourcetype");
@@ -340,7 +340,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			assertThat(responses, equalTo(3));
 			path.up();
 			for (int i = 0; i < responses; i++) {
-				String displayname = path.getStringAndUp("response[" + i + "].propstat[0].prop.displayName");
+				final String displayname = path.getStringAndUp("response[" + i + "].propstat[0].prop.displayName");
 				if ("Gemeinsamer Kalender".equals(displayname)) {
 					assertThat("current-user-privilege-set.privilege.write", not(path.nodeExists()));
 				} else {
@@ -357,19 +357,19 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		 *
 		 * @param hrefGemeinsamerKalender
 		 */
-		void givenPropfindOnCalendar_then207(String hrefGemeinsamerKalender) {
+		void givenPropfindOnCalendar_then207(final String hrefGemeinsamerKalender) {
 			String kalender = hrefGemeinsamerKalender;
 			if (hrefGemeinsamerKalender.indexOf('/') == 0) {
 				kalender = hrefGemeinsamerKalender.substring(1);
 			}
-			String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_207.xml", this);
+			final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_207.xml", this);
 
-			Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
-			String responseString = response.asString();
+			final Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
+			final String responseString = response.asString();
 			response.then().statusCode(207);
 			// erwarte 2 Responses in Multistatus für Admin (1 Kalender Root, 1
 			// Eigener Kalender
-			XmlPathWalker path = new XmlPathWalker(responseString);
+			final XmlPathWalker path = new XmlPathWalker(responseString);
 			assertThat(path.getIntAndUp("multistatus.response.size()"), equalTo(1));
 			path.get("propstat.prop");
 			assertThat(List.of("resourcetype.collection", "resourcetype.calendar",
