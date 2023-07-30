@@ -1,0 +1,11 @@
+{
+  "erfolgreich": true,
+  "fehlercodes": [
+    {
+      "code": "SW_1_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Wird Sozialwissenschaften nicht in EF.1 belegt, so muss Sozialwissenschaften in der Qualifikationsphase als Zusatzkurs gewählt werden."
+    }
+  ],
+  "log": []
+}

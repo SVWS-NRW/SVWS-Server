@@ -1,0 +1,11 @@
+{
+  "erfolgreich": true,
+  "fehlercodes": [
+    {
+      "code": "ANZ_11_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Die Gesamtstundenzahl sollte 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung in der Oberstufe zu gewährleisten."
+    }
+  ],
+  "log": []
+}
