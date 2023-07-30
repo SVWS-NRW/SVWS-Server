@@ -32,10 +32,8 @@ files
 	.filter((file) => file.includes("_GostJahrgangsdaten"))
 	.forEach((file) => {
 		const split = basename(file, ".json").split("_");
-		if (!jahrgaenge[split[1]]) {
+		if (!jahrgaenge[split[1]])
 			jahrgaenge[split[1]] = null;
-			return;
-		}
 		jahrgaenge[split[1]] = GostJahrgangsdaten.transpilerFromJSON(
 			readFileSync(resolve(test_dir, file), "utf8")
 		);
@@ -45,7 +43,8 @@ files
 	.forEach((file) => {
 		const json = JSON.parse(readFileSync(resolve(test_dir, file), "utf8"));
 		const split = basename(file, ".json").split("_");
-		if (!jahrgaenge_faecher[split[1]]) jahrgaenge_faecher[split[1]] = [];
+		if (!jahrgaenge_faecher[split[1]])
+			jahrgaenge_faecher[split[1]] = [];
 		json.forEach((fach: { [string: string]: any }) => {
 			jahrgaenge_faecher[split[1]].push(
 				GostFach.transpilerFromJSON(JSON.stringify(fach))
@@ -57,7 +56,8 @@ files
 	.forEach((file) => {
 		const json = JSON.parse(readFileSync(resolve(test_dir, file), "utf8"));
 		const split = basename(file, ".json").split("_");
-		if (!jahrgaenge_fachkombis[split[1]]) jahrgaenge_fachkombis[split[1]] = [];
+		if (!jahrgaenge_fachkombis[split[1]])
+			jahrgaenge_fachkombis[split[1]] = [];
 		json.forEach((fachkombi: { [string: string]: any }) => {
 			jahrgaenge_fachkombis[split[1]].push(
 				GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(fachkombi))
@@ -68,7 +68,8 @@ files
 	.filter((file) => file.includes("_Abiturdaten"))
 	.forEach((file) => {
 		const split = basename(file, ".json").split("_");
-		if (!abiturdaten[split[1]]) abiturdaten[split[1]] = {};
+		if (!abiturdaten[split[1]])
+			abiturdaten[split[1]] = {};
 		abiturdaten[split[1]][split[2]] = Abiturdaten.transpilerFromJSON(
 			readFileSync(resolve(test_dir, file), "utf8")
 		);
