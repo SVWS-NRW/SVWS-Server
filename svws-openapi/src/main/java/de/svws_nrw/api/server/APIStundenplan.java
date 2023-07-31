@@ -176,6 +176,62 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Erstellen eines neuen (leeren) Stundenplanes für den angegebenen Schuljahresabschnitt.
+     *
+     * @param schema                   das Datenbankschema
+     * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+     * @param request                  die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Stundenplan-Eintrag
+     */
+    @POST
+    @Path("/create/{idSchuljahresabschnitt : \\d+}")
+    @Operation(summary = "Erstellt einen neuen (leeren) Stundenplan für den angegebenen Schuljahresabschnitt und gibt den zugehörigen Listeneintrag zurück.",
+    description = "Erstellt einen neuen (leeren) Stundenplan für den angegebenen Schuljahresabschnitt und gibt den zugehörigen Listeneintrag zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Stundenplan wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanListeEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Der Schuljahresabschnitt wurde nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplan(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+    			BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanListe(conn)).addEmpty(idSchuljahresabschnitt);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status
+     */
+    @DELETE
+    @Path("/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Stundenplan.",
+    description = "Entfernt einen Stundenplan."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Stundenplans hat.")
+    @ApiResponse(responseCode = "204", description = "Der Stundenplan wurde erfolgreich entfernt.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Der Stundenplan ist nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN)) {
+    		return (new DataStundenplanListe(conn)).delete(id);
+    	}
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage des Zeitrasters zu einem Stundenplan.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

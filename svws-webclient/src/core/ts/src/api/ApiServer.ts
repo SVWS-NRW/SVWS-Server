@@ -9012,6 +9012,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
+	 *
+	 * Entfernt einen Stundenplan.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Der Stundenplan wurde erfolgreich entfernt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu entfernen.
+	 *   Code 404: Der Stundenplan ist nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async deleteStundenplan(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		await super.deleteJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addStundenplanAufsichtsbereich für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/aufsichtsbereiche/create
 	 *
 	 * Erstellt einen neuen Aufsichtsbereich für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
@@ -9353,6 +9377,34 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return StundenplanAufsichtsbereich.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/create/{idSchuljahresabschnitt : \d+}
+	 *
+	 * Erstellt einen neuen (leeren) Stundenplan für den angegebenen Schuljahresabschnitt und gibt den zugehörigen Listeneintrag zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Stundenplan wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanListeEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan anzulegen.
+	 *   Code 404: Der Schuljahresabschnitt wurde nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idSchuljahresabschnitt - der Pfad-Parameter idSchuljahresabschnitt
+	 *
+	 * @returns Der Stundenplan wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplan(schema : string, idSchuljahresabschnitt : number) : Promise<StundenplanListeEintrag> {
+		const path = "/db/{schema}/stundenplan/create/{idSchuljahresabschnitt : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{idSchuljahresabschnitt\s*(:[^}]+)?}/g, idSchuljahresabschnitt.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return StundenplanListeEintrag.transpilerFromJSON(text);
 	}
 
 

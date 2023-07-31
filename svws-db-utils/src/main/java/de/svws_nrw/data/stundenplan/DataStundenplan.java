@@ -113,5 +113,4 @@ public final class DataStundenplan extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOStundenplan.class, patchMappings);
 	}
 
-
 }

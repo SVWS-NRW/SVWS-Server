@@ -221,17 +221,17 @@ public abstract class DataManager<ID> {
 	 *
 	 * @return die Response - im Erfolgsfall mit dem gelöschen Core-DTO
 	 */
-	public <DTO, CoreData> Response deleteBasic(final Long id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+	public <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
 		try {
 			conn.transactionBegin();
-			// Bestimme dem Raum
+			// Bestimme das DTO
 			if (id == null)
 	    		throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
 			final DTO raum = conn.queryByKey(dtoClass, id);
 			if (raum == null)
-	    		throw OperationError.NOT_FOUND.exception("Es wurde kein Raum mit der ID %d gefunden.".formatted(id));
+	    		throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
 			final CoreData daten = dtoMapper.apply(raum);
-			// Entferne den Raum
+			// Entferne das DTO
 			conn.transactionRemove(raum);
 			conn.transactionCommit();
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
