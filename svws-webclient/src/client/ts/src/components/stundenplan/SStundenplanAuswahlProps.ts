@@ -8,4 +8,6 @@ export interface StundenplanAuswahlProps {
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
+	removeEintraege: (eintraege: StundenplanListeEintrag[]) => Promise<void>;
+	addEintrag: (eintrag: StundenplanListeEintrag) => Promise<void>;
 }

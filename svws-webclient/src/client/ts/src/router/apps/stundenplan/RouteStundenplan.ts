@@ -79,6 +79,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
+			addEintrag: this.data.addEintrag,
+			removeEintraege: this.data.removeEintraege,
 		};
 	}
 

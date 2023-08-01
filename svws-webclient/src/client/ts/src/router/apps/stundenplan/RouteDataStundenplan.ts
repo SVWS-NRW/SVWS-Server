@@ -1,12 +1,13 @@
+import type { StundenplanZeitraster, StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan} from "@core";
+import type { RouteNode } from "~/router/RouteNode";
+
+import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
+
 import { shallowRef } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 
-import type { StundenplanZeitraster, StundenplanListeEintrag, Stundenplan, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum} from "@core";
-import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
@@ -255,6 +256,30 @@ export class RouteDataStundenplan {
 			const stundenplanManager = new StundenplanManager(daten, new ArrayList(), new ArrayList(), null);
 			this.setPatchedState({ auswahl, daten, stundenplanManager });
 		}
+	}
+
+	addEintrag = async (eintrag: StundenplanListeEintrag) => {
+		const leer = await api.server.addStundenplan(api.schema, api.abschnitt.id);
+		const sp: Partial<Stundenplan> = {};
+		sp.bezeichnungStundenplan = eintrag.bezeichnung;
+		sp.gueltigAb = eintrag.gueltigAb;
+		sp.gueltigBis = eintrag.gueltigBis;
+		//TODO Fix wochenTypModell
+		sp.wochenTypModell = 2;
+		await api.server.patchStundenplan(sp, api.schema, leer.id);
+		eintrag.id = leer.id;
+		this.mapKatalogeintraege.set(leer.id, eintrag)
+		this.commit();
+	}
+
+	removeEintraege = async (eintraege: StundenplanListeEintrag[]) => {
+		for (const eintrag of eintraege) {
+			if (eintrag.id === this.auswahl?.id)
+				this._state.value.auswahl = undefined;
+			await api.server.deleteStundenplan(api.schema, eintrag.id);
+			this.mapKatalogeintraege.delete(eintrag.id);
+		}
+		this.commit();
 	}
 
 	gotoEintrag = async (eintrag: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag.id));
