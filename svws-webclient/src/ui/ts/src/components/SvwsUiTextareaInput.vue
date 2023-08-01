@@ -1,12 +1,11 @@
 <script setup lang="ts">
-	// TODO: contenteditable funktioniert nicht wie es soll. Nach einem Patch, wandert der Cursor an den Anfang des Strings zurück,
-	// egal, wo er vorher war. Lösungen wie v-once funktionieren nicht.
 	import { ref, computed } from 'vue';
+	import { useTextareaAutosize, useVModel } from '@vueuse/core'
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
 	const props = withDefaults(defineProps<{
-		modelValue?: string | null;
+		modelValue?: string;
 		placeholder?: string;
 		valid?: boolean;
 		statistics?: boolean;
@@ -32,7 +31,6 @@
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", value: string): void;
 		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 		(e: "click", event: Event): void;
@@ -40,35 +38,20 @@
 		(e: "keydown", event: Event): void;
 	}>();
 
+	const value = useVModel(props, "modelValue", emit);
+	const { textarea, input } = useTextareaAutosize({input: value})
 	const focused = ref(false);
-	const tag = computed(() => (props.autoresize ? "span" : "textarea"));
 	const bindings = computed(() => {
 		return {
 			required: props.required,
 			disabled: props.disabled,
-			onInput,
 			onFocus,
 			onBlur,
 			onClick,
 			onMousedown,
 			onKeydown,
-			...(props.autoresize
-				? {
-					contenteditable: !props.disabled,
-					textContent: props.modelValue,
-				}
-				: {
-					rows: props.rows,
-					cols: props.cols,
-					value: props.modelValue,
-				}),
 		};
 	});
-
-	function onInput(event: Event) {
-		const field = props.autoresize ? "innerText" : "value";
-		emit("update:modelValue", (event.target as HTMLInputElement)[field]);
-	}
 
 	function onFocus(event: FocusEvent) {
 		focused.value = true;
@@ -108,7 +91,7 @@
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<component :is="tag" v-bind="bindings" class="textarea-input--control" />
+		<textarea	ref="textarea" v-model="input" v-bind="bindings" class="textarea-input--control" />
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
