@@ -1,6 +1,7 @@
 ---
 group: 'design-system'
-title: 'Readme'
+title: 'Installation'
+id: 'install'
 iconColor: '#ccc'
 icon: 'carbon:bookmark'
 ---

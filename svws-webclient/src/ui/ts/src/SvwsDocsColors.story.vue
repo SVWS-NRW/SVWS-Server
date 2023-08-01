@@ -1,6 +1,6 @@
 <template>
-	<Story title="Farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'single', iframe: false}">
-		<Variant title="Farben" source=" ">
+	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'single', iframe: false}">
+		<Variant title="Farben" source=" " id="farbpalette">
 			<div class="svws-docs-color">
 				<div class="htw-prose dark:htw-prose-invert">
 					<h1>Farben</h1>

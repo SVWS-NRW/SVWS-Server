@@ -26,8 +26,8 @@
 </script>
 
 <template>
-	<Story title="Multiselect" :layout="{type: 'grid', width: '45%'}" icon="ri:expand-up-down-fill">
-		<Variant title="Default">
+	<Story title="Multiselect" id="svws-ui-multi-select" :layout="{type: 'grid', width: '45%'}" icon="ri:expand-up-down-fill">
+		<Variant title="Default" id="Default">
 			<div class="demo-wrapper flex flex-col gap-3">
 				<svws-ui-multi-select v-model="modelValue1"
 					title="Simple"
@@ -39,7 +39,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Simple Sort">
+		<Variant title="Simple Sort" id="Simple Sort">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue2"
 					title="Simple"
@@ -50,7 +50,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Autocomplete">
+		<Variant title="Autocomplete" id="Autocomplete">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue4"
 					autocomplete
@@ -62,7 +62,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Tags">
+		<Variant title="Tags" id="Tags">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue5"
 					tags
@@ -73,7 +73,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Tags with Autocomplete">
+		<Variant title="Tags with Autocomplete" id="Tags with Autocomplete">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue6"
 					:item-text="item => item?.text || ''"
@@ -86,7 +86,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Headless">
+		<Variant title="Headless" id="Headless">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue7"
 					:item-text="item => item?.text || ''"
@@ -97,7 +97,7 @@
 			</div>
 		</Variant>
 
-		<Variant title="Tags Headless">
+		<Variant title="Tags Headless" id="Tags Headless">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue8"
 					:item-text="item => item?.text || ''"
@@ -109,7 +109,7 @@
 					@input="onInput" />
 			</div>
 		</Variant>
-		<Variant title="Statistics">
+		<Variant title="Statistics" id="Statistics">
 			<div class="demo-wrapper">
 				<svws-ui-multi-select v-model="modelValue8"
 					:item-text="item => item?.text || ''"

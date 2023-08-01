@@ -17,9 +17,10 @@
 </script>
 
 <template>
-	<Story title="Button" icon="ri:cursor-line" :layout="{type: 'grid', width: '45%'}">
+	<Story title="Button" id="svws-ui-button" icon="ri:cursor-line" :layout="{type: 'grid', width: '45%'}">
 		<Variant v-for="(props, title) of propsVariants"
 			:key="title"
+			:id="title"
 			:title="title">
 			<svws-ui-button v-bind="props" @click="onClick">
 				<template v-if="props.type !== 'icon'">

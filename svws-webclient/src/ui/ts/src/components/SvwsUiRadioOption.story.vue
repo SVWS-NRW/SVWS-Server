@@ -4,8 +4,8 @@
 </script>
 
 <template>
-	<Story title="Radio Options" icon="ri:radio-button-line" :layout="{type: 'grid', width: '45%'}">
-		<Variant title="Horizontal Row">
+	<Story title="Radio Options" id="svws-ui-radio-option" icon="ri:radio-button-line" :layout="{type: 'grid', width: '45%'}">
+		<Variant title="Horizontal Row" id="Horizontal Row">
 			<svws-ui-radio-group :row="true">
 				<svws-ui-radio-option value="option1" name="radioInputExample" label="Option 1" />
 				<svws-ui-radio-option value="option2" name="radioInputExample" label="Option 2" disabled />
@@ -17,32 +17,32 @@
 			</svws-ui-radio-group>
 		</Variant>
 
-		<Variant title="Stacked">
+		<Variant title="Stacked" id="Stacked">
 			<svws-ui-radio-group>
 				<svws-ui-radio-option value="option1" name="radioInputExample2" label="Option 1" />
 				<svws-ui-radio-option value="option2" name="radioInputExample2" label="Option 2" />
 			</svws-ui-radio-group>
 		</Variant>
 
-		<Variant title="Default">
+		<Variant title="Default" id="Default">
 			<div class="flex">
 				<svws-ui-radio-option name="name" value="value" label="Option" />
 			</div>
 		</Variant>
 
-		<Variant title="Checked">
+		<Variant title="Checked" id="Checked">
 			<div class="flex">
 				<svws-ui-radio-option v-model="checked" name="name" value="value" label="Option" />
 			</div>
 		</Variant>
 
-		<Variant title="Statistics">
+		<Variant title="Statistics" id="Statistics">
 			<div class="flex">
 				<svws-ui-radio-option name="name" value="value" label="Option" statistics />
 			</div>
 		</Variant>
 
-		<Variant title="Disabled">
+		<Variant title="Disabled" id="Disabled">
 			<div class="flex">
 				<svws-ui-radio-option name="name" value="value" label="Option" disabled />
 			</div>

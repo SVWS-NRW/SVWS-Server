@@ -11,42 +11,42 @@
 </script>
 
 <template>
-	<Story title="Checkbox" icon="ri:checkbox-line" :layout="{type: 'grid', width: '45%'}">
-		<Variant title="Checked">
+	<Story title="Checkbox" id="svws-ui-checkbox" icon="ri:checkbox-line" :layout="{type: 'grid', width: '45%'}">
+		<Variant title="Checked" id="Checked">
 			<svws-ui-checkbox v-model="modelValue1" :value="true">Checkbox</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="Checked with highlight">
+		<Variant title="Checked with highlight" id="Checked with highlight">
 			<div :class="{'text-primary': modelValue1b}">
 				<svws-ui-checkbox v-model="modelValue1b" :value="true">Example: Blue highlight in table</svws-ui-checkbox>
 			</div>
 		</Variant>
 
-		<Variant title="Unchecked">
+		<Variant title="Unchecked" id="Unchecked">
 			<svws-ui-checkbox v-model="modelValue2" :value="false">Checkbox</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="Without Label">
+		<Variant title="Without Label" id="Without Label">
 			<svws-ui-checkbox v-model="modelValue2" :value="true" />
 		</Variant>
 
-		<Variant title="Circle Style">
+		<Variant title="Circle Style" id="Circle Style">
 			<svws-ui-checkbox v-model="modelValueC" :value="true" circle>Same function, different appearance!</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="B/W">
+		<Variant title="B/W" id="B/W">
 			<svws-ui-checkbox v-model="modelValueC" :value="true" circle bw>Same function, different appearance!</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="Statistics">
+		<Variant title="Statistics" id="Statistics">
 			<svws-ui-checkbox v-model="modelValue3" statistics :value="false">Checkbox</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="Disabled">
+		<Variant title="Disabled" id="Disabled">
 			<svws-ui-checkbox v-model="modelValue3" disabled :value="false">Checkbox</svws-ui-checkbox>
 		</Variant>
 
-		<Variant title="Headless">
+		<Variant title="Headless" id="Headless">
 			<svws-ui-checkbox v-model="modelValue3" headless :value="false">Checkbox</svws-ui-checkbox>
 		</Variant>
 

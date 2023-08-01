@@ -477,8 +477,8 @@
 </script>
 
 <template>
-	<Story title="Data Table" icon="ri:table-2">
-		<Variant title="Basic">
+	<Story title="Data Table" id="svws-ui-data-table" icon="ri:table-2">
+		<Variant title="Basic" id="Basic">
 			<section class="flex flex-col h-[50vh]">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
@@ -531,7 +531,7 @@
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
-		<Variant title="Collapsible">
+		<Variant title="Collapsible" id="Collapsible">
 			<section class="flex flex-col">
 				<svws-ui-data-table :items="dataCollapsible" collapsible>
 					<template #header />
@@ -615,7 +615,7 @@
 				</svws-ui-data-table>
 			</section>
 		</Variant>
-		<Variant title="Drag-n-Drop">
+		<Variant title="Drag-n-Drop" id="Drag-n-Drop">
 			<section class="flex flex-col">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
@@ -668,7 +668,7 @@
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
-		<Variant title="Complex Filters">
+		<Variant title="Complex Filters" id="Complex Filters">
 			<section style="max-height: 50vh" class="flex flex-col complex-filters">
 				<svws-ui-data-table v-model="selectedRows3"
 					:items="data"
@@ -744,24 +744,24 @@
 				<code><strong>Selected Rows:</strong> {{ selectedRows3 }}</code>
 			</section>
 		</Variant>
-		<Variant title="Simple">
+		<Variant title="Simple" id="Simple">
 			<svws-ui-data-table :items="data" />
 		</Variant>
-		<Variant title="Simple mit zuschaltbaren Columns">
+		<Variant title="Simple mit zuschaltbaren Columns" id="Simple mit zuschaltbaren Columns">
 			<div class="flex gap-3 mb-3">
 				<svws-ui-button @click="varcol=columns">Columns</svws-ui-button>
 				<svws-ui-button @click="varcol=columns_ohne_id">Columns ohne ID</svws-ui-button>
 			</div>
 			<svws-ui-data-table :items="data" :columns="varcol" />
 		</Variant>
-		<Variant title="Simple Iterable">
+		<Variant title="Simple Iterable" id="Simple Iterable">
 			<svws-ui-data-table :items="set" />
 		</Variant>
-		<Variant title="Simple Row Click Selection">
+		<Variant title="Simple Row Click Selection" id="Simple Row Click Selection">
 			<svws-ui-data-table v-model:clicked="clickedRow" :items="data" clickable />
 			<p>Clicked row: {{ clickedRow }}</p>
 		</Variant>
-		<Variant title="Selection Multi">
+		<Variant title="Selection Multi" id="Selection Multi">
 			<svws-ui-data-table v-model="selectedRows2"
 				:items="data"
 				selectable
@@ -770,7 +770,7 @@
 			<p>Clicked row: {{ clickedRow }}</p>
 			<p>Selected Rows: {{ selectedRows2 }}</p>
 		</Variant>
-		<Variant title="Selection Multi Iterable">
+		<Variant title="Selection Multi Iterable" id="Selection Multi Iterable">
 			<svws-ui-data-table v-model="selectedRows2"
 				:items="set"
 				selectable
@@ -779,7 +779,7 @@
 			<p>Clicked row: {{ clickedRow }}</p>
 			<p>Selected Rows: {{ selectedRows2 }}</p>
 		</Variant>
-		<Variant title="Selection Multi reactive-Iterable">
+		<Variant title="Selection Multi reactive-Iterable" id="Selection Multi reactive-Iterable">
 			<svws-ui-data-table v-model="selectedRows2"
 				:items="setReactive"
 				selectable
@@ -788,7 +788,7 @@
 			<p>Clicked row: {{ clickedRow }}</p>
 			<p>Selected Rows: {{ selectedRows4 }}</p>
 		</Variant>
-		<Variant title="Selection Multi + Footer Action">
+		<Variant title="Selection Multi + Footer Action" id="Selection Multi + Footer Action">
 			<svws-ui-data-table v-model="selectedRows2" :items="data" selectable>
 				<template #footerActions>
 					<button class="button button--icon">
@@ -803,7 +803,7 @@
 				</template>
 			</svws-ui-data-table>
 		</Variant>
-		<Variant title="Custom everything">
+		<Variant title="Custom everything" id="Custom everything">
 			<svws-ui-data-table :items="data">
 				<template #header>
 					<tr class="data-table__tr">
@@ -825,7 +825,7 @@
 				</template>
 			</svws-ui-data-table>
 		</Variant>
-		<Variant title="Sorting + Selection + Header Labels">
+		<Variant title="Sorting + Selection + Header Labels" id="Sorting + Selection + Header Labels">
 			<svws-ui-data-table v-model="selectedRows3"
 				:items="data"
 				:columns="columns"
@@ -835,7 +835,7 @@
 			<p>Sort By: {{ sortBy }}</p>
 			<p>Sorting Order: {{ sortingOrder }}</p>
 		</Variant>
-		<Variant title="Basic + Custom Head Cell">
+		<Variant title="Basic + Custom Head Cell" id="Basic + Custom Head Cell">
 			<svws-ui-data-table :items="data">
 				<template #header(age)="{ column: { label } }">
 					<div class="flex">
@@ -847,7 +847,7 @@
 				</template>
 			</svws-ui-data-table>
 		</Variant>
-		<Variant title="Basic + Custom Cell Content">
+		<Variant title="Basic + Custom Cell Content" id="Basic + Custom Cell Content">
 			<svws-ui-data-table :items="data" :columns="columns">
 				<template #cell(email)="{ value }">
 					{{ value }}
@@ -862,7 +862,7 @@
 				</template>
 			</svws-ui-data-table>
 		</Variant>
-		<Variant title="Basic + Inline Editing">
+		<Variant title="Basic + Inline Editing" id="Basic + Inline Editing">
 			<svws-ui-data-table :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>
@@ -878,7 +878,7 @@
 				</template>
 			</svws-ui-data-table>
 		</Variant>
-		<Variant title="Headless Inputs">
+		<Variant title="Headless Inputs" id="Headless Inputs">
 			<svws-ui-data-table :items="data" :columns="columns2">
 				<template #cell(name)="{ value, rowData }">
 					<span class="data-table__td-content" v-if="!rowData.isEditing">{{ value }}</span>

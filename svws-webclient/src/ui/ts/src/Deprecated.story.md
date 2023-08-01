@@ -2,6 +2,7 @@
 group: 'design-system'
 title: 'Deprecated'
 iconColor: '#ccc'
+id: 'deprecated'
 icon: 'carbon:bookmark'
 ---
 

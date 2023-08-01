@@ -1,6 +1,6 @@
 <template>
-	<Story title="Notifications" group="app" :layout="{type: 'grid', width: '45%'}" icon="ri:notification-badge-line">
-		<Variant title="Success">
+	<Story title="Notifications" id="svws-ui-notifications" group="app" :layout="{type: 'grid', width: '45%'}" icon="ri:notification-badge-line">
+		<Variant title="Success" id="Success">
 			<svws-ui-notification type="success">
 				<template #header>
 					Success
@@ -8,12 +8,12 @@
 				<p>Das hat gut geklappt!</p>
 			</svws-ui-notification>
 		</Variant>
-		<Variant title="Info">
+		<Variant title="Info" id="Info">
 			<svws-ui-notification type="info">
 				Info
 			</svws-ui-notification>
 		</Variant>
-		<Variant title="Error">
+		<Variant title="Error" id="Error">
 			<svws-ui-notification type="error">
 				<template #header>
 					UserNotificationException
@@ -21,7 +21,7 @@
 				<p>Something went wrong. Das ist ein Beispiel für eine UserNotificationException.</p>
 			</svws-ui-notification>
 		</Variant>
-		<Variant title="Bug">
+		<Variant title="Bug" id="Bug">
 			<svws-ui-notification type="bug">
 				<template #header>
 					DeveloperNotificationException

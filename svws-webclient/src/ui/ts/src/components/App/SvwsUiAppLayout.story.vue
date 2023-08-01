@@ -23,7 +23,7 @@
 </script>
 
 <template>
-	<Story title="Layout" group="app" icon="ri:computer-line" :layout="{type: 'grid', width: '90%'}">
+	<Story title="Layout" id="svws-ui-app-layout" group="app" icon="ri:computer-line" :layout="{type: 'grid', width: '90%'}">
 		<svws-ui-app-layout>
 			<template #sidebar>
 				<svws-ui-menu v-if="false">
