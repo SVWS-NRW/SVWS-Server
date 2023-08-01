@@ -265,7 +265,7 @@ export class RouteDataStundenplan {
 		sp.gueltigAb = eintrag.gueltigAb;
 		sp.gueltigBis = eintrag.gueltigBis;
 		//TODO Fix wochenTypModell
-		sp.wochenTypModell = 2;
+		// sp.wochenTypModell = 2;
 		await api.server.patchStundenplan(sp, api.schema, leer.id);
 		eintrag.id = leer.id;
 		this.mapKatalogeintraege.set(leer.id, eintrag)

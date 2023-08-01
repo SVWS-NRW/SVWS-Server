@@ -1,3 +1,4 @@
+import { reactive } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, Router, NavigationFailure } from "vue-router";
 import { createRouter, createWebHashHistory } from "vue-router";
 
@@ -9,6 +10,10 @@ import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
 import { ServerMode } from "@core";
 
+interface RouteStateError {
+	code: number | undefined;
+	error: Error | undefined;
+}
 
 export class RouteManager {
 
@@ -20,6 +25,11 @@ export class RouteManager {
 
 	/** Gibt an, ob aktuell ein Routing stattfindet und eine Ereignisbehandlung durchgeführt wird. */
 	protected active = false;
+
+	private _errorstate = reactive<RouteStateError>({
+		code: undefined,
+		error: undefined
+	});
 
 	/**
      * Erstellt die Instanz des Managers für die übergebene Route
@@ -36,6 +46,27 @@ export class RouteManager {
 		this.router.addRoute(routeInit.record);
 		this.router.addRoute(routeError.record);
 		this.router.addRoute(routeApp.record);
+	}
+
+	public get errorcode(): number | undefined {
+		return this._errorstate.code;
+	}
+
+	public set errorcode(value : number | undefined) {
+		this._errorstate.code = value;
+	}
+
+	public get error(): Error | undefined {
+		return this._errorstate.error;
+	}
+
+	public set error(value : Error | undefined) {
+		this._errorstate.error = value;
+	}
+
+	public resetErrorState() {
+		this._errorstate.code = undefined;
+		this._errorstate.error = undefined;
 	}
 
 	/**
@@ -123,7 +154,7 @@ export class RouteManager {
 		if ((from_node === undefined) && (from.fullPath !== "/"))
 			return false;
 		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init")) {
-			await to_node.enter(to_node, to.params);
+			await to_node.doEnter(to_node, to.params);
 			await to_node.doUpdate(to_node, to.params);
 			return;
 		}
@@ -135,7 +166,7 @@ export class RouteManager {
 		if (!to_node.mode.checkServerMode(api.mode))
 			return routeError.getRoute(new Error("Die Route ist nicht verfügbar, da die Client-Funktionen sich derzeit in der Entwicklung befinden (Stand: " + to_node.mode.name() + ")."), 503);
 		// Rufe die beforeEach-Methode bei der Ziel-Route auf und prüfe, ob die Route abgelehnt oder umgeleite wird...
-		let result: any = await to_node.beforeEach(to_node, to.params, from_node, from.params);
+		let result: any = await to_node.doBeforeEach(to_node, to.params, from_node, from.params);
 		if (result !== true)
 			return result;
 		// Ereignisbehandlung: Sende die entsprechenden Nachrichten enter, update, leave zur Aktualisierung an die Knoten
@@ -143,14 +174,14 @@ export class RouteManager {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
 			const to_predecessors: RouteNode<unknown, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
-				result = await node.enter(to_node, to.params);
+				result = await node.doEnter(to_node, to.params);
 				if (result !== undefined)
 					return result;
 				result = await node.doUpdate(to_node, to.params);
 				if (result !== undefined)
 					return result;
 			}
-			result = await to_node.enter(to_node, to.params);
+			result = await to_node.doEnter(to_node, to.params);
 			if (result !== undefined)
 				return result;
 			result = await to_node.doUpdate(to_node, to.params);
@@ -168,7 +199,7 @@ export class RouteManager {
 			if (to_is_successor) {
 				for (const node of to_predecessors_all) {
 					if (to_is_successor.includes(node) && (node.name !== from_node.name)) {
-						result = await node.enter(to_node, to.params);
+						result = await node.doEnter(to_node, to.params);
 						if (result !== undefined)
 							return result;
 					}
@@ -176,7 +207,7 @@ export class RouteManager {
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.enter(to_node, to.params);
+				result = await to_node.doEnter(to_node, to.params);
 				if (result !== undefined)
 					return result;
 				result = await to_node.doUpdate(to_node, to.params);
@@ -184,7 +215,7 @@ export class RouteManager {
 					return result;
 			} else if (from_is_successor) {
 				for (const node of from_is_successor.slice(1).reverse()) {
-					result = await node.leaveBefore(from_node, from.params);
+					result = await node.doLeaveBefore(from_node, from.params);
 					if (result !== undefined)
 						return result;
 				}
@@ -213,17 +244,17 @@ export class RouteManager {
 					from_predecessors = from_predecessors.slice(1);
 					to_predecessors = to_predecessors.slice(1);
 				}
-				result = await from_node.leaveBefore(from_node, from.params);
+				result = await from_node.doLeaveBefore(from_node, from.params);
 				if (result !== undefined)
 					return result;
 				for (const node of [...from_predecessors].reverse()) {
-					result = await node.leaveBefore(from_node, from.params);
+					result = await node.doLeaveBefore(from_node, from.params);
 					if (result !== undefined)
 						return result;
 				}
 				for (const node of to_predecessors_all) {
 					if (to_predecessors.includes(node)) {
-						result = await node.enter(to_node, to.params);
+						result = await node.doEnter(to_node, to.params);
 						if (result !== undefined)
 							return result;
 					}
@@ -231,7 +262,7 @@ export class RouteManager {
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.enter(to_node, to.params);
+				result = await to_node.doEnter(to_node, to.params);
 				if (result !== undefined)
 					return result;
 				result = await to_node.doUpdate(to_node, to.params);

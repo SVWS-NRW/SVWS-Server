@@ -4,16 +4,16 @@ import { ServerMode} from "@core";
 import { BenutzerKompetenz, Schulform } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { RouteDataError } from "~/router/error/RouteDataError";
 
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
+import { routerManager } from "~/router/RouteManager";
 
 
-export class RouteError extends RouteNode<RouteDataError, any> {
+export class RouteError extends RouteNode<unknown, any> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "error", "/error/:errorcode?", SError, new RouteDataError());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "error", "/error/:errorcode?", SError);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "Fehler";
@@ -28,17 +28,17 @@ export class RouteError extends RouteNode<RouteDataError, any> {
 	}
 
 	public getRoute(error?: Error, errorcode? : number): RouteLocationRaw {
-		this.data.reset();
-		this.data.code = errorcode;
-		this.data.error = error;
+		routerManager.resetErrorState();
+		routerManager.errorcode = errorcode;
+		routerManager.error = error;
 		const params = errorcode === undefined ? {} : { errorcode };
 		return { name: this.name, params: params };
 	}
 
 	public getProps(): ErrorProps {
 		return {
-			code: this.data.code,
-			error: this.data.error
+			code: routerManager.errorcode,
+			error: routerManager.error
 		}
 	}
 

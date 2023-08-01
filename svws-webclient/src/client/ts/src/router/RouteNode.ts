@@ -7,6 +7,8 @@ import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz } from "@core";
 
 import { api } from "~/router/Api";
+import { routeError } from "~/router/error/RouteError";
+import { routerManager } from "./RouteManager";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -390,8 +392,26 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Quell-Route
      * @param from_params die Parameter der Quell-Route
      */
-	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+	protected async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return true;
+	}
+
+	/**
+     * TODO see RouterManager - global hook
+     *
+     * @param to    die Ziel-Route
+     * @param to_params die Parameter der Ziel-Route
+     * @param from   die Quell-Route
+     * @param from_params die Parameter der Quell-Route
+     */
+	public async doBeforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
+		try {
+			return this.beforeEach(to, to_params, from, from_params);
+		} catch (e) {
+			routerManager.errorcode = undefined;
+			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
+			return { name: "error" };
+		}
 	}
 
 	/**
@@ -467,7 +487,24 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	}
+
+	/**
+     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+     * bevor eine Route neu betreten wird.
+     *
+     * @param to   die neue Route
+     * @param to_params   die Routen-Parameter
+     */
+	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		try {
+		  return await this.enter(to, to_params);
+		} catch (e) {
+			routerManager.errorcode = undefined;
+			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doEnter(" + to.name + ")");
+			return { name: "error" };
+		}
 	}
 
 	/**
@@ -492,12 +529,18 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to_params   die Routen-Parameter
      */
 	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
-		if (this.hidden(to_params))
-			return this.parent === undefined ? this.getRoute() : this.parent.getRoute();
-		if (this._parent !== undefined)
-			this._parent._selectedChild.value = this;
-		return await this.update(to, to_params);
+		try {
+			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
+			if (this.hidden(to_params))
+				return this.parent === undefined ? this.getRoute() : this.parent.getRoute();
+			if (this._parent !== undefined)
+				this._parent._selectedChild.value = this;
+			return await this.update(to, to_params);
+		} catch (e) {
+			routerManager.errorcode = undefined;
+			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
+			return { name: "error" };
+		}
 	}
 
 	/**
@@ -507,8 +550,26 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param from   die Route, die verlassen wird
      * @param from_params   die Routen-Parameter
      */
-	public async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
+
+	/**
+   * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+   * bevor eine Route verlassen wird.
+   *
+   * @param from   die Route, die verlassen wird
+   * @param from_params   die Routen-Parameter
+   */
+	public async doLeaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		try {
+		  return await this.leaveBefore(from, from_params);
+		} catch (e) {
+			routerManager.errorcode = undefined;
+			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
+			return { name: "error" };
+		}
+	}
+
 
 	/**
      * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
