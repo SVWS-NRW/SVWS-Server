@@ -31,6 +31,7 @@
 	})
 
 	const emit = defineEmits<{
+		(e: "update:modelValue", value: string): void;
 		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 		(e: "click", event: Event): void;

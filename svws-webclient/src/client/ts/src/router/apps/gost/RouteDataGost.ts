@@ -185,8 +185,7 @@ export class RouteDataGost {
 		return this._state.value.mapJahrgaengeOhneAbiJahrgang;
 	}
 
-	patchJahrgangsdaten = useDebounceFn((data: Partial<GostJahrgangsdaten>, abiturjahr: number)=> this._patchJahrgangsdaten(data, abiturjahr), 1000)
-	_patchJahrgangsdaten = (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
+	patchJahrgangsdaten = (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten === undefined)
 			return false;
 		void api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
