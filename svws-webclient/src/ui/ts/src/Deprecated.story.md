@@ -1,6 +1,7 @@
 ---
-group: 'top'
+group: 'design-system'
 title: 'Deprecated'
+iconColor: '#ccc'
 icon: 'carbon:bookmark'
 ---
 

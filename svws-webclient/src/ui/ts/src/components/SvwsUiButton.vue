@@ -148,7 +148,7 @@
 	}
 
 	&:focus-visible {
-		@apply bg-light dark:bg-white/5 ring-black/25 dark:ring-white/25;
+		@apply bg-black/10 dark:bg-white/5 ring-black/25 dark:ring-white/25;
 	}
 }
 

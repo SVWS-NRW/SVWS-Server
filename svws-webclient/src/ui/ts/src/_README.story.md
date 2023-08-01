@@ -1,6 +1,7 @@
 ---
-group: 'top'
+group: 'design-system'
 title: 'Readme'
+iconColor: '#ccc'
 icon: 'carbon:bookmark'
 ---
 

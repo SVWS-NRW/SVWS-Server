@@ -69,7 +69,11 @@ export default defineConfig({
 				{
 					id: 'app',
 					title: 'App',
-				}
+				},
+				{
+					id: 'design-system',
+					title: 'Info',
+				},
 			],
 		},
 	},
