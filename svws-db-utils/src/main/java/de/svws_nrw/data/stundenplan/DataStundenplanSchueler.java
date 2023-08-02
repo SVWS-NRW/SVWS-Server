@@ -13,14 +13,13 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -80,19 +79,9 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		// Bestimme zunächst alle Zeitraster-IDs des Stundenplans
-		final List<Long> zeitrasterIDs = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
-				.stream().map(z -> z.ID).toList();
-		if (zeitrasterIDs.isEmpty())
-			return new ArrayList<>();
-		// Bestimme alle Unterrichte für diese Zeitraster-IDs
-		final List<DTOStundenplanUnterricht> unterrichte = conn.queryNamed("DTOStundenplanUnterricht.zeitraster_id.multiple", zeitrasterIDs, DTOStundenplanUnterricht.class);
-		if (unterrichte.isEmpty())
-			return new ArrayList<>();
-		final List<Long> unterrichtIDs = unterrichte.stream().map(u -> u.ID).toList();
-		// Bestimme alle Klassen-IDs dieser Unterrichte
-		final List<Long> klassenIDs = conn.queryNamed("DTOStundenplanUnterrichtKlasse.unterricht_id.multiple", unterrichtIDs, DTOStundenplanUnterrichtKlasse.class)
-				.stream().map(k -> k.Klasse_ID).toList();
+		// Bestimme alle Klassen-IDs der Schuljahresabschnitts
+		final List<Long> klassenIDs = conn.queryNamed("DTOKlassen.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKlassen.class)
+				.stream().map(k -> k.ID).toList();
 		// Bestimme alle Schüler-IDs von SchuelerLernabschnittsdaten, wo die Klasse zugeordnet ist und der Schuljahresabschnitt übereinstimmt
 		final Set<Long> schuelerIDs = new HashSet<>();
 		final Map<Long, Long> mapSchuelerKlasse = new HashMap<>();
@@ -102,16 +91,11 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 			schuelerIDs.addAll(lernabschnitte.stream().map(l -> l.Schueler_ID).toList());
 		}
 		// Bestimme alle Kurs-IDs der Unterrichte
-		final List<Long> kursIDs = unterrichte.stream().filter(u -> u.Kurs_ID != null).map(u -> u.Kurs_ID).toList();
+		final List<Long> kursIDs = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class).stream().map(k -> k.ID).toList();
 		if (!kursIDs.isEmpty()) {
-			// Bestimme alle Abschnitt-IDs von Schueler-Leistungsdaten bei denen ein solcher Kurs vorhanden ist
-			final List<Long> abschnittIDs = conn.queryNamed("DTOSchuelerLeistungsdaten.kurs_id.multiple", kursIDs, DTOSchuelerLeistungsdaten.class)
-					.stream().map(l -> l.Abschnitt_ID).toList();
-			if (!abschnittIDs.isEmpty()) {
-				final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.ID IN ?1 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, abschnittIDs);
-				mapSchuelerKlasse.putAll(lernabschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l.Klassen_ID)));
-				schuelerIDs.addAll(lernabschnitte.stream().map(l -> l.Schueler_ID).toList());
-			}
+			final List<Long> kursSchuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class)
+					.stream().map(ks -> ks.Schueler_ID).distinct().toList();
+			schuelerIDs.addAll(kursSchuelerIDs);
 		}
 		// Und bestimme nun die Schüler-Daten...
 		final List<DTOSchueler> schuelerListe = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
