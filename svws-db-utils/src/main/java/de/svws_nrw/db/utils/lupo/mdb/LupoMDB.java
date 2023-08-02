@@ -319,7 +319,7 @@ public class LupoMDB {
 		logger.modifyIndent(2);
 		for (final DTOKlassen kl : klassen) {
 			final List<DTOKlassenLeitung> klassenleitungen = mapKlassenLeitung.get(kl.ID);
-			if (!klassenleitungen.isEmpty()) {
+			if (klassenleitungen != null && !klassenleitungen.isEmpty()) {
 				for (final DTOKlassenLeitung kll : klassenleitungen) {
 					logger.logLn("- Klassenlehrer der Klasse " + kl.Klasse + "...");
 					final DTOLehrer l = lehrer.get(kll.Lehrer_ID);
