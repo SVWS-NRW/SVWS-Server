@@ -27,9 +27,7 @@ public final class BooleanJNConverter extends DBAttributeConverter<Boolean, Stri
 
 	@Override
 	public Boolean convertToEntityAttribute(final String dbData) {
-		if (dbData == null)
-			return null;
-		return "J".equals(dbData);
+		return (dbData != null) && "J".equals(dbData);
 	}
 
 	@Override

@@ -34,11 +34,7 @@ public final class MigrationBoolean01ConverterDeserializer extends StdDeserializ
 
 	@Override
 	public Boolean deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
-		try {
-			return Boolean01Converter.instance.convertToEntityAttribute(p.getIntValue());
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			return null;
-		}
+		return Boolean01Converter.instance.convertToEntityAttribute(p.getIntValue());
 	}
 
 }
