@@ -60,8 +60,8 @@ export class Schueler extends JavaObject {
 	public static transpilerToJSON(obj : Schueler) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"status" : ' + obj.status + ',';
 		result += '"geschlecht" : ' + obj.geschlecht + ',';
 		result = result.slice(0, -1);
@@ -75,10 +75,10 @@ export class Schueler extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
 		if (typeof obj.status !== "undefined") {
 			result += '"status" : ' + obj.status + ',';

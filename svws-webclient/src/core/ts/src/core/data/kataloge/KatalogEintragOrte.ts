@@ -62,9 +62,9 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerToJSON(obj : KatalogEintragOrte) : string {
 		let result = '{';
 		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
-		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
+		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
+		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
@@ -79,13 +79,13 @@ export class KatalogEintragOrte extends JavaObject {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
 		if (typeof obj.PLZ !== "undefined") {
-			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
+			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
+			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
+			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';

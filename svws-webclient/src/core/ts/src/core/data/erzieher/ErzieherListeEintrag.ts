@@ -68,10 +68,10 @@ export class ErzieherListeEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchueler" : ' + obj.idSchueler + ',';
 		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
-		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -89,16 +89,16 @@ export class ErzieherListeEintrag extends JavaObject {
 			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
 		}
 		if (typeof obj.anrede !== "undefined") {
-			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
+			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

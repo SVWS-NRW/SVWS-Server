@@ -236,30 +236,30 @@ export class BetriebStammdaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
-		result += '"name1" : ' + '"' + obj.name1! + '"' + ',';
-		result += '"name2" : ' + '"' + obj.name2! + '"' + ',';
-		result += '"strassenname" : ' + '"' + obj.strassenname! + '"' + ',';
-		result += '"hausnr" : ' + '"' + obj.hausnr! + '"' + ',';
-		result += '"hausnrzusatz" : ' + '"' + obj.hausnrzusatz! + '"' + ',';
+		result += '"name1" : ' + JSON.stringify(obj.name1!) + ',';
+		result += '"name2" : ' + JSON.stringify(obj.name2!) + ',';
+		result += '"strassenname" : ' + JSON.stringify(obj.strassenname!) + ',';
+		result += '"hausnr" : ' + JSON.stringify(obj.hausnr!) + ',';
+		result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz!) + ',';
 		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
-		result += '"telefon1" : ' + '"' + obj.telefon1! + '"' + ',';
-		result += '"telefon2" : ' + '"' + obj.telefon2! + '"' + ',';
-		result += '"fax" : ' + '"' + obj.fax! + '"' + ',';
-		result += '"email" : ' + '"' + obj.email! + '"' + ',';
-		result += '"bemerkungen" : ' + '"' + obj.bemerkungen! + '"' + ',';
+		result += '"telefon1" : ' + JSON.stringify(obj.telefon1!) + ',';
+		result += '"telefon2" : ' + JSON.stringify(obj.telefon2!) + ',';
+		result += '"fax" : ' + JSON.stringify(obj.fax!) + ',';
+		result += '"email" : ' + JSON.stringify(obj.email!) + ',';
+		result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"ausbildungsbetrieb" : ' + obj.ausbildungsbetrieb + ',';
 		result += '"bietetPraktika" : ' + obj.bietetPraktika + ',';
-		result += '"branche" : ' + '"' + obj.branche! + '"' + ',';
-		result += '"zusatz1" : ' + '"' + obj.zusatz1! + '"' + ',';
-		result += '"zusatz2" : ' + '"' + obj.zusatz2! + '"' + ',';
+		result += '"branche" : ' + JSON.stringify(obj.branche!) + ',';
+		result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1!) + ',';
+		result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2!) + ',';
 		result += '"Sichtbar" : ' + obj.Sichtbar + ',';
 		result += '"Aenderbar" : ' + obj.Aenderbar + ',';
 		result += '"Massnahmentraeger" : ' + obj.Massnahmentraeger + ',';
 		result += '"BelehrungISG" : ' + obj.BelehrungISG + ',';
-		result += '"GU_ID" : ' + '"' + obj.GU_ID! + '"' + ',';
+		result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID!) + ',';
 		result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis + ',';
-		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID + '"') + ',';
+		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
 		if (!obj.ansprechpartner) {
 			result += '"ansprechpartner" : []';
 		} else {
@@ -286,37 +286,37 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
 		}
 		if (typeof obj.name1 !== "undefined") {
-			result += '"name1" : ' + '"' + obj.name1 + '"' + ',';
+			result += '"name1" : ' + JSON.stringify(obj.name1!) + ',';
 		}
 		if (typeof obj.name2 !== "undefined") {
-			result += '"name2" : ' + '"' + obj.name2 + '"' + ',';
+			result += '"name2" : ' + JSON.stringify(obj.name2!) + ',';
 		}
 		if (typeof obj.strassenname !== "undefined") {
-			result += '"strassenname" : ' + '"' + obj.strassenname + '"' + ',';
+			result += '"strassenname" : ' + JSON.stringify(obj.strassenname!) + ',';
 		}
 		if (typeof obj.hausnr !== "undefined") {
-			result += '"hausnr" : ' + '"' + obj.hausnr + '"' + ',';
+			result += '"hausnr" : ' + JSON.stringify(obj.hausnr!) + ',';
 		}
 		if (typeof obj.hausnrzusatz !== "undefined") {
-			result += '"hausnrzusatz" : ' + '"' + obj.hausnrzusatz + '"' + ',';
+			result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz!) + ',';
 		}
 		if (typeof obj.ort_id !== "undefined") {
 			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		}
 		if (typeof obj.telefon1 !== "undefined") {
-			result += '"telefon1" : ' + '"' + obj.telefon1 + '"' + ',';
+			result += '"telefon1" : ' + JSON.stringify(obj.telefon1!) + ',';
 		}
 		if (typeof obj.telefon2 !== "undefined") {
-			result += '"telefon2" : ' + '"' + obj.telefon2 + '"' + ',';
+			result += '"telefon2" : ' + JSON.stringify(obj.telefon2!) + ',';
 		}
 		if (typeof obj.fax !== "undefined") {
-			result += '"fax" : ' + '"' + obj.fax + '"' + ',';
+			result += '"fax" : ' + JSON.stringify(obj.fax!) + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + '"' + obj.email + '"' + ',';
+			result += '"email" : ' + JSON.stringify(obj.email!) + ',';
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + '"' + obj.bemerkungen + '"' + ',';
+			result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen!) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
@@ -328,13 +328,13 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"bietetPraktika" : ' + obj.bietetPraktika + ',';
 		}
 		if (typeof obj.branche !== "undefined") {
-			result += '"branche" : ' + '"' + obj.branche + '"' + ',';
+			result += '"branche" : ' + JSON.stringify(obj.branche!) + ',';
 		}
 		if (typeof obj.zusatz1 !== "undefined") {
-			result += '"zusatz1" : ' + '"' + obj.zusatz1 + '"' + ',';
+			result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1!) + ',';
 		}
 		if (typeof obj.zusatz2 !== "undefined") {
-			result += '"zusatz2" : ' + '"' + obj.zusatz2 + '"' + ',';
+			result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2!) + ',';
 		}
 		if (typeof obj.Sichtbar !== "undefined") {
 			result += '"Sichtbar" : ' + obj.Sichtbar + ',';
@@ -349,13 +349,13 @@ export class BetriebStammdaten extends JavaObject {
 			result += '"BelehrungISG" : ' + obj.BelehrungISG + ',';
 		}
 		if (typeof obj.GU_ID !== "undefined") {
-			result += '"GU_ID" : ' + '"' + obj.GU_ID + '"' + ',';
+			result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID!) + ',';
 		}
 		if (typeof obj.ErwFuehrungszeugnis !== "undefined") {
 			result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis + ',';
 		}
 		if (typeof obj.ExtID !== "undefined") {
-			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : '"' + obj.ExtID + '"') + ',';
+			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
 		}
 		if (typeof obj.ansprechpartner !== "undefined") {
 			if (!obj.ansprechpartner) {

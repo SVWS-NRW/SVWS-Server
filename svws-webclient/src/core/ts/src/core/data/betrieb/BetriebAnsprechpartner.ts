@@ -85,14 +85,14 @@ export class BetriebAnsprechpartner extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
-		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : '"' + obj.telefon + '"') + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
-		result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : '"' + obj.abteilung + '"') + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
-		result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID + '"') + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
+		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -107,28 +107,28 @@ export class BetriebAnsprechpartner extends JavaObject {
 			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (typeof obj.anrede !== "undefined") {
-			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : '"' + obj.anrede + '"') + ',';
+			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
 		if (typeof obj.telefon !== "undefined") {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : '"' + obj.telefon + '"') + ',';
+			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (typeof obj.abteilung !== "undefined") {
-			result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : '"' + obj.abteilung + '"') + ',';
+			result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
 		}
 		if (typeof obj.titel !== "undefined") {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
+			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (typeof obj.GU_ID !== "undefined") {
-			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : '"' + obj.GU_ID + '"') + ',';
+			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

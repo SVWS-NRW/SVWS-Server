@@ -43,9 +43,9 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 
 	public static transpilerToJSON(obj : SchildReportingDatenquelleAttribut) : string {
 		let result = '{';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
-		result += '"typ" : ' + '"' + obj.typ! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		result += '"typ" : ' + JSON.stringify(obj.typ!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -54,13 +54,13 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelleAttribut>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.typ !== "undefined") {
-			result += '"typ" : ' + '"' + obj.typ + '"' + ',';
+			result += '"typ" : ' + JSON.stringify(obj.typ!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

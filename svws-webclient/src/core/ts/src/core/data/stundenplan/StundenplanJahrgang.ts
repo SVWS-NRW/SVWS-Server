@@ -44,8 +44,8 @@ export class StundenplanJahrgang extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanJahrgang) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -57,10 +57,10 @@ export class StundenplanJahrgang extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

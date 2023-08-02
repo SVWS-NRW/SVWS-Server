@@ -103,17 +103,17 @@ export class Sprachpruefung extends JavaObject {
 
 	public static transpilerToJSON(obj : Sprachpruefung) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
-		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache + '"') + ',';
+		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
 		result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
 		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
 		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
 		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
 		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
 		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -123,16 +123,16 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachpruefung>) : string {
 		let result = '{';
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
+			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (typeof obj.anspruchsniveauId !== "undefined") {
 			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
 		}
 		if (typeof obj.ersetzteSprache !== "undefined") {
-			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : '"' + obj.ersetzteSprache + '"') + ',';
+			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
 		}
 		if (typeof obj.istHSUPruefung !== "undefined") {
 			result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
@@ -153,7 +153,7 @@ export class Sprachpruefung extends JavaObject {
 			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
 		}
 		if (typeof obj.referenzniveau !== "undefined") {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
 			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';

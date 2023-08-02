@@ -67,12 +67,12 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragVersetzungsvermerke) : string {
 		let result = '{';
-		result += '"Nr" : ' + ((!obj.Nr) ? 'null' : '"' + obj.Nr + '"') + ',';
-		result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : '"' + obj.Klartext + '"') + ',';
-		result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : '"' + obj.StatistikKrz + '"') + ',';
+		result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
+		result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
+		result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
 		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
-		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : '"' + obj.Schulform + '"') + ',';
-		result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : '"' + obj.StatistikKrzNeu + '"') + ',';
+		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
+		result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -83,22 +83,22 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragVersetzungsvermerke>) : string {
 		let result = '{';
 		if (typeof obj.Nr !== "undefined") {
-			result += '"Nr" : ' + ((!obj.Nr) ? 'null' : '"' + obj.Nr + '"') + ',';
+			result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
 		}
 		if (typeof obj.Klartext !== "undefined") {
-			result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : '"' + obj.Klartext + '"') + ',';
+			result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
 		}
 		if (typeof obj.StatistikKrz !== "undefined") {
-			result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : '"' + obj.StatistikKrz + '"') + ',';
+			result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		}
 		if (typeof obj.Schulform !== "undefined") {
-			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : '"' + obj.Schulform + '"') + ',';
+			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		}
 		if (typeof obj.StatistikKrzNeu !== "undefined") {
-			result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : '"' + obj.StatistikKrzNeu + '"') + ',';
+			result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

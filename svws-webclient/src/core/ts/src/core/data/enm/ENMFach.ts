@@ -60,8 +60,8 @@ export class ENMFach extends JavaObject {
 	public static transpilerToJSON(obj : ENMFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"kuerzelAnzeige" : ' + JSON.stringify(obj.kuerzelAnzeige!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result = result.slice(0, -1);
@@ -75,10 +75,10 @@ export class ENMFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + '"' + obj.kuerzelAnzeige + '"' + ',';
+			result += '"kuerzelAnzeige" : ' + JSON.stringify(obj.kuerzelAnzeige!) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

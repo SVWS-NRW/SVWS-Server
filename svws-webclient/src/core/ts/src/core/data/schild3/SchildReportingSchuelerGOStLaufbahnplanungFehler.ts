@@ -36,7 +36,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFehler extends JavaObject
 	public static transpilerToJSON(obj : SchildReportingSchuelerGOStLaufbahnplanungFehler) : string {
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
-		result += '"belegungsfehler" : ' + '"' + obj.belegungsfehler! + '"' + ',';
+		result += '"belegungsfehler" : ' + JSON.stringify(obj.belegungsfehler!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -48,7 +48,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFehler extends JavaObject
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
 		if (typeof obj.belegungsfehler !== "undefined") {
-			result += '"belegungsfehler" : ' + '"' + obj.belegungsfehler + '"' + ',';
+			result += '"belegungsfehler" : ' + JSON.stringify(obj.belegungsfehler!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

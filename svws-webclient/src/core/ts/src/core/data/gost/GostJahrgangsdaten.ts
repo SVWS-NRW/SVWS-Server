@@ -110,15 +110,15 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostJahrgangsdaten) : string {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
-		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen + '"') + ',';
-		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand + '"') + ',';
+		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
+		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
 		result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
-		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE + '"') + ',';
+		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
-		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW + '"') + ',';
+		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		if (!obj.istBlockungFestgelegt) {
 			result += '"istBlockungFestgelegt" : []';
 		} else {
@@ -154,31 +154,31 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (typeof obj.istAbgeschlossen !== "undefined") {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen + ',';
 		}
 		if (typeof obj.textBeratungsbogen !== "undefined") {
-			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : '"' + obj.textBeratungsbogen + '"') + ',';
+			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		}
 		if (typeof obj.textMailversand !== "undefined") {
-			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : '"' + obj.textMailversand + '"') + ',';
+			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
 		}
 		if (typeof obj.hatZusatzkursGE !== "undefined") {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE + ',';
 		}
 		if (typeof obj.beginnZusatzkursGE !== "undefined") {
-			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : '"' + obj.beginnZusatzkursGE + '"') + ',';
+			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		}
 		if (typeof obj.hatZusatzkursSW !== "undefined") {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW + ',';
 		}
 		if (typeof obj.beginnZusatzkursSW !== "undefined") {
-			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : '"' + obj.beginnZusatzkursSW + '"') + ',';
+			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		}
 		if (typeof obj.istBlockungFestgelegt !== "undefined") {
 			const a = obj.istBlockungFestgelegt;

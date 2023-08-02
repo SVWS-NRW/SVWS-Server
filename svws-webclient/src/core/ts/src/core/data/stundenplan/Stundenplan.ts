@@ -148,9 +148,9 @@ export class Stundenplan extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"gueltigAb" : ' + '"' + obj.gueltigAb! + '"' + ',';
-		result += '"gueltigBis" : ' + '"' + obj.gueltigBis! + '"' + ',';
-		result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan! + '"' + ',';
+		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
+		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
+		result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan!) + ',';
 		result += '"wochenTypModell" : ' + obj.wochenTypModell + ',';
 		if (!obj.zeitraster) {
 			result += '"zeitraster" : []';
@@ -250,13 +250,13 @@ export class Stundenplan extends JavaObject {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (typeof obj.gueltigAb !== "undefined") {
-			result += '"gueltigAb" : ' + '"' + obj.gueltigAb + '"' + ',';
+			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + '"' + obj.gueltigBis + '"' + ',';
+			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
 		}
 		if (typeof obj.bezeichnungStundenplan !== "undefined") {
-			result += '"bezeichnungStundenplan" : ' + '"' + obj.bezeichnungStundenplan + '"' + ',';
+			result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan!) + ',';
 		}
 		if (typeof obj.wochenTypModell !== "undefined") {
 			result += '"wochenTypModell" : ' + obj.wochenTypModell + ',';

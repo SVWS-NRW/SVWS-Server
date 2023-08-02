@@ -95,7 +95,7 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : JahrgangsKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		if (!obj.bezeichnungen) {
 			result += '"bezeichnungen" : []';
 		} else {
@@ -121,7 +121,7 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.bezeichnungen !== "undefined") {
 			if (!obj.bezeichnungen) {

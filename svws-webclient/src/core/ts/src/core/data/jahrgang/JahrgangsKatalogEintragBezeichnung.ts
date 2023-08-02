@@ -60,8 +60,8 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 
 	public static transpilerToJSON(obj : JahrgangsKatalogEintragBezeichnung) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -70,10 +70,10 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<JahrgangsKatalogEintragBezeichnung>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

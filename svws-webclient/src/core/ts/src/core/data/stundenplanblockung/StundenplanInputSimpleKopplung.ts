@@ -45,7 +45,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanInputSimpleKopplung) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"stunden" : ' + obj.stunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -58,7 +58,7 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.stunden !== "undefined") {
 			result += '"stunden" : ' + obj.stunden + ',';

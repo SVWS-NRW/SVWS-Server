@@ -109,15 +109,15 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"aktuellesGOSthalbjahr" : ' + '"' + obj.aktuellesGOSthalbjahr! + '"' + ',';
-		result += '"beratungsGOSthalbjahr" : ' + '"' + obj.beratungsGOSthalbjahr! + '"' + ',';
-		result += '"beratungsbogentext" : ' + '"' + obj.beratungsbogentext! + '"' + ',';
-		result += '"emailtext" : ' + '"' + obj.emailtext! + '"' + ',';
-		result += '"beratungslehrkraefte" : ' + '"' + obj.beratungslehrkraefte! + '"' + ',';
-		result += '"beratungslehrkraft" : ' + '"' + obj.beratungslehrkraft! + '"' + ',';
-		result += '"ruecklaufdatum" : ' + '"' + obj.ruecklaufdatum! + '"' + ',';
-		result += '"beratungsdatum" : ' + '"' + obj.beratungsdatum! + '"' + ',';
-		result += '"kommentar" : ' + '"' + obj.kommentar! + '"' + ',';
+		result += '"aktuellesGOSthalbjahr" : ' + JSON.stringify(obj.aktuellesGOSthalbjahr!) + ',';
+		result += '"beratungsGOSthalbjahr" : ' + JSON.stringify(obj.beratungsGOSthalbjahr!) + ',';
+		result += '"beratungsbogentext" : ' + JSON.stringify(obj.beratungsbogentext!) + ',';
+		result += '"emailtext" : ' + JSON.stringify(obj.emailtext!) + ',';
+		result += '"beratungslehrkraefte" : ' + JSON.stringify(obj.beratungslehrkraefte!) + ',';
+		result += '"beratungslehrkraft" : ' + JSON.stringify(obj.beratungslehrkraft!) + ',';
+		result += '"ruecklaufdatum" : ' + JSON.stringify(obj.ruecklaufdatum!) + ',';
+		result += '"beratungsdatum" : ' + JSON.stringify(obj.beratungsdatum!) + ',';
+		result += '"kommentar" : ' + JSON.stringify(obj.kommentar!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,31 +132,31 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
 		if (typeof obj.aktuellesGOSthalbjahr !== "undefined") {
-			result += '"aktuellesGOSthalbjahr" : ' + '"' + obj.aktuellesGOSthalbjahr + '"' + ',';
+			result += '"aktuellesGOSthalbjahr" : ' + JSON.stringify(obj.aktuellesGOSthalbjahr!) + ',';
 		}
 		if (typeof obj.beratungsGOSthalbjahr !== "undefined") {
-			result += '"beratungsGOSthalbjahr" : ' + '"' + obj.beratungsGOSthalbjahr + '"' + ',';
+			result += '"beratungsGOSthalbjahr" : ' + JSON.stringify(obj.beratungsGOSthalbjahr!) + ',';
 		}
 		if (typeof obj.beratungsbogentext !== "undefined") {
-			result += '"beratungsbogentext" : ' + '"' + obj.beratungsbogentext + '"' + ',';
+			result += '"beratungsbogentext" : ' + JSON.stringify(obj.beratungsbogentext!) + ',';
 		}
 		if (typeof obj.emailtext !== "undefined") {
-			result += '"emailtext" : ' + '"' + obj.emailtext + '"' + ',';
+			result += '"emailtext" : ' + JSON.stringify(obj.emailtext!) + ',';
 		}
 		if (typeof obj.beratungslehrkraefte !== "undefined") {
-			result += '"beratungslehrkraefte" : ' + '"' + obj.beratungslehrkraefte + '"' + ',';
+			result += '"beratungslehrkraefte" : ' + JSON.stringify(obj.beratungslehrkraefte!) + ',';
 		}
 		if (typeof obj.beratungslehrkraft !== "undefined") {
-			result += '"beratungslehrkraft" : ' + '"' + obj.beratungslehrkraft + '"' + ',';
+			result += '"beratungslehrkraft" : ' + JSON.stringify(obj.beratungslehrkraft!) + ',';
 		}
 		if (typeof obj.ruecklaufdatum !== "undefined") {
-			result += '"ruecklaufdatum" : ' + '"' + obj.ruecklaufdatum + '"' + ',';
+			result += '"ruecklaufdatum" : ' + JSON.stringify(obj.ruecklaufdatum!) + ',';
 		}
 		if (typeof obj.beratungsdatum !== "undefined") {
-			result += '"beratungsdatum" : ' + '"' + obj.beratungsdatum + '"' + ',';
+			result += '"beratungsdatum" : ' + JSON.stringify(obj.beratungsdatum!) + ',';
 		}
 		if (typeof obj.kommentar !== "undefined") {
-			result += '"kommentar" : ' + '"' + obj.kommentar + '"' + ',';
+			result += '"kommentar" : ' + JSON.stringify(obj.kommentar!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

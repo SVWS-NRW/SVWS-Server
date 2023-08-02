@@ -122,9 +122,9 @@ export class NotenKatalogEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"text" : ' + '"' + obj.text! + '"' + ',';
-		result += '"textZeugnis" : ' + '"' + obj.textZeugnis! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text!) + ',';
+		result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis!) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -144,13 +144,13 @@ export class NotenKatalogEintrag extends JavaObject {
 			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + '"' + obj.text + '"' + ',';
+			result += '"text" : ' + JSON.stringify(obj.text!) + ',';
 		}
 		if (typeof obj.textZeugnis !== "undefined") {
-			result += '"textZeugnis" : ' + '"' + obj.textZeugnis + '"' + ',';
+			result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis!) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

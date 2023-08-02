@@ -58,11 +58,11 @@ export class ENMLehrer extends JavaObject {
 	public static transpilerToJSON(obj : ENMLehrer) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
-		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
-		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht + '"') + ',';
-		result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : '"' + obj.eMailDienstlich + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
+		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,19 +74,19 @@ export class ENMLehrer extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : '"' + obj.nachname + '"') + ',';
+			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : '"' + obj.vorname + '"') + ',';
+			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (typeof obj.geschlecht !== "undefined") {
-			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : '"' + obj.geschlecht + '"') + ',';
+			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		}
 		if (typeof obj.eMailDienstlich !== "undefined") {
-			result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : '"' + obj.eMailDienstlich + '"') + ',';
+			result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

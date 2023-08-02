@@ -46,9 +46,9 @@ export class ENMNote extends JavaObject {
 	public static transpilerToJSON(obj : ENMNote) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
+		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -60,13 +60,13 @@ export class ENMNote extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (typeof obj.notenpunkte !== "undefined") {
 			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + ((!obj.text) ? 'null' : '"' + obj.text + '"') + ',';
+			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -140,13 +140,13 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : PruefungsordnungKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : '"' + obj.kuerzelSchild + '"') + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr) + ',';
-		result += '"gvNr" : ' + '"' + obj.gvNr! + '"' + ',';
-		result += '"gvSeiten" : ' + '"' + obj.gvSeiten! + '"' + ',';
-		result += '"link" : ' + '"' + obj.link! + '"' + ',';
+		result += '"gvNr" : ' + JSON.stringify(obj.gvNr!) + ',';
+		result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten!) + ',';
+		result += '"link" : ' + JSON.stringify(obj.link!) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -160,25 +160,25 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.kuerzelSchild !== "undefined") {
-			result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : '"' + obj.kuerzelSchild + '"') + ',';
+			result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.gvJahr !== "undefined") {
 			result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr) + ',';
 		}
 		if (typeof obj.gvNr !== "undefined") {
-			result += '"gvNr" : ' + '"' + obj.gvNr + '"' + ',';
+			result += '"gvNr" : ' + JSON.stringify(obj.gvNr!) + ',';
 		}
 		if (typeof obj.gvSeiten !== "undefined") {
-			result += '"gvSeiten" : ' + '"' + obj.gvSeiten + '"' + ',';
+			result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten!) + ',';
 		}
 		if (typeof obj.link !== "undefined") {
-			result += '"link" : ' + '"' + obj.link + '"' + ',';
+			result += '"link" : ' + JSON.stringify(obj.link!) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

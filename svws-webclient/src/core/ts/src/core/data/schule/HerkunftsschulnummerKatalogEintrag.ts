@@ -122,7 +122,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"schulnummer" : ' + obj.schulnummer + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		if (!obj.zulaessig) {
 			result += '"zulaessig" : []';
 		} else {
@@ -151,7 +151,7 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.zulaessig !== "undefined") {
 			if (!obj.zulaessig) {

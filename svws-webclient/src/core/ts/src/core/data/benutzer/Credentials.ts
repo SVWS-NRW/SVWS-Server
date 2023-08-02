@@ -35,8 +35,8 @@ export class Credentials extends JavaObject {
 
 	public static transpilerToJSON(obj : Credentials) : string {
 		let result = '{';
-		result += '"benutzername" : ' + '"' + obj.benutzername! + '"' + ',';
-		result += '"password" : ' + '"' + obj.password! + '"' + ',';
+		result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
+		result += '"password" : ' + JSON.stringify(obj.password!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -45,10 +45,10 @@ export class Credentials extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Credentials>) : string {
 		let result = '{';
 		if (typeof obj.benutzername !== "undefined") {
-			result += '"benutzername" : ' + '"' + obj.benutzername + '"' + ',';
+			result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
 		}
 		if (typeof obj.password !== "undefined") {
-			result += '"password" : ' + '"' + obj.password + '"' + ',';
+			result += '"password" : ' + JSON.stringify(obj.password!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -74,12 +74,12 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	public static transpilerToJSON(obj : GostKlausurenKalenderinformation) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
-		result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : '"' + obj.startdatum + '"') + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
-		result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : '"' + obj.enddatum + '"') + ',';
+		result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
 		result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result += '"istSperrtermin" : ' + obj.istSperrtermin + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -92,22 +92,22 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.startdatum !== "undefined") {
-			result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : '"' + obj.startdatum + '"') + ',';
+			result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
 		}
 		if (typeof obj.startzeit !== "undefined") {
 			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
 		}
 		if (typeof obj.enddatum !== "undefined") {
-			result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : '"' + obj.enddatum + '"') + ',';
+			result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
 		}
 		if (typeof obj.endzeit !== "undefined") {
 			result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit) + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (typeof obj.istSperrtermin !== "undefined") {
 			result += '"istSperrtermin" : ' + obj.istSperrtermin + ',';

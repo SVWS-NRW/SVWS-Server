@@ -73,15 +73,15 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragExportCSV) : string {
 		let result = '{';
-		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
-		result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : '"' + obj.Feldname + '"') + ',';
-		result += '"AnzeigeText" : ' + ((!obj.AnzeigeText) ? 'null' : '"' + obj.AnzeigeText + '"') + ',';
-		result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : '"' + obj.Feldtyp + '"') + ',';
-		result += '"Feldwerte" : ' + ((!obj.Feldwerte) ? 'null' : '"' + obj.Feldwerte + '"') + ',';
-		result += '"ErgebnisWerte" : ' + ((!obj.ErgebnisWerte) ? 'null' : '"' + obj.ErgebnisWerte + '"') + ',';
-		result += '"LookupFeldname" : ' + ((!obj.LookupFeldname) ? 'null' : '"' + obj.LookupFeldname + '"') + ',';
-		result += '"LookupSQLText" : ' + ((!obj.LookupSQLText) ? 'null' : '"' + obj.LookupSQLText + '"') + ',';
-		result += '"DBFormat" : ' + ((!obj.DBFormat) ? 'null' : '"' + obj.DBFormat + '"') + ',';
+		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
+		result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
+		result += '"AnzeigeText" : ' + ((!obj.AnzeigeText) ? 'null' : JSON.stringify(obj.AnzeigeText)) + ',';
+		result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
+		result += '"Feldwerte" : ' + ((!obj.Feldwerte) ? 'null' : JSON.stringify(obj.Feldwerte)) + ',';
+		result += '"ErgebnisWerte" : ' + ((!obj.ErgebnisWerte) ? 'null' : JSON.stringify(obj.ErgebnisWerte)) + ',';
+		result += '"LookupFeldname" : ' + ((!obj.LookupFeldname) ? 'null' : JSON.stringify(obj.LookupFeldname)) + ',';
+		result += '"LookupSQLText" : ' + ((!obj.LookupSQLText) ? 'null' : JSON.stringify(obj.LookupSQLText)) + ',';
+		result += '"DBFormat" : ' + ((!obj.DBFormat) ? 'null' : JSON.stringify(obj.DBFormat)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,31 +90,31 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragExportCSV>) : string {
 		let result = '{';
 		if (typeof obj.DatenartKrz !== "undefined") {
-			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
+			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		}
 		if (typeof obj.Feldname !== "undefined") {
-			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : '"' + obj.Feldname + '"') + ',';
+			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
 		}
 		if (typeof obj.AnzeigeText !== "undefined") {
-			result += '"AnzeigeText" : ' + ((!obj.AnzeigeText) ? 'null' : '"' + obj.AnzeigeText + '"') + ',';
+			result += '"AnzeigeText" : ' + ((!obj.AnzeigeText) ? 'null' : JSON.stringify(obj.AnzeigeText)) + ',';
 		}
 		if (typeof obj.Feldtyp !== "undefined") {
-			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : '"' + obj.Feldtyp + '"') + ',';
+			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
 		}
 		if (typeof obj.Feldwerte !== "undefined") {
-			result += '"Feldwerte" : ' + ((!obj.Feldwerte) ? 'null' : '"' + obj.Feldwerte + '"') + ',';
+			result += '"Feldwerte" : ' + ((!obj.Feldwerte) ? 'null' : JSON.stringify(obj.Feldwerte)) + ',';
 		}
 		if (typeof obj.ErgebnisWerte !== "undefined") {
-			result += '"ErgebnisWerte" : ' + ((!obj.ErgebnisWerte) ? 'null' : '"' + obj.ErgebnisWerte + '"') + ',';
+			result += '"ErgebnisWerte" : ' + ((!obj.ErgebnisWerte) ? 'null' : JSON.stringify(obj.ErgebnisWerte)) + ',';
 		}
 		if (typeof obj.LookupFeldname !== "undefined") {
-			result += '"LookupFeldname" : ' + ((!obj.LookupFeldname) ? 'null' : '"' + obj.LookupFeldname + '"') + ',';
+			result += '"LookupFeldname" : ' + ((!obj.LookupFeldname) ? 'null' : JSON.stringify(obj.LookupFeldname)) + ',';
 		}
 		if (typeof obj.LookupSQLText !== "undefined") {
-			result += '"LookupSQLText" : ' + ((!obj.LookupSQLText) ? 'null' : '"' + obj.LookupSQLText + '"') + ',';
+			result += '"LookupSQLText" : ' + ((!obj.LookupSQLText) ? 'null' : JSON.stringify(obj.LookupSQLText)) + ',';
 		}
 		if (typeof obj.DBFormat !== "undefined") {
-			result += '"DBFormat" : ' + ((!obj.DBFormat) ? 'null' : '"' + obj.DBFormat + '"') + ',';
+			result += '"DBFormat" : ' + ((!obj.DBFormat) ? 'null' : JSON.stringify(obj.DBFormat)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

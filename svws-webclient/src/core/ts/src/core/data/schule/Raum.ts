@@ -52,8 +52,8 @@ export class Raum extends JavaObject {
 	public static transpilerToJSON(obj : Raum) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		result += '"groesse" : ' + obj.groesse + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -66,10 +66,10 @@ export class Raum extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.groesse !== "undefined") {
 			result += '"groesse" : ' + obj.groesse + ',';

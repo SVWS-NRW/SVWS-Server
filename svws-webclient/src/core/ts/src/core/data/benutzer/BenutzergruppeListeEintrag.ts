@@ -44,7 +44,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BenutzergruppeListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -57,7 +57,7 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

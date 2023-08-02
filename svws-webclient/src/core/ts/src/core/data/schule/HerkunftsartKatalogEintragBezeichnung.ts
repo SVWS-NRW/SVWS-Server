@@ -71,9 +71,9 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
 	public static transpilerToJSON(obj : HerkunftsartKatalogEintragBezeichnung) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
-		result += '"kurzBezeichnung" : ' + '"' + obj.kurzBezeichnung! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -82,13 +82,13 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<HerkunftsartKatalogEintragBezeichnung>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
 		if (typeof obj.kurzBezeichnung !== "undefined") {
-			result += '"kurzBezeichnung" : ' + '"' + obj.kurzBezeichnung + '"' + ',';
+			result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

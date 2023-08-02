@@ -44,9 +44,9 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostLaufbahnplanungBeratungsdaten) : string {
 		let result = '{';
 		result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID) + ',';
-		result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : '"' + obj.beratungsdatum + '"') + ',';
-		result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : '"' + obj.kommentar + '"') + ',';
-		result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : '"' + obj.ruecklaufdatum + '"') + ',';
+		result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
+		result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
+		result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 			result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID) + ',';
 		}
 		if (typeof obj.beratungsdatum !== "undefined") {
-			result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : '"' + obj.beratungsdatum + '"') + ',';
+			result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
 		}
 		if (typeof obj.kommentar !== "undefined") {
-			result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : '"' + obj.kommentar + '"') + ',';
+			result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
 		}
 		if (typeof obj.ruecklaufdatum !== "undefined") {
-			result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : '"' + obj.ruecklaufdatum + '"') + ',';
+			result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

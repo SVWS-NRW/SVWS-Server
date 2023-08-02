@@ -56,7 +56,7 @@ export class BenutzergruppeDaten extends JavaObject {
 	public static transpilerToJSON(obj : BenutzergruppeDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		if (!obj.kompetenzen) {
 			result += '"kompetenzen" : []';
@@ -81,7 +81,7 @@ export class BenutzergruppeDaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

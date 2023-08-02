@@ -59,8 +59,8 @@ export class SchulformSchulgliederung extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulformSchulgliederung) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,10 +69,10 @@ export class SchulformSchulgliederung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformSchulgliederung>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
 		if (typeof obj.gliederung !== "undefined") {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
+			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

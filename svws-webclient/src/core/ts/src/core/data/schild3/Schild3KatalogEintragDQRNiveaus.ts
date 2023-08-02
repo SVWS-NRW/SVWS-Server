@@ -49,8 +49,8 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragDQRNiveaus) : string {
 		let result = '{';
-		result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung + '"') + ',';
-		result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS + '"') + ',';
+		result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
+		result += '"FKS" : ' + ((!obj.FKS) ? 'null' : JSON.stringify(obj.FKS)) + ',';
 		result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
@@ -62,10 +62,10 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDQRNiveaus>) : string {
 		let result = '{';
 		if (typeof obj.Gliederung !== "undefined") {
-			result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : '"' + obj.Gliederung + '"') + ',';
+			result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
 		}
 		if (typeof obj.FKS !== "undefined") {
-			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : '"' + obj.FKS + '"') + ',';
+			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : JSON.stringify(obj.FKS)) + ',';
 		}
 		if (typeof obj.DQR_Niveau !== "undefined") {
 			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';

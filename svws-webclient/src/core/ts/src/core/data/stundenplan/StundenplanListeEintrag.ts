@@ -76,12 +76,12 @@ export class StundenplanListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"gueltigAb" : ' + '"' + obj.gueltigAb! + '"' + ',';
-		result += '"gueltigBis" : ' + '"' + obj.gueltigBis! + '"' + ',';
+		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
+		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -93,7 +93,7 @@ export class StundenplanListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
@@ -105,10 +105,10 @@ export class StundenplanListeEintrag extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.gueltigAb !== "undefined") {
-			result += '"gueltigAb" : ' + '"' + obj.gueltigAb + '"' + ',';
+			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
 		}
 		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + '"' + obj.gueltigBis + '"' + ',';
+			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

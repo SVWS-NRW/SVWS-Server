@@ -68,13 +68,13 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 	public static transpilerToJSON(obj : Schild3KatalogEintragFilterFeldListe) : string {
 		let result = '{';
 		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
-		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : '"' + obj.Bezeichnung + '"') + ',';
-		result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : '"' + obj.DBFeld + '"') + ',';
-		result += '"Typ" : ' + ((!obj.Typ) ? 'null' : '"' + obj.Typ + '"') + ',';
-		result += '"Werte" : ' + ((!obj.Werte) ? 'null' : '"' + obj.Werte + '"') + ',';
-		result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : '"' + obj.StdWert + '"') + ',';
-		result += '"Operator" : ' + ((!obj.Operator) ? 'null' : '"' + obj.Operator + '"') + ',';
-		result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : '"' + obj.Zusatzbedingung + '"') + ',';
+		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
+		result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
+		result += '"Typ" : ' + ((!obj.Typ) ? 'null' : JSON.stringify(obj.Typ)) + ',';
+		result += '"Werte" : ' + ((!obj.Werte) ? 'null' : JSON.stringify(obj.Werte)) + ',';
+		result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
+		result += '"Operator" : ' + ((!obj.Operator) ? 'null' : JSON.stringify(obj.Operator)) + ',';
+		result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -86,25 +86,25 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
 		if (typeof obj.Bezeichnung !== "undefined") {
-			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : '"' + obj.Bezeichnung + '"') + ',';
+			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		}
 		if (typeof obj.DBFeld !== "undefined") {
-			result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : '"' + obj.DBFeld + '"') + ',';
+			result += '"DBFeld" : ' + ((!obj.DBFeld) ? 'null' : JSON.stringify(obj.DBFeld)) + ',';
 		}
 		if (typeof obj.Typ !== "undefined") {
-			result += '"Typ" : ' + ((!obj.Typ) ? 'null' : '"' + obj.Typ + '"') + ',';
+			result += '"Typ" : ' + ((!obj.Typ) ? 'null' : JSON.stringify(obj.Typ)) + ',';
 		}
 		if (typeof obj.Werte !== "undefined") {
-			result += '"Werte" : ' + ((!obj.Werte) ? 'null' : '"' + obj.Werte + '"') + ',';
+			result += '"Werte" : ' + ((!obj.Werte) ? 'null' : JSON.stringify(obj.Werte)) + ',';
 		}
 		if (typeof obj.StdWert !== "undefined") {
-			result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : '"' + obj.StdWert + '"') + ',';
+			result += '"StdWert" : ' + ((!obj.StdWert) ? 'null' : JSON.stringify(obj.StdWert)) + ',';
 		}
 		if (typeof obj.Operator !== "undefined") {
-			result += '"Operator" : ' + ((!obj.Operator) ? 'null' : '"' + obj.Operator + '"') + ',';
+			result += '"Operator" : ' + ((!obj.Operator) ? 'null' : JSON.stringify(obj.Operator)) + ',';
 		}
 		if (typeof obj.Zusatzbedingung !== "undefined") {
-			result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : '"' + obj.Zusatzbedingung + '"') + ',';
+			result += '"Zusatzbedingung" : ' + ((!obj.Zusatzbedingung) ? 'null' : JSON.stringify(obj.Zusatzbedingung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

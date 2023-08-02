@@ -51,10 +51,10 @@ export class AdressbuchEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : AdressbuchEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id! + '"' + ',';
-		result += '"adressbuchId" : ' + '"' + obj.adressbuchId! + '"' + ',';
-		result += '"uri" : ' + '"' + obj.uri! + '"' + ',';
-		result += '"version" : ' + '"' + obj.version! + '"' + ',';
+		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
+		result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
+		result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -63,16 +63,16 @@ export class AdressbuchEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchEintrag>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id + '"' + ',';
+			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
 		if (typeof obj.adressbuchId !== "undefined") {
-			result += '"adressbuchId" : ' + '"' + obj.adressbuchId + '"' + ',';
+			result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
 		}
 		if (typeof obj.uri !== "undefined") {
-			result += '"uri" : ' + '"' + obj.uri + '"' + ',';
+			result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
 		}
 		if (typeof obj.version !== "undefined") {
-			result += '"version" : ' + '"' + obj.version + '"' + ',';
+			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -98,11 +98,11 @@ export class LehrerListeEintrag extends JavaObject {
 	public static transpilerToJSON(obj : LehrerListeEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
-		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
-		result += '"personTyp" : ' + '"' + obj.personTyp! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+		result += '"personTyp" : ' + JSON.stringify(obj.personTyp!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -118,19 +118,19 @@ export class LehrerListeEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.titel !== "undefined") {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : '"' + obj.titel + '"') + ',';
+			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
 		if (typeof obj.personTyp !== "undefined") {
-			result += '"personTyp" : ' + '"' + obj.personTyp + '"' + ',';
+			result += '"personTyp" : ' + JSON.stringify(obj.personTyp!) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

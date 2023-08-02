@@ -216,7 +216,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchulgliederungKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"istBK" : ' + obj.istBK + ',';
 		if (!obj.schulformen) {
 			result += '"schulformen" : []';
@@ -232,9 +232,9 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		}
 		result += '"istAuslaufend" : ' + obj.istAuslaufend + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
-		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : '"' + obj.bkAnlage + '"') + ',';
-		result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : '"' + obj.bkTyp + '"') + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
+		result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
 		result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex) + ',';
 		result += '"istVZ" : ' + obj.istVZ + ',';
 		if (!obj.bkAbschlussBerufsbildend) {
@@ -274,7 +274,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.istBK !== "undefined") {
 			result += '"istBK" : ' + obj.istBK + ',';
@@ -300,13 +300,13 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.bkAnlage !== "undefined") {
-			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : '"' + obj.bkAnlage + '"') + ',';
+			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
 		}
 		if (typeof obj.bkTyp !== "undefined") {
-			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : '"' + obj.bkTyp + '"') + ',';
+			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
 		}
 		if (typeof obj.bkIndex !== "undefined") {
 			result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex) + ',';

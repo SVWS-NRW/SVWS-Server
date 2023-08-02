@@ -55,7 +55,7 @@ export class AbschlussErgebnis extends JavaObject {
 	public static transpilerToJSON(obj : AbschlussErgebnis) : string {
 		let result = '{';
 		result += '"erworben" : ' + obj.erworben + ',';
-		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss + '"') + ',';
+		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		if (!obj.npFaecher) {
 			result += '"npFaecher" : []';
 		} else {
@@ -91,7 +91,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += '"erworben" : ' + obj.erworben + ',';
 		}
 		if (typeof obj.abschluss !== "undefined") {
-			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : '"' + obj.abschluss + '"') + ',';
+			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		}
 		if (typeof obj.npFaecher !== "undefined") {
 			if (!obj.npFaecher) {

@@ -98,7 +98,7 @@ export class BilingualeSpracheKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BilingualeSpracheKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		if (!obj.schulformen) {
 			result += '"schulformen" : []';
 		} else {
@@ -124,7 +124,7 @@ export class BilingualeSpracheKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.schulformen !== "undefined") {
 			if (!obj.schulformen) {

@@ -49,8 +49,8 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragLaender) : string {
 		let result = '{';
-		result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext + '"') + ',';
-		result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext + '"') + ',';
+		result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
+		result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
 		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
@@ -62,10 +62,10 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragLaender>) : string {
 		let result = '{';
 		if (typeof obj.Kurztext !== "undefined") {
-			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : '"' + obj.Kurztext + '"') + ',';
+			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
 		}
 		if (typeof obj.Langtext !== "undefined") {
-			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : '"' + obj.Langtext + '"') + ',';
+			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';

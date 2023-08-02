@@ -80,13 +80,13 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public static transpilerToJSON(obj : SchildReportingDatenquelle) : string {
 		let result = '{';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
-		result += '"datenart" : ' + '"' + obj.datenart! + '"' + ',';
-		result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master + '"') + ',';
-		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut + '"') + ',';
-		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp + '"') + ',';
-		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut + '"') + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"datenart" : ' + JSON.stringify(obj.datenart!) + ',';
+		result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
+		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
+		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
+		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		if (!obj.attribute) {
 			result += '"attribute" : []';
 		} else {
@@ -107,25 +107,25 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelle>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.datenart !== "undefined") {
-			result += '"datenart" : ' + '"' + obj.datenart + '"' + ',';
+			result += '"datenart" : ' + JSON.stringify(obj.datenart!) + ',';
 		}
 		if (typeof obj.master !== "undefined") {
-			result += '"master" : ' + ((!obj.master) ? 'null' : '"' + obj.master + '"') + ',';
+			result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
 		}
 		if (typeof obj.masterattribut !== "undefined") {
-			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : '"' + obj.masterattribut + '"') + ',';
+			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
 		}
 		if (typeof obj.mastertyp !== "undefined") {
-			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : '"' + obj.mastertyp + '"') + ',';
+			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
 		}
 		if (typeof obj.linkattribut !== "undefined") {
-			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : '"' + obj.linkattribut + '"') + ',';
+			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		}
 		if (typeof obj.attribute !== "undefined") {
 			if (!obj.attribute) {

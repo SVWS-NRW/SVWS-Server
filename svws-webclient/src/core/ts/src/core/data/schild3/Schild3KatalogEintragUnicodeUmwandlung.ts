@@ -62,12 +62,12 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public static transpilerToJSON(obj : Schild3KatalogEintragUnicodeUmwandlung) : string {
 		let result = '{';
 		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
-		result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : '"' + obj.Unicodezeichen + '"') + ',';
-		result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : '"' + obj.Ersatzzeichen + '"') + ',';
-		result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : '"' + obj.DecimalZeichen + '"') + ',';
-		result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : '"' + obj.DecimalErsatzzeichen + '"') + ',';
-		result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : '"' + obj.Hexzeichen + '"') + ',';
-		result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : '"' + obj.HexErsatzzeichen + '"') + ',';
+		result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
+		result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
+		result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
+		result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
+		result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
+		result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -79,22 +79,22 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
 		if (typeof obj.Unicodezeichen !== "undefined") {
-			result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : '"' + obj.Unicodezeichen + '"') + ',';
+			result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
 		}
 		if (typeof obj.Ersatzzeichen !== "undefined") {
-			result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : '"' + obj.Ersatzzeichen + '"') + ',';
+			result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
 		}
 		if (typeof obj.DecimalZeichen !== "undefined") {
-			result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : '"' + obj.DecimalZeichen + '"') + ',';
+			result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
 		}
 		if (typeof obj.DecimalErsatzzeichen !== "undefined") {
-			result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : '"' + obj.DecimalErsatzzeichen + '"') + ',';
+			result += '"DecimalErsatzzeichen" : ' + ((!obj.DecimalErsatzzeichen) ? 'null' : JSON.stringify(obj.DecimalErsatzzeichen)) + ',';
 		}
 		if (typeof obj.Hexzeichen !== "undefined") {
-			result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : '"' + obj.Hexzeichen + '"') + ',';
+			result += '"Hexzeichen" : ' + ((!obj.Hexzeichen) ? 'null' : JSON.stringify(obj.Hexzeichen)) + ',';
 		}
 		if (typeof obj.HexErsatzzeichen !== "undefined") {
-			result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : '"' + obj.HexErsatzzeichen + '"') + ',';
+			result += '"HexErsatzzeichen" : ' + ((!obj.HexErsatzzeichen) ? 'null' : JSON.stringify(obj.HexErsatzzeichen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

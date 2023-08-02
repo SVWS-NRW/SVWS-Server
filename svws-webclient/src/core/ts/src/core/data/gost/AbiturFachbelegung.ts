@@ -124,18 +124,18 @@ export class AbiturFachbelegung extends JavaObject {
 	public static transpilerToJSON(obj : AbiturFachbelegung) : string {
 		let result = '{';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"letzteKursart" : ' + ((!obj.letzteKursart) ? 'null' : '"' + obj.letzteKursart + '"') + ',';
+		result += '"letzteKursart" : ' + ((!obj.letzteKursart) ? 'null' : JSON.stringify(obj.letzteKursart)) + ',';
 		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
 		result += '"istFSNeu" : ' + obj.istFSNeu + ',';
 		result += '"block1PunktSumme" : ' + ((!obj.block1PunktSumme) ? 'null' : obj.block1PunktSumme) + ',';
 		result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
-		result += '"block2NotenKuerzelPruefung" : ' + ((!obj.block2NotenKuerzelPruefung) ? 'null' : '"' + obj.block2NotenKuerzelPruefung + '"') + ',';
+		result += '"block2NotenKuerzelPruefung" : ' + ((!obj.block2NotenKuerzelPruefung) ? 'null' : JSON.stringify(obj.block2NotenKuerzelPruefung)) + ',';
 		result += '"block2PunkteZwischenstand" : ' + ((!obj.block2PunkteZwischenstand) ? 'null' : obj.block2PunkteZwischenstand) + ',';
 		result += '"block2MuendlichePruefungAbweichung" : ' + ((!obj.block2MuendlichePruefungAbweichung) ? 'null' : obj.block2MuendlichePruefungAbweichung) + ',';
 		result += '"block2MuendlichePruefungBestehen" : ' + ((!obj.block2MuendlichePruefungBestehen) ? 'null' : obj.block2MuendlichePruefungBestehen) + ',';
 		result += '"block2MuendlichePruefungFreiwillig" : ' + ((!obj.block2MuendlichePruefungFreiwillig) ? 'null' : obj.block2MuendlichePruefungFreiwillig) + ',';
 		result += '"block2MuendlichePruefungReihenfolge" : ' + ((!obj.block2MuendlichePruefungReihenfolge) ? 'null' : obj.block2MuendlichePruefungReihenfolge) + ',';
-		result += '"block2MuendlichePruefungNotenKuerzel" : ' + ((!obj.block2MuendlichePruefungNotenKuerzel) ? 'null' : '"' + obj.block2MuendlichePruefungNotenKuerzel + '"') + ',';
+		result += '"block2MuendlichePruefungNotenKuerzel" : ' + ((!obj.block2MuendlichePruefungNotenKuerzel) ? 'null' : JSON.stringify(obj.block2MuendlichePruefungNotenKuerzel)) + ',';
 		result += '"block2Punkte" : ' + ((!obj.block2Punkte) ? 'null' : obj.block2Punkte) + ',';
 		result += '"block2Pruefer" : ' + ((!obj.block2Pruefer) ? 'null' : obj.block2Pruefer) + ',';
 		if (!obj.belegungen) {
@@ -161,7 +161,7 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.letzteKursart !== "undefined") {
-			result += '"letzteKursart" : ' + ((!obj.letzteKursart) ? 'null' : '"' + obj.letzteKursart + '"') + ',';
+			result += '"letzteKursart" : ' + ((!obj.letzteKursart) ? 'null' : JSON.stringify(obj.letzteKursart)) + ',';
 		}
 		if (typeof obj.abiturFach !== "undefined") {
 			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
@@ -176,7 +176,7 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"block1NotenpunkteDurchschnitt" : ' + ((!obj.block1NotenpunkteDurchschnitt) ? 'null' : obj.block1NotenpunkteDurchschnitt) + ',';
 		}
 		if (typeof obj.block2NotenKuerzelPruefung !== "undefined") {
-			result += '"block2NotenKuerzelPruefung" : ' + ((!obj.block2NotenKuerzelPruefung) ? 'null' : '"' + obj.block2NotenKuerzelPruefung + '"') + ',';
+			result += '"block2NotenKuerzelPruefung" : ' + ((!obj.block2NotenKuerzelPruefung) ? 'null' : JSON.stringify(obj.block2NotenKuerzelPruefung)) + ',';
 		}
 		if (typeof obj.block2PunkteZwischenstand !== "undefined") {
 			result += '"block2PunkteZwischenstand" : ' + ((!obj.block2PunkteZwischenstand) ? 'null' : obj.block2PunkteZwischenstand) + ',';
@@ -194,7 +194,7 @@ export class AbiturFachbelegung extends JavaObject {
 			result += '"block2MuendlichePruefungReihenfolge" : ' + ((!obj.block2MuendlichePruefungReihenfolge) ? 'null' : obj.block2MuendlichePruefungReihenfolge) + ',';
 		}
 		if (typeof obj.block2MuendlichePruefungNotenKuerzel !== "undefined") {
-			result += '"block2MuendlichePruefungNotenKuerzel" : ' + ((!obj.block2MuendlichePruefungNotenKuerzel) ? 'null' : '"' + obj.block2MuendlichePruefungNotenKuerzel + '"') + ',';
+			result += '"block2MuendlichePruefungNotenKuerzel" : ' + ((!obj.block2MuendlichePruefungNotenKuerzel) ? 'null' : JSON.stringify(obj.block2MuendlichePruefungNotenKuerzel)) + ',';
 		}
 		if (typeof obj.block2Punkte !== "undefined") {
 			result += '"block2Punkte" : ' + ((!obj.block2Punkte) ? 'null' : obj.block2Punkte) + ',';

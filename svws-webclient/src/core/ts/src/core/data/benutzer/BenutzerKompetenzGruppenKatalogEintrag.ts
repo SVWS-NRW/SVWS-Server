@@ -82,7 +82,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : BenutzerKompetenzGruppenKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"spalte" : ' + obj.spalte + ',';
 		result += '"zeile" : ' + obj.zeile + ',';
 		result = result.slice(0, -1);
@@ -96,7 +96,7 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.spalte !== "undefined") {
 			result += '"spalte" : ' + obj.spalte + ',';

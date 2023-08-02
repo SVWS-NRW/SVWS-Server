@@ -41,7 +41,7 @@ export class SchemaListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchemaListeEintrag) : string {
 		let result = '{';
-		result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
+		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
 		result = result.slice(0, -1);
@@ -52,7 +52,7 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchemaListeEintrag>) : string {
 		let result = '{';
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + ((!obj.name) ? 'null' : '"' + obj.name + '"') + ',';
+			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
 		if (typeof obj.revision !== "undefined") {
 			result += '"revision" : ' + obj.revision + ',';

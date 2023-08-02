@@ -48,7 +48,7 @@ export class SchuleAbschnitte extends JavaObject {
 	public static transpilerToJSON(obj : SchuleAbschnitte) : string {
 		let result = '{';
 		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
-		result += '"abschnittBez" : ' + '"' + obj.abschnittBez! + '"' + ',';
+		result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez!) + ',';
 		if (!obj.bezAbschnitte) {
 			result += '"bezAbschnitte" : []';
 		} else {
@@ -72,7 +72,7 @@ export class SchuleAbschnitte extends JavaObject {
 			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		}
 		if (typeof obj.abschnittBez !== "undefined") {
-			result += '"abschnittBez" : ' + '"' + obj.abschnittBez + '"' + ',';
+			result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez!) + ',';
 		}
 		if (typeof obj.bezAbschnitte !== "undefined") {
 			if (!obj.bezAbschnitte) {

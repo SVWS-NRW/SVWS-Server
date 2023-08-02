@@ -195,8 +195,8 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"lernabschnittID" : ' + obj.lernabschnittID + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
 		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
-		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : '"' + obj.kursart + '"') + ',';
-		result += '"abifach" : ' + ((!obj.abifach) ? 'null' : '"' + obj.abifach + '"') + ',';
+		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
+		result += '"abifach" : ' + ((!obj.abifach) ? 'null' : JSON.stringify(obj.abifach)) + ',';
 		result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10 + ',';
 		result += '"koopSchule" : ' + ((!obj.koopSchule) ? 'null' : obj.koopSchule) + ',';
 		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
@@ -204,15 +204,15 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"zusatzkraftID" : ' + ((!obj.zusatzkraftID) ? 'null' : obj.zusatzkraftID) + ',';
 		result += '"zusatzkraftWochenstunden" : ' + obj.zusatzkraftWochenstunden + ',';
 		result += '"aufZeugnis" : ' + obj.aufZeugnis + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		result += '"istGemahnt" : ' + obj.istGemahnt + ',';
-		result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : '"' + obj.Mahndatum + '"') + ',';
+		result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : JSON.stringify(obj.Mahndatum)) + ',';
 		result += '"istEpochal" : ' + obj.istEpochal + ',';
-		result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : '"' + obj.geholtJahrgangAbgeschlossen + '"') + ',';
+		result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
 		result += '"gewichtungAllgemeinbildend" : ' + obj.gewichtungAllgemeinbildend + ',';
-		result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : '"' + obj.noteBerufsabschluss + '"') + ',';
-		result += '"textFachbezogeneLernentwicklung" : ' + '"' + obj.textFachbezogeneLernentwicklung! + '"' + ',';
-		result += '"umfangLernstandsbericht" : ' + '"' + obj.umfangLernstandsbericht! + '"' + ',';
+		result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
+		result += '"textFachbezogeneLernentwicklung" : ' + JSON.stringify(obj.textFachbezogeneLernentwicklung!) + ',';
+		result += '"umfangLernstandsbericht" : ' + JSON.stringify(obj.umfangLernstandsbericht!) + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
 		result = result.slice(0, -1);
@@ -235,10 +235,10 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : '"' + obj.kursart + '"') + ',';
+			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (typeof obj.abifach !== "undefined") {
-			result += '"abifach" : ' + ((!obj.abifach) ? 'null' : '"' + obj.abifach + '"') + ',';
+			result += '"abifach" : ' + ((!obj.abifach) ? 'null' : JSON.stringify(obj.abifach)) + ',';
 		}
 		if (typeof obj.istZP10oderZK10 !== "undefined") {
 			result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10 + ',';
@@ -262,31 +262,31 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			result += '"aufZeugnis" : ' + obj.aufZeugnis + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		if (typeof obj.istGemahnt !== "undefined") {
 			result += '"istGemahnt" : ' + obj.istGemahnt + ',';
 		}
 		if (typeof obj.Mahndatum !== "undefined") {
-			result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : '"' + obj.Mahndatum + '"') + ',';
+			result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : JSON.stringify(obj.Mahndatum)) + ',';
 		}
 		if (typeof obj.istEpochal !== "undefined") {
 			result += '"istEpochal" : ' + obj.istEpochal + ',';
 		}
 		if (typeof obj.geholtJahrgangAbgeschlossen !== "undefined") {
-			result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : '"' + obj.geholtJahrgangAbgeschlossen + '"') + ',';
+			result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
 		}
 		if (typeof obj.gewichtungAllgemeinbildend !== "undefined") {
 			result += '"gewichtungAllgemeinbildend" : ' + obj.gewichtungAllgemeinbildend + ',';
 		}
 		if (typeof obj.noteBerufsabschluss !== "undefined") {
-			result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : '"' + obj.noteBerufsabschluss + '"') + ',';
+			result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
 		}
 		if (typeof obj.textFachbezogeneLernentwicklung !== "undefined") {
-			result += '"textFachbezogeneLernentwicklung" : ' + '"' + obj.textFachbezogeneLernentwicklung + '"' + ',';
+			result += '"textFachbezogeneLernentwicklung" : ' + JSON.stringify(obj.textFachbezogeneLernentwicklung!) + ',';
 		}
 		if (typeof obj.umfangLernstandsbericht !== "undefined") {
-			result += '"umfangLernstandsbericht" : ' + '"' + obj.umfangLernstandsbericht + '"' + ',';
+			result += '"umfangLernstandsbericht" : ' + JSON.stringify(obj.umfangLernstandsbericht!) + ',';
 		}
 		if (typeof obj.fehlstundenGesamt !== "undefined") {
 			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';

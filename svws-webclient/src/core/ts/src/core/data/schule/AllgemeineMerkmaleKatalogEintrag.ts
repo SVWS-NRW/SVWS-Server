@@ -138,11 +138,11 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : AllgemeineMerkmaleKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"beiSchule" : ' + obj.beiSchule + ',';
 		result += '"beiSchueler" : ' + obj.beiSchueler + ',';
-		result += '"kuerzelASD" : ' + ((!obj.kuerzelASD) ? 'null' : '"' + obj.kuerzelASD + '"') + ',';
+		result += '"kuerzelASD" : ' + ((!obj.kuerzelASD) ? 'null' : JSON.stringify(obj.kuerzelASD)) + ',';
 		if (!obj.schulformen) {
 			result += '"schulformen" : []';
 		} else {
@@ -168,10 +168,10 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.beiSchule !== "undefined") {
 			result += '"beiSchule" : ' + obj.beiSchule + ',';
@@ -180,7 +180,7 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			result += '"beiSchueler" : ' + obj.beiSchueler + ',';
 		}
 		if (typeof obj.kuerzelASD !== "undefined") {
-			result += '"kuerzelASD" : ' + ((!obj.kuerzelASD) ? 'null' : '"' + obj.kuerzelASD + '"') + ',';
+			result += '"kuerzelASD" : ' + ((!obj.kuerzelASD) ? 'null' : JSON.stringify(obj.kuerzelASD)) + ',';
 		}
 		if (typeof obj.schulformen !== "undefined") {
 			if (!obj.schulformen) {

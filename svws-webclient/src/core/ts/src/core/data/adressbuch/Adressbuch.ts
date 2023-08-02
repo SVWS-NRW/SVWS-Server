@@ -68,11 +68,11 @@ export class Adressbuch extends JavaObject {
 
 	public static transpilerToJSON(obj : Adressbuch) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id! + '"' + ',';
-		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : '"' + obj.displayname + '"') + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
+		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
+		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"synctoken" : ' + obj.synctoken + ',';
-		result += '"adressbuchTyp" : ' + '"' + obj.adressbuchTyp! + '"' + ',';
+		result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp!) + ',';
 		if (!obj.adressbuchEintraege) {
 			result += '"adressbuchEintraege" : []';
 		} else {
@@ -93,19 +93,19 @@ export class Adressbuch extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Adressbuch>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id + '"' + ',';
+			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
 		if (typeof obj.displayname !== "undefined") {
-			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : '"' + obj.displayname + '"') + ',';
+			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
+			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (typeof obj.synctoken !== "undefined") {
 			result += '"synctoken" : ' + obj.synctoken + ',';
 		}
 		if (typeof obj.adressbuchTyp !== "undefined") {
-			result += '"adressbuchTyp" : ' + '"' + obj.adressbuchTyp + '"' + ',';
+			result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp!) + ',';
 		}
 		if (typeof obj.adressbuchEintraege !== "undefined") {
 			if (!obj.adressbuchEintraege) {

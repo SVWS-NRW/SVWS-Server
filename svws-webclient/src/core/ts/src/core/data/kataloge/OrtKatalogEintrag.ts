@@ -76,10 +76,10 @@ export class OrtKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : OrtKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
-		result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : '"' + obj.ortsname + '"') + ',';
-		result += '"kreis" : ' + ((!obj.kreis) ? 'null' : '"' + obj.kreis + '"') + ',';
-		result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : '"' + obj.kuerzelBundesland + '"') + ',';
+		result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
+		result += '"kreis" : ' + ((!obj.kreis) ? 'null' : JSON.stringify(obj.kreis)) + ',';
+		result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -94,16 +94,16 @@ export class OrtKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.plz !== "undefined") {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
+			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
 		if (typeof obj.ortsname !== "undefined") {
-			result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : '"' + obj.ortsname + '"') + ',';
+			result += '"ortsname" : ' + ((!obj.ortsname) ? 'null' : JSON.stringify(obj.ortsname)) + ',';
 		}
 		if (typeof obj.kreis !== "undefined") {
-			result += '"kreis" : ' + ((!obj.kreis) ? 'null' : '"' + obj.kreis + '"') + ',';
+			result += '"kreis" : ' + ((!obj.kreis) ? 'null' : JSON.stringify(obj.kreis)) + ',';
 		}
 		if (typeof obj.kuerzelBundesland !== "undefined") {
-			result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : '"' + obj.kuerzelBundesland + '"') + ',';
+			result += '"kuerzelBundesland" : ' + ((!obj.kuerzelBundesland) ? 'null' : JSON.stringify(obj.kuerzelBundesland)) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

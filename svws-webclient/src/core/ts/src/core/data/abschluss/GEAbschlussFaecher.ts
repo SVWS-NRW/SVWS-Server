@@ -56,7 +56,7 @@ export class GEAbschlussFaecher extends JavaObject {
 		let result = '{';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		if (!obj.faecher) {
 			result += '"faecher" : []';
 		} else {
@@ -83,7 +83,7 @@ export class GEAbschlussFaecher extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (typeof obj.faecher !== "undefined") {
 			if (!obj.faecher) {

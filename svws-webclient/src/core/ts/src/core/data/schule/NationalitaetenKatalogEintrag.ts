@@ -153,14 +153,14 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : NationalitaetenKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"iso3" : ' + '"' + obj.iso3! + '"' + ',';
-		result += '"iso2" : ' + '"' + obj.iso2! + '"' + ',';
-		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch + '"') + ',';
-		result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis! + '"' + ',';
-		result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
-		result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang! + '"' + ',';
-		result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit! + '"' + ',';
+		result += '"iso3" : ' + JSON.stringify(obj.iso3!) + ',';
+		result += '"iso2" : ' + JSON.stringify(obj.iso2!) + ',';
+		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
+		result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis!) + ',';
+		result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang!) + ',';
+		result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit!) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -174,28 +174,28 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.iso3 !== "undefined") {
-			result += '"iso3" : ' + '"' + obj.iso3 + '"' + ',';
+			result += '"iso3" : ' + JSON.stringify(obj.iso3!) + ',';
 		}
 		if (typeof obj.iso2 !== "undefined") {
-			result += '"iso2" : ' + '"' + obj.iso2 + '"' + ',';
+			result += '"iso2" : ' + JSON.stringify(obj.iso2!) + ',';
 		}
 		if (typeof obj.isoNumerisch !== "undefined") {
-			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : '"' + obj.isoNumerisch + '"') + ',';
+			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
 		}
 		if (typeof obj.codeDEStatis !== "undefined") {
-			result += '"codeDEStatis" : ' + '"' + obj.codeDEStatis + '"' + ',';
+			result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis!) + ',';
 		}
 		if (typeof obj.bezeichnungSuche !== "undefined") {
-			result += '"bezeichnungSuche" : ' + '"' + obj.bezeichnungSuche + '"' + ',';
+			result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.bezeichnungLang !== "undefined") {
-			result += '"bezeichnungLang" : ' + '"' + obj.bezeichnungLang + '"' + ',';
+			result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang!) + ',';
 		}
 		if (typeof obj.staatsangehoerigkeit !== "undefined") {
-			result += '"staatsangehoerigkeit" : ' + '"' + obj.staatsangehoerigkeit + '"' + ',';
+			result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit!) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

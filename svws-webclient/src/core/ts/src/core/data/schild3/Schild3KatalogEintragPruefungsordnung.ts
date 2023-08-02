@@ -73,13 +73,13 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragPruefungsordnung) : string {
 		let result = '{';
-		result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform + '"') + ',';
-		result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz + '"') + ',';
-		result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name + '"') + ',';
-		result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL + '"') + ',';
+		result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : JSON.stringify(obj.PO_Schulform)) + ',';
+		result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : JSON.stringify(obj.PO_Krz)) + ',';
+		result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : JSON.stringify(obj.PO_Name)) + ',';
+		result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : JSON.stringify(obj.PO_SGL)) + ',';
 		result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
 		result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
-		result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge + '"') + ',';
+		result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : JSON.stringify(obj.PO_Jahrgaenge)) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -90,16 +90,16 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragPruefungsordnung>) : string {
 		let result = '{';
 		if (typeof obj.PO_Schulform !== "undefined") {
-			result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : '"' + obj.PO_Schulform + '"') + ',';
+			result += '"PO_Schulform" : ' + ((!obj.PO_Schulform) ? 'null' : JSON.stringify(obj.PO_Schulform)) + ',';
 		}
 		if (typeof obj.PO_Krz !== "undefined") {
-			result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : '"' + obj.PO_Krz + '"') + ',';
+			result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : JSON.stringify(obj.PO_Krz)) + ',';
 		}
 		if (typeof obj.PO_Name !== "undefined") {
-			result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : '"' + obj.PO_Name + '"') + ',';
+			result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : JSON.stringify(obj.PO_Name)) + ',';
 		}
 		if (typeof obj.PO_SGL !== "undefined") {
-			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : '"' + obj.PO_SGL + '"') + ',';
+			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : JSON.stringify(obj.PO_SGL)) + ',';
 		}
 		if (typeof obj.PO_MinJahrgang !== "undefined") {
 			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
@@ -108,7 +108,7 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
 		}
 		if (typeof obj.PO_Jahrgaenge !== "undefined") {
-			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : '"' + obj.PO_Jahrgaenge + '"') + ',';
+			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : JSON.stringify(obj.PO_Jahrgaenge)) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

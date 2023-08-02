@@ -52,7 +52,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungListeneintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
 		result = result.slice(0, -1);
@@ -66,7 +66,7 @@ export class GostBlockungListeneintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';

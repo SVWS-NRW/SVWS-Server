@@ -107,8 +107,8 @@ export class KAOAKategorieEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KAOAKategorieEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		if (!obj.jahrgaenge) {
 			result += '"jahrgaenge" : []';
 		} else {
@@ -134,10 +134,10 @@ export class KAOAKategorieEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.jahrgaenge !== "undefined") {
 			if (!obj.jahrgaenge) {

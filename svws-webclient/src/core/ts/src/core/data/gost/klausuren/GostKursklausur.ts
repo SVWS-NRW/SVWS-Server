@@ -181,15 +181,15 @@ export class GostKursklausur extends JavaObject {
 		result += '"halbjahr" : ' + obj.halbjahr + ',';
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		result += '"dauer" : ' + obj.dauer + ',';
 		result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
 		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
-		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
+		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
-		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
+		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
 		if (!obj.kursSchiene) {
 			result += '"kursSchiene" : []';
 		} else {
@@ -243,7 +243,7 @@ export class GostKursklausur extends JavaObject {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + '"' + obj.kursart + '"' + ',';
+			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		}
 		if (typeof obj.dauer !== "undefined") {
 			result += '"dauer" : ' + obj.dauer + ',';
@@ -261,13 +261,13 @@ export class GostKursklausur extends JavaObject {
 			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		}
 		if (typeof obj.bemerkungVorgabe !== "undefined") {
-			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
+			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		}
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';
 		}
 		if (typeof obj.kursKurzbezeichnung !== "undefined") {
-			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : '"' + obj.kursKurzbezeichnung + '"') + ',';
+			result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
 		}
 		if (typeof obj.kursSchiene !== "undefined") {
 			const a = obj.kursSchiene;

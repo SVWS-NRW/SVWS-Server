@@ -79,15 +79,15 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragSchuelerImportExport) : string {
 		let result = '{';
-		result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : '"' + obj.Tabelle + '"') + ',';
-		result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : '"' + obj.TabellenAnzeige + '"') + ',';
-		result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : '"' + obj.MasterTable + '"') + ',';
-		result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : '"' + obj.ExpCmd + '"') + ',';
-		result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : '"' + obj.SrcGetFieldsSQL + '"') + ',';
-		result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : '"' + obj.DeleteSQL + '"') + ',';
-		result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : '"' + obj.DstGetIDSQL + '"') + ',';
-		result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : '"' + obj.HauptFeld + '"') + ',';
-		result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : '"' + obj.DetailFeld + '"') + ',';
+		result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
+		result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
+		result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
+		result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
+		result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
+		result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
+		result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
+		result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
+		result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
 		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -97,31 +97,31 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragSchuelerImportExport>) : string {
 		let result = '{';
 		if (typeof obj.Tabelle !== "undefined") {
-			result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : '"' + obj.Tabelle + '"') + ',';
+			result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
 		}
 		if (typeof obj.TabellenAnzeige !== "undefined") {
-			result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : '"' + obj.TabellenAnzeige + '"') + ',';
+			result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
 		}
 		if (typeof obj.MasterTable !== "undefined") {
-			result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : '"' + obj.MasterTable + '"') + ',';
+			result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
 		}
 		if (typeof obj.ExpCmd !== "undefined") {
-			result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : '"' + obj.ExpCmd + '"') + ',';
+			result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
 		}
 		if (typeof obj.SrcGetFieldsSQL !== "undefined") {
-			result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : '"' + obj.SrcGetFieldsSQL + '"') + ',';
+			result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
 		}
 		if (typeof obj.DeleteSQL !== "undefined") {
-			result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : '"' + obj.DeleteSQL + '"') + ',';
+			result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
 		}
 		if (typeof obj.DstGetIDSQL !== "undefined") {
-			result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : '"' + obj.DstGetIDSQL + '"') + ',';
+			result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
 		}
 		if (typeof obj.HauptFeld !== "undefined") {
-			result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : '"' + obj.HauptFeld + '"') + ',';
+			result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
 		}
 		if (typeof obj.DetailFeld !== "undefined") {
-			result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : '"' + obj.DetailFeld + '"') + ',';
+			result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
 		}
 		if (typeof obj.Reihenfolge !== "undefined") {
 			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';

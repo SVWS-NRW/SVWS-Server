@@ -61,7 +61,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		result += '"hatBSA" : ' + obj.hatBSA + ',';
 		result += '"note" : ' + obj.note + ',';
 		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
-		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend + '"') + ',';
+		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		if (!obj.log) {
 			result += '"log" : []';
 		} else {
@@ -91,7 +91,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
 		}
 		if (typeof obj.abschlussAllgemeinbildend !== "undefined") {
-			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : '"' + obj.abschlussAllgemeinbildend + '"') + ',';
+			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		}
 		if (typeof obj.log !== "undefined") {
 			if (!obj.log) {

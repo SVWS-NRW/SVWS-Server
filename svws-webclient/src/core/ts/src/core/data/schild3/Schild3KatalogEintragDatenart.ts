@@ -55,9 +55,9 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragDatenart) : string {
 		let result = '{';
-		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
-		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart + '"') + ',';
-		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname + '"') + ',';
+		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
+		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
+		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
 		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
@@ -69,13 +69,13 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDatenart>) : string {
 		let result = '{';
 		if (typeof obj.DatenartKrz !== "undefined") {
-			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : '"' + obj.DatenartKrz + '"') + ',';
+			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		}
 		if (typeof obj.Datenart !== "undefined") {
-			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : '"' + obj.Datenart + '"') + ',';
+			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
 		}
 		if (typeof obj.Tabellenname !== "undefined") {
-			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : '"' + obj.Tabellenname + '"') + ',';
+			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
 		}
 		if (typeof obj.Reihenfolge !== "undefined") {
 			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';

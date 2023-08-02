@@ -118,13 +118,13 @@ export class GostKlausurvorgabe extends JavaObject {
 		result += '"halbjahr" : ' + obj.halbjahr + ',';
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		result += '"dauer" : ' + obj.dauer + ',';
 		result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
 		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
 		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
 		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
-		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
+		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -148,7 +148,7 @@ export class GostKlausurvorgabe extends JavaObject {
 			result += '"idFach" : ' + obj.idFach + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + '"' + obj.kursart + '"' + ',';
+			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		}
 		if (typeof obj.dauer !== "undefined") {
 			result += '"dauer" : ' + obj.dauer + ',';
@@ -166,7 +166,7 @@ export class GostKlausurvorgabe extends JavaObject {
 			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
 		}
 		if (typeof obj.bemerkungVorgabe !== "undefined") {
-			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : '"' + obj.bemerkungVorgabe + '"') + ',';
+			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

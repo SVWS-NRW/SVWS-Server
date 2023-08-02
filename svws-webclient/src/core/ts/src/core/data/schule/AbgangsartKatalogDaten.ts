@@ -61,7 +61,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 	public static transpilerToJSON(obj : AbgangsartKatalogDaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		if (!obj.zulaessig) {
 			result += '"zulaessig" : []';
 		} else {
@@ -87,7 +87,7 @@ export class AbgangsartKatalogDaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.zulaessig !== "undefined") {
 			if (!obj.zulaessig) {

@@ -31,8 +31,8 @@ export class BenutzerKennwort extends JavaObject {
 
 	public static transpilerToJSON(obj : BenutzerKennwort) : string {
 		let result = '{';
-		result += '"user" : ' + ((!obj.user) ? 'null' : '"' + obj.user + '"') + ',';
-		result += '"password" : ' + ((!obj.password) ? 'null' : '"' + obj.password + '"') + ',';
+		result += '"user" : ' + ((!obj.user) ? 'null' : JSON.stringify(obj.user)) + ',';
+		result += '"password" : ' + ((!obj.password) ? 'null' : JSON.stringify(obj.password)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -41,10 +41,10 @@ export class BenutzerKennwort extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerKennwort>) : string {
 		let result = '{';
 		if (typeof obj.user !== "undefined") {
-			result += '"user" : ' + ((!obj.user) ? 'null' : '"' + obj.user + '"') + ',';
+			result += '"user" : ' + ((!obj.user) ? 'null' : JSON.stringify(obj.user)) + ',';
 		}
 		if (typeof obj.password !== "undefined") {
-			result += '"password" : ' + ((!obj.password) ? 'null' : '"' + obj.password + '"') + ',';
+			result += '"password" : ' + ((!obj.password) ? 'null' : JSON.stringify(obj.password)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

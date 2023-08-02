@@ -48,8 +48,8 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : BerufskollegFachklassenKatalogEintrag) : string {
 		let result = '{';
-		result += '"schluessel" : ' + '"' + obj.schluessel! + '"' + ',';
-		result += '"schluessel2" : ' + '"' + obj.schluessel2! + '"' + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+		result += '"schluessel2" : ' + JSON.stringify(obj.schluessel2!) + ',';
 		if (!obj.historie) {
 			result += '"historie" : []';
 		} else {
@@ -70,10 +70,10 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.schluessel !== "undefined") {
-			result += '"schluessel" : ' + '"' + obj.schluessel + '"' + ',';
+			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
 		}
 		if (typeof obj.schluessel2 !== "undefined") {
-			result += '"schluessel2" : ' + '"' + obj.schluessel2 + '"' + ',';
+			result += '"schluessel2" : ' + JSON.stringify(obj.schluessel2!) + ',';
 		}
 		if (typeof obj.historie !== "undefined") {
 			if (!obj.historie) {

@@ -103,14 +103,14 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
-		result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : '"' + obj.berufsfeldGruppe + '"') + ',';
-		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : '"' + obj.berufsfeld + '"') + ',';
-		result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : '"' + obj.ebene1 + '"') + ',';
-		result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : '"' + obj.ebene2 + '"') + ',';
-		result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : '"' + obj.ebene3 + '"') + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
-		result += '"bezeichnungM" : ' + '"' + obj.bezeichnungM! + '"' + ',';
-		result += '"bezeichnungW" : ' + '"' + obj.bezeichnungW! + '"' + ',';
+		result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
+		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
+		result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
+		result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
+		result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM!) + ',';
+		result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW!) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -127,28 +127,28 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
 		}
 		if (typeof obj.berufsfeldGruppe !== "undefined") {
-			result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : '"' + obj.berufsfeldGruppe + '"') + ',';
+			result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		}
 		if (typeof obj.berufsfeld !== "undefined") {
-			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : '"' + obj.berufsfeld + '"') + ',';
+			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
 		}
 		if (typeof obj.ebene1 !== "undefined") {
-			result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : '"' + obj.ebene1 + '"') + ',';
+			result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
 		}
 		if (typeof obj.ebene2 !== "undefined") {
-			result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : '"' + obj.ebene2 + '"') + ',';
+			result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
 		}
 		if (typeof obj.ebene3 !== "undefined") {
-			result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : '"' + obj.ebene3 + '"') + ',';
+			result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.bezeichnungM !== "undefined") {
-			result += '"bezeichnungM" : ' + '"' + obj.bezeichnungM + '"' + ',';
+			result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM!) + ',';
 		}
 		if (typeof obj.bezeichnungW !== "undefined") {
-			result += '"bezeichnungW" : ' + '"' + obj.bezeichnungW + '"' + ',';
+			result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW!) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

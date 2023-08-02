@@ -68,7 +68,7 @@ export class StundenplanKurs extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanKurs) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		if (!obj.schienen) {
 			result += '"schienen" : []';
 		} else {
@@ -116,7 +116,7 @@ export class StundenplanKurs extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
 			if (!obj.schienen) {

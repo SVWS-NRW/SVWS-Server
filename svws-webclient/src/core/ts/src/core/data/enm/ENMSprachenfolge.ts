@@ -87,15 +87,15 @@ export class ENMSprachenfolge extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMSprachenfolge) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
+		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : '"' + obj.fachKuerzel + '"') + ',';
+		result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
 		result += '"reihenfolge" : ' + obj.reihenfolge + ',';
 		result += '"belegungVonJahrgang" : ' + obj.belegungVonJahrgang + ',';
 		result += '"belegungVonAbschnitt" : ' + obj.belegungVonAbschnitt + ',';
 		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : obj.belegungBisJahrgang) + ',';
 		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		result += '"belegungSekI" : ' + ((!obj.belegungSekI) ? 'null' : obj.belegungSekI) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -105,13 +105,13 @@ export class ENMSprachenfolge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMSprachenfolge>) : string {
 		let result = '{';
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : '"' + obj.sprache + '"') + ',';
+			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
 		}
 		if (typeof obj.fachID !== "undefined") {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.fachKuerzel !== "undefined") {
-			result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : '"' + obj.fachKuerzel + '"') + ',';
+			result += '"fachKuerzel" : ' + ((!obj.fachKuerzel) ? 'null' : JSON.stringify(obj.fachKuerzel)) + ',';
 		}
 		if (typeof obj.reihenfolge !== "undefined") {
 			result += '"reihenfolge" : ' + obj.reihenfolge + ',';
@@ -129,7 +129,7 @@ export class ENMSprachenfolge extends JavaObject {
 			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
 		}
 		if (typeof obj.referenzniveau !== "undefined") {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (typeof obj.belegungSekI !== "undefined") {
 			result += '"belegungSekI" : ' + ((!obj.belegungSekI) ? 'null' : obj.belegungSekI) + ',';

@@ -73,9 +73,9 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBelegpruefungErgebnisFehler) : string {
 		let result = '{';
-		result += '"code" : ' + '"' + obj.code! + '"' + ',';
-		result += '"art" : ' + '"' + obj.art! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
+		result += '"code" : ' + JSON.stringify(obj.code!) + ',';
+		result += '"art" : ' + JSON.stringify(obj.art!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,13 +84,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungErgebnisFehler>) : string {
 		let result = '{';
 		if (typeof obj.code !== "undefined") {
-			result += '"code" : ' + '"' + obj.code + '"' + ',';
+			result += '"code" : ' + JSON.stringify(obj.code!) + ',';
 		}
 		if (typeof obj.art !== "undefined") {
-			result += '"art" : ' + '"' + obj.art + '"' + ',';
+			result += '"art" : ' + JSON.stringify(obj.art!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

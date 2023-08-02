@@ -144,14 +144,14 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
-		result += '"pruefungsOrdnung" : ' + '"' + obj.pruefungsOrdnung! + '"' + ',';
-		result += '"klasse" : ' + '"' + obj.klasse! + '"' + ',';
-		result += '"klasseStatistik" : ' + '"' + obj.klasseStatistik! + '"' + ',';
-		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
-		result += '"jahrgangStatistik" : ' + '"' + obj.jahrgangStatistik! + '"' + ',';
-		result += '"datumZeugniskonferenz" : ' + '"' + obj.datumZeugniskonferenz! + '"' + ',';
-		result += '"datumZeugnis" : ' + '"' + obj.datumZeugnis! + '"' + ',';
-		result += '"logPruefungsalgorithmus" : ' + '"' + obj.logPruefungsalgorithmus! + '"' + ',';
+		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
+		result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
+		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
+		result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik!) + ',';
+		result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz!) + ',';
+		result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis!) + ',';
+		result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -181,28 +181,28 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 			result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		}
 		if (typeof obj.pruefungsOrdnung !== "undefined") {
-			result += '"pruefungsOrdnung" : ' + '"' + obj.pruefungsOrdnung + '"' + ',';
+			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		}
 		if (typeof obj.klasse !== "undefined") {
-			result += '"klasse" : ' + '"' + obj.klasse + '"' + ',';
+			result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
 		}
 		if (typeof obj.klasseStatistik !== "undefined") {
-			result += '"klasseStatistik" : ' + '"' + obj.klasseStatistik + '"' + ',';
+			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + '"' + obj.jahrgang + '"' + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
 		if (typeof obj.jahrgangStatistik !== "undefined") {
-			result += '"jahrgangStatistik" : ' + '"' + obj.jahrgangStatistik + '"' + ',';
+			result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik!) + ',';
 		}
 		if (typeof obj.datumZeugniskonferenz !== "undefined") {
-			result += '"datumZeugniskonferenz" : ' + '"' + obj.datumZeugniskonferenz + '"' + ',';
+			result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz!) + ',';
 		}
 		if (typeof obj.datumZeugnis !== "undefined") {
-			result += '"datumZeugnis" : ' + '"' + obj.datumZeugnis + '"' + ',';
+			result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis!) + ',';
 		}
 		if (typeof obj.logPruefungsalgorithmus !== "undefined") {
-			result += '"logPruefungsalgorithmus" : ' + '"' + obj.logPruefungsalgorithmus + '"' + ',';
+			result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

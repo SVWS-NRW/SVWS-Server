@@ -111,10 +111,10 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KAOAZusatzmerkmalEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
-		result += '"merkmal" : ' + '"' + obj.merkmal! + '"' + ',';
-		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : '"' + obj.optionsart + '"') + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"merkmal" : ' + JSON.stringify(obj.merkmal!) + ',';
+		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -128,16 +128,16 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.merkmal !== "undefined") {
-			result += '"merkmal" : ' + '"' + obj.merkmal + '"' + ',';
+			result += '"merkmal" : ' + JSON.stringify(obj.merkmal!) + ',';
 		}
 		if (typeof obj.optionsart !== "undefined") {
-			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : '"' + obj.optionsart + '"') + ',';
+			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

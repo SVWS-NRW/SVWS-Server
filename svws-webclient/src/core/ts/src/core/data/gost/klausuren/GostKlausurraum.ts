@@ -50,7 +50,7 @@ export class GostKlausurraum extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idTermin" : ' + obj.idTermin + ',';
 		result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -68,7 +68,7 @@ export class GostKlausurraum extends JavaObject {
 			result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum) + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -55,7 +55,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"fach" : ' + obj.fach + ',';
 		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"representation" : ' + '"' + obj.representation! + '"' + ',';
+		result += '"representation" : ' + JSON.stringify(obj.representation!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,7 +73,7 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 			result += '"kursart" : ' + obj.kursart + ',';
 		}
 		if (typeof obj.representation !== "undefined") {
-			result += '"representation" : ' + '"' + obj.representation + '"' + ',';
+			result += '"representation" : ' + JSON.stringify(obj.representation!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

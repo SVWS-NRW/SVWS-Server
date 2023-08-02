@@ -101,9 +101,9 @@ export class SchuelerBetriebsdaten extends JavaObject {
 		result += '"schueler_id" : ' + obj.schueler_id + ',';
 		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
 		result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
-		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : '"' + obj.vertragsbeginn + '"') + ',';
-		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : '"' + obj.vertragsende + '"') + ',';
-		result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : '"' + obj.ausbilder + '"') + ',';
+		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
+		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
+		result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		result += '"allgadranschreiben" : ' + ((!obj.allgadranschreiben) ? 'null' : obj.allgadranschreiben) + ',';
 		result += '"praktikum" : ' + ((!obj.praktikum) ? 'null' : obj.praktikum) + ',';
 		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
@@ -129,13 +129,13 @@ export class SchuelerBetriebsdaten extends JavaObject {
 			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
 		}
 		if (typeof obj.vertragsbeginn !== "undefined") {
-			result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : '"' + obj.vertragsbeginn + '"') + ',';
+			result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
 		}
 		if (typeof obj.vertragsende !== "undefined") {
-			result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : '"' + obj.vertragsende + '"') + ',';
+			result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		}
 		if (typeof obj.ausbilder !== "undefined") {
-			result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : '"' + obj.ausbilder + '"') + ',';
+			result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		}
 		if (typeof obj.allgadranschreiben !== "undefined") {
 			result += '"allgadranschreiben" : ' + ((!obj.allgadranschreiben) ? 'null' : obj.allgadranschreiben) + ',';

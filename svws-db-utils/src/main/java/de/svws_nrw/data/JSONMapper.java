@@ -387,7 +387,11 @@ public final class JSONMapper {
 	 * @return die Response
 	 */
 	public static Response fromString(final String data) {
-		return Response.ok((data == null) ? null : "\"" + data + "\"", MediaType.APPLICATION_JSON).build();
+		try {
+			return Response.ok((data == null) ? null : mapper.writeValueAsString(data), MediaType.APPLICATION_JSON).build();
+		} catch (final JsonProcessingException e) {
+			throw new WebApplicationException("Fehler bei der Umwandlung des Strings in einen JSON-String", e, Response.Status.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 

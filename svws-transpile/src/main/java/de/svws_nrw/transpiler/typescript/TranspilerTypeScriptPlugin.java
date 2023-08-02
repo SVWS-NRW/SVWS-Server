@@ -1747,9 +1747,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + '\"' + " + objAttr + "! + '\"'" + endline);
+					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + "!)" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + " + '\"')" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
@@ -1893,9 +1893,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + '\"' + " + objAttr + " + '\"'" + endline);
+					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + "!)" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : '\"' + " + objAttr + " + '\"')" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {

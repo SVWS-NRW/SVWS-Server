@@ -35,8 +35,8 @@ export class BenutzerConfigElement extends JavaObject {
 
 	public static transpilerToJSON(obj : BenutzerConfigElement) : string {
 		let result = '{';
-		result += '"key" : ' + '"' + obj.key! + '"' + ',';
-		result += '"value" : ' + '"' + obj.value! + '"' + ',';
+		result += '"key" : ' + JSON.stringify(obj.key!) + ',';
+		result += '"value" : ' + JSON.stringify(obj.value!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -45,10 +45,10 @@ export class BenutzerConfigElement extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerConfigElement>) : string {
 		let result = '{';
 		if (typeof obj.key !== "undefined") {
-			result += '"key" : ' + '"' + obj.key + '"' + ',';
+			result += '"key" : ' + JSON.stringify(obj.key!) + ',';
 		}
 		if (typeof obj.value !== "undefined") {
-			result += '"value" : ' + '"' + obj.value + '"' + ',';
+			result += '"value" : ' + JSON.stringify(obj.value!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

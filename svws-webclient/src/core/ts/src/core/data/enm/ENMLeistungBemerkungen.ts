@@ -85,17 +85,17 @@ export class ENMLeistungBemerkungen extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMLeistungBemerkungen) : string {
 		let result = '{';
-		result += '"ASV" : ' + ((!obj.ASV) ? 'null' : '"' + obj.ASV + '"') + ',';
-		result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : '"' + obj.tsASV + '"') + ',';
-		result += '"AUE" : ' + ((!obj.AUE) ? 'null' : '"' + obj.AUE + '"') + ',';
-		result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : '"' + obj.tsAUE + '"') + ',';
-		result += '"ZB" : ' + ((!obj.ZB) ? 'null' : '"' + obj.ZB + '"') + ',';
-		result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : '"' + obj.tsZB + '"') + ',';
-		result += '"LELS" : ' + ((!obj.LELS) ? 'null' : '"' + obj.LELS + '"') + ',';
-		result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : '"' + obj.schulformEmpf + '"') + ',';
-		result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : '"' + obj.individuelleVersetzungsbemerkungen + '"') + ',';
-		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : '"' + obj.tsIndividuelleVersetzungsbemerkungen + '"') + ',';
-		result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : '"' + obj.foerderbemerkungen + '"') + ',';
+		result += '"ASV" : ' + ((!obj.ASV) ? 'null' : JSON.stringify(obj.ASV)) + ',';
+		result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
+		result += '"AUE" : ' + ((!obj.AUE) ? 'null' : JSON.stringify(obj.AUE)) + ',';
+		result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
+		result += '"ZB" : ' + ((!obj.ZB) ? 'null' : JSON.stringify(obj.ZB)) + ',';
+		result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
+		result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
+		result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
+		result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
+		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
+		result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -104,37 +104,37 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMLeistungBemerkungen>) : string {
 		let result = '{';
 		if (typeof obj.ASV !== "undefined") {
-			result += '"ASV" : ' + ((!obj.ASV) ? 'null' : '"' + obj.ASV + '"') + ',';
+			result += '"ASV" : ' + ((!obj.ASV) ? 'null' : JSON.stringify(obj.ASV)) + ',';
 		}
 		if (typeof obj.tsASV !== "undefined") {
-			result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : '"' + obj.tsASV + '"') + ',';
+			result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
 		}
 		if (typeof obj.AUE !== "undefined") {
-			result += '"AUE" : ' + ((!obj.AUE) ? 'null' : '"' + obj.AUE + '"') + ',';
+			result += '"AUE" : ' + ((!obj.AUE) ? 'null' : JSON.stringify(obj.AUE)) + ',';
 		}
 		if (typeof obj.tsAUE !== "undefined") {
-			result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : '"' + obj.tsAUE + '"') + ',';
+			result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
 		}
 		if (typeof obj.ZB !== "undefined") {
-			result += '"ZB" : ' + ((!obj.ZB) ? 'null' : '"' + obj.ZB + '"') + ',';
+			result += '"ZB" : ' + ((!obj.ZB) ? 'null' : JSON.stringify(obj.ZB)) + ',';
 		}
 		if (typeof obj.tsZB !== "undefined") {
-			result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : '"' + obj.tsZB + '"') + ',';
+			result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
 		}
 		if (typeof obj.LELS !== "undefined") {
-			result += '"LELS" : ' + ((!obj.LELS) ? 'null' : '"' + obj.LELS + '"') + ',';
+			result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
 		}
 		if (typeof obj.schulformEmpf !== "undefined") {
-			result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : '"' + obj.schulformEmpf + '"') + ',';
+			result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
 		}
 		if (typeof obj.individuelleVersetzungsbemerkungen !== "undefined") {
-			result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : '"' + obj.individuelleVersetzungsbemerkungen + '"') + ',';
+			result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
 		}
 		if (typeof obj.tsIndividuelleVersetzungsbemerkungen !== "undefined") {
-			result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : '"' + obj.tsIndividuelleVersetzungsbemerkungen + '"') + ',';
+			result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
 		}
 		if (typeof obj.foerderbemerkungen !== "undefined") {
-			result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : '"' + obj.foerderbemerkungen + '"') + ',';
+			result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

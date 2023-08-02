@@ -84,14 +84,14 @@ export class ENMLernabschnitt extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
-		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt + '"') + ',';
+		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
 		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
-		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenGesamtUnentschuldigt + '"') + ',';
-		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung + '"') + ',';
-		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : '"' + obj.lernbereich1note + '"') + ',';
-		result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : '"' + obj.lernbereich2note + '"') + ',';
-		result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : '"' + obj.foerderschwerpunkt1 + '"') + ',';
-		result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : '"' + obj.foerderschwerpunkt2 + '"') + ',';
+		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
+		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
+		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
+		result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
+		result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
+		result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -106,28 +106,28 @@ export class ENMLernabschnitt extends JavaObject {
 			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
 		}
 		if (typeof obj.tsFehlstundenGesamt !== "undefined") {
-			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : '"' + obj.tsFehlstundenGesamt + '"') + ',';
+			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
 		}
 		if (typeof obj.fehlstundenGesamtUnentschuldigt !== "undefined") {
 			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
 		}
 		if (typeof obj.tsFehlstundenGesamtUnentschuldigt !== "undefined") {
-			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : '"' + obj.tsFehlstundenGesamtUnentschuldigt + '"') + ',';
+			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
 		}
 		if (typeof obj.pruefungsordnung !== "undefined") {
-			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : '"' + obj.pruefungsordnung + '"') + ',';
+			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		}
 		if (typeof obj.lernbereich1note !== "undefined") {
-			result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : '"' + obj.lernbereich1note + '"') + ',';
+			result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
 		}
 		if (typeof obj.lernbereich2note !== "undefined") {
-			result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : '"' + obj.lernbereich2note + '"') + ',';
+			result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
 		}
 		if (typeof obj.foerderschwerpunkt1 !== "undefined") {
-			result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : '"' + obj.foerderschwerpunkt1 + '"') + ',';
+			result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
 		}
 		if (typeof obj.foerderschwerpunkt2 !== "undefined") {
-			result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : '"' + obj.foerderschwerpunkt2 + '"') + ',';
+			result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

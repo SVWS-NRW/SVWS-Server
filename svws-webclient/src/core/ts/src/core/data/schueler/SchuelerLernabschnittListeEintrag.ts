@@ -137,12 +137,12 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
-		result += '"pruefungsOrdnung" : ' + '"' + obj.pruefungsOrdnung! + '"' + ',';
+		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		result += '"klassenID" : ' + obj.klassenID + ',';
-		result += '"klasse" : ' + '"' + obj.klasse! + '"' + ',';
-		result += '"klasseStatistik" : ' + '"' + obj.klasseStatistik! + '"' + ',';
+		result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
+		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
 		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
-		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -175,22 +175,22 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 			result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		}
 		if (typeof obj.pruefungsOrdnung !== "undefined") {
-			result += '"pruefungsOrdnung" : ' + '"' + obj.pruefungsOrdnung + '"' + ',';
+			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		}
 		if (typeof obj.klassenID !== "undefined") {
 			result += '"klassenID" : ' + obj.klassenID + ',';
 		}
 		if (typeof obj.klasse !== "undefined") {
-			result += '"klasse" : ' + '"' + obj.klasse + '"' + ',';
+			result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
 		}
 		if (typeof obj.klasseStatistik !== "undefined") {
-			result += '"klasseStatistik" : ' + '"' + obj.klasseStatistik + '"' + ',';
+			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
 		}
 		if (typeof obj.jahrgangID !== "undefined") {
 			result += '"jahrgangID" : ' + obj.jahrgangID + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + '"' + obj.jahrgang + '"' + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

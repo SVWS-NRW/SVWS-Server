@@ -65,7 +65,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
-		result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil + '"') + ',';
+		result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
@@ -83,7 +83,7 @@ export class OrtsteilKatalogEintrag extends JavaObject {
 			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		}
 		if (typeof obj.ortsteil !== "undefined") {
-			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : '"' + obj.ortsteil + '"') + ',';
+			result += '"ortsteil" : ' + ((!obj.ortsteil) ? 'null' : JSON.stringify(obj.ortsteil)) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

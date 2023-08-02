@@ -112,20 +112,20 @@ export class LehrerPersonaldaten extends JavaObject {
 	public static transpilerToJSON(obj : LehrerPersonaldaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : '"' + obj.identNrTeil1 + '"') + ',';
-		result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : '"' + obj.identNrTeil2SerNr + '"') + ',';
-		result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : '"' + obj.personalaktennummer + '"') + ',';
-		result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : '"' + obj.lbvPersonalnummer + '"') + ',';
-		result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : '"' + obj.lbvVerguetungsschluessel + '"') + ',';
-		result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : '"' + obj.zugangsdatum + '"') + ',';
-		result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : '"' + obj.zugangsgrund + '"') + ',';
-		result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : '"' + obj.abgangsdatum + '"') + ',';
-		result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : '"' + obj.abgangsgrund + '"') + ',';
+		result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
+		result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
+		result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
+		result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
+		result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
+		result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
+		result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
+		result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
+		result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll) + ',';
-		result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : '"' + obj.rechtsverhaeltnis + '"') + ',';
-		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : '"' + obj.beschaeftigungsart + '"') + ',';
-		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : '"' + obj.einsatzstatus + '"') + ',';
-		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : '"' + obj.stammschulnummer + '"') + ',';
+		result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
+		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
+		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -137,46 +137,46 @@ export class LehrerPersonaldaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.identNrTeil1 !== "undefined") {
-			result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : '"' + obj.identNrTeil1 + '"') + ',';
+			result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
 		}
 		if (typeof obj.identNrTeil2SerNr !== "undefined") {
-			result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : '"' + obj.identNrTeil2SerNr + '"') + ',';
+			result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
 		}
 		if (typeof obj.personalaktennummer !== "undefined") {
-			result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : '"' + obj.personalaktennummer + '"') + ',';
+			result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
 		}
 		if (typeof obj.lbvPersonalnummer !== "undefined") {
-			result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : '"' + obj.lbvPersonalnummer + '"') + ',';
+			result += '"lbvPersonalnummer" : ' + ((!obj.lbvPersonalnummer) ? 'null' : JSON.stringify(obj.lbvPersonalnummer)) + ',';
 		}
 		if (typeof obj.lbvVerguetungsschluessel !== "undefined") {
-			result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : '"' + obj.lbvVerguetungsschluessel + '"') + ',';
+			result += '"lbvVerguetungsschluessel" : ' + ((!obj.lbvVerguetungsschluessel) ? 'null' : JSON.stringify(obj.lbvVerguetungsschluessel)) + ',';
 		}
 		if (typeof obj.zugangsdatum !== "undefined") {
-			result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : '"' + obj.zugangsdatum + '"') + ',';
+			result += '"zugangsdatum" : ' + ((!obj.zugangsdatum) ? 'null' : JSON.stringify(obj.zugangsdatum)) + ',';
 		}
 		if (typeof obj.zugangsgrund !== "undefined") {
-			result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : '"' + obj.zugangsgrund + '"') + ',';
+			result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
 		}
 		if (typeof obj.abgangsdatum !== "undefined") {
-			result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : '"' + obj.abgangsdatum + '"') + ',';
+			result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
 		}
 		if (typeof obj.abgangsgrund !== "undefined") {
-			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : '"' + obj.abgangsgrund + '"') + ',';
+			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		}
 		if (typeof obj.pflichtstundensoll !== "undefined") {
 			result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll) + ',';
 		}
 		if (typeof obj.rechtsverhaeltnis !== "undefined") {
-			result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : '"' + obj.rechtsverhaeltnis + '"') + ',';
+			result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
 		}
 		if (typeof obj.beschaeftigungsart !== "undefined") {
-			result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : '"' + obj.beschaeftigungsart + '"') + ',';
+			result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
 		}
 		if (typeof obj.einsatzstatus !== "undefined") {
-			result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : '"' + obj.einsatzstatus + '"') + ',';
+			result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
 		}
 		if (typeof obj.stammschulnummer !== "undefined") {
-			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : '"' + obj.stammschulnummer + '"') + ',';
+			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

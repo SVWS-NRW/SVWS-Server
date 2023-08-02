@@ -38,7 +38,7 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerstatusKatalogEintrag) : string {
 		let result = '{';
 		result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr) + ',';
-		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : '"' + obj.Bezeichnung + '"') + ',';
+		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -51,7 +51,7 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 			result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr) + ',';
 		}
 		if (typeof obj.Bezeichnung !== "undefined") {
-			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : '"' + obj.Bezeichnung + '"') + ',';
+			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		}
 		if (typeof obj.Sortierung !== "undefined") {
 			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';

@@ -54,7 +54,7 @@ export class StundenplanSchiene extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,7 +72,7 @@ export class StundenplanSchiene extends JavaObject {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

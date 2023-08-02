@@ -94,7 +94,7 @@ export class GostBlockungsergebnis extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"blockungID" : ' + obj.blockungID + ',';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istMarkiert" : ' + obj.istMarkiert + ',';
 		result += '"istVorlage" : ' + obj.istVorlage + ',';
@@ -125,7 +125,7 @@ export class GostBlockungsergebnis extends JavaObject {
 			result += '"blockungID" : ' + obj.blockungID + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.gostHalbjahr !== "undefined") {
 			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';

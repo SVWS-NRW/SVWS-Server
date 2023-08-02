@@ -313,52 +313,52 @@ export class SchulenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulenKatalogEintrag) : string {
 		let result = '{';
-		result += '"SchulNr" : ' + '"' + obj.SchulNr! + '"' + ',';
-		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
+		result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
+		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		result += '"KoRe" : ' + obj.KoRe + ',';
 		result += '"KoHo" : ' + obj.KoHo + ',';
-		result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : '"' + obj.ABez1 + '"') + ',';
-		result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : '"' + obj.ABez2 + '"') + ',';
-		result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : '"' + obj.ABez3 + '"') + ',';
-		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
-		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
-		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse + '"') + ',';
-		result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : '"' + obj.TelVorw + '"') + ',';
-		result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : '"' + obj.Telefon + '"') + ',';
-		result += '"FaxVorw" : ' + ((!obj.FaxVorw) ? 'null' : '"' + obj.FaxVorw + '"') + ',';
-		result += '"Fax" : ' + ((!obj.Fax) ? 'null' : '"' + obj.Fax + '"') + ',';
-		result += '"ModemVorw" : ' + ((!obj.ModemVorw) ? 'null' : '"' + obj.ModemVorw + '"') + ',';
-		result += '"Modem" : ' + ((!obj.Modem) ? 'null' : '"' + obj.Modem + '"') + ',';
-		result += '"SF" : ' + ((!obj.SF) ? 'null' : '"' + obj.SF + '"') + ',';
-		result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : '"' + obj.OeffPri + '"') + ',';
-		result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : '"' + obj.KurzBez + '"') + ',';
+		result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
+		result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
+		result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
+		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
+		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
+		result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
+		result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
+		result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
+		result += '"FaxVorw" : ' + ((!obj.FaxVorw) ? 'null' : JSON.stringify(obj.FaxVorw)) + ',';
+		result += '"Fax" : ' + ((!obj.Fax) ? 'null' : JSON.stringify(obj.Fax)) + ',';
+		result += '"ModemVorw" : ' + ((!obj.ModemVorw) ? 'null' : JSON.stringify(obj.ModemVorw)) + ',';
+		result += '"Modem" : ' + ((!obj.Modem) ? 'null' : JSON.stringify(obj.Modem)) + ',';
+		result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
+		result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
+		result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
-		result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : '"' + obj.SchBetrSchlDatum + '"') + ',';
-		result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : '"' + obj.ArtDerTraegerschaft + '"') + ',';
-		result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : '"' + obj.SchultraegerNr + '"') + ',';
-		result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : '"' + obj.Schulgliederung + '"') + ',';
-		result += '"Schulart" : ' + ((!obj.Schulart) ? 'null' : '"' + obj.Schulart + '"') + ',';
-		result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : '"' + obj.Ganztagsbetrieb + '"') + ',';
-		result += '"FSP" : ' + ((!obj.FSP) ? 'null' : '"' + obj.FSP + '"') + ',';
-		result += '"Verbund" : ' + ((!obj.Verbund) ? 'null' : '"' + obj.Verbund + '"') + ',';
-		result += '"Bus" : ' + ((!obj.Bus) ? 'null' : '"' + obj.Bus + '"') + ',';
+		result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
+		result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
+		result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
+		result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
+		result += '"Schulart" : ' + ((!obj.Schulart) ? 'null' : JSON.stringify(obj.Schulart)) + ',';
+		result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
+		result += '"FSP" : ' + ((!obj.FSP) ? 'null' : JSON.stringify(obj.FSP)) + ',';
+		result += '"Verbund" : ' + ((!obj.Verbund) ? 'null' : JSON.stringify(obj.Verbund)) + ',';
+		result += '"Bus" : ' + ((!obj.Bus) ? 'null' : JSON.stringify(obj.Bus)) + ',';
 		result += '"Fachberater" : ' + ((!obj.Fachberater) ? 'null' : obj.Fachberater) + ',';
 		result += '"FachberHauptamtl" : ' + ((!obj.FachberHauptamtl) ? 'null' : obj.FachberHauptamtl) + ',';
-		result += '"TelNrDBSalt" : ' + ((!obj.TelNrDBSalt) ? 'null' : '"' + obj.TelNrDBSalt + '"') + ',';
-		result += '"RP" : ' + ((!obj.RP) ? 'null' : '"' + obj.RP + '"') + ',';
-		result += '"Email" : ' + ((!obj.Email) ? 'null' : '"' + obj.Email + '"') + ',';
-		result += '"URL" : ' + ((!obj.URL) ? 'null' : '"' + obj.URL + '"') + ',';
-		result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : '"' + obj.Bemerkung + '"') + ',';
+		result += '"TelNrDBSalt" : ' + ((!obj.TelNrDBSalt) ? 'null' : JSON.stringify(obj.TelNrDBSalt)) + ',';
+		result += '"RP" : ' + ((!obj.RP) ? 'null' : JSON.stringify(obj.RP)) + ',';
+		result += '"Email" : ' + ((!obj.Email) ? 'null' : JSON.stringify(obj.Email)) + ',';
+		result += '"URL" : ' + ((!obj.URL) ? 'null' : JSON.stringify(obj.URL)) + ',';
+		result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : JSON.stringify(obj.Bemerkung)) + ',';
 		result += '"CD" : ' + ((!obj.CD) ? 'null' : obj.CD) + ',';
 		result += '"Stift" : ' + ((!obj.Stift) ? 'null' : obj.Stift) + ',';
-		result += '"OGTS" : ' + ((!obj.OGTS) ? 'null' : '"' + obj.OGTS + '"') + ',';
-		result += '"SELB" : ' + ((!obj.SELB) ? 'null' : '"' + obj.SELB + '"') + ',';
-		result += '"Internat" : ' + ((!obj.Internat) ? 'null' : '"' + obj.Internat + '"') + ',';
+		result += '"OGTS" : ' + ((!obj.OGTS) ? 'null' : JSON.stringify(obj.OGTS)) + ',';
+		result += '"SELB" : ' + ((!obj.SELB) ? 'null' : JSON.stringify(obj.SELB)) + ',';
+		result += '"Internat" : ' + ((!obj.Internat) ? 'null' : JSON.stringify(obj.Internat)) + ',';
 		result += '"InternatPlaetze" : ' + ((!obj.InternatPlaetze) ? 'null' : obj.InternatPlaetze) + ',';
-		result += '"SMail" : ' + ((!obj.SMail) ? 'null' : '"' + obj.SMail + '"') + ',';
-		result += '"SportImAbi" : ' + ((!obj.SportImAbi) ? 'null' : '"' + obj.SportImAbi + '"') + ',';
-		result += '"Tal" : ' + ((!obj.Tal) ? 'null' : '"' + obj.Tal + '"') + ',';
-		result += '"KonKop" : ' + ((!obj.KonKop) ? 'null' : '"' + obj.KonKop + '"') + ',';
+		result += '"SMail" : ' + ((!obj.SMail) ? 'null' : JSON.stringify(obj.SMail)) + ',';
+		result += '"SportImAbi" : ' + ((!obj.SportImAbi) ? 'null' : JSON.stringify(obj.SportImAbi)) + ',';
+		result += '"Tal" : ' + ((!obj.Tal) ? 'null' : JSON.stringify(obj.Tal)) + ',';
+		result += '"KonKop" : ' + ((!obj.KonKop) ? 'null' : JSON.stringify(obj.KonKop)) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -369,10 +369,10 @@ export class SchulenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulenKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.SchulNr !== "undefined") {
-			result += '"SchulNr" : ' + '"' + obj.SchulNr + '"' + ',';
+			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : '"' + obj.RegSchl + '"') + ',';
+			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		}
 		if (typeof obj.KoRe !== "undefined") {
 			result += '"KoRe" : ' + obj.KoRe + ',';
@@ -381,79 +381,79 @@ export class SchulenKatalogEintrag extends JavaObject {
 			result += '"KoHo" : ' + obj.KoHo + ',';
 		}
 		if (typeof obj.ABez1 !== "undefined") {
-			result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : '"' + obj.ABez1 + '"') + ',';
+			result += '"ABez1" : ' + ((!obj.ABez1) ? 'null' : JSON.stringify(obj.ABez1)) + ',';
 		}
 		if (typeof obj.ABez2 !== "undefined") {
-			result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : '"' + obj.ABez2 + '"') + ',';
+			result += '"ABez2" : ' + ((!obj.ABez2) ? 'null' : JSON.stringify(obj.ABez2)) + ',';
 		}
 		if (typeof obj.ABez3 !== "undefined") {
-			result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : '"' + obj.ABez3 + '"') + ',';
+			result += '"ABez3" : ' + ((!obj.ABez3) ? 'null' : JSON.stringify(obj.ABez3)) + ',';
 		}
 		if (typeof obj.PLZ !== "undefined") {
-			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : '"' + obj.PLZ + '"') + ',';
+			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		}
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : '"' + obj.Ort + '"') + ',';
+			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (typeof obj.Strasse !== "undefined") {
-			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : '"' + obj.Strasse + '"') + ',';
+			result += '"Strasse" : ' + ((!obj.Strasse) ? 'null' : JSON.stringify(obj.Strasse)) + ',';
 		}
 		if (typeof obj.TelVorw !== "undefined") {
-			result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : '"' + obj.TelVorw + '"') + ',';
+			result += '"TelVorw" : ' + ((!obj.TelVorw) ? 'null' : JSON.stringify(obj.TelVorw)) + ',';
 		}
 		if (typeof obj.Telefon !== "undefined") {
-			result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : '"' + obj.Telefon + '"') + ',';
+			result += '"Telefon" : ' + ((!obj.Telefon) ? 'null' : JSON.stringify(obj.Telefon)) + ',';
 		}
 		if (typeof obj.FaxVorw !== "undefined") {
-			result += '"FaxVorw" : ' + ((!obj.FaxVorw) ? 'null' : '"' + obj.FaxVorw + '"') + ',';
+			result += '"FaxVorw" : ' + ((!obj.FaxVorw) ? 'null' : JSON.stringify(obj.FaxVorw)) + ',';
 		}
 		if (typeof obj.Fax !== "undefined") {
-			result += '"Fax" : ' + ((!obj.Fax) ? 'null' : '"' + obj.Fax + '"') + ',';
+			result += '"Fax" : ' + ((!obj.Fax) ? 'null' : JSON.stringify(obj.Fax)) + ',';
 		}
 		if (typeof obj.ModemVorw !== "undefined") {
-			result += '"ModemVorw" : ' + ((!obj.ModemVorw) ? 'null' : '"' + obj.ModemVorw + '"') + ',';
+			result += '"ModemVorw" : ' + ((!obj.ModemVorw) ? 'null' : JSON.stringify(obj.ModemVorw)) + ',';
 		}
 		if (typeof obj.Modem !== "undefined") {
-			result += '"Modem" : ' + ((!obj.Modem) ? 'null' : '"' + obj.Modem + '"') + ',';
+			result += '"Modem" : ' + ((!obj.Modem) ? 'null' : JSON.stringify(obj.Modem)) + ',';
 		}
 		if (typeof obj.SF !== "undefined") {
-			result += '"SF" : ' + ((!obj.SF) ? 'null' : '"' + obj.SF + '"') + ',';
+			result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
 		}
 		if (typeof obj.OeffPri !== "undefined") {
-			result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : '"' + obj.OeffPri + '"') + ',';
+			result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
 		}
 		if (typeof obj.KurzBez !== "undefined") {
-			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : '"' + obj.KurzBez + '"') + ',';
+			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		}
 		if (typeof obj.SchBetrSchl !== "undefined") {
 			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
 		}
 		if (typeof obj.SchBetrSchlDatum !== "undefined") {
-			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : '"' + obj.SchBetrSchlDatum + '"') + ',';
+			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
 		}
 		if (typeof obj.ArtDerTraegerschaft !== "undefined") {
-			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : '"' + obj.ArtDerTraegerschaft + '"') + ',';
+			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
 		}
 		if (typeof obj.SchultraegerNr !== "undefined") {
-			result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : '"' + obj.SchultraegerNr + '"') + ',';
+			result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
 		}
 		if (typeof obj.Schulgliederung !== "undefined") {
-			result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : '"' + obj.Schulgliederung + '"') + ',';
+			result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
 		}
 		if (typeof obj.Schulart !== "undefined") {
-			result += '"Schulart" : ' + ((!obj.Schulart) ? 'null' : '"' + obj.Schulart + '"') + ',';
+			result += '"Schulart" : ' + ((!obj.Schulart) ? 'null' : JSON.stringify(obj.Schulart)) + ',';
 		}
 		if (typeof obj.Ganztagsbetrieb !== "undefined") {
-			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : '"' + obj.Ganztagsbetrieb + '"') + ',';
+			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
 		}
 		if (typeof obj.FSP !== "undefined") {
-			result += '"FSP" : ' + ((!obj.FSP) ? 'null' : '"' + obj.FSP + '"') + ',';
+			result += '"FSP" : ' + ((!obj.FSP) ? 'null' : JSON.stringify(obj.FSP)) + ',';
 		}
 		if (typeof obj.Verbund !== "undefined") {
-			result += '"Verbund" : ' + ((!obj.Verbund) ? 'null' : '"' + obj.Verbund + '"') + ',';
+			result += '"Verbund" : ' + ((!obj.Verbund) ? 'null' : JSON.stringify(obj.Verbund)) + ',';
 		}
 		if (typeof obj.Bus !== "undefined") {
-			result += '"Bus" : ' + ((!obj.Bus) ? 'null' : '"' + obj.Bus + '"') + ',';
+			result += '"Bus" : ' + ((!obj.Bus) ? 'null' : JSON.stringify(obj.Bus)) + ',';
 		}
 		if (typeof obj.Fachberater !== "undefined") {
 			result += '"Fachberater" : ' + ((!obj.Fachberater) ? 'null' : obj.Fachberater) + ',';
@@ -462,19 +462,19 @@ export class SchulenKatalogEintrag extends JavaObject {
 			result += '"FachberHauptamtl" : ' + ((!obj.FachberHauptamtl) ? 'null' : obj.FachberHauptamtl) + ',';
 		}
 		if (typeof obj.TelNrDBSalt !== "undefined") {
-			result += '"TelNrDBSalt" : ' + ((!obj.TelNrDBSalt) ? 'null' : '"' + obj.TelNrDBSalt + '"') + ',';
+			result += '"TelNrDBSalt" : ' + ((!obj.TelNrDBSalt) ? 'null' : JSON.stringify(obj.TelNrDBSalt)) + ',';
 		}
 		if (typeof obj.RP !== "undefined") {
-			result += '"RP" : ' + ((!obj.RP) ? 'null' : '"' + obj.RP + '"') + ',';
+			result += '"RP" : ' + ((!obj.RP) ? 'null' : JSON.stringify(obj.RP)) + ',';
 		}
 		if (typeof obj.Email !== "undefined") {
-			result += '"Email" : ' + ((!obj.Email) ? 'null' : '"' + obj.Email + '"') + ',';
+			result += '"Email" : ' + ((!obj.Email) ? 'null' : JSON.stringify(obj.Email)) + ',';
 		}
 		if (typeof obj.URL !== "undefined") {
-			result += '"URL" : ' + ((!obj.URL) ? 'null' : '"' + obj.URL + '"') + ',';
+			result += '"URL" : ' + ((!obj.URL) ? 'null' : JSON.stringify(obj.URL)) + ',';
 		}
 		if (typeof obj.Bemerkung !== "undefined") {
-			result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : '"' + obj.Bemerkung + '"') + ',';
+			result += '"Bemerkung" : ' + ((!obj.Bemerkung) ? 'null' : JSON.stringify(obj.Bemerkung)) + ',';
 		}
 		if (typeof obj.CD !== "undefined") {
 			result += '"CD" : ' + ((!obj.CD) ? 'null' : obj.CD) + ',';
@@ -483,28 +483,28 @@ export class SchulenKatalogEintrag extends JavaObject {
 			result += '"Stift" : ' + ((!obj.Stift) ? 'null' : obj.Stift) + ',';
 		}
 		if (typeof obj.OGTS !== "undefined") {
-			result += '"OGTS" : ' + ((!obj.OGTS) ? 'null' : '"' + obj.OGTS + '"') + ',';
+			result += '"OGTS" : ' + ((!obj.OGTS) ? 'null' : JSON.stringify(obj.OGTS)) + ',';
 		}
 		if (typeof obj.SELB !== "undefined") {
-			result += '"SELB" : ' + ((!obj.SELB) ? 'null' : '"' + obj.SELB + '"') + ',';
+			result += '"SELB" : ' + ((!obj.SELB) ? 'null' : JSON.stringify(obj.SELB)) + ',';
 		}
 		if (typeof obj.Internat !== "undefined") {
-			result += '"Internat" : ' + ((!obj.Internat) ? 'null' : '"' + obj.Internat + '"') + ',';
+			result += '"Internat" : ' + ((!obj.Internat) ? 'null' : JSON.stringify(obj.Internat)) + ',';
 		}
 		if (typeof obj.InternatPlaetze !== "undefined") {
 			result += '"InternatPlaetze" : ' + ((!obj.InternatPlaetze) ? 'null' : obj.InternatPlaetze) + ',';
 		}
 		if (typeof obj.SMail !== "undefined") {
-			result += '"SMail" : ' + ((!obj.SMail) ? 'null' : '"' + obj.SMail + '"') + ',';
+			result += '"SMail" : ' + ((!obj.SMail) ? 'null' : JSON.stringify(obj.SMail)) + ',';
 		}
 		if (typeof obj.SportImAbi !== "undefined") {
-			result += '"SportImAbi" : ' + ((!obj.SportImAbi) ? 'null' : '"' + obj.SportImAbi + '"') + ',';
+			result += '"SportImAbi" : ' + ((!obj.SportImAbi) ? 'null' : JSON.stringify(obj.SportImAbi)) + ',';
 		}
 		if (typeof obj.Tal !== "undefined") {
-			result += '"Tal" : ' + ((!obj.Tal) ? 'null' : '"' + obj.Tal + '"') + ',';
+			result += '"Tal" : ' + ((!obj.Tal) ? 'null' : JSON.stringify(obj.Tal)) + ',';
 		}
 		if (typeof obj.KonKop !== "undefined") {
-			result += '"KonKop" : ' + ((!obj.KonKop) ? 'null' : '"' + obj.KonKop + '"') + ',';
+			result += '"KonKop" : ' + ((!obj.KonKop) ? 'null' : JSON.stringify(obj.KonKop)) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

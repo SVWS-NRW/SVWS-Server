@@ -36,7 +36,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 	public static transpilerToJSON(obj : SchildReportingSchuelerGOStLaufbahnplanungHinweise) : string {
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
-		result += '"belegungshinweis" : ' + '"' + obj.belegungshinweis! + '"' + ',';
+		result += '"belegungshinweis" : ' + JSON.stringify(obj.belegungshinweis!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -48,7 +48,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
 		}
 		if (typeof obj.belegungshinweis !== "undefined") {
-			result += '"belegungshinweis" : ' + '"' + obj.belegungshinweis + '"' + ',';
+			result += '"belegungshinweis" : ' + JSON.stringify(obj.belegungshinweis!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -40,7 +40,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : AbgangsartKatalogEintrag) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		if (!obj.historie) {
 			result += '"historie" : []';
 		} else {
@@ -61,7 +61,7 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.historie !== "undefined") {
 			if (!obj.historie) {

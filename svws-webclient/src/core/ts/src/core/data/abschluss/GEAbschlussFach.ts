@@ -65,11 +65,11 @@ export class GEAbschlussFach extends JavaObject {
 
 	public static transpilerToJSON(obj : GEAbschlussFach) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"note" : ' + obj.note + ',';
 		result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache) + ',';
-		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : '"' + obj.kursart + '"') + ',';
+		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich) + ',';
 		result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen) + ',';
 		result = result.slice(0, -1);
@@ -80,10 +80,10 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GEAbschlussFach>) : string {
 		let result = '{';
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
 			result += '"note" : ' + obj.note + ',';
@@ -92,7 +92,7 @@ export class GEAbschlussFach extends JavaObject {
 			result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache) + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : '"' + obj.kursart + '"') + ',';
+			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (typeof obj.ausgleich !== "undefined") {
 			result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich) + ',';

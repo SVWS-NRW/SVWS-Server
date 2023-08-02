@@ -174,13 +174,13 @@ export class GostFach extends JavaObject {
 	public static transpilerToJSON(obj : GostFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
 		result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
-		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
+		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK + ',';
 		result += '"istMoeglichAbiGK" : ' + obj.istMoeglichAbiGK + ',';
 		result += '"istMoeglichEF1" : ' + obj.istMoeglichEF1 + ',';
@@ -191,9 +191,9 @@ export class GostFach extends JavaObject {
 		result += '"istMoeglichQ22" : ' + obj.istMoeglichQ22 + ',';
 		result += '"wochenstundenQualifikationsphase" : ' + obj.wochenstundenQualifikationsphase + ',';
 		result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID) + ',';
-		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel + '"') + ',';
+		result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
 		result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID) + ',';
-		result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel + '"') + ',';
+		result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -205,13 +205,13 @@ export class GostFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.kuerzelAnzeige !== "undefined") {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : '"' + obj.kuerzelAnzeige + '"') + ',';
+			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';
@@ -223,7 +223,7 @@ export class GostFach extends JavaObject {
 			result += '"istFremdSpracheNeuEinsetzend" : ' + obj.istFremdSpracheNeuEinsetzend + ',';
 		}
 		if (typeof obj.biliSprache !== "undefined") {
-			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
+			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
 		if (typeof obj.istMoeglichAbiLK !== "undefined") {
 			result += '"istMoeglichAbiLK" : ' + obj.istMoeglichAbiLK + ',';
@@ -256,13 +256,13 @@ export class GostFach extends JavaObject {
 			result += '"projektKursLeitfach1ID" : ' + ((!obj.projektKursLeitfach1ID) ? 'null' : obj.projektKursLeitfach1ID) + ',';
 		}
 		if (typeof obj.projektKursLeitfach1Kuerzel !== "undefined") {
-			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach1Kuerzel + '"') + ',';
+			result += '"projektKursLeitfach1Kuerzel" : ' + ((!obj.projektKursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach1Kuerzel)) + ',';
 		}
 		if (typeof obj.projektKursLeitfach2ID !== "undefined") {
 			result += '"projektKursLeitfach2ID" : ' + ((!obj.projektKursLeitfach2ID) ? 'null' : obj.projektKursLeitfach2ID) + ',';
 		}
 		if (typeof obj.projektKursLeitfach2Kuerzel !== "undefined") {
-			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektKursLeitfach2Kuerzel + '"') + ',';
+			result += '"projektKursLeitfach2Kuerzel" : ' + ((!obj.projektKursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektKursLeitfach2Kuerzel)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

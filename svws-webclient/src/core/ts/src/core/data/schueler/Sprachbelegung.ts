@@ -63,13 +63,13 @@ export class Sprachbelegung extends JavaObject {
 
 	public static transpilerToJSON(obj : Sprachbelegung) : string {
 		let result = '{';
-		result += '"sprache" : ' + '"' + obj.sprache! + '"' + ',';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge) + ',';
-		result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : '"' + obj.belegungVonJahrgang + '"') + ',';
+		result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
 		result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt) + ',';
-		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : '"' + obj.belegungBisJahrgang + '"') + ',';
+		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
 		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -78,25 +78,25 @@ export class Sprachbelegung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachbelegung>) : string {
 		let result = '{';
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + '"' + obj.sprache + '"' + ',';
+			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		}
 		if (typeof obj.reihenfolge !== "undefined") {
 			result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge) + ',';
 		}
 		if (typeof obj.belegungVonJahrgang !== "undefined") {
-			result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : '"' + obj.belegungVonJahrgang + '"') + ',';
+			result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
 		}
 		if (typeof obj.belegungVonAbschnitt !== "undefined") {
 			result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt) + ',';
 		}
 		if (typeof obj.belegungBisJahrgang !== "undefined") {
-			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : '"' + obj.belegungBisJahrgang + '"') + ',';
+			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
 		}
 		if (typeof obj.belegungBisAbschnitt !== "undefined") {
 			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
 		}
 		if (typeof obj.referenzniveau !== "undefined") {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : '"' + obj.referenzniveau + '"') + ',';
+			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

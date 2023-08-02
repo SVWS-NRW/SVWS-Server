@@ -52,8 +52,8 @@ export class StundenplanSchueler extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanSchueler) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"idKlasse" : ' + obj.idKlasse + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -66,10 +66,10 @@ export class StundenplanSchueler extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
 		if (typeof obj.idKlasse !== "undefined") {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';

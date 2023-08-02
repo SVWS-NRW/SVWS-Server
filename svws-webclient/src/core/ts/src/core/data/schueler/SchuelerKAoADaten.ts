@@ -89,14 +89,14 @@ export class SchuelerKAoADaten extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
 		result += '"abschnitt" : ' + obj.abschnitt! + ',';
-		result += '"jahrgang" : ' + '"' + obj.jahrgang! + '"' + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		result += '"kategorie" : ' + obj.kategorie! + ',';
 		result += '"merkmal" : ' + obj.merkmal! + ',';
 		result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal) + ',';
 		result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption) + ',';
 		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld) + ',';
 		result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -111,7 +111,7 @@ export class SchuelerKAoADaten extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + '"' + obj.jahrgang + '"' + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
 		if (typeof obj.kategorie !== "undefined") {
 			result += '"kategorie" : ' + obj.kategorie + ',';
@@ -132,7 +132,7 @@ export class SchuelerKAoADaten extends JavaObject {
 			result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4) + ',';
 		}
 		if (typeof obj.bemerkung !== "undefined") {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : '"' + obj.bemerkung + '"') + ',';
+			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

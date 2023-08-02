@@ -53,7 +53,7 @@ export class GostBlockungSchiene extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -69,7 +69,7 @@ export class GostBlockungSchiene extends JavaObject {
 			result += '"nummer" : ' + obj.nummer + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

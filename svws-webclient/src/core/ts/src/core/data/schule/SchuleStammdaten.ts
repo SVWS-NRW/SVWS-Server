@@ -156,19 +156,19 @@ export class SchuleStammdaten extends JavaObject {
 	public static transpilerToJSON(obj : SchuleStammdaten) : string {
 		let result = '{';
 		result += '"schulNr" : ' + obj.schulNr + ',';
-		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
-		result += '"bezeichnung1" : ' + '"' + obj.bezeichnung1! + '"' + ',';
-		result += '"bezeichnung2" : ' + ((!obj.bezeichnung2) ? 'null' : '"' + obj.bezeichnung2 + '"') + ',';
-		result += '"bezeichnung3" : ' + ((!obj.bezeichnung3) ? 'null' : '"' + obj.bezeichnung3 + '"') + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer + '"') + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz + '"') + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
-		result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort + '"') + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : '"' + obj.telefon + '"') + ',';
-		result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax + '"') + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
-		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse + '"') + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"bezeichnung1" : ' + JSON.stringify(obj.bezeichnung1!) + ',';
+		result += '"bezeichnung2" : ' + ((!obj.bezeichnung2) ? 'null' : JSON.stringify(obj.bezeichnung2)) + ',';
+		result += '"bezeichnung3" : ' + ((!obj.bezeichnung3) ? 'null' : JSON.stringify(obj.bezeichnung3)) + ',';
+		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
+		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"fax" : ' + ((!obj.fax) ? 'null' : JSON.stringify(obj.fax)) + ',';
+		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		result += '"anzJGS_Jahr" : ' + obj.anzJGS_Jahr + ',';
 		result += '"schuleAbschnitte" : ' + SchuleAbschnitte.transpilerToJSON(obj.schuleAbschnitte) + ',';
@@ -196,43 +196,43 @@ export class SchuleStammdaten extends JavaObject {
 			result += '"schulNr" : ' + obj.schulNr + ',';
 		}
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
 		if (typeof obj.bezeichnung1 !== "undefined") {
-			result += '"bezeichnung1" : ' + '"' + obj.bezeichnung1 + '"' + ',';
+			result += '"bezeichnung1" : ' + JSON.stringify(obj.bezeichnung1!) + ',';
 		}
 		if (typeof obj.bezeichnung2 !== "undefined") {
-			result += '"bezeichnung2" : ' + ((!obj.bezeichnung2) ? 'null' : '"' + obj.bezeichnung2 + '"') + ',';
+			result += '"bezeichnung2" : ' + ((!obj.bezeichnung2) ? 'null' : JSON.stringify(obj.bezeichnung2)) + ',';
 		}
 		if (typeof obj.bezeichnung3 !== "undefined") {
-			result += '"bezeichnung3" : ' + ((!obj.bezeichnung3) ? 'null' : '"' + obj.bezeichnung3 + '"') + ',';
+			result += '"bezeichnung3" : ' + ((!obj.bezeichnung3) ? 'null' : JSON.stringify(obj.bezeichnung3)) + ',';
 		}
 		if (typeof obj.strassenname !== "undefined") {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
+			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (typeof obj.hausnummer !== "undefined") {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : '"' + obj.hausnummer + '"') + ',';
+			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
 		if (typeof obj.hausnummerZusatz !== "undefined") {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : '"' + obj.hausnummerZusatz + '"') + ',';
+			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (typeof obj.plz !== "undefined") {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : '"' + obj.plz + '"') + ',';
+			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
 		if (typeof obj.ort !== "undefined") {
-			result += '"ort" : ' + ((!obj.ort) ? 'null' : '"' + obj.ort + '"') + ',';
+			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
 		if (typeof obj.telefon !== "undefined") {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : '"' + obj.telefon + '"') + ',';
+			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (typeof obj.fax !== "undefined") {
-			result += '"fax" : ' + ((!obj.fax) ? 'null' : '"' + obj.fax + '"') + ',';
+			result += '"fax" : ' + ((!obj.fax) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		}
 		if (typeof obj.email !== "undefined") {
-			result += '"email" : ' + ((!obj.email) ? 'null' : '"' + obj.email + '"') + ',';
+			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (typeof obj.webAdresse !== "undefined") {
-			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : '"' + obj.webAdresse + '"') + ',';
+			result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';

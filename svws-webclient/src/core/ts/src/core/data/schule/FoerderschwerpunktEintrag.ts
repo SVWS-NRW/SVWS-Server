@@ -68,9 +68,9 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	public static transpilerToJSON(obj : FoerderschwerpunktEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"text" : ' + '"' + obj.text! + '"' + ',';
-		result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text!) + ',';
+		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar + ',';
 		result = result.slice(0, -1);
@@ -84,13 +84,13 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.text !== "undefined") {
-			result += '"text" : ' + '"' + obj.text + '"' + ',';
+			result += '"text" : ' + JSON.stringify(obj.text!) + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + '"' + obj.kuerzelStatistik + '"' + ',';
+			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		}
 		if (typeof obj.istSichtbar !== "undefined") {
 			result += '"istSichtbar" : ' + obj.istSichtbar + ',';

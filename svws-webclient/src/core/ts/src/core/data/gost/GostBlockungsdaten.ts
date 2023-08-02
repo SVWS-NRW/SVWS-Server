@@ -129,7 +129,7 @@ export class GostBlockungsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungsdaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"abijahrgang" : ' + obj.abijahrgang + ',';
 		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
 		result += '"istAktiv" : ' + obj.istAktiv + ',';
@@ -216,7 +216,7 @@ export class GostBlockungsdaten extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.abijahrgang !== "undefined") {
 			result += '"abijahrgang" : ' + obj.abijahrgang + ',';

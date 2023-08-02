@@ -59,7 +59,7 @@ export class StundenplanPausenzeit extends JavaObject {
 		result += '"wochentag" : ' + obj.wochentag + ',';
 		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
 		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -80,7 +80,7 @@ export class StundenplanPausenzeit extends JavaObject {
 			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

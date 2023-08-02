@@ -94,7 +94,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"gruppe_id" : ' + obj.gruppe_id + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		if (!obj.nurSchulformen) {
 			result += '"nurSchulformen" : []';
 		} else {
@@ -121,7 +121,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			result += '"gruppe_id" : ' + obj.gruppe_id + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.nurSchulformen !== "undefined") {
 			if (!obj.nurSchulformen) {

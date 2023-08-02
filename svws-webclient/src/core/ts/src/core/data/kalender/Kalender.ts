@@ -92,11 +92,11 @@ export class Kalender extends JavaObject {
 
 	public static transpilerToJSON(obj : Kalender) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id! + '"' + ',';
-		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : '"' + obj.displayname + '"') + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
+		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
+		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"synctoken" : ' + obj.synctoken + ',';
-		result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp! + '"' + ',';
+		result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		if (!obj.kalenderEintraege) {
 			result += '"kalenderEintraege" : []';
 		} else {
@@ -120,19 +120,19 @@ export class Kalender extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Kalender>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id + '"' + ',';
+			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
 		if (typeof obj.displayname !== "undefined") {
-			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : '"' + obj.displayname + '"') + ',';
+			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : '"' + obj.beschreibung + '"') + ',';
+			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (typeof obj.synctoken !== "undefined") {
 			result += '"synctoken" : ' + obj.synctoken + ',';
 		}
 		if (typeof obj.kalenderTyp !== "undefined") {
-			result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp + '"' + ',';
+			result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		}
 		if (typeof obj.kalenderEintraege !== "undefined") {
 			if (!obj.kalenderEintraege) {

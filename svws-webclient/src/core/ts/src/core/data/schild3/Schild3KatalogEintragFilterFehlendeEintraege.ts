@@ -62,12 +62,12 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	public static transpilerToJSON(obj : Schild3KatalogEintragFilterFehlendeEintraege) : string {
 		let result = '{';
 		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
-		result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : '"' + obj.Beschreibung + '"') + ',';
-		result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : '"' + obj.Feldname + '"') + ',';
-		result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : '"' + obj.Tabellen + '"') + ',';
-		result += '"SQLText" : ' + ((!obj.SQLText) ? 'null' : '"' + obj.SQLText + '"') + ',';
-		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : '"' + obj.Schulform + '"') + ',';
-		result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : '"' + obj.Feldtyp + '"') + ',';
+		result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
+		result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
+		result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : JSON.stringify(obj.Tabellen)) + ',';
+		result += '"SQLText" : ' + ((!obj.SQLText) ? 'null' : JSON.stringify(obj.SQLText)) + ',';
+		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
+		result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -79,22 +79,22 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
 		}
 		if (typeof obj.Beschreibung !== "undefined") {
-			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : '"' + obj.Beschreibung + '"') + ',';
+			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
 		}
 		if (typeof obj.Feldname !== "undefined") {
-			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : '"' + obj.Feldname + '"') + ',';
+			result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
 		}
 		if (typeof obj.Tabellen !== "undefined") {
-			result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : '"' + obj.Tabellen + '"') + ',';
+			result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : JSON.stringify(obj.Tabellen)) + ',';
 		}
 		if (typeof obj.SQLText !== "undefined") {
-			result += '"SQLText" : ' + ((!obj.SQLText) ? 'null' : '"' + obj.SQLText + '"') + ',';
+			result += '"SQLText" : ' + ((!obj.SQLText) ? 'null' : JSON.stringify(obj.SQLText)) + ',';
 		}
 		if (typeof obj.Schulform !== "undefined") {
-			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : '"' + obj.Schulform + '"') + ',';
+			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		}
 		if (typeof obj.Feldtyp !== "undefined") {
-			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : '"' + obj.Feldtyp + '"') + ',';
+			result += '"Feldtyp" : ' + ((!obj.Feldtyp) ? 'null' : JSON.stringify(obj.Feldtyp)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

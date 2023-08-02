@@ -80,11 +80,11 @@ export class KatalogEintragOrtsteile extends JavaObject {
 	public static transpilerToJSON(obj : KatalogEintragOrtsteile) : string {
 		let result = '{';
 		result += '"ID" : ' + obj.ID + ',';
-		result += '"PLZ" : ' + '"' + obj.PLZ! + '"' + ',';
-		result += '"RegSchl" : ' + '"' + obj.RegSchl! + '"' + ',';
-		result += '"Ort" : ' + '"' + obj.Ort! + '"' + ',';
-		result += '"Ortsteil" : ' + '"' + obj.Ortsteil! + '"' + ',';
-		result += '"Stand" : ' + '"' + obj.Stand! + '"' + ',';
+		result += '"PLZ" : ' + JSON.stringify(obj.PLZ!) + ',';
+		result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl!) + ',';
+		result += '"Ort" : ' + JSON.stringify(obj.Ort!) + ',';
+		result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil!) + ',';
+		result += '"Stand" : ' + JSON.stringify(obj.Stand!) + ',';
 		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
 		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
@@ -98,19 +98,19 @@ export class KatalogEintragOrtsteile extends JavaObject {
 			result += '"ID" : ' + obj.ID + ',';
 		}
 		if (typeof obj.PLZ !== "undefined") {
-			result += '"PLZ" : ' + '"' + obj.PLZ + '"' + ',';
+			result += '"PLZ" : ' + JSON.stringify(obj.PLZ!) + ',';
 		}
 		if (typeof obj.RegSchl !== "undefined") {
-			result += '"RegSchl" : ' + '"' + obj.RegSchl + '"' + ',';
+			result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl!) + ',';
 		}
 		if (typeof obj.Ort !== "undefined") {
-			result += '"Ort" : ' + '"' + obj.Ort + '"' + ',';
+			result += '"Ort" : ' + JSON.stringify(obj.Ort!) + ',';
 		}
 		if (typeof obj.Ortsteil !== "undefined") {
-			result += '"Ortsteil" : ' + '"' + obj.Ortsteil + '"' + ',';
+			result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil!) + ',';
 		}
 		if (typeof obj.Stand !== "undefined") {
-			result += '"Stand" : ' + '"' + obj.Stand + '"' + ',';
+			result += '"Stand" : ' + JSON.stringify(obj.Stand!) + ',';
 		}
 		if (typeof obj.gueltigVon !== "undefined") {
 			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';

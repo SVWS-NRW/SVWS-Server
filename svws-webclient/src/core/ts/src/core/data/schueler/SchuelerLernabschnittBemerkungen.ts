@@ -75,13 +75,13 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittBemerkungen) : string {
 		let result = '{';
-		result += '"zeugnisAllgemein" : ' + '"' + obj.zeugnisAllgemein! + '"' + ',';
-		result += '"zeugnisASV" : ' + '"' + obj.zeugnisASV! + '"' + ',';
-		result += '"zeugnisLELS" : ' + '"' + obj.zeugnisLELS! + '"' + ',';
-		result += '"zeugnisAUE" : ' + '"' + obj.zeugnisAUE! + '"' + ',';
-		result += '"uebergangESF" : ' + '"' + obj.uebergangESF! + '"' + ',';
-		result += '"foerderschwerpunkt" : ' + '"' + obj.foerderschwerpunkt! + '"' + ',';
-		result += '"versetzungsentscheidung" : ' + '"' + obj.versetzungsentscheidung! + '"' + ',';
+		result += '"zeugnisAllgemein" : ' + JSON.stringify(obj.zeugnisAllgemein!) + ',';
+		result += '"zeugnisASV" : ' + JSON.stringify(obj.zeugnisASV!) + ',';
+		result += '"zeugnisLELS" : ' + JSON.stringify(obj.zeugnisLELS!) + ',';
+		result += '"zeugnisAUE" : ' + JSON.stringify(obj.zeugnisAUE!) + ',';
+		result += '"uebergangESF" : ' + JSON.stringify(obj.uebergangESF!) + ',';
+		result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt!) + ',';
+		result += '"versetzungsentscheidung" : ' + JSON.stringify(obj.versetzungsentscheidung!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,25 +90,25 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittBemerkungen>) : string {
 		let result = '{';
 		if (typeof obj.zeugnisAllgemein !== "undefined") {
-			result += '"zeugnisAllgemein" : ' + '"' + obj.zeugnisAllgemein + '"' + ',';
+			result += '"zeugnisAllgemein" : ' + JSON.stringify(obj.zeugnisAllgemein!) + ',';
 		}
 		if (typeof obj.zeugnisASV !== "undefined") {
-			result += '"zeugnisASV" : ' + '"' + obj.zeugnisASV + '"' + ',';
+			result += '"zeugnisASV" : ' + JSON.stringify(obj.zeugnisASV!) + ',';
 		}
 		if (typeof obj.zeugnisLELS !== "undefined") {
-			result += '"zeugnisLELS" : ' + '"' + obj.zeugnisLELS + '"' + ',';
+			result += '"zeugnisLELS" : ' + JSON.stringify(obj.zeugnisLELS!) + ',';
 		}
 		if (typeof obj.zeugnisAUE !== "undefined") {
-			result += '"zeugnisAUE" : ' + '"' + obj.zeugnisAUE + '"' + ',';
+			result += '"zeugnisAUE" : ' + JSON.stringify(obj.zeugnisAUE!) + ',';
 		}
 		if (typeof obj.uebergangESF !== "undefined") {
-			result += '"uebergangESF" : ' + '"' + obj.uebergangESF + '"' + ',';
+			result += '"uebergangESF" : ' + JSON.stringify(obj.uebergangESF!) + ',';
 		}
 		if (typeof obj.foerderschwerpunkt !== "undefined") {
-			result += '"foerderschwerpunkt" : ' + '"' + obj.foerderschwerpunkt + '"' + ',';
+			result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt!) + ',';
 		}
 		if (typeof obj.versetzungsentscheidung !== "undefined") {
-			result += '"versetzungsentscheidung" : ' + '"' + obj.versetzungsentscheidung + '"' + ',';
+			result += '"versetzungsentscheidung" : ' + JSON.stringify(obj.versetzungsentscheidung!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

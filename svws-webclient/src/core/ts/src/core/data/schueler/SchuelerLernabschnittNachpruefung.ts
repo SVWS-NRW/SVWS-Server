@@ -47,10 +47,10 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittNachpruefung) : string {
 		let result = '{';
-		result += '"grund" : ' + '"' + obj.grund! + '"' + ',';
+		result += '"grund" : ' + JSON.stringify(obj.grund!) + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -59,16 +59,16 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefung>) : string {
 		let result = '{';
 		if (typeof obj.grund !== "undefined") {
-			result += '"grund" : ' + '"' + obj.grund + '"' + ',';
+			result += '"grund" : ' + JSON.stringify(obj.grund!) + ',';
 		}
 		if (typeof obj.fachID !== "undefined") {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		if (typeof obj.datum !== "undefined") {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : '"' + obj.datum + '"') + ',';
+			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

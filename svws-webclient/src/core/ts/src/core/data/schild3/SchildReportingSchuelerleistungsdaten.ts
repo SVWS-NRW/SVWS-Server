@@ -138,16 +138,16 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"abschnittID" : ' + obj.abschnittID + ',';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel! + '"' + ',';
-		result += '"fach" : ' + '"' + obj.fach! + '"' + ',';
+		result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel!) + ',';
+		result += '"fach" : ' + JSON.stringify(obj.fach!) + ',';
 		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
-		result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : '"' + obj.lehrerKuerzel + '"') + ',';
+		result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
 		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
-		result += '"kurs" : ' + '"' + obj.kurs! + '"' + ',';
-		result += '"kursart" : ' + '"' + obj.kursart! + '"' + ',';
-		result += '"kursartAllg" : ' + '"' + obj.kursartAllg! + '"' + ',';
-		result += '"note" : ' + '"' + obj.note! + '"' + ',';
-		result += '"noteKuerzel" : ' + '"' + obj.noteKuerzel! + '"' + ',';
+		result += '"kurs" : ' + JSON.stringify(obj.kurs!) + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
+		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
+		result += '"note" : ' + JSON.stringify(obj.note!) + ',';
+		result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel!) + ',';
 		result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';
 		result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg) + ',';
 		result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII) + ',';
@@ -168,34 +168,34 @@ export class SchildReportingSchuelerleistungsdaten extends JavaObject {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.fachKuerzel !== "undefined") {
-			result += '"fachKuerzel" : ' + '"' + obj.fachKuerzel + '"' + ',';
+			result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel!) + ',';
 		}
 		if (typeof obj.fach !== "undefined") {
-			result += '"fach" : ' + '"' + obj.fach + '"' + ',';
+			result += '"fach" : ' + JSON.stringify(obj.fach!) + ',';
 		}
 		if (typeof obj.lehrerID !== "undefined") {
 			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
 		}
 		if (typeof obj.lehrerKuerzel !== "undefined") {
-			result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : '"' + obj.lehrerKuerzel + '"') + ',';
+			result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
 		}
 		if (typeof obj.kursID !== "undefined") {
 			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
 		}
 		if (typeof obj.kurs !== "undefined") {
-			result += '"kurs" : ' + '"' + obj.kurs + '"' + ',';
+			result += '"kurs" : ' + JSON.stringify(obj.kurs!) + ',';
 		}
 		if (typeof obj.kursart !== "undefined") {
-			result += '"kursart" : ' + '"' + obj.kursart + '"' + ',';
+			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
 		}
 		if (typeof obj.kursartAllg !== "undefined") {
-			result += '"kursartAllg" : ' + '"' + obj.kursartAllg + '"' + ',';
+			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + '"' + obj.note + '"' + ',';
+			result += '"note" : ' + JSON.stringify(obj.note!) + ',';
 		}
 		if (typeof obj.noteKuerzel !== "undefined") {
-			result += '"noteKuerzel" : ' + '"' + obj.noteKuerzel + '"' + ',';
+			result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel!) + ',';
 		}
 		if (typeof obj.notePunkte !== "undefined") {
 			result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';

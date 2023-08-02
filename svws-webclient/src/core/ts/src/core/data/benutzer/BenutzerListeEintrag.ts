@@ -78,8 +78,8 @@ export class BenutzerListeEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"typ" : ' + obj.typ + ',';
 		result += '"typID" : ' + obj.typID + ',';
-		result += '"anzeigename" : ' + '"' + obj.anzeigename! + '"' + ',';
-		result += '"name" : ' + '"' + obj.name! + '"' + ',';
+		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
+		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"istAdmin" : ' + obj.istAdmin + ',';
 		result += '"idCredentials" : ' + obj.idCredentials + ',';
 		result = result.slice(0, -1);
@@ -99,10 +99,10 @@ export class BenutzerListeEintrag extends JavaObject {
 			result += '"typID" : ' + obj.typID + ',';
 		}
 		if (typeof obj.anzeigename !== "undefined") {
-			result += '"anzeigename" : ' + '"' + obj.anzeigename + '"' + ',';
+			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
 		}
 		if (typeof obj.name !== "undefined") {
-			result += '"name" : ' + '"' + obj.name + '"' + ',';
+			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		}
 		if (typeof obj.istAdmin !== "undefined") {
 			result += '"istAdmin" : ' + obj.istAdmin + ',';

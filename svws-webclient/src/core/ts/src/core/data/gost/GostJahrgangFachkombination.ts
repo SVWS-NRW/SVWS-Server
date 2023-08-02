@@ -90,9 +90,9 @@ export class GostJahrgangFachkombination extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"fachID1" : ' + obj.fachID1 + ',';
-		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1 + '"') + ',';
+		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : JSON.stringify(obj.kursart1)) + ',';
 		result += '"fachID2" : ' + obj.fachID2 + ',';
-		result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2 + '"') + ',';
+		result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : JSON.stringify(obj.kursart2)) + ',';
 		if (!obj.gueltigInHalbjahr) {
 			result += '"gueltigInHalbjahr" : []';
 		} else {
@@ -106,7 +106,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"typ" : ' + obj.typ + ',';
-		result += '"hinweistext" : ' + '"' + obj.hinweistext! + '"' + ',';
+		result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -124,13 +124,13 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"fachID1" : ' + obj.fachID1 + ',';
 		}
 		if (typeof obj.kursart1 !== "undefined") {
-			result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : '"' + obj.kursart1 + '"') + ',';
+			result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : JSON.stringify(obj.kursart1)) + ',';
 		}
 		if (typeof obj.fachID2 !== "undefined") {
 			result += '"fachID2" : ' + obj.fachID2 + ',';
 		}
 		if (typeof obj.kursart2 !== "undefined") {
-			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : '"' + obj.kursart2 + '"') + ',';
+			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : JSON.stringify(obj.kursart2)) + ',';
 		}
 		if (typeof obj.gueltigInHalbjahr !== "undefined") {
 			const a = obj.gueltigInHalbjahr;
@@ -151,7 +151,7 @@ export class GostJahrgangFachkombination extends JavaObject {
 			result += '"typ" : ' + obj.typ + ',';
 		}
 		if (typeof obj.hinweistext !== "undefined") {
-			result += '"hinweistext" : ' + '"' + obj.hinweistext + '"' + ',';
+			result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

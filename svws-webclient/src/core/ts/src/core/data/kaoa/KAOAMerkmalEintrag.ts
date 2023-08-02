@@ -133,10 +133,10 @@ export class KAOAMerkmalEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KAOAMerkmalEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"beschreibung" : ' + '"' + obj.beschreibung! + '"' + ',';
-		result += '"kategorie" : ' + '"' + obj.kategorie! + '"' + ',';
-		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : '"' + obj.optionsart + '"') + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"kategorie" : ' + JSON.stringify(obj.kategorie!) + ',';
+		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		if (!obj.bkAnlagen) {
 			result += '"bkAnlagen" : []';
 		} else {
@@ -162,16 +162,16 @@ export class KAOAMerkmalEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.beschreibung !== "undefined") {
-			result += '"beschreibung" : ' + '"' + obj.beschreibung + '"' + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
 		}
 		if (typeof obj.kategorie !== "undefined") {
-			result += '"kategorie" : ' + '"' + obj.kategorie + '"' + ',';
+			result += '"kategorie" : ' + JSON.stringify(obj.kategorie!) + ',';
 		}
 		if (typeof obj.optionsart !== "undefined") {
-			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : '"' + obj.optionsart + '"') + ',';
+			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		}
 		if (typeof obj.bkAnlagen !== "undefined") {
 			if (!obj.bkAnlagen) {

@@ -162,8 +162,8 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer) + ',';
 		result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild) + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
 		if (!obj.schulformen) {
 			result += '"schulformen" : []';
@@ -198,10 +198,10 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 			result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.farbe !== "undefined") {
 			result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';

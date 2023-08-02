@@ -76,9 +76,9 @@ export class GostBlockungKursLehrer extends JavaObject {
 	public static transpilerToJSON(obj : GostBlockungKursLehrer) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"vorname" : ' + '"' + obj.vorname! + '"' + ',';
-		result += '"nachname" : ' + '"' + obj.nachname! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		result += '"reihenfolge" : ' + obj.reihenfolge + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"istExtern" : ' + obj.istExtern + ',';
@@ -93,13 +93,13 @@ export class GostBlockungKursLehrer extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
-			result += '"vorname" : ' + '"' + obj.vorname + '"' + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		}
 		if (typeof obj.nachname !== "undefined") {
-			result += '"nachname" : ' + '"' + obj.nachname + '"' + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}
 		if (typeof obj.reihenfolge !== "undefined") {
 			result += '"reihenfolge" : ' + obj.reihenfolge + ',';

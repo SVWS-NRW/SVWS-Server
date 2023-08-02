@@ -77,13 +77,13 @@ export class BetriebListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
-		result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1 + '"') + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
-		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr + '"') + ',';
-		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz + '"') + ',';
+		result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
+		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
+		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
 		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
 		result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
-		result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';
+		result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -98,16 +98,16 @@ export class BetriebListeEintrag extends JavaObject {
 			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
 		}
 		if (typeof obj.name1 !== "undefined") {
-			result += '"name1" : ' + ((!obj.name1) ? 'null' : '"' + obj.name1 + '"') + ',';
+			result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
 		}
 		if (typeof obj.strassenname !== "undefined") {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : '"' + obj.strassenname + '"') + ',';
+			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (typeof obj.hausnr !== "undefined") {
-			result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : '"' + obj.hausnr + '"') + ',';
+			result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
 		}
 		if (typeof obj.hausnrzusatz !== "undefined") {
-			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : '"' + obj.hausnrzusatz + '"') + ',';
+			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
 		}
 		if (typeof obj.ort_id !== "undefined") {
 			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
@@ -116,7 +116,7 @@ export class BetriebListeEintrag extends JavaObject {
 			result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
 		}
 		if (typeof obj.branche !== "undefined") {
-			result += '"branche" : ' + ((!obj.branche) ? 'null' : '"' + obj.branche + '"') + ',';
+			result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

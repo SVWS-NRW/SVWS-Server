@@ -35,8 +35,8 @@ export class Telefonnummer extends JavaObject {
 
 	public static transpilerToJSON(obj : Telefonnummer) : string {
 		let result = '{';
-		result += '"type" : ' + '"' + obj.type! + '"' + ',';
-		result += '"number" : ' + '"' + obj.number! + '"' + ',';
+		result += '"type" : ' + JSON.stringify(obj.type!) + ',';
+		result += '"number" : ' + JSON.stringify(obj.number!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -45,10 +45,10 @@ export class Telefonnummer extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Telefonnummer>) : string {
 		let result = '{';
 		if (typeof obj.type !== "undefined") {
-			result += '"type" : ' + '"' + obj.type + '"' + ',';
+			result += '"type" : ' + JSON.stringify(obj.type!) + ',';
 		}
 		if (typeof obj.number !== "undefined") {
-			result += '"number" : ' + '"' + obj.number + '"' + ',';
+			result += '"number" : ' + JSON.stringify(obj.number!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

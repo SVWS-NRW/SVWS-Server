@@ -49,7 +49,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanblockungKopplung) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		if (!obj.stundenelemente) {
 			result += '"stundenelemente" : []';
 		} else {
@@ -73,7 +73,7 @@ export class StundenplanblockungKopplung extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.stundenelemente !== "undefined") {
 			if (!obj.stundenelemente) {

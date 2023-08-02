@@ -121,15 +121,15 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel + '"') + ',';
+		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
 		result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
-		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
-		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
+		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
+		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
@@ -147,7 +147,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"schuljahr" : ' + obj.schuljahr + ',';
 		}
 		if (typeof obj.halbjahrKuerzel !== "undefined") {
-			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : '"' + obj.halbjahrKuerzel + '"') + ',';
+			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		}
 		if (typeof obj.abschnitt !== "undefined") {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
@@ -156,22 +156,22 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : '"' + obj.jahrgang + '"') + ',';
+			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		}
 		if (typeof obj.notenKuerzel !== "undefined") {
-			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : '"' + obj.notenKuerzel + '"') + ',';
+			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
 		}
 		if (typeof obj.kursartKuerzel !== "undefined") {
-			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : '"' + obj.kursartKuerzel + '"') + ',';
+			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
 		if (typeof obj.istSchriftlich !== "undefined") {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

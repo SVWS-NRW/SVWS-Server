@@ -68,12 +68,12 @@ export class ENMZP10 extends JavaObject {
 	public static transpilerToJSON(obj : ENMZP10) : string {
 		let result = '{';
 		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"vornote" : ' + ((!obj.vornote) ? 'null' : '"' + obj.vornote + '"') + ',';
-		result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : '"' + obj.noteSchriftlichePruefung + '"') + ',';
+		result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
+		result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		result += '"muendlichePruefung" : ' + obj.muendlichePruefung + ',';
 		result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig + ',';
-		result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : '"' + obj.noteMuendlichePruefung + '"') + ',';
-		result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : '"' + obj.abschlussnote + '"') + ',';
+		result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
+		result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -85,10 +85,10 @@ export class ENMZP10 extends JavaObject {
 			result += '"fachID" : ' + obj.fachID + ',';
 		}
 		if (typeof obj.vornote !== "undefined") {
-			result += '"vornote" : ' + ((!obj.vornote) ? 'null' : '"' + obj.vornote + '"') + ',';
+			result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
 		}
 		if (typeof obj.noteSchriftlichePruefung !== "undefined") {
-			result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : '"' + obj.noteSchriftlichePruefung + '"') + ',';
+			result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		}
 		if (typeof obj.muendlichePruefung !== "undefined") {
 			result += '"muendlichePruefung" : ' + obj.muendlichePruefung + ',';
@@ -97,10 +97,10 @@ export class ENMZP10 extends JavaObject {
 			result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig + ',';
 		}
 		if (typeof obj.noteMuendlichePruefung !== "undefined") {
-			result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : '"' + obj.noteMuendlichePruefung + '"') + ',';
+			result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
 		}
 		if (typeof obj.abschlussnote !== "undefined") {
-			result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : '"' + obj.abschlussnote + '"') + ',';
+			result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

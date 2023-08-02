@@ -80,9 +80,9 @@ export class GostStatistikFachwahl extends JavaObject {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
-		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		result += '"wahlenAB3" : ' + obj.wahlenAB3 + ',';
 		result += '"wahlenAB4" : ' + obj.wahlenAB4 + ',';
 		if (!obj.fachwahlen) {
@@ -111,13 +111,13 @@ export class GostStatistikFachwahl extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : '"' + obj.kuerzel + '"') + ',';
+			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : '"' + obj.bezeichnung + '"') + ',';
+			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (typeof obj.kuerzelStatistik !== "undefined") {
-			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : '"' + obj.kuerzelStatistik + '"') + ',';
+			result += '"kuerzelStatistik" : ' + ((!obj.kuerzelStatistik) ? 'null' : JSON.stringify(obj.kuerzelStatistik)) + ',';
 		}
 		if (typeof obj.wahlenAB3 !== "undefined") {
 			result += '"wahlenAB3" : ' + obj.wahlenAB3 + ',';

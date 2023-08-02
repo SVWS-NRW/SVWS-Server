@@ -168,12 +168,12 @@ export class KursartKatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KursartKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
-		result += '"nummer" : ' + '"' + obj.nummer! + '"' + ',';
-		result += '"bezeichnung" : ' + '"' + obj.bezeichnung! + '"' + ',';
-		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
-		result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg + '"') + ',';
-		result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg + '"') + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
+		result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
+		result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
 		result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt + ',';
 		if (!obj.zulaessig) {
 			result += '"zulaessig" : []';
@@ -200,22 +200,22 @@ export class KursartKatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.nummer !== "undefined") {
-			result += '"nummer" : ' + '"' + obj.nummer + '"' + ',';
+			result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
-			result += '"bezeichnung" : ' + '"' + obj.bezeichnung + '"' + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
-			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : '"' + obj.bemerkungen + '"') + ',';
+			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		}
 		if (typeof obj.kuerzelAllg !== "undefined") {
-			result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : '"' + obj.kuerzelAllg + '"') + ',';
+			result += '"kuerzelAllg" : ' + ((!obj.kuerzelAllg) ? 'null' : JSON.stringify(obj.kuerzelAllg)) + ',';
 		}
 		if (typeof obj.bezeichnungAllg !== "undefined") {
-			result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : '"' + obj.bezeichnungAllg + '"') + ',';
+			result += '"bezeichnungAllg" : ' + ((!obj.bezeichnungAllg) ? 'null' : JSON.stringify(obj.bezeichnungAllg)) + ',';
 		}
 		if (typeof obj.erlaubtGOSt !== "undefined") {
 			result += '"erlaubtGOSt" : ' + obj.erlaubtGOSt + ',';

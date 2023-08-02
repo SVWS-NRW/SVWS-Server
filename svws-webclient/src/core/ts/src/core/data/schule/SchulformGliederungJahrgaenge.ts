@@ -45,8 +45,8 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulformGliederungJahrgaenge) : string {
 		let result = '{';
-		result += '"schulform" : ' + '"' + obj.schulform! + '"' + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		if (!obj.jahrgaenge) {
 			result += '"jahrgaenge" : []';
 		} else {
@@ -67,10 +67,10 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformGliederungJahrgaenge>) : string {
 		let result = '{';
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + '"' + obj.schulform + '"' + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
 		}
 		if (typeof obj.gliederung !== "undefined") {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : '"' + obj.gliederung + '"') + ',';
+			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		if (typeof obj.jahrgaenge !== "undefined") {
 			if (!obj.jahrgaenge) {

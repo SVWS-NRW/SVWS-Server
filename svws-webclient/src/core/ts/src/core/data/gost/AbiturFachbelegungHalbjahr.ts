@@ -97,15 +97,15 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 
 	public static transpilerToJSON(obj : AbiturFachbelegungHalbjahr) : string {
 		let result = '{';
-		result += '"halbjahrKuerzel" : ' + '"' + obj.halbjahrKuerzel! + '"' + ',';
-		result += '"kursartKuerzel" : ' + '"' + obj.kursartKuerzel! + '"' + ',';
+		result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel!) + ',';
+		result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel!) + ',';
 		result += '"schriftlich" : ' + obj.schriftlich + ',';
-		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
+		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
-		result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : '"' + obj.notenkuerzel + '"') + ',';
+		result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
 		result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet) + ',';
 		result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis) + ',';
 		result = result.slice(0, -1);
@@ -116,16 +116,16 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbiturFachbelegungHalbjahr>) : string {
 		let result = '{';
 		if (typeof obj.halbjahrKuerzel !== "undefined") {
-			result += '"halbjahrKuerzel" : ' + '"' + obj.halbjahrKuerzel + '"' + ',';
+			result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel!) + ',';
 		}
 		if (typeof obj.kursartKuerzel !== "undefined") {
-			result += '"kursartKuerzel" : ' + '"' + obj.kursartKuerzel + '"' + ',';
+			result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel!) + ',';
 		}
 		if (typeof obj.schriftlich !== "undefined") {
 			result += '"schriftlich" : ' + obj.schriftlich + ',';
 		}
 		if (typeof obj.biliSprache !== "undefined") {
-			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : '"' + obj.biliSprache + '"') + ',';
+			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
@@ -140,7 +140,7 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
 		}
 		if (typeof obj.notenkuerzel !== "undefined") {
-			result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : '"' + obj.notenkuerzel + '"') + ',';
+			result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
 		}
 		if (typeof obj.block1gewertet !== "undefined") {
 			result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet) + ',';

@@ -296,19 +296,19 @@ export class Abiturdaten extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
+		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"latinum" : ' + obj.latinum + ',';
 		result += '"kleinesLatinum" : ' + obj.kleinesLatinum + ',';
 		result += '"graecum" : ' + obj.graecum + ',';
 		result += '"hebraicum" : ' + obj.hebraicum + ',';
 		result += '"block1FehlstundenGesamt" : ' + obj.block1FehlstundenGesamt + ',';
 		result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt + ',';
-		result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema + '"') + ',';
-		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
-		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
-		result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung + '"') + ',';
-		result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel + '"') + ',';
-		result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema + '"') + ',';
+		result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
+		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
+		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
+		result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
+		result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
+		result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
 		result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse) + ',';
 		result += '"block1DefiziteGesamt" : ' + ((!obj.block1DefiziteGesamt) ? 'null' : obj.block1DefiziteGesamt) + ',';
 		result += '"block1DefiziteLK" : ' + ((!obj.block1DefiziteLK) ? 'null' : obj.block1DefiziteLK) + ',';
@@ -325,7 +325,7 @@ export class Abiturdaten extends JavaObject {
 		result += '"gesamtPunkteVerbesserung" : ' + ((!obj.gesamtPunkteVerbesserung) ? 'null' : obj.gesamtPunkteVerbesserung) + ',';
 		result += '"gesamtPunkteVerschlechterung" : ' + ((!obj.gesamtPunkteVerschlechterung) ? 'null' : obj.gesamtPunkteVerschlechterung) + ',';
 		result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -375,7 +375,7 @@ export class Abiturdaten extends JavaObject {
 			result += '"sprachendaten" : ' + Sprachendaten.transpilerToJSON(obj.sprachendaten) + ',';
 		}
 		if (typeof obj.bilingualeSprache !== "undefined") {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : '"' + obj.bilingualeSprache + '"') + ',';
+			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (typeof obj.latinum !== "undefined") {
 			result += '"latinum" : ' + obj.latinum + ',';
@@ -396,22 +396,22 @@ export class Abiturdaten extends JavaObject {
 			result += '"block1FehlstundenUnentschuldigt" : ' + obj.block1FehlstundenUnentschuldigt + ',';
 		}
 		if (typeof obj.projektKursThema !== "undefined") {
-			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : '"' + obj.projektKursThema + '"') + ',';
+			result += '"projektKursThema" : ' + ((!obj.projektKursThema) ? 'null' : JSON.stringify(obj.projektKursThema)) + ',';
 		}
 		if (typeof obj.projektkursLeitfach1Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach1Kuerzel + '"') + ',';
+			result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		}
 		if (typeof obj.projektkursLeitfach2Kuerzel !== "undefined") {
-			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : '"' + obj.projektkursLeitfach2Kuerzel + '"') + ',';
+			result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
 		}
 		if (typeof obj.besondereLernleistung !== "undefined") {
-			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : '"' + obj.besondereLernleistung + '"') + ',';
+			result += '"besondereLernleistung" : ' + ((!obj.besondereLernleistung) ? 'null' : JSON.stringify(obj.besondereLernleistung)) + ',';
 		}
 		if (typeof obj.besondereLernleistungNotenKuerzel !== "undefined") {
-			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : '"' + obj.besondereLernleistungNotenKuerzel + '"') + ',';
+			result += '"besondereLernleistungNotenKuerzel" : ' + ((!obj.besondereLernleistungNotenKuerzel) ? 'null' : JSON.stringify(obj.besondereLernleistungNotenKuerzel)) + ',';
 		}
 		if (typeof obj.besondereLernleistungThema !== "undefined") {
-			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : '"' + obj.besondereLernleistungThema + '"') + ',';
+			result += '"besondereLernleistungThema" : ' + ((!obj.besondereLernleistungThema) ? 'null' : JSON.stringify(obj.besondereLernleistungThema)) + ',';
 		}
 		if (typeof obj.block1AnzahlKurse !== "undefined") {
 			result += '"block1AnzahlKurse" : ' + ((!obj.block1AnzahlKurse) ? 'null' : obj.block1AnzahlKurse) + ',';
@@ -462,7 +462,7 @@ export class Abiturdaten extends JavaObject {
 			result += '"pruefungBestanden" : ' + ((!obj.pruefungBestanden) ? 'null' : obj.pruefungBestanden) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : '"' + obj.note + '"') + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

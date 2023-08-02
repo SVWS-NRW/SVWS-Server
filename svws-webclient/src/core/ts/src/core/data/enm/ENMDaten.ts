@@ -224,13 +224,13 @@ export class ENMDaten extends JavaObject {
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
 		result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
-		result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : '"' + obj.publicKey + '"') + ',';
+		result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
 		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
 		result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';
 		result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen + ',';
 		result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
-		result += '"schulform" : ' + ((!obj.schulform) ? 'null' : '"' + obj.schulform + '"') + ',';
-		result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : '"' + obj.mailadresse + '"') + ',';
+		result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
+		result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
 		if (!obj.noten) {
 			result += '"noten" : []';
 		} else {
@@ -374,7 +374,7 @@ export class ENMDaten extends JavaObject {
 			result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
 		}
 		if (typeof obj.publicKey !== "undefined") {
-			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : '"' + obj.publicKey + '"') + ',';
+			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
 		}
 		if (typeof obj.lehrerID !== "undefined") {
 			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
@@ -389,10 +389,10 @@ export class ENMDaten extends JavaObject {
 			result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
 		}
 		if (typeof obj.schulform !== "undefined") {
-			result += '"schulform" : ' + ((!obj.schulform) ? 'null' : '"' + obj.schulform + '"') + ',';
+			result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
 		}
 		if (typeof obj.mailadresse !== "undefined") {
-			result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : '"' + obj.mailadresse + '"') + ',';
+			result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
 		}
 		if (typeof obj.noten !== "undefined") {
 			if (!obj.noten) {

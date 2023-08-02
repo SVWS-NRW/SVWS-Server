@@ -43,10 +43,10 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : DatenbankVerbindungsdaten) : string {
 		let result = '{';
-		result += '"username" : ' + ((!obj.username) ? 'null' : '"' + obj.username + '"') + ',';
-		result += '"password" : ' + ((!obj.password) ? 'null' : '"' + obj.password + '"') + ',';
-		result += '"location" : ' + ((!obj.location) ? 'null' : '"' + obj.location + '"') + ',';
-		result += '"schema" : ' + ((!obj.schema) ? 'null' : '"' + obj.schema + '"') + ',';
+		result += '"username" : ' + ((!obj.username) ? 'null' : JSON.stringify(obj.username)) + ',';
+		result += '"password" : ' + ((!obj.password) ? 'null' : JSON.stringify(obj.password)) + ',';
+		result += '"location" : ' + ((!obj.location) ? 'null' : JSON.stringify(obj.location)) + ',';
+		result += '"schema" : ' + ((!obj.schema) ? 'null' : JSON.stringify(obj.schema)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -55,16 +55,16 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<DatenbankVerbindungsdaten>) : string {
 		let result = '{';
 		if (typeof obj.username !== "undefined") {
-			result += '"username" : ' + ((!obj.username) ? 'null' : '"' + obj.username + '"') + ',';
+			result += '"username" : ' + ((!obj.username) ? 'null' : JSON.stringify(obj.username)) + ',';
 		}
 		if (typeof obj.password !== "undefined") {
-			result += '"password" : ' + ((!obj.password) ? 'null' : '"' + obj.password + '"') + ',';
+			result += '"password" : ' + ((!obj.password) ? 'null' : JSON.stringify(obj.password)) + ',';
 		}
 		if (typeof obj.location !== "undefined") {
-			result += '"location" : ' + ((!obj.location) ? 'null' : '"' + obj.location + '"') + ',';
+			result += '"location" : ' + ((!obj.location) ? 'null' : JSON.stringify(obj.location)) + ',';
 		}
 		if (typeof obj.schema !== "undefined") {
-			result += '"schema" : ' + ((!obj.schema) ? 'null' : '"' + obj.schema + '"') + ',';
+			result += '"schema" : ' + ((!obj.schema) ? 'null' : JSON.stringify(obj.schema)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

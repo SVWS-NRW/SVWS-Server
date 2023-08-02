@@ -101,7 +101,7 @@ export class GostBlockungKurs extends JavaObject {
 		result += '"kursart" : ' + obj.kursart + ',';
 		result += '"nummer" : ' + obj.nummer + ',';
 		result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
-		result += '"suffix" : ' + '"' + obj.suffix! + '"' + ',';
+		result += '"suffix" : ' + JSON.stringify(obj.suffix!) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
 		if (!obj.lehrer) {
@@ -139,7 +139,7 @@ export class GostBlockungKurs extends JavaObject {
 			result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
 		}
 		if (typeof obj.suffix !== "undefined") {
-			result += '"suffix" : ' + '"' + obj.suffix + '"' + ',';
+			result += '"suffix" : ' + JSON.stringify(obj.suffix!) + ',';
 		}
 		if (typeof obj.wochenstunden !== "undefined") {
 			result += '"wochenstunden" : ' + obj.wochenstunden + ',';

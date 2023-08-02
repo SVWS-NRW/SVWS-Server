@@ -44,7 +44,7 @@ export class StundenplanblockungFach extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanblockungFach) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + '"' + obj.kuerzel! + '"' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -57,7 +57,7 @@ export class StundenplanblockungFach extends JavaObject {
 			result += '"id" : ' + obj.id + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
-			result += '"kuerzel" : ' + '"' + obj.kuerzel + '"' + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + obj.sortierung + ',';

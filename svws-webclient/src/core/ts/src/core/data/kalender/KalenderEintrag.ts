@@ -103,17 +103,17 @@ export class KalenderEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KalenderEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + '"' + obj.id! + '"' + ',';
-		result += '"kalenderId" : ' + '"' + obj.kalenderId! + '"' + ',';
-		result += '"uid" : ' + '"' + obj.uid! + '"' + ',';
-		result += '"version" : ' + '"' + obj.version! + '"' + ',';
-		result += '"data" : ' + '"' + obj.data! + '"' + ',';
-		result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart + '"') + ',';
-		result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde + '"') + ',';
+		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"kalenderId" : ' + JSON.stringify(obj.kalenderId!) + ',';
+		result += '"uid" : ' + JSON.stringify(obj.uid!) + ',';
+		result += '"version" : ' + JSON.stringify(obj.version!) + ',';
+		result += '"data" : ' + JSON.stringify(obj.data!) + ',';
+		result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : JSON.stringify(obj.kalenderStart)) + ',';
+		result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : JSON.stringify(obj.kalenderEnde)) + ',';
 		result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
 		result += '"darfLesen" : ' + obj.darfLesen + ',';
 		result += '"istBesitzer" : ' + obj.istBesitzer + ',';
-		result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp! + '"' + ',';
+		result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -122,25 +122,25 @@ export class KalenderEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KalenderEintrag>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + '"' + obj.id + '"' + ',';
+			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
 		}
 		if (typeof obj.kalenderId !== "undefined") {
-			result += '"kalenderId" : ' + '"' + obj.kalenderId + '"' + ',';
+			result += '"kalenderId" : ' + JSON.stringify(obj.kalenderId!) + ',';
 		}
 		if (typeof obj.uid !== "undefined") {
-			result += '"uid" : ' + '"' + obj.uid + '"' + ',';
+			result += '"uid" : ' + JSON.stringify(obj.uid!) + ',';
 		}
 		if (typeof obj.version !== "undefined") {
-			result += '"version" : ' + '"' + obj.version + '"' + ',';
+			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		}
 		if (typeof obj.data !== "undefined") {
-			result += '"data" : ' + '"' + obj.data + '"' + ',';
+			result += '"data" : ' + JSON.stringify(obj.data!) + ',';
 		}
 		if (typeof obj.kalenderStart !== "undefined") {
-			result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : '"' + obj.kalenderStart + '"') + ',';
+			result += '"kalenderStart" : ' + ((!obj.kalenderStart) ? 'null' : JSON.stringify(obj.kalenderStart)) + ',';
 		}
 		if (typeof obj.kalenderEnde !== "undefined") {
-			result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : '"' + obj.kalenderEnde + '"') + ',';
+			result += '"kalenderEnde" : ' + ((!obj.kalenderEnde) ? 'null' : JSON.stringify(obj.kalenderEnde)) + ',';
 		}
 		if (typeof obj.darfSchreiben !== "undefined") {
 			result += '"darfSchreiben" : ' + obj.darfSchreiben + ',';
@@ -152,7 +152,7 @@ export class KalenderEintrag extends JavaObject {
 			result += '"istBesitzer" : ' + obj.istBesitzer + ',';
 		}
 		if (typeof obj.kalenderTyp !== "undefined") {
-			result += '"kalenderTyp" : ' + '"' + obj.kalenderTyp + '"' + ',';
+			result += '"kalenderTyp" : ' + JSON.stringify(obj.kalenderTyp!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
