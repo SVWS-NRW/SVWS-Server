@@ -21,7 +21,7 @@
 				</div>
 			</template>
 			<template #cell(bewertung)="{ rowData: row }">
-				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer" v-if="getErgebnisse().contains(row)">
+				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer">
 					<svws-ui-tooltip position="right">
 						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 						<template #content>

@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="Item">
 	import type { ComputedRef, ShallowRef } from "vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
-	import { computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport } from "vue";
+	import { computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport, toRef } from "vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 	import { genId } from "../utils";
 
@@ -95,10 +95,13 @@
 		searchText.value = "" + value;
 	}
 
-	const selectedItem: ShallowRef<Item | undefined> = shallowRef(Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue);
+	const model = toRef(props, 'modelValue')
+
+	const selectedItem: ShallowRef<Item | undefined> = shallowRef(Array.isArray(model.value) ? model.value[0] : model.value);
 	const selectedItemList = shallowReactive(
-		new Set<Item>(Array.isArray(props.modelValue) ? props.modelValue : props.modelValue !== undefined ? [props.modelValue] : [])
+		new Set<Item>(Array.isArray(model.value) ? model.value : model.value !== undefined ? [model.value] : [])
 	);
+
 	watch(
 		() => props.modelValue,
 		newVal => {
@@ -239,9 +242,10 @@
 	}
 
 	const floating = ref(null);
+	const tags = toRef(props, 'tags');
 
 	const {x, y, strategy, placement} = useFloating(
-		props.tags ? inputElTags : inputEl,
+		tags.value ? inputElTags : inputEl,
 		floating,
 		{
 			placement: 'bottom',
@@ -275,6 +279,7 @@
 					:disabled="disabled"
 					:removable="removable"
 					:class="{'text-input--control--multiselect-tags': tags}"
+					:debounce-ms="0"
 					role="combobox"
 					:aria-label="placeholder"
 					:aria-expanded="showList"

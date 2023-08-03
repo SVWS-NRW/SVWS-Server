@@ -189,7 +189,7 @@
 
 <script lang="ts" setup>
 	import type { TableHTMLAttributes } from "vue";
-	import { defineComponent, computed, ref, useAttrs } from "vue";
+	import { defineComponent, computed, useAttrs, toRef } from "vue";
 
 	import useColumns from "./hooks/useColumns";
 	import useRows from "./hooks/useRows";
@@ -296,7 +296,7 @@
 		props
 	);
 
-	const filterOpenRef = ref(props.filterOpen);
+	const filterOpenRef = toRef(props, 'filterOpen');
 
 	const toggleFilterOpen = () => {
 		filterOpenRef.value = !filterOpenRef.value;

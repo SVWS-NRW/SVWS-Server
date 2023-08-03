@@ -5,8 +5,9 @@
 </script>
 <script setup lang="ts">
 	import type { InputType } from "../types";
-	import { useSlots, ref, computed } from "vue";
+	import { useSlots, ref, computed, toRef } from "vue";
 	import { genId } from "../utils";
+	import { useDebounceFn } from "@vueuse/core";
 
 	const props = withDefaults(defineProps<{
 		type?: InputType;
@@ -23,6 +24,7 @@
 		url?: boolean;
 		maxLen?: number;
 		span?: 'full' | '2';
+		debounceMs?: number;
 	}>(), {
 		type: "text",
 		modelValue: "",
@@ -37,7 +39,8 @@
 		rounded: false,
 		url: false,
 		maxLen: undefined,
-		span: undefined
+		span: undefined,
+		debounceMs: 1000
 	});
 
 	const emit = defineEmits<{
@@ -73,6 +76,8 @@
 	});
 
 	const hasIcon = computed(() => !!slots.default);
+
+	const debouncedOnInput = useDebounceFn((event) => onInput(event), toRef(props, 'debounceMs'))
 
 	function onInput(event: Event) {
 		emit("update:modelValue", (event.target as HTMLInputElement).value);
@@ -116,7 +121,7 @@
 			:readonly="readonly"
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
-			@input="onInput">
+			@input="debouncedOnInput">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"
