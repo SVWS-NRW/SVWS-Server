@@ -2,12 +2,12 @@ import type { Schuljahresabschnitt, StundenplanListeEintrag } from "@core";
 
 export interface StundenplanAuswahlProps {
 	auswahl: StundenplanListeEintrag | undefined;
-	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
+	mapKatalogeintraege: () => Map<number, StundenplanListeEintrag>;
 	gotoEintrag: (religion: StundenplanListeEintrag) => Promise<void>;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
 	aktSchulabschnitt: number;
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	removeEintraege: (eintraege: StundenplanListeEintrag[]) => Promise<void>;
-	addEintrag: (eintrag: StundenplanListeEintrag) => Promise<void>;
+	addEintrag: () => Promise<void>;
 }

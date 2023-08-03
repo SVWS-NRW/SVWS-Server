@@ -6,17 +6,15 @@
 		</template>
 		<template #content>
 			<div class="flex flex-col gap-12">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" selectable v-model="selected">
+				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
 					<template #footerActions>
 						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
 							<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer"
 								:disabled="selected.length === 0" />
 						</div>
-						<s-stundenplan-neu-modal v-slot="{ openModal }" :add-stundenplan="addEintrag">
-							<svws-ui-button type="icon" @click="openModal()">
-								<i-ri-add-line />
-							</svws-ui-button>
-						</s-stundenplan-neu-modal>
+						<svws-ui-button type="icon" @click="addEintrag">
+							<i-ri-add-line />
+						</svws-ui-button>
 					</template>
 				</svws-ui-data-table>
 			</div>

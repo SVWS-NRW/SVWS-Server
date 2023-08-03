@@ -98,7 +98,16 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.server.patchStundenplan(data, api.schema, this.auswahl.id).then(()=>{
 			const daten = this.daten;
-			this.setPatchedState({daten: Object.assign(daten, data)});
+			if (this.auswahl) {
+				if (data.bezeichnungStundenplan)
+					this.auswahl.bezeichnung = data.bezeichnungStundenplan;
+				if (data.gueltigAb)
+					this.auswahl.gueltigAb = data.gueltigAb;
+				if (data.gueltigBis)
+					this.auswahl.gueltigBis = data.gueltigBis;
+				this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
+			}
+			this.setPatchedState({daten: Object.assign(daten, data), auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege});
 		}).catch((e) => console.log(e))
 	}
 
@@ -258,18 +267,10 @@ export class RouteDataStundenplan {
 		}
 	}
 
-	addEintrag = async (eintrag: StundenplanListeEintrag) => {
-		const leer = await api.server.addStundenplan(api.schema, api.abschnitt.id);
-		const sp: Partial<Stundenplan> = {};
-		sp.bezeichnungStundenplan = eintrag.bezeichnung;
-		sp.gueltigAb = eintrag.gueltigAb;
-		sp.gueltigBis = eintrag.gueltigBis;
-		//TODO Fix wochenTypModell
-		// sp.wochenTypModell = 2;
-		await api.server.patchStundenplan(sp, api.schema, leer.id);
-		eintrag.id = leer.id;
-		this.mapKatalogeintraege.set(leer.id, eintrag)
-		this.commit();
+	addEintrag = async () => {
+		const eintrag = await api.server.addStundenplan(api.schema, api.abschnitt.id);
+		this.mapKatalogeintraege.set(eintrag.id, eintrag)
+		await this.setEintrag(eintrag);
 	}
 
 	removeEintraege = async (eintraege: StundenplanListeEintrag[]) => {
