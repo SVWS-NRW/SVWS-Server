@@ -14,7 +14,7 @@
 					<template #body>
 						<svws-ui-table-row v-for="(e, i) in data" :key="i" @click="select(e.id)" :clicked="clickedErzieher ? clickedErzieher === e.id : i === 0">
 							<svws-ui-table-cell>
-								{{ mapErzieherarten.get(e.idErzieherArt).bezeichnung }}
+								{{ e.idErzieherArt ? mapErzieherarten.get(e.idErzieherArt)?.bezeichnung : '' }}
 							</svws-ui-table-cell>
 							<svws-ui-table-cell>
 								{{ e.vorname }} {{ e.nachname }}
@@ -23,7 +23,7 @@
 								{{ e.eMail }}
 							</svws-ui-table-cell>
 							<svws-ui-table-cell>
-								{{ e.strassenname }}{{ mapOrte?.get(e.wohnortID) ? ', ' + mapOrte?.get(e.wohnortID).plz + ' ' + mapOrte?.get(e.wohnortID)?.ortsname : '' }}
+								{{ e.strassenname }}{{ e.wohnortID && mapOrte?.get(e.wohnortID) ? `, ${mapOrte.get(e.wohnortID)?.plz} ${mapOrte?.get(e.wohnortID)?.ortsname}` : '' }}
 							</svws-ui-table-cell>
 							<svws-ui-table-cell align="center">
 								<i-ri-check-fill v-if="e.erhaeltAnschreiben" />
@@ -55,13 +55,10 @@
 
 <script setup lang="ts">
 	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
-	import type {DataTableColumn} from "@ui";
-	import {ref} from "vue";
-	// TODO import { useDebouncedPatch } from '~/utils/composables/debouncedPatch';
+	import type { DataTableColumn } from "@ui";
+	import { ref } from "vue";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
-
-	// TODO debouncing... const { doPatch } = useDebouncedPatch(computed(() => props.data), props.patch)
 
 	const clickedErzieher = ref<number | undefined>(undefined);
 
@@ -73,7 +70,7 @@
 		{ key: "anschreiben", label: "Anschreiben", tooltip: "Erhält Anschreiben", fixedWidth: 3, align: "center"},
 	];
 
-	async function select(erzieher) {
+	async function select(erzieher: number) {
 		clickedErzieher.value = erzieher;
 	}
 
