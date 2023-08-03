@@ -140,8 +140,13 @@ export class RouteManager {
 		}
 		// Aktualisiere ggf. den redirect-Parameter
 		if (!api.authenticated && (to.name === "login")) {
-			const redirect = to.query.redirect === undefined ? "/" : to.query.redirect;
-			if ((redirect !== null) && (redirect.toString() !== routeLogin.routepath)) {
+			let doChangeRedirect = false;
+			let redirect = to.query.redirect;
+			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error")))) {
+				doChangeRedirect = true;
+				redirect = "/";
+			}
+			if (doChangeRedirect) {
 				routeLogin.routepath = redirect.toString();
 				return { name: "login", query: { redirect: redirect } };
 			}
