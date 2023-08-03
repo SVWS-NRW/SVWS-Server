@@ -33,8 +33,8 @@
 
 	const cols = [
 		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
-		{ key: "gueltigAb", label: "von", span: 1, sortable: false, defaultSort: 'asc' },
-		{ key: "gueltigBis", label: "bis", span: 1, sortable: false }
+		{ key: "gueltigAb", label: "von", span: 1, sortable: false, defaultSort: 'asc', type: 'date' },
+		{ key: "gueltigBis", label: "bis", span: 1, sortable: false, type: 'date' }
 	];
 
 	async function doDeleteEintraege() {

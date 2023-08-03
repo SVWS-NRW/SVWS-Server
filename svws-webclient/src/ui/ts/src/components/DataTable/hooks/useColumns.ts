@@ -24,6 +24,7 @@ export const buildTableColumn = (source: DataTableColumnSource, initialIndex: nu
 		align: input.align || 'left',
 		tooltip: input.tooltip || '',
 		disabled: input.disabled || false,
+		type: input.type || 'text'
 	}
 }
 

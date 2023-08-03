@@ -1,3 +1,5 @@
+import type { InputType } from "src/types"
+
 export type DataTableSortingOrder = 'asc' | 'desc' | null
 export const DataTableSortingOptions = ['asc', 'desc', null] as const
 
@@ -13,6 +15,7 @@ export type DataTableColumn = {
   align?: 'left' | 'center' | 'right'
   tooltip?: string
 	disabled?: boolean
+  type?: InputType
 }
 
 export type DataTableColumnSource = DataTableColumn | string
@@ -31,6 +34,7 @@ export interface DataTableColumnInternal {
   align: 'left' | 'center' | 'right'
   tooltip: string
 	disabled: boolean
+  type: InputType
 }
 
 export type DataTableItem = Record<string, any>

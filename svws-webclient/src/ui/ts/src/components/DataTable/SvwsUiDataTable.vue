@@ -139,41 +139,13 @@
 							<svws-ui-text-input v-if="row.isEditing"
 								v-model="cell.value"
 								:headless="true"
+								:type="(cell.column.type)"
 								@update:value="(value: string) => cell.value = value"
 								@click.stop="setClickedRow(row) " />
 							<span v-else class="data-table__td-content" :title="cell.value">
-								{{ cell.value }}
+								{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 							</span>
 						</slot>
-					</div>
-					<div v-if="rowActions" class="data-table__row-actions data-table__td">
-						<!-- <svws-ui-popover :hover="false"
-							:disable-click-away="false"
-							:show-delay="0"
-							placement="auto-start"
-							:arrow="false"
-							class="data-table__row-actions__popover"
-							:context="true"
-							@click.stop>
-							<template #trigger>
-								<svws-ui-button type="icon" size="small" class="cursor-context-menu">
-									<span class="icon">
-										<i-ri-more2-fill />
-									</span>
-								</svws-ui-button>
-							</template>
-							<template #content>
-								<div v-for="action in rowActions"
-									:key="action.action">
-									<svws-ui-button class="action-item"
-										type="transparent"
-										size="small"
-										@click="() => {rowExecute ? rowExecute(action.action, row) : null}">
-										{{ action.label }}
-									</svws-ui-button>
-								</div>
-							</template>
-						</svws-ui-popover> -->
 					</div>
 				</div>
 			</slot>
@@ -356,56 +328,6 @@
 	const computedTableAttributes = computed(() => ({
 		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
 	} as TableHTMLAttributes));
-
-	// const tableRef = ref<HTMLDivElement | null>(null);
-	// const tableTbodyRef = ref<HTMLDivElement | null>(null);
-	// const tableScrollable = ref(false);
-	// const tableRefScrollHeight = ref(0);
-	// const tableScrolledToBottom = ref(true);
-	// const tableScrolledToTop = ref(true);
-
-	// const checkTableScrollable = () => {
-	// 	if (tableRef.value && tableTbodyRef.value) {
-	// 		if ("scrollHeight" in tableTbodyRef.value && "clientHeight" in tableRef.value) {
-	// 			tableScrollable.value = tableTbodyRef.value.scrollHeight > tableRef.value.clientHeight;
-	// 		}
-	// 	}
-	// }
-
-	// const updateScrollValues = () => {
-	// 	if (tableScrollable.value === false) {
-	// 		tableScrolledToBottom.value = true;
-	// 		tableScrolledToTop.value = true;
-	// 		return;
-	// 	}
-
-	// 	if (tableRef.value && "scrollHeight" in tableRef.value && "scrollTop" in tableRef.value) {
-	// 		tableRefScrollHeight.value = tableRef.value.scrollHeight;
-	// 		tableScrolledToTop.value = tableRef.value.scrollTop < 5;
-	// 		tableScrolledToBottom.value = tableRef.value.scrollTop >= (tableRef.value.scrollHeight - tableRef.value.offsetHeight - 5);
-	// 	}
-	// }
-
-	// onUpdated(() => {
-	// 	checkTableScrollable();
-	// 	updateScrollValues();
-	// });
-
-	// onMounted(() => {
-	// 	checkTableScrollable();
-	// 	updateScrollValues();
-	// 	window.addEventListener("resize", checkTableScrollable);
-	// 	if ("addEventListener" in tableRef.value) {
-	// 		tableRef.value.addEventListener("scroll", updateScrollValues);
-	// 	}
-	// });
-
-	// onBeforeUnmount(() => {
-	// 	window.removeEventListener("resize", checkTableScrollable);
-	// 	if ("removeEventListener" in tableRef.value) {
-	// 		tableRef.value.removeEventListener("scroll", updateScrollValues);
-	// 	}
-	// });
 
 </script>
 
