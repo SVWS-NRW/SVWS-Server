@@ -59,7 +59,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vorname */
 	public SchemaTabelleSpalte col_Vorname = add("Vorname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Vorname des Schülers PAuswG vom 21.6.2019 §5 Abs. 2");
+		.setJavaComment("Vorname des Schülers PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte Zusatz */
 	public SchemaTabelleSpalte col_Zusatz = add("Zusatz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)

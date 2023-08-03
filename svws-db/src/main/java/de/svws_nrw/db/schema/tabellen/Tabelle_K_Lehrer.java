@@ -46,7 +46,7 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vorname */
 	public SchemaTabelleSpalte col_Vorname = add("Vorname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Der Vorname des Lehrers PAuswG vom 21.6.2019 §5 Abs. 2");
+		.setJavaComment("Der Vorname des Lehrers PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte PersonTyp */
 	public SchemaTabelleSpalte col_PersonTyp = add("PersonTyp", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)

@@ -45,7 +45,7 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vorname1 */
 	public SchemaTabelleSpalte col_Vorname1 = add("Vorname1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Vorname1 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2");
+		.setJavaComment("Vorname1 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte Anrede2 */
 	public SchemaTabelleSpalte col_Anrede2 = add("Anrede2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(20)
@@ -61,7 +61,7 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vorname2 */
 	public SchemaTabelleSpalte col_Vorname2 = add("Vorname2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Vorname2 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2");
+		.setJavaComment("Vorname2 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte ErzStrasse */
 	public SchemaTabelleSpalte col_ErzStrasse = add("ErzStrasse", SchemaDatentypen.VARCHAR, false).setDatenlaenge(55)

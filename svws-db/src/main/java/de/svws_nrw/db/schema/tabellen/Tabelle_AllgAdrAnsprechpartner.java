@@ -30,7 +30,7 @@ public class Tabelle_AllgAdrAnsprechpartner extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Vorname */
 	public SchemaTabelleSpalte col_Vorname = add("Vorname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(80)
-		.setJavaComment("Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2");
+		.setJavaComment("Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt.");
 
 	/** Die Definition der Tabellenspalte Anrede */
 	public SchemaTabelleSpalte col_Anrede = add("Anrede", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
