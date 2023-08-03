@@ -1,7 +1,7 @@
-import type { StundenplanZeitraster, StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan} from "@core";
+import type { StundenplanZeitraster, StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { StundenplanManager, DeveloperNotificationException, ArrayList } from "@core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
 
 import { shallowRef } from "vue";
 import { useDebounceFn } from "@vueuse/core";
@@ -20,6 +20,7 @@ interface RouteStateStundenplan {
 	listRaeume: List<Raum>;
 	listPausenzeiten: List<StundenplanPausenzeit>;
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
+	listJahrgaenge: List<JahrgangsListeEintrag>;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
@@ -32,6 +33,7 @@ export class RouteDataStundenplan {
 		listRaeume: new ArrayList(),
 		listPausenzeiten: new ArrayList(),
 		listAufsichtsbereiche: new ArrayList(),
+		listJahrgaenge: new ArrayList(),
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -89,6 +91,10 @@ export class RouteDataStundenplan {
 
 	get listAufsichtsbereiche(): List<StundenplanAufsichtsbereich> {
 		return this._state.value.listAufsichtsbereiche;
+	}
+
+	get listJahrgaenge(): List<JahrgangsListeEintrag> {
+		return this._state.value.listJahrgaenge;
 	}
 
 	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
@@ -243,6 +249,18 @@ export class RouteDataStundenplan {
 		await this.setEintrag(this.auswahl);
 	}
 
+	addJahrgang = async (id: number) => {
+		const jahrgang = new StundenplanJahrgang();
+		jahrgang.id = id;
+		this.stundenplanManager.jahrgangAdd(jahrgang);
+		this.commit();
+	}
+
+	removeJahrgang = async (id: number) => {
+		this.stundenplanManager.jahrgangRemoveById(id);
+		this.commit();
+	}
+
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
 		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
@@ -252,7 +270,8 @@ export class RouteDataStundenplan {
 		const listRaeume = await api.server.getRaeume(api.schema);
 		const listPausenzeiten = await api.server.getPausenzeiten(api.schema);
 		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche })
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge })
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {

@@ -47,6 +47,9 @@ export class RouteStundenplanDaten extends RouteNode<unknown, RouteStundenplan> 
 			addZeitraster: routeStundenplan.data.addZeitraster,
 			removeZeitraster: routeStundenplan.data.removeZeitraster,
 			importZeitraster: routeStundenplan.data.importZeitraster,
+			listJahrgaenge: routeStundenplan.data.listJahrgaenge,
+			addJahrgang: routeStundenplan.data.addJahrgang,
+			removeJahrgang: routeStundenplan.data.removeJahrgang,
 		};
 	}
 

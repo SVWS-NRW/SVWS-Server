@@ -1,4 +1,4 @@
-import type { List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum, StundenplanZeitraster } from "@core";
+import type { JahrgangsListeEintrag, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum, StundenplanZeitraster } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;
@@ -22,4 +22,7 @@ export interface StundenplanDatenProps {
 	addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
 	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	importZeitraster: () => Promise<void>;
+	listJahrgaenge: List<JahrgangsListeEintrag>;
+	addJahrgang: (id: number) => Promise<void>;
+	removeJahrgang: (id: number) => Promise<void>;
 }

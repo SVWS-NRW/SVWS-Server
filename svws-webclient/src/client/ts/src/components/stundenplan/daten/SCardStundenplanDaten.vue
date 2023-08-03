@@ -7,17 +7,51 @@
 				@update:model-value="patch({ gueltigAb: String($event) })" type="date" />
 			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()"
 				@update:model-value="patch({ gueltigBis: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell()"
+				@update:model-value="patch({ wochenTypModell: Number($event) })" type="number" />
+			<svws-ui-data-table :items="listJahrgaenge" :no-data="false" :columns="cols">
+				<template #cell(id)="{value}">
+					<svws-ui-checkbox circle :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
+				</template>
+			</svws-ui-data-table>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { Stundenplan, StundenplanManager } from "@core";
+	import type { DataTableColumn } from "@ui";
+	import { type JahrgangsListeEintrag, type List, type Stundenplan, type StundenplanManager } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
 		patch: (data: Partial<Stundenplan>) => Promise<void>;
+		listJahrgaenge: List<JahrgangsListeEintrag>;
+		addJahrgang: (id: number) => Promise<void>;
+		removeJahrgang: (id: number) => Promise<void>;
 	}>();
+
+	const cols: DataTableColumn[] = [
+		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
+		{ key: "id", label: "Gültig", sortable: true }
+	];
+
+	const jahrgaenge = computed(()=> {
+		const list = props.stundenplanManager().jahrgangGetMengeAsList();
+		const a = [];
+		for (const j of list)
+			a.push(j.id);
+		return a;
+	})
+
+	async function updateJahrgaenge(id: number) {
+		if (jahrgaenge.value.includes(id))
+			await props.removeJahrgang(id);
+		else {
+			await props.removeJahrgang(id);
+		}
+	}
 
 </script>
