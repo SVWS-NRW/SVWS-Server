@@ -15,7 +15,7 @@
 				:item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
 			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname || undefined"
 				@update:model-value="doPatch({ nachname: String($event) }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Vorname" :model-value="erzieher.vorname || undefined"
+			<svws-ui-text-input placeholder="Rufname" :model-value="erzieher.vorname || undefined"
 				@update:model-value="doPatch({ vorname: String($event) }, erzieher.id)" type="text" />
 			<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname || undefined"
 				@update:model-value="doPatch({ zusatzNachname: String($event) }, erzieher.id)" type="text" />

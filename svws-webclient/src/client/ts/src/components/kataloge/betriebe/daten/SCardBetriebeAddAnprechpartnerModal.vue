@@ -6,7 +6,7 @@
 			<div class="flex justify-center flex-wrap items-center gap-2">
 				<svws-ui-text-input v-model="item.anrede" placeholder="Anrede" />
 				<svws-ui-text-input v-model="item.name" placeholder="Name" required />
-				<svws-ui-text-input v-model="item.vorname" placeholder="Vorname" />
+				<svws-ui-text-input v-model="item.vorname" placeholder="Rufname" />
 				<svws-ui-text-input v-model="item.telefon" placeholder="Telefon" />
 				<svws-ui-text-input v-model="item.email" placeholder="EMail" />
 			</div>

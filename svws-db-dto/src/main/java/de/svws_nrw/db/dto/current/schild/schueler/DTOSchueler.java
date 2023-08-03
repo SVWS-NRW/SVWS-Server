@@ -346,7 +346,7 @@ public final class DTOSchueler {
 	@JsonProperty
 	public String Nachname;
 
-	/** Vorname des Schülers PAuswG vom 21.6.2019 §5 Abs. 2 */
+	/** Vorname des Schülers PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt. */
 	@Column(name = "Vorname")
 	@JsonProperty
 	public String Vorname;

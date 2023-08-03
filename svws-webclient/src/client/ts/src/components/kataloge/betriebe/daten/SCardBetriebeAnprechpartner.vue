@@ -48,7 +48,7 @@
 
 	const cols = [
 		{key: 'id', label: 'ID', span: 1}, {key: 'anrede', label: 'Anrede', span: 1}, {key: 'name', label: 'Name', span: 2},
-		{key: 'vorname', label: 'Vorname', span: 2}, {key: 'telefon', label: 'Telefon', span: 3}, {key: 'email', label: 'Email', span: 2}
+		{key: 'vorname', label: 'Rufname', span: 2}, {key: 'telefon', label: 'Telefon', span: 3}, {key: 'email', label: 'Email', span: 2}
 	]
 
 	watch(() => props.daten, (first, second) => {

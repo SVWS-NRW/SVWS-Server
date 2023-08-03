@@ -124,7 +124,7 @@ public final class MigrationDTOSchuelerErzieherAdresse {
 	@JsonProperty
 	public String Name1;
 
-	/** Vorname1 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2 */
+	/** Vorname1 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt. */
 	@Column(name = "Vorname1")
 	@JsonProperty
 	public String Vorname1;
@@ -144,7 +144,7 @@ public final class MigrationDTOSchuelerErzieherAdresse {
 	@JsonProperty
 	public String Name2;
 
-	/** Vorname2 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2 */
+	/** Vorname2 zum Erzieherdatensatz PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt. */
 	@Column(name = "Vorname2")
 	@JsonProperty
 	public String Vorname2;

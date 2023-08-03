@@ -63,7 +63,7 @@ public final class MigrationDTOAnsprechpartnerAllgemeineAdresse {
 	@JsonProperty
 	public String Name;
 
-	/** Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2 */
+	/** Vorname des Ansprechpartners im Betrieb PAuswG vom 21.6.2019 §5 Abs. 2. Wird im Client mit Rufname angezeigt. */
 	@Column(name = "Vorname")
 	@JsonProperty
 	public String Vorname;

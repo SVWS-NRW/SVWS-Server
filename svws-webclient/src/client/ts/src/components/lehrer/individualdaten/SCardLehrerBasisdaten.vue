@@ -7,7 +7,7 @@
 			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
 			<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
 			<svws-ui-text-input placeholder="Nachname" v-model="inputNachname" type="text" required />
-			<svws-ui-text-input placeholder="Vorname" v-model="inputVorname" type="text" required />
+			<svws-ui-text-input placeholder="Rufname" v-model="inputVorname" type="text" required />
 			<svws-ui-spacing />
 			<svws-ui-multi-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
 			<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
