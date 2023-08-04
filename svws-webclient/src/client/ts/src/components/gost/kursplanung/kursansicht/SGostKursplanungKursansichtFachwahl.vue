@@ -101,7 +101,7 @@
 								'p-0': active || isKursDropZone(kurs, schiene).value,
 							}"
 							@drag-start="dragKursStarted" @drag-end="dragKursEnded" @click="toggleKursAusgewaehlt(kurs)">
-							{{ getErgebnismanager().getKursE(kurs.id).schueler.size() }}
+							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
@@ -133,7 +133,7 @@
 								'bg-light text-primary font-bold border border-black/50': istKursAusgewaehlt(kurs).value,
 								'bg-white/50 border border-black/25': !istKursAusgewaehlt(kurs).value,
 							}">
-							{{ getErgebnismanager().getKursE(kurs.id).schueler.size() }}
+							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<div class="icon absolute right-1" v-if="istKursFixiertInSchiene(kurs, schiene).value"> <i-ri-pushpin-fill class="inline-block" /> </div>
 							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block" /> </div>
 						</div>
