@@ -14,7 +14,10 @@ Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfern
 
 ### **Icon**
 
-Icons können in den meisten Fällen direkt mit `<i-ri-icon-name/>` eingesetzt werden. Falls benötigt kann ein Icon mit einem `<span class="icon">…</span>` umschlossen werden.
+Icons können in den meisten Fällen direkt mit `<i-ri-icon-name/>` eingesetzt werden.
+Dazu wird [unplugin-icons](https://github.com/antfu/unplugin-icons) verwendet, eine Bibliothek, die bei Bedarf Icons aus verschiedenen Projekten nachlädt.
+
+Falls benötigt kann ein Icon mit einem `<span class="icon">…</span>` umschlossen werden.
 
   * `<svws-ui-icon/>` entfernt
 

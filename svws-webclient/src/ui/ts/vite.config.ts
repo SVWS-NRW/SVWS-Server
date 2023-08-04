@@ -33,9 +33,9 @@ export default defineConfig({
 			defaultColorScheme: 'light',
 			storeColorScheme: true,
 			logo: {
-				square: '/src/assets/img/favicon.svg',
-				light: '/src/assets/img/histoire-svws.svg',
-				dark: '/src/assets/img/histoire-svws-dark.svg',
+				square: './src/assets/img/favicon.svg',
+				light: './src/assets/img/histoire-svws.svg',
+				dark: './src/assets/img/histoire-svws-dark.svg',
 			},
 		},
 		backgroundPresets: [

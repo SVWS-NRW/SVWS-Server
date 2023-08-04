@@ -34,6 +34,7 @@ einem Problem werden. Daher sollte immer überlegt werden, ob eine Komponente wi
 Beispiel bei einer Tabelle: Zur Übersichtlichkeit und einfachen Verwendung an anderen Stellen außerhalb der
 Table-Komponente wird darin eine Zeile mit einer Row-Komponente gerendert. Jede Row hat mehrere Cells und davon braucht
 eine Cell eine Checkbox-Komponente.
+
 Wenn es jetzt 100 Zeilen gibt, werden in diesem Beispiel 100 Row-Komponenten gerendert, jede mit 5 Cells und einer
 Checkbox-Komponente. Das sind 700 Komponenten, die gerendert werden müssen.
 

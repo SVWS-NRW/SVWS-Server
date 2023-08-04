@@ -37,14 +37,14 @@
 		{
 			'name': 'SVWS',
 			'additional': 'primary',
-			'useFor': 'Primärer Button, Aktiver Status, klickbare Elemente',
+			'useFor': 'Primärer Button, aktiver Status, klickbare Elemente',
 			'color': '#2285d5',
 			'allowText': true,
 			'text': '#ffffff',
 		},
 		{
 			'name': 'Statistik',
-			'useFor': 'Primäre Farbe für UI Elemente im Statistik-Bereich, Border und Label von statik-relevanten Elementen',
+			'useFor': 'Primäre Farbe für UI Elemente im Statistik-Bereich, Border und Label von statistikrelevanten Elementen',
 			'color': '#8b5cf6',
 			'tailwind': 'violet-500',
 			'allowText': true,
@@ -71,7 +71,7 @@
 		},
 		{
 			'name': 'Error',
-			'useFor': 'Fehlermeldungen, Warnungen, "Löschen" Icon',
+			'useFor': 'Fehlermeldungen, Warnungen, "Löschen"-Icon',
 			'color': '#e11d48',
 			'tailwind': 'rose-600',
 			'allowText': true,
@@ -79,7 +79,7 @@
 		},
 		{
 			'name': 'Success',
-			'useFor': 'Erfolgsmeldungen, "Check" Icon',
+			'useFor': 'Erfolgsmeldungen, "Check"-Icon',
 			'color': '#84cc16',
 			'tailwind': 'lime-500',
 			'allowText': true,
