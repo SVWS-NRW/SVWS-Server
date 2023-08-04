@@ -1,8 +1,9 @@
 package de.svws_nrw.core.utils.klausurplan;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.ArrayList;
 
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -18,6 +19,17 @@ import jakarta.validation.constraints.NotNull;
 public class KlausurterminblockungAlgorithmus {
 
 	private static final @NotNull Random _random = new Random();
+
+	private static final @NotNull Comparator<@NotNull GostKursklausur> _compGostKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+		if (a.halbjahr < b.halbjahr) return -1;
+		if (a.halbjahr > b.halbjahr) return +1;
+
+		if (a.quartal < b.quartal) return -1;
+		if (a.quartal > b.quartal) return +1;
+
+		return Long.compare(a.id, b.id);
+	};
+
 
 	/** Ein Logger für Debug-Zwecke. */
 	private final @NotNull Logger _logger;
@@ -41,49 +53,97 @@ public class KlausurterminblockungAlgorithmus {
 	/**
 	 * Liefert eine Liste (Termine, Ebene 1) von Listen (KlausurIDs, Ebene 2).
 	 *
-	 * @param pInput   Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
-	 * @param pConfig  Das Konfigurationsobjekt für den Algorithmus.
+	 * @param input   Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
+	 * @param config  Das Konfigurationsobjekt für den Algorithmus.
 	 *
 	 * @return eine Liste (Termine, Ebene 1) von Listen (KlausurIDs, Ebene 2).
 	 */
-	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
+	public @NotNull List<@NotNull List<@NotNull Long>> berechne(final @NotNull List<@NotNull GostKursklausur> input, final @NotNull KlausurterminblockungAlgorithmusConfig config) {
 		final @NotNull List<@NotNull List<@NotNull Long>> out = new ArrayList<>();
+		berechneRekursivQuartalsModus(input, config, out);
+		return out;
+	}
 
-		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste pInput potentiell herausgefiltert werden müssen.
-		switch (pConfig.get_lk_gk_modus()) {
+	private void berechneRekursivQuartalsModus(final @NotNull List<@NotNull GostKursklausur> input, final @NotNull KlausurterminblockungAlgorithmusConfig config, final @NotNull List<@NotNull List<@NotNull Long>> out) {
+
+		// Keine Daten vorhanden.
+		if (input.isEmpty())
+			return;
+
+		// Keine Filterung angefordert.
+		if (config.get_quartals_modus() == KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_ZUSAMMEN) {
+			berechneRekursivLkGkModus(input, config, out);
+			return;
+		}
+
+		// Sortieren nach (Halbjahr, Quartal).
+		input.sort(_compGostKursklausur);
+
+		// Blocken nach (Halbjahr, Quartal).
+		final @NotNull List<@NotNull GostKursklausur> temp = new ArrayList<>();
+		for (final @NotNull GostKursklausur klausur : input) {
+			// Neue Gruppe (Sonderfall) erstellen.
+			if (temp.isEmpty()) {
+				temp.add(klausur);
+				continue;
+			}
+
+			// Gleiche Gruppe.
+			if (_compGostKursklausur.compare(klausur, temp.get(0)) == 0) {
+				temp.add(klausur);
+				continue;
+			}
+
+			// Gruppe blocken
+			berechneRekursivLkGkModus(temp, config, out);
+
+			// Neue Gruppe erstellen.
+			temp.clear();
+			temp.add(klausur);
+		}
+
+		if (!temp.isEmpty()) {
+			berechneRekursivLkGkModus(temp, config, out);
+			temp.clear();
+		}
+	}
+
+
+
+	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausur> input, final @NotNull KlausurterminblockungAlgorithmusConfig config, final @NotNull List<@NotNull List<@NotNull Long>> out) {
+		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste potentiell geblockt werden sollen.
+		switch (config.get_lk_gk_modus()) {
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:
-				berechne_helper(pInput, pConfig, out); // keine Filterung
+				berechne_helper(input, config, out); // keine Filterung
 				break;
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK:
-				berechne_helper(filter(pInput, true), pConfig, out);  // nur LK
+				berechne_helper(filter(input, true), config, out);  // nur LK
 				break;
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK:
-				berechne_helper(filter(pInput, false), pConfig, out);  // nur GK (bzw. nicht LK)
+				berechne_helper(filter(input, false), config, out);  // nur GK (bzw. nicht LK)
 				break;
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT:
-				berechne_helper(filter(pInput, true), pConfig, out);  // nur LK
-				berechne_helper(filter(pInput, false), pConfig, out);  // nur GK (bzw. nicht LK)
+				berechne_helper(filter(input, true), config, out);  // nur LK
+				berechne_helper(filter(input, false), config, out);  // nur GK (bzw. nicht LK)
 				break;
 			default:
 				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!");
 		}
-
-		return out;
 	}
 
 	/**
 	 * Liefert die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 *
-	 * @param pInput Die Liste, die gefiltert werden soll.
-	 * @param pLK    Falls TRUE, werden die LK-Klausuren herausgefiltert, andernfalls das Gegenteil.
+	 * @param input   Die Liste, die gefiltert werden soll.
+	 * @param istLK   Falls TRUE, werden die LK-Klausuren herausgefiltert, andernfalls das Gegenteil.
 	 *
 	 * @return die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 */
-	private static @NotNull List<@NotNull GostKursklausur> filter(final @NotNull List<@NotNull GostKursklausur> pInput, final boolean pLK) {
+	private static @NotNull List<@NotNull GostKursklausur> filter(final @NotNull List<@NotNull GostKursklausur> input, final boolean istLK) {
 		final @NotNull List<@NotNull GostKursklausur> temp = new ArrayList<>();
 
-		for (final GostKursklausur gostKursklausur : pInput)
-			if (gostKursklausur.kursart.equals("LK") == pLK)
+		for (final GostKursklausur gostKursklausur : input)
+			if (gostKursklausur.kursart.equals("LK") == istLK)
 				temp.add(gostKursklausur);
 
 		return temp;

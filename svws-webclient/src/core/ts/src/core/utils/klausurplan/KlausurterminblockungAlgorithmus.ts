@@ -8,8 +8,10 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { KlausurterminblockungAlgorithmusGreedy3 } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy3';
 import { Logger, cast_de_svws_nrw_core_logger_Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
+import type { Comparator } from '../../../java/util/Comparator';
 import { Random } from '../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
@@ -18,6 +20,18 @@ import type { List } from '../../../java/util/List';
 export class KlausurterminblockungAlgorithmus extends JavaObject {
 
 	private static readonly _random : Random = new Random();
+
+	private static readonly _compGostKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
+		if (a.halbjahr < b.halbjahr)
+			return -1;
+		if (a.halbjahr > b.halbjahr)
+			return +1;
+		if (a.quartal < b.quartal)
+			return -1;
+		if (a.quartal > b.quartal)
+			return +1;
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 	/**
 	 * Ein Logger für Debug-Zwecke.
@@ -53,50 +67,82 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	/**
 	 * Liefert eine Liste (Termine, Ebene 1) von Listen (KlausurIDs, Ebene 2).
 	 *
-	 * @param pInput   Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
-	 * @param pConfig  Das Konfigurationsobjekt für den Algorithmus.
+	 * @param input   Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
+	 * @param config  Das Konfigurationsobjekt für den Algorithmus.
 	 *
 	 * @return eine Liste (Termine, Ebene 1) von Listen (KlausurIDs, Ebene 2).
 	 */
-	public berechne(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
+	public berechne(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig) : List<List<number>> {
 		const out : List<List<number>> = new ArrayList();
-		switch (pConfig.get_lk_gk_modus()) {
+		this.berechneRekursivQuartalsModus(input, config, out);
+		return out;
+	}
+
+	private berechneRekursivQuartalsModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
+		if (input.isEmpty())
+			return;
+		if (config.get_quartals_modus() === KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_ZUSAMMEN) {
+			this.berechneRekursivLkGkModus(input, config, out);
+			return;
+		}
+		input.sort(KlausurterminblockungAlgorithmus._compGostKursklausur);
+		const temp : List<GostKursklausur> = new ArrayList();
+		for (const klausur of input) {
+			if (temp.isEmpty()) {
+				temp.add(klausur);
+				continue;
+			}
+			if (KlausurterminblockungAlgorithmus._compGostKursklausur.compare(klausur, temp.get(0)) === 0) {
+				temp.add(klausur);
+				continue;
+			}
+			this.berechneRekursivLkGkModus(temp, config, out);
+			temp.clear();
+			temp.add(klausur);
+		}
+		if (!temp.isEmpty()) {
+			this.berechneRekursivLkGkModus(temp, config, out);
+			temp.clear();
+		}
+	}
+
+	private berechneRekursivLkGkModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
+		switch (config.get_lk_gk_modus()) {
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE: {
-				this.berechne_helper(pInput, pConfig, out);
+				this.berechne_helper(input, config, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK: {
-				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, true), pConfig, out);
+				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, true), config, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK: {
-				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, false), pConfig, out);
+				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, false), config, out);
 				break;
 			}
 			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT: {
-				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, true), pConfig, out);
-				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(pInput, false), pConfig, out);
+				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, true), config, out);
+				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, false), config, out);
 				break;
 			}
 			default: {
 				throw new DeveloperNotificationException("Der LK-GK-Modus ist unbekannt!")
 			}
 		}
-		return out;
 	}
 
 	/**
 	 * Liefert die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 *
-	 * @param pInput Die Liste, die gefiltert werden soll.
-	 * @param pLK    Falls TRUE, werden die LK-Klausuren herausgefiltert, andernfalls das Gegenteil.
+	 * @param input   Die Liste, die gefiltert werden soll.
+	 * @param istLK   Falls TRUE, werden die LK-Klausuren herausgefiltert, andernfalls das Gegenteil.
 	 *
 	 * @return die Liste pInput nach LK-Klausuren (oder dem Gegenteil) gefiltert heraus.
 	 */
-	private static filter(pInput : List<GostKursklausur>, pLK : boolean) : List<GostKursklausur> {
+	private static filter(input : List<GostKursklausur>, istLK : boolean) : List<GostKursklausur> {
 		const temp : List<GostKursklausur> = new ArrayList();
-		for (const gostKursklausur of pInput)
-			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === pLK)
+		for (const gostKursklausur of input)
+			if (JavaObject.equalsTranspiler(gostKursklausur.kursart, ("LK")) === istLK)
 				temp.add(gostKursklausur);
 		return temp;
 	}

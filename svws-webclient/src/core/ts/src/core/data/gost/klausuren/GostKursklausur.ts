@@ -20,12 +20,12 @@ export class GostKursklausur extends JavaObject {
 	public abijahr : number = -1;
 
 	/**
-	 * Das Gost-Halbjahr, in dem die Klausurg geschrieben wird.
+	 * Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
 	 */
 	public halbjahr : number = -1;
 
 	/**
-	 * Das Quartal, in welchem die Klausur gechrieben wird.
+	 * Das Quartal, in welchem die Klausur geschrieben wird.
 	 */
 	public quartal : number = -1;
 
@@ -55,12 +55,12 @@ export class GostKursklausur extends JavaObject {
 	public istMdlPruefung : boolean = false;
 
 	/**
-	 * Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen.
+	 * Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
 	 */
 	public istAudioNotwendig : boolean = false;
 
 	/**
-	 * Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse.
+	 * Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
 	 */
 	public istVideoNotwendig : boolean = false;
 

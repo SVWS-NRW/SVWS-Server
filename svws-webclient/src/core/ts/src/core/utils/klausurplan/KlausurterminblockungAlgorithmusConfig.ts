@@ -23,6 +23,16 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public static readonly LK_GK_MODUS_GETRENNT : number = 3;
 
 	/**
+	 *  Alle Klausur werden gemeinsam geblockt werden.
+	 */
+	public static readonly QUARTALS_MODUS_ZUSAMMEN : number = 0;
+
+	/**
+	 *  Die Klausuren werden pro Halbjahr und Quartal geblockt.
+	 */
+	public static readonly QUARTALS_MODUS_GETRENNT : number = 1;
+
+	/**
 	 *  Der normale Algorithmus minimiert die Anzahl der Termine.
 	 */
 	public static readonly ALGORITHMUS_NORMAL : number = 1;
@@ -45,6 +55,8 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 
 	private lk_gk_modus : number = 0;
 
+	private quartals_modus : number = 0;
+
 	private regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin : boolean = false;
 
 	private regel_bevorzuge_gleiche_kursschienen_pro_termin : boolean = false;
@@ -56,6 +68,7 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	public constructor() {
 		super();
 		this.set_max_time_millis(1000);
+		this.set_quartals_modus_zusammen();
 		this.set_lk_gk_modus_beide();
 		this.set_algorithmus_normal();
 		this.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
@@ -147,6 +160,29 @@ export class KlausurterminblockungAlgorithmusConfig extends JavaObject {
 	 */
 	public set_lk_gk_modus_getrennt() : void {
 		this.lk_gk_modus = KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT;
+	}
+
+	/**
+	 * Liefert den {@link #quartals_modus}.
+	 *
+	 * @return den {@link #quartals_modus}.
+	 */
+	public get_quartals_modus() : number {
+		return this.quartals_modus;
+	}
+
+	/**
+	 * 	Alle Klausuren werden gemeinsam geblockt werden.
+	 */
+	public set_quartals_modus_zusammen() : void {
+		this.quartals_modus = KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_ZUSAMMEN;
+	}
+
+	/**
+	 * Die Klausuren werden zuerst nach Halbjahr und dann nach Quartal geblockt.
+	 */
+	public set_quartals_modus_getrennt() : void {
+		this.quartals_modus = KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_GETRENNT;
 	}
 
 	/**

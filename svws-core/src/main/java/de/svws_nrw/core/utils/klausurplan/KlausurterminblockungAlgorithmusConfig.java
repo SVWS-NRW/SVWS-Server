@@ -33,6 +33,16 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public static final int LK_GK_MODUS_GETRENNT = 3;
 
 	/**
+	 * Alle Klausur werden gemeinsam geblockt werden.
+	 */
+	public static final int QUARTALS_MODUS_ZUSAMMEN = 0;
+
+	/**
+	 * Die Klausuren werden pro Halbjahr und Quartal geblockt.
+	 */
+	public static final int QUARTALS_MODUS_GETRENNT = 1;
+
+	/**
 	 * Der normale Algorithmus minimiert die Anzahl der Termine.
 	 */
 	public static final int ALGORITHMUS_NORMAL = 1;
@@ -52,6 +62,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	private long max_time_millis;
 	private int algorithmus;
 	private int lk_gk_modus;
+	private int quartals_modus;
 	private boolean regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
 	private boolean regel_bevorzuge_gleiche_kursschienen_pro_termin;
 
@@ -60,6 +71,7 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public KlausurterminblockungAlgorithmusConfig() {
 		set_max_time_millis(1000L);
+		set_quartals_modus_zusammen();
 		set_lk_gk_modus_beide();
 		set_algorithmus_normal();
 		set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
@@ -151,6 +163,29 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public void set_lk_gk_modus_getrennt() {
 		lk_gk_modus = LK_GK_MODUS_GETRENNT;
+	}
+
+	/**
+	 * Liefert den {@link #quartals_modus}.
+	 *
+	 * @return den {@link #quartals_modus}.
+	 */
+	public int get_quartals_modus() {
+		return quartals_modus;
+	}
+
+	/**
+	 * 	Alle Klausuren werden gemeinsam geblockt werden.
+	 */
+	public void set_quartals_modus_zusammen() {
+		quartals_modus = QUARTALS_MODUS_ZUSAMMEN;
+	}
+
+	/**
+	 * Die Klausuren werden zuerst nach Halbjahr und dann nach Quartal geblockt.
+	 */
+	public void set_quartals_modus_getrennt() {
+		quartals_modus = QUARTALS_MODUS_GETRENNT;
 	}
 
 	/**
