@@ -82,8 +82,8 @@
 						Kollisionen
 					</div>
 					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
-						{{ getAnzahlKollisionenSchiene(s.id) }}
+						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0}">
+						{{ getAnzahlKollisionenSchiene(s.id) }} <i-ri-alert-line v-if="getAnzahlKollisionenSchiene(s.id) > 0" />
 					</div>
 				</div>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
