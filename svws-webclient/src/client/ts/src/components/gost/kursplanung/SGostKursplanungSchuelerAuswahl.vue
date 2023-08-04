@@ -28,14 +28,14 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">
-					<svws-ui-radio-option v-model="radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
-					<svws-ui-radio-option v-model="radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
 						<i-ri-alert-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtverteilt">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtverteilt">
 						<i-ri-forbid-2-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
 						<i-ri-alert-fill />
 					</svws-ui-radio-option>
 				</svws-ui-radio-group>
@@ -129,8 +129,6 @@
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
-
-	const radio_filter = props.schuelerFilter.radio_filter();
 
 	const fach: WritableComputedRef<GostFach|undefined> = computed({
 		get: () => {

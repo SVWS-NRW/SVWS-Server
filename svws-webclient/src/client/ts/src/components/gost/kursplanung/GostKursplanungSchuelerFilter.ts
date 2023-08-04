@@ -186,36 +186,34 @@ export class GostKursplanungSchuelerFilter {
 			this.kurs = undefined;
 	}
 
-	public radio_filter: () => WritableComputedRef<string> = () => computed({
-		get: () => {
-			if (this.kollisionen.value && this.nichtwahlen.value)
-				return 'kollisionen_nichtwahlen';
-			if (this.kollisionen.value)
-				return 'kollisionen';
-			if (this.nichtwahlen.value)
-				return 'nichtwahlen';
-			return 'alle';
-		},
-		set: (value) => {
-			switch (value) {
-				case 'alle':
-					this.kollisionen.value = false;
-					this.nichtwahlen.value = false;
-					break;
-				case 'kollisionen':
-					this.kollisionen.value = true;
-					this.nichtwahlen.value = false;
-					break;
-				case 'nichtwahlen':
-					this.kollisionen.value = false;
-					this.nichtwahlen.value = true;
-					break;
-				case 'kollisionen_nichtwahlen':
-					this.kollisionen.value = true;
-					this.nichtwahlen.value = true;
-					break;
-			}
-		}
-	});
+	public get radio_filter() {
+		if (this.kollisionen.value && this.nichtwahlen.value)
+			return 'kollisionen_nichtwahlen';
+		if (this.kollisionen.value)
+			return 'kollisionen';
+		if (this.nichtwahlen.value)
+			return 'nichtwahlen';
+		return 'alle';
+	}
 
+	public set radio_filter(value) {
+		switch (value) {
+			case 'alle':
+				this.kollisionen.value = false;
+				this.nichtwahlen.value = false;
+				break;
+			case 'kollisionen':
+				this.kollisionen.value = true;
+				this.nichtwahlen.value = false;
+				break;
+			case 'nichtwahlen':
+				this.kollisionen.value = false;
+				this.nichtwahlen.value = true;
+				break;
+			case 'kollisionen_nichtwahlen':
+				this.kollisionen.value = true;
+				this.nichtwahlen.value = true;
+				break;
+		}
+	}
 }
