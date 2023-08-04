@@ -77,10 +77,28 @@
 
 	const hasIcon = computed(() => !!slots.default);
 
-	const debouncedOnInput = useDebounceFn((event) => onInput(event), toRef(props, 'debounceMs'))
+	const debouncedOnInput = useDebounceFn((event) => onDebouncedInput(event), toRef(props, 'debounceMs'))
 
-	function onInput(event: Event) {
-		emit("update:modelValue", (event.target as HTMLInputElement).value);
+	/**
+	 * Diese Funktion löst ein Emit aus, wenn das Input-Feld verlassen wird und
+	 * wenn der Wert noch nicht vom onInput verschickt wurde
+	 * @param event
+	 */
+	function onBlurInput(event: Event) {
+		const eventValue = (event.target as HTMLInputElement).value;
+		if (props.modelValue !== eventValue)
+			emit("update:modelValue", eventValue);
+	}
+
+	/**
+	 * Diese Funktion verschickt den State des Inputs mittels der o.a. Debounce-Funktion
+	 * und nur dann, wenn der Focus gesetzt ist. Wird der Focus verlassen, bricht diese Funktion ab
+	 * und stattdessen verschickt die `onblurInput`-Funktion den Wert.
+	 * @param event
+	 */
+	function onDebouncedInput(event: Event) {
+		if (input.value === document.activeElement)
+			emit("update:modelValue", (event.target as HTMLInputElement).value);
 	}
 
 	defineExpose({
@@ -121,7 +139,9 @@
 			:readonly="readonly"
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
-			@input="debouncedOnInput">
+			@input="debouncedOnInput"
+			@blur="onBlurInput"
+			@focus="debouncedOnInput">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"
