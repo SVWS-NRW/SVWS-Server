@@ -77,4 +77,22 @@ public final class StringUtils {
 
 	    return sb.toString();
 	}
+
+	/**
+	 * Liefert eine Kopie des String, welcher vorne mit 0en aufgefüllt wurde, bis "size" erreicht wurde.
+	 *
+	 * @param s     Der zu kopierende String.
+	 * @param size  Die Mindestgröße des Ergebnis-Strings.
+	 *
+	 * @return eine Kopie des String, welcher vorne mit 0en aufgefüllt wurde, bis "size" erreicht wurde.
+	 */
+	public static @NotNull String fillWithLeadingZeros(final @NotNull String s, final int size) {
+
+		final StringBuilder sb = new StringBuilder();
+		while (sb.length() + s.length() < size)
+			sb.append('0');
+		sb.append(s);
+
+	    return sb.toString();
+	}
 }

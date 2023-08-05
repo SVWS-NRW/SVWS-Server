@@ -67,6 +67,22 @@ export class StringUtils extends JavaObject {
 		return sb.toString();
 	}
 
+	/**
+	 * Liefert eine Kopie des String, welcher vorne mit 0en aufgefüllt wurde, bis "size" erreicht wurde.
+	 *
+	 * @param s     Der zu kopierende String.
+	 * @param size  Die Mindestgröße des Ergebnis-Strings.
+	 *
+	 * @return eine Kopie des String, welcher vorne mit 0en aufgefüllt wurde, bis "size" erreicht wurde.
+	 */
+	public static fillWithLeadingZeros(s : string, size : number) : string {
+		const sb : StringBuilder | null = new StringBuilder();
+		while (sb.length() + s.length < size)
+			sb.append('0');
+		sb.append(s);
+		return sb.toString();
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.StringUtils'].includes(name);
 	}
