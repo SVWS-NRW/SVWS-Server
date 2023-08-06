@@ -11,7 +11,6 @@ import { System } from '../../../java/lang/System';
 import type { Comparator } from '../../../java/util/Comparator';
 import { Random } from '../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
-import { JavaLong } from '../../../java/lang/JavaLong';
 import { KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
@@ -30,7 +29,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 			return -1;
 		if (a.quartal > b.quartal)
 			return +1;
-		return JavaLong.compare(a.id, b.id);
+		return 0;
 	} };
 
 	/**

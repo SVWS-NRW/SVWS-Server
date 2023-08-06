@@ -27,7 +27,7 @@ public class KlausurterminblockungAlgorithmus {
 		if (a.quartal < b.quartal) return -1;
 		if (a.quartal > b.quartal) return +1;
 
-		return Long.compare(a.id, b.id);
+		return 0;
 	};
 
 
