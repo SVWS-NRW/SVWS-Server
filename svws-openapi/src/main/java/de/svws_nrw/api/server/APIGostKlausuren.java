@@ -308,6 +308,35 @@ public class APIGostKlausuren {
 	}
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage der Klausuren eines Abiturjahrgangs in
+	 * einem bestimmten Halbjahr der Gymnasialen Oberstufe.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
+	 *                   werden soll
+	 * @param blockung die Klausurblockung
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Liste der Gost-Kursklausuren
+	 */
+	@POST
+	@Path("/kursklausuren/blocken")
+	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
+	public Response blockGostKlausurenKursklausuren(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<List<Long>> blockung,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return DataGostKlausurenKursklausur.persistBlockung(conn, blockung);
+		}
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Schuelerklausuren zu einer Menge von Kursklausuren.
 	 *
 	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt

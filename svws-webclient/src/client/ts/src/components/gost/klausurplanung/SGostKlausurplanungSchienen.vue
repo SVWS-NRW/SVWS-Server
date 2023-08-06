@@ -141,6 +141,7 @@
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
+		blockConfig.set_quartals_modus_getrennt();
 		if (algMode.value === "algNormal")
 			blockConfig.set_algorithmus_normal();
 		else if (algMode.value === "algFaecher")
@@ -159,11 +160,14 @@
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
+		// await props.persistKlausurblockung(klausurTermine);
 		for await (const klausurList of klausurTermine) {
-			const termin = await props.erzeugeKlausurtermin(props.quartalsauswahl.value);
+			let termin = null;
 			for await (const klausurId of klausurList) {
 				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
 				if (klausur !== null) {
+					if (termin === null)
+						termin = await props.erzeugeKlausurtermin(klausur.quartal);
 					await props.setTerminToKursklausur(termin.id, klausur);
 				}
 			}

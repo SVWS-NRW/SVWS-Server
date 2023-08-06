@@ -50,7 +50,6 @@
 
 	import { type GostKursklausurManager, type GostKursklausur, type GostKlausurtermin, type GostFaecherManager, type LehrerListeEintrag, type SchuelerListeEintrag, type List, type KursManager, Arrays} from "@core";
 	import { computed, ref } from 'vue';
-import { ArrayList } from "../../../../../../core/ts/src/java/util/ArrayList";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin | null;

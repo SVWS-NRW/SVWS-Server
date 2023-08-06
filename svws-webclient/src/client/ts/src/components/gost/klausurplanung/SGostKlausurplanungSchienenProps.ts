@@ -21,5 +21,6 @@ export interface GostKlausurplanungSchienenProps {
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	kursmanager: KursManager;
 	patchKlausurterminDatum: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
+	// persistKlausurblockung: (blockung: List<List<number>>) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

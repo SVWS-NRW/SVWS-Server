@@ -21,6 +21,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -64,11 +65,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final List<GostKursklausur> daten = new ArrayList<>();
 
 		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr)
-				.setParameter("hj", GostHalbjahr.fromID(halbjahr))
-				.getResultList()
-				.stream()
-				.collect(Collectors.toMap(v -> v.ID, v -> v));
+				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
 
 		if (mapVorgaben.isEmpty()) {
 			// TODO Errorhandling nötig?
@@ -83,8 +80,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		}
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn
-				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).toList(), DTOGostKlausurenSchuelerklausuren.class)
-				.stream().collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
+				.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id.multiple", kursklausuren.stream().map(k -> k.ID).toList(), DTOGostKlausurenSchuelerklausuren.class).stream()
+				.collect(Collectors.groupingBy(s -> s.Kursklausur_ID));
 
 		if (mapSchuelerklausuren.isEmpty()) {
 			// TODO Errorhandling nötig?
@@ -108,26 +105,66 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return daten;
 	}
 
-
-
+	/**
+	 * Setzt die im Client generierte Blockung in der Datenbank um.
+	 *
+	 * @param conn     Connection
+	 * @param blockung das Gost-Halbjahr
+	 *
+	 * @return Response
+	 *
+	 */
+	public static Response persistBlockung(final DBEntityManager conn, final List<List<Long>> blockung) {
+		// final KlausurterminblockungAlgorithmusConfig blockConfig = new KlausurterminblockungAlgorithmusConfig();
+		// final KlausurterminblockungAlgorithmus blockAlgo = new KlausurterminblockungAlgorithmus();
+		try {
+			conn.transactionBegin();
+			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Termine");
+			Long terminId = lastID == null ? 1 : lastID.MaxID + 1;
+			for (final List<Long> klausuren : blockung) {
+				DTOGostKlausurenTermine termin = null;
+				for (final long klausurId : klausuren) {
+					DTOGostKlausurenKursklausuren klausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, klausurId);
+					if (klausur == null)
+						throw OperationError.NOT_FOUND.exception("Kursklausur mit ID " + klausurId + " nicht gefunden.");
+					DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, klausur.Vorgabe_ID);
+					if (vorgabe == null)
+						throw OperationError.NOT_FOUND.exception("Kklausurvorgabe mit ID " + klausur.Vorgabe_ID + " nicht gefunden.");
+					if (termin == null) {
+						termin = new DTOGostKlausurenTermine(terminId++, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal);
+						conn.transactionPersist(termin);
+					}
+					if (termin.Abi_Jahrgang != vorgabe.Abi_Jahrgang || termin.Halbjahr != vorgabe.Halbjahr || termin.Quartal != vorgabe.Quartal)
+						throw OperationError.CONFLICT.exception("Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
+					klausur.Termin_ID = termin.ID;
+					conn.transactionPersist(klausur);
+				}
+			}
+			conn.transactionCommit();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(true).build();
+		} finally {
+			conn.transactionRollback();
+		}
+	}
 
 	/**
 	 * TODO
 	 *
-	 * @param <One> TODO
-	 * @param <Two> TODO
+	 * @param <One>   TODO
+	 * @param <Two>   TODO
 	 * @param <Three> TODO
-	 * @param <Four> TODO
-	 * @param <Five> TODO
+	 * @param <Four>  TODO
+	 * @param <Five>  TODO
 	 */
-	@FunctionalInterface interface Function5<One, Two, Three, Four, Five> {
+	@FunctionalInterface
+	interface Function5<One, Two, Three, Four, Five> {
 		/**
 		 * TODO
 		 *
-		 * @param one     TODO
-		 * @param two     TODO
-		 * @param three   TODO
-		 * @param four    TODO
+		 * @param one   TODO
+		 * @param two   TODO
+		 * @param three TODO
+		 * @param four  TODO
 		 *
 		 * @return TODO
 		 */
@@ -183,12 +220,14 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return kk;
 	};
 
-	@Override public Response get(final Long halbjahr) {
+	@Override
+	public Response get(final Long halbjahr) {
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(halbjahr.intValue())).build();
 	}
 
-	@Override public Response patch(final Long id, final InputStream is) {
+	@Override
+	public Response patch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
 			try {
@@ -249,7 +288,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return Response.status(Status.OK).build();
 	}
 
-	@Override public Response getList() {
+	@Override
+	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
 

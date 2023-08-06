@@ -147,7 +147,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
 	 * Termins geändert hat.
 	 *
-	 * @param id die ID des GostKlausurtermin-Objekts
+	 * @param id    die ID des GostKlausurtermin-Objekts
 	 * @param datum das neue Datum der Klausur
 	 */
 	public patchKlausurterminDatum(id : number, datum : string | null) : void {
@@ -380,8 +380,16 @@ export class GostKursklausurManager extends JavaObject {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public getKursklausurenOhneTerminByQuartal(quartal : number) : List<GostKursklausur> {
-		const klausuren : List<GostKursklausur> | null = this._mapQuartalTerminKursklausuren.getOrNull(quartal <= 0 ? -1 : quartal, -1);
-		return klausuren !== null ? klausuren : new ArrayList();
+		if (quartal > 0) {
+			const klausuren : List<GostKursklausur> | null = this._mapQuartalTerminKursklausuren.getOrNull(quartal, -1);
+			return klausuren !== null ? klausuren : new ArrayList();
+		}
+		const klausuren : List<GostKursklausur> | null = new ArrayList();
+		const klausurListen : List<List<GostKursklausur>> | null = this._mapQuartalTerminKursklausuren.getNonNullValuesAsList();
+		for (const kl of klausurListen) {
+			klausuren.addAll(kl);
+		}
+		return klausuren;
 	}
 
 	/**
@@ -478,7 +486,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen ein Datum gesetzt ist
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen
+	 * ein Datum gesetzt ist
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
@@ -492,7 +501,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein Datum gesetzt ist
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein
+	 * Datum gesetzt ist
 	 *
 	 * @param quartal die Nummer des Quartals
 	 *

@@ -36,7 +36,6 @@ public class GostKursklausurManager {
 	/** Eine Map quartal -> Liste von GostKursklausuren */
 	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKursklausur>> _mapQuartalKursKlausuren = new HashMap<>();
 
-
 	/** Eine Map idTermin -> Liste von GostKursklausuren */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _mapTerminKursklausuren = new HashMap<>();
 
@@ -45,7 +44,6 @@ public class GostKursklausurManager {
 
 	/** Eine Map quartal, kursart, idTermin -> Liste von GostKursklausuren */
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _mapQuartalKursartTerminKursklausuren = new HashMap3D<>();
-
 
 	/** Die Klausurtermine, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostKlausurtermin> _termine = new ArrayList<>();
@@ -62,7 +60,6 @@ public class GostKursklausurManager {
 	/** Eine Map date -> GostKlausurtermin */
 	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull GostKlausurtermin>> _mapDateKlausurtermin = new HashMap<>();
 
-
 	/** Ein Comparator für die GostKlausurtermine. */
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compDatum = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum == null)
@@ -71,7 +68,6 @@ public class GostKursklausurManager {
 			return -1;
 		return a.datum.compareTo(b.datum);
 	};
-
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -125,10 +121,12 @@ public class GostKursklausurManager {
 		DeveloperNotificationException.ifListAddsDuplicate("_mapTerminKursklausurenList", MapUtils.getOrCreateArrayList(_mapTerminKursklausuren, kk.idTermin != null ? kk.idTermin : -1), kk);
 
 		// Füllen von _mapQuartalTerminKursklausuren
-		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalTerminKursklausurenList", Map2DUtils.getOrCreateArrayList(_mapQuartalTerminKursklausuren, kk.quartal, kk.idTermin != null ? kk.idTermin : -1), kk);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalTerminKursklausurenList",
+				Map2DUtils.getOrCreateArrayList(_mapQuartalTerminKursklausuren, kk.quartal, kk.idTermin != null ? kk.idTermin : -1), kk);
 
 		// Füllen von _mapQuartalKursartTerminKursklausuren
-		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKursartTerminKursklausurenList", Map3DUtils.getOrCreateArrayList(_mapQuartalKursartTerminKursklausuren, kk.quartal, kk.kursart, kk.idTermin != null ? kk.idTermin : -1), kk);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKursartTerminKursklausurenList",
+				Map3DUtils.getOrCreateArrayList(_mapQuartalKursartTerminKursklausuren, kk.quartal, kk.kursart, kk.idTermin != null ? kk.idTermin : -1), kk);
 
 	}
 
@@ -136,7 +134,7 @@ public class GostKursklausurManager {
 	 * Aktualisiert die internen Strukturen, nachdem sich z.B. das Datum eines
 	 * Termins geändert hat.
 	 *
-	 * @param id die ID des GostKlausurtermin-Objekts
+	 * @param id    die ID des GostKlausurtermin-Objekts
 	 * @param datum das neue Datum der Klausur
 	 *
 	 */
@@ -159,7 +157,6 @@ public class GostKursklausurManager {
 			removeKlausurtermin(id);
 		}
 	}
-
 
 	/**
 	 * Löscht ein GostKlausurtermin-Objekt aus den internen Strukturen.
@@ -219,7 +216,6 @@ public class GostKursklausurManager {
 
 	}
 
-
 	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Termin einer Klausur
 	 * geändert hat.
@@ -246,7 +242,8 @@ public class GostKursklausurManager {
 			DeveloperNotificationException.ifListRemoveFailes("_mapQuartalTerminKursklausurenList", _mapQuartalTerminKursklausuren.getNonNullOrException(klausur.quartal, oldTerminId), klausur);
 
 			// aus _mapQuartalKursartTerminKursklausuren löschen
-			DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKursartTerminKursklausurenList", DeveloperNotificationException.ifMap3DGetIsNull(_mapQuartalKursartTerminKursklausuren, klausur.quartal, klausur.kursart, oldTerminId), klausur);
+			DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKursartTerminKursklausurenList",
+					DeveloperNotificationException.ifMap3DGetIsNull(_mapQuartalKursartTerminKursklausuren, klausur.quartal, klausur.kursart, oldTerminId), klausur);
 
 			// _mapQuartalKursKlausuren muss nicht geändert werden
 
@@ -269,7 +266,6 @@ public class GostKursklausurManager {
 			listSchuelerIds.addAll(k.schuelerIds);
 		}
 	}
-
 
 	/**
 	 * Fügt den internen Strukturen eine neue Kursklausur hinzu.
@@ -346,8 +342,8 @@ public class GostKursklausurManager {
 		final List<@NotNull GostKlausurtermin> termine = getKlausurtermineByDatum(datum);
 		final List<@NotNull GostKlausurtermin> retList = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : termine) {
-			final List<@NotNull StundenplanZeitraster> zrsTermin = manager
-					.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), getMaxKlausurdauerZuTermin(termin.id));
+			final List<@NotNull StundenplanZeitraster> zrsTermin = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag),
+					DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), getMaxKlausurdauerZuTermin(termin.id));
 			for (@NotNull final StundenplanZeitraster zrTermin : zrsTermin)
 				if (zrTermin != null && zrTermin.id == zr.id)
 					retList.add(termin);
@@ -406,8 +402,16 @@ public class GostKursklausurManager {
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
 	public @NotNull List<@NotNull GostKursklausur> getKursklausurenOhneTerminByQuartal(final int quartal) {
-		final List<@NotNull GostKursklausur> klausuren = _mapQuartalTerminKursklausuren.getOrNull(quartal <= 0 ? -1 : quartal, -1L);
-		return klausuren != null ? klausuren : new ArrayList<>();
+		if (quartal > 0) {
+			final List<@NotNull GostKursklausur> klausuren = _mapQuartalTerminKursklausuren.getOrNull(quartal, -1L);
+			return klausuren != null ? klausuren : new ArrayList<>();
+		}
+		final List<@NotNull GostKursklausur> klausuren = new ArrayList<>();
+		final List<@NotNull List<@NotNull GostKursklausur>> klausurListen = _mapQuartalTerminKursklausuren.getNonNullValuesAsList();
+		for (final @NotNull List<@NotNull GostKursklausur> kl : klausurListen) {
+			klausuren.addAll(kl);
+		}
+		return klausuren;
 	}
 
 	/**
@@ -505,7 +509,8 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen ein Datum gesetzt ist
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Halbjahres, bei denen
+	 * ein Datum gesetzt ist
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
@@ -519,7 +524,8 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein Datum gesetzt ist
+	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein
+	 * Datum gesetzt ist
 	 *
 	 * @param quartal die Nummer des Quartals
 	 *

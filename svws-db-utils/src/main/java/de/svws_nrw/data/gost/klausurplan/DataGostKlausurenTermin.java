@@ -146,6 +146,10 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
+//	public static GostKlausurtermin createTerminNoTransaction() {
+//		return null;
+//	}
+
 	/**
 	 * Erstellt einen neuen Gost-Klausurtermin *
 	 *
@@ -156,47 +160,11 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @return Eine Response mit dem neuen Gost-Klausurtermin
 	 */
 	public Response create(final int halbjahr, final int quartal/* , InputStream is */) {
-		DTOGostKlausurenTermine termin = null;
-		try {
-			conn.transactionBegin();
-			// Bestimme die ID des neuen Klausurtermins
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Termine");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-			termin = new DTOGostKlausurenTermine(id, _abiturjahr, GostHalbjahr.fromID(halbjahr), quartal);
-			/*
-			 * Map<String, Object> map = JSONMapper.toMap(is); if (map.size() > 0) { for
-			 * (Entry<String, Object> entry : map.entrySet()) { String key = entry.getKey();
-			 * Object value = entry.getValue(); switch (key) { case "id" -> { Long patch_id
-			 * = JSONMapper.convertToLong(value, true); if ((patch_id == null) ||
-			 * (patch_id.longValue() != ID.longValue())) throw
-			 * OperationError.BAD_REQUEST.exception(); } case "abijahr" -> { int
-			 * patch_abijahr = JSONMapper.convertToInteger(value, false); if ((patch_abijahr
-			 * != termin.Abi_Jahrgang)) throw OperationError.BAD_REQUEST.exception(); } case
-			 * "halbjahr" -> { int patch_halbjahr = JSONMapper.convertToInteger(value,
-			 * false); if ((patch_halbjahr != termin.Halbjahr.id)) throw
-			 * OperationError.BAD_REQUEST.exception(); } case "quartal" -> { int
-			 * patch_quartal = JSONMapper.convertToInteger(value, false); if ((patch_quartal
-			 * != termin.Quartal)) throw OperationError.BAD_REQUEST.exception(); } case
-			 * "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true,
-			 * false); case "datum" -> termin.Datum = JSONMapper.convertToString(value,
-			 * true, false); case "startzeit" -> termin.Startzeit =
-			 * JSONMapper.convertToString(value, true, false); default -> throw
-			 * OperationError.BAD_REQUEST.exception(); } } }
-			 */
-			conn.transactionPersist(termin);
-			if (!conn.transactionCommit())
-				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Gost-Klausurtermins");
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webApplicationException)
-				return webApplicationException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
-
-		final GostKlausurtermin daten = dtoMapper.apply(termin);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-
+		final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Termine");
+		final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+		DTOGostKlausurenTermine termin = new DTOGostKlausurenTermine(id, _abiturjahr, GostHalbjahr.fromID(halbjahr), quartal);
+		conn.persist(termin);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(termin)).build();
 	}
 
 	/**
@@ -209,16 +177,16 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	public Response delete(final List<Long> ids) {
 		// Bestimme den Termin
 		try {
-		conn.transactionBegin();
-		for (final long id : ids) {
-			final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
-			if (termin == null)
-				return OperationError.NOT_FOUND.getResponse();
-			// Entferne den Termin
-			conn.transactionRemove(termin);
-		}
-		if (!conn.transactionCommit())
-			return OperationError.NOT_FOUND.getResponse("Datenbankfehler beim Löschen der Gost-Klausurtermine");
+			conn.transactionBegin();
+			for (final long id : ids) {
+				final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
+				if (termin == null)
+					return OperationError.NOT_FOUND.getResponse();
+				// Entferne den Termin
+				conn.transactionRemove(termin);
+			}
+			if (!conn.transactionCommit())
+				return OperationError.NOT_FOUND.getResponse("Datenbankfehler beim Löschen der Gost-Klausurtermine");
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webApplicationException)
 				return webApplicationException.getResponse();

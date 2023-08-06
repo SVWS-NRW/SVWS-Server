@@ -120,7 +120,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		console.log({ name: value.name, params: { abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		await RouteManager.doRoute({ name: value.name, params: { abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		await this.data.setView(node);
 	}
