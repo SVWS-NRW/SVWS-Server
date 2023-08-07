@@ -49,7 +49,6 @@
 			</template>
 			<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)" :key="pausenaufsicht.id">
 				<div class="absolute h-full w-full stundenplan-unterricht bg-green-100" :style="posPausenaufsicht(pausenaufsicht)">
-					{{ pausenaufsicht.id }}
 					<div> {{ pausenzeit(pausenaufsicht).bezeichnung }} </div>
 					<div> &nbsp; </div>
 					<div v-if="mode !== 'lehrer'"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </div>
