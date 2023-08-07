@@ -91,19 +91,19 @@
 </script>
 
 <style lang="postcss">
-.app--page {
-	@apply flex flex-grow flex-col justify-between;
-	@apply h-screen;
-	@apply overflow-hidden;
-	@apply relative;
-	@apply bg-white dark:bg-black;
-}
+	.app--page {
+		@apply flex flex-grow flex-col justify-between;
+		@apply h-screen;
+		@apply overflow-hidden;
+		@apply relative;
+		@apply bg-white dark:bg-black;
+	}
 
- .page--wrapper {
-	 @apply relative h-full;
- }
+	.page--wrapper {
+		@apply flex flex-col w-full h-full flex-grow;
+	}
 
- .page--flex {
-	 @apply flex flex-col w-full h-full;
- }
+	.page--flex {
+		@apply flex flex-col w-full h-full;
+	}
 </style>

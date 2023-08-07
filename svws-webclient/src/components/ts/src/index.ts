@@ -3,5 +3,6 @@ export type { SchuelerLaufbahnplanungProps } from './components/gost/laufbahnpla
 export { default as SSchuelerLaufbahnplanung } from './components/gost/laufbahnplanung/SSchuelerLaufbahnplanung.vue'
 export type { StundenplanAnsichtProps } from './components/stundenplan/StundenplanAnsichtProps'
 export { default as StundenplanAnsicht } from './components/stundenplan/StundenplanAnsicht.vue'
+export { default as StundenplanAnsichtPausenzeiten } from './components/stundenplan/StundenplanAnsichtPausenzeiten.vue'
 export type { StundenplanAuswahlProps } from './components/stundenplan/StundenplanAuswahlProps'
 export { default as StundenplanAuswahl } from './components/stundenplan/StundenplanAuswahl.vue'

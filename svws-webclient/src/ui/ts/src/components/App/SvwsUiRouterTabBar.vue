@@ -132,6 +132,7 @@
     .router-tab-bar--area {
         @apply flex flex-col items-start overflow-hidden;
 		@apply pt-1.5;
+		@apply h-full;
 
 		&--single-route {
 			@apply bg-transparent;
@@ -139,17 +140,14 @@
     }
 
     .router-tab-bar--panel {
-        @apply h-full w-full relative;
+        @apply w-full relative;
         @apply overflow-auto;
+		@apply flex-grow;
 
 		&.pt-0 {
 			padding-top: 0;
 		}
     }
-
-	.router-tab-bar--area {
-		@apply h-full;
-	}
 
     .router-tab-bar--wrapper {
 		@apply flex items-center;
