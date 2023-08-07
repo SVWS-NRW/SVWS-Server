@@ -5,7 +5,7 @@
 }
 
 html {
-	@apply font-sans;
+	@apply font-sans !important;
 	font-size: initial !important;
 }
 

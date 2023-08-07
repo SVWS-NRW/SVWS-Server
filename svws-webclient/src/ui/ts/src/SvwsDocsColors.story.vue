@@ -1,39 +1,43 @@
 <template>
-	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'single', iframe: false}">
-		<Variant title="Farben" source=" " id="farbpalette">
-			<div class="svws-docs-color">
-				<div class="htw-prose dark:htw-prose-invert">
-					<h1>Farben</h1>
-					<p>
-						Für den Client und in den Components ist eine allgemeine Farbpalette definiert, mit der alle
-						möglichen Einsatzfälle abgedeckt werden können:
-					</p>
-				</div>
-				<div
-					class="svws-docs-color-shades">
-					<div class="flex flex-col gap-2 text-base" v-for="(color, index) in colors" :key="index">
-						<div class="svws-docs-color-shade rounded-lg w-full" :style="{backgroundColor: color.color}" :class="{'border border-black/25': color.name.toLowerCase() === 'white'}">
-							<span style="user-select: all" class="svws-docs-color-shade-badge" :style="{color: color.text || '#2c2c2c', backgroundColor: color.color}">bg-{{ color.name.toLowerCase() }}</span>
-							<span v-if="color.allowText" style="user-select: all" class="svws-docs-color-shade-badge" :style="{color: color.color, backgroundColor: color.background || '#ffffff'}">text-{{ color.name.toLowerCase() }}</span>
-						</div>
-						<div class="flex flex-col gap-y-1">
-							<span class="text-sm font-bold">{{ color.name }} <span style="user-select: all">var(--color-{{ color.name.toLowerCase() }})</span></span>
-							<span>{{ color.useFor }}</span>
-						</div>
+	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
+		<Variant title="Info zu den Farben" source=" " id="info">
+			<div class="htw-prose dark:htw-prose-invert">
+				<p>
+					Für den Client und in den Components ist eine allgemeine Farbpalette definiert, mit der alle
+					möglichen Einsatzfälle abgedeckt werden können.
+				</p>
+			</div>
+		</Variant>
+		<Variant :title="color.name" source=" " :id="color.name" v-for="(color, index) in colors" :key="index">
+			<div class="flex gap-2 text-base items-start">
+				<div class="svws-docs-color-shade" :style="{backgroundColor: color.color}" :class="{'border border-black/25': color.name.toLowerCase() === 'white'}" />
+				<div class="flex flex-wrap items-start gap-1 pt-1">
+					<div class="w-full text-sm font-bold">{{ color.useFor }}</div>
+					<div class="flex gap-2">
+						<span class="svws-docs-color-shade-badge" style="user-select: all">var(--color-{{ color.name.toLowerCase() }})</span>
+						<span style="user-select: all" class="svws-docs-color-shade-badge" :style="{color: color.text || '#2c2c2c', backgroundColor: color.color}">bg-{{ color.name.toLowerCase() }}</span>
+						<span v-if="color.allowText" style="user-select: all" class="svws-docs-color-shade-badge" :style="{color: color.color, backgroundColor: color.background || '#ffffff'}">text-{{ color.name.toLowerCase() }}</span>
 					</div>
 				</div>
-				<div class="htw-prose dark:htw-prose-invert">
-					<p>
-						Zusätzlich gibt es noch eine größere Auswahl von Farben, die <strong>nur in besonderen Fällen</strong> verwendet
-						werden dürfen. Zum Beispiel als Hintergrundfarben für verschiedene Fächer in der Kursübersicht. Dafür können auch die weiteren Farben von Tailwind verwendet werden.
-					</p>
-				</div>
+			</div>
+		</Variant>
+		<Variant title="Weitere Farben" source=" " id="weitere-farben">
+			<div class="htw-prose dark:htw-prose-invert">
+				<p>
+					Zusätzlich gibt es noch eine größere Auswahl von Farben, die <strong>nur in besonderen Fällen</strong> verwendet
+					werden dürfen. Zum Beispiel als Hintergrundfarben für verschiedene Fächer in der Kursübersicht. Dafür können auch die weiteren Farben von Tailwind verwendet werden.
+				</p>
 			</div>
 		</Variant>
 	</Story>
 </template>
 <script setup lang="ts">
 	const colors = [
+		{
+			'name': 'Light',
+			'useFor': 'App Hintergrund, Abhebung von Bereichen auf weißen Hintergründen (z.B. Subnavigation)',
+			'color': '#f5f4f2',
+		},
 		{
 			'name': 'SVWS',
 			'additional': 'primary',
@@ -49,11 +53,6 @@
 			'tailwind': 'violet-500',
 			'allowText': true,
 			'text': '#ffffff',
-		},
-		{
-			'name': 'Light',
-			'useFor': 'App Hintergrund, Abhebung von Bereichen auf weißen Hintergründen (Subnavigation)',
-			'color': '#f5f4f2',
 		},
 		{
 			'name': 'Black',
@@ -89,19 +88,11 @@
 </script>
 
 <style lang="postcss" scoped>
-.svws-docs-color {
-@apply md:p-6;
-}
-
-.svws-docs-color-shades {
-	@apply mb-24 mt-6 gap-y-10 gap-x-3 grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))];
-}
-
 .svws-docs-color-shade {
-	@apply h-32 flex items-center justify-center gap-1;
+	@apply h-16 w-16 rounded-lg shrink-0;
 }
 
 .svws-docs-color-shade-badge {
-	@apply bg-white rounded px-1;
+	@apply bg-white rounded px-1 first:pl-0;
 }
 </style>

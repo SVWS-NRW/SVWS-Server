@@ -59,6 +59,10 @@ export default defineConfig({
 		tree: {
 			groups: [
 				{
+					id: 'top-top',
+					title: '',
+				},
+				{
 					id: 'top',
 					title: '',
 				},

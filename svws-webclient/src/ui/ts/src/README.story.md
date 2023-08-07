@@ -1,6 +1,6 @@
 ---
-group: 'top'
-title: 'README'
+group: 'top-top'
+title: 'Guide (Read me)'
 id: 'readme'
 icon: 'ri:code-s-slash-line'
 ---
@@ -11,6 +11,7 @@ In diesem Guide werden die wichtigsten Informationen und Best Practices für die
 SVWS Client zusammengefasst.
 
 * [Farben](/story/farben)
+* [Icons](/story/icons)
 * [Performance](#performance)
   * [Komponente oder nur ein `div`?](#komponente-oder-nur-ein-div)
   * [Optimierungen](#optimierungen)
