@@ -129,73 +129,95 @@
 
 
 <style lang="postcss">
-	.router-tab-bar {
-		&--area {
-			@apply h-full flex flex-col items-start overflow-hidden;
-			@apply pt-1.5;
+    .router-tab-bar--area {
+        @apply flex flex-col items-start overflow-hidden;
+		@apply pt-1.5;
+		@apply h-full;
 
-			&--single-route {
-				@apply bg-transparent;
-			}
+		&--single-route {
+			@apply bg-transparent;
 		}
+    }
 
-		&--panel {
-			@apply h-full w-full relative overflow-auto flex-grow;
+    .router-tab-bar--panel {
+        @apply w-full relative;
+        @apply overflow-auto;
+		@apply flex-grow;
 
-			&.pt-0 {
-				padding-top: 0;
-			}
+      .svws-api--pending & {
+        @apply opacity-50 filter grayscale;
+      }
+
+		&.pt-0 {
+			padding-top: 0;
 		}
+    }
 
-		&--wrapper {
-			@apply w-full flex items-center flex-shrink-0 relative z-30;
+    .router-tab-bar--wrapper {
+		@apply flex items-center;
+		@apply relative z-30;
+		@apply w-full;
+		@apply flex-shrink-0;
 
-			&:after {
-				@apply absolute inset-x-0 bottom-0 pointer-events-none;
-				@apply border-b-2 border-light dark:border-white/10;
-				content: "";
-			}
-		}
-
-		&--content {
-			@apply relative w-full flex flex-row items-center;
-			@apply overflow-x-scroll space-x-2 pb-2 px-6 lg:px-9 3xl:px-12 4xl:px-20;
-			-ms-overflow-style: none;
-			scrollbar-width: none;
-
-			&::-webkit-scrollbar {
-				@apply hidden;
-			}
-
-			&:focus-visible {
-				@apply outline-none bg-svws/5;
-			}
-		}
-
-		&--subnav-target {
-			@apply w-full overflow-x-auto flex-shrink-0;
+		&:after {
+			@apply absolute inset-x-0 bottom-0;
+			@apply border-b-2 border-light dark:border-white/10;
+			@apply pointer-events-none;
+			content: "";
 		}
 	}
 
-	.router-tab-bar--scroll-button {
-		@apply w-7 h-7 p-0.5 pointer-events-auto;
+    .router-tab-bar--content {
+		@apply flex flex-row items-center;
+		@apply overflow-x-scroll pb-2;
+		@apply relative w-full gap-x-1;
+		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
+		-webkit-overflow-scrolling: touch;
+
+		-ms-overflow-style: none;
+		/* Remove Scrollbar in IE and Edge */
+		scrollbar-width: none;
+		/* Remove Scrollbar in Firefox */
+
+		&:focus-visible {
+			@apply outline-none bg-svws/5;
+		}
+    }
+
+    .router-tab-bar--content::-webkit-scrollbar {
+        display: none;
+        /* Remove Scrollbar in Chromium basesd Browsers */
+    }
+
+    .router-tab-bar--scroll-button-background {
+		@apply absolute z-20;
+		@apply h-full;
+		@apply pointer-events-none;
+		@apply text-base px-6;
+		@apply from-white/0 to-white/90;
+    }
+
+    .router-tab-bar--scroll-button-background-right {
+		@apply bg-gradient-to-r;
+		@apply right-0 top-0.5;
+    }
+
+    .router-tab-bar--scroll-button-background-left {
+		@apply bg-gradient-to-l;
+		@apply left-0 top-0.5;
+    }
+
+    .router-tab-bar--scroll-button {
+		@apply pointer-events-auto;
+		@apply w-7 h-7 p-0.5;
 
 		svg {
 			@apply w-5 h-5;
 		}
+    }
 
-		&-background {
-			@apply h-full absolute top-0.5 z-20 pointer-events-none text-base px-6;
-			@apply from-white/0 to-white/90;
-		}
-
-		&-background-right {
-			@apply bg-gradient-to-r right-0;
-		}
-
-		&-background-left {
-			@apply bg-gradient-to-l left-0;
-		}
+	.router-tab-bar--subnav-target {
+		@apply w-full overflow-x-auto flex-shrink-0;
 	}
 
 </style>

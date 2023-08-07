@@ -1,6 +1,7 @@
 <template>
-	<button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']" role="button">
-		{{ text }}
+	<button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
+		<span>{{ text }}</span>
+		<!--<i-ri-loader-4-line v-if="isSelected" class="svws-ui-spinner" />-->
 	</button>
 </template>
 
@@ -42,52 +43,77 @@
 
 <style lang="postcss">
     .router-tab-bar-button {
-        @apply inline-flex items-center justify-center py-2 px-3 rounded-md;
-        @apply text-sm font-bold text-black dark:text-white whitespace-nowrap select-none;
+        @apply inline-flex items-center justify-center;
+        @apply py-2 px-3.5;
+        @apply rounded-md;
+        @apply select-none;
+        @apply text-sm font-bold text-black dark:text-white;
+        @apply whitespace-nowrap;
+      @apply relative;
 
-		&:hover {
-			@apply bg-light dark:bg-white/5;
-		}
+      .svws-ui-spinner {
+        @apply w-4 h-4 absolute top-1.5 right-0.5;
+      }
+    }
 
-		&:focus {
-			@apply outline-none;
-		}
+    .router-tab-bar-button:hover {
+        @apply bg-light hover:bg-white/5;
+    }
 
-		&:focus-visible {
-			@apply ring ring-inset ring-svws/50;
-
-			.page--statistik & {
-				@apply ring-violet-500/50;
-			}
-		}
-
-		&:focus,
-		&--active {
-			@apply text-svws bg-svws/5 dark:bg-svws/10;
-
-			.page--statistik & {
-				@apply text-violet-500 bg-violet-500/5 dark:bg-violet-500/10;
-			}
-		}
-
-		&--active {
-			@apply relative;
-
-			&:after {
-				@apply absolute w-full;
-				@apply -bottom-2 inset-x-0;
-				@apply border-b-2 border-svws z-10;
-				content: '';
+    .router-tab-bar-button:focus {
+				@apply text-svws;
+				@apply bg-svws/5 dark:bg-svws/10;
 
 				.page--statistik & {
-					@apply border-violet-500;
+					@apply text-violet-500 bg-violet-500/5 dark:bg-violet-500/10;
 				}
 			}
+
+    .router-tab-bar-button:focus-visible {
+				@apply ring-svws/50;
+
+				.page--statistik & {
+					@apply ring-violet-500/50;
+				}
 		}
 
-		&:disabled {
-			@apply bg-black/25 dark:bg-white/25 border-black/50 dark:border-white/50 text-black dark:text-white;
-			@apply opacity-20 cursor-not-allowed pointer-events-none;
+    .router-tab-bar-button:focus,
+    .router-tab-bar-button--active {
+        @apply outline-none;
+    }
+
+    .router-tab-bar-button--active {
+		@apply relative;
+        @apply text-svws;
+
+		.page--statistik & {
+			@apply text-violet-500;
 		}
+
+      .svws-api--pending & {
+        /*@apply pl-2 pr-5;*/
+        span {
+          @apply animate-pulse;
+        }
+      }
+
+		&:after {
+			@apply absolute w-full;
+			@apply -bottom-2 inset-x-0;
+			@apply border-b-2 border-svws z-10;
+			content: '';
+			/*@apply left-3;
+			width: calc(100% - 1.5rem);*/
+
+			.page--statistik & {
+				@apply border-violet-500;
+			}
+		}
+    }
+
+    .router-tab-bar-button:disabled {
+		@apply bg-black/25 dark:bg-white/25 border-black/50 dark:border-white/50 text-black dark:text-white;
+		@apply opacity-20;
+		@apply cursor-not-allowed pointer-events-none;
     }
 </style>

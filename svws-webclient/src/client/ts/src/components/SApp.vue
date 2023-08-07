@@ -53,7 +53,7 @@
 		</template>
 		<template #main>
 			<div class="app--page" :class="app.name">
-				<div class="page--wrapper">
+				<div class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<template v-if="pendingSetApp">
 						<svws-ui-header>
 							<div class="flex items-center">
@@ -83,7 +83,7 @@
 	import type { AuswahlChildData } from './AuswahlChildData';
 	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
-	import { computed, ref, watch } from "vue";
+	import { computed, ref } from "vue";
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
@@ -96,7 +96,7 @@
 	const pendingSetApp = ref('');
 
 	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden...' } },
+		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden…' } },
 		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
 	];
 	const selectedRoute = loadingSkeletonRoutes[0];
