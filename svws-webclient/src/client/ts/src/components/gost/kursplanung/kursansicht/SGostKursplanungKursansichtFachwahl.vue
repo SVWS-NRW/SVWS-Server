@@ -82,7 +82,7 @@
 				<!-- Es folgen die einzelnen Tabellenzellen für die Schienen der Blockung -->
 				<template v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
-					<svws-ui-drop-data v-if="!getDatenmanager().daten().istAktiv" tag="div" role="cell" v-slot="{ active }"
+					<div role="cell" v-if="!getDatenmanager().daten().istAktiv"
 						class="data-table__td data-table__td__no-padding data-table__td__align-center"
 						:class="{
 							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
@@ -90,17 +90,18 @@
 							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 						}"
 						:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
-						:drop-allowed="isKursDropZone(kurs, schiene).value" @drop="istKursDropAendereKursschiene($event, kurs, schiene)">
+						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();" @drop="istKursDropAendereKursschiene(kurs, schiene)">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable ... -->
-						<svws-ui-drag-data v-if="istZugeordnetKursSchiene(kurs, schiene).value" tag="div" :draggable="true" :key="kurs.id" :data="{kurs, schiene}"
-							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black"
+						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="true" :key="kurs.id"
+							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black cursor-grab"
 							:class="{
+								'cursor-grabbing': dragDataKursSchiene !== undefined,
 								'bg-light text-primary font-bold': istKursAusgewaehlt(kurs).value,
 								'bg-light/75': !istKursAusgewaehlt(kurs).value,
-								'p-0.5': !active && !isKursDropZone(kurs, schiene).value,
-								'p-0': active || isKursDropZone(kurs, schiene).value,
+								'p-0.5': dragDataKursSchiene === undefined && !isKursDropZone(kurs, schiene).value,
+								'p-0': dragDataKursSchiene !== undefined || isKursDropZone(kurs, schiene).value,
 							}"
-							@drag-start="dragKursStarted" @drag-end="dragKursEnded" @click="toggleKursAusgewaehlt(kurs)">
+							@dragstart="dragKursStarted(kurs, schiene)" @dragend="dragKursEnded()" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
@@ -109,22 +110,22 @@
 								<i-ri-pushpin-fill v-if="istKursFixiertInSchiene(kurs, schiene).value" class="inline-block group-hover:opacity-75" />
 								<i-ri-pushpin-line v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="inline-block opacity-25 group-hover:opacity-100" />
 							</div>
-						</svws-ui-drag-data>
+						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
 						<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
 							:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
 							:class="{
-								'bg-white': active && isKursDropZone(kurs, schiene).value,
+								'bg-white': dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value,
 								'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value
 							}">
 							&NonBreakingSpace;
-							<template v-if="active">
-								<div v-if="active && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
+							<template v-if="dragDataKursSchiene !== undefined">
+								<div v-if="dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
 							</template>
 							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block !opacity-100" /> </div>
 							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
 						</div>
-					</svws-ui-drop-data>
+					</div>
 					<!-- ... oder das Element in der Zelle ist nicht für Drag & Drop gedacht -->
 					<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" @click="toggleKursAusgewaehlt(kurs)"
@@ -210,7 +211,7 @@
 	const tmp_name = ref("");
 	const kursdetail_anzeige = ref<boolean>(false);
 
-	const dragDataKursSchiene = ref<{ kurs: GostBlockungKurs | undefined; schiene: GostBlockungSchiene | undefined }>({schiene: undefined, kurs: undefined})
+	const dragDataKursSchiene = ref<{ kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene} | undefined>(undefined)
 
 	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
@@ -345,28 +346,24 @@
 			props.schuelerFilter.reset();
 	}
 
-	function dragKursStarted(e: DragEvent) {
-		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "") as { kurs: GostBlockungKurs; schiene: GostBlockungSchiene } | undefined;
-		if (!data)
-			return;
-		dragDataKursSchiene.value = data;
+	function dragKursStarted(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
+		dragDataKursSchiene.value = { kurs, schiene };
 	}
 
 	function dragKursEnded() {
-		dragDataKursSchiene.value = {kurs: undefined, schiene: undefined};
+		dragDataKursSchiene.value = undefined;
 	}
 
 	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (dragDataKursSchiene.value.kurs !== undefined) && (dragDataKursSchiene.value.schiene !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id !== schiene.id);
+		return (dragDataKursSchiene.value !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id !== schiene.id);
 	});
 
 	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (dragDataKursSchiene.value.kurs !== undefined) && (dragDataKursSchiene.value.schiene !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id === schiene.id);
+		return (dragDataKursSchiene.value !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id === schiene.id);
 	});
 
 	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		if (dragDataKursSchiene.value.kurs === undefined || dragDataKursSchiene.value.schiene === undefined)
+		if (dragDataKursSchiene.value === undefined)
 			return false;
 		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
 			return false;
@@ -375,20 +372,20 @@
 		return true;
 	});
 
-	async function istKursDropAendereKursschiene(data: {kurs: GostBlockungsergebnisKurs; schiene: GostBlockungSchiene}, kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		if (!data.kurs || !data.schiene)
+	async function istKursDropAendereKursschiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
+		if (dragDataKursSchiene.value === undefined)
 			return;
-		if (data.kurs.id !== kurs.id) {
-			modal_regel_kurse.value.openModal(data.kurs.id, kurs.id);
+		if (dragDataKursSchiene.value.kurs.id !== kurs.id) {
+			modal_regel_kurse.value.openModal(dragDataKursSchiene.value.kurs.id, kurs.id);
 			return;
 		}
-		if ((data.kurs.id === kurs.id) && (!istZugeordnetKursSchiene(kurs, schiene).value) ) {
+		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (!istZugeordnetKursSchiene(kurs, schiene).value) ) {
 			// Entferne potentielle Fixierung beim Verschieben.
-			if (props.allowRegeln && props.getDatenmanager().kursGetHatFixierungInSchiene(data.kurs.id, schiene.id)) {
+			if (props.allowRegeln && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, schiene.id)) {
 				const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(kurs.id, schiene.id);
 				await props.removeRegel(regel.id);
 			}
-			await props.updateKursSchienenZuordnung(data.kurs.id, data.schiene.id, schiene.id);
+			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, schiene.id);
 		}
 	}
 
