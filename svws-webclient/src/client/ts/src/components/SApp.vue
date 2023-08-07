@@ -3,6 +3,7 @@
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
+					<span :class="{'text-red-400':apiStatus.pending}">X</span>
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
 					<svws-ui-menu-header :user="username" :schule="schulname" />
 				</template>

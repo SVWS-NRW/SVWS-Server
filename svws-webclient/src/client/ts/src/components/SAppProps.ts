@@ -1,5 +1,6 @@
 import type { SchuleStammdaten, Schulform } from "@core";
 import type { AuswahlChildData } from "./AuswahlChildData";
+import type { ApiStatus } from "./ApiStatus";
 
 export interface AppProps {
 	schulform: Schulform;
@@ -10,4 +11,5 @@ export interface AppProps {
 	app: AuswahlChildData;
 	apps: AuswahlChildData[];
 	appsHidden: boolean[];
+	apiStatus: ApiStatus;
 }

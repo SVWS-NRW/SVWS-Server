@@ -83,7 +83,9 @@ export class RouteManager {
 		if (manager.active)
 			return;
 		// Führe das Routing durch...
+		api.status.start();
 		await manager.router.push(to);
+		api.status.stop();
 	}
 
 	/**

@@ -1,4 +1,6 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { AppProps } from "~/components/SAppProps";
 
 import { Schulform, BenutzerKompetenz, ServerMode } from "@core";
 
@@ -32,9 +34,7 @@ import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 
 import { ConfigElement } from "~/components/Config";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
-import type { AppProps } from "~/components/SAppProps";
 import SApp from "~/components/SApp.vue";
 
 
@@ -120,6 +120,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			app: this.getApp(),
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
+			apiStatus: api.status,
 		};
 	}
 
