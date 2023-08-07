@@ -1,9 +1,10 @@
 <template>
 	<div
 		class="sidebar--menu">
-		<div class="sidebar--menu--header">
+		<div class="sidebar--menu--header" v-if="$slots.header">
 			<slot name="header" />
 		</div>
+		<div v-else class="h-5" />
 		<div class="sidebar--menu--body">
 			<slot />
 		</div>

@@ -1,26 +1,49 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="true">
+	<svws-ui-app-layout>
+		<template #sidebar>
+			<svws-ui-menu>
+				<svws-ui-menu-item :active="false" @click="goBack">
+					<template #label>
+						Zurück
+					</template>
+					<template #icon>
+						<i-ri-arrow-go-back-line />
+					</template>
+				</svws-ui-menu-item>
+				<svws-ui-menu-item :active="false" @click="reloadClient">
+					<template #label>
+						Neu laden
+					</template>
+					<template #icon>
+						<i-ri-restart-line />
+					</template>
+				</svws-ui-menu-item>
+			</svws-ui-menu>
+		</template>
 		<template #main>
-			<div class="error-wrapper">
-				<div class="error-container">
-					<div class="error-form modal modal--lg">
-						<div class="modal--content-wrapper">
-							<div class="modal--content">
-								<div class="error-form-header mb-8 px-8 py-4 mt-6">
-									<h1 class="leading-none text-center w-full">
-										<span class="font-normal">Es ist ein Fehler aufgetreten</span>
-									</h1>
-								</div>
-								<div v-if="code !== undefined" class="w-full mt-1 px-8">
-									HTTP-Fehlercode: {{ code }}
-								</div>
-								<div v-if="error !== undefined" class="w-full mt-1 px-8">
-									<div> Fehler : {{ error.name }} </div>
-									<div> Message : {{ error.message }} </div>
-									<div> Stack Trace : </div>
-									<div class="ml-5" style="white-space: pre;"> {{ error.stack }} </div>
-								</div>
-							</div>
+			<div class="app--page">
+				<svws-ui-header>
+					<div class="flex items-center">
+						<div>
+							<span class="inline-flex gap-2"><i-ri-alert-fill class="text-error" />{{ error?.name }}</span>
+							<br>
+							<span class="opacity-40">
+								<template v-if="code !== undefined">
+									Fehler {{ code }}
+								</template>
+								<template v-else>
+									Unbekannter Fehlercode
+								</template>
+							</span>
+						</div>
+					</div>
+				</svws-ui-header>
+				<div class="router-tab-bar--area" v-if="error !== undefined">
+					<div class="router-tab-bar--panel">
+						<div class="page--content">
+							<svws-ui-content-card :title="error?.message">
+								<pre>{{ error.stack }}</pre>
+							</svws-ui-content-card>
 						</div>
 					</div>
 				</div>
@@ -36,31 +59,12 @@
 
 	const props = defineProps<ErrorProps>();
 
+	function goBack() {
+		window.history.back();
+	}
+
+	function reloadClient() {
+		window.location.href = window.location.origin;
+	}
+
 </script>
-
-
-<style lang="postcss">
-
-	.error-wrapper {
-		@apply flex h-full flex-col justify-between;
-	}
-
-	.error-container {
-		@apply bg-cover bg-top rounded-t-2xl h-full flex flex-col justify-center items-center px-4;
-		background-image: url("/images/placeholder-background.jpg");
-	}
-
-	.modal {
-		@apply shadow-black/25 rounded-xl;
-	}
-
-	.error-form-header {
-		@apply flex flex-row items-start justify-between gap-4 font-bold leading-tight;
-		font-size: 2.618rem;
-	}
-	.error-form .modal--content {
-		@apply p-0;
-		@apply text-left
-	}
-
-</style>
