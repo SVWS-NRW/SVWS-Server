@@ -249,13 +249,13 @@
 
 	const fixier_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
-		    return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
+			return props.getDatenmanager().schuelerGetRegelFixiertInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 
 	const verbieten_regel = (idKurs: number, idSchueler: number) : ComputedRef<number | undefined> => computed(() => {
 		if (props.getDatenmanager().schuelerGetIstVerbotenInKurs(idSchueler, idKurs))
-		    return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs).id;
+			return props.getDatenmanager().schuelerGetRegelVerbotenInKurs(idSchueler, idKurs).id;
 		return undefined;
 	});
 
