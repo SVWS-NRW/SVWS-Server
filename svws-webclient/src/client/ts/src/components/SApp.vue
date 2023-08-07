@@ -3,12 +3,13 @@
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
+					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
 					<svws-ui-menu-header :user="username" :schule="schulname" />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
-						<svws-ui-menu-item :active="is_active(item)" @click="setApp(item)">
+						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
 							<template #label> {{ item.text }} </template>
 							<template #icon> <s-app-icon :routename="item.name" /> </template>
 						</svws-ui-menu-item>
@@ -63,14 +64,7 @@
 		return name ? name : "Fehlende Bezeichnung für die Schule";
 	});
 
-	const minDelayReached = ref(false);
-	const minDurationReached = ref(false);
-	const showOverlay = ref(false);
-
-	setTimeout(() => (minDelayReached.value = true), 100); // Minimum Delay bevor das Overlay eingeblendet wird. Soll flackern des Bildschirms vermeiden.
-	setTimeout(() => (minDurationReached.value = true), 400); // Minimum Dauer bevor das Overlay ausgeblendet wird. Soll flackern des Bildschirms vermeiden.
-	watch(minDelayReached, () => { showOverlay.value = true; });
-	watch(minDurationReached, () => { showOverlay.value = false; });
+	const pendingSetApp = ref('');
 
 	function is_active(current: AuswahlChildData): boolean {
 		const routename = props.app.name?.toString().split('.')[0];
@@ -81,6 +75,12 @@
 		document.title = current.text + " - " + schulname.value;
 		document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon' + (props.app.name === 'statistik' ? '-statistik' : '') + '.svg')
 		return true;
+	}
+
+	async function startSetApp(app: AuswahlChildData) {
+		pendingSetApp.value = app.text;
+		await props.setApp(app);
+		pendingSetApp.value = '';
 	}
 
 	async function doLogout() {
