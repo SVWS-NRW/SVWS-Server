@@ -110,18 +110,18 @@
 					<!--Schienen-->
 					<template v-if="allow_regeln">
 						<template v-for="schiene in schienen" :key="schiene.id">
-							<svws-ui-drop-data tag="div" :drop-allowed="istDropZoneSchiene(schiene).value" @drop="openModalRegelKursartSchiene(schiene, $event)"
+							<div @dragover="if (istDropZoneSchiene(schiene).value) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)"
 								class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black relative group"
 								:class="{ 'bg-primary/5 text-primary hover:text-primary': istDropZoneSchiene(schiene).value, }">
-								<svws-ui-drag-data tag="div" :key="schiene.id" :data="{ schiene }" @click="openModalRegelKursartSchiene(schiene, { schiene })"
-									class="select-none cursor-grab text-center"
-									:draggable="true" @drag-start="dragSchieneStarted" @drag-end="dragSchieneEnded">
+								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)"
+									class="select-none cursor-grab text-center" :class="{'cursor-grabbing': dragDataKursartSchiene !== undefined}"
+									:draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
 									<span class="rounded w-3 absolute top-0 left-0">
 										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 									</span>
 									<i-ri-lock-unlock-line class="inline-block" />
-								</svws-ui-drag-data>
-							</svws-ui-drop-data>
+								</div>
+							</div>
 						</template>
 					</template>
 					<div v-else role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center normal-case font-normal text-black/50" :style="{'gridColumn': 'span ' + schienen.size()}">
@@ -311,29 +311,25 @@
 	}
 
 
-	const dragDataKursartSchiene = ref<{ schiene: GostBlockungSchiene | undefined }>({ schiene : undefined });
+	const dragDataKursartSchiene = ref<{ schiene: GostBlockungSchiene } | undefined>(undefined);
 
 	const modalRegelKursartSchienen = ref();
 
 	const istDropZoneSchiene = (schiene: GostBlockungSchiene) : ComputedRef<boolean> => computed(() => {
-		const dragSchiene = dragDataKursartSchiene.value.schiene;
-		return (dragSchiene !== undefined && (dragSchiene.id !== schiene.id));
+		return (dragDataKursartSchiene.value !== undefined && (dragDataKursartSchiene.value.schiene.id !== schiene.id));
 	});
 
-	function openModalRegelKursartSchiene(schiene: GostBlockungSchiene, data: { schiene: GostBlockungSchiene }) {
-		modalRegelKursartSchienen.value.openModal(data.schiene, schiene);
+	function openModalRegelKursartSchiene(schiene: GostBlockungSchiene) {
+		const andereSchiene = (dragDataKursartSchiene.value === undefined) ? schiene : dragDataKursartSchiene.value.schiene;
+		modalRegelKursartSchienen.value.openModal(andereSchiene, schiene);
 	}
 
-	function dragSchieneStarted(e: DragEvent) {
-		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "");
-		if (data === undefined)
-			return;
-		dragDataKursartSchiene.value = data;
+	function dragSchieneStarted(schiene: GostBlockungSchiene) {
+		dragDataKursartSchiene.value = { schiene };
 	}
 
 	function dragSchieneEnded() {
-		dragDataKursartSchiene.value.schiene = undefined;
+		dragDataKursartSchiene.value = undefined;
 	}
 
 </script>
