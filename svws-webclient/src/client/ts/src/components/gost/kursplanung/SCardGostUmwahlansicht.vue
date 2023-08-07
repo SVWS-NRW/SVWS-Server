@@ -13,16 +13,22 @@
 			<!-- Übersicht über die Fachwahlen des Schülers -->
 			<div class="w-1/6 min-w-[9rem]">
 				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
-				<svws-ui-drop-data v-slot="{ active }" class="mb-4" @drop="drop_entferne_kurszuordnung">
-					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': active, 'border-transparent': !active }">
+				<div class="mb-4" @dragover="$event.preventDefault()" @drop="drop_entferne_kurszuordnung">
+					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': dragAndDropData !== undefined, 'border-transparent': dragAndDropData === undefined }">
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-data-table :items="[]" :no-data="false" :disable-header="true">
 							<template #body>
 								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
-									<svws-ui-drag-data :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id" tag="div" role="cell" :data="{ id: fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fachID: fach.fachID, kursart: fachwahlKursart(fach.fachID, schueler.id).value.id }"
-										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" @drag-start="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)" @drag-end="drag_ended"
-										class="select-none data-table__td group" :class="{ 'bg-white' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined), 'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv) }"
-										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id) }">
+									<div role="cell" :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id"
+										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)"
+										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
+										@dragend="drag_ended()"
+										class="select-none data-table__td group"
+										:class="{
+											'bg-white' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined),
+											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)
+										}"
+										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
 										<div class="flex items-center justify-between gap-1 w-full">
 											<div class="inline-flex items-center gap-1">
 												<span class="group-hover:bg-light rounded w-3 -ml-1">
@@ -34,15 +40,15 @@
 												<svws-ui-tooltip v-if="!fachwahlKurszuordnung(fach.fachID, schueler.id).value"> <i-ri-forbid-2-line /> <template #content> <span>Nichtverteilt</span> </template> </svws-ui-tooltip>
 											</div>
 										</div>
-									</svws-ui-drag-data>
+									</div>
 								</div>
 							</template>
 						</svws-ui-data-table>
 
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
 						<template v-if="!blockung_aktiv">
-							<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': active}">
-								<div v-if="active" class="flex gap-2 items-center w-full h-full">
+							<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': dragAndDropData !== undefined}">
+								<div v-if="dragAndDropData !== undefined" class="flex gap-2 items-center w-full h-full">
 									<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
 									<span>Entfernen</span>
 								</div>
@@ -53,7 +59,7 @@
 							</div>
 						</template>
 					</div>
-				</svws-ui-drop-data>
+				</div>
 
 				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
 				<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
@@ -84,12 +90,14 @@
 							</div>
 
 							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
-							<svws-ui-drag-data v-for="kurs of schiene.kurse" :key="kurs.id" tag="div" role="cell" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
+							<div role="cell" v-for="kurs of schiene.kurse" :key="kurs.id"
 								class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative p-0.5"
 								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id, schueler.id).value }"
-								:draggable="is_draggable(kurs.id, schueler.id).value" @drag-start="drag_started(kurs.id, kurs.fachID, kurs.kursart)" @drag-end="drag_ended">
-								<svws-ui-drop-data @drop="drop_aendere_kurszuordnung(kurs, schueler.id)" :drop-allowed="is_drop_zone(kurs).value"
-									class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor(kurs.id, schueler.id) }">
+								:draggable="is_draggable(kurs.id, schueler.id).value"
+								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
+								@dragend="drag_ended()">
+								<div class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor(kurs.id, schueler.id) }"
+									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs, schueler.id)">
 									<span class="group-hover:bg-white rounded w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value">
 										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 									</span>
@@ -113,8 +121,8 @@
 											<span class="icon" title="Fixiert"> <i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" /> </span>
 										</span>
 									</span>
-								</svws-ui-drop-data>
-							</svws-ui-drag-data>
+								</div>
+							</div>
 
 							<!-- Auffüllen mit leeren Zellen, falls in der Schiene nicht die maximale Anzahl von Kursen vorliegt. -->
 							<div v-for="n in (maxKurseInSchienen - schiene.kurse.size())" :key="n" role="cell" class="data-table__td" />
@@ -193,6 +201,10 @@
 		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs);
 	});
 
+	function dropAllowTrash(e: DragEvent) {
+		e.preventDefault();
+	}
+
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) : ComputedRef<boolean> => computed(() => {
 		if (dragAndDropData.value === undefined)
 			return false
@@ -222,11 +234,12 @@
 		drag_ended();
 	}
 
-	async function drop_entferne_kurszuordnung(kurs: any) {
+	async function drop_entferne_kurszuordnung(e: DragEvent) {
 		const schuelerid = props.schueler?.id;
-		if (schuelerid === undefined || kurs === undefined || kurs.id === undefined)
+		const obj = dragAndDropData.value;
+		if ((schuelerid === undefined) || (obj === undefined) || (obj.id === undefined))
 			return;
-		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
+		await props.removeKursSchuelerZuordnung(schuelerid, obj.id);
 	}
 
 	function bgColor(idKurs : number, idSchueler : number) : string {
@@ -303,7 +316,7 @@
 	const bgColorFachwahl = (idFach: number, idSchueler: number) : ComputedRef<string> =>  computed(() => {
 		const fwKurszuordnung = fachwahlKurszuordnung(idFach, idSchueler).value;
 		if (fwKurszuordnung !== undefined)
-			return "gray";
+			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
 		const zulfach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
 		if (!zulfach)
