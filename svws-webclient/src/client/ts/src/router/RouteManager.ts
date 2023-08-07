@@ -83,9 +83,7 @@ export class RouteManager {
 		if (manager.active)
 			return;
 		// Führe das Routing durch...
-		api.status.start();
 		await manager.router.push(to);
-		api.status.stop();
 	}
 
 	/**
@@ -135,6 +133,7 @@ export class RouteManager {
 		if ((this.active) && (to.redirectedFrom === undefined))
 			return false;
 		this.active = true; // Setze, dass ein Routing-Vorgang bearbeitet wird
+		api.status.start();
 		// Ist der Benutzer nicht authentifiziert, so wird er zur Login-Seite weitergeleitet
 		if (!api.authenticated && (to.name !== "login")) {
 			routeLogin.routepath = to.fullPath;
@@ -292,41 +291,46 @@ export class RouteManager {
 	 * @param failure ggf. der Grund für einen Fehler
 	 */
 	protected async afterEach(to: RouteLocationNormalized, from: RouteLocationNormalized, failure?: NavigationFailure | void): Promise<any> {
-		// TODO Behandle die Leave-Ereignisse hier anstatt in Before-Each
-		const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
-		const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
-		if (failure === undefined) {
-			if (api.mode !== ServerMode.STABLE)
-				console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
-			if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
-				// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
-				const equals = (to_node.name === from_node.name);
-				const to_is_successor = to_node.checkSuccessorOf(from_node);
-				if (!to_is_successor) {
-					const from_is_successor = from_node.checkSuccessorOf(to_node);
-					const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
-					if (from_is_successor) {
-						for (const node of from_is_successor.slice(1).reverse())
-							await node.leave(from_node, from.params);
-					} else if (!equals) {
-						let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
-						let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
-						// Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
-						while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
-							from_predecessors = from_predecessors.slice(1);
-							to_predecessors = to_predecessors.slice(1);
+		try {
+			const to_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
+			const from_node : RouteNode<unknown, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
+			if (failure === undefined) {
+				if (api.mode !== ServerMode.STABLE)
+					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
+				if ((to_node !== undefined) && (from_node !== undefined) && (from.fullPath !== "/") && api.authenticated && (!to.name?.toString().startsWith("init"))) {
+					// Prüfe, ob die Knoten Nachfolger bzw. Vorgänger voneinander sind
+					const equals = (to_node.name === from_node.name);
+					const to_is_successor = to_node.checkSuccessorOf(from_node);
+					if (!to_is_successor) {
+						const from_is_successor = from_node.checkSuccessorOf(to_node);
+						const to_predecessors_all: RouteNode<unknown, any>[] = to_node.getPredecessors();
+						if (from_is_successor) {
+							for (const node of from_is_successor.slice(1).reverse())
+								await node.leave(from_node, from.params);
+						} else if (!equals) {
+							let from_predecessors: RouteNode<unknown, any>[] = from_node.getPredecessors();
+							let to_predecessors: RouteNode<unknown, any>[] = [...to_predecessors_all];
+							// Entferne gemeinsame Teilroute am Anfang der beiden Routen - diese Routen-Teile bleiben erhalten
+							while ((from_predecessors.length > 0) && (to_predecessors.length > 0) && (from_predecessors[0].name === to_predecessors[0].name)) {
+								from_predecessors = from_predecessors.slice(1);
+								to_predecessors = to_predecessors.slice(1);
+							}
+							await from_node.leave(from_node, from.params);
+							for (const node of [...from_predecessors].reverse())
+								await node.leave(from_node, from.params);
 						}
-						await from_node.leave(from_node, from.params);
-						for (const node of [...from_predecessors].reverse())
-							await node.leave(from_node, from.params);
 					}
 				}
+			} else {
+				if (api.mode !== ServerMode.STABLE)
+					console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
 			}
-		} else {
-			if (api.mode !== ServerMode.STABLE)
-				console.log("Failed Routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); //  + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
+		} catch(e) {
+			console.log("Unexpected routing error:", e);
+		} finally {
+			api.status.stop();
+			this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 		}
-		this.active = false; // Setze, dass die Handhabung des Routing-Vorgangs abgeschlossen wurde
 	}
 
 }
