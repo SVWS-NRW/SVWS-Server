@@ -1,7 +1,7 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl"
-			:items="mapBlockungen().values()" :columns="[{ key: 'name', label: 'Blockung' }]" class="mt-10">
+			:items="listBlockungen" :columns="[{ key: 'name', label: 'Blockung' }]" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
 				<div class="flex justify-between w-full items-start">
 					<div class="flex items-center gap-1">
@@ -11,7 +11,7 @@
 							</span>
 							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
 								@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false"
-								@update:model-value="(value) => patch_blockung(String(value), row.id)" :debounce-ms="1000" />
+								@update:model-value="(value) => patch_blockung(String(value), row.id)" />
 						</div>
 						<div v-else>
 							<span>{{ row.name }}</span>
@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
+	import { ArrayList, BlockungsUtils, type GostBlockungListeneintrag, type GostBlockungsdaten, type GostBlockungsdatenManager, type GostBlockungsergebnisListeneintrag, type GostHalbjahr, type GostJahrgangsdaten, type List } from "@core";
 	import type { DataTableItem } from "@ui";
 	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
@@ -88,6 +88,14 @@
 		&& props.getDatenmanager().getFaecherAnzahl() > 0
 		&& props.getDatenmanager().kursGetAnzahl() > 0
 	)
+
+	const listBlockungen = computed(()=> {
+		const list: List<GostBlockungListeneintrag> = new ArrayList();
+		for (const i of props.mapBlockungen().values())
+			list.add(i);
+		BlockungsUtils.sortGostBlockungListeneintrag(list);
+		return list;
+	})
 
 	async function select_blockungauswahl(blockung: DataTableItem | null) {
 		if ((blockung === null) || props.apiStatus.pending)
