@@ -20,7 +20,7 @@
 							<template #body>
 								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
 									<svws-ui-drag-data :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id" tag="div" role="cell" :data="{ id: fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fachID: fach.fachID, kursart: fachwahlKursart(fach.fachID, schueler.id).value.id }"
-										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" @drag-start="drag_started" @drag-end="drag_ended"
+										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" @drag-start="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)" @drag-end="drag_ended"
 										class="select-none data-table__td group" :class="{ 'bg-white' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined), 'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv) }"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id) }">
 										<div class="flex items-center justify-between gap-1 w-full">
@@ -87,7 +87,7 @@
 							<svws-ui-drag-data v-for="kurs of schiene.kurse" :key="kurs.id" tag="div" role="cell" :data="{ id: kurs.id, fachID: kurs.fachID, kursart: kurs.kursart }"
 								class="data-table__td data-table__td__align-center data-table__td__no-padding select-none group relative p-0.5"
 								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id, schueler.id).value }"
-								:draggable="is_draggable(kurs.id, schueler.id).value" @drag-start="drag_started" @drag-end="drag_ended">
+								:draggable="is_draggable(kurs.id, schueler.id).value" @drag-start="drag_started(kurs.id, kurs.fachID, kurs.kursart)" @drag-end="drag_ended">
 								<svws-ui-drop-data @drop="drop_aendere_kurszuordnung(kurs, schueler.id)" :drop-allowed="is_drop_zone(kurs).value"
 									class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor(kurs.id, schueler.id) }">
 									<span class="group-hover:bg-white rounded w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value">
@@ -141,7 +141,7 @@
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
 	import type {DataTableColumn} from "@ui";
 
-	type DndData = { id: number, fachID: number, kursart: number };
+	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostUmwahlansichtProps>();
 
@@ -152,13 +152,6 @@
 	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 
 	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
-
-	async function drop_entferne_kurszuordnung(kurs: any) {
-		const schuelerid = props.schueler?.id;
-		if (schuelerid === undefined || kurs === undefined || kurs.id === undefined)
-			return;
-		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
-	}
 
 	async function auto_verteilen() {
 		if (props.schueler !== undefined)
@@ -211,12 +204,8 @@
 		return true;
 	});
 
-	function drag_started(e: DragEvent) {
-		const transfer = e.dataTransfer;
-		const data = JSON.parse(transfer?.getData('text/plain') || "") as DndData;
-		if (!data)
-			return;
-		dragAndDropData.value = data;
+	function drag_started(idKurs : number | undefined, idFach: number, kursart: number) {
+		dragAndDropData.value = { id: idKurs, fachID: idFach, kursart: kursart };
 	}
 
 	function drag_ended() {
@@ -231,6 +220,13 @@
 			return;
 		await props.updateKursSchuelerZuordnung(idSchueler, kurs_neu.id, kurs_alt.id);
 		drag_ended();
+	}
+
+	async function drop_entferne_kurszuordnung(kurs: any) {
+		const schuelerid = props.schueler?.id;
+		if (schuelerid === undefined || kurs === undefined || kurs.id === undefined)
+			return;
+		await props.removeKursSchuelerZuordnung(schuelerid, kurs.id);
 	}
 
 	function bgColor(idKurs : number, idSchueler : number) : string {
