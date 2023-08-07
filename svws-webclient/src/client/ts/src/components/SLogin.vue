@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="true" class="app--layout--login">
+	<svws-ui-app-layout :fullwidth-content="!authentication_success" :skeleton="authentication_success" :class="{'app--layout--login': !authentication_success}">
 		<template #main>
 			<div class="login-wrapper">
 				<div class="login-container">
@@ -70,7 +70,7 @@
 
 	import type { LoginProps } from "./SLoginProps";
 	import type { DBSchemaListeEintrag, List} from "@core";
-	import {computed, ref} from "vue";
+	import {computed, ref, watch} from "vue";
 	import { ArrayList } from "@core";
 	import { version } from '../../version';
 
@@ -86,6 +86,7 @@
 	const inputFocus = ref(false);
 
 	const connection_failed = ref(false);
+	const authentication_success = ref(false);
 
 	const inputDBSchemata = ref<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
 
@@ -131,6 +132,13 @@
 		connection_failed.value = false;
 		connecting.value = false;
 	}
+
+	watch(() => props.authenticated, (value) => {
+		if (value) {
+			authentication_success.value = true;
+			document.documentElement.style.backgroundImage = "none";
+		}
+	});
 
 	async function doLogin() {
 		inputFocus.value = false;

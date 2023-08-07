@@ -37,12 +37,41 @@
 			</svws-ui-menu>
 		</template>
 		<template #secondaryMenu v-if="app.name !== 'statistik'">
-			<router-view :key="app.name" name="liste" />
+			<template v-if="pendingSetApp">
+				<svws-ui-secondary-menu>
+					<template #headline>
+						<span>{{ pendingSetApp }}</span>
+					</template>
+					<template #abschnitt>
+						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+					</template>
+				</svws-ui-secondary-menu>
+			</template>
+			<template v-else>
+				<router-view :key="app.name" name="liste" />
+			</template>
 		</template>
 		<template #main>
 			<div class="app--page" :class="app.name">
 				<div class="page--wrapper">
-					<router-view :key="app.name" />
+					<template v-if="pendingSetApp">
+						<svws-ui-header>
+							<div class="flex items-center">
+								<div class="w-20 mr-6" v-if="app.name === 'schueler' || app.name === 'lehrer'">
+									<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								</div>
+								<div>
+									<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+									<br>
+									<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								</div>
+							</div>
+						</svws-ui-header>
+						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton" />
+					</template>
+					<template v-else>
+						<router-view :key="app.name" />
+					</template>
 				</div>
 			</div>
 		</template>
@@ -66,14 +95,23 @@
 
 	const pendingSetApp = ref('');
 
+	const loadingSkeletonRoutes = [
+		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden...' } },
+		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
+	];
+	const selectedRoute = loadingSkeletonRoutes[0];
+
 	function is_active(current: AuswahlChildData): boolean {
 		const routename = props.app.name?.toString().split('.')[0];
+		const title = current.text + " - " + schulname.value;
 		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
 			return true;
 		if (routename !== current.name)
 			return false;
-		document.title = current.text + " - " + schulname.value;
-		document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon' + (props.app.name === 'statistik' ? '-statistik' : '') + '.svg')
+		if (document.title !== title) {
+			document.title = title;
+			document.querySelector("link[rel~='icon']")?.setAttribute('href', 'favicon' + (props.app.name === 'statistik' ? '-statistik' : '') + '.svg')
+		}
 		return true;
 	}
 
@@ -84,8 +122,9 @@
 	}
 
 	async function doLogout() {
-		document.title = "SVWS NRW";
+		document.title = "Abmelden…";
 		await props.logout();
+		document.title = "SVWS NRW";
 	}
 
 </script>

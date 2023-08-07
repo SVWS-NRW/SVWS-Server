@@ -1,35 +1,88 @@
-<script setup lang='ts'>
-	import {ref} from "vue";
-
-	const props = withDefaults(defineProps<{
-		fullwidthContent?: boolean;
-	}>(), {
-		fullwidthContent: false,
-	});
-
-	const contentIsFullscreen = ref(false);
-
-	function toggleFullscreen() {
-		contentIsFullscreen.value = !contentIsFullscreen.value;
-		window.localStorage.setItem(
-			"fullscreen",
-			String(contentIsFullscreen.value)
-		);
-	}
-</script>
 <template>
-	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside}">
-		<div v-if="$slots.sidebar && !contentIsFullscreen" class="app--menu">
+	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton}">
+		<div v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu">
 			<slot name="sidebar" />
+			<template v-if="skeleton">
+				<svws-ui-menu>
+					<template #header>
+						<div class="flex items-center justify-center w-full">
+							<span class="inline-block h-12 rounded-xl animate-pulse w-12 bg-black/5 dark:bg-white/5" />
+						</div>
+					</template>
+					<template #default>
+						<svws-ui-menu-item :active="false">
+							<template #label>
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+							</template>
+							<template #icon>
+								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+							</template>
+						</svws-ui-menu-item>
+						<svws-ui-menu-item :active="false">
+							<template #label>
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+							</template>
+							<template #icon>
+								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+							</template>
+						</svws-ui-menu-item>
+						<svws-ui-menu-item :active="false">
+							<template #label>
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+							</template>
+							<template #icon>
+								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+							</template>
+						</svws-ui-menu-item>
+					</template>
+					<template #footer>
+						<svws-ui-menu-item :active="false">
+							<template #label>
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+							</template>
+							<template #icon>
+								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+							</template>
+						</svws-ui-menu-item>
+					</template>
+					<template #version>
+						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+					</template>
+				</svws-ui-menu>
+			</template>
 		</div>
-		<div v-if="$slots.secondaryMenu && !contentIsFullscreen" class="app--sidebar">
+		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
 			<div class="app--sidebar-container">
 				<slot name="secondaryMenu" />
+				<template v-if="skeleton">
+					<svws-ui-secondary-menu>
+						<template #headline>
+							<span>SVWS NRW</span>
+						</template>
+						<template #abschnitt>
+							<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+						</template>
+					</svws-ui-secondary-menu>
+				</template>
 			</div>
 		</div>
 		<main class="app--content">
 			<div class="app--content-container relative" :class="{'fullwidth-content' : fullwidthContent}">
-				<slot name="main" />
+				<div class="app--page" v-if="skeleton">
+					<svws-ui-header>
+						<div class="flex items-center">
+							<div class="w-20 mr-6">
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+							</div>
+							<div class="animate-pulse">
+								<span>Daten</span>
+								<br>
+								<span class="opacity-40">werden geladen…</span>
+							</div>
+						</div>
+					</svws-ui-header>
+				</div>
+				<slot name="main" v-else />
 			</div>
 			<aside class="app-layout--aside" v-if="$slots.aside">
 				<div class="app-layout--aside-container relative">
@@ -39,6 +92,17 @@
 		</main>
 	</div>
 </template>
+
+<script setup lang='ts'>
+	const props = withDefaults(defineProps<{
+		skeleton?: boolean;
+		fullwidthContent?: boolean;
+	}>(), {
+		skeleton: false,
+		fullwidthContent: false
+	});
+
+</script>
 
 <style lang="postcss">
 	html {
