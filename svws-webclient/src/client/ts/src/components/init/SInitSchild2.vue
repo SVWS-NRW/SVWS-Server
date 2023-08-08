@@ -3,8 +3,8 @@
 		<div class="flex items-start gap-3">
 			<div class="flex flex-col gap-3">
 				<!--TODO: SvwsUISelectInput (deprecated) durch SvwsUIMultiselect austauschen-->
-				<svws-ui-select-input v-model="db" :options="[{index: 'mysql', label: 'MySQL'}, {index: 'mariadb', label: 'MariaDB'},{index: 'mssql', label: 'MSSQL'},{index: 'mdb', label: 'Access (MDB)'}]" @update:model-value="setDB" />
-				<div class="flex flex-col gap-3" v-if="db && db !== 'mdb'">
+				<svws-ui-multi-select v-model="db" :items="items" @update:model-value="set" :item-text="i=>i.label" />
+				<div class="flex flex-col gap-3" v-if="db.index !== 'mdb'">
 					<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
 					<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />
 					<svws-ui-text-input v-model="location" placeholder="Datenbank-Host" />
@@ -13,7 +13,7 @@
 					<svws-ui-text-input v-model="password" placeholder="Passwort Datenbankbenutzer" />
 					<svws-ui-button @click="migrate()">Migration starten</svws-ui-button>
 				</div>
-				<div class="flex flex-col gap-3" v-if="db === 'mdb'">
+				<div class="flex flex-col gap-3" v-if="db.index === 'mdb'">
 					<svws-ui-text-input v-model="password" placeholder="Datenbank-Passwort" />
 					Access-Datei auswählen (Endung .mdb):
 					<input type="file" @change="migrate" :disabled="loading">
@@ -40,7 +40,9 @@
 		setDB: (db: string) => Promise<void>;
 	}>();
 
-	const db = ref('');
+	const items: {index: string, label: string}[] = [{index: 'mysql', label: 'MySQL'}, {index: 'mariadb', label: 'MariaDB'},{index: 'mssql', label: 'MSSQL'},{index: 'mdb', label: 'Access (MDB)'}];
+
+	const db = ref(items[3]);
 	const schildzentral = ref(false);
 	const schulnummer = ref("");
 	const location = ref("");
@@ -49,6 +51,10 @@
 	const password = ref("");
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
+
+	async function set(item: {index: string, label: string}) {
+		await props.setDB(item.index);
+	}
 
 	async function migrate(event?: Event) {
 		loading.value = true;
