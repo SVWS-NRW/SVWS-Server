@@ -13,6 +13,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 
 import SInit from "~/components/init/SInit.vue";
 import type { InitProps } from "~/components/init/SInitProps";
+import { cast_de_svws_nrw_core_types_gost_GostAbiturFach } from "../../../../../core/ts/src/core/types/gost/GostAbiturFach";
 
 
 export class RouteInit extends RouteNode<unknown, any> {
@@ -93,8 +94,14 @@ export class RouteInit extends RouteNode<unknown, any> {
 		return true;
 	}
 
-	setSource = async (source: string) => await RouteManager.doRoute({name: this.name, params: { source } });
-	setDB = async (db: string) => await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
+	setSource = async (source: string) => {
+		const db = (source === 'schild2') ? 'mdb' : undefined;
+		await RouteManager.doRoute({name: this.name, params: { source, db } });
+	}
+
+	setDB = async (db: string) => {
+		await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
+	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		this.listSchulkatalog.value = await api.server.getKatalogSchulen(api.schema);
@@ -103,6 +110,10 @@ export class RouteInit extends RouteNode<unknown, any> {
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.source instanceof Array || to_params.db instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if ((to_params.source === 'schild2') && (to_params.db === undefined))
+			return { name: this.name, params: { source: to_params.source, db: 'mdb' }};
+		if ((to_params.source !== 'schild2') && (to_params.db !== undefined))
+			return { name: this.name, params: { source: to_params.source }};
 		this.source.value = ['schulkatalog','schild2','backup',undefined].includes(to_params.source) ? to_params.source as 'schulkatalog'|'schild2'|'backup'|undefined : undefined;
 		this.db.value = ['mysql','mariadb','mssql','mdb',undefined].includes(to_params.db) ? to_params.db as 'mysql'|'mariadb'|'mssql'|'mdb'|undefined : undefined;
 	}

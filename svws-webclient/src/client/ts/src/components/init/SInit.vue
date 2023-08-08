@@ -31,7 +31,7 @@
 										</div>
 									</div>
 									<s-init-schulkatalog v-if="source === 'schulkatalog'" :list-schulkatalog="listSchulkatalog" :init-schule="initSchule" class="border rounded-md px-8 pb-3" />
-									<s-init-schild2 v-if="source === 'schild2'" :migrate-d-b="migrateDB" :set-d-b="setDB" class="border rounded-md px-8 pb-3" />
+									<s-init-schild2 v-if="source === 'schild2'" :migrate-d-b="migrateDB" :set-d-b="setDB" class="border rounded-md px-8 pb-3" :db="db" />
 									<s-init-backup v-if="source === 'backup'" :migrate-d-b="migrateDB" class="border rounded-md px-8 pb-3" />
 								</div>
 							</div>
