@@ -10,9 +10,9 @@ import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SVWS_Client_Konfiguration_Benutzer.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Client_Konfiguration_Benutzer.
  */
-public class Tabelle_SVWS_Client_Konfiguration_Benutzer extends SchemaTabelle {
+public class Tabelle_Client_Konfiguration_Benutzer extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Benutzer_ID */
 	public SchemaTabelleSpalte col_Benutzer_ID = add("Benutzer_ID", SchemaDatentypen.BIGINT, true)
@@ -35,9 +35,9 @@ public class Tabelle_SVWS_Client_Konfiguration_Benutzer extends SchemaTabelle {
 		.setJavaComment("Der Wert des Konfigurationsdatensatzes");
 
 
-	/** Die Definition des Fremdschlüssels SVWSClientKonfigurationBenutzer_Benutzer_FK */
-	public SchemaTabelleFremdschluessel fk_SVWSClientKonfigurationBenutzer_Benutzer_FK = addForeignKey(
-			"SVWSClientKonfigurationBenutzer_Benutzer_FK",
+	/** Die Definition des Fremdschlüssels ClientKonfigurationBenutzer_Benutzer_FK */
+	public SchemaTabelleFremdschluessel fk_ClientKonfigurationBenutzer_Benutzer_FK = addForeignKey(
+			"ClientKonfigurationBenutzer_Benutzer_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Benutzer_ID, Schema.tab_Benutzer.col_ID)
@@ -45,13 +45,13 @@ public class Tabelle_SVWS_Client_Konfiguration_Benutzer extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle SVWS_Client_Konfiguration_Benutzer.
+	 * Erstellt die Schema-Defintion für die Tabelle Client_Konfiguration_Benutzer.
 	 */
-	public Tabelle_SVWS_Client_Konfiguration_Benutzer() {
-		super("SVWS_Client_Konfiguration_Benutzer", SchemaRevisionen.REV_0);
+	public Tabelle_Client_Konfiguration_Benutzer() {
+		super("Client_Konfiguration_Benutzer", SchemaRevisionen.REV_0);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("svws.client");
+		setJavaSubPackage("client");
 		setJavaClassName("DTOClientKonfigurationBenutzer");
 		setJavaComment("Tabelle für das Speichern von Client-Konfigurationen als Key-Value-Paare. Dabei werden über das Feld App unterschiedliche Client-Anwendungen unterstützt und über das Feld Benutzer eine Benutzerspezifische Speicherung.");
 	}

@@ -50,7 +50,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 
@@ -352,7 +352,7 @@ public class LupoMDB {
 		logger.modifyIndent(2);
 		if (!nichtMoeglicheKombinationen.isEmpty()) {
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
+			final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Jahrgang_Fachkombinationen");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 			for (final ABPNichtMoeglAbiFachKombi nmk : nichtMoeglicheKombinationen) {
 				logger.log("- Fachkombination " + nmk.Fach1_Krz + " (" + nmk.Kursart1 + ") <-> " + nmk.Fach2_Krz + " (" + nmk.Kursart2 + "): ");

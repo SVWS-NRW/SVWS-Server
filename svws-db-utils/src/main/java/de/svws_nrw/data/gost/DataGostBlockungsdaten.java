@@ -53,7 +53,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -309,7 +309,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (fachwahlen == null)
 				throw OperationError.NOT_FOUND.exception();
 			// Bestimme die ID der neuen Blockung
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 			final Long blockungID = lastID == null ? 1 : lastID.MaxID + 1;
 			// Lese zunächst die bestehenden Blockungen mit dem Abiturjahr und dem Halbjahr ein (für weitere Prüfungen)
 			final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang.Abi_Jahrgang, gostHalbjahr);
@@ -330,7 +330,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (faecherManager == null)
 				return OperationError.NOT_FOUND.getResponse();
 			// Lege ein "leeres" Ergebnis für manuelles Blocken an
-			final DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			final long ergebnisID = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
 			final DTOGostBlockungZwischenergebnis erg = new DTOGostBlockungZwischenergebnis(ergebnisID, blockungID, false, false);
 			// Blockung anlegen
@@ -340,7 +340,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final GostBlockungsdaten daten = dtoMapper.apply(blockung);
 			final GostBlockungsdatenManager manager = new GostBlockungsdatenManager(daten, faecherManager);
 			// Schienen anlegen
-			final DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 			final long schienenID = dbSchienenID == null ? 0 : dbSchienenID.MaxID;
 			for (int i = 1; i <= anzahlSchienen; i++) {
 				final DTOGostBlockungSchiene schiene = new DTOGostBlockungSchiene(schienenID + i, blockungID, i,
@@ -351,7 +351,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// Anhand der Fachwahlstatistik eine Default-Anzahl für die Kursanzahl ermitteln und
 			// DTOGostBlockungKurs-Objekte dafür persistieren
 			// TODO Verbesserung des Algorithmus -> Optimierung... erstmal nur eine primitive Variante
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			long kurseID = dbKurseID == null ? 0 : dbKurseID.MaxID;
 			for (final GostStatistikFachwahl fw : fachwahlen) {
 				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
@@ -435,7 +435,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		try {
 			final ArrayList<Long> ergebnisse = new ArrayList<>();
 			conn.transactionBegin();
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			long ergebnisID = lastID == null ? 1 : lastID.MaxID + 1;
 			for (final GostBlockungsergebnisManager output : outputs) {
 				// Schreibe das Ergebnis in die Datenbank.
@@ -531,10 +531,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (blockungOriginal == null)
 				throw OperationError.NOT_FOUND.exception();
 			// Bestimme die ID für das Duplikat der Blockung
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 			final Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
 			// Bestimme die ID für das Vorlage-Ergebnis der duplizierten Blockung
-			final DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final DTOSchemaAutoInkremente dbErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			final long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
 			// Bestimme den Namen der neuen Blockung
 			final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr);
@@ -548,7 +548,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, name, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr, false);
 			conn.transactionPersist(blockungDuplikat);
 			// Dupliziere die Schienen
-			final DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 			long idSchieneDuplikat = dbSchienenID == null ? 0 : dbSchienenID.MaxID + 1;
 			final HashMap<Long, Long> mapSchienenIDs = new HashMap<>();
 			final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", ergebnisOriginal.Blockung_ID,
@@ -560,7 +560,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idSchieneDuplikat++;
 			}
 			// Dupliziere die Kurse
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			long idKursDuplikat = dbKurseID == null ? 0 : dbKurseID.MaxID + 1;
 			final HashMap<Long, Long> mapKursIDs = new HashMap<>();
 			final List<DTOGostBlockungKurs> kurseOriginal = conn.queryNamed("DTOGostBlockungKurs.blockung_id", ergebnisOriginal.Blockung_ID,
@@ -585,7 +585,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 			}
 			// Dupliziere die Regeln
-			final DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Regeln");
+			final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
 			long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 			final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
 			final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
@@ -681,10 +681,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (blockungOriginal.Halbjahr == GostHalbjahr.Q22)   // Blockungen der Q2.2 können nicht hochgeschrieben werden...
 				throw OperationError.BAD_REQUEST.exception();
 			// Bestimme die ID für die hochgeschriebene Blockung
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 			final Long idBlockungDuplikat = lastID == null ? 1 : lastID.MaxID + 1;
 			// Bestimme die ID für das Vorlage-Ergebnis der hochgeschriebenen Blockung
-			final DTODBAutoInkremente dbErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final DTOSchemaAutoInkremente dbErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			final long idErgebnisDuplikat = dbErgebnisID == null ? 1 : dbErgebnisID.MaxID + 1;
 			// Bestimme den Namen der neuen Blockung
 			final String name = blockungOriginal.Name + " - hochgeschrieben von Ergebnis " + idErgebnisOriginal + ")";
@@ -692,7 +692,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final DTOGostBlockung blockungDuplikat = new DTOGostBlockung(idBlockungDuplikat, name, blockungOriginal.Abi_Jahrgang, blockungOriginal.Halbjahr.next(), false);
 			conn.transactionPersist(blockungDuplikat);
 			// Dupliziere die Schienen
-			final DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 			long idSchieneDuplikat = dbSchienenID == null ? 0 : dbSchienenID.MaxID + 1;
 			final HashMap<Long, Long> mapSchienenIDs = new HashMap<>();
 			final List<DTOGostBlockungSchiene> schienenOriginal = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", ergebnisOriginal.Blockung_ID,
@@ -704,7 +704,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				idSchieneDuplikat++;
 			}
 			// Dupliziere die Kurse
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			long idKursDuplikat = dbKurseID == null ? 0 : dbKurseID.MaxID + 1;
 			final HashMap<Long, Long> mapKursIDs = new HashMap<>();
 			final HashMap<Long, DTOGostBlockungKurs> mapKurseHochgeschrieben = new HashMap<>();
@@ -731,7 +731,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				}
 			}
 			// Dupliziere die Regeln
-			final DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Regeln");
+			final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
 			long idRegelDuplikat = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 			final HashMap<Long, Long> mapRegelIDs = new HashMap<>();
 			final HashMap<Long, GostKursblockungRegelTyp> mapRegelTypen = new HashMap<>(); // Die Typen für die neuen Regel-IDs
@@ -886,10 +886,10 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 						.stream().collect(Collectors.toMap(lad -> lad.ID, lad -> lad));
 
 			// Bestimme die ID für die hochgeschriebene Blockung
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung");
 			final Long idBlockung = lastID == null ? 1 : lastID.MaxID + 1;
 			// Bestimme die ID für das Vorlage-Ergebnis der hochgeschriebenen Blockung
-			final DTODBAutoInkremente lastErgebnisID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
+			final DTOSchemaAutoInkremente lastErgebnisID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Zwischenergebnisse");
 			final long idErgebnis = lastErgebnisID == null ? 1 : lastErgebnisID.MaxID + 1;
 
 			// Erstelle die Blockung
@@ -919,7 +919,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 
 			// Erstelle die Schienen
-			final DTODBAutoInkremente lastSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			final DTOSchemaAutoInkremente lastSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 			long idSchiene = lastSchienenID == null ? 0 : lastSchienenID.MaxID + 1;
 			final HashMap<Integer, Long> mapSchienen = new HashMap<>();
 			for (final Integer schienenNr : setSchienen) {
@@ -930,7 +930,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			}
 
 			// Erstelle die Kurse
-			final DTODBAutoInkremente lastKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente lastKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			long idKurs = lastKurseID == null ? 0 : lastKurseID.MaxID + 1;
 			final HashMap<Long, Long> mapKursIDs = new HashMap<>(); // Von der Originals-Kurs-ID auf die Blockungs-Kurs-ID
 			final HashMap<Long, DTOGostBlockungKurs> mapKurseErstellt = new HashMap<>();

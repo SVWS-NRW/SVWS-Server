@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.migration.svws.db;
+package de.svws_nrw.db.dto.current.schema;
 
 import de.svws_nrw.db.DBEntityManager;
 
@@ -12,24 +12,24 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Core_Type_Versionen.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Core_Type_Versionen.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SVWS_Core_Type_Versionen")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.all", query = "SELECT e FROM MigrationDTOCoreTypeVersion e")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.nametabelle", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.NameTabelle = :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.nametabelle.multiple", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.name", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.Name = :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.name.multiple", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.Name IN :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.version", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.Version = :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.version.multiple", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.Version IN :value")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.primaryKeyQuery", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.NameTabelle = ?1")
-@NamedQuery(name = "MigrationDTOCoreTypeVersion.all.migration", query = "SELECT e FROM MigrationDTOCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
+@Table(name = "Schema_Core_Type_Versionen")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.all", query = "SELECT e FROM DTOSchemaCoreTypeVersion e")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.nametabelle", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.NameTabelle = :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.nametabelle.multiple", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.name", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.Name = :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.name.multiple", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.Name IN :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.version", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.Version = :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.version.multiple", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.Version IN :value")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.primaryKeyQuery", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "DTOSchemaCoreTypeVersion.all.migration", query = "SELECT e FROM DTOSchemaCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "Name", "Version"})
-public final class MigrationDTOCoreTypeVersion {
+public final class DTOSchemaCoreTypeVersion {
 
 	/** Gibt den Namen der Tabelle an, wo die Daten des Core-Types hinterlegt werden. */
 	@Id
@@ -45,22 +45,22 @@ public final class MigrationDTOCoreTypeVersion {
 	/** Die Version, in welcher der Core-Type in der DB vorliegt */
 	@Column(name = "Version")
 	@JsonProperty
-	public Long Version;
+	public long Version;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTOCoreTypeVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaCoreTypeVersion ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private MigrationDTOCoreTypeVersion() {
+	private DTOSchemaCoreTypeVersion() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTOCoreTypeVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaCoreTypeVersion ohne eine Initialisierung der Attribute.
 	 * @param NameTabelle   der Wert für das Attribut NameTabelle
 	 * @param Name   der Wert für das Attribut Name
 	 * @param Version   der Wert für das Attribut Version
 	 */
-	public MigrationDTOCoreTypeVersion(final String NameTabelle, final String Name, final Long Version) {
+	public DTOSchemaCoreTypeVersion(final String NameTabelle, final String Name, final long Version) {
 		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
@@ -69,9 +69,6 @@ public final class MigrationDTOCoreTypeVersion {
 			throw new NullPointerException("Name must not be null");
 		}
 		this.Name = Name;
-		if (Version == null) {
-			throw new NullPointerException("Version must not be null");
-		}
 		this.Version = Version;
 	}
 
@@ -84,7 +81,7 @@ public final class MigrationDTOCoreTypeVersion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MigrationDTOCoreTypeVersion other = (MigrationDTOCoreTypeVersion) obj;
+		DTOSchemaCoreTypeVersion other = (DTOSchemaCoreTypeVersion) obj;
 		if (NameTabelle == null) {
 			if (other.NameTabelle != null)
 				return false;
@@ -109,7 +106,7 @@ public final class MigrationDTOCoreTypeVersion {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOCoreTypeVersion(NameTabelle=" + this.NameTabelle + ", Name=" + this.Name + ", Version=" + this.Version + ")";
+		return "DTOSchemaCoreTypeVersion(NameTabelle=" + this.NameTabelle + ", Name=" + this.Name + ", Version=" + this.Version + ")";
 	}
 
 }

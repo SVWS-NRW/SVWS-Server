@@ -35,7 +35,7 @@ import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 
@@ -50,7 +50,7 @@ public final class DBUtilsGostBlockung {
 
 	/** Funktion zum Bestimmen der nächsten freien ID bei einer Tabelle mit Autoinkrement */
 	private static BiFunction<DBEntityManager, SchemaTabelle, Long> getNextID = (final DBEntityManager conn, final SchemaTabelle tab) -> {
-		final DTODBAutoInkremente dbID = conn.queryByKey(DTODBAutoInkremente.class, tab.name());
+		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, tab.name());
 		return dbID == null ? 1 : dbID.MaxID + 1;
 	};
 

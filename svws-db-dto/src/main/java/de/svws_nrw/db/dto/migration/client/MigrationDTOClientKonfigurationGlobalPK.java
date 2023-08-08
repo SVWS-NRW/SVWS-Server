@@ -1,9 +1,9 @@
-package de.svws_nrw.db.dto.migration.svws.client;
+package de.svws_nrw.db.dto.migration.client;
 
 import java.io.Serializable;
 
 /**
- * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle SVWS_Client_Konfiguration_Global.
+ * Diese Klasse dient als DTO für den Primärschlüssel der Datenbanktabelle Client_Konfiguration_Global.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */

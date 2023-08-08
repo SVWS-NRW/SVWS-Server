@@ -25,7 +25,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParamete
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -211,7 +211,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
 				throw OperationError.CONFLICT.exception();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbRegelID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Regeln");
+			final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
 			final long idRegel = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
 			// Füge die Regel hinzu
 	    	final DTOGostBlockungRegel regel = new DTOGostBlockungRegel(idRegel, idBlockung, regelTyp);

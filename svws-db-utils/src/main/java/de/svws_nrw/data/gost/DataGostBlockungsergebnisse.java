@@ -42,7 +42,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
@@ -467,7 +467,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    		throw OperationError.CONFLICT.exception();
 	    	final DTOJahrgang jahrgang = jahrgangsliste.get(0);
 			// Bestimme die ID, mit welche der nächste Kurs eingefügt wird
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_Kurse.name());
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Kurse.name());
 			long idKurs = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
 	    	// Durchwandere alle Kurse der Blockung und lege diese an, merke dabei auch die Zuordnung der neuen Kurs-IDs zu den Kurs-IDs der Blockung
 			final HashMap<Long, Long> mapKursIDs = new HashMap<>();
@@ -523,7 +523,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    	}
             conn.transactionBegin();
 			// Bestimme die ID, mit welcher die nächsten Schülerleistungsdaten eingefügt werden
-			final DTODBAutoInkremente dbLeistungenID = conn.queryByKey(DTODBAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
+			final DTOSchemaAutoInkremente dbLeistungenID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
 			long idLeistungen = dbLeistungenID == null ? 1 : dbLeistungenID.MaxID + 1;
 	    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege die Leistungsdaten an
 	    	for (final Schueler schueler : datenManager.daten().schueler) {

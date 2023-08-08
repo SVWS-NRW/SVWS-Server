@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.current.svws.client;
+package de.svws_nrw.db.dto.current.client;
 
 import de.svws_nrw.db.DBEntityManager;
 
@@ -13,14 +13,14 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_Client_Konfiguration_Global.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Client_Konfiguration_Global.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @IdClass(DTOClientKonfigurationGlobalPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SVWS_Client_Konfiguration_Global")
+@Table(name = "Client_Konfiguration_Global")
 @NamedQuery(name = "DTOClientKonfigurationGlobal.all", query = "SELECT e FROM DTOClientKonfigurationGlobal e")
 @NamedQuery(name = "DTOClientKonfigurationGlobal.appname", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName = :value")
 @NamedQuery(name = "DTOClientKonfigurationGlobal.appname.multiple", query = "SELECT e FROM DTOClientKonfigurationGlobal e WHERE e.AppName IN :value")

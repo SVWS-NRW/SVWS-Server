@@ -16,7 +16,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -249,7 +249,7 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 					throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 
 				// Bestimme die ID des neuen Ansprechpartners
-				final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Schueler_AllgAdr");
+				final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Schueler_AllgAdr");
 				final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 				// Schülerbetrieb anlegen

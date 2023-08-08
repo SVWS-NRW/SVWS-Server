@@ -37,7 +37,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.dto.current.svws.db.DTOCoreTypeVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleCoreType;
@@ -157,7 +157,7 @@ public class DBCoreTypeUpdater {
 		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
 			if (!tab.hasCoreType())
 				continue;
-			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tab.name());
+			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(tab.name());
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
@@ -165,7 +165,7 @@ public class DBCoreTypeUpdater {
 		}
 		// TODO unten deprecated, oben aktuell
 		for (final CoreTypeTable entry : tables) {
-			final DTOCoreTypeVersion v = _status.getCoreTypeVersion(entry.name);
+			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(entry.name);
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(entry.version, v.Version) < 0)
@@ -251,9 +251,9 @@ public class DBCoreTypeUpdater {
 				// Füge die aktuellen Daten des Core-Types ein
 				conn.transactionNativeUpdate(sqlInsert);
 				// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
-				DTOCoreTypeVersion v = conn.queryByKey(DTOCoreTypeVersion.class, tabname);
+				DTOSchemaCoreTypeVersion v = conn.queryByKey(DTOSchemaCoreTypeVersion.class, tabname);
 				if (v == null) {
-					v = new DTOCoreTypeVersion(tabname, typename, version);
+					v = new DTOSchemaCoreTypeVersion(tabname, typename, version);
 				} else {
 					v.Version = version;
 				}
@@ -888,7 +888,7 @@ public class DBCoreTypeUpdater {
 	 * @return true, falls die Versionen übereinstimmen, und ansonsten false
 	 */
 	private boolean pruefeVersion(final String tabname, final long version) {
-		final DTOCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
+		final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
 		if (v == null)
 			return false;
 		return v.Version == version;

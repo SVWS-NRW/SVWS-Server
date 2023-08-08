@@ -12,7 +12,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -134,7 +134,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			if (abschnitt == null)
 				throw OperationError.NOT_FOUND.exception("Ein Schuljahresabschnitt mit der ID %d konnte nicht gefunden werden.".formatted(idSchuljahresabschnitt));
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbStundenplanID = conn.queryByKey(DTODBAutoInkremente.class, "Stundenplan");
+			final DTOSchemaAutoInkremente dbStundenplanID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Stundenplan");
 			final long idStundenplan = dbStundenplanID == null ? 1 : dbStundenplanID.MaxID + 1;
 			// Ermittle, ob bereits Stundenpläne für den Schuljahresabschnitt existieren und bestimme das Start bzw. das Enddatum aus dem Abschnitt
 			final List<StundenplanListeEintrag> stundenplaene = DataStundenplanListe.getStundenplaene(conn, idSchuljahresabschnitt);

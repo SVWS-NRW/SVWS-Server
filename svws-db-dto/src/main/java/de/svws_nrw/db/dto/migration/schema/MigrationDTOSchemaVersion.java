@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.migration.svws.db;
+package de.svws_nrw.db.dto.migration.schema;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.migration.MigrationBoolean01Converter;
@@ -20,22 +20,22 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterSerializer
 import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializer;
 
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_DB_Version.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Version.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SVWS_DB_Version")
-@NamedQuery(name = "MigrationDTODBVersion.all", query = "SELECT e FROM MigrationDTODBVersion e")
-@NamedQuery(name = "MigrationDTODBVersion.revision", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.Revision = :value")
-@NamedQuery(name = "MigrationDTODBVersion.revision.multiple", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.Revision IN :value")
-@NamedQuery(name = "MigrationDTODBVersion.istainted", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.IsTainted = :value")
-@NamedQuery(name = "MigrationDTODBVersion.istainted.multiple", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.IsTainted IN :value")
-@NamedQuery(name = "MigrationDTODBVersion.primaryKeyQuery", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.Revision = ?1")
-@NamedQuery(name = "MigrationDTODBVersion.all.migration", query = "SELECT e FROM MigrationDTODBVersion e WHERE e.Revision IS NOT NULL")
+@Table(name = "Schema_Version")
+@NamedQuery(name = "MigrationDTOSchemaVersion.all", query = "SELECT e FROM MigrationDTOSchemaVersion e")
+@NamedQuery(name = "MigrationDTOSchemaVersion.revision", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.Revision = :value")
+@NamedQuery(name = "MigrationDTOSchemaVersion.revision.multiple", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.Revision IN :value")
+@NamedQuery(name = "MigrationDTOSchemaVersion.istainted", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.IsTainted = :value")
+@NamedQuery(name = "MigrationDTOSchemaVersion.istainted.multiple", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.IsTainted IN :value")
+@NamedQuery(name = "MigrationDTOSchemaVersion.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.Revision = ?1")
+@NamedQuery(name = "MigrationDTOSchemaVersion.all.migration", query = "SELECT e FROM MigrationDTOSchemaVersion e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
-public final class MigrationDTODBVersion {
+public final class MigrationDTOSchemaVersion {
 
 	/** Die Revision des Datenbankschemas der SVWS-DB */
 	@Id
@@ -52,18 +52,18 @@ public final class MigrationDTODBVersion {
 	public Boolean IsTainted;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTODBVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchemaVersion ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private MigrationDTODBVersion() {
+	private MigrationDTOSchemaVersion() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse MigrationDTODBVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse MigrationDTOSchemaVersion ohne eine Initialisierung der Attribute.
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public MigrationDTODBVersion(final Long Revision, final Boolean IsTainted) {
+	public MigrationDTOSchemaVersion(final Long Revision, final Boolean IsTainted) {
 		if (Revision == null) {
 			throw new NullPointerException("Revision must not be null");
 		}
@@ -83,7 +83,7 @@ public final class MigrationDTODBVersion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MigrationDTODBVersion other = (MigrationDTODBVersion) obj;
+		MigrationDTOSchemaVersion other = (MigrationDTOSchemaVersion) obj;
 		if (Revision == null) {
 			if (other.Revision != null)
 				return false;
@@ -108,7 +108,7 @@ public final class MigrationDTODBVersion {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTODBVersion(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
+		return "MigrationDTOSchemaVersion(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
 	}
 
 }

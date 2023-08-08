@@ -6,9 +6,9 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SVWS_Core_Type_Versionen.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Schema_Core_Type_Versionen.
  */
-public class Tabelle_SVWS_Core_Type_Versionen extends SchemaTabelle {
+public class Tabelle_Schema_Core_Type_Versionen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NameTabelle */
 	public SchemaTabelleSpalte col_NameTabelle = add("NameTabelle", SchemaDatentypen.VARCHAR, true).setDatenlaenge(255)
@@ -28,14 +28,14 @@ public class Tabelle_SVWS_Core_Type_Versionen extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle SVWS_Core_Type_Versionen.
+	 * Erstellt die Schema-Defintion für die Tabelle Schema_Core_Type_Versionen.
 	 */
-	public Tabelle_SVWS_Core_Type_Versionen() {
-		super("SVWS_Core_Type_Versionen", SchemaRevisionen.REV_0);
+	public Tabelle_Schema_Core_Type_Versionen() {
+		super("Schema_Core_Type_Versionen", SchemaRevisionen.REV_0);
 		setMigrate(false);
 		setImportExport(false);
-		setJavaSubPackage("svws.db");
-		setJavaClassName("DTOCoreTypeVersion");
+		setJavaSubPackage("schema");
+		setJavaClassName("DTOSchemaCoreTypeVersion");
 		setJavaComment("Tabelle für das Speichern, in welcher Version die Core-Type-Daten in den Datenbank-Tabellen vorliegen");
 	}
 

@@ -24,7 +24,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -240,11 +240,11 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         	conn.transactionBegin();
 
             // Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
-            final DTODBAutoInkremente ba_lastID = conn.queryByKey(DTODBAutoInkremente.class, "BenutzerAllgemein");
+            final DTOSchemaAutoInkremente ba_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "BenutzerAllgemein");
             final Long ba_ID = ba_lastID == null ? 1 : ba_lastID.MaxID + 1;
-            final DTODBAutoInkremente c_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Credentials");
+            final DTOSchemaAutoInkremente c_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Credentials");
             c_ID = c_lastID == null ? 1 : c_lastID.MaxID + 1;
-            final DTODBAutoInkremente b_lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzer");
+            final DTOSchemaAutoInkremente b_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzer");
             final Long b_ID = b_lastID == null ? 1 : b_lastID.MaxID + 1;
 
             // Lege die Objekte an

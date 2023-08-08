@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.current.svws.db;
+package de.svws_nrw.db.dto.current.schema;
 
 import de.svws_nrw.db.DBEntityManager;
 
@@ -12,22 +12,22 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_DB_AutoInkremente.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_AutoInkremente.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SVWS_DB_AutoInkremente")
-@NamedQuery(name = "DTODBAutoInkremente.all", query = "SELECT e FROM DTODBAutoInkremente e")
-@NamedQuery(name = "DTODBAutoInkremente.nametabelle", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = :value")
-@NamedQuery(name = "DTODBAutoInkremente.nametabelle.multiple", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IN :value")
-@NamedQuery(name = "DTODBAutoInkremente.maxid", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID = :value")
-@NamedQuery(name = "DTODBAutoInkremente.maxid.multiple", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.MaxID IN :value")
-@NamedQuery(name = "DTODBAutoInkremente.primaryKeyQuery", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle = ?1")
-@NamedQuery(name = "DTODBAutoInkremente.all.migration", query = "SELECT e FROM DTODBAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
+@Table(name = "Schema_AutoInkremente")
+@NamedQuery(name = "DTOSchemaAutoInkremente.all", query = "SELECT e FROM DTOSchemaAutoInkremente e")
+@NamedQuery(name = "DTOSchemaAutoInkremente.nametabelle", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.NameTabelle = :value")
+@NamedQuery(name = "DTOSchemaAutoInkremente.nametabelle.multiple", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.NameTabelle IN :value")
+@NamedQuery(name = "DTOSchemaAutoInkremente.maxid", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.MaxID = :value")
+@NamedQuery(name = "DTOSchemaAutoInkremente.maxid.multiple", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.MaxID IN :value")
+@NamedQuery(name = "DTOSchemaAutoInkremente.primaryKeyQuery", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "DTOSchemaAutoInkremente.all.migration", query = "SELECT e FROM DTOSchemaAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "MaxID"})
-public final class DTODBAutoInkremente {
+public final class DTOSchemaAutoInkremente {
 
 	/** Gibt den Tabellennamen an, für dessen Auto-Inkrement der ID-Wert verwendet werden soll. */
 	@Id
@@ -41,18 +41,18 @@ public final class DTODBAutoInkremente {
 	public long MaxID;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTODBAutoInkremente ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaAutoInkremente ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTODBAutoInkremente() {
+	private DTOSchemaAutoInkremente() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTODBAutoInkremente ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaAutoInkremente ohne eine Initialisierung der Attribute.
 	 * @param NameTabelle   der Wert für das Attribut NameTabelle
 	 * @param MaxID   der Wert für das Attribut MaxID
 	 */
-	public DTODBAutoInkremente(final String NameTabelle, final long MaxID) {
+	public DTOSchemaAutoInkremente(final String NameTabelle, final long MaxID) {
 		if (NameTabelle == null) {
 			throw new NullPointerException("NameTabelle must not be null");
 		}
@@ -69,7 +69,7 @@ public final class DTODBAutoInkremente {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTODBAutoInkremente other = (DTODBAutoInkremente) obj;
+		DTOSchemaAutoInkremente other = (DTOSchemaAutoInkremente) obj;
 		if (NameTabelle == null) {
 			if (other.NameTabelle != null)
 				return false;
@@ -94,7 +94,7 @@ public final class DTODBAutoInkremente {
 	 */
 	@Override
 	public String toString() {
-		return "DTODBAutoInkremente(NameTabelle=" + this.NameTabelle + ", MaxID=" + this.MaxID + ")";
+		return "DTOSchemaAutoInkremente(NameTabelle=" + this.NameTabelle + ", MaxID=" + this.MaxID + ")";
 	}
 
 }

@@ -6,9 +6,9 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SVWS_DB_AutoInkremente.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Schema_AutoInkremente.
  */
-public class Tabelle_SVWS_DB_AutoInkremente extends SchemaTabelle {
+public class Tabelle_Schema_AutoInkremente extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NameTabelle */
 	public SchemaTabelleSpalte col_NameTabelle = add("NameTabelle", SchemaDatentypen.VARCHAR, true).setDatenlaenge(200)
@@ -25,12 +25,12 @@ public class Tabelle_SVWS_DB_AutoInkremente extends SchemaTabelle {
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle SVWS_DB_AutoInkremente.
 	 */
-	public Tabelle_SVWS_DB_AutoInkremente() {
-		super("SVWS_DB_AutoInkremente", SchemaRevisionen.REV_0);
+	public Tabelle_Schema_AutoInkremente() {
+		super("Schema_AutoInkremente", SchemaRevisionen.REV_0);
 		setMigrate(false);
 		setImportExport(false);
-		setJavaSubPackage("svws.db");
-		setJavaClassName("DTODBAutoInkremente");
+		setJavaSubPackage("schema");
+		setJavaClassName("DTOSchemaAutoInkremente");
 		setJavaComment("Tabelle für das Zwischenspeichern der bisherigen Maximalwerte beim Einfügen, damit eine DBMS-unabhängige Auto-Inkrement-Funktion realisiert werden kann.");
 	}
 

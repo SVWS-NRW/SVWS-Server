@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.current.svws.db;
+package de.svws_nrw.db.dto.current.schema;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
@@ -20,22 +20,22 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle SVWS_DB_Version.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Version.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "SVWS_DB_Version")
-@NamedQuery(name = "DTODBVersion.all", query = "SELECT e FROM DTODBVersion e")
-@NamedQuery(name = "DTODBVersion.revision", query = "SELECT e FROM DTODBVersion e WHERE e.Revision = :value")
-@NamedQuery(name = "DTODBVersion.revision.multiple", query = "SELECT e FROM DTODBVersion e WHERE e.Revision IN :value")
-@NamedQuery(name = "DTODBVersion.istainted", query = "SELECT e FROM DTODBVersion e WHERE e.IsTainted = :value")
-@NamedQuery(name = "DTODBVersion.istainted.multiple", query = "SELECT e FROM DTODBVersion e WHERE e.IsTainted IN :value")
-@NamedQuery(name = "DTODBVersion.primaryKeyQuery", query = "SELECT e FROM DTODBVersion e WHERE e.Revision = ?1")
-@NamedQuery(name = "DTODBVersion.all.migration", query = "SELECT e FROM DTODBVersion e WHERE e.Revision IS NOT NULL")
+@Table(name = "Schema_Version")
+@NamedQuery(name = "DTOSchemaVersion.all", query = "SELECT e FROM DTOSchemaVersion e")
+@NamedQuery(name = "DTOSchemaVersion.revision", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision = :value")
+@NamedQuery(name = "DTOSchemaVersion.revision.multiple", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision IN :value")
+@NamedQuery(name = "DTOSchemaVersion.istainted", query = "SELECT e FROM DTOSchemaVersion e WHERE e.IsTainted = :value")
+@NamedQuery(name = "DTOSchemaVersion.istainted.multiple", query = "SELECT e FROM DTOSchemaVersion e WHERE e.IsTainted IN :value")
+@NamedQuery(name = "DTOSchemaVersion.primaryKeyQuery", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision = ?1")
+@NamedQuery(name = "DTOSchemaVersion.all.migration", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
-public final class DTODBVersion {
+public final class DTOSchemaVersion {
 
 	/** Die Revision des Datenbankschemas der SVWS-DB */
 	@Id
@@ -52,18 +52,18 @@ public final class DTODBVersion {
 	public Boolean IsTainted;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTODBVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaVersion ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTODBVersion() {
+	private DTOSchemaVersion() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTODBVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaVersion ohne eine Initialisierung der Attribute.
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public DTODBVersion(final long Revision, final Boolean IsTainted) {
+	public DTOSchemaVersion(final long Revision, final Boolean IsTainted) {
 		this.Revision = Revision;
 		this.IsTainted = IsTainted;
 	}
@@ -77,7 +77,7 @@ public final class DTODBVersion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTODBVersion other = (DTODBVersion) obj;
+		DTOSchemaVersion other = (DTOSchemaVersion) obj;
 		return Revision == other.Revision;
 	}
 
@@ -97,7 +97,7 @@ public final class DTODBVersion {
 	 */
 	@Override
 	public String toString() {
-		return "DTODBVersion(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
+		return "DTOSchemaVersion(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
 	}
 
 }

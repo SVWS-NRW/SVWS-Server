@@ -22,7 +22,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParamete
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -258,7 +258,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 	        if (vorlage == null)
 	        	throw OperationError.BAD_REQUEST.exception("Die Schiene kann nicht hinzugefügt werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbSchienenID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Schienen");
+			final DTOSchemaAutoInkremente dbSchienenID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Schienen");
 			final long idSchiene = dbSchienenID == null ? 1 : dbSchienenID.MaxID + 1;
 			// Ermittle, ob bereits Schienen existieren
 			final List<DTOGostBlockungSchiene> schienen = conn.queryNamed("DTOGostBlockungSchiene.blockung_id", idBlockung, DTOGostBlockungSchiene.class);

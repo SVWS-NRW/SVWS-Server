@@ -25,7 +25,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -103,7 +103,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
-		final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
+		final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
 		long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 
 		for (final DTOKurs kurs : kurse) {
@@ -123,7 +123,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (!conn.persistAll(kursklausuren))
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		final DTODBAutoInkremente dbNmkIDsKlausuren = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Schuelerklausuren");
+		final DTOSchemaAutoInkremente dbNmkIDsKlausuren = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Schuelerklausuren");
 		Long idNmkIDsKlausuren = dbNmkIDsKlausuren == null ? 1 : dbNmkIDsKlausuren.MaxID + 1;
 
 		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
@@ -266,7 +266,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			// Bestimme die ID des neuen Klausurtermins
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Vorgaben");
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 			int abi_Jahrgang = -1;
@@ -366,7 +366,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (!vorgabenVorlage.isEmpty()) {
 			final ArrayList<DTOGostKlausurenVorgaben> gostVorgaben = new ArrayList<>();
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbNmkID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Vorgaben");
+			final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Vorgaben");
 			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 			for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
 				if (halbjahr != null && vorgabe.Halbjahr != halbjahr || quartal > 0 && quartal != vorgabe.Quartal)

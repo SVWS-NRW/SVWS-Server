@@ -28,7 +28,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -246,7 +246,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 					kursart = GostKursart.PJK;
 			}
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			final long idKurs = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
 			// Ermittle, ob bereits Kurse mit für das Fach und die Kursart existieren
 	    	final String jpql = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Blockung_ID = ?1 and e.Fach_ID = ?2 and e.Kursart = ?3";
@@ -349,7 +349,7 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 			while (kursnummern.contains(nummer))
 				nummer++;
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTODBAutoInkremente dbKurseID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Blockung_Kurse");
+			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Kurse");
 			final long idKurs2 = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
 			// Lege den neuen Kurs an.
 			final DTOGostBlockungKurs kursNeu = new DTOGostBlockungKurs(idKurs2, kurs.Blockung_ID, kurs.Fach_ID,

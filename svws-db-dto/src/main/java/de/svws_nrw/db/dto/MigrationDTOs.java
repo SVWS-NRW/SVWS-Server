@@ -2,9 +2,14 @@ package de.svws_nrw.db.dto;
 
 import java.util.HashMap;
 
+import de.svws_nrw.db.dto.migration.client.MigrationDTOClientKonfigurationBenutzer;
+import de.svws_nrw.db.dto.migration.client.MigrationDTOClientKonfigurationGlobal;
 import de.svws_nrw.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart;
 import de.svws_nrw.db.dto.migration.coretypes.MigrationDTONote;
 import de.svws_nrw.db.dto.migration.coretypes.MigrationDTOPersonalTyp;
+import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaAutoInkremente;
+import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaCoreTypeVersion;
+import de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaVersion;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildVerwaltung;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
@@ -163,11 +168,6 @@ import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentials;
 import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOLernplattformen;
 import de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOSchuleCredentials;
-import de.svws_nrw.db.dto.migration.svws.client.MigrationDTOClientKonfigurationBenutzer;
-import de.svws_nrw.db.dto.migration.svws.client.MigrationDTOClientKonfigurationGlobal;
-import de.svws_nrw.db.dto.migration.svws.db.MigrationDTOCoreTypeVersion;
-import de.svws_nrw.db.dto.migration.svws.db.MigrationDTODBAutoInkremente;
-import de.svws_nrw.db.dto.migration.svws.db.MigrationDTODBVersion;
 
 /**
  * Diese Klasse dient als Verzeichnis aller Datenbank-DTO-Klassen.
@@ -191,9 +191,14 @@ public final class MigrationDTOs {
      private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {
          if (mapDTOName2DTOClass == null) {
              mapDTOName2DTOClass = new HashMap<>();
+             mapDTOName2DTOClass.put(MigrationDTOClientKonfigurationBenutzer.class.getSimpleName(), MigrationDTOClientKonfigurationBenutzer.class);
+             mapDTOName2DTOClass.put(MigrationDTOClientKonfigurationGlobal.class.getSimpleName(), MigrationDTOClientKonfigurationGlobal.class);
              mapDTOName2DTOClass.put(MigrationDTOKursFortschreibungsart.class.getSimpleName(), MigrationDTOKursFortschreibungsart.class);
              mapDTOName2DTOClass.put(MigrationDTONote.class.getSimpleName(), MigrationDTONote.class);
              mapDTOName2DTOClass.put(MigrationDTOPersonalTyp.class.getSimpleName(), MigrationDTOPersonalTyp.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchemaAutoInkremente.class.getSimpleName(), MigrationDTOSchemaAutoInkremente.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchemaCoreTypeVersion.class.getSimpleName(), MigrationDTOSchemaCoreTypeVersion.class);
+             mapDTOName2DTOClass.put(MigrationDTOSchemaVersion.class.getSimpleName(), MigrationDTOSchemaVersion.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildAuswahlFilter.class.getSimpleName(), MigrationDTOSchildAuswahlFilter.class);
              mapDTOName2DTOClass.put(MigrationDTOSchildVerwaltung.class.getSimpleName(), MigrationDTOSchildVerwaltung.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuelerIndividuelleGruppe.class.getSimpleName(), MigrationDTOSchuelerIndividuelleGruppe.class);
@@ -352,11 +357,6 @@ public final class MigrationDTOs {
              mapDTOName2DTOClass.put(MigrationDTOCredentialsLernplattformen.class.getSimpleName(), MigrationDTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(MigrationDTOLernplattformen.class.getSimpleName(), MigrationDTOLernplattformen.class);
              mapDTOName2DTOClass.put(MigrationDTOSchuleCredentials.class.getSimpleName(), MigrationDTOSchuleCredentials.class);
-             mapDTOName2DTOClass.put(MigrationDTOClientKonfigurationBenutzer.class.getSimpleName(), MigrationDTOClientKonfigurationBenutzer.class);
-             mapDTOName2DTOClass.put(MigrationDTOClientKonfigurationGlobal.class.getSimpleName(), MigrationDTOClientKonfigurationGlobal.class);
-             mapDTOName2DTOClass.put(MigrationDTOCoreTypeVersion.class.getSimpleName(), MigrationDTOCoreTypeVersion.class);
-             mapDTOName2DTOClass.put(MigrationDTODBAutoInkremente.class.getSimpleName(), MigrationDTODBAutoInkremente.class);
-             mapDTOName2DTOClass.put(MigrationDTODBVersion.class.getSimpleName(), MigrationDTODBVersion.class);
          }
          return mapDTOName2DTOClass;
      }
@@ -383,9 +383,14 @@ public final class MigrationDTOs {
      private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {
          if (mapTablename2DTOClass == null) {
              mapTablename2DTOClass = new HashMap<>();
+             mapTablename2DTOClass.put("Client_Konfiguration_Benutzer", MigrationDTOClientKonfigurationBenutzer.class);
+             mapTablename2DTOClass.put("Client_Konfiguration_Global", MigrationDTOClientKonfigurationGlobal.class);
              mapTablename2DTOClass.put("KursFortschreibungsarten", MigrationDTOKursFortschreibungsart.class);
              mapTablename2DTOClass.put("Noten", MigrationDTONote.class);
              mapTablename2DTOClass.put("PersonalTypen", MigrationDTOPersonalTyp.class);
+             mapTablename2DTOClass.put("Schema_AutoInkremente", MigrationDTOSchemaAutoInkremente.class);
+             mapTablename2DTOClass.put("Schema_Core_Type_Versionen", MigrationDTOSchemaCoreTypeVersion.class);
+             mapTablename2DTOClass.put("Schema_Version", MigrationDTOSchemaVersion.class);
              mapTablename2DTOClass.put("SchildFilter", MigrationDTOSchildAuswahlFilter.class);
              mapTablename2DTOClass.put("Schild_Verwaltung", MigrationDTOSchildVerwaltung.class);
              mapTablename2DTOClass.put("SchuelerListe", MigrationDTOSchuelerIndividuelleGruppe.class);
@@ -544,11 +549,6 @@ public final class MigrationDTOs {
              mapTablename2DTOClass.put("CredentialsLernplattformen", MigrationDTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen", MigrationDTOLernplattformen.class);
              mapTablename2DTOClass.put("SchuleCredentials", MigrationDTOSchuleCredentials.class);
-             mapTablename2DTOClass.put("SVWS_Client_Konfiguration_Benutzer", MigrationDTOClientKonfigurationBenutzer.class);
-             mapTablename2DTOClass.put("SVWS_Client_Konfiguration_Global", MigrationDTOClientKonfigurationGlobal.class);
-             mapTablename2DTOClass.put("SVWS_Core_Type_Versionen", MigrationDTOCoreTypeVersion.class);
-             mapTablename2DTOClass.put("SVWS_DB_AutoInkremente", MigrationDTODBAutoInkremente.class);
-             mapTablename2DTOClass.put("SVWS_DB_Version", MigrationDTODBVersion.class);
          }
          return mapTablename2DTOClass;
      }

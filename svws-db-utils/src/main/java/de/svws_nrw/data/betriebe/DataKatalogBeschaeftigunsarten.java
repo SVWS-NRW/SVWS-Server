@@ -14,7 +14,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -96,7 +96,7 @@ public final class DataKatalogBeschaeftigunsarten extends DataManager<Long> {
     public Response create(final InputStream is) {
         DTOBeschaeftigungsart dtoObjekt = null;
      // Bestimme die ID der neuen Beschäftigungsart
-        final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_BeschaeftigungsArt");
+        final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_BeschaeftigungsArt");
         final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
         // Beschätigungsart anlegen

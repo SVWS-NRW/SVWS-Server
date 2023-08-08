@@ -15,7 +15,7 @@ import java.util.function.LongFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_AutoInkremente;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -947,7 +947,7 @@ public final class DBEntityManager implements AutoCloseable {
 		final String tableName = t.getAnnotation(Table.class).name();
 		if (tableName == null)
 			throw new NullPointerException("Die angegebene Klasse hat keine Tabellen-Annotation");
-		final Tabelle_SVWS_DB_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_SVWS_DB_AutoInkremente();
+		final Tabelle_Schema_AutoInkremente tabelleSvwsDbAutoInkremente = new Tabelle_Schema_AutoInkremente();
 		final String col_MaxID = tabelleSvwsDbAutoInkremente.col_MaxID.name();
 		final String tableAutoInkrementeName = tabelleSvwsDbAutoInkremente.name();
 		final Query q = em.createNativeQuery("SELECT " + col_MaxID + " FROM " + tableAutoInkrementeName + " WHERE nametabelle = ?tableName");

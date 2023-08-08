@@ -25,9 +25,14 @@
         <class>de.svws_nrw.db.converter.gost.GOStBesondereLernleistungConverter</class>
         <class>de.svws_nrw.db.converter.gost.GOStKursartConverter</class>
         <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
+        <class>de.svws_nrw.db.dto.migration.client.MigrationDTOClientKonfigurationBenutzer</class>
+        <class>de.svws_nrw.db.dto.migration.client.MigrationDTOClientKonfigurationGlobal</class>
         <class>de.svws_nrw.db.dto.migration.coretypes.MigrationDTOKursFortschreibungsart</class>
         <class>de.svws_nrw.db.dto.migration.coretypes.MigrationDTONote</class>
         <class>de.svws_nrw.db.dto.migration.coretypes.MigrationDTOPersonalTyp</class>
+        <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaAutoInkremente</class>
+        <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaCoreTypeVersion</class>
+        <class>de.svws_nrw.db.dto.migration.schema.MigrationDTOSchemaVersion</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildAuswahlFilter</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchildVerwaltung</class>
         <class>de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe</class>
@@ -186,11 +191,8 @@
         <class>de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOLernplattformen</class>
         <class>de.svws_nrw.db.dto.migration.svws.auth.MigrationDTOSchuleCredentials</class>
-        <class>de.svws_nrw.db.dto.migration.svws.client.MigrationDTOClientKonfigurationBenutzer</class>
-        <class>de.svws_nrw.db.dto.migration.svws.client.MigrationDTOClientKonfigurationGlobal</class>
-        <class>de.svws_nrw.db.dto.migration.svws.db.MigrationDTOCoreTypeVersion</class>
-        <class>de.svws_nrw.db.dto.migration.svws.db.MigrationDTODBAutoInkremente</class>
-        <class>de.svws_nrw.db.dto.migration.svws.db.MigrationDTODBVersion</class>
+        <class>de.svws_nrw.db.dto.current.client.DTOClientKonfigurationBenutzer</class>
+        <class>de.svws_nrw.db.dto.current.client.DTOClientKonfigurationGlobal</class>
         <class>de.svws_nrw.db.dto.current.coretypes.DTOKursFortschreibungsart</class>
         <class>de.svws_nrw.db.dto.current.coretypes.DTONote</class>
         <class>de.svws_nrw.db.dto.current.coretypes.DTOPersonalTyp</class>
@@ -220,6 +222,9 @@
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene</class>
         <class>de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler</class>
+        <class>de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente</class>
+        <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
+        <class>de.svws_nrw.db.dto.current.schema.DTOSchemaVersion</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchildAuswahlFilter</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchildVerwaltung</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe</class>
@@ -394,16 +399,11 @@
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOSchuleCredentials</class>
-        <class>de.svws_nrw.db.dto.current.svws.client.DTOClientKonfigurationBenutzer</class>
-        <class>de.svws_nrw.db.dto.current.svws.client.DTOClientKonfigurationGlobal</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessource</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler</class>
-        <class>de.svws_nrw.db.dto.current.svws.db.DTOCoreTypeVersion</class>
-        <class>de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente</class>
-        <class>de.svws_nrw.db.dto.current.svws.db.DTODBVersion</class>
         <class>de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten</class>
         <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer</class>

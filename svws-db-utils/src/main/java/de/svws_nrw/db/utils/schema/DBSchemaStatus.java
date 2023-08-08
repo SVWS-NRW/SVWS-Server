@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.svws.db.DTOCoreTypeVersion;
-import de.svws_nrw.db.dto.current.svws.db.DTODBVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
 import de.svws_nrw.db.schema.dto.DTOInformationSchemaTableColumn;
 import de.svws_nrw.db.schema.dto.DTOInformationSchemaTables;
 
@@ -32,7 +32,7 @@ public final class DBSchemaStatus {
 	List<String> tabellen;
 
 	/** Eine Liste mit den aktuellen Versionen der Core-Types in der Datenbank */
-	Map<String, DTOCoreTypeVersion> coreTypeVersionen = null;
+	Map<String, DTOSchemaCoreTypeVersion> coreTypeVersionen = null;
 
 
 	/**
@@ -121,10 +121,10 @@ public final class DBSchemaStatus {
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
 		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase("SVWS_DB_Version")).findFirst().orElse(null) == null)
 			return null;
-		DTODBVersion dto;
+		DTOSchemaVersion dto;
 		final DBDriver dbms = conn.getDBDriver();
 		if ((!dbms.hasMultiSchemaSupport()) || (schemaName == null) || schemaName.equals(conn.getDBSchema())) {
-			dto = conn.querySingle(DTODBVersion.class);
+			dto = conn.querySingle(DTOSchemaVersion.class);
 		} else {
 			// Hole die Versions-Informationen aus einem fremden Schema. Hier wird natives SQL benötigt
 			String sql;
@@ -135,7 +135,7 @@ public final class DBSchemaStatus {
 			} else {
 				return null;
 			}
-			dto = conn.queryNative(sql, DTODBVersion.class).stream().findFirst().orElse(null);
+			dto = conn.queryNative(sql, DTOSchemaVersion.class).stream().findFirst().orElse(null);
 		}
 		Long revision = null;
 		if ((dto != null) && (dto.Revision >= 0))
@@ -170,10 +170,10 @@ public final class DBSchemaStatus {
 	 * @return die Version des Core-Types oder null, wenn aktuell
 	 *         keine Version in der Tabelle gespeichert ist
 	 */
-	public DTOCoreTypeVersion getCoreTypeVersion(final String tabname) {
+	public DTOSchemaCoreTypeVersion getCoreTypeVersion(final String tabname) {
 		if (coreTypeVersionen == null) {
 			try (DBEntityManager conn = user.getEntityManager()) {
-				coreTypeVersionen = conn.queryAll(DTOCoreTypeVersion.class).stream()
+				coreTypeVersionen = conn.queryAll(DTOSchemaCoreTypeVersion.class).stream()
 					.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
 			}
 		}

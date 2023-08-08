@@ -30,7 +30,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenRaeumeStunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -145,15 +145,15 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		try {
 			conn.transactionBegin();
 			// Bestimme die ID der ersten neuen Klausurraumstunde
-			final DTODBAutoInkremente lastKrsID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
+			final DTOSchemaAutoInkremente lastKrsID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
 			long idKrs = lastKrsID == null ? 1 : lastKrsID.MaxID + 1;
 
 			// Lege die Raumstunden für den gesamten Raum an (Befüllen der Tabelle
 			// Gost_Klausuren_Raeume_Stunden)
 			for (final StundenplanZeitraster stunde : zeitrasterRaum) {
 				if (raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id) == null) {
-					DTOGostKlausurenRaeumeStunden dtoStundeNeu = new DTOGostKlausurenRaeumeStunden(idKrs++, idRaum, stunde.id);
-					GostKlausurraumstunde stundeNeu = DataGostKlausurenRaumstunde.dtoMapper.apply(dtoStundeNeu);
+					final DTOGostKlausurenRaeumeStunden dtoStundeNeu = new DTOGostKlausurenRaeumeStunden(idKrs++, idRaum, stunde.id);
+					final GostKlausurraumstunde stundeNeu = DataGostKlausurenRaumstunde.dtoMapper.apply(dtoStundeNeu);
 					raumManager.addKlausurraumstunde(stundeNeu);
 					result.raumstunden.add(stundeNeu);
 					conn.transactionPersist(dtoStundeNeu);
@@ -170,7 +170,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 						startzeit, v.dauer);
 				conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden v WHERE v.Schuelerklausur_ID = %d".formatted(sk.idSchuelerklausur));
 				for (final StundenplanZeitraster stunde : zeitrasterSk) {
-					DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur, raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
+					final DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur, raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
 					conn.transactionPersist(skRaumStundeNeu);
 					result.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 				}

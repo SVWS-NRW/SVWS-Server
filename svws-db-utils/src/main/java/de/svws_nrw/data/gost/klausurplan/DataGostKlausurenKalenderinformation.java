@@ -12,7 +12,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKalenderinformationen;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -141,7 +141,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 		try {
 			conn.transactionBegin();
 			// Bestimme die ID der neuen KlausurenKalenderinformation
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class,
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class,
 					"Gost_Klausuren_Kalenderinformationen");
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 			kalInfo = new DTOGostKlausurenKalenderinformationen(id, false);

@@ -14,7 +14,7 @@ import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -100,7 +100,7 @@ public final class DataKatalogBetriebsarten extends DataManager<Long> {
                 conn.transactionBegin();
 
                 // Bestimme die ID der neuen Ansprechpartners
-                final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_Adressart");
+                final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Adressart");
                 final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
                 // Schülerbetrieb anlegen

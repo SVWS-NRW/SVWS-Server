@@ -6,9 +6,9 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle SVWS_Client_Konfiguration_Global.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Client_Konfiguration_Global.
  */
-public class Tabelle_SVWS_Client_Konfiguration_Global extends SchemaTabelle {
+public class Tabelle_Client_Konfiguration_Global extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte AppName */
 	public SchemaTabelleSpalte col_AppName = add("AppName", SchemaDatentypen.VARCHAR, true).setDatenlaenge(100)
@@ -27,13 +27,13 @@ public class Tabelle_SVWS_Client_Konfiguration_Global extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle SVWS_Client_Konfiguration_Global.
+	 * Erstellt die Schema-Defintion für die Tabelle Client_Konfiguration_Global.
 	 */
-	public Tabelle_SVWS_Client_Konfiguration_Global() {
-		super("SVWS_Client_Konfiguration_Global", SchemaRevisionen.REV_0);
+	public Tabelle_Client_Konfiguration_Global() {
+		super("Client_Konfiguration_Global", SchemaRevisionen.REV_0);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("svws.client");
+		setJavaSubPackage("client");
 		setJavaClassName("DTOClientKonfigurationGlobal");
 		setJavaComment("Tabelle für das Speichern von Client-Konfigurationen als Key-Value-Paare. Dabei werden über das Feld App unterschiedliche Client-Anwendungen unterstützt. Die Konfigurationen in dieser Tabelle gelten global für den Client.");
 	}

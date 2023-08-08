@@ -13,7 +13,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAdressart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrtsteil;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -103,7 +103,7 @@ public final class DataBetriebsStammdaten extends DataManager<Long> {
 	public Response create(final InputStream is) {
 	    DTOKatalogAllgemeineAdresse betrieb = null;
 	 	// Bestimme die ID des neuen Betriebs
-        final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "K_AllgAdresse");
+        final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_AllgAdresse");
         final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
         // Betrieb anlegen

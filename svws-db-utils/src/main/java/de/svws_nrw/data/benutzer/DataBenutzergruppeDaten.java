@@ -19,7 +19,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -472,7 +472,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                 conn.transactionBegin();
 
                 // Bestimme die ID der neuen Benutzergruppe
-                final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Benutzergruppen");
+                final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzergruppen");
                 final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
                 // TODO Konstruktor-Parameter überprüfen

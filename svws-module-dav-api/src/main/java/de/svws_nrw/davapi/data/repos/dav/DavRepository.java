@@ -25,7 +25,7 @@ import de.svws_nrw.db.converter.current.DatumUhrzeitConverter;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessource;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import jakarta.persistence.TypedQuery;
 
 /**
@@ -145,11 +145,11 @@ public final class DavRepository implements IDavRepository {
 	 * sucht die nächste id für den gegebenen Tabellennamen
 	 *
 	 * @param tableName der Tabellenname
-	 * @return 1, wenn die Tabelle in {@link DTODBAutoInkremente} noch nicht
+	 * @return 1, wenn die Tabelle in {@link DTOSchemaAutoInkremente} noch nicht
 	 *         auftaucht, ansonsten die nächsthöhere ID
 	 */
 	private Long getNextId(final String tableName) {
-		final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, tableName);
+		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, tableName);
 		return lastID == null ? 1 : lastID.MaxID + 1;
 	}
 
@@ -247,7 +247,7 @@ public final class DavRepository implements IDavRepository {
 			dtoACL.berechtigungen = davRessourceCollectionACLPermissions.toPermissionString();
 		} else {
 
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollectionsACL");
 			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
 			dtoACL = new DTODavRessourceCollectionsACL(id, davRessourceCollectionACLPermissions.getBenutzerId(),
@@ -367,7 +367,7 @@ public final class DavRepository implements IDavRepository {
 		}
 		// keine eigene Collection vom Typ vorhanden, also anlegen
 
-		final DTODBAutoInkremente lastCollectionsID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollections");
+		final DTOSchemaAutoInkremente lastCollectionsID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollections");
 		final DTODavRessourceCollection eigenerKalender = new DTODavRessourceCollection(user.getId(),
 				lastCollectionsID == null ? 1 : lastCollectionsID.MaxID + 1, typ, "Eigener Kalender",
 				getNewSyncTokenTimestampAsString());
@@ -377,7 +377,7 @@ public final class DavRepository implements IDavRepository {
 			return;
 		}
 
-		final DTODBAutoInkremente lastACLID = conn.queryByKey(DTODBAutoInkremente.class, "DavRessourceCollectionsACL");
+		final DTOSchemaAutoInkremente lastACLID = conn.queryByKey(DTOSchemaAutoInkremente.class, "DavRessourceCollectionsACL");
 		final Long newAclID = lastACLID == null ? 1 : lastACLID.MaxID + 1;
 
 		final DavRessourceCollectionACLPermissions permissions = new DavRessourceCollectionACLPermissions(true, true,

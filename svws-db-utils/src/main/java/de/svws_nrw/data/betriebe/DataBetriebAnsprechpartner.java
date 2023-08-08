@@ -12,7 +12,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -159,7 +159,7 @@ public final class DataBetriebAnsprechpartner extends DataManager<Long> {
 			try {
 				conn.transactionBegin();
 				// Bestimme die ID des neuen Ansprechpartners
-				final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "AllgAdrAnsprechpartner");
+				final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "AllgAdrAnsprechpartner");
 				final Long id = (lastID == null) ? 1 : lastID.MaxID + 1;
 				final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
 				if (betrieb == null)

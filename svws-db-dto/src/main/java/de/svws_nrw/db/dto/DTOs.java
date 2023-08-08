@@ -2,6 +2,8 @@ package de.svws_nrw.db.dto;
 
 import java.util.HashMap;
 
+import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationBenutzer;
+import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationGlobal;
 import de.svws_nrw.db.dto.current.coretypes.DTOKursFortschreibungsart;
 import de.svws_nrw.db.dto.current.coretypes.DTONote;
 import de.svws_nrw.db.dto.current.coretypes.DTOPersonalTyp;
@@ -31,6 +33,9 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
 import de.svws_nrw.db.dto.current.schild.DTOSchildAuswahlFilter;
 import de.svws_nrw.db.dto.current.schild.DTOSchildVerwaltung;
 import de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe;
@@ -205,16 +210,11 @@ import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleCredentials;
-import de.svws_nrw.db.dto.current.svws.client.DTOClientKonfigurationBenutzer;
-import de.svws_nrw.db.dto.current.svws.client.DTOClientKonfigurationGlobal;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessource;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler;
-import de.svws_nrw.db.dto.current.svws.db.DTOCoreTypeVersion;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
-import de.svws_nrw.db.dto.current.svws.db.DTODBVersion;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzer;
@@ -244,6 +244,8 @@ public final class DTOs {
      private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {
          if (mapDTOName2DTOClass == null) {
              mapDTOName2DTOClass = new HashMap<>();
+             mapDTOName2DTOClass.put(DTOClientKonfigurationBenutzer.class.getSimpleName(), DTOClientKonfigurationBenutzer.class);
+             mapDTOName2DTOClass.put(DTOClientKonfigurationGlobal.class.getSimpleName(), DTOClientKonfigurationGlobal.class);
              mapDTOName2DTOClass.put(DTOKursFortschreibungsart.class.getSimpleName(), DTOKursFortschreibungsart.class);
              mapDTOName2DTOClass.put(DTONote.class.getSimpleName(), DTONote.class);
              mapDTOName2DTOClass.put(DTOPersonalTyp.class.getSimpleName(), DTOPersonalTyp.class);
@@ -273,6 +275,9 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnis.class.getSimpleName(), DTOGostBlockungZwischenergebnis.class);
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnisKursSchiene.class.getSimpleName(), DTOGostBlockungZwischenergebnisKursSchiene.class);
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnisKursSchueler.class.getSimpleName(), DTOGostBlockungZwischenergebnisKursSchueler.class);
+             mapDTOName2DTOClass.put(DTOSchemaAutoInkremente.class.getSimpleName(), DTOSchemaAutoInkremente.class);
+             mapDTOName2DTOClass.put(DTOSchemaCoreTypeVersion.class.getSimpleName(), DTOSchemaCoreTypeVersion.class);
+             mapDTOName2DTOClass.put(DTOSchemaVersion.class.getSimpleName(), DTOSchemaVersion.class);
              mapDTOName2DTOClass.put(DTOSchildAuswahlFilter.class.getSimpleName(), DTOSchildAuswahlFilter.class);
              mapDTOName2DTOClass.put(DTOSchildVerwaltung.class.getSimpleName(), DTOSchildVerwaltung.class);
              mapDTOName2DTOClass.put(DTOSchuelerIndividuelleGruppe.class.getSimpleName(), DTOSchuelerIndividuelleGruppe.class);
@@ -447,16 +452,11 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOCredentialsLernplattformen.class.getSimpleName(), DTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(DTOLernplattformen.class.getSimpleName(), DTOLernplattformen.class);
              mapDTOName2DTOClass.put(DTOSchuleCredentials.class.getSimpleName(), DTOSchuleCredentials.class);
-             mapDTOName2DTOClass.put(DTOClientKonfigurationBenutzer.class.getSimpleName(), DTOClientKonfigurationBenutzer.class);
-             mapDTOName2DTOClass.put(DTOClientKonfigurationGlobal.class.getSimpleName(), DTOClientKonfigurationGlobal.class);
              mapDTOName2DTOClass.put(DTODavRessource.class.getSimpleName(), DTODavRessource.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollection.class.getSimpleName(), DTODavRessourceCollection.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(), DTODavRessourceCollectionsACL.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenLehrer.class.getSimpleName(), DTODavSyncTokenLehrer.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenSchueler.class.getSimpleName(), DTODavSyncTokenSchueler.class);
-             mapDTOName2DTOClass.put(DTOCoreTypeVersion.class.getSimpleName(), DTOCoreTypeVersion.class);
-             mapDTOName2DTOClass.put(DTODBAutoInkremente.class.getSimpleName(), DTODBAutoInkremente.class);
-             mapDTOName2DTOClass.put(DTODBVersion.class.getSimpleName(), DTODBVersion.class);
              mapDTOName2DTOClass.put(DTOEnmLeistungsdaten.class.getSimpleName(), DTOEnmLeistungsdaten.class);
              mapDTOName2DTOClass.put(DTOEnmLernabschnittsdaten.class.getSimpleName(), DTOEnmLernabschnittsdaten.class);
              mapDTOName2DTOClass.put(DTOViewBenutzer.class.getSimpleName(), DTOViewBenutzer.class);
@@ -489,6 +489,8 @@ public final class DTOs {
      private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {
          if (mapTablename2DTOClass == null) {
              mapTablename2DTOClass = new HashMap<>();
+             mapTablename2DTOClass.put("Client_Konfiguration_Benutzer", DTOClientKonfigurationBenutzer.class);
+             mapTablename2DTOClass.put("Client_Konfiguration_Global", DTOClientKonfigurationGlobal.class);
              mapTablename2DTOClass.put("KursFortschreibungsarten", DTOKursFortschreibungsart.class);
              mapTablename2DTOClass.put("Noten", DTONote.class);
              mapTablename2DTOClass.put("PersonalTypen", DTOPersonalTyp.class);
@@ -518,6 +520,9 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse", DTOGostBlockungZwischenergebnis.class);
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse_Kurs_Schienen", DTOGostBlockungZwischenergebnisKursSchiene.class);
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler", DTOGostBlockungZwischenergebnisKursSchueler.class);
+             mapTablename2DTOClass.put("Schema_AutoInkremente", DTOSchemaAutoInkremente.class);
+             mapTablename2DTOClass.put("Schema_Core_Type_Versionen", DTOSchemaCoreTypeVersion.class);
+             mapTablename2DTOClass.put("Schema_Version", DTOSchemaVersion.class);
              mapTablename2DTOClass.put("SchildFilter", DTOSchildAuswahlFilter.class);
              mapTablename2DTOClass.put("Schild_Verwaltung", DTOSchildVerwaltung.class);
              mapTablename2DTOClass.put("SchuelerListe", DTOSchuelerIndividuelleGruppe.class);
@@ -692,16 +697,11 @@ public final class DTOs {
              mapTablename2DTOClass.put("CredentialsLernplattformen", DTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen", DTOLernplattformen.class);
              mapTablename2DTOClass.put("SchuleCredentials", DTOSchuleCredentials.class);
-             mapTablename2DTOClass.put("SVWS_Client_Konfiguration_Benutzer", DTOClientKonfigurationBenutzer.class);
-             mapTablename2DTOClass.put("SVWS_Client_Konfiguration_Global", DTOClientKonfigurationGlobal.class);
              mapTablename2DTOClass.put("DavRessources", DTODavRessource.class);
              mapTablename2DTOClass.put("DavRessourceCollections", DTODavRessourceCollection.class);
              mapTablename2DTOClass.put("DavRessourceCollectionsACL", DTODavRessourceCollectionsACL.class);
              mapTablename2DTOClass.put("DavSyncTokenLehrer", DTODavSyncTokenLehrer.class);
              mapTablename2DTOClass.put("DavSyncTokenSchueler", DTODavSyncTokenSchueler.class);
-             mapTablename2DTOClass.put("SVWS_Core_Type_Versionen", DTOCoreTypeVersion.class);
-             mapTablename2DTOClass.put("SVWS_DB_AutoInkremente", DTODBAutoInkremente.class);
-             mapTablename2DTOClass.put("SVWS_DB_Version", DTODBVersion.class);
              mapTablename2DTOClass.put("EnmLeistungsdaten", DTOEnmLeistungsdaten.class);
              mapTablename2DTOClass.put("EnmLernabschnittsdaten", DTOEnmLernabschnittsdaten.class);
              mapTablename2DTOClass.put("V_Benutzer", DTOViewBenutzer.class);

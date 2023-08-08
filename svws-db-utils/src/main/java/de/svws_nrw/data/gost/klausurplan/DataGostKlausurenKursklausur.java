@@ -21,7 +21,7 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
-import de.svws_nrw.db.dto.current.svws.db.DTODBAutoInkremente;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -119,15 +119,15 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		// final KlausurterminblockungAlgorithmus blockAlgo = new KlausurterminblockungAlgorithmus();
 		try {
 			conn.transactionBegin();
-			final DTODBAutoInkremente lastID = conn.queryByKey(DTODBAutoInkremente.class, "Gost_Klausuren_Termine");
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Termine");
 			Long terminId = lastID == null ? 1 : lastID.MaxID + 1;
 			for (final List<Long> klausuren : blockung) {
 				DTOGostKlausurenTermine termin = null;
 				for (final long klausurId : klausuren) {
-					DTOGostKlausurenKursklausuren klausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, klausurId);
+					final DTOGostKlausurenKursklausuren klausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, klausurId);
 					if (klausur == null)
 						throw OperationError.NOT_FOUND.exception("Kursklausur mit ID " + klausurId + " nicht gefunden.");
-					DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, klausur.Vorgabe_ID);
+					final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, klausur.Vorgabe_ID);
 					if (vorgabe == null)
 						throw OperationError.NOT_FOUND.exception("Kklausurvorgabe mit ID " + klausur.Vorgabe_ID + " nicht gefunden.");
 					if (termin == null) {

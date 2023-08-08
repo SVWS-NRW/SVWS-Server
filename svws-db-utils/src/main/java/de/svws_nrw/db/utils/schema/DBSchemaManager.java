@@ -11,7 +11,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.dto.current.svws.db.DTODBVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
 import de.svws_nrw.db.schema.DBSchemaViews;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
@@ -322,8 +322,8 @@ public final class DBSchemaManager {
 			final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 			if (rev == -1)
 				return false;
-			final DTODBVersion oldObj = conn.querySingle(DTODBVersion.class);
-			final DTODBVersion newObj = new DTODBVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
+			final DTOSchemaVersion oldObj = conn.querySingle(DTOSchemaVersion.class);
+			final DTOSchemaVersion newObj = new DTOSchemaVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 			if (oldObj == null) {
 				conn.persist(newObj);
 			} else {

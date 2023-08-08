@@ -157,11 +157,11 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_PersonalTypen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Personengruppen_Personen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Religionen_Keys;
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Client_Konfiguration_Benutzer;
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Client_Konfiguration_Global;
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_Core_Type_Versionen;
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_AutoInkremente;
-import de.svws_nrw.db.schema.tabellen.Tabelle_SVWS_DB_Version;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Client_Konfiguration_Benutzer;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Client_Konfiguration_Global;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_Core_Type_Versionen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_AutoInkremente;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schema_Version;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchildFilter;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schild_Verwaltung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schueler;
@@ -563,16 +563,16 @@ public final class Schema {
 	public static final Tabelle_Religionen_Keys tab_Religionen_Keys = add(new Tabelle_Religionen_Keys());
 
 	/** Tabelle SVWS_Client_Konfiguration_Global */
-	public static final Tabelle_SVWS_Client_Konfiguration_Global tab_SVWS_Client_Konfiguration_Global = add(new Tabelle_SVWS_Client_Konfiguration_Global());
+	public static final Tabelle_Client_Konfiguration_Global tab_SVWS_Client_Konfiguration_Global = add(new Tabelle_Client_Konfiguration_Global());
 
 	/** Tabelle SVWS_Core_Type_Versionen */
-	public static final Tabelle_SVWS_Core_Type_Versionen tab_SVWS_Core_Type_Versionen = add(new Tabelle_SVWS_Core_Type_Versionen());
+	public static final Tabelle_Schema_Core_Type_Versionen tab_SVWS_Core_Type_Versionen = add(new Tabelle_Schema_Core_Type_Versionen());
 
 	/** Tabelle SVWS_DB_AutoInkremente */
-	public static final Tabelle_SVWS_DB_AutoInkremente tab_SVWS_DB_AutoInkremente = add(new Tabelle_SVWS_DB_AutoInkremente());
+	public static final Tabelle_Schema_AutoInkremente tab_SVWS_DB_AutoInkremente = add(new Tabelle_Schema_AutoInkremente());
 
 	/** Tabelle SVWS_DB_Version */
-	public static final Tabelle_SVWS_DB_Version tab_SVWS_DB_Version = add(new Tabelle_SVWS_DB_Version());
+	public static final Tabelle_Schema_Version tab_SVWS_DB_Version = add(new Tabelle_Schema_Version());
 
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());
@@ -776,7 +776,7 @@ public final class Schema {
 	public static final Tabelle_Logins tab_Logins = add(new Tabelle_Logins());
 
 	/** Tabelle SVWS_Client_Konfiguration_Benutzer */
-	public static final Tabelle_SVWS_Client_Konfiguration_Benutzer tab_SVWS_Client_Konfiguration_Benutzer = add(new Tabelle_SVWS_Client_Konfiguration_Benutzer());
+	public static final Tabelle_Client_Konfiguration_Benutzer tab_SVWS_Client_Konfiguration_Benutzer = add(new Tabelle_Client_Konfiguration_Benutzer());
 
 	/** Tabelle Schild_Verwaltung */
 	public static final Tabelle_Schild_Verwaltung tab_Schild_Verwaltung = add(new Tabelle_Schild_Verwaltung());
