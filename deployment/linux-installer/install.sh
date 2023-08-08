@@ -394,7 +394,7 @@ if [ "$CREATE_TESTDATA" = "j" ] || [ "$CREATE_TESTDATA" = "J" ]; then
 
     # Importiere die Datenbank(en) mittels der MigrateDB Klasse
     echo "Importiere Datenbank: ${MDBFILE} ..."
-    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -d -r -1 -sd "MDB" \
+    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.MigrateDB -j -r -1 -sd "MDB" \
        -sl "${MDBFILE}" -sp "${TESTDB_PASSWORD}" \
        -td "MARIA_DB" \
        -tl ${MariaDB_HOST} \
@@ -412,7 +412,7 @@ if [ "$INIT_EMPTY_DB" = "j" ] || [ "$INIT_EMPTY_DB" = "J" ]; then
 
 	# Erstelle leere Datenbank ...
     echo "Erstelle leere Datenbank ..."
-    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.CreateSchema -j -d -r -1 \
+    java -cp "svws-server-app-*.jar:${APP_PATH}/app/*:${APP_PATH}/app/lib/*" de.svws_nrw.db.utils.app.CreateSchema -j -r -1 \
        -td "MARIA_DB" \
        -tl ${MariaDB_HOST} \
        -ts ${MariaDB_DATABASE} \
