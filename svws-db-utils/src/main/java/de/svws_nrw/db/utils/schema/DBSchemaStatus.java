@@ -119,7 +119,7 @@ public final class DBSchemaStatus {
 	 * @return die Datenbank-Version
 	 */
 	private DBSchemaVersion leseDBSchemaVersion(final DBEntityManager conn) {
-		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase("SVWS_DB_Version")).findFirst().orElse(null) == null)
+		if (tabellen.stream().filter(tabname -> tabname.equalsIgnoreCase("Schema_Version")).findFirst().orElse(null) == null)
 			return null;
 		DTOSchemaVersion dto;
 		final DBDriver dbms = conn.getDBDriver();
@@ -129,9 +129,9 @@ public final class DBSchemaStatus {
 			// Hole die Versions-Informationen aus einem fremden Schema. Hier wird natives SQL benötigt
 			String sql;
 			if ((dbms == DBDriver.MARIA_DB) || (dbms == DBDriver.MYSQL)) {
-				sql = "SELECT * FROM `" + schemaName + "`.SVWS_DB_Version";
+				sql = "SELECT * FROM `" + schemaName + "`.Schema_Version";
 			} else if (dbms == DBDriver.MSSQL) {
-				sql = "SELECT * FROM [" + schemaName + "].SVWS_DB_Version";
+				sql = "SELECT * FROM [" + schemaName + "].Schema_Version";
 			} else {
 				return null;
 			}
