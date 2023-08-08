@@ -133,7 +133,7 @@ public class DBUpdater {
 			if (!dropTables(neue_revision))
 				throw new DBException("Fehler beim Verwerfen veralteter Tabellen");
 
-			// 17. Update-Schritt: Tabelle SVWS_DB_Version aktualisieren
+			// 17. Update-Schritt: Tabelle Schema_Version aktualisieren
 			logger.logLn("- Setze die DB-Revision auf " + neue_revision);
 			if (!schemaManager.setDBRevision(neue_revision))
 				throw new DBException("Fehler beim Setzen der SVWS-DB-Revision");

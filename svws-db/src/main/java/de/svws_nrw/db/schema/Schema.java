@@ -562,17 +562,17 @@ public final class Schema {
 	/** Tabelle Religionen_Keys */
 	public static final Tabelle_Religionen_Keys tab_Religionen_Keys = add(new Tabelle_Religionen_Keys());
 
-	/** Tabelle SVWS_Client_Konfiguration_Global */
-	public static final Tabelle_Client_Konfiguration_Global tab_SVWS_Client_Konfiguration_Global = add(new Tabelle_Client_Konfiguration_Global());
+	/** Tabelle Client_Konfiguration_Global */
+	public static final Tabelle_Client_Konfiguration_Global tab_Client_Konfiguration_Global = add(new Tabelle_Client_Konfiguration_Global());
 
-	/** Tabelle SVWS_Core_Type_Versionen */
-	public static final Tabelle_Schema_Core_Type_Versionen tab_SVWS_Core_Type_Versionen = add(new Tabelle_Schema_Core_Type_Versionen());
+	/** Tabelle Schema_Core_Type_Versionen */
+	public static final Tabelle_Schema_Core_Type_Versionen tab_Schema_Core_Type_Versionen = add(new Tabelle_Schema_Core_Type_Versionen());
 
-	/** Tabelle SVWS_DB_AutoInkremente */
-	public static final Tabelle_Schema_AutoInkremente tab_SVWS_DB_AutoInkremente = add(new Tabelle_Schema_AutoInkremente());
+	/** Tabelle Schema_AutoInkremente */
+	public static final Tabelle_Schema_AutoInkremente tab_Schema_AutoInkremente = add(new Tabelle_Schema_AutoInkremente());
 
-	/** Tabelle SVWS_DB_Version */
-	public static final Tabelle_Schema_Version tab_SVWS_DB_Version = add(new Tabelle_Schema_Version());
+	/** Tabelle Schema_Version */
+	public static final Tabelle_Schema_Version tab_Schema_Version = add(new Tabelle_Schema_Version());
 
 	/** Tabelle SchildFilter */
 	public static final Tabelle_SchildFilter tab_SchildFilter = add(new Tabelle_SchildFilter());
@@ -775,8 +775,8 @@ public final class Schema {
 	/** Tabelle Logins */
 	public static final Tabelle_Logins tab_Logins = add(new Tabelle_Logins());
 
-	/** Tabelle SVWS_Client_Konfiguration_Benutzer */
-	public static final Tabelle_Client_Konfiguration_Benutzer tab_SVWS_Client_Konfiguration_Benutzer = add(new Tabelle_Client_Konfiguration_Benutzer());
+	/** Tabelle Client_Konfiguration_Benutzer */
+	public static final Tabelle_Client_Konfiguration_Benutzer tab_Client_Konfiguration_Benutzer = add(new Tabelle_Client_Konfiguration_Benutzer());
 
 	/** Tabelle Schild_Verwaltung */
 	public static final Tabelle_Schild_Verwaltung tab_Schild_Verwaltung = add(new Tabelle_Schild_Verwaltung());
