@@ -104,7 +104,7 @@
 										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value && !getDatenmanager().daten().istAktiv)">
 											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
 												<i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" />
-												<i-ri-forbid-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
+												<i-ri-forbid-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" class="inline-block" />
 											</span>
 											<span class="icon cursor-pointer" @click.stop="fixieren_regel_toggle(kurs.id, schueler.id)" :title="fixier_regel(kurs.id, schueler.id).value ? 'Fixiert' : 'Fixieren'">
 												<i-ri-pushpin-fill v-if="fixier_regel(kurs.id, schueler.id).value" class="inline-block" />
@@ -193,7 +193,7 @@
 	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
 		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
 			return false;
-		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !fixier_regel(idKurs, idSchueler).value;
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	});
 
 	function dropAllowTrash(e: DragEvent) {
@@ -208,7 +208,7 @@
 			return false;
 		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
 			return false;
-		if (props.schueler && verbieten_regel(kurs.id, props.schueler.id).value)
+		if (props.schueler && props.getErgebnismanager().getOfSchuelerOfKursIstGesperrt(props.schueler.id, kurs.id))
 			return false;
 		return true;
 	});
