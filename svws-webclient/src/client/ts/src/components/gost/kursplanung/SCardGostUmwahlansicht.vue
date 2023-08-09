@@ -193,7 +193,7 @@
 	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
 		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
 			return false;
-		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs);
+		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !fixier_regel(idKurs, idSchueler).value;
 	});
 
 	function dropAllowTrash(e: DragEvent) {
