@@ -289,6 +289,7 @@ task doZip(type: Zip) {
 }
 
 assemble.dependsOn doZip
+publish.dependsOn doZip
 
 
 task cleanCore(type: Delete) {
