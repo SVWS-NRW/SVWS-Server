@@ -55,7 +55,7 @@
 
 				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
 				<div class="flex flex-col gap-2">
-					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen" v-if="!blockung_aktiv">Verteilen<i-ri-sparkling-line /></svws-ui-button>
 					<svws-ui-button class="w-full justify-center" type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`"> Laufbahn <i-ri-group-line /></svws-ui-button>
 				</div>
 			</div>
