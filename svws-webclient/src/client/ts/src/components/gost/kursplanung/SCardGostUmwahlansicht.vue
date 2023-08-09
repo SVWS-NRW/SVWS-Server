@@ -208,6 +208,8 @@
 			return false;
 		if ((fachID !== kurs.fachID) || (kursart !== kurs.kursart))
 			return false;
+		if (props.schueler && verbieten_regel(kurs.id, props.schueler.id).value)
+			return false;
 		return true;
 	});
 
