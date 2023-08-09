@@ -1,69 +1,108 @@
 <template>
-	<div class="stundenplan h-full" :class="cols">
-		<div class="stundenplan-cell"> &ndash; </div>
-		<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="stundenplan-cell bg-svws-300">
-			<div> {{ wochentage[wochentag.id] }} </div>
-		</div>
-		<div class="stundenplan-cell relative">
-			<div v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde" class="bg-yellow-200 absolute w-48 rounded-md"
-				:style="posZeitraster(undefined, stunde)">
-				<div> {{ stunde }}. Stunde </div>
-				<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten">
-					{{ zeiten }}
-				</div>
+	<div class="svws-ui-stundenplan">
+		<div class="svws-ui-stundenplan--head">
+			<div class="inline-flex gap-1 items-center pl-2 print:invisible" :class="{'opacity-50 font-normal': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}">
+				<i-ri-calendar-line v-if="wochentyp() !== 0" class="text-primary print:hidden" />
+				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
+			</div>
+			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id"
+				class="font-bold text-center inline-flex items-center w-full justify-center">
+				<div> {{ wochentage[wochentag.id] }}</div>
 			</div>
 		</div>
-		<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="relative">
-			<template v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde">
-				<div class="absolute h-full w-full bg-yellow-100 rounded-md" :style="posZeitraster(wochentag, stunde)">
-					<div v-if="(wochentyp() !== 0) && (manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, 0) || manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, wochentyp()))" class="h-full w-full flex flex-col gap-2">
-						<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)" :key="unterricht.id"
-							class="stundenplan-unterricht bg-cyan-100" :class="mode === 'schueler' ? 'grid-cols-2' : mode === 'lehrer' ? 'grid-cols-3' : 'grid-cols-4'">
-							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-							<div> {{ unterricht.wochentyp !== 0 ? "" + unterricht.wochentyp : "&nbsp;" }} </div>
-							<div v-if="mode !== 'lehrer'"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
-						</div>
+		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
+			<div class="svws-ui-stundenplan--zeitraster svws-einheiten">
+				<template v-for="n in zeitrasterRows" :key="n">
+					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
+						<template v-if="n % 4 === 2">
+							{{ beginn / 60 + Math.floor((n * 5) / 60) }}
+						</template>
+					</span>
+				</template>
+			</div>
+			<div class="svws-ui-stundenplan--zeitraster">
+				<div v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde"
+					class="svws-ui-stundenplan--stunde text-center justify-center"
+					:style="posZeitraster(undefined, stunde)">
+					<div class="text-headline-sm">{{ stunde }}. Stunde</div>
+					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
+						{{ zeiten.replace(' Uhr', '') }}
 					</div>
-					<div v-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag, stunde)" class="h-full w-full flex flex-col gap-2">
-						<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)" :key="unterricht.id"
-							class="stundenplan-unterricht bg-cyan-100" :class="mode === 'schueler' ? 'grid-cols-2' : mode === 'lehrer' ? 'grid-cols-3' : 'grid-cols-4'">
-							<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-							<div> &nbsp; </div>
-							<div v-if="mode !== 'lehrer'"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-							<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
-						</div>
+				</div>
+				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center"
+						:style="posPause(undefined, pause)">
+						<div>{{ pause.bezeichnung }}</div>
+						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
 					</div>
-					<div v-else-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)" class="h-full w-full flex flex-row gap-2">
-						<div v-for="wt in manager().getWochenTypModell()" :key="wt" class="flex flex-col gap-2 bg-cyan-100">
-							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)" :key="unterricht.id"
-								class="stundenplan-unterricht" :class="mode === 'schueler' ? 'grid-cols-2' : mode === 'lehrer' ? 'grid-cols-3' : 'grid-cols-4'">
-								<div> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
-								<div> {{ wt }} </div>
-								<div v-if="mode !== 'lehrer'"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-								<div> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+				</template>
+			</div>
+			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id"
+				class="svws-ui-stundenplan--zeitraster">
+				<template v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde">
+					<div class="svws-ui-stundenplan--stunde"
+						:style="posZeitraster(wochentag, stunde)">
+						<template v-if="(wochentyp() !== 0) && (manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, 0) || manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, wochentyp()))">
+							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)"
+								:key="unterricht.id"
+								class="svws-ui-stundenplan--unterricht"
+								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
+								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }}</div>
+								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
+								<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
+								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
 							</div>
+						</template>
+						<template v-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag, stunde)">
+							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)"
+								:key="unterricht.id"
+								class="svws-ui-stundenplan--unterricht"
+								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
+								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
+								<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
+								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
+							</div>
+						</template>
+						<div v-else-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)"
+							class="svws-multiple">
+							<template v-for="wt in manager().getWochenTypModell()" :key="wt">
+								<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)"
+									:key="unterricht.id"
+									class="svws-ui-stundenplan--unterricht svws-compact"
+									:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column: ${wt}`">
+									<div class="col-span-full text-sm mb-0.5">{{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+									<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
+									<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
+									<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
+								</div>
+							</template>
 						</div>
 					</div>
-				</div>
-			</template>
-			<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)" :key="pausenaufsicht.id">
-				<div class="absolute h-full w-full stundenplan-unterricht bg-green-100" :style="posPausenaufsicht(pausenaufsicht)">
-					<div> {{ pausenzeit(pausenaufsicht).bezeichnung }} </div>
-					<div> &nbsp; </div>
-					<div v-if="mode !== 'lehrer'"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </div>
-					<div> {{ aufsichtsbereiche(pausenaufsicht) }} </div>
-				</div>
-			</template>
+				</template>
+				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
+					<div class="svws-ui-stundenplan--pause"
+						:style="posPause(wochentag, pause)" />
+				</template>
+				<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)"
+					:key="pausenaufsicht.id">
+					<div class="svws-ui-stundenplan--pause" :style="posPausenaufsicht(pausenaufsicht)">
+						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
+							<div class="font-bold"> {{ pausenzeit(pausenaufsicht).bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pausenzeit(pausenaufsicht).bezeichnung }} </div>
+							<div><span v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }}</span></div>
+							<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
+						</div>
+					</div>
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit } from "@core";
-	import { computed } from "vue";
-	import { type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
+	import {ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, type StundenplanAufsichtsbereich, ZulaessigesFach} from "@core";
+	import {computed, ComputedRef} from "vue";
+	import {type StundenplanAnsichtProps} from "./StundenplanAnsichtProps";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
@@ -80,6 +119,11 @@
 	const gesamtzeit = computed(() => {
 		const tmp = ende.value - beginn.value;
 		return tmp <= 0 ? 360 : tmp;
+	});
+
+	const zeitrasterRows = computed(() => {
+		// Für alle 5 Minuten eine Grid Row
+		return Math.round(gesamtzeit.value / 5);
 	});
 
 	function pausenzeit(pausenaufsicht: StundenplanPausenaufsicht): StundenplanPausenzeit {
@@ -120,6 +164,8 @@
 		}
 		let top = 0;
 		let height = 10;
+    let rowStart = 0;
+    let rowEnd = 10;
 		if ((zbeginn === null) || (zende === null)) {
 			const sb = props.manager().zeitrasterGetStundeMin();
 			const se = props.manager().zeitrasterGetStundeMax();
@@ -129,15 +175,34 @@
 		} else {
 			top = ((zbeginn - beginn.value) / gesamtzeit.value) * 100;
 			height = ((zende - zbeginn) / gesamtzeit.value) * 100;
+      rowStart = (zbeginn - beginn.value) / 5;
+      rowEnd = (zende - beginn.value) / 5;
 		}
-		return "top: " + top + "%; height: " + height + "%;";
+		// return "top: " + top + "%; height: " + height + "%;";
+    return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
+  function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
+    if (pause.wochentag !== (wochentag?.id || wochentag === undefined ? Wochentag.MONTAG.id : wochentag.id))
+      return 'display: none;';
+    const p = props.manager().pausenzeitGetByIdOrException(pause.id);
+    let rowStart = 0;
+    let rowEnd = 10;
+    if ((p.beginn === null) || (p.ende === null)) {
+      rowStart = 1;
+    } else {
+      rowStart = (p.beginn - beginn.value) / 5;
+      rowEnd = (p.ende - beginn.value) / 5;
+    }
+    return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
+  }
 
 	function posPausenaufsicht(p : StundenplanPausenaufsicht) : string {
 		const pzeit = pausenzeit(p);
 		let top = 0;
 		let height = 10;
+    let rowStart = 0;
+    let rowEnd = 10;
 		if ((pzeit.beginn === null) || (pzeit.ende === null)) {
 			const sb = props.manager().zeitrasterGetStundeMin();
 			const se = props.manager().zeitrasterGetStundeMax();
@@ -147,67 +212,110 @@
 		} else {
 			top = ((pzeit.beginn - beginn.value) / gesamtzeit.value) * 100;
 			height = ((pzeit.ende - pzeit.beginn) / gesamtzeit.value) * 100;
+      rowStart = (pzeit.beginn - beginn.value) / 5;
+      rowEnd = (pzeit.ende - beginn.value) / 5;
 		}
-		return "top: " + top + "%; height: " + height + "%;";
+		// return "top: " + top + "%; height: " + height + "%;";
+    return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
-	const cols = computed(() => {
-		const colcount = props.manager().zeitrasterGetWochentageAlsEnumRange().length;
-		const result = {
-			'stundenplan-col1': colcount === 1,
-			'stundenplan-col2': colcount === 2,
-			'stundenplan-col3': colcount === 3,
-			'stundenplan-col4': colcount === 4,
-			'stundenplan-col5': colcount === 5,
-			'stundenplan-col6': colcount === 6,
-			'stundenplan-col7': colcount === 7,
-		};
-		return result;
-	});
+	function getBgColor(fach: string): string {
+		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+	}
 
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
+.svws-ui-stundenplan {
+  @apply flex flex-col h-full min-w-max flex-grow;
+  --zeitrasterRows: 0;
+}
 
-	.stundenplan {
-		@apply grid gap-4 rounded-md select-none;
-		grid-template-rows: 1.6rem 1fr
+.svws-ui-stundenplan--head,
+.svws-ui-stundenplan--body {
+  @apply grid grid-flow-col;
+  grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
+}
+
+.svws-ui-stundenplan--head {
+  @apply bg-white py-1 text-button;
+  @apply h-[2.75rem] sticky -top-px z-10;
+  @apply border border-black/25 dark:border-white/10;
+}
+
+.svws-ui-stundenplan--body {
+  @apply flex-grow border-x border-black/25 dark:border-white/10 bg-light dark:bg-white/5 -mt-px print:mt-0 relative;
+}
+
+.svws-ui-stundenplan--zeitraster {
+  @apply grid grid-cols-1;
+  grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 2%));
+
+	&.svws-einheiten {
+		@apply print:hidden absolute h-full w-5 -ml-5 border-b border-transparent;
+	}
+}
+
+.svws-ui-stundenplan--stunde,
+.svws-ui-stundenplan--pause {
+  @apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-y-auto;
+  @apply border border-l-0 border-black/25 dark:border-white/10;
+
+  .svws-ui-stundenplan--zeitraster:last-child & {
+    @apply border-r-0;
+  }
+
+  .svws-multiple {
+    @apply grid grid-cols-2 grid-flow-col gap-1 h-full;
+  }
+}
+
+.svws-ui-stundenplan--pause {
+  @apply bg-light dark:bg-white/5 text-black/50 dark:text-white/50;
+}
+
+.svws-ui-stundenplan--unterricht,
+.svws-ui-stundenplan--pausen-aufsicht {
+ @apply rounded grid grid-cols-3 gap-x-1 flex-grow w-full border border-black/10 p-2 content-center leading-none;
+
+  &.svws-compact {
+    @apply grid-cols-2;
+  }
+
+	+ .svws-ui-stundenplan--unterricht,
+	+ .svws-ui-stundenplan--pausen-aufsicht {
+		@apply rounded-t-none;
+
+		.svws-multiple & {
+			@apply rounded-t;
+		}
 	}
 
-	.stundenplan-col1 {
-		grid-template-columns: 12rem repeat(1, minmax(0, 1fr))
+	&:not(:last-child) {
+		@apply rounded-b-none;
+
+		.svws-multiple & {
+			@apply rounded-b;
+		}
+	}
+}
+
+.svws-ui-stundenplan--pausen-aufsicht {
+  &.svws-lehrkraft {
+    @apply bg-black/75 dark:bg-white/75 text-white dark:text-black;
+  }
+}
+
+.svws-ui-stundenplan--einheit {
+	@apply border-t border-black dark:border-white h-full w-1/2 text-sm font-bold pt-0.5 pr-1 opacity-25 ml-auto text-right;
+
+	&.svws-small {
+		@apply w-1/2;
 	}
 
-	.stundenplan-col2 {
-		grid-template-columns: 12rem repeat(2, minmax(0, 1fr))
+	&.svws-extended {
+		@apply w-full;
 	}
-
-	.stundenplan-col3 {
-		grid-template-columns: 12rem repeat(3, minmax(0, 1fr))
-	}
-
-	.stundenplan-col4 {
-		grid-template-columns: 12rem repeat(4, minmax(0, 1fr))
-	}
-
-	.stundenplan-col5 {
-		grid-template-columns: 12rem repeat(5, minmax(0, 1fr))
-	}
-
-	.stundenplan-col6 {
-		grid-template-columns: 12rem repeat(6, minmax(0, 1fr))
-	}
-
-	.stundenplan-col7 {
-		grid-template-columns: 12rem repeat(7, minmax(0, 1fr))
-	}
-
-	.stundenplan-cell {
-		@apply text-center rounded-md w-full h-full
-	}
-
-	.stundenplan-unterricht {
-		@apply text-center rounded-md grid;
-	}
+}
 
 </style>

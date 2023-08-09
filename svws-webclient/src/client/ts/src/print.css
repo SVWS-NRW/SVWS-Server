@@ -1,0 +1,138 @@
+.app--menu,
+.app--sidebar,
+.svws-ui-header .badge,
+.svws-ui-header .svws-ui-avatar,
+.router-tab-bar--subnav {
+	@apply hidden;
+}
+
+html,
+body,
+#app,
+.router-tab-bar--area,
+.router-tab-bar--panel,
+.app--layout,
+.app--content,
+.app--content-container,
+.app--page {
+	@apply h-max overflow-auto;
+}
+
+.svws-ui-header {
+	@apply min-h-0 px-0 pt-0 !important;
+}
+
+.svws-ui-header .svws-headline {
+	@apply mr-1 !important;
+}
+
+.svws-ui-header .svws-subline {
+	@apply w-auto opacity-100;
+}
+
+.svws-ui-header .svws-subline:before {
+	content: '(';
+}
+
+.svws-ui-header .svws-subline:after {
+	content: ')';
+}
+
+.svws-ui-header .svws-headline-wrapper {
+	@apply text-headline-md;
+}
+
+.svws-ui-header--actions {
+  @apply hidden;
+}
+
+html {
+	@apply bg-transparent;
+}
+
+.app--layout {
+	@apply p-0;
+}
+
+.app--content-container {
+	@apply border-0 rounded-none;
+}
+
+.router-tab-bar--panel {
+	@apply overflow-hidden;
+}
+
+.router-tab-bar--area {
+	@apply pt-0;
+}
+
+.page--content {
+	@apply p-0 !important;
+	max-width: unset !important;
+}
+
+.text-headline-md {
+	@apply font-normal !important;
+}
+
+.text-headline-md.opacity-50 {
+	@apply opacity-100;
+	font-size: 80% !important;
+}
+
+.svws-ui-stundenplan {
+	@apply min-w-0 w-full border border-black;
+	border-width: 1pt;
+	@apply border-b-0;
+}
+
+.svws-ui-stundenplan--head,
+.svws-ui-stundenplan--body {
+	@apply border-0;
+}
+
+.svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pausen-aufsicht {
+	@apply rounded-none bg-transparent grid-cols-3 content-center leading-tight border-0 py-0 !important;
+}
+
+.svws-ui-stundenplan--stunde .font-bold.text-sm {
+	@apply font-normal text-button;
+}
+
+.svws-ui-stundenplan--stunde .text-sm.mb-0\.5 {
+	@apply -mb-0.5;
+}
+
+.svws-ui-stundenplan--stunde .text-headline-sm {
+	@apply font-normal;
+}
+
+.svws-ui-stundenplan--stunde {
+	@apply border-black border-l-0 !important;
+	border-width: 1pt;
+}
+
+.svws-ui-stundenplan--stunde, .svws-ui-stundenplan--pause {
+	@apply p-0;
+}
+
+.svws-ui-stundenplan--zeitraster:first-child .svws-ui-stundenplan--pause {
+	@apply border-r border-black !important;
+	border-width: 1px;
+}
+
+.svws-ui-stundenplan--pause {
+	@apply border-black border-0 font-normal py-2 pr-1 pl-0.5 !important;
+}
+
+.svws-ui-stundenplan--pausen-aufsicht.svws-lehrkraft {
+	@apply text-black border border-dashed border-black !important;
+}
+
+.svws-ui-stundenplan--stunde .svws-multiple, .svws-ui-stundenplan--pause .svws-multiple {
+	@apply gap-0;
+}
+
+.svws-ui-stundenplan--stunde .svws-multiple .svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pause .svws-multiple .svws-ui-stundenplan--pausen-aufsicht {
+	@apply border-0 ;
+}

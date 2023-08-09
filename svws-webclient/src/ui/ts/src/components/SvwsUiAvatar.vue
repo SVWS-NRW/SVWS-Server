@@ -36,7 +36,7 @@
 </script>
 
 <template>
-	<div class="relative" :class="{'is-capturing': isCapturing}">
+	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
 		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
 			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
 				<i-ri-camera-line class="w-full h-full opacity-50" />
@@ -105,6 +105,10 @@
 </template>
 
 <style lang="postcss">
+.svws-ui-avatar {
+	@apply relative;
+}
+
 .avatar {
 	@apply w-full rounded-lg overflow-hidden relative bg-light;
 	@apply border border-black/5 dark:border-white/5;

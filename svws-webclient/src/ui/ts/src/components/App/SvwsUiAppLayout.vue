@@ -258,14 +258,20 @@
 
 	.sidebar--menu--header,
 	.secondary-menu--headline,
+	.svws-ui-header,
 	.page--header {
 		@apply flex flex-col items-start justify-center;
 		min-height: 6.5rem;
 	}
 
+	.svws-ui-header {
+		@apply flex-row items-center justify-between;
+	}
+
 	@media (min-width: 1280px) or (orientation: portrait) {
 		.sidebar--menu--header,
 		.secondary-menu--headline,
+		.svws-ui-header,
 		.page--header {
 			min-height: 8rem;
 		}

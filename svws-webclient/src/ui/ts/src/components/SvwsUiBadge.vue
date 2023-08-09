@@ -15,7 +15,7 @@
 <template>
 	<template v-if="short">
 		<svws-ui-tooltip :indicator="false">
-			<span class="badge" :class="{
+			<span class="svws-ui-badge badge" :class="{
 				'badge--primary': type === 'primary',
 				'badge--success': type === 'success',
 				'badge--error': type === 'error',
@@ -34,7 +34,7 @@
 		</svws-ui-tooltip>
 	</template>
 	<template v-else>
-		<span class="badge" :class="{
+		<span class="svws-ui-badge badge" :class="{
 			'badge--primary': type === 'primary',
 			'badge--success': type === 'success',
 			'badge--error': type === 'error',
