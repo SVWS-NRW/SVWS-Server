@@ -187,11 +187,12 @@ export class RouteDataGostKlausurplanung {
 				return true;
 			}
 			//				throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
+			const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr);
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
 				this.setPatchedState({
 					halbjahr: halbjahr,
-					kursklausurmanager: undefined,
+					kursklausurmanager,
 					stundenplanmanager: undefined,
 					klausurvorgabenmanager: klausurvorgabenmanager,
 				});
@@ -210,25 +211,24 @@ export class RouteDataGostKlausurplanung {
 			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({
 				halbjahr: halbjahr,
-				//kursklausurmanager,
+				kursklausurmanager,
 				stundenplanmanager,
 				klausurvorgabenmanager,
 			});
-			await this.reloadKursklausurmanager();
 			return true;
 		} finally {
 			api.status.stop();
 		}
 	}
 
-	public async reloadKursklausurmanager() {
+	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null) : Promise<GostKursklausurManager> {
 		//try {
-		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
-		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
-		const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
-		this.setPatchedState({
+		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		return new GostKursklausurManager(listKursklausuren, listKlausurtermine);
+		/*this.setPatchedState({
 			kursklausurmanager,
-		});
+		});*/
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -424,7 +424,8 @@ export class RouteDataGostKlausurplanung {
 	/*persistKlausurblockung = async (blockung: List<List<number>>): Promise<boolean> => {
 		api.status.start();
 		await api.server.blockGostKlausurenKursklausuren(blockung, api.schema);
-		await this.reloadKursklausurmanager();
+		await this.reloadKursklausurmanager(null);
+		this.commit();
 		api.status.stop();
 		return true;
 	}*/
