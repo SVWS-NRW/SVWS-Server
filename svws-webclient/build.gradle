@@ -289,7 +289,6 @@ task doZip(type: Zip) {
 }
 
 assemble.dependsOn doZip
-publish.dependsOn doZip
 
 
 task cleanCore(type: Delete) {
@@ -410,7 +409,7 @@ publishing {
     }
     publications {
         mavenClientZip(MavenPublication) {
-            artifact  'build/SVWS-Client.zip'
+            artifact doZip
             artifactId = 'svws-client'
             pom {
                 name = 'SVWS-Client'
