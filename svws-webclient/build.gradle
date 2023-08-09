@@ -310,6 +310,7 @@ clean.dependsOn cleanClient
 
 task copyNexusNpmrc(type: Copy) {
 	dependsOn assemble
+	mustRunAfter publish
 	group "build"
 	from "$projectDir/.npmrc.nexus"
 	into "$projectDir/"
