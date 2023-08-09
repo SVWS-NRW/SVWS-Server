@@ -29,13 +29,13 @@
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">
 					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
-					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen" name="Kollisionen" label="Kollisionen">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen" name="Kollisionen" label="Koll">
 						<i-ri-alert-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="nichtwahlen" name="Nichtwahlen" label="Nichtverteilt">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="nichtwahlen" name="Nichtwahlen" label="NV">
 						<i-ri-forbid-2-line />
 					</svws-ui-radio-option>
-					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="K/N">
+					<svws-ui-radio-option v-model="schuelerFilter.radio_filter" value="kollisionen_nichtwahlen" name="Kollisionen_Nichtwahlen" label="Koll/NV">
 						<i-ri-alert-fill />
 					</svws-ui-radio-option>
 				</svws-ui-radio-group>
