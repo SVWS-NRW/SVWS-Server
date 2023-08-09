@@ -1,13 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="schueler !== undefined" title="Kurszuordnungen" class="min-w-[30rem]">
-		<!-- Link für den Wechsel zur Laufbahnplanung -->
-		<template #actions>
-			<svws-ui-button type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`">
-				<i-ri-group-line />
-				{{ 'Laufbahnplanung von ' + schueler.vorname + ' ' + schueler.nachname }}
-			</svws-ui-button>
-		</template>
-
+	<svws-ui-content-card v-if="schueler !== undefined" class="min-w-[30rem]">
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
 			<!-- Übersicht über die Fachwahlen des Schülers -->
@@ -62,7 +54,10 @@
 				</div>
 
 				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
-				<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
+				<div class="flex flex-col gap-2">
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen">Verteilen<i-ri-sparkling-line /></svws-ui-button>
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`"> Laufbahn <i-ri-group-line /></svws-ui-button>
+				</div>
 			</div>
 
 			<!-- Übersicht über die Kurs-Schienen-Zuordnung für den Schüler -->

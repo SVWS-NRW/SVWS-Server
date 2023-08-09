@@ -18,22 +18,6 @@
 				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div class="flex flex-wrap justify-between mb-4">
-			<h3 class="text-headline cursor-auto">
-				<svws-ui-tooltip position="right" :indicator="(blockung_aktiv && !blockungsergebnis_aktiv) || blockungsergebnis_aktiv ? 'underline': false">
-					{{ blockungsname }}
-					<template #icon>
-						<i-ri-error-warning-line v-if="blockung_aktiv && !blockungsergebnis_aktiv" class="ml-1 w-6 h-6" />
-						<i-ri-pushpin-line v-if="blockungsergebnis_aktiv" class="ml-1 w-6 h-6" />
-						<span v-else />
-					</template>
-					<template #content>
-						<div v-if="blockungsergebnis_aktiv" class="text-lg font-bold">Dieses Blockungsergebnis ist aktiv.</div>
-						<div v-if="blockung_aktiv && !blockungsergebnis_aktiv">Ein anderes Ergebnis dieser Blockung ist bereits aktiv.</div>
-					</template>
-				</svws-ui-tooltip>
-			</h3>
-		</div>
 		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
