@@ -27,6 +27,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.utils.BlockungsUtils;
 import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
@@ -41,32 +42,37 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanManager {
 
+	// Static
+	private static final int MINUTEN_INF_POS = 24 * 60 + 1;
+	private static final int MINUTEN_INF_NEG = -1;
+	private static final int WOCHENTAG_INF_POS = Wochentag.SONNTAG.id + 1;
+	private static final int WOCHENTAG_INF_NEG  = Wochentag.MONTAG.id - 1;
+	private static final int STUNDE_INF_POS = -1;
+	private static final int STUNDE_INF_NEG = -1;
+
 	// StundenplanAufsichtsbereich
-	private final @NotNull List<@NotNull StundenplanAufsichtsbereich> _list_aufsichtsbereiche = new ArrayList<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_idAufsichtsbereich_zu_aufsichtsbereich = new HashMap<>();
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);
 	};
+	private final @NotNull List<@NotNull StundenplanAufsichtsbereich> _list_aufsichtsbereiche = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _map_idAufsichtsbereich_zu_aufsichtsbereich = new HashMap<>();
 
 	// StundenplanFach
-	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_idFach_zu_fach = new HashMap<>();
 	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);
 	};
+	private final @NotNull List<@NotNull StundenplanFach> _list_faecher = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanFach> _map_idFach_zu_fach = new HashMap<>();
 
 	// StundenplanJahrgang
 	private final @NotNull List<@NotNull StundenplanJahrgang> _list_jahrgaenge = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanJahrgang> _map_idJahrgang_zu_jahrgang = new HashMap<>();
 
 	// StundenplanKalenderwochenzuordnung
-	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kwz = new ArrayList<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_idKWZ_zu_kwz = new HashMap<>();
-	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map2d_jahr_kw_zu_kwz = new HashMap2D<>();
 	private static final @NotNull Comparator<@NotNull StundenplanKalenderwochenzuordnung> _compKWZ = (final @NotNull StundenplanKalenderwochenzuordnung a, final @NotNull StundenplanKalenderwochenzuordnung b) -> {
 		if (a.jahr < b.jahr) return -1;
 		if (a.jahr > b.jahr) return +1;
@@ -76,6 +82,9 @@ public class StundenplanManager {
 		if (a.wochentyp > b.wochentyp) return +1;
 		return Long.compare(a.id, b.id);
 	};
+	private final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> _list_kwz = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKalenderwochenzuordnung> _map_idKWZ_zu_kwz = new HashMap<>();
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanKalenderwochenzuordnung> _map2d_jahr_kw_zu_kwz = new HashMap2D<>();
 
 	// StundenplanKlasse
 	private final @NotNull List<@NotNull StundenplanKlasse> _list_klassen = new ArrayList<>();
@@ -95,8 +104,6 @@ public class StundenplanManager {
 	private final @NotNull Comparator<@NotNull StundenplanPausenaufsicht> _compPausenaufsicht = (final @NotNull StundenplanPausenaufsicht a, final @NotNull StundenplanPausenaufsicht b) -> Long.compare(a.id, b.id);
 
 	// StundenplanPausenzeit
-	private final @NotNull List<@NotNull StundenplanPausenzeit> _list_pausenzeiten = new ArrayList<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_idPausenzeit_zu_pausenzeit = new HashMap<>();
 	private static final @NotNull Comparator<@NotNull StundenplanPausenzeit> _compPausenzeit = (final @NotNull StundenplanPausenzeit a, final @NotNull StundenplanPausenzeit b) -> {
 		if (a.wochentag < b.wochentag) return -1;
 		if (a.wochentag > b.wochentag) return +1;
@@ -106,15 +113,22 @@ public class StundenplanManager {
 		if (beginnA > beginnB) return +1;
 		return Long.compare(a.id, b.id);
 	};
+	private final @NotNull List<@NotNull StundenplanPausenzeit> _list_pausenzeiten = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_idPausenzeit_zu_pausenzeit = new HashMap<>();
+	private int _pausenzeitMinutenMin = 480;
+	private int _pausenzeitMinutenMax = 480;
+	private int _pausenzeitUndZeitrasterMinutenMin = 480;
+	private int _pausenzeitUndZeitrasterMinutenMax = 480;
+	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitMapByWochentag = new HashMap<>();
 
 	// StundenplanRaum
-	private final @NotNull List<@NotNull StundenplanRaum> _list_raeume = new ArrayList<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_idRaum_zu_raum = new HashMap<>();
 	private static final @NotNull Comparator<@NotNull StundenplanRaum> _compRaum = (final @NotNull StundenplanRaum a, final @NotNull StundenplanRaum b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);
 	};
+	private final @NotNull List<@NotNull StundenplanRaum> _list_raeume = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_idRaum_zu_raum = new HashMap<>();
 
 	// StundenplanSchiene
 	private final @NotNull List<@NotNull StundenplanSchiene> _list_schienen = new ArrayList<>();
@@ -131,8 +145,16 @@ public class StundenplanManager {
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
+	private boolean _unterrichtHatMultiWochen = false;
 
 	// StundenplanZeitraster
+	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
+		if (a.wochentag < b.wochentag) return -1;
+		if (a.wochentag > b.wochentag) return +1;
+		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
+		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
+		return Long.compare(a.id, b.id);
+	};
 	private final @NotNull List<@NotNull StundenplanZeitraster> _list_zeitraster = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_idZeitraster_zu_zeitraster = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map2d_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
@@ -143,15 +165,9 @@ public class StundenplanManager {
 	private int _zeitrasterStundeMin = 1;
 	private int _zeitrasterStundeMax = 1;
 	private @NotNull int @NotNull [] _zeitrasterStundenRange = new int[] {1};
+	private final @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMinByStunde = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMaxByStunde = new HashMap<>();
 	private @NotNull Wochentag @NotNull [] _zeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
-	private boolean _unterrichtHatMultiWochen = false;
-	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
-		if (a.wochentag < b.wochentag) return -1;
-		if (a.wochentag > b.wochentag) return +1;
-		if (a.unterrichtstunde < b.unterrichtstunde) return -1;
-		if (a.unterrichtstunde > b.unterrichtstunde) return +1;
-		return Long.compare(a.id, b.id);
-	};
 
 	// Weiteres
 	private final long stundenplanID;
@@ -160,6 +176,7 @@ public class StundenplanManager {
 	private final @NotNull String stundenplanGueltigAb;
 	private final @NotNull String stundenplanGueltigBis;
 	private final @NotNull String stundenplanBezeichnung;
+
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -1347,6 +1364,18 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeitGetMengeByWochentagOrEmptyList(final int wochentag) {
+		return MapUtils.getOrCreateArrayList(_pausenzeitMapByWochentag, wochentag);
+	}
+
+	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanPausenzeit}-Objekt und fügt dann das neue Objekt hinzu.
 	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *
@@ -1378,9 +1407,76 @@ public class StundenplanManager {
 		pausenzeitUpdate();
 	}
 
+	/**
+	 * Liefert das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitGetMinutenMin() {
+		return _pausenzeitMinutenMin;
+	}
+
+	/**
+	 * Liefert das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitGetMinutenMax() {
+		return _pausenzeitMinutenMax;
+	}
+
+	/**
+	 * Liefert das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitUndZeitrasterGetMinutenMin() {
+		return _pausenzeitUndZeitrasterMinutenMin;
+	}
+
+	/**
+	 * Liefert das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitUndZeitrasterGetMinutenMax() {
+		return _pausenzeitUndZeitrasterMinutenMax;
+	}
+
+
 	private void pausenzeitUpdate() {
 		// Sortieren
 		_list_pausenzeiten.sort(_compPausenzeit);
+
+		// Initialisierungen
+		_pausenzeitMinutenMin = MINUTEN_INF_POS;               // Ungültiger Dummy-Wert
+		_pausenzeitMinutenMax = MINUTEN_INF_NEG;               // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS;  // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG;  // Ungültiger Dummy-Wert
+		_pausenzeitMapByWochentag.clear();
+
+		// Iterieren
+		for (final @NotNull StundenplanPausenzeit p : _list_pausenzeiten) { // Wichtig: Pausenzeiten sind sortiert!
+			_pausenzeitMinutenMin = BlockungsUtils.minVI(_pausenzeitMinutenMin, p.beginn);
+			_pausenzeitMinutenMax = BlockungsUtils.maxVI(_pausenzeitMinutenMax, p.ende);
+			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, p.beginn);
+			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, p.ende);
+			MapUtils.getOrCreateArrayList(_pausenzeitMapByWochentag, p.wochentag).add(p);
+		}
+		for (final @NotNull StundenplanZeitraster z : _list_zeitraster) {
+			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
+			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+		}
+
+		// Dummy-Werte durch Default-Werte ersetzen.
+		_pausenzeitMinutenMin = (_pausenzeitMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitMinutenMin;
+		_pausenzeitMinutenMax = (_pausenzeitMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitMinutenMax;
+		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
+		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
 	}
 
 	private void raumAddOhneUpdate(final @NotNull StundenplanRaum raum) {
@@ -2388,6 +2484,32 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das Minimum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param stunde  Die Unterrichtsstunde, deren Minimum gesucht wird.
+	 *
+	 * @return das Minimum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int zeitrasterGetMinutenMinDerStunde(final int stunde) {
+		final Integer min = _zeitrasterMinutenMinByStunde.get(stunde); // Beide Fälle von NULL können auftreten!
+		return (min == null) ? 480 : min;
+	}
+
+	/**
+	 * Liefert das Maximum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param stunde  Die Unterrichtsstunde, deren Maximum gesucht wird.
+	 *
+	 * @return das Maximum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int zeitrasterGetMinutenMaxDerStunde(final int stunde) {
+		final Integer max = _zeitrasterMinutenMaxByStunde.get(stunde); // Beide Fälle von NULL können auftreten!
+		return (max == null) ? 480 : max;
+	}
+
+	/**
 	 * Liefert die kleinste Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -2687,41 +2809,52 @@ public class StundenplanManager {
 	 * <br>Laufzeit: O(|Zeitraster| * log)
 	 */
 	private void zeitrasterUpdate() {
+		// Sortieren
+		_list_zeitraster.sort(_compZeitraster);
 
-		if (_list_zeitraster.isEmpty()) {
-			_zeitrasterWochentagMin = Wochentag.MONTAG.id;
-			_zeitrasterWochentagMax = Wochentag.MONTAG.id;
-			_zeitrasterStundeMin = 1;
-			_zeitrasterStundeMax = 1;
-			_zeitrasterStundenRange = new int[] {1};
-			_zeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
-		} else {
-			_list_zeitraster.sort(_compZeitraster);
-			final @NotNull StundenplanZeitraster first = DeveloperNotificationException.ifListGetFirstFailes("_list_zeitraster", _list_zeitraster);
-			int minWT = first.wochentag;
-			int maxWT = first.wochentag;
-			int minSt = first.unterrichtstunde;
-			int maxSt = first.unterrichtstunde;
-			_unterrichtHatMultiWochen = false;
-			for (final @NotNull StundenplanZeitraster z :_list_zeitraster) {
-				minWT = Math.min(minWT, z.wochentag);
-				maxWT = Math.max(maxWT, z.wochentag);
-				minSt = Math.min(minSt, z.unterrichtstunde);
-				maxSt = Math.max(maxSt, z.unterrichtstunde);
-			}
-			_zeitrasterWochentagMin =  minWT;
-			_zeitrasterWochentagMax =  maxWT;
-			_zeitrasterStundeMin = minSt;
-			_zeitrasterStundeMax = maxSt;
+		// Initialisierungen
+		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
+		_zeitrasterWochentagMin = WOCHENTAG_INF_POS;          // Ungültiger Dummy-Wert
+		_zeitrasterWochentagMax = WOCHENTAG_INF_NEG;          // Ungültiger Dummy-Wert
+		_zeitrasterStundeMin = STUNDE_INF_POS;                // Ungültiger Dummy-Wert
+		_zeitrasterStundeMax = STUNDE_INF_NEG;                // Ungültiger Dummy-Wert
+		_zeitrasterMinutenMinByStunde.clear();
+		_zeitrasterMinutenMaxByStunde.clear();
 
-			_zeitrasterStundenRange = new int[maxSt - minSt + 1];
-			for (int i = 0; i < _zeitrasterStundenRange.length; i++)
-				_zeitrasterStundenRange[i] = minSt + i;
-
-			_zeitrasterWochentageAlsEnumRange = new Wochentag[maxWT - minWT + 1];
-			for (int i = 0; i < _zeitrasterWochentageAlsEnumRange.length; i++)
-				_zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(minWT + i);
+		// Iterieren
+		for (final @NotNull StundenplanZeitraster z :_list_zeitraster) {
+			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
+			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+			_zeitrasterWochentagMin = BlockungsUtils.minVI(_zeitrasterWochentagMin, z.wochentag);
+			_zeitrasterWochentagMax = BlockungsUtils.maxVI(_zeitrasterWochentagMax, z.wochentag);
+			_zeitrasterStundeMin = BlockungsUtils.minVI(_zeitrasterStundeMin, z.unterrichtstunde);
+			_zeitrasterStundeMax = BlockungsUtils.maxVI(_zeitrasterStundeMax, z.unterrichtstunde);
+			_zeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(_zeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
+			_zeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(_zeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.unterrichtstunde));
 		}
+		for (final @NotNull StundenplanPausenzeit p :_list_pausenzeiten) {
+			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, p.beginn);
+			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, p.ende);
+		}
+
+		// Dummy-Werte mit Default-Werten ersetzen
+		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
+		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
+		_zeitrasterWochentagMin = (_zeitrasterWochentagMin == WOCHENTAG_INF_POS) ? Wochentag.MONTAG.id : _zeitrasterWochentagMin;
+		_zeitrasterWochentagMax = (_zeitrasterWochentagMax == WOCHENTAG_INF_NEG) ? Wochentag.MONTAG.id : _zeitrasterWochentagMax;
+		_zeitrasterStundeMin = (_zeitrasterStundeMin == STUNDE_INF_POS) ? 1 : _zeitrasterStundeMin;
+		_zeitrasterStundeMax = (_zeitrasterStundeMax == STUNDE_INF_NEG) ? 1 : _zeitrasterStundeMax;
+
+		// _zeitrasterStundenRange
+		_zeitrasterStundenRange = new int[_zeitrasterStundeMax - _zeitrasterStundeMin + 1];
+		for (int i = 0; i < _zeitrasterStundenRange.length; i++)
+			_zeitrasterStundenRange[i] = _zeitrasterStundeMin + i;
+
+		// _zeitrasterWochentageAlsEnumRange
+		_zeitrasterWochentageAlsEnumRange = new Wochentag[_zeitrasterWochentagMax - _zeitrasterWochentagMin + 1];
+		for (int i = 0; i < _zeitrasterWochentageAlsEnumRange.length; i++)
+			_zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_zeitrasterWochentagMin + i);
 	}
 
 }

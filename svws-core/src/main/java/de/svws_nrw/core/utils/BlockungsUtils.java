@@ -58,4 +58,66 @@ public final class BlockungsUtils {
 		return new String[] {prefix, suffix};
 	}
 
+	/**
+	 * Liefert das Minimum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 *
+	 * @param value1        Der 1. Zahlenwert.
+	 * @param value2orNull  Der 2. Zahlenwert (oder NULL).
+	 *
+	 * @return das Minimum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 */
+	public static int minVI(final int value1, final Integer value2orNull) {
+		if (value2orNull == null)
+			return value1;
+		final int value2 = value2orNull;
+		return value1 <= value2 ? value1 : value2;
+	}
+
+	/**
+	 * Liefert das Maximum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 *
+	 * @param value1        Der 1. Zahlenwert.
+	 * @param value2orNull  Der 2. Zahlenwert (oder NULL).
+	 *
+	 * @return das Maximum beider Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 */
+	public static int maxVI(final int value1, final Integer value2orNull) {
+		if (value2orNull == null)
+			return value1;
+		final int value2 = value2orNull;
+		return value1 >= value2 ? value1 : value2;
+	}
+
+	/**
+	 * Liefert das Minimum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 *
+	 * @param a  Der 1. Zahlenwert (oder NULL).
+	 * @param b  Der 2. Zahlenwert (oder NULL).
+	 *
+	 * @return das Minimum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 */
+	public static Integer minII(final Integer a, final Integer b) {
+		if (a == null)
+			return b;
+		if (b == null)
+			return a;
+		return a <= b ? a : b;
+	}
+
+	/**
+	 * Liefert das Maximum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 *
+	 * @param a  Der 1. Zahlenwert (oder NULL).
+	 * @param b  Der 2. Zahlenwert (oder NULL).
+	 *
+	 * @return das Maximum zweier Integer-Zahlenwerte. Ein NULL-Wert wird ignoriert.
+	 */
+	public static Integer maxII(final Integer a, final Integer b) {
+		if (a == null)
+			return b;
+		if (b == null)
+			return a;
+		return a >= b ? a : b;
+	}
+
 }
