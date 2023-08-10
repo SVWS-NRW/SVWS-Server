@@ -47,6 +47,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final StundenplanKurs daten = new StundenplanKurs();
 		daten.id = k.ID;
 		daten.bezeichnung = k.KurzBez;
+		daten.wochenstunden = k.WochenStd;
 		return daten;
 	};
 

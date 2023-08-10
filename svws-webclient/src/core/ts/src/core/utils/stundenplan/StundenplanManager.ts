@@ -1283,6 +1283,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
+	 * <br> Laufzeit: O(1)
 	 *
 	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
 	 *

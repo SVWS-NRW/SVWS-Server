@@ -15,6 +15,11 @@ export class StundenplanKurs extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
+	 * Die Wochenstunden, welche dem Kurs zugeordnet sind
+	 */
+	public wochenstunden : number = 0;
+
+	/**
 	 * Die Liste der IDs der Schienen, denen der Kurs zugeordnet ist.
 	 */
 	public schienen : List<number> = new ArrayList();
@@ -47,6 +52,9 @@ export class StundenplanKurs extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (typeof obj.wochenstunden === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstunden');
+		result.wochenstunden = obj.wochenstunden;
 		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
 			for (const elem of obj.schienen) {
 				result.schienen?.add(elem);
@@ -69,6 +77,7 @@ export class StundenplanKurs extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		if (!obj.schienen) {
 			result += '"schienen" : []';
 		} else {
@@ -117,6 +126,9 @@ export class StundenplanKurs extends JavaObject {
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		}
+		if (typeof obj.wochenstunden !== "undefined") {
+			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		}
 		if (typeof obj.schienen !== "undefined") {
 			if (!obj.schienen) {

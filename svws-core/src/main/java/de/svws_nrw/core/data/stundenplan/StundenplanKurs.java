@@ -25,6 +25,10 @@ public class StundenplanKurs {
 	@Schema(description = "Die Bezeichnung des Kurses", example = "M-GK1")
 	public @NotNull String bezeichnung = "";
 
+	/** Die Wochenstunden, welche dem Kurs zugeordnet sind */
+	@Schema(description = "die Wochenstunden, welche dem Kurs zugeordnet sind.", example = "3")
+	public int wochenstunden = 0;
+
 	/** Die Liste der IDs der Schienen, denen der Kurs zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Schienen, denen der Kurs zugeordnet ist")
 	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
