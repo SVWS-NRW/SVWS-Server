@@ -89,8 +89,8 @@
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
 							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 						}"
-						:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
-						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();" @drop="istKursDropAendereKursschiene(kurs, schiene)">
+						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
+						@drop="dropKursAtSchiene(kurs, schiene)">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="true" :key="kurs.id"
 							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black cursor-grab"
@@ -114,10 +114,7 @@
 						<!-- ... ansonsten ist er nicht draggable -->
 						<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
 							:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
-							:class="{
-								'bg-white': dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value,
-								'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value
-							}">
+							:class="{ 'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							&NonBreakingSpace;
 							<template v-if="dragDataKursSchiene !== undefined">
 								<div v-if="dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
@@ -148,6 +145,7 @@
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>
 		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
+		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 	</template>
 </template>
 
@@ -206,6 +204,7 @@
 	}
 
 	const modal_regel_kurse = ref();
+	const modal_combine_kurse = ref();
 
 	const edit_name = ref<number | undefined>(undefined);
 	const tmp_name = ref("");
@@ -372,11 +371,15 @@
 		return true;
 	});
 
-	async function istKursDropAendereKursschiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
+	async function dropKursAtSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
 		if (dragDataKursSchiene.value === undefined)
 			return;
 		if (dragDataKursSchiene.value.kurs.id !== kurs.id) {
-			modal_regel_kurse.value.openModal(dragDataKursSchiene.value.kurs.id, kurs.id);
+			const schienen = props.getErgebnismanager().getOfKursSchienenmenge(kurs.id);
+			if (schienen.contains(schiene))
+				modal_combine_kurse.value.openModal(dragDataKursSchiene.value.kurs, kurs);
+			else
+				modal_regel_kurse.value.openModal(dragDataKursSchiene.value.kurs.id, kurs.id);
 			return;
 		}
 		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (!istZugeordnetKursSchiene(kurs, schiene).value) ) {
