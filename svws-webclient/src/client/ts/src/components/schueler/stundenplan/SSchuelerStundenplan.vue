@@ -1,16 +1,18 @@
 <template>
-	<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-		<svws-ui-sub-nav>
-			<stundenplan-auswahl :stundenplan="stundenplan" :map-stundenplaene="mapStundenplaene" :goto-stundenplan="gotoStundenplan" :goto-wochentyp="gotoWochentyp"
-				:goto-kalenderwoche="gotoKalenderwoche" :manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" />
-			<svws-ui-modal-hilfe class="ml-auto"> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
-		</svws-ui-sub-nav>
+	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+		<svws-ui-button type="secondary" @click="print"><i-ri-printer-line />Drucken</svws-ui-button>
+		<svws-ui-modal-hilfe> <hilfe-schueler-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<div class="w-full h-full p-8">
+	<div class="page--content page--content--flex">
 		<template v-if="stundenplan === undefined">
-			Derzeit liegt kein Stundenplan für diesen Lernabschnitt vor.
+			<div class="svws-ui-empty">
+				<i-ri-calendar-event-line />
+				<span>Derzeit liegt kein Stundenplan<br>für diesen Lernabschnitt vor.</span>
+			</div>
 		</template>
 		<template v-else>
+      <stundenplan-auswahl :stundenplan="stundenplan" :map-stundenplaene="mapStundenplaene" :goto-stundenplan="gotoStundenplan" :goto-wochentyp="gotoWochentyp"
+                           :goto-kalenderwoche="gotoKalenderwoche" :manager="manager" :wochentyp="wochentyp" :kalenderwoche="kalenderwoche" />
 			<router-view :key="$route.hash" />
 		</template>
 	</div>
@@ -22,6 +24,10 @@
 	import { onMounted, ref } from "vue";
 
 	defineProps<StundenplanAuswahlProps>();
+
+	const print = () => {
+		window.print();
+	};
 
 	const isMounted = ref(false);
 	onMounted(() => {
