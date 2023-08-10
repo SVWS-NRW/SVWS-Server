@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Klassenleitungen">
+	<svws-ui-content-card title="Klassenleitung">
 		<svws-ui-data-table :columns="cols" :items="liste" />
 	</svws-ui-content-card>
 </template>

@@ -63,12 +63,13 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
+			mapLehrer: this.data.mapLehrer,
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
-			gotoEintrag: this.data.gotoEintrag,
+			gotoEintrag: this.data.gotoEintrag
 		};
 	}
 

@@ -1,19 +1,22 @@
 <template>
 	<template v-if="visible">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ auswahl?.kuerzel ?? '' }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ auswahl?.id }}
-				</svws-ui-badge>
-			</div>
-			<div>
-				<div class="separate-items--custom">
-					<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						{{ auswahl?.kuerzel || '—' }}
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID:
+							{{ auswahl?.id || '—' }}
+						</svws-ui-badge>
+					</h2>
+					<span class="svws-subline separate-items--custom">
+						<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
+					</span>
 				</div>
 			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>

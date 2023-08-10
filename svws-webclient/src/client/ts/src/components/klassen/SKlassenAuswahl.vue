@@ -7,6 +7,11 @@
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols">
 				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
+				<template #cell(klassenLehrer)="{value}">
+					<span class="separate-items--custom">
+						<span v-for="(l, i) in value" :key="i"> {{ getKlassenlehrerKuerzelById(l) }} </span>
+					</span>
+				</template>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse" />
 				</template>
@@ -21,9 +26,10 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import type { Ref } from "vue";
+	import type { Ref, ComputedRef } from "vue";
 	import { computed, ref } from "vue";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import type {LehrerListeEintrag} from "@core";
 
 	const props = defineProps<KlassenAuswahlProps>();
 	const sichtbar: Ref<boolean> = ref(true);
@@ -40,7 +46,17 @@
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5 },
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
+		{ key: "klassenLehrer", label: "Klassenleitung", sortable: true }
 	];
+
+	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
+		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
+	);
+
+	const getKlassenlehrerKuerzelById = (id: number) => {
+		const lehrer = props.mapLehrer.get(id);
+		if (lehrer) return lehrer.kuerzel;
+		return "";
+	}
 
 </script>
