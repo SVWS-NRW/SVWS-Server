@@ -1,13 +1,13 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
+	<svws-ui-modal ref="modal" type="danger" class="hidden">
 		<template #modalTitle>Zeitraster importieren</template>
 		<template #modalContent>
 			Beim Import der Katalogzeitraster werden alle bisher für den Stundenplan angelegten Zeitraster entfernt und durch Zeitraster aus dem Schulkatalog ersetzt.
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()"> Zeitraster importieren </svws-ui-button>
+			<svws-ui-button type="danger" @click="importer()"> Importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

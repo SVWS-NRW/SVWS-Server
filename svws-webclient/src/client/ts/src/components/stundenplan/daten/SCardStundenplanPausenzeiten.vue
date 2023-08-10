@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Pausenzeiten">
+	<svws-ui-content-card title="Pausenzeiten" class="lg:col-start-2">
 		<svws-ui-data-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" clickable v-model:clicked="zeit" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(wochentag)="{ rowData }">
 				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
@@ -12,14 +12,12 @@
 			</template>
 			<template #footerActions>
 				<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeiten">
-					<svws-ui-button @click="openModal()" type="secondary" title="Pausenzeiten importieren">Aus Katalog importieren</svws-ui-button>
+					<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
 				</s-card-stundenplan-import-pausenzeiten-modal>
+				<svws-ui-button v-if="selected.length > 0" @click="removePausenzeiten(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
 				<s-card-stundenplan-add-pausenzeit-modal v-slot="{ openModal }" :add-pausenzeit="addPausenzeit">
-					<svws-ui-button @click="openModal()" type="secondary" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+					<svws-ui-button @click="openModal()" type="icon" title="Pausenzeit hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 				</s-card-stundenplan-add-pausenzeit-modal>
-				<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
-					<svws-ui-button @click="removePausenzeiten(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
-				</div>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>

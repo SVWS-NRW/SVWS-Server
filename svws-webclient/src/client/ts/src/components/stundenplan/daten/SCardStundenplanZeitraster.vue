@@ -1,28 +1,30 @@
 <template>
-	<svws-ui-content-card title="Zeitraster">
+	<svws-ui-content-card title="Zeitraster" class="col-span-full">
 		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
 			<StundenplanWoche :map-tage="mapTage">
 				<template #zeiten>
-					<div class="flex flex-col border w-full" v-if="gleicheZeiten !== undefined">
-						<div class="font-bold text-headline-md">Zeiten</div>
-						<div v-for="stunde of gleicheZeiten" :key="stunde.id" @click="openModal(stunde, true)" @mouseover="selected=stunde.unterrichtstunde" @mouseleave="selected=0" class="border rounded-md m-1 font-bold text-headline-md hover:bg-slate-400 select-none cursor-pointer">
-							<div class="flex flex-col gap-1 h-14">{{ stunde.stundenbeginn }} - {{ stunde.stundenende }}</div>
+					<div class="svws-ui-zeitraster--tag" v-if="gleicheZeiten !== undefined">
+						<div class="svws-ui-zeitraster--head">Zeiten</div>
+						<div v-for="stunde of gleicheZeiten" :key="stunde.id" @click="openModal(stunde, true)" @mouseover="selected=stunde.unterrichtstunde" @mouseleave="selected=0" class="svws-ui-zeitraster--entry svws-alternative">
+							<div class="svws-ui-zeitraster--stunde text-button font-bold">{{ stunde.stundenbeginn }}–{{ stunde.stundenende }}</div>
 						</div>
 					</div>
 				</template>
 				<StundenplanTag v-for="[tag, listZeitraster] of mapTage.entries()" :key="tag" :tag="tag">
-					<StundenplanEntry v-for="stunde of listZeitraster" :key="stunde.id" :entry="stunde" @click="openModal(stunde, false)" class="hover:bg-slate-400 select-none cursor-pointer" :class="{'bg-slate-400': stunde.unterrichtstunde === selected}">
-						<StundenplanStunde :stunde="stunde" />
+					<StundenplanEntry v-for="stunde of listZeitraster" :key="stunde.id" :entry="stunde" @click="openModal(stunde, false)" class="group" :class="{'svws-group-hover bg-svws/5 text-svws': stunde.unterrichtstunde === selected}">
+						<StundenplanStunde :stunde="stunde" class="group-hover:border-svws" />
 					</StundenplanEntry>
 				</StundenplanTag>
 			</StundenplanWoche>
 		</SCardStundenplanZeitrasterModal>
-		<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
-			<svws-ui-button type="transparent" size="small" @click="openModal()">Zeitraster hinzufügen</svws-ui-button>
-		</SCardStundenplanZeitrasterModal>
-		<SCardStundenplanZeitrasterImportModal :stundenplan-manager="stundenplanManager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
-			<svws-ui-button type="transparent" size="small" @click="openModal()">Zeitraster importieren</svws-ui-button>
-		</SCardStundenplanZeitrasterImportModal>
+		<div class="flex items-center gap-2 flex-wrap mt-5 justify-end">
+			<SCardStundenplanZeitrasterImportModal :stundenplan-manager="stundenplanManager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+				<svws-ui-button type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+			</SCardStundenplanZeitrasterImportModal>
+			<SCardStundenplanZeitrasterModal :add-zeitraster="addZeitraster" :patch-zeitraster="patchZeitraster" :stundenplan-manager="stundenplanManager" v-slot="{ openModal }">
+				<svws-ui-button type="primary" @click="openModal()">Zeitraster hinzufügen</svws-ui-button>
+			</SCardStundenplanZeitrasterModal>
+		</div>
 	</svws-ui-content-card>
 </template>
 
@@ -92,3 +94,11 @@
 		return stunden;
 	})
 </script>
+
+<style lang="postcss" scoped>
+.svws-group-hover {
+  .svws-ui-zeitraster--stunde {
+    @apply border-svws text-svws;
+  }
+}
+</style>

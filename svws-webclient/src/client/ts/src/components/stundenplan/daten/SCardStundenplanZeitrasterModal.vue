@@ -1,25 +1,35 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
-		<template #modalTitle>Zeitraster bearbeiten</template>
+	<svws-ui-modal ref="modal" size="medium" class="hidden">
+		<template #modalTitle>Zeitraster {{ item.id < 1 ? 'hinzufügen' : 'bearbeiten' }}</template>
 		<template #modalContent>
-			<svws-ui-input-wrapper :grid="2">
-				<template v-if="multi.length > 1">
-					{{ stundenplanManager().zeitrasterGetWochentagMinEnum().beschreibung }}	bis {{ stundenplanManager().zeitrasterGetWochentagMaxEnum().beschreibung }}
-				</template>
+			<svws-ui-input-wrapper :grid="4" :class="item.id < 1 ? 'items-start' : 'items-center'">
+				<div v-if="multi.length > 1" class="text-headline-md text-left">
+					<span>{{ stundenplanManager().zeitrasterGetWochentagMinEnum().beschreibung }}–{{ stundenplanManager().zeitrasterGetWochentagMaxEnum().beschreibung }}</span>
+				</div>
 				<template v-if="item.id < 1">
-					<svws-ui-checkbox v-for="tag of [1,2,3,4,5,6,7]" :key="tag" :model-value="listTage.get(tag) || false" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
+					<div class="flex gap-x-5 flex-col -mb-12">
+						<svws-ui-checkbox v-for="tag of [1,2,3,4,5,6,7]" :key="tag" :model-value="listTage.get(tag) || false" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
+					</div>
 				</template>
-				<div v-if="multi.length === 1 && item.id > 0" class="font-bold">{{ Wochentag.fromIDorException(item.wochentag) }}</div>
+				<div v-if="multi.length === 1 && item.id > 0" class="text-headline-md text-left">
+					<span>{{ Wochentag.fromIDorException(item.wochentag) }}</span>
+				</div>
 				<svws-ui-text-input type="number" v-model="item.unterrichtstunde" required placeholder="Stunde" />
 				<svws-ui-text-input v-model="item.stundenbeginn" required placeholder="Stundenbeginn" />
 				<svws-ui-text-input v-model="item.stundenende" placeholder="Stundenende" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.unterrichtstunde"> Zeitraster Anpassen </svws-ui-button>
-			<svws-ui-button v-if="removeZeitraster" type="secondary" @click="remove()"> Zeitraster entfernen </svws-ui-button>
+			<div class="flex justify-between w-full">
+				<div>
+					<svws-ui-button v-if="removeZeitraster" type="danger" @click="remove()"> Eintrag entfernen </svws-ui-button>
+				</div>
+				<div class="flex gap-2">
+					<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
+					<svws-ui-button @click="importer()" :disabled="!item.unterrichtstunde"> {{ item.id < 1 ? 'Hinzufügen' : 'Speichern' }} </svws-ui-button>
+				</div>
+			</div>
 		</template>
 	</svws-ui-modal>
 </template>

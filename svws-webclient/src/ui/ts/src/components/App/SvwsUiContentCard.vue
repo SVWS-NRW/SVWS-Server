@@ -68,6 +68,18 @@
 		&--actions {
 			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3;
 		}
+
+    &.col-span-full {
+      .content-card--actions {
+        @apply max-xl:w-auto max-xl:mb-0 max-md:w-full max-md:mb-3;
+      }
+    }
+
+    &.h-full {
+      .content-card--content {
+        @apply min-h-full;
+      }
+    }
 	}
 
 	.content-card--wrapper--light-bg .content-card--header {

@@ -148,6 +148,16 @@
 		<Variant title="Weitere Icons" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
+					<th><i-ri-printer-line /></th>
+					<td>Drucken</td>
+					<td><code>{{ '<' }}i-ri-printer-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-upload-cloud-2-line /></th>
+					<td>Importieren, Hochladen</td>
+					<td><code>{{ '<' }}i-ri-upload-cloud-2-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
 					<th><i-ri-bar-chart2-line /></th>
 					<td>Tooltip Label für statistikrelevante Inputs</td>
 					<td><code>{{ '<' }}i-ri-bar-chart-2-line{{ ' />' }}</code></td>

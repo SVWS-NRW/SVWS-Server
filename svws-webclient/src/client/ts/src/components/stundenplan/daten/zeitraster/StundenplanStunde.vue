@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-1 h-14">
+	<div class="svws-ui-zeitraster--stunde">
 		<div class="font-bold text-headline-md">{{ stunde.unterrichtstunde }}</div>
 		<slot />
 	</div>
@@ -13,3 +13,9 @@
 	}>()
 
 </script>
+
+<style lang="postcss">
+.svws-ui-zeitraster--stunde {
+  @apply flex flex-col gap-1 h-16 justify-center items-center p-2 border border-black/25 rounded;
+}
+</style>
