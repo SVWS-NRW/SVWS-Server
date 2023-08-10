@@ -152,7 +152,7 @@ export class RouteDataStundenplan {
 		for (const zeitraster of multi) {
 			Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende})
 			await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
-			this.stundenplanManager.patchZeitraster(zeitraster);
+			this.stundenplanManager.zeitrasterPatch(zeitraster);
 		}
 		this.commit();
 	}
@@ -195,7 +195,7 @@ export class RouteDataStundenplan {
 			delete item.id;
 			item.wochentag = tag;
 			const _item = await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id)
-			this.stundenplanManager.addZeitraster(_item);
+			this.stundenplanManager.zeitrasterAdd(_item);
 		}
 		this.commit();
 	}
@@ -229,7 +229,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
-			this.stundenplanManager.removeZeitraster(zeitraster.id);
+			this.stundenplanManager.zeitrasterRemove(zeitraster.id);
 		}
 		this.commit();
 	}

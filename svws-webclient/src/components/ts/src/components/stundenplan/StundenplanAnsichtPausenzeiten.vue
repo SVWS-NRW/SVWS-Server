@@ -71,12 +71,12 @@
 
 	const beginn = computed(() => {
 		// TODO Pausenzeiten Min
-		return props.manager().getZeitrasterMinutenMin();
+		return props.manager().zeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
 		// TODO Pausenzeiten Max
-		return props.manager().getZeitrasterMinutenMax();
+		return props.manager().zeitrasterGetMinutenMax();
 	});
 
 	const gesamtzeit = computed(() => {

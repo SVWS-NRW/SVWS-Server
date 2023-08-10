@@ -5,7 +5,7 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
 				<template v-if="multi.length > 1">
-					{{ stundenplanManager().getZeitrasterWochentagMin().beschreibung }}	bis {{ stundenplanManager().getZeitrasterWochentagMax().beschreibung }}
+					{{ stundenplanManager().zeitrasterGetWochentagMinEnum().beschreibung }}	bis {{ stundenplanManager().zeitrasterGetWochentagMaxEnum().beschreibung }}
 				</template>
 				<template v-if="item.id < 1">
 					<svws-ui-checkbox v-for="tag of [1,2,3,4,5,6,7]" :key="tag" :model-value="listTage.get(tag) || false" @update:model-value="updateMap(tag, $event)" :value="tag">{{ Wochentag.fromIDorException(tag) }}</svws-ui-checkbox>
