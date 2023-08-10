@@ -311,6 +311,7 @@ export { StundenplanFach } from './core/data/stundenplan/StundenplanFach';
 export { StundenplanJahrgang } from './core/data/stundenplan/StundenplanJahrgang';
 export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 export { StundenplanKlasse } from './core/data/stundenplan/StundenplanKlasse';
+export { StundenplanKlassenunterricht } from './core/data/stundenplan/StundenplanKlassenunterricht';
 export { StundenplanKomplett } from './core/data/stundenplan/StundenplanKomplett';
 export { StundenplanKurs } from './core/data/stundenplan/StundenplanKurs';
 export { StundenplanLehrer } from './core/data/stundenplan/StundenplanLehrer';

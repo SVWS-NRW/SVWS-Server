@@ -41,4 +41,8 @@ public class StundenplanUnterrichtsverteilung {
 	@Schema(description = "die Liste der Kurse, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<@NotNull StundenplanKurs> kurse = new ArrayList<>();
 
+	/** Die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen. */
+	@Schema(description = "die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen")
+	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterricht = new ArrayList<>();
+
 }

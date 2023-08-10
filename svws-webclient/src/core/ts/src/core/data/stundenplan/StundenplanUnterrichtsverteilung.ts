@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanLehrer } from '../../../core/data/stundenplan/StundenplanLehrer';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
+import { StundenplanKlassenunterricht } from '../../../core/data/stundenplan/StundenplanKlassenunterricht';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
@@ -38,6 +39,11 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 	 * Die Liste der Kurse, die für den Stundenplan zur Verfügung stehen.
 	 */
 	public kurse : List<StundenplanKurs> = new ArrayList();
+
+	/**
+	 * Die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen.
+	 */
+	public klassenunterricht : List<StundenplanKlassenunterricht> = new ArrayList();
 
 
 	public constructor() {
@@ -77,6 +83,11 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
 			for (const elem of obj.kurse) {
 				result.kurse?.add(StundenplanKurs.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.klassenunterricht !== undefined) && (obj.klassenunterricht !== null)) {
+			for (const elem of obj.klassenunterricht) {
+				result.klassenunterricht?.add(StundenplanKlassenunterricht.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -141,6 +152,18 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 				const elem = obj.kurse.get(i);
 				result += StundenplanKurs.transpilerToJSON(elem);
 				if (i < obj.kurse.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.klassenunterricht) {
+			result += '"klassenunterricht" : []';
+		} else {
+			result += '"klassenunterricht" : [ ';
+			for (let i = 0; i < obj.klassenunterricht.size(); i++) {
+				const elem = obj.klassenunterricht.get(i);
+				result += StundenplanKlassenunterricht.transpilerToJSON(elem);
+				if (i < obj.klassenunterricht.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -220,6 +243,20 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 					const elem = obj.kurse.get(i);
 					result += StundenplanKurs.transpilerToJSON(elem);
 					if (i < obj.kurse.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.klassenunterricht !== "undefined") {
+			if (!obj.klassenunterricht) {
+				result += '"klassenunterricht" : []';
+			} else {
+				result += '"klassenunterricht" : [ ';
+				for (let i = 0; i < obj.klassenunterricht.size(); i++) {
+					const elem = obj.klassenunterricht.get(i);
+					result += StundenplanKlassenunterricht.transpilerToJSON(elem);
+					if (i < obj.klassenunterricht.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';
