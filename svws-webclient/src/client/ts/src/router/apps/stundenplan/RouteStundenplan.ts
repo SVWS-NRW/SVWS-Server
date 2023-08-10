@@ -1,4 +1,8 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteApp } from "~/router/apps/RouteApp";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
+import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -6,18 +10,15 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
-import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "~/router/apps/stundenplan/RouteStundenplanUnterricht";
 import { routeStundenplanPausenaufsicht } from "~/router/apps/stundenplan/RouteStundenplanPausenaufsicht";
+import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
-import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -34,6 +35,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanDaten,
 			routeStundenplanUnterricht,
 			routeStundenplanPausenaufsicht,
+			routeStundenplanZeitrasterPausenzeit,
 		];
 		super.defaultChild = routeStundenplanDaten;
 	}
@@ -112,7 +114,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { } });
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
 		await this.data.setView(node);
 	}
 }
