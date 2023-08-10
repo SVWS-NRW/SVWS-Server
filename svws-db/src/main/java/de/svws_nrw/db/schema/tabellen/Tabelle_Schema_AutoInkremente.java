@@ -23,7 +23,7 @@ public class Tabelle_Schema_AutoInkremente extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle SVWS_DB_AutoInkremente.
+	 * Erstellt die Schema-Defintion für die Tabelle Schema_AutoInkremente.
 	 */
 	public Tabelle_Schema_AutoInkremente() {
 		super("Schema_AutoInkremente", SchemaRevisionen.REV_0);
