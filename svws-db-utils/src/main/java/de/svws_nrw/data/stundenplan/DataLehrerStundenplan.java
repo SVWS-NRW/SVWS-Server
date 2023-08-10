@@ -84,6 +84,13 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		stundenplan.daten.kalenderwochenZuordnung.addAll(DataStundenplanKalenderwochenzuordnung.getKalenderwochenzuordnungen(conn, idStundenplan));
 		if (!stundenplan.daten.zeitraster.isEmpty())
 			getUnterricht(stundenplan, lehrer.id, stundenplan.daten.zeitraster);
+		// Füge ggf. noch die Schüler der Klassen zu der Schülerliste hinzu
+		final Set<Long> schuelerIDs = new HashSet<>();
+		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.klassen.stream().flatMap(k -> k.schueler.stream()).toList());
+		schuelerIDs.removeAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.id).toList());
+		if (!schuelerIDs.isEmpty())
+			stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
+				.filter(s -> schuelerIDs.contains(s.id)).toList());
 		// Füge die Pausenaufsichten des Lehrers hinzu und ergänze ggf. noch den Lehrer selbst mit seinen Fächern...
 		stundenplan.pausenaufsichten = DataStundenplanPausenaufsichten.getAufsichtenVonLehrer(conn, idStundenplan, lehrer.id);
 		if (stundenplan.unterrichtsverteilung.lehrer.isEmpty()) {
@@ -161,6 +168,9 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 			stundenplan.unterrichtsverteilung.lehrer.add(l);
 		stundenplan.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
 				.filter(k -> kursIDs.contains(k.id)).toList());
+		final Set<Long> klassenIDs = stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
+		stundenplan.unterrichtsverteilung.klassenunterricht.addAll(DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream()
+				.filter(k -> klassenIDs.contains(k.idKlasse)).toList());
 		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
 		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen

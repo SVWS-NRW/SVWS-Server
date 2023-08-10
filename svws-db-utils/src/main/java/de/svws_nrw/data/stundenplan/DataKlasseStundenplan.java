@@ -84,6 +84,13 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 			getUnterricht(stundenplan, klasse, stundenplan.daten.zeitraster);
 		if (stundenplan.unterrichtsverteilung.klassen.isEmpty())
 			stundenplan.unterrichtsverteilung.klassen.add(klasse);
+		// Füge ggf. noch die Schüler der Klassen zu der Schülerliste hinzu
+		final Set<Long> schuelerIDs = new HashSet<>();
+		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.klassen.stream().flatMap(k -> k.schueler.stream()).toList());
+		schuelerIDs.removeAll(stundenplan.unterrichtsverteilung.schueler.stream().map(s -> s.id).toList());
+		if (!schuelerIDs.isEmpty())
+			stundenplan.unterrichtsverteilung.schueler.addAll(DataStundenplanSchueler.getSchueler(conn, idStundenplan).stream()
+				.filter(s -> schuelerIDs.contains(s.id)).toList());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(stundenplan).build();
 	}
 
@@ -158,6 +165,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 			stundenplan.unterrichtsverteilung.lehrer.add(l);
 		stundenplan.unterrichtsverteilung.kurse.addAll(DataStundenplanKurse.getKurse(conn, idStundenplan).stream()
 				.filter(k -> kursIDs.contains(k.id)).toList());
+		stundenplan.unterrichtsverteilung.klassenunterricht.addAll(DataStundenplanKlassenunterricht.getKlassenunterricht(conn, klasse.id));
 		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
 		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen

@@ -37,12 +37,4 @@ public class StundenplanKlassenunterricht {
 	@Schema(description = "die Liste der IDs der Schienen, denen der Klassenunterricht zugeordnet ist")
 	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
 
-	/** Die Liste der IDs der Jahrgänge, denen der Klassenunterricht zugeordnet ist. */
-	@Schema(description = "die Liste der IDs der Jahrgänge, denen der Klassenunterricht zugeordnet ist")
-	public @NotNull List<@NotNull Long> jahrgaenge = new ArrayList<>();
-
-	/** Die Liste der IDs der Schüler, die dem Klassenunterricht zugeordnet sind. */
-	@Schema(description = "die Liste der IDs der Schüler, die dem Klassenunterricht zugeordnet sind")
-	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
-
 }
