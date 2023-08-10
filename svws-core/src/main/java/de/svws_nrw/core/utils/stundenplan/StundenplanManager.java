@@ -160,14 +160,16 @@ public class StundenplanManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map2d_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_wochentag_zu_zeitrastermenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_stunde_zu_zeitrastermenge = new HashMap<>();
-	private int _zeitrasterWochentagMin = Wochentag.MONTAG.id;
-	private int _zeitrasterWochentagMax = Wochentag.MONTAG.id;
-	private int _zeitrasterStundeMin = 1;
-	private int _zeitrasterStundeMax = 1;
 	private @NotNull int @NotNull [] _zeitrasterStundenRange = new int[] {1};
 	private final @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMinByStunde = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, Integer> _zeitrasterMinutenMaxByStunde = new HashMap<>();
 	private @NotNull Wochentag @NotNull [] _zeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
+	private int _zeitrasterWochentagMin = Wochentag.MONTAG.id;
+	private int _zeitrasterWochentagMax = Wochentag.MONTAG.id;
+	private int _zeitrasterStundeMin = 1;
+	private int _zeitrasterStundeMax = 1;
+	private int _zeitrasterMinutenMin = 480;
+	private int _zeitrasterMinutenMax = 480;
 
 	// Weiteres
 	private final long stundenplanID;
@@ -1752,38 +1754,22 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
 	 */
 	public int zeitrasterGetMinutenMin() {
-		// TODO BAR O(1)
-		for (final @NotNull StundenplanZeitraster z :_list_zeitraster)
-			if (z.stundenbeginn != null) {
-				int min = z.stundenbeginn;
-				for (final @NotNull StundenplanZeitraster z2 :_list_zeitraster)
-					if ((z2.stundenbeginn != null) && (z2.stundenbeginn < min))
-						min = z2.stundenbeginn;
-				return min;
-			}
-		return 480;
+		return _zeitrasterMinutenMin;
 	}
 
 	/**
 	 * Liefert den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
 	 */
 	public int zeitrasterGetMinutenMax() {
-		// TODO BAR O(1)
-		for (final @NotNull StundenplanZeitraster z :_list_zeitraster)
-			if (z.stundenende != null) {
-				int max = z.stundenende;
-				for (final @NotNull StundenplanZeitraster z2 :_list_zeitraster)
-					if ((z2.stundenende != null) && (z2.stundenende > max))
-						max = z2.stundenende;
-				return max;
-			}
-		return 480;
+		return _zeitrasterMinutenMax;
 	}
 
 	/**
@@ -2597,6 +2583,8 @@ public class StundenplanManager {
 		// Initialisierungen
 		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
 		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
+		_zeitrasterMinutenMin = MINUTEN_INF_POS;              // Ungültiger Dummy-Wert
+		_zeitrasterMinutenMax = MINUTEN_INF_NEG;              // Ungültiger Dummy-Wert
 		_zeitrasterWochentagMin = WOCHENTAG_INF_POS;          // Ungültiger Dummy-Wert
 		_zeitrasterWochentagMax = WOCHENTAG_INF_NEG;          // Ungültiger Dummy-Wert
 		_zeitrasterStundeMin = STUNDE_INF_POS;                // Ungültiger Dummy-Wert
@@ -2608,6 +2596,8 @@ public class StundenplanManager {
 		for (final @NotNull StundenplanZeitraster z :_list_zeitraster) {
 			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
 			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+			_zeitrasterMinutenMin = BlockungsUtils.minVI(_zeitrasterMinutenMin, z.stundenbeginn);
+			_zeitrasterMinutenMax = BlockungsUtils.maxVI(_zeitrasterMinutenMax, z.stundenende);
 			_zeitrasterWochentagMin = BlockungsUtils.minVI(_zeitrasterWochentagMin, z.wochentag);
 			_zeitrasterWochentagMax = BlockungsUtils.maxVI(_zeitrasterWochentagMax, z.wochentag);
 			_zeitrasterStundeMin = BlockungsUtils.minVI(_zeitrasterStundeMin, z.unterrichtstunde);
@@ -2623,6 +2613,8 @@ public class StundenplanManager {
 		// Dummy-Werte mit Default-Werten ersetzen
 		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
 		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
+		_zeitrasterMinutenMin = (_zeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _zeitrasterMinutenMin;
+		_zeitrasterMinutenMax = (_zeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _zeitrasterMinutenMax;
 		_zeitrasterWochentagMin = (_zeitrasterWochentagMin == WOCHENTAG_INF_POS) ? Wochentag.MONTAG.id : _zeitrasterWochentagMin;
 		_zeitrasterWochentagMax = (_zeitrasterWochentagMax == WOCHENTAG_INF_NEG) ? Wochentag.MONTAG.id : _zeitrasterWochentagMax;
 		_zeitrasterStundeMin = (_zeitrasterStundeMin == STUNDE_INF_POS) ? 1 : _zeitrasterStundeMin;
