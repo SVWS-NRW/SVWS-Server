@@ -727,7 +727,7 @@ export class StundenplanManager extends JavaObject {
 		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
 		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
 		const sJahrKW : string = "KW " + kwz.kw;
-		return sJahrKW! + " (" + sMoGer! + "–" + sSoGer! + ")";
+		return sJahrKW + " (" + sMoGer! + "–" + sSoGer! + ")"!;
 	}
 
 	/**
@@ -1717,7 +1717,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert zum übergebenen Wochentyp einen passenden String.
-	 * <br>Beispiel: 0 -> "Alle", 1 -> "A-Woche", ...
+	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
@@ -2130,7 +2130,7 @@ export class StundenplanManager extends JavaObject {
 			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
 				listUhrzeit.set(i, sWochentagVon! + ". " + sUhrzeit!);
 			else
-				listUhrzeit.set(i, sWochentagVon! + ".–" + sWochentagBis! + ". " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon! + ".-" + sWochentagBis! + ". " + sUhrzeit!);
 		}
 		return listUhrzeit;
 	}
@@ -2141,7 +2141,7 @@ export class StundenplanManager extends JavaObject {
 			return "???";
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-		return sBeginn! + "–" + sEnde! + " Uhr";
+		return sBeginn! + " - " + sEnde! + " Uhr";
 	}
 
 	/**
