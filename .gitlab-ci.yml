@@ -40,8 +40,8 @@ stages:
 publish:
     stage: publish
     rules:
-        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "1115-gradle-build-verbesserung-des-release-prozesses" && $CI_COMMIT_TAG != ""'
-          when: always
+        - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == "1115-gradle-build-verbesserung-des-release-prozesses" && $CI_COMMIT_TAG != null'
+          when: manual
 
     script: echo $CI_COMMIT_TAG & echo $CI_PIPELINE_SOURCE
     when: on_success
