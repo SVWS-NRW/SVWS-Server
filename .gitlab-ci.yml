@@ -33,7 +33,6 @@ before_script:
 
 stages:
   - build
-  #- integration-tests
   - analyze
   - publish
 
