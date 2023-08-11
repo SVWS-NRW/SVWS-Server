@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, type StundenplanAufsichtsbereich } from "@core";
+	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
@@ -70,13 +70,11 @@
 	const props = defineProps<StundenplanAnsichtProps>();
 
 	const beginn = computed(() => {
-		// TODO Pausenzeiten Min
-		return props.manager().zeitrasterGetMinutenMin();
+		return props.manager().pausenzeitUndZeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
-		// TODO Pausenzeiten Max
-		return props.manager().zeitrasterGetMinutenMax();
+		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 
 	const gesamtzeit = computed(() => {
@@ -111,20 +109,26 @@
 	}
 
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
-		// TODO Ermittle die Info aus allen vorhanden Wochentagen (!) - nicht nur vom Montag
-		const w = wochentag === undefined ? Wochentag.MONTAG : wochentag;
-		const z = props.manager().zeitrasterGetByWochentagAndStundeOrException(w.id, stunde);
+		let zbeginn =  props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
+		let zende =  props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
+		if (wochentag !== undefined) {
+			const z = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
+			if (z.stundenbeginn !== null)
+				zbeginn = z.stundenbeginn;
+			if (z.stundenende !== null)
+				zende = z.stundenende;
+		}
 		let top = 0;
 		let height = 10;
-		if ((z.stundenbeginn === null) || (z.stundenende === null)) {
+		if ((zbeginn === null) || (zende === null)) {
 			const sb = props.manager().zeitrasterGetStundeMin();
 			const se = props.manager().zeitrasterGetStundeMax();
 			const stunden = se - sb + 1;
 			top = ((stunde - sb) / stunden) * 100;
 			height = 100 / stunden;
 		} else {
-			top = ((z.stundenbeginn - beginn.value) / gesamtzeit.value) * 100;
-			height = ((z.stundenende - z.stundenbeginn) / gesamtzeit.value) * 100;
+			top = ((zbeginn - beginn.value) / gesamtzeit.value) * 100;
+			height = ((zende - zbeginn) / gesamtzeit.value) * 100;
 		}
 		return "top: " + top + "%; height: " + height + "%;";
 	}
