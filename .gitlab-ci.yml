@@ -35,6 +35,14 @@ stages:
   - build
   - integration-tests
   - analyze
+  - publish
+
+publish:
+    stage: publish
+    only:
+        - tags
+    script: echo "PUBLISH!"
+    when: on_success
 
 integration-tests:
   dependencies:
