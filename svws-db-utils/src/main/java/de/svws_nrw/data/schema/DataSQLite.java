@@ -77,6 +77,13 @@ public final class DataSQLite {
           .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
           .toString() + ".sqlite";
         logger.logLn("Erstelle eine SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
+		try {
+			if (!Files.exists(Paths.get(tmpDirectory))) {
+				Files.createDirectory(Paths.get(tmpDirectory));
+	    	}
+		} catch (final IOException e) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		}
 
 		// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 		final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
@@ -95,7 +102,7 @@ public final class DataSQLite {
 				FileUtils.move(tmpDirectory + "/" + tmpFilename, output);
 				output.flush();
 			} catch (final Exception e) {
-				e.printStackTrace();
+				throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 			}
         }).header("Content-Disposition", "attachment; filename=\"" + schemaname + ".sqlite\"").build();
 		if (!response.hasEntity())
