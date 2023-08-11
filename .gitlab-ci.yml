@@ -39,8 +39,9 @@ stages:
 
 publish:
     stage: publish
-    rules:
-        -   if: $CI_COMMIT_BRANCH == "1115-gradle-build-verbesserung-des-release-prozesses" && $CI_COMMIT_TAG != ""
+    only:
+        - tags
+        - 1115-gradle-build-verbesserung-des-release-prozesses
     script: echo "PUBLISH!"
     when: on_success
 
@@ -48,7 +49,7 @@ integration-tests:
   dependencies:
   - build
   stage: integration-tests
-  script: echo "tests" #./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+  script: echo "test" #./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
   cache:
     <<: *global_cache
     policy: pull
