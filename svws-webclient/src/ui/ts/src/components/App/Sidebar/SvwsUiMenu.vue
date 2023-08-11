@@ -49,17 +49,17 @@
 				<div class="flex flex-col gap-2 text-left">
 					<span class="font-bold text-sm">Theme</span>
 					<svws-ui-radio-group :row="true">
-						<!--<svws-ui-radio-option value="auto" v-model="theme" name="theme" label="System" @click="updateTheme('auto')" />-->
-						<svws-ui-radio-option value="light" v-model="theme" name="theme" label="Light"
+						<!--<svws-ui-radio-option value="auto" v-model="themeRef" name="theme" label="System" @click="updateTheme('auto')" />-->
+						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light"
 							@click="updateTheme('light')">
 							<i-ri-sun-line />
 						</svws-ui-radio-option>
-						<svws-ui-radio-option value="dark" v-model="theme" name="theme" label="Dark (In Entwicklung)"
+						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)"
 							@click="updateTheme('dark')">
 							<i-ri-moon-line />
 						</svws-ui-radio-option>
 					</svws-ui-radio-group>
-					<div v-if="theme === 'dark'" class="mt-2 text-white/50">
+					<div v-if="themeRef === 'dark'" class="mt-2 text-white/50">
 						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
 						vollständig umgesetzt.
 						<span
@@ -94,9 +94,9 @@
 
 <script setup lang="ts">
 
-	import {ref} from "vue";
+	import {onMounted, onUnmounted, ref} from "vue";
 
-	const theme = ref<string>('light');
+	const themeRef = ref<string>('light');
 	const fontSize = ref<string>('default');
 
 	const modal = ref<any>(null);
@@ -116,17 +116,39 @@
 			document.documentElement.classList.add(`${theme}`);
 		}
 		localStorage.setItem('theme', theme);
+		themeRef.value = theme;
 	};
 
 	if (localStorage.getItem('theme')) {
-		theme.value = localStorage.getItem('theme') as string;
-		updateTheme(theme.value);
+		themeRef.value = localStorage.getItem('theme') as string;
+		updateTheme(themeRef.value);
 	}
 
 	if (localStorage.getItem('fontSize')) {
 		fontSize.value = localStorage.getItem('fontSize') as string;
 		updateFontSize(fontSize.value);
 	}
+
+	onMounted(() => {
+		window.addEventListener("beforeprint", () => {
+			if (themeRef.value === 'dark') {
+				document.documentElement.classList.remove('dark');
+				document.documentElement.classList.add('light');
+			}
+		});
+
+		window.addEventListener("afterprint", () => {
+			if (themeRef.value === 'dark') {
+				document.documentElement.classList.remove('light');
+				document.documentElement.classList.add('dark');
+			}
+		});
+	});
+
+	onUnmounted(() => {
+		window.removeEventListener("beforeprint", () => {});
+		window.removeEventListener("afterprint", () => {});
+	});
 </script>
 
 <style lang="postcss">

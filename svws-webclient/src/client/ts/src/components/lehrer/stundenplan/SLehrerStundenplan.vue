@@ -42,7 +42,7 @@
 	@apply text-headline-md text-black/50 dark:text-white/50 text-center;
 
 	svg {
-		@apply w-full h-1/5 text-light dark:text-white/5;
+		@apply w-full h-1/5 text-light dark:text-white/5 mb-5;
 		max-width: 20vw;
 	}
 }

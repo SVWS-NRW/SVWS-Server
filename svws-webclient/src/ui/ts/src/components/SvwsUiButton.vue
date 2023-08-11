@@ -102,7 +102,8 @@
 .button--secondary {
 	@apply bg-transparent dark:bg-transparent text-black dark:text-white border-black/90 dark:border-white/90;
 
-	.notification--error & {
+	.notification--error &,
+	.svws-ui-stundenplan--unterricht--warning & {
 		@apply text-white dark:text-black border-white/25 dark:border-black/25;
 	}
 
@@ -113,7 +114,8 @@
 			@apply border-violet-500 text-violet-500;
 		}
 
-		.notification--error & {
+		.notification--error &,
+		.svws-ui-stundenplan--unterricht--warning & {
 			@apply border-white dark:border-black text-white dark:text-black brightness-100;
 		}
 	}
@@ -125,7 +127,8 @@
 			@apply ring-violet-500/25 border-violet-500;
 		}
 
-		.notification--error & {
+		.notification--error &,
+		.svws-ui-stundenplan--unterricht--warning & {
 			@apply ring-white/25 dark:ring-black/25 border-white dark:border-black;
 		}
 	}
@@ -133,7 +136,8 @@
 	&:active {
 		@apply bg-svws/5 brightness-100;
 
-		.notification--error & {
+		.notification--error &,
+    .svws-ui-stundenplan--unterricht--warning &{
 			@apply bg-white/10 dark:bg-black/10;
 		}
 	}

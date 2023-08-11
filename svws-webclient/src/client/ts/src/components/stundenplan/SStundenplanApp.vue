@@ -10,7 +10,7 @@
 							{{ auswahl.id }}
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ 'KW ' + toKW(auswahl.gueltigAb) + '–' + toKW(auswahl.gueltigBis) }}</span>
+					<span class="svws-subline">{{ toYear(auswahl.gueltigAb, auswahl.gueltigBis) }} ({{ 'KW ' + toKW(auswahl.gueltigAb) + '–' + toKW(auswahl.gueltigBis) }})</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -36,6 +36,12 @@
 	function toDateStr(iso: string) : string {
 		const date = DateUtils.extractFromDateISO8601(iso);
 		return wochentag[date[3] % 7] + " " + date[2] + "." + date[1] + "." + date[0];
+	}
+
+	function toYear(isoFrom: string, isoTo: string) : string {
+		const dateFrom = DateUtils.extractFromDateISO8601(isoFrom);
+		const dateTo = DateUtils.extractFromDateISO8601(isoTo);
+		return "" + dateFrom[0] + (dateFrom[0] !== dateTo[0] ? "/" + dateTo[0] : "");
 	}
 
 	function toKW(iso: string) : string {

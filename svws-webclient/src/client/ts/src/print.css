@@ -1,3 +1,7 @@
+:root, html {
+	color-scheme: light;
+}
+
 .app--menu,
 .app--sidebar,
 .svws-ui-header .badge,

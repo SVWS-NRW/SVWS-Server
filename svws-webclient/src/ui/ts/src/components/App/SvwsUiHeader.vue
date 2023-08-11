@@ -25,7 +25,7 @@
 		}
 
 		.svws-headline {
-			@apply inline-flex gap-x-2 gap-y-1 items-center;
+			@apply inline-flex gap-x-3 gap-y-1 items-center;
 
 			.svws-ui-badge {
 				@apply my-0;

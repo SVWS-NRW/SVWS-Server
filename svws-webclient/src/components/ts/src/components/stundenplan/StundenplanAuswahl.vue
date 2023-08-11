@@ -13,6 +13,7 @@
 				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
 					:class="{'print:hidden': !kwAuswahl}"
 					removable
+					:disabled="wochentypen().size() <= 0"
 					:item-text="(kw: StundenplanKalenderwochenzuordnung | undefined) => getKalenderwochenString(kw)" />
 				<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()"
 					:disabled="mapStundenplaene.size <= 1"

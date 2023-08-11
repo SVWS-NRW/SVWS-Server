@@ -1,10 +1,9 @@
 <template>
-	<div class="page--content">
-		<svws-ui-content-card title="Platzhalter" class="opacity-50">
-			<svws-ui-input-wrapper :grid="2">
-				<p>Hier werden zukünftig die Unterrichtsdaten angezeigt.</p>
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
+	<div class="page--content page--content--flex">
+		<div class="svws-ui-empty">
+			<i-ri-stack-line />
+			<span>Hier werden zukünftig<br>die Unterrichtsdaten angezeigt.</span>
+		</div>
 	</div>
 </template>
 
