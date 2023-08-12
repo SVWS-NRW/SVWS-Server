@@ -580,6 +580,17 @@ export class StundenplanManager extends JavaObject {
 		this.jahrgangUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanJahrgang}-Objekte.
+	 *
+	 * @param listJahrgang  Die Liste der zu entfernenden {@link StundenplanJahrgang}-Objekte.
+	 */
+	public jahrgangRemoveAll(listJahrgang : List<StundenplanJahrgang>) : void {
+		for (const jahrgang of listJahrgang)
+			this.jahrgangRemoveOhneUpdateById(jahrgang.id);
+		this.jahrgangUpdate();
+	}
+
 	private jahrgangUpdate() : void {
 		const setJahrgangKuerzel : HashSet<string> = new HashSet();
 		for (const jahrgang of this._list_jahrgaenge)
@@ -789,6 +800,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public kalenderwochenzuordnungRemoveByJahrAndKW(jahr : number, kalenderwoche : number) : void {
 		this.kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(jahr, kalenderwoche);
+		this.kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 *
+	 * @param listKWZ  Die Liste der zu entfernenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public kalenderwochenzuordnungRemoveAll(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
+		for (const kwz of listKWZ)
+			this.kalenderwochenzuordnungRemoveOhneUpdateById(kwz.id);
 		this.kalenderwochenzuordnungUpdate();
 	}
 

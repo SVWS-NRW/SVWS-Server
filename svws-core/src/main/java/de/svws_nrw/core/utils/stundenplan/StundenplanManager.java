@@ -596,6 +596,17 @@ public class StundenplanManager {
 		jahrgangUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanJahrgang}-Objekte.
+	 *
+	 * @param listJahrgang  Die Liste der zu entfernenden {@link StundenplanJahrgang}-Objekte.
+	 */
+	public void jahrgangRemoveAll(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
+		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
+			jahrgangRemoveOhneUpdateById(jahrgang.id);
+		jahrgangUpdate();
+	}
+
 	private void jahrgangUpdate() {
 		// Überprüfe, ob doppelte StundenplanJahrgang-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setJahrgangKuerzel = new HashSet<>();
@@ -828,6 +839,17 @@ public class StundenplanManager {
 	 */
 	public void kalenderwochenzuordnungRemoveByJahrAndKW(final int jahr, final int kalenderwoche) {
 		kalenderwochenzuordnungRemoveOhneUpdateByJahrAndKW(jahr, kalenderwoche);
+		kalenderwochenzuordnungUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 *
+	 * @param listKWZ  Die Liste der zu entfernenden {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 */
+	public void kalenderwochenzuordnungRemoveAll(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listKWZ) {
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : listKWZ)
+			kalenderwochenzuordnungRemoveOhneUpdateById(kwz.id);
 		kalenderwochenzuordnungUpdate();
 	}
 
