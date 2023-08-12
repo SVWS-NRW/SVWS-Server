@@ -281,7 +281,10 @@ export class RouteDataStundenplan {
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
 		else {
 			const daten = await api.server.getStundenplan(api.schema, auswahl.id);
-			const stundenplanManager = new StundenplanManager(daten, new ArrayList(), new ArrayList(), null);
+			const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
+			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
+			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
+			const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({ auswahl, daten, stundenplanManager });
 		}
 	}
