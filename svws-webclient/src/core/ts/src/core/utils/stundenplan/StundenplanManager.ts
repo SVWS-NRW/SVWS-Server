@@ -913,6 +913,17 @@ export class StundenplanManager extends JavaObject {
 		this.klasseUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanKlasse}-Objekte.
+	 *
+	 * @param listKlasse  Die Liste der zu entfernenden {@link StundenplanKlasse}-Objekte.
+	 */
+	public klasseRemoveAll(listKlasse : List<StundenplanKlasse>) : void {
+		for (const klasse of listKlasse)
+			this.klasseRemoveOhneUpdateById(klasse.id);
+		this.klasseUpdate();
+	}
+
 	private klasseUpdate() : void {
 		const setKlasseKuerzel : HashSet<string> = new HashSet();
 		for (const klasse of this._list_klassen) {
@@ -1061,6 +1072,17 @@ export class StundenplanManager extends JavaObject {
 		this.kursUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanKurs}-Objekte.
+	 *
+	 * @param listKurs  Die Liste der zu entfernenden {@link StundenplanKurs}-Objekte.
+	 */
+	public kursRemoveAll(listKurs : List<StundenplanKurs>) : void {
+		for (const kurs of listKurs)
+			this.kursRemoveOhneUpdateById(kurs.id);
+		this.kursUpdate();
+	}
+
 	private kursUpdate() : void {
 		// empty block
 	}
@@ -1143,6 +1165,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public lehrerRemoveById(idLehrer : number) : void {
 		this.lehrerRemoveOhneUpdateById(idLehrer);
+		this.lehrerUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanLehrer}-Objekte.
+	 *
+	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
+	 */
+	public lehrerRemoveAll(listLehrer : List<StundenplanLehrer>) : void {
+		for (const lehrer of listLehrer)
+			this.lehrerRemoveOhneUpdateById(lehrer.id);
 		this.lehrerUpdate();
 	}
 

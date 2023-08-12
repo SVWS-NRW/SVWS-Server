@@ -960,6 +960,17 @@ public class StundenplanManager {
 		klasseUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanKlasse}-Objekte.
+	 *
+	 * @param listKlasse  Die Liste der zu entfernenden {@link StundenplanKlasse}-Objekte.
+	 */
+	public void klasseRemoveAll(final @NotNull List<@NotNull StundenplanKlasse> listKlasse) {
+		for (final @NotNull StundenplanKlasse klasse : listKlasse)
+			klasseRemoveOhneUpdateById(klasse.id);
+		klasseUpdate();
+	}
+
 	private void klasseUpdate() {
 		// Überprüfe, ob doppelte StundenplanKlasse-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setKlasseKuerzel = new HashSet<>();
@@ -1118,6 +1129,17 @@ public class StundenplanManager {
 		kursUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanKurs}-Objekte.
+	 *
+	 * @param listKurs  Die Liste der zu entfernenden {@link StundenplanKurs}-Objekte.
+	 */
+	public void kursRemoveAll(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
+		for (final @NotNull StundenplanKurs kurs : listKurs)
+			kursRemoveOhneUpdateById(kurs.id);
+		kursUpdate();
+	}
+
 	private void kursUpdate() {
 		// ...
 	}
@@ -1207,6 +1229,17 @@ public class StundenplanManager {
 	 */
 	public void lehrerRemoveById(final long idLehrer) {
 		lehrerRemoveOhneUpdateById(idLehrer);
+		lehrerUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanLehrer}-Objekte.
+	 *
+	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
+	 */
+	public void lehrerRemoveAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
+		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
+			lehrerRemoveOhneUpdateById(lehrer.id);
 		lehrerUpdate();
 	}
 
