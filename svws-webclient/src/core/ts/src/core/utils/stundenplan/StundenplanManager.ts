@@ -1405,6 +1405,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Entfernt alle {@link StundenplanPausenzeit}-Objekte.
+	 *
+	 * @param listPausenzeit  Die Liste der zu entfernenden {@link StundenplanPausenzeit}-Objekte.
+	 */
+	public pausenzeitRemoveAll(listPausenzeit : List<StundenplanPausenzeit>) : void {
+		for (const pausenzeit of listPausenzeit)
+			this.pausenzeitRemoveOhneUpdateById(pausenzeit.id);
+		this.pausenzeitUpdate();
+	}
+
+	/**
 	 * Liefert das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -1545,6 +1556,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public raumRemoveById(idRaum : number) : void {
 		this.raumRemoveOhneUpdateById(idRaum);
+		this.raumUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanRaum}-Objekte.
+	 *
+	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
+	 */
+	public raumRemoveAll(listRaum : List<StundenplanRaum>) : void {
+		for (const raum of listRaum)
+			this.raumRemoveOhneUpdateById(raum.id);
 		this.raumUpdate();
 	}
 

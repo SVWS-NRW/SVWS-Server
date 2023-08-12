@@ -1488,6 +1488,17 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Entfernt alle {@link StundenplanPausenzeit}-Objekte.
+	 *
+	 * @param listPausenzeit  Die Liste der zu entfernenden {@link StundenplanPausenzeit}-Objekte.
+	 */
+	public void pausenzeitRemoveAll(final @NotNull List<@NotNull StundenplanPausenzeit> listPausenzeit) {
+		for (final @NotNull StundenplanPausenzeit pausenzeit : listPausenzeit)
+			pausenzeitRemoveOhneUpdateById(pausenzeit.id);
+		pausenzeitUpdate();
+	}
+
+	/**
 	 * Liefert das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -1643,6 +1654,17 @@ public class StundenplanManager {
 	 */
 	public void raumRemoveById(final long idRaum) {
 		raumRemoveOhneUpdateById(idRaum);
+		raumUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanRaum}-Objekte.
+	 *
+	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
+	 */
+	public void raumRemoveAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
+		for (final @NotNull StundenplanRaum raum : listRaum)
+			raumRemoveOhneUpdateById(raum.id);
 		raumUpdate();
 	}
 
