@@ -229,7 +229,7 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
-			this.stundenplanManager.zeitrasterRemove(zeitraster.id);
+			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);
 		}
 		this.commit();
 	}
