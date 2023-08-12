@@ -382,6 +382,17 @@ public class StundenplanManager {
 		aufsichtsbereichUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanAufsichtsbereich}-Objekte.
+	 *
+	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
+	 */
+	public void aufsichtsbereichRemoveAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
+			aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
+		aufsichtsbereichUpdate();
+	}
+
 	private void aufsichtsbereichUpdate() {
 		// Überprüfe, ob doppelte StundenplanAufsichtsbereich-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setAufsichtKuerzel = new HashSet<>();
@@ -475,6 +486,17 @@ public class StundenplanManager {
 	 */
 	public void fachRemoveById(final long idFach) {
 		fachRemoveOhneUpdateById(idFach);
+		fachUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanFach}-Objekte.
+	 *
+	 * @param listFach  Die Liste der zu entfernenden {@link StundenplanFach}-Objekte.
+	 */
+	public void fachRemoveAll(final @NotNull List<@NotNull StundenplanFach> listFach) {
+		for (final @NotNull StundenplanFach fach : listFach)
+			fachRemoveOhneUpdateById(fach.id);
 		fachUpdate();
 	}
 

@@ -384,6 +384,17 @@ export class StundenplanManager extends JavaObject {
 		this.aufsichtsbereichUpdate();
 	}
 
+	/**
+	 * Entfernt alle {@link StundenplanAufsichtsbereich}-Objekte.
+	 *
+	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
+	 */
+	public aufsichtsbereichRemoveAll(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
+		for (const aufsichtsbereich of listAufsichtsbereich)
+			this.aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
+		this.aufsichtsbereichUpdate();
+	}
+
 	private aufsichtsbereichUpdate() : void {
 		const setAufsichtKuerzel : HashSet<string> = new HashSet();
 		for (const aufsicht of this._list_aufsichtsbereiche)
@@ -468,6 +479,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public fachRemoveById(idFach : number) : void {
 		this.fachRemoveOhneUpdateById(idFach);
+		this.fachUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanFach}-Objekte.
+	 *
+	 * @param listFach  Die Liste der zu entfernenden {@link StundenplanFach}-Objekte.
+	 */
+	public fachRemoveAll(listFach : List<StundenplanFach>) : void {
+		for (const fach of listFach)
+			this.fachRemoveOhneUpdateById(fach.id);
 		this.fachUpdate();
 	}
 
