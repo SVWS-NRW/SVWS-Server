@@ -1,20 +1,26 @@
 <template>
-	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false">
+	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false" class="border">
 		<svws-ui-content-card title="Kausurraum">
 			<svws-ui-multi-select title="Raum auswählen"
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
 				:items="stundenplanmanager.raumGetMengeAsList()" />
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Klausuren im Raum">
-			<table>
-				<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
-					:klausur="klausur"
-					:kursklausurmanager="kursklausurmanager"
-					:kursmanager="kursmanager"
-					:map-lehrer="mapLehrer" />
-			</table>
+			<div>
+				Belegung:
+				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
+				<span v-else>{{ anzahlSuS }}</span>
+			</div>
+			<svws-ui-content-card title="Klausuren im Raum">
+				<table>
+					<div v-if="klausurenImRaum.size() === 0">Keine Klausuren im Raum</div>
+					<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
+						:klausur="klausur"
+						:kursklausurmanager="kursklausurmanager"
+						:kursmanager="kursmanager"
+						:map-lehrer="mapLehrer" />
+				</table>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 	</svws-ui-drop-data>
 </template>
@@ -42,6 +48,7 @@
 	};
 
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
+	const anzahlSuS = computed(() => props.raummanager.getSchuelerklausurenInRaum(props.raum.id, props.kursklausurmanager()).size());
 
 	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
 	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum) : null;

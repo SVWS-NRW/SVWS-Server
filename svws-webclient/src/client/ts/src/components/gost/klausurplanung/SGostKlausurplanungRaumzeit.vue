@@ -9,6 +9,7 @@
 			<ul class="flex flex-col gap-y-1">
 				<li v-for="termin in termine" :key="termin.id">
 					<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
+						:jahrgangsdaten="jahrgangsdaten"
 						:faecher-manager="faecherManager"
 						:map-lehrer="mapLehrer"
 						:termin="termin"

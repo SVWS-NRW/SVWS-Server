@@ -8,7 +8,6 @@
 				:map-lehrer="mapLehrer" />
 		</table>
 	</svws-ui-content-card>
-	Termin {{ termin.id }}
 	<div class="flex flex-col flex-wrap gap-4 w-full">
 		<svws-ui-button type="primary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum</svws-ui-button>
 		<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager?.getKlausurraeume()"

@@ -1,6 +1,7 @@
 <template>
 	<div class="rounded bg-dark-20 p-2">
 		<s-gost-klausurplanung-termin :kursklausurmanager="kursklausurmanager"
+			:jahrgangsdaten="jahrgangsdaten"
 			:toggle-details="true"
 			:show-details="false"
 			:termin="termin"
@@ -11,10 +12,11 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager} from "@core";
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, GostJahrgangsdaten} from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
+		jahrgangsdaten: GostJahrgangsdaten;
 		termin: GostKlausurtermin;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;

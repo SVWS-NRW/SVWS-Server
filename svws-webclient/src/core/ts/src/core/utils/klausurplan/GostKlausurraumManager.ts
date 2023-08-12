@@ -218,7 +218,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public addSchuelerklausur(klausur : GostSchuelerklausur) : void {
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdSchuelerklausur, klausur.idSchuelerklausur, klausur);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapKkidSkList", MapUtils.getOrCreateArrayList(this._mapKkidSk, klausur.idKursklausur), klausur);
-		let raumstunden : List<GostKlausurraumstunde> | null = this._mapidRsSkrsRevert.get(klausur.idSchuelerklausur);
+		const raumstunden : List<GostKlausurraumstunde> | null = this._mapidRsSkrsRevert.get(klausur.idSchuelerklausur);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList", Map2DUtils.getOrCreateArrayList(this._mapRaumKursklausurSchuelerklausur, raumstunden === null || raumstunden.isEmpty() ? -1 : raumstunden.get(0).idRaum, klausur.idKursklausur), klausur);
 	}
 
@@ -245,7 +245,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public setzeRaumZuSchuelerklausuren(skids : List<number>, collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
 		for (const skid of skids) {
 			const schuelerklausur : GostSchuelerklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdSchuelerklausur, skid);
-			let listKrs : List<GostKlausurraumstunde | null> | null = this._mapidRsSkrsRevert.get(skid);
+			const listKrs : List<GostKlausurraumstunde | null> | null = this._mapidRsSkrsRevert.get(skid);
 			if (listKrs === null) {
 				DeveloperNotificationException.ifMap2DGetIsNull(this._mapRaumKursklausurSchuelerklausur, -1, schuelerklausur.idKursklausur).remove(schuelerklausur);
 				continue;
@@ -284,7 +284,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return die Liste der GostKursklausuren
 	 */
 	public getKursklausuren(manager : GostKursklausurManager) : List<GostKursklausur> {
-		let kursklausuren : List<GostKursklausur> | null = new ArrayList();
+		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		for (const kkId of this._mapKkidSk.keySet()) {
 			kursklausuren.add(manager.getKursklausurById(kkId));
 		}
@@ -311,7 +311,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return die Liste der GostKursklausuren
 	 */
 	public getKursklausurenInRaum(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
-		let kursklausuren : List<GostKursklausur> | null = new ArrayList();
+		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		if (!this._mapRaumKursklausurSchuelerklausur.containsKey1(idRaum))
 			return kursklausuren;
 		for (const idKK of this._mapRaumKursklausurSchuelerklausur.getKeySetOf(idRaum)) {
@@ -319,6 +319,23 @@ export class GostKlausurraumManager extends JavaObject {
 				kursklausuren.add(manager.getKursklausurById(idKK));
 		}
 		return kursklausuren;
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idRaum  die Id des Klausurraums
+	 * @param manager der Kursklausurmanager
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public getSchuelerklausurenInRaum(idRaum : number, manager : GostKursklausurManager) : List<GostSchuelerklausur> {
+		const schuelerklausuren : List<GostSchuelerklausur> | null = new ArrayList();
+		if (!this._mapRaumKursklausurSchuelerklausur.containsKey1(idRaum))
+			return schuelerklausuren;
+		for (const idKK of this._mapRaumKursklausurSchuelerklausur.getKeySetOf(idRaum))
+			schuelerklausuren.addAll(this._mapRaumKursklausurSchuelerklausur.getNonNullOrException(idRaum, idKK));
+		return schuelerklausuren;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
