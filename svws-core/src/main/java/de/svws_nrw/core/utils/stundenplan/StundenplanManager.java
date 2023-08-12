@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
@@ -90,6 +91,9 @@ public class StundenplanManager {
 	// StundenplanKlasse
 	private final @NotNull List<@NotNull StundenplanKlasse> _list_klassen = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_idKlasse_zu_klasse = new HashMap<>();
+
+	// StundenplanKlassenunterricht
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _map2d_idKlasse_idFach_klassenunterricht = new HashMap2D<>();
 
 	// StundenplanKurs
 	private final @NotNull List<@NotNull StundenplanKurs> _list_kurse = new ArrayList<>();
@@ -219,9 +223,11 @@ public class StundenplanManager {
 				uv.schueler,
 				daten.schienen,
 				uv.klassen,
+				uv.klassenunterricht,
 				pausenaufsichten,
 				uv.kurse,
-				unterrichte);
+				unterrichte
+				);
 
 	}
 
@@ -252,6 +258,7 @@ public class StundenplanManager {
 				stundenplanKomplett.unterrichtsverteilung.schueler,
 				stundenplanKomplett.daten.schienen,
 				stundenplanKomplett.unterrichtsverteilung.klassen,
+				stundenplanKomplett.unterrichtsverteilung.klassenunterricht,
 				stundenplanKomplett.pausenaufsichten,
 				stundenplanKomplett.unterrichtsverteilung.kurse,
 				stundenplanKomplett.unterrichte);
@@ -268,6 +275,7 @@ public class StundenplanManager {
 			             final @NotNull List<@NotNull StundenplanSchueler> listSchueler,
 			             final @NotNull List<@NotNull StundenplanSchiene> listSchiene,
 			             final @NotNull List<@NotNull StundenplanKlasse> listKlasse,
+			             final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht,
 			             final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht,
 			             final @NotNull List<@NotNull StundenplanKurs> listKurs,
 			             final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
@@ -275,21 +283,22 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", stundenplanWochenTypModell == 1);
 
-		kalenderwochenzuordnungAddAll(listKWZ);        // ✔, referenziert ---
-		kalenderwochenzuordnungErzeugePseudoMenge();   // ✔, referenziert Kalenderwochenzuordnung (wg. Default-Wochentyp-Bestimmung)
-		fachAddAll(listFach);                          // ✔, referenziert ---
-		jahrgangAddAll(listJahrgang);                  // ✔, referenziert ---
-		zeitrasterAddAll(listZeitraster);              // ✔, referenziert ---
-		raumAddAll(listRaum);                          // ✔, referenziert ---
-		pausenzeitAddAll(listPausenzeit);              // ✔, referenziert ---
-		aufsichtsbereichAddAll(listAufsichtsbereich);  // ✔, referenziert ---
-		klasseAddAll(listKlasse);                      // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
-		lehrerAddAll(listLehrer);                      // ✔, referenziert [Fach]
-		schuelerAddAll(listSchueler);                  // ✔, referenziert Klasse
-		schieneAddAll(listSchiene);                    // ✔, referenziert Jahrgang
-		pausenaufsichtAddAll(listPausenaufsicht);      // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
-		kursAddAll(listKurs);                          // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
-		unterrichtAddAll(listUnterricht);              // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		kalenderwochenzuordnungAddAll(listKWZ);          // ✔, referenziert ---
+		kalenderwochenzuordnungErzeugePseudoMenge();     // ✔, referenziert Kalenderwochenzuordnung (wg. Default-Wochentyp-Bestimmung)
+		fachAddAll(listFach);                            // ✔, referenziert ---
+		jahrgangAddAll(listJahrgang);                    // ✔, referenziert ---
+		zeitrasterAddAll(listZeitraster);                // ✔, referenziert ---
+		raumAddAll(listRaum);                            // ✔, referenziert ---
+		pausenzeitAddAll(listPausenzeit);                // ✔, referenziert ---
+		aufsichtsbereichAddAll(listAufsichtsbereich);    // ✔, referenziert ---
+		klasseAddAll(listKlasse);                        // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
+		klassenunterrichtAddAll(listKlassenunterricht);  // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
+		lehrerAddAll(listLehrer);                        // ✔, referenziert [Fach]
+		schuelerAddAll(listSchueler);                    // ✔, referenziert Klasse
+		schieneAddAll(listSchiene);                      // ✔, referenziert Jahrgang
+		pausenaufsichtAddAll(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
+		kursAddAll(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
+		unterrichtAddAll(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
 	}
 
 	// #####################################################################
@@ -941,6 +950,43 @@ public class StundenplanManager {
 				DeveloperNotificationException.ifSetAddsDuplicate("setJahrgaengeDerKlasse", setJahrgaengeDerKlasse, idJahrgangDerKlasse);
 			}
 		}
+	}
+
+	private void klassenunterrichtAddOhneUpdate(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
+		// Überprüfen
+		DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, klassenunterricht.idKlasse);
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, klassenunterricht.idFach);
+
+		// Hinzufügen
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_klassenunterricht, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
+	}
+
+	/**
+	 * Fügt alle {@link StundenplanKlassenunterricht}-Objekte hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlassenunterricht|), da klassenunterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param listKlassenunterricht  Die Menge der {@link StundenplanKlassenunterricht}-Objekte, welche hinzugefügt werden soll.
+	 */
+	private void klassenunterrichtAddAll(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
+			klassenunterrichtAddOhneUpdate(klassenunterricht);
+		klassenunterrichtUpdate();
+	}
+
+	/**
+	 * Liefert die Wochenstunden des Klassenunterrichts.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 * @param idFach    Die Datenbank-ID des Faches.
+	 *
+	 * @return die Wochenstunden des Klassenunterrichts.
+	 */
+	public int klassenunterrichtGetWochenstunden(final long idKlasse, final long idFach) {
+		return DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_klassenunterricht, idKlasse, idFach).wochenstunden;
+	}
+
+	private void klassenunterrichtUpdate() {
+		// noch nichts
 	}
 
 	private void kursAddOhneUpdate(final @NotNull StundenplanKurs kurs) {
