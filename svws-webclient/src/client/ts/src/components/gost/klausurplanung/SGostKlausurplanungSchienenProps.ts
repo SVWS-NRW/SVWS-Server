@@ -1,5 +1,6 @@
 import type {
 	GostFaecherManager,
+	GostJahrgangsdaten,
 	GostKlausurtermin,
 	GostKursklausur,
 	GostKursklausurManager,
@@ -11,6 +12,7 @@ import type {
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungSchienenProps {
+	jahrgangsdaten: GostJahrgangsdaten;
 	kursklausurmanager: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;

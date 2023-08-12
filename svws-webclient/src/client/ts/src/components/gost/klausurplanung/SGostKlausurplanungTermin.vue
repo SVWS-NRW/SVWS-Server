@@ -2,7 +2,7 @@
 	<slot name="header">
 		<header class="border-b">
 			<div class="text-headline-md">
-				<span>St HJ{{ termin.halbjahr }}K{{ termin?.quartal }}</span>
+				<span>{{ jahrgangsdaten.jahrgang }} - {{ termin.halbjahr % 2 }}. Hj - {{ termin?.quartal }}. Quartal</span>
 				<SvwsUiToggle v-if="toggleDetails" class="float-right" v-model="showDetails" @click="$event.stopPropagation()">
 					Details zeigen
 				</SvwsUiToggle>
@@ -19,7 +19,7 @@
 			<table class="w-full">
 				<thead />
 				<tbody>
-					<svws-ui-drag-data v-for="klausur in klausuren"
+					<svws-ui-drag-data v-for="klausur in klausuren()"
 						:key="klausur.id"
 						:data="klausur"
 						:draggable="klausurDraggable"
@@ -42,10 +42,11 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, KursManager} from "@core";
+	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, KursManager, GostJahrgangsdaten} from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
+		jahrgangsdaten: GostJahrgangsdaten;
 		showDetails: boolean;
 		toggleDetails: boolean;
 		termin: GostKlausurtermin;
@@ -72,16 +73,16 @@
 		emit("dragEndKlausur", e);
 	}
 
-	const klausuren = props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
+	const klausuren = () => props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
 
 	const anzahlSuS = computed(() => {
 		let anzahl = 0;
-		for(const klausur of klausuren.toArray() as GostKursklausur[]) {
+		for(const klausur of klausuren().toArray() as GostKursklausur[]) {
 			anzahl += klausur.schuelerIds.size();
 		}
 		return anzahl;
 	});
 
-	const kurzBezeichnungen = [...klausuren].map(k => k.kursKurzbezeichnung).join(", ");
+	const kurzBezeichnungen = [...klausuren()].map(k => k.kursKurzbezeichnung).join(", ");
 
 </script>

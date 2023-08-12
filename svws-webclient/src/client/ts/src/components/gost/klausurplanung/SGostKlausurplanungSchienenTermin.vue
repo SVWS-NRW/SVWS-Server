@@ -12,6 +12,7 @@
 			</div>
 			<!--<svws-ui-text-input v-if="termin !== null" placeholder="Terminbezeichnung" :model-value="termin.bezeichnung" @update:model-value="patchKlausurtermin !== undefined ? patchKlausurtermin({ bezeichnung: String($event) }, termin!.id) : null" />-->
 			<s-gost-klausurplanung-termin v-if="termin !== null" :kursklausurmanager="kursklausurmanager"
+				:jahrgangsdaten="jahrgangsdaten"
 				:toggle-details="false"
 				:show-details="showDetails"
 				:quartal="quartal"
@@ -48,10 +49,12 @@
 
 <script setup lang="ts">
 
+	import type { GostJahrgangsdaten} from "@core";
 	import { type GostKursklausurManager, type GostKursklausur, type GostKlausurtermin, type GostFaecherManager, type LehrerListeEintrag, type SchuelerListeEintrag, type List, type KursManager, Arrays} from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
+		jahrgangsdaten: GostJahrgangsdaten;
 		termin: GostKlausurtermin | null;
 		kursklausurmanager: () => GostKursklausurManager;
 		faecherManager: GostFaecherManager;

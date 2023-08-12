@@ -40,6 +40,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
 		return {
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new ArrayList(), new ArrayList())},
 			setTerminToKursklausur: routeGostKlausurplanung.data.setTerminToKursklausur,

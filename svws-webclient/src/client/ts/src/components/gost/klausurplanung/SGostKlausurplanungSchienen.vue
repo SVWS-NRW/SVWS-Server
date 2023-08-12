@@ -65,6 +65,7 @@
 				<div class="flex flex-col">
 					<div class="text-headline-md">Zu verplanen:</div>
 					<s-gost-klausurplanung-schienen-termin :quartal="quartalsauswahl.value"
+						:jahrgangsdaten="jahrgangsdaten"
 						:kursklausurmanager="kursklausurmanager"
 						:termin="null"
 						:alle-termine="termine"
@@ -79,6 +80,7 @@
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
 						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+							:jahrgangsdaten="jahrgangsdaten"
 							:class="dropOverCssClasses(termin)"
 							:kursklausurmanager="kursklausurmanager"
 							:termin="termin"
