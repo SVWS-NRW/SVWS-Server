@@ -453,46 +453,6 @@ export class StundenplanManager extends JavaObject {
 		return this._list_faecher;
 	}
 
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanFach}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
-	 *
-	 * @param fach  Das neue {@link StundenplanFach}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public fachPatch(fach : StundenplanFach) : void {
-		this.fachRemoveOhneUpdateById(fach.id);
-		this.fachAddOhneUpdate(fach);
-		this.fachUpdate();
-	}
-
-	private fachRemoveOhneUpdateById(idFach : number) : void {
-		const f : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._map_idFach_zu_fach, idFach);
-		DeveloperNotificationException.ifMapRemoveFailes(this._map_idFach_zu_fach, f.id);
-		DeveloperNotificationException.ifListRemoveFailes("_list_faecher", this._list_faecher, f);
-	}
-
-	/**
-	 * Entfernt ein {@link StundenplanFach}-Objekt anhand seiner ID.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param idFach  Die Datenbank-ID des {@link StundenplanFach}-Objekts, welches entfernt werden soll.
-	 */
-	public fachRemoveById(idFach : number) : void {
-		this.fachRemoveOhneUpdateById(idFach);
-		this.fachUpdate();
-	}
-
-	/**
-	 * Entfernt alle {@link StundenplanFach}-Objekte.
-	 *
-	 * @param listFach  Die Liste der zu entfernenden {@link StundenplanFach}-Objekte.
-	 */
-	public fachRemoveAll(listFach : List<StundenplanFach>) : void {
-		for (const fach of listFach)
-			this.fachRemoveOhneUpdateById(fach.id);
-		this.fachUpdate();
-	}
-
 	private fachUpdate() : void {
 		const setFachKuerzel : HashSet<string> = new HashSet();
 		for (const fach of this._list_faecher)
@@ -1040,6 +1000,17 @@ export class StundenplanManager extends JavaObject {
 		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
 		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(idsKurs, wochentyp, wochentag, unterrichtstunde);
+	}
+
+	/**
+	 * Liefert die Wochenstunden des Kurses.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Wochenstunden des Kurses.
+	 */
+	public kursGetWochenstunden(idKurs : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, idKurs).wochenstunden;
 	}
 
 	/**

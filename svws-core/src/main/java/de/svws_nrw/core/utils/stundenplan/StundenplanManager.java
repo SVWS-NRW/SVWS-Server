@@ -457,49 +457,6 @@ public class StundenplanManager {
 		return _list_faecher;
 	}
 
-	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanFach}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
-	 *
-	 * @param fach  Das neue {@link StundenplanFach}-Objekt, welches das alte Objekt ersetzt.
-	 */
-	public void fachPatch(final @NotNull StundenplanFach fach) {
-		fachRemoveOhneUpdateById(fach.id);
-		fachAddOhneUpdate(fach);
-		fachUpdate();
-	}
-
-	private void fachRemoveOhneUpdateById(final long idFach) {
-		// Get
-		final @NotNull StundenplanFach f = DeveloperNotificationException.ifMapGetIsNull(_map_idFach_zu_fach, idFach);
-
-		// Entfernen
-		DeveloperNotificationException.ifMapRemoveFailes(_map_idFach_zu_fach, f.id);
-		DeveloperNotificationException.ifListRemoveFailes("_list_faecher", _list_faecher, f);
-	}
-
-	/**
-	 * Entfernt ein {@link StundenplanFach}-Objekt anhand seiner ID.
-	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
-	 *
-	 * @param idFach  Die Datenbank-ID des {@link StundenplanFach}-Objekts, welches entfernt werden soll.
-	 */
-	public void fachRemoveById(final long idFach) {
-		fachRemoveOhneUpdateById(idFach);
-		fachUpdate();
-	}
-
-	/**
-	 * Entfernt alle {@link StundenplanFach}-Objekte.
-	 *
-	 * @param listFach  Die Liste der zu entfernenden {@link StundenplanFach}-Objekte.
-	 */
-	public void fachRemoveAll(final @NotNull List<@NotNull StundenplanFach> listFach) {
-		for (final @NotNull StundenplanFach fach : listFach)
-			fachRemoveOhneUpdateById(fach.id);
-		fachUpdate();
-	}
-
 	private void fachUpdate() {
 		// Überprüfe, ob doppelte StundenplanFach-Kürzel vorhanden sind.
 		final @NotNull HashSet<@NotNull String> setFachKuerzel = new HashSet<>();
@@ -1094,6 +1051,17 @@ public class StundenplanManager {
 		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]); // 6 = kalenderwochenjahr, 5 = kalenderwoche
 		final @NotNull Wochentag wochentag = Wochentag.fromIDorException(e[3]); // 3 = tagInWoche
 		return kursGetMengeGefiltertByWochentypAndWochentagAndStunde(idsKurs, wochentyp, wochentag, unterrichtstunde);
+	}
+
+	/**
+	 * Liefert die Wochenstunden des Kurses.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Wochenstunden des Kurses.
+	 */
+	public int kursGetWochenstunden(final long idKurs) {
+		return DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, idKurs).wochenstunden;
 	}
 
 	/**
