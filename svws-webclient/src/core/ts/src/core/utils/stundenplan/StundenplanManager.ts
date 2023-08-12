@@ -2426,6 +2426,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 *
+	 * @param wochentag  Der Wochentag, deren Zeitrastermenge überprüft wird.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 */
+	public zeitrasterExistsByWochentag(wochentag : number) : boolean {
+		return !MapUtils.getOrCreateArrayList(this._map_wochentag_zu_zeitrastermenge, wochentag).isEmpty();
+	}
+
+	/**
 	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
 	 * <br>Hinweis: Die ID darf nicht gepatch werden!
 	 *

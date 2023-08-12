@@ -2267,6 +2267,7 @@ public class StundenplanManager {
 			final int ende = zeitraster.stundenende;
 			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
 		}
+
 		// Hinzufügen.
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_zeitraster, zeitraster.id, zeitraster);
 		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
@@ -2576,6 +2577,17 @@ public class StundenplanManager {
 	 */
 	public boolean zeitrasterExistsByWochentagAndStunde(final int wochentag, final int stunde) {
 		return _map2d_wochentag_stunde_zu_zeitraster.contains(wochentag, stunde);
+	}
+
+	/**
+	 * Liefert TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 *
+	 * @param wochentag  Der Wochentag, deren Zeitrastermenge überprüft wird.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 */
+	public boolean zeitrasterExistsByWochentag(final int wochentag) {
+		return !MapUtils.getOrCreateArrayList(_map_wochentag_zu_zeitrastermenge, wochentag).isEmpty();
 	}
 
 	/**
