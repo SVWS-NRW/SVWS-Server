@@ -3,17 +3,16 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerStundenplan, type RouteSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 
-import { StundenplanAnsicht } from "@comp";
+import { StundenplanAnsichtPausenzeiten } from "@comp";
 import type { StundenplanAnsichtProps } from "@comp";
 
 export class RouteSchuelerStundenplanDaten extends RouteNode<unknown, RouteSchuelerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsichtPausenzeiten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";

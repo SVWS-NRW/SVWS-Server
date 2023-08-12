@@ -1943,7 +1943,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Export der SQLite-Datenbank
-	 *     - Mime-Type: application/octet-stream
+	 *     - Mime-Type: application/vnd.sqlite3
 	 *     - Rückgabe-Typ: Blob
 	 *   Code 403: Das Schema darf nicht exportiert werden.
 	 *
