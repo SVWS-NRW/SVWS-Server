@@ -14,7 +14,6 @@ import { routeApp } from "~/router/apps/RouteApp";
 
 import { routeStundenplanDaten } from "~/router/apps/stundenplan/RouteStundenplanDaten";
 import { routeStundenplanUnterricht } from "~/router/apps/stundenplan/RouteStundenplanUnterricht";
-import { routeStundenplanPausenaufsicht } from "~/router/apps/stundenplan/RouteStundenplanPausenaufsicht";
 import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
@@ -35,7 +34,6 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanDaten,
 			routeStundenplanZeitrasterPausenzeit,
 			routeStundenplanUnterricht,
-			routeStundenplanPausenaufsicht,
 		];
 		super.defaultChild = routeStundenplanDaten;
 	}
