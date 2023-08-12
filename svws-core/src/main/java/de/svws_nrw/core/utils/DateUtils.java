@@ -259,4 +259,50 @@ public final class DateUtils {
 		return StringUtils.padZahl(tagImMonat, 2) + "." + StringUtils.padZahl(monat, 2) + "." + StringUtils.padZahl(jahr, 4);
 	}
 
+	/**
+	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
+	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
+	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
+	 *
+	 * @param zeit  Die Zeitangabe im Format hh:mm.
+	 *
+	 * @return die Minuten einer Zeitangabe im Format hh:mm.
+	 */
+	public static int gibMinutenOfZeitAsString(final @NotNull String zeit) {
+		final @NotNull String @NotNull [] sSplit = zeit.split(":");
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", sSplit.length != 2);
+
+		final @NotNull String sStunden = sSplit[0].trim();
+		final @NotNull String sMinuten = sSplit[1].trim();
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sStunden.length() < 1) || (sStunden.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sMinuten.length() < 1) || (sMinuten.length() > 2));
+
+		final int stunden = Integer.parseInt(sStunden);
+		final int minuten = Integer.parseInt(sMinuten);
+		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
+
+		return stunden * 60 + minuten;
+	}
+
+	/**
+	 * Liefert den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 * <br>Gültige Werte sind im Bereich 0 bis 24*60=1440 (exklusive).
+	 *
+	 * @param minuten  Die Anzahl der Minuten.
+	 *
+	 * @return den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 */
+	public static @NotNull String gibZeitStringOfMinuten(final int minuten) {
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten >= 1440)", (minuten < 0) || (minuten >= 1440));
+
+		final int std = minuten / 60;
+		final int min = minuten - std * 60;
+
+		final @NotNull String sStd = (std < 10 ? "0" : "") + std;
+		final @NotNull String sMin = (min < 10 ? "0" : "") + min;
+
+		return sStd + ":" + sMin;
+	}
+
 }

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../java/lang/JavaObject';
+import { JavaInteger } from '../../java/lang/JavaInteger';
 import { StringUtils } from '../../core/utils/StringUtils';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
@@ -231,6 +232,46 @@ export class DateUtils extends JavaObject {
 		const monat : number = info[1];
 		const tagImMonat : number = info[2];
 		return StringUtils.padZahl(tagImMonat, 2)! + "." + StringUtils.padZahl(monat, 2)! + "." + StringUtils.padZahl(jahr, 4)!;
+	}
+
+	/**
+	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
+	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
+	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
+	 *
+	 * @param zeit  Die Zeitangabe im Format hh:mm.
+	 *
+	 * @return die Minuten einer Zeitangabe im Format hh:mm.
+	 */
+	public static gibMinutenOfZeitAsString(zeit : string) : number {
+		const sSplit : Array<string> = zeit.split(":");
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", sSplit.length !== 2);
+		const sStunden : string = sSplit[0].trim();
+		const sMinuten : string = sSplit[1].trim();
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sStunden.length < 1) || (sStunden.length > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sMinuten.length < 1) || (sMinuten.length > 2));
+		const stunden : number = JavaInteger.parseInt(sStunden);
+		const minuten : number = JavaInteger.parseInt(sMinuten);
+		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
+		return stunden * 60 + minuten;
+	}
+
+	/**
+	 * Liefert den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 * <br>Gültige Werte sind im Bereich 0 bis 24*60=1440 (exklusive).
+	 *
+	 * @param minuten  Die Anzahl der Minuten.
+	 *
+	 * @return den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 */
+	public static gibZeitStringOfMinuten(minuten : number) : string {
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten >= 1440)", (minuten < 0) || (minuten >= 1440));
+		const std : number = Math.trunc(minuten / 60);
+		const min : number = minuten - std * 60;
+		const sStd : string = (std < 10 ? "0" : "") + std;
+		const sMin : string = (min < 10 ? "0" : "") + min;
+		return sStd! + ":" + sMin!;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
