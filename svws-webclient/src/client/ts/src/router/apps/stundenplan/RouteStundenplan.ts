@@ -33,9 +33,9 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeStundenplanDaten,
+			routeStundenplanZeitrasterPausenzeit,
 			routeStundenplanUnterricht,
 			routeStundenplanPausenaufsicht,
-			routeStundenplanZeitrasterPausenzeit,
 		];
 		super.defaultChild = routeStundenplanDaten;
 	}
