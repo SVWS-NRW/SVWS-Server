@@ -11,7 +11,7 @@
 			<svws-ui-spacing />
 			<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="i=>i.text" />
 			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data().geburtsdatum"
-				@update:model-value="doPatch({ geburtsdatum: String($event) })" type="date" required statistics />
+				@update:model-value="doPatch({ geburtsdatum: String($event) })" type="date" :valid="istGeburtsdatumGueltig" required statistics />
 			<svws-ui-text-input placeholder="Geburtsort" :model-value="data().geburtsort"
 				@update:model-value="doPatch({ geburtsort: String($event) })" type="text" />
 			<svws-ui-text-input placeholder="Geburtsname" :model-value="data().geburtsname"
@@ -25,7 +25,7 @@
 	import type { SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { Geschlecht } from "@core";
+	import { DateUtils, Geschlecht } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;
@@ -38,6 +38,16 @@
 	function doPatch(data: Partial<SchuelerStammdaten>) {
 		emit('patch', data);
 	}
+
+	const istGeburtsdatumGueltig = computed<boolean>(() => {
+		const strDate = props.data().geburtsdatum;
+		if (strDate == null)
+			return false;
+		const date = DateUtils.extractFromDateISO8601(strDate);
+		const curDate = new Date();
+		const diffYear = curDate.getFullYear() - date[0];
+		return (diffYear > 3) && (diffYear < 51);
+	});
 
 	const geschlecht: WritableComputedRef<Geschlecht> = computed({
 		get: () => Geschlecht.fromValue(props.data().geschlecht) ?? Geschlecht.X,
