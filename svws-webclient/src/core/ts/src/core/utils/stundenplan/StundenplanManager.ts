@@ -103,6 +103,10 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idKlasse_zu_klasse : HashMap<number, StundenplanKlasse> = new HashMap();
 
+	private readonly _map_idKlasse_zu_klassenunterricht : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+
+	private readonly _map_idKlasse_zu_unterrichtmenge : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+
 	private readonly _list_klassenunterricht : List<StundenplanKlassenunterricht> = new ArrayList();
 
 	private readonly _map2d_idKlasse_idFach_zu_klassenunterricht : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
@@ -803,9 +807,12 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseAddOhneUpdate(klasse : StundenplanKlasse) : void {
-		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+		const idKlasse : number = klasse.id;
+		DeveloperNotificationException.ifInvalidID("klasse.id", idKlasse);
 		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klasse, klasse.id, klasse);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klasse, idKlasse, klasse);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_klassenunterricht, idKlasse, new ArrayList());
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idKlasse_zu_unterrichtmenge, idKlasse, new ArrayList());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_klassen", this._list_klassen, klasse);
 	}
 
@@ -865,8 +872,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseRemoveOhneUpdateById(idKlasse : number) : void {
+		const listKU : List<StundenplanKlassenunterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse);
+		for (const u of listKU)
+			this.klassenunterrichtRemoveOhneUpdateById(u.idKlasse, u.idFach);
 		const k : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, idKlasse);
-		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klasse, k.id);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klasse, idKlasse);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klassenunterricht, idKlasse);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_unterrichtmenge, idKlasse);
 		DeveloperNotificationException.ifListRemoveFailes("_list_klasse", this._list_klassen, k);
 	}
 
@@ -893,6 +905,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private klasseUpdate() : void {
+		this.klassenunterrichtUpdate();
 		const setKlasseKuerzel : HashSet<string> = new HashSet();
 		for (const klasse of this._list_klassen) {
 			DeveloperNotificationException.ifSetAddsDuplicate("setKlasseKuerzel", setKlasseKuerzel, klasse.kuerzel);
@@ -911,6 +924,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", this._map_idFach_zu_fach, idFach);
 		for (const idSchiene of klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", this._map_idSchiene_zu_schiene, idSchiene);
+		DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse).add(klassenunterricht);
 		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach, klassenunterricht);
 		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach, new ArrayList());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_klassenunterricht", this._list_klassenunterricht, klassenunterricht);
@@ -940,22 +954,20 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
-	 * <br>Laufzeit: O(1)
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse.
 	 *
-	 * @param idKlasse  Die Datenbank-ID der Klasse.
-	 * @param idFach    Die Datenbank-ID des Faches.
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
 	 *
-	 * @return die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse.
 	 */
-	public klassenunterrichtGetWochenstundenSoll(idKlasse : number, idFach : number) : number {
-		return DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach).wochenstunden;
+	public klassenunterrichtGetMengeByKlasseId(idKlasse : number) : List<StundenplanKlassenunterricht> {
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse);
 	}
 
 	/**
 	 * Liefert die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 * <br>Hinweis: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
-	 * <br>Laufzeit: O(|Unterricht des Klassenunterricht|)
+	 * <br>Laufzeit: O(|Unterrichte des Klassenunterricht|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
@@ -971,11 +983,25 @@ export class StundenplanManager extends JavaObject {
 		return summe / faktor;
 	}
 
+	/**
+	 * Liefert die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 * @param idFach    Die Datenbank-ID des Faches.
+	 *
+	 * @return die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 */
+	public klassenunterrichtGetWochenstundenSoll(idKlasse : number, idFach : number) : number {
+		return DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach).wochenstunden;
+	}
+
 	private klassenunterrichtRemoveOhneUpdateById(idKlasse : number, idFach : number) : void {
 		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
 		for (const u of listU)
 			this.unterrichtRemoveByIdOhneUpdate(u.id);
 		const klassenunterricht : StundenplanKlassenunterricht = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach);
+		DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse).remove(klassenunterricht);
 		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach);
 		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
 		DeveloperNotificationException.ifListRemoveFailes("_list_klassenunterricht", this._list_klassenunterricht, klassenunterricht);
@@ -1112,6 +1138,24 @@ export class StundenplanManager extends JavaObject {
 		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
 		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(idsKurs, wochentyp, wochentag, unterrichtstunde);
+	}
+
+	/**
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * <br>Hinweis: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Laufzeit: O(|Unterrichte des Kurses|)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 */
+	public kursGetWochenstundenIst(idKurs : number) : number {
+		let summe : number = 0;
+		const faktor : number = (this.stundenplanWochenTypModell === 0) ? 1 : this.stundenplanWochenTypModell;
+		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, idKurs);
+		for (const u of listU)
+			summe += (u.wochentyp === 0) ? faktor : 1;
+		return summe / faktor;
 	}
 
 	/**
@@ -1856,12 +1900,14 @@ export class StundenplanManager extends JavaObject {
 			MapUtils.getOrCreateArrayList(this._map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
 		}
 		if (u.idKurs !== null) {
-			const unterricht : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
-			DeveloperNotificationException.ifListAddsDuplicate("unterrichtKurs", unterricht, u);
+			const unterrichtKurs : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("unterrichtKurs", unterrichtKurs, u);
 		} else {
 			for (const idKlasse of u.klassen) {
-				const unterricht : List<StundenplanUnterricht> = Map2DUtils.getOrCreateArrayList(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
-				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKlasseFach", unterricht, u);
+				const unterrichtKlasseFach : List<StundenplanUnterricht> = Map2DUtils.getOrCreateArrayList(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKlasseFach", unterrichtKlasseFach, u);
+				const unterrichtKlasse : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_unterrichtmenge, idKlasse);
+				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKL", unterrichtKlasse, u);
 			}
 		}
 		this._list_unterricht.add(u);
@@ -1901,6 +1947,34 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetByIdOrException(idUnterricht : number) : StundenplanUnterricht {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_idUnterricht_zu_unterricht, idUnterricht);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param wochentyp  Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse mit einem bestimmten Wochentyp.
+	 */
+	public unterrichtGetMengeByKlasseIdAndWochentyp(idKlasse : number, wochentyp : number) : List<StundenplanUnterricht> {
+		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this.stundenplanWochenTypModell);
+		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_unterrichtmenge, idKlasse);
+		return CollectionUtils.toFilteredArrayList(listU, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse in einer bestimmten Kalenderwoche.
+	 *
+	 * @param idKlasse       Die Datenbank-ID der Klasse.
+	 * @param jahr           Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte einer Klasse in einer bestimmten Kalenderwoche.
+	 */
+	public unterrichtGetMengeByKlasseIdAndJahrAndKW(idKlasse : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
+		return this.unterrichtGetMengeByKlasseIdAndWochentyp(idKlasse, wochentyp);
 	}
 
 	/**
@@ -2175,12 +2249,14 @@ export class StundenplanManager extends JavaObject {
 		Map2DUtils.getOrCreateArrayList(this._map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).remove(u);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idUnterricht_zu_lehrermenge, u.id);
 		if (u.idKurs !== null) {
-			const unterricht : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
-			DeveloperNotificationException.ifListRemoveFailes("unterrichtKurs", unterricht, u);
+			const unterrichtKurs : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListRemoveFailes("unterrichtKurs", unterrichtKurs, u);
 		} else {
 			for (const idKlasse of u.klassen) {
-				const unterricht : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
-				DeveloperNotificationException.ifListRemoveFailes("unterrichtKlasseFach", unterricht, u);
+				const unterrichtKlasseFach : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				DeveloperNotificationException.ifListRemoveFailes("unterrichtKlasseFach", unterrichtKlasseFach, u);
+				const unterrichtKlasse : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_unterrichtmenge, idKlasse);
+				DeveloperNotificationException.ifListRemoveFailes("unterrichtKL", unterrichtKlasse, u);
 			}
 		}
 		this._list_unterricht.remove(u);
