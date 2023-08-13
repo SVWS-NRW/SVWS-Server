@@ -1711,7 +1711,7 @@ public class StundenplanManager {
 	 * @return das Maximum aller nicht leeren {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public int pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() {
-		return _pausenzeitUndZeitrasterMinutenMax;
+		return _pausenzeitUndZeitrasterMinutenMaxOhneLeere;
 	}
 
 	private void pausenzeitUpdate() {
