@@ -171,6 +171,7 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		final Set<Long> klassenIDs = stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
 		stundenplan.unterrichtsverteilung.klassenunterricht.addAll(DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream()
 				.filter(k -> klassenIDs.contains(k.idKlasse)).toList());
+		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
 		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
 		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen
