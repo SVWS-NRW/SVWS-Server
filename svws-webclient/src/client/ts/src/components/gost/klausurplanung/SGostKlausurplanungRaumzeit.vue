@@ -30,6 +30,7 @@
 				:stundenplanmanager="stundenplanmanager"
 				:erzeuge-klausurraum="erzeugeKlausurraum"
 				:patch-klausurraum="patchKlausurraum"
+				:patch-kursklausur="patchKursklausur"
 				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
 		</div>
 	</div>

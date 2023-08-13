@@ -166,12 +166,12 @@
 		for await (const klausurList of klausurTermine) {
 			let termin = null;
 			for await (const klausurId of klausurList) {
-				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
-				if (klausur !== null) {
-					if (termin === null)
-						termin = await props.erzeugeKlausurtermin(klausur.quartal);
-					await props.setTerminToKursklausur(termin.id, klausur);
-				}
+				const klausur = props.kursklausurmanager().gibKursklausurById(klausurId);
+				// if (klausur !== null) {
+				if (termin === null)
+					termin = await props.erzeugeKlausurtermin(klausur.quartal);
+				await props.setTerminToKursklausur(termin.id, klausur);
+				// }
 			}
 		}
 		loading.value = false;

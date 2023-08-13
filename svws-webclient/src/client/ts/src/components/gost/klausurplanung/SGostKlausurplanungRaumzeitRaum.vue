@@ -16,9 +16,11 @@
 					<div v-if="klausurenImRaum.size() === 0">Keine Klausuren im Raum</div>
 					<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
 						:klausur="klausur"
+						:termin="kursklausurmanager().getKlausurterminById(raum.idTermin)"
 						:kursklausurmanager="kursklausurmanager"
 						:kursmanager="kursmanager"
-						:map-lehrer="mapLehrer" />
+						:map-lehrer="mapLehrer"
+						:patch-kursklausur="patchKursklausur" />
 				</table>
 			</svws-ui-content-card>
 		</svws-ui-content-card>
@@ -40,6 +42,7 @@
 		raummanager: GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
 	}>();
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {

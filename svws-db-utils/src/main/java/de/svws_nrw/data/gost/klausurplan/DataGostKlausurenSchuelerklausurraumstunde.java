@@ -129,7 +129,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			if (sk.startzeit != null) {
 				if (sk.startzeit < minStart)
 					minStart = sk.startzeit;
-				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausur(sk.idKursklausur).idVorgabe).dauer;
+				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausurById(sk.idKursklausur).idVorgabe).dauer;
 				if (sk.startzeit + endzeit > maxEnd)
 					maxEnd = endzeit;
 			}

@@ -21,6 +21,7 @@
 		<table>
 			<s-gost-klausurplanung-klausur v-for="klausur of klausurenOhneRaum" :key="klausur.id"
 				:klausur="klausur"
+				:termin="termin"
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
 				:map-lehrer="mapLehrer" />
@@ -38,6 +39,7 @@
 				:raummanager="(raummanager as GostKlausurraumManager)"
 				:patch-klausurraum="patchKlausurraum"
 				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren"
+				:patch-kursklausur="patchKursklausur"
 				:faecher-manager="faecherManager"
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
@@ -62,6 +64,7 @@
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
 	}>();
 
 	const klausurenOhneRaum = computed(() => props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager()));

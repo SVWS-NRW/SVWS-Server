@@ -315,6 +315,17 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
+	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id);
+		const oldKlausur = this.kursklausurmanager.gibKursklausurById(id);
+		Object.assign(oldKlausur, klausur);
+		this.kursklausurmanager.updateKursklausur(oldKlausur);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
 	erzeugeKlausurvorgabe = async (vorgabe: GostKlausurvorgabe): Promise<GostKlausurvorgabe> => {
 		api.status.start();
 		vorgabe.abiJahrgang = this.abiturjahr;

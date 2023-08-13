@@ -297,6 +297,17 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert den Klausurtermin zur übergebenen ID.
+	 *
+	 * @param id die Id des Klausurtermins
+	 *
+	 * @return das Klausurtermin-Objekt
+	 */
+	public getKlausurterminById(id : number) : GostKlausurtermin {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurtermin, id);
+	}
+
+	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
 	 * @param datum das Datum der Klausurtermine
@@ -458,8 +469,8 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return das GostKursklausur-Objekt
 	 */
-	public gibKursklausur(idKursklausur : number) : GostKursklausur | null {
-		return this._mapIdKursklausur.get(idKursklausur);
+	public gibKursklausurById(idKursklausur : number) : GostKursklausur {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKursklausur, idKursklausur);
 	}
 
 	/**

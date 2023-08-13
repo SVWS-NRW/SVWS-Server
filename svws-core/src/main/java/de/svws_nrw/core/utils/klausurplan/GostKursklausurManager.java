@@ -318,6 +318,17 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert den Klausurtermin zur übergebenen ID.
+	 *
+	 * @param id die Id des Klausurtermins
+	 *
+	 * @return das Klausurtermin-Objekt
+	 */
+	public @NotNull GostKlausurtermin getKlausurterminById(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapIdKlausurtermin, id);
+	}
+
+	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
 	 * @param datum das Datum der Klausurtermine
@@ -481,8 +492,8 @@ public class GostKursklausurManager {
 	 *
 	 * @return das GostKursklausur-Objekt
 	 */
-	public GostKursklausur gibKursklausur(final long idKursklausur) {
-		return _mapIdKursklausur.get(idKursklausur);
+	public @NotNull GostKursklausur gibKursklausurById(final long idKursklausur) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapIdKursklausur, idKursklausur);
 	}
 
 	/**
