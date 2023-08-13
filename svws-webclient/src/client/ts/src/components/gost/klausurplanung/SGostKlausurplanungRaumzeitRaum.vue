@@ -5,7 +5,7 @@
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-				:items="stundenplanmanager.raumGetMengeAsList()" />
+				:items="raummanager.raumVerfuegbarGetMengeAsList(stundenplanmanager.raumGetMengeAsList())" />
 			<div>
 				Belegung:
 				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
@@ -50,7 +50,13 @@
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
 	const anzahlSuS = computed(() => props.raummanager.getSchuelerklausurenInRaum(props.raum.id, props.kursklausurmanager()).size());
 
-	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
 	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum) : null;
+
+	const stundenplanRaumSelected = computed({
+		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),
+		set: (value: StundenplanRaum | undefined): void => {
+			props.raum.idStundenplanRaum = value === undefined ? null : value.id;
+		}
+	});
 
 </script>

@@ -19,21 +19,19 @@
 				</li>
 			</ul>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="&nbsp;">
-			<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
-			<div v-else>
-				<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
-					:kursklausurmanager="kursklausurmanager"
-					:faecher-manager="faecherManager"
-					:map-lehrer="mapLehrer"
-					:kursmanager="kursmanager"
-					:raummanager="(raummanager as GostKlausurraumManager)"
-					:stundenplanmanager="stundenplanmanager"
-					:erzeuge-klausurraum="erzeugeKlausurraum"
-					:patch-klausurraum="patchKlausurraum"
-					:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
-			</div>
-		</svws-ui-content-card>
+		<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
+		<div class="h-full" v-else>
+			<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
+				:kursklausurmanager="kursklausurmanager"
+				:faecher-manager="faecherManager"
+				:map-lehrer="mapLehrer"
+				:kursmanager="kursmanager"
+				:raummanager="(raummanager as GostKlausurraumManager)"
+				:stundenplanmanager="stundenplanmanager"
+				:erzeuge-klausurraum="erzeugeKlausurraum"
+				:patch-klausurraum="patchKlausurraum"
+				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
+		</div>
 	</div>
 </template>
 

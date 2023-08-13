@@ -10,6 +10,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausuren/GostKlausurenCollectionSkrsKrs';
+import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { GostKursklausurManager } from '../../../core/utils/klausurplan/GostKursklausurManager';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
@@ -29,6 +30,11 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Eine Map id -> GostKlausurraum
 	 */
 	private readonly _mapIdRaum : JavaMap<number, GostKlausurraum> = new HashMap();
+
+	/**
+	 * Eine Map idStundenplanraum -> GostKlausurraum
+	 */
+	private readonly _mapIdstundenplanraumRaum : JavaMap<number, GostKlausurraum> = new HashMap();
 
 	/**
 	 * Die Klausurraumstunden, die im Manager vorhanden sind
@@ -184,7 +190,21 @@ export class GostKlausurraumManager extends JavaObject {
 	public addKlausurraum(raum : GostKlausurraum) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_raeume", this._raeume, raum);
 		this._raeume.sort(GostKlausurraumManager._compRaumId);
+		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdstundenplanraumRaum, raum.idStundenplanRaum, raum);
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdRaum, raum.id, raum);
+	}
+
+	/**
+	 * Entfernt einen Klausurraum aus den internen Datenstrukturen
+	 *
+	 * @param raum das Gost-Klausurraum-Objekt
+	 */
+	public removeKlausurraum(raum : GostKlausurraum) : void {
+		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, raum);
+		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, raum.id);
+		for (const entry of this._mapIdstundenplanraumRaum.entrySet())
+			if (entry.getValue().id === raum.id)
+				this._mapIdstundenplanraumRaum.remove(entry.getKey());
 	}
 
 	/**
@@ -229,10 +249,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param r das GostKlausurraum-Objekt
 	 */
 	public patchKlausurraum(r : GostKlausurraum) : void {
-		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, r);
-		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, r.id);
-		this._raeume.add(r);
-		this._mapIdRaum.put(r.id, r);
+		this.removeKlausurraum(r);
+		this.addKlausurraum(r);
 	}
 
 	/**
@@ -336,6 +354,21 @@ export class GostKlausurraumManager extends JavaObject {
 		for (const idKK of this._mapRaumKursklausurSchuelerklausur.getKeySetOf(idRaum))
 			schuelerklausuren.addAll(this._mapRaumKursklausurSchuelerklausur.getNonNullOrException(idRaum, idKK));
 		return schuelerklausuren;
+	}
+
+	/**
+	 * Liefert eine Liste von Stundenplanräumen, die nicht für diesen Klausurtermin verplant sind.
+	 *
+	 * @param alleRaeume  die Liste aller Stundenplanräume
+	 *
+	 * @return die Liste der nicht verplanten StundenplanRäume
+	 */
+	public raumVerfuegbarGetMengeAsList(alleRaeume : List<StundenplanRaum>) : List<StundenplanRaum> {
+		const raeume : List<StundenplanRaum> | null = new ArrayList();
+		for (const raum of alleRaeume)
+			if (!this._mapIdstundenplanraumRaum.containsKey(raum.id))
+				raeume.add(raum);
+		return raeume;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
