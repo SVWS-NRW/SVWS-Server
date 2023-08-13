@@ -227,24 +227,6 @@ public final class DateUtils {
 	}
 
 	/**
-	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
-	 * <br>Beispiel: 1000 Minuten --> "16:40"
-	 *
-	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
-	 *
-	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
-	 */
-	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
-		DeveloperNotificationException.ifSmaller("minuten", minuten, 0);
-		DeveloperNotificationException.ifGreater("minuten", minuten, 24L * 60L);
-		final int h = minuten / 60;
-		final int m = minuten - h * 60;
-		final String sStunden = (h < 10 ? "0" : "") + h;
-		final String sMinuten = (m < 10 ? "0" : "") + m;
-		return sStunden + ":" + sMinuten;
-	}
-
-	/**
 	 * Liefert das nach "DIN 5008 optional" konvertierte Datumsformat, z.B. 2023-02-28 zu 28.02.2023.
 	 *
 	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2023-02-28).
@@ -303,6 +285,19 @@ public final class DateUtils {
 		final @NotNull String sMin = (min < 10 ? "0" : "") + min;
 
 		return sStd + ":" + sMin;
+	}
+
+	/**
+	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 * <br>Beispiel: 1000 Minuten --> "16:40"
+	 *
+	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
+	 *
+	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 */
+	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
+		// TODO remove
+		return gibZeitStringOfMinuten(minuten);
 	}
 
 }
