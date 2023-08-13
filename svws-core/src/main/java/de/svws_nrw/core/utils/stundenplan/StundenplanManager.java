@@ -125,10 +125,14 @@ public class StundenplanManager {
 	};
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _list_pausenzeiten = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanPausenzeit> _map_idPausenzeit_zu_pausenzeit = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanPausenaufsicht>> _map_idPausenzeit_zu_pausenaufsichtmenge = new HashMap<>();
+
 	private int _pausenzeitMinutenMin = 480;
 	private int _pausenzeitMinutenMax = 480;
 	private int _pausenzeitUndZeitrasterMinutenMin = 480;
 	private int _pausenzeitUndZeitrasterMinutenMax = 480;
+	private int _pausenzeitUndZeitrasterMinutenMinOhneLeere = 480;
+	private int _pausenzeitUndZeitrasterMinutenMaxOhneLeere = 480;
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _pausenzeitMapByWochentag = new HashMap<>();
 
 	// StundenplanRaum
@@ -152,7 +156,6 @@ public class StundenplanManager {
 	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
 	private boolean _unterrichtHatMultiWochen = false;
 
@@ -166,6 +169,7 @@ public class StundenplanManager {
 	};
 	private final @NotNull List<@NotNull StundenplanZeitraster> _list_zeitraster = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanZeitraster> _map_idZeitraster_zu_zeitraster = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> _map2d_wochentag_stunde_zu_zeitraster = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_wochentag_zu_zeitrastermenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanZeitraster>> _map_stunde_zu_zeitrastermenge = new HashMap<>();
@@ -1410,12 +1414,12 @@ public class StundenplanManager {
 	private void pausenaufsichtAddOhneUpdate(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
 		// Überprüfen
 		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > stundenplanWochenTypModell));
 
 		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
+		DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenaufsicht.idPausenzeit).add(pausenaufsicht);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", _list_pausenaufsichten, pausenaufsicht);
 	}
 
@@ -1480,6 +1484,7 @@ public class StundenplanManager {
 
 		// Entfernen
 		DeveloperNotificationException.ifMapRemoveFailes(_map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id);
+		DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenaufsicht.idPausenzeit).remove(pausenaufsicht);
 		DeveloperNotificationException.ifListRemoveFailes("_list_pausenaufsichten", _list_pausenaufsichten, pausenaufsicht);
 	}
 
@@ -1518,6 +1523,7 @@ public class StundenplanManager {
 
 		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id, pausenzeit);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenzeit.id, new ArrayList<>());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenzeiten", _list_pausenzeiten, pausenzeit);
 	}
 
@@ -1594,7 +1600,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
-	 * <br> Laufzeit: O(1)
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
 	 *
 	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
 	 *
@@ -1622,6 +1628,7 @@ public class StundenplanManager {
 
 		// Entfernen
 		DeveloperNotificationException.ifMapRemoveFailes(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenzeit.id);
 		DeveloperNotificationException.ifListRemoveFailes("_list_pausenzeiten", _list_pausenzeiten, pausenzeit);
 	}
 
@@ -1678,6 +1685,16 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das Minimum aller nicht leeren {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Minimum aller nicht leeren {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitUndZeitrasterGetMinutenMinOhneLeere() {
+		return _pausenzeitUndZeitrasterMinutenMinOhneLeere;
+	}
+
+	/**
 	 * Liefert das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -1687,16 +1704,27 @@ public class StundenplanManager {
 		return _pausenzeitUndZeitrasterMinutenMax;
 	}
 
+	/**
+	 * Liefert das Maximum aller nicht leeren {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return das Maximum aller nicht leeren {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
+	 */
+	public int pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() {
+		return _pausenzeitUndZeitrasterMinutenMax;
+	}
 
 	private void pausenzeitUpdate() {
 		// Sortieren
 		_list_pausenzeiten.sort(_compPausenzeit);
 
 		// Initialisierungen
-		_pausenzeitMinutenMin = MINUTEN_INF_POS;               // Ungültiger Dummy-Wert
-		_pausenzeitMinutenMax = MINUTEN_INF_NEG;               // Ungültiger Dummy-Wert
-		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS;  // Ungültiger Dummy-Wert
-		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG;  // Ungültiger Dummy-Wert
+		_pausenzeitMinutenMin = MINUTEN_INF_POS;                        // Ungültiger Dummy-Wert
+		_pausenzeitMinutenMax = MINUTEN_INF_NEG;                        // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS;           // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG;           // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMinOhneLeere = MINUTEN_INF_POS;  // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMaxOhneLeere = MINUTEN_INF_NEG;  // Ungültiger Dummy-Wert
 		_pausenzeitMapByWochentag.clear();
 
 		// Iterieren
@@ -1705,11 +1733,20 @@ public class StundenplanManager {
 			_pausenzeitMinutenMax = BlockungsUtils.maxVI(_pausenzeitMinutenMax, p.ende);
 			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, p.beginn);
 			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, p.ende);
-			MapUtils.getOrCreateArrayList(_pausenzeitMapByWochentag, p.wochentag).add(p);
+			final @NotNull List<@NotNull StundenplanPausenaufsicht> listPA = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenaufsichtmenge, p.id);
+			if (!listPA.isEmpty()) {
+				_pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
+				_pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
+			}
 		}
 		for (final @NotNull StundenplanZeitraster z : _list_zeitraster) {
 			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
 			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+			final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, z.id);
+			if (!listU.isEmpty()) {
+				_pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMinOhneLeere, z.stundenbeginn);
+				_pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMaxOhneLeere, z.stundenende);
+			}
 		}
 
 		// Dummy-Werte durch Default-Werte ersetzen.
@@ -1717,6 +1754,8 @@ public class StundenplanManager {
 		_pausenzeitMinutenMax = (_pausenzeitMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitMinutenMax;
 		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
 		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
+		_pausenzeitUndZeitrasterMinutenMinOhneLeere = (_pausenzeitUndZeitrasterMinutenMinOhneLeere == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMinOhneLeere;
+		_pausenzeitUndZeitrasterMinutenMaxOhneLeere = (_pausenzeitUndZeitrasterMinutenMaxOhneLeere == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMaxOhneLeere;
 	}
 
 	private void raumAddOhneUpdate(final @NotNull StundenplanRaum raum) {
@@ -2940,6 +2979,7 @@ public class StundenplanManager {
 
 		// Remove
 		DeveloperNotificationException.ifMapRemoveFailes(_map_idZeitraster_zu_zeitraster, idZeitraster);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idZeitraster_zu_unterrichtmenge, idZeitraster);
 		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_wochentag_stunde_zu_zeitraster, z.wochentag, z.unterrichtstunde);
 		MapUtils.removeFromListAndTrimOrException(_map_wochentag_zu_zeitrastermenge, z.wochentag, z);
 		MapUtils.removeFromListAndTrimOrException(_map_stunde_zu_zeitrastermenge, z.unterrichtstunde, z);
@@ -2991,40 +3031,55 @@ public class StundenplanManager {
 		_list_zeitraster.sort(_compZeitraster);
 
 		// Initialisierungen
-		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
-		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
-		_zeitrasterMinutenMin = MINUTEN_INF_POS;              // Ungültiger Dummy-Wert
-		_zeitrasterMinutenMax = MINUTEN_INF_NEG;              // Ungültiger Dummy-Wert
-		_zeitrasterWochentagMin = WOCHENTAG_INF_POS;          // Ungültiger Dummy-Wert
-		_zeitrasterWochentagMax = WOCHENTAG_INF_NEG;          // Ungültiger Dummy-Wert
-		_zeitrasterStundeMin = STUNDE_INF_POS;                // Ungültiger Dummy-Wert
-		_zeitrasterStundeMax = STUNDE_INF_NEG;                // Ungültiger Dummy-Wert
+		_zeitrasterMinutenMin = MINUTEN_INF_POS;                       // Ungültiger Dummy-Wert
+		_zeitrasterMinutenMax = MINUTEN_INF_NEG;                       // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS;          // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMax = MINUTEN_INF_NEG;          // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMinOhneLeere = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
+		_pausenzeitUndZeitrasterMinutenMaxOhneLeere = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
+		_zeitrasterWochentagMin = WOCHENTAG_INF_POS;                   // Ungültiger Dummy-Wert
+		_zeitrasterWochentagMax = WOCHENTAG_INF_NEG;                   // Ungültiger Dummy-Wert
+		_zeitrasterStundeMin = STUNDE_INF_POS;                         // Ungültiger Dummy-Wert
+		_zeitrasterStundeMax = STUNDE_INF_NEG;                         // Ungültiger Dummy-Wert
 		_zeitrasterMinutenMinByStunde.clear();
 		_zeitrasterMinutenMaxByStunde.clear();
 
 		// Iterieren
 		for (final @NotNull StundenplanZeitraster z :_list_zeitraster) {
-			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
-			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
-			_zeitrasterMinutenMin = BlockungsUtils.minVI(_zeitrasterMinutenMin, z.stundenbeginn);
-			_zeitrasterMinutenMax = BlockungsUtils.maxVI(_zeitrasterMinutenMax, z.stundenende);
 			_zeitrasterWochentagMin = BlockungsUtils.minVI(_zeitrasterWochentagMin, z.wochentag);
 			_zeitrasterWochentagMax = BlockungsUtils.maxVI(_zeitrasterWochentagMax, z.wochentag);
 			_zeitrasterStundeMin = BlockungsUtils.minVI(_zeitrasterStundeMin, z.unterrichtstunde);
 			_zeitrasterStundeMax = BlockungsUtils.maxVI(_zeitrasterStundeMax, z.unterrichtstunde);
 			_zeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(_zeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
 			_zeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(_zeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.stundenende));
+
+			_zeitrasterMinutenMin = BlockungsUtils.minVI(_zeitrasterMinutenMin, z.stundenbeginn);
+			_zeitrasterMinutenMax = BlockungsUtils.maxVI(_zeitrasterMinutenMax, z.stundenende);
+			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
+			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+			final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, z.id);
+			if (!listU.isEmpty()) {
+				_pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMinOhneLeere, z.stundenbeginn);
+				_pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMaxOhneLeere, z.stundenende);
+			}
 		}
 		for (final @NotNull StundenplanPausenzeit p :_list_pausenzeiten) {
 			_pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMin, p.beginn);
 			_pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMax, p.ende);
+			final @NotNull List<@NotNull StundenplanPausenaufsicht> listPA = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenaufsichtmenge, p.id);
+			if (!listPA.isEmpty()) {
+				_pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(_pausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
+				_pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(_pausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
+			}
 		}
 
 		// Dummy-Werte mit Default-Werten ersetzen
-		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
-		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
 		_zeitrasterMinutenMin = (_zeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _zeitrasterMinutenMin;
 		_zeitrasterMinutenMax = (_zeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _zeitrasterMinutenMax;
+		_pausenzeitUndZeitrasterMinutenMin = (_pausenzeitUndZeitrasterMinutenMin == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMin;
+		_pausenzeitUndZeitrasterMinutenMax = (_pausenzeitUndZeitrasterMinutenMax == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMax;
+		_pausenzeitUndZeitrasterMinutenMinOhneLeere = (_pausenzeitUndZeitrasterMinutenMinOhneLeere == MINUTEN_INF_POS) ? 480 : _pausenzeitUndZeitrasterMinutenMinOhneLeere;
+		_pausenzeitUndZeitrasterMinutenMaxOhneLeere = (_pausenzeitUndZeitrasterMinutenMaxOhneLeere == MINUTEN_INF_NEG) ? 480 : _pausenzeitUndZeitrasterMinutenMaxOhneLeere;
 		_zeitrasterWochentagMin = (_zeitrasterWochentagMin == WOCHENTAG_INF_POS) ? Wochentag.MONTAG.id : _zeitrasterWochentagMin;
 		_zeitrasterWochentagMax = (_zeitrasterWochentagMax == WOCHENTAG_INF_NEG) ? Wochentag.MONTAG.id : _zeitrasterWochentagMax;
 		_zeitrasterStundeMin = (_zeitrasterStundeMin == STUNDE_INF_POS) ? 1 : _zeitrasterStundeMin;
