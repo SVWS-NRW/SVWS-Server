@@ -993,15 +993,37 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * Liefert die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
 	 *
-	 * @return die Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * @return die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 */
-	public int klassenunterrichtGetWochenstunden(final long idKlasse, final long idFach) {
+	public int klassenunterrichtGetWochenstundenSoll(final long idKlasse, final long idFach) {
 		return DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach).wochenstunden;
+	}
+
+	/**
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * <br>Hinweis: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Laufzeit: O(|Unterricht des Klassenunterricht|)
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 * @param idFach    Die Datenbank-ID des Faches.
+	 *
+	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 */
+	public double klassenunterrichtGetWochenstundenIst(final long idKlasse, final long idFach) {
+		double summe = 0;
+		final double faktor = (stundenplanWochenTypModell == 0) ? 1 : stundenplanWochenTypModell;
+
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		for (final @NotNull  StundenplanUnterricht u : listU)
+			summe += (u.wochentyp == 0) ? faktor : 1;
+
+		return summe / faktor;
 	}
 
 	private void klassenunterrichtRemoveOhneUpdateById(final long idKlasse, final long idFach) {
@@ -1159,12 +1181,13 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert die Wochenstunden des Kurses.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Wochenstunden des Kurses.
 	 */
-	public int kursGetWochenstunden(final long idKurs) {
+	public int kursGetWochenstundenSoll(final long idKurs) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, idKurs).wochenstunden;
 	}
 
@@ -1966,7 +1989,7 @@ public class StundenplanManager {
 		} else {
 			// Klassenunterricht
 			for (final @NotNull Long idKlasse : u.klassen) {
-				final @NotNull List<@NotNull StundenplanUnterricht> unterricht = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				final @NotNull List<@NotNull StundenplanUnterricht> unterricht = Map2DUtils.getOrCreateArrayList(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
 				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKlasseFach", unterricht, u);
 			}
 		}
@@ -2010,6 +2033,39 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param wochentyp  Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(final long idKlasse, final long idFach, final int wochentyp) {
+		// Überprüfen
+		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > stundenplanWochenTypModell);
+
+		// Filtern
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		return CollectionUtils.toFilteredArrayList(listU, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) in einer bestimmten Kalenderwoche.
+	 *
+	 * @param idKlasse       Die Datenbank-ID der Klasse.
+	 * @param idFach         Die Datenbank-ID des Faches.
+	 * @param jahr           Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) in einer bestimmten Kalenderwoche.
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndFachIdAndJahrAndKW(final long idKlasse, final long idFach, final int jahr, final int kalenderwoche) {
+		final int wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
+		return unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse, idFach, wochentyp);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
 	 * @param idkurs     Die ID des Kurses.
@@ -2022,8 +2078,8 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > stundenplanWochenTypModell);
 
 		// Filtern
-		final @NotNull List<@NotNull StundenplanUnterricht> list = MapUtils.getOrCreateArrayList(_map_idKurs_zu_unterrichtmenge, idkurs);
-		return CollectionUtils.toFilteredArrayList(list, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, idkurs);
+		return CollectionUtils.toFilteredArrayList(listU, (final @NotNull StundenplanUnterricht u) -> (u.wochentyp == 0) || (u.wochentyp == wochentyp));
 	}
 
 	/**

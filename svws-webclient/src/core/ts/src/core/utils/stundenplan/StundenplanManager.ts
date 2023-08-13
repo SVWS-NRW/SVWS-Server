@@ -940,15 +940,35 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * Liefert die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
 	 *
-	 * @return die Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * @return die SOLL-Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 */
-	public klassenunterrichtGetWochenstunden(idKlasse : number, idFach : number) : number {
+	public klassenunterrichtGetWochenstundenSoll(idKlasse : number, idFach : number) : number {
 		return DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach).wochenstunden;
+	}
+
+	/**
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * <br>Hinweis: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Laufzeit: O(|Unterricht des Klassenunterricht|)
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 * @param idFach    Die Datenbank-ID des Faches.
+	 *
+	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 */
+	public klassenunterrichtGetWochenstundenIst(idKlasse : number, idFach : number) : number {
+		let summe : number = 0;
+		const faktor : number = (this.stundenplanWochenTypModell === 0) ? 1 : this.stundenplanWochenTypModell;
+		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		for (const u of listU)
+			summe += (u.wochentyp === 0) ? faktor : 1;
+		return summe / faktor;
 	}
 
 	private klassenunterrichtRemoveOhneUpdateById(idKlasse : number, idFach : number) : void {
@@ -1096,12 +1116,13 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert die Wochenstunden des Kurses.
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die Wochenstunden des Kurses.
 	 */
-	public kursGetWochenstunden(idKurs : number) : number {
+	public kursGetWochenstundenSoll(idKurs : number) : number {
 		return DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, idKurs).wochenstunden;
 	}
 
@@ -1839,7 +1860,7 @@ export class StundenplanManager extends JavaObject {
 			DeveloperNotificationException.ifListAddsDuplicate("unterrichtKurs", unterricht, u);
 		} else {
 			for (const idKlasse of u.klassen) {
-				const unterricht : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				const unterricht : List<StundenplanUnterricht> = Map2DUtils.getOrCreateArrayList(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
 				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKlasseFach", unterricht, u);
 			}
 		}
@@ -1883,6 +1904,36 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param idFach     Die Datenbank-ID des Faches.
+	 * @param wochentyp  Der gewünschten Wochentyp. Der Wert 0 ist nur dann erlaubt, wenn wochenTypModell ebenfalls 0 ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) mit einem bestimmten Wochentyp.
+	 */
+	public unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse : number, idFach : number, wochentyp : number) : List<StundenplanUnterricht> {
+		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this.stundenplanWochenTypModell);
+		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		return CollectionUtils.toFilteredArrayList(listU, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) in einer bestimmten Kalenderwoche.
+	 *
+	 * @param idKlasse       Die Datenbank-ID der Klasse.
+	 * @param idFach         Die Datenbank-ID des Faches.
+	 * @param jahr           Das Jahr der Kalenderwoche (muss zwischen 2000 und 3000 liegen).
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche (muss zwischen 1 und 53 liegen).
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte eines Klassenunterrichts (Klasse, Fach) in einer bestimmten Kalenderwoche.
+	 */
+	public unterrichtGetMengeByKlasseIdAndFachIdAndJahrAndKW(idKlasse : number, idFach : number, jahr : number, kalenderwoche : number) : List<StundenplanUnterricht> {
+		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kalenderwoche);
+		return this.unterrichtGetMengeByKlasseIdAndFachIdAndWochentyp(idKlasse, idFach, wochentyp);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht} eines Kurses mit einem bestimmten Wochentyp.
 	 *
 	 * @param idkurs     Die ID des Kurses.
@@ -1892,8 +1943,8 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtGetMengeByKursIdAndWochentyp(idkurs : number, wochentyp : number) : List<StundenplanUnterricht> {
 		DeveloperNotificationException.ifTrue("wochentyp > stundenplanWochenTypModell", wochentyp > this.stundenplanWochenTypModell);
-		const list : List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._map_idKurs_zu_unterrichtmenge, idkurs);
-		return CollectionUtils.toFilteredArrayList(list, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
+		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, idkurs);
+		return CollectionUtils.toFilteredArrayList(listU, { test : (u: StundenplanUnterricht) => (u.wochentyp === 0) || (u.wochentyp === wochentyp) });
 	}
 
 	/**
