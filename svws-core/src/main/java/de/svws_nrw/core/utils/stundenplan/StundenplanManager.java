@@ -93,11 +93,14 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _map_idKlasse_zu_klasse = new HashMap<>();
 
 	// StundenplanKlassenunterricht
-	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _map2d_idKlasse_idFach_klassenunterricht = new HashMap2D<>();
+	private final @NotNull List<@NotNull StundenplanKlassenunterricht> _list_klassenunterricht = new ArrayList<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _map2d_idKlasse_idFach_zu_klassenunterricht = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idKlasse_idFach_zu_unterrichtmenge = new HashMap2D<>();
 
 	// StundenplanKurs
 	private final @NotNull List<@NotNull StundenplanKurs> _list_kurse = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKurs> _map_idKurs_zu_kurs = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idKurs_zu_unterrichtmenge = new HashMap<>();
 
 	// StundenplanLehrer
 	private final @NotNull List<@NotNull StundenplanLehrer> _list_lehrer = new ArrayList<>();
@@ -146,7 +149,6 @@ public class StundenplanManager {
 	// StundenplanUnterricht
 	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idKurs_zu_unterrichtmenge = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idZeitraster_zu_unterrichtmenge = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
@@ -292,10 +294,10 @@ public class StundenplanManager {
 		pausenzeitAddAll(listPausenzeit);                // ✔, referenziert ---
 		aufsichtsbereichAddAll(listAufsichtsbereich);    // ✔, referenziert ---
 		klasseAddAll(listKlasse);                        // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
-		klassenunterrichtAddAll(listKlassenunterricht);  // ✔, referenziert [Jahrgang], es gibt auch jahrgangsübergreifende Klassen!
 		lehrerAddAll(listLehrer);                        // ✔, referenziert [Fach]
 		schuelerAddAll(listSchueler);                    // ✔, referenziert Klasse
 		schieneAddAll(listSchiene);                      // ✔, referenziert Jahrgang
+		klassenunterrichtAddAll(listKlassenunterricht);  // ✔, referenziert Klasse, [Jahrgang], [Schienen]
 		pausenaufsichtAddAll(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
 		kursAddAll(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
 		unterrichtAddAll(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
@@ -954,11 +956,28 @@ public class StundenplanManager {
 
 	private void klassenunterrichtAddOhneUpdate(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
 		// Überprüfen
-		DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, klassenunterricht.idKlasse);
-		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, klassenunterricht.idFach);
+		final long idKlasse = klassenunterricht.idKlasse;
+		final long idFach = klassenunterricht.idFach;
+		DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, idKlasse);
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, idFach);
+		for (final @NotNull Long idSchiene : klassenunterricht.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchiene);
 
 		// Hinzufügen
-		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_klassenunterricht, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach, klassenunterricht);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach, new ArrayList<>());
+		DeveloperNotificationException.ifListAddsDuplicate("_list_klassenunterricht", _list_klassenunterricht, klassenunterricht);
+	}
+
+	/**
+	 * Fügt ein {@link StundenplanKlassenunterricht}-Objekt hinzu.
+	 * <br>Laufzeit: O(|StundenplanKlassenunterricht|), da klassenunterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param klassenunterricht  Das {@link StundenplanKlassenunterricht}-Objekt, welches hinzugefügt werden soll.
+	 */
+	public void klassenunterrichtAdd(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
+		klassenunterrichtAddOhneUpdate(klassenunterricht);
+		klassenunterrichtUpdate();
 	}
 
 	/**
@@ -974,19 +993,58 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die Wochenstunden des Klassenunterrichts.
+	 * Liefert die Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
 	 *
-	 * @return die Wochenstunden des Klassenunterrichts.
+	 * @return die Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 */
 	public int klassenunterrichtGetWochenstunden(final long idKlasse, final long idFach) {
-		return DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_klassenunterricht, idKlasse, idFach).wochenstunden;
+		return DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach).wochenstunden;
+	}
+
+	private void klassenunterrichtRemoveOhneUpdateById(final long idKlasse, final long idFach) {
+		// Kaskade: StundenplanUnterricht (des Klassenunterrichts)
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		for (final @NotNull StundenplanUnterricht u : listU)
+			unterrichtRemoveByIdOhneUpdate(u.id);
+
+		// Get
+		final @NotNull StundenplanKlassenunterricht klassenunterricht = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach);
+
+		// Entfernen
+		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach);
+		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
+		DeveloperNotificationException.ifListRemoveFailes("_list_klassenunterricht", _list_klassenunterricht, klassenunterricht);
+	}
+
+	/**
+	 * Entfernt ein {@link StundenplanKlassenunterricht}-Objekt anhand seiner ID.
+	 * <br>Laufzeit: O(|StundenplanKlassenunterricht|), da klassenunterrichtUpdate() aufgerufen wird.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 * @param idFach    Die Datenbank-ID des Faches.
+	 */
+	public void klassenunterrichtRemoveById(final long idKlasse, final long idFach) {
+		klassenunterrichtRemoveOhneUpdateById(idKlasse, idFach);
+		klassenunterrichtUpdate();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanKlassenunterricht}-Objekte.
+	 *
+	 * @param listKlassenunterricht  Die Liste der zu entfernenden {@link StundenplanKlassenunterricht}-Objekte.
+	 */
+	public void klassenunterrichtRemoveAll(final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
+			klassenunterrichtRemoveOhneUpdateById(klassenunterricht.idKlasse, klassenunterricht.idFach);
+		klassenunterrichtUpdate();
 	}
 
 	private void klassenunterrichtUpdate() {
-		// noch nichts
+		// Kaskade: StundenplanUnterricht
+		unterrichtUpdate();
 	}
 
 	private void kursAddOhneUpdate(final @NotNull StundenplanKurs kurs) {
@@ -1123,6 +1181,11 @@ public class StundenplanManager {
 	}
 
 	private void kursRemoveOhneUpdateById(final long idKurs) {
+		// Kaskade: StundenplanUnterricht (des Kurses)
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, idKurs);
+		for (final @NotNull StundenplanUnterricht u : listU)
+			unterrichtRemoveByIdOhneUpdate(u.id);
+
 		// Get
 		final @NotNull StundenplanKurs kurs = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, idKurs);
 
@@ -1155,7 +1218,8 @@ public class StundenplanManager {
 	}
 
 	private void kursUpdate() {
-		// ...
+		// Kaskade: StundenplanUnterricht
+		unterrichtUpdate();
 	}
 
 	private void lehrerAddOhneUpdate(final @NotNull StundenplanLehrer lehrer) {
@@ -1889,17 +1953,22 @@ public class StundenplanManager {
 
 		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idUnterricht_zu_unterricht, u.id, u);
-		MapUtils.getOrCreateArrayList(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
+		DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
 		Map2DUtils.getOrCreateArrayList(_map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
 		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer) {
 			final @NotNull StundenplanLehrer lehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
 			MapUtils.getOrCreateArrayList(_map_idUnterricht_zu_lehrermenge, u.id).add(lehrer);
 		}
-		// Ist es Kurs-Unterricht?
 		if (u.idKurs != null) {
-			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_idKurs_zu_kurs, u.idKurs);
-			final @NotNull List<@NotNull StundenplanUnterricht> unterrichtDesKurses = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, u.idKurs);
-			DeveloperNotificationException.ifListAddsDuplicate("unterrichtDesKurses", unterrichtDesKurses, u);
+			// Kursunterricht
+			final @NotNull List<@NotNull StundenplanUnterricht> unterricht = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListAddsDuplicate("unterrichtKurs", unterricht, u);
+		} else {
+			// Klassenunterricht
+			for (final @NotNull Long idKlasse : u.klassen) {
+				final @NotNull List<@NotNull StundenplanUnterricht> unterricht = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				DeveloperNotificationException.ifListAddsDuplicate("unterrichtKlasseFach", unterricht, u);
+			}
 		}
 		_list_unterricht.add(u);
 	}
@@ -2198,14 +2267,19 @@ public class StundenplanManager {
 
 		// Remove
 		DeveloperNotificationException.ifMapRemoveFailes(_map_idUnterricht_zu_unterricht, u.id);
-		MapUtils.getOrCreateArrayList(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).remove(u);
+		DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).remove(u);
 		Map2DUtils.getOrCreateArrayList(_map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).remove(u);
 		DeveloperNotificationException.ifMapRemoveFailes(_map_idUnterricht_zu_lehrermenge, u.id);
-		// Ist es Kurs-Unterricht?
 		if (u.idKurs != null) {
-			DeveloperNotificationException.ifMapNotContains("_map_kursID_zu_kurs", _map_idKurs_zu_kurs, u.idKurs);
-			final @NotNull List<@NotNull StundenplanUnterricht> unterrichtDesKurses = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, u.idKurs);
-			DeveloperNotificationException.ifListRemoveFailes("unterrichtDesKurses", unterrichtDesKurses, u);
+			// Kursunterricht
+			final @NotNull List<@NotNull StundenplanUnterricht> unterricht = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, u.idKurs);
+			DeveloperNotificationException.ifListRemoveFailes("unterrichtKurs", unterricht, u);
+		} else {
+			// Klassenunterricht
+			for (final @NotNull Long idKlasse : u.klassen) {
+				final @NotNull List<@NotNull StundenplanUnterricht> unterricht = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, u.idFach);
+				DeveloperNotificationException.ifListRemoveFailes("unterrichtKlasseFach", unterricht, u);
+			}
 		}
 		_list_unterricht.remove(u);
 	}
@@ -2383,6 +2457,7 @@ public class StundenplanManager {
 
 		// Hinzufügen.
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_zeitraster, zeitraster.id, zeitraster);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_unterrichtmenge, zeitraster.id, new ArrayList<>());
 		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
 		MapUtils.getOrCreateArrayList(_map_wochentag_zu_zeitrastermenge, zeitraster.wochentag).add(zeitraster);
 		MapUtils.getOrCreateArrayList(_map_stunde_zu_zeitrastermenge, zeitraster.unterrichtstunde).add(zeitraster);
@@ -2717,7 +2792,7 @@ public class StundenplanManager {
 
 	private void zeitrasterRemoveOhneUpdate(final long idZeitraster) {
 		// Kaskade: StundenplanUnterricht
-		final @NotNull List<@NotNull StundenplanUnterricht> listU = MapUtils.getOrCreateArrayList(_map_idZeitraster_zu_unterrichtmenge, idZeitraster);
+		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, idZeitraster);
 		for (final @NotNull StundenplanUnterricht u : listU)
 			unterrichtRemoveByIdOhneUpdate(u.id);
 
