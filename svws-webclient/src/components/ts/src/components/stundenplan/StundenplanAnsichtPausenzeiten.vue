@@ -112,19 +112,28 @@
 
 <script setup lang="ts">
 
-	import {ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, type StundenplanAufsichtsbereich, ZulaessigesFach} from "@core";
-	import {computed} from "vue";
-	import {type StundenplanAnsichtProps} from "./StundenplanAnsichtProps";
+	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach } from "@core";
+	import { computed } from "vue";
+	import { type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
-	const props = defineProps<StundenplanAnsichtProps>();
+	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
+		mode: 'schueler',
+		ignoreEmpty: false,
+	});
 
 	const beginn = computed(() => {
+		// TODO Methoden im Kommentar noch fehlerhaft, verwenden sobald der Bug behoben ist...
+		// if (props.ignoreEmpty)
+		// 	return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
+		// TODO Methoden im Kommentar noch fehlerhaft, verwenden sobald der Bug behoben ist...
+		// if (props.ignoreEmpty)
+		// 	return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 

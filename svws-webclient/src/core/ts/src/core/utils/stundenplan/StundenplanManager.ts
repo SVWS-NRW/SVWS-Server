@@ -1612,7 +1612,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller nicht leeren {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() : number {
-		return this._pausenzeitUndZeitrasterMinutenMax;
+		return this._pausenzeitUndZeitrasterMinutenMaxOhneLeere;
 	}
 
 	private pausenzeitUpdate() : void {
