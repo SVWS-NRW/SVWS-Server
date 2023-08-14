@@ -67,10 +67,10 @@
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
 		// TODO Ermittle die Info aus allen vorhanden Wochentagen (!) - nicht nur vom Montag
 		const w = wochentag === undefined ? Wochentag.MONTAG : wochentag;
-		const z = props.manager().zeitrasterGetByWochentagAndStundeOrException(w.id, stunde);
+		const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(w.id, stunde);
 		let top = 0;
 		let height = 10;
-		if ((z.stundenbeginn === null) || (z.stundenende === null)) {
+		if ((z === null) || (z.stundenbeginn === null) || (z.stundenende === null)) {
 			const sb = props.manager().zeitrasterGetStundeMin();
 			const se = props.manager().zeitrasterGetStundeMax();
 			const stunden = se - sb + 1;
