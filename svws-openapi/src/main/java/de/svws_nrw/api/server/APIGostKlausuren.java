@@ -43,7 +43,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
@@ -161,10 +160,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response copyGostKlausurenVorgaben(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("halbjahr") final int halbjahr, @PathParam("quartal") final int quartal, @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			if (new DataGostKlausurenVorgabe(conn, abiturjahr).copyVorgabenToJahrgang(GostHalbjahr.fromID(halbjahr), quartal)) {
-				return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(true).build();
-			}
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(false).build();
+			return (new DataGostKlausurenVorgabe(conn, abiturjahr).copyVorgaben(GostHalbjahr.fromID(halbjahr), quartal));
 		}
 	}
 
