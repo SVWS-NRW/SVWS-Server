@@ -396,6 +396,14 @@ publishReleaseAll.dependsOn publishNpmCore
 publishReleaseAll.dependsOn publishNpmUi
 publishReleaseAll.dependsOn publishNpmClient
 
+project.tasks.withType(PublishToMavenRepository).configureEach {
+  dependsOn copyNexusNpmrc, copyNpmNpmrc
+}
+
+project.tasks.withType(Sign).configureEach {
+  dependsOn copyNexusNpmrc, copyNpmNpmrc
+}
+
 
 publishing {
     repositories {
