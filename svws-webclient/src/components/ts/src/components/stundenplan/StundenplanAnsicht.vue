@@ -4,7 +4,7 @@
 			<div class="inline-flex gap-1 items-center pl-2" :class="{'opacity-50 font-normal print:invisible': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
 			</div>
-			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id"
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
 				class="font-bold text-center inline-flex items-center w-full justify-center">
 				<div> {{ wochentage[wochentag.id] }}</div>
 			</div>
@@ -37,7 +37,7 @@
 					</div>
 				</template>
 			</div>
-			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id"
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
 				class="svws-ui-stundenplan--zeitraster">
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde"
@@ -135,6 +135,10 @@
 		// if (props.ignoreEmpty)
 		// 	return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
+	});
+
+	const wochentagRange = computed(() => {
+		return props.manager().zeitrasterGetWochentageAlsEnumRange();
 	});
 
 	const zeitrasterRange = computed(() => {
