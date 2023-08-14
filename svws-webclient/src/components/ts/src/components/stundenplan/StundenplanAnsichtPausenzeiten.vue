@@ -21,7 +21,7 @@
 				</template>
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
-				<div v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde"
+				<div v-for="stunde in zeitrasterRange" :key="stunde"
 					class="svws-ui-stundenplan--stunde text-center justify-center"
 					:style="posZeitraster(undefined, stunde)">
 					<div class="text-headline-sm">{{ stunde }}. Stunde</div>
@@ -39,7 +39,7 @@
 			</div>
 			<div v-for="wochentag in manager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id"
 				class="svws-ui-stundenplan--zeitraster">
-				<template v-for="stunde in manager().zeitrasterGetStundenRange()" :key="stunde">
+				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde"
 						:style="posZeitraster(wochentag, stunde)">
 						<template v-if="(wochentyp() !== 0) && (manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, 0) || manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, wochentyp()))">
@@ -137,6 +137,13 @@
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 
+	const zeitrasterRange = computed(() => {
+		// TODO warten bis die Methode implementiert ist und dann mit den beiden TODOs oben aktivieren
+		// if (props.ignoreEmpty)
+		// 	return props.manager().zeitrasterGetStundenRangeOhneLeere();
+		return props.manager().zeitrasterGetStundenRange();
+	})
+
 	const gesamtzeit = computed(() => {
 		const tmp = ende.value - beginn.value;
 		return tmp <= 0 ? 360 : tmp;
@@ -185,23 +192,12 @@
 					zende = z.stundenende;
 			}
 		}
-		let top = 0;
-		let height = 10;
 		let rowStart = 0;
 		let rowEnd = 10;
-		if ((zbeginn === null) || (zende === null)) {
-			const sb = props.manager().zeitrasterGetStundeMin();
-			const se = props.manager().zeitrasterGetStundeMax();
-			const stunden = se - sb + 1;
-			top = ((stunde - sb) / stunden) * 100;
-			height = 100 / stunden;
-		} else {
-			top = ((zbeginn - beginn.value) / gesamtzeit.value) * 100;
-			height = ((zende - zbeginn) / gesamtzeit.value) * 100;
+		if ((zbeginn !== null) && (zende !== null)) {
 			rowStart = (zbeginn - beginn.value) / 5;
 			rowEnd = (zende - beginn.value) / 5;
 		}
-		// return "top: " + top + "%; height: " + height + "%;";
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
@@ -222,23 +218,12 @@
 
 	function posPausenaufsicht(p : StundenplanPausenaufsicht) : string {
 		const pzeit = pausenzeit(p);
-		let top = 0;
-		let height = 10;
 		let rowStart = 0;
 		let rowEnd = 10;
-		if ((pzeit.beginn === null) || (pzeit.ende === null)) {
-			const sb = props.manager().zeitrasterGetStundeMin();
-			const se = props.manager().zeitrasterGetStundeMax();
-			const stunden = se - sb + 1;
-			top = 0;
-			height = 100 / stunden;
-		} else {
-			top = ((pzeit.beginn - beginn.value) / gesamtzeit.value) * 100;
-			height = ((pzeit.ende - pzeit.beginn) / gesamtzeit.value) * 100;
+		if ((pzeit.beginn !== null) && (pzeit.ende !== null)) {
 			rowStart = (pzeit.beginn - beginn.value) / 5;
 			rowEnd = (pzeit.ende - beginn.value) / 5;
 		}
-		// return "top: " + top + "%; height: " + height + "%;";
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
