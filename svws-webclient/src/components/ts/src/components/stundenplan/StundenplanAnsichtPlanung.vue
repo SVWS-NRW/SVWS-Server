@@ -6,7 +6,7 @@
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
 				class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentag.beschreibung }}</div>
+				<div> {{ wochentag.beschreibung }}<i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([...manager().getListZeitrasterZuWochentag(wochentag)])" /></div>
 			</div>
 			<div @click="addWochentag"><i-ri-add-line class="cursor-pointer" /></div>
 		</div>
@@ -26,7 +26,7 @@
 					class="svws-ui-stundenplan--stunde text-center justify-center"
 					:style="posZeitraster(undefined, stunde)">
 					<div class="text-headline-sm">
-						<SvwsUiTextInput :model-value="stunde" @update:model-value="patchStunde" headless style="width: 1rem;" /><span>.&nbsp;Stunde</span><i-ri-delete-bin-line class="cursor-pointer" />
+						<SvwsUiTextInput :model-value="stunde" @update:model-value="patchStunde" headless style="width: 1rem;" /><span>.&nbsp;Stunde</span><i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([...manager().getListZeitrasterZuStunde(stunde)])" />
 					</div>
 					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
 						{{ zeiten.replace(' Uhr', '') }}
@@ -42,21 +42,20 @@
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
 				class="svws-ui-stundenplan--zeitraster">
-				<template v-for="stunde in manager().getListZeitrasterZuWochentag(wochentag)" :key="stunde">
+				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag">
 					<div class="svws-ui-stundenplan--stunde"
-						:style="posZeitraster(wochentag, stunde.unterrichtstunde)">
-						{{ stunde.unterrichtstunde }}
+						:style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)">
+						{{ zeitrasterEintrag.unterrichtstunde }}
 						<div class="flex justify-between">
 							<div class="flex content-start">
-								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitBeginn(stunde.id)" @update:model-value="patchAnfang" headless style="width: 3rem;" /> -&nbsp;
-								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitEnde(stunde.id)" @update:model-value="patchEnde" headless style="width: 4rem;" />
-							</div> <i-ri-delete-bin-line class="cursor-pointer" />
+								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id)" @update:model-value="patchAnfang" headless style="width: 3rem;" /> -&nbsp;
+								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id)" @update:model-value="patchEnde" headless style="width: 4rem;" />
+							</div> <i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([zeitrasterEintrag])" />
 						</div>
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause"
-						:style="posPause(wochentag, pause)" />
+					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" />
 				</template>
 			</div>
 			<div />
@@ -65,17 +64,15 @@
 	</div>
 </template>
 <script setup lang="ts">
-	import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster } from "@core";
-	import { Wochentag } from "@core";
-	import { computed, ref } from "vue";
+	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
+	import type { StundenplanZeitraster, Wochentag } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		manager: () => StundenplanManager;
 		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
-		addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
+		addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
 		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
-		ignoreEmpty?: false,
-
 	}>();
 
 	const beginn = computed(() => {
@@ -150,13 +147,15 @@
 	}
 
 	async function addWochentag() {
-		const curr = props.manager().zeitrasterGetWochentagMaxEnum().id;
-		console.log("Wochentag hinzufügen: ", Wochentag.fromIDorException(curr+1).beschreibung)
+		await props.addZeitraster(props.manager().zeitrasterGetWochentagMaxEnum(), undefined);
 	}
 
 	async function addStunde() {
-		const curr = props.manager().zeitrasterGetStundeMax();
-		console.log("Stunde hinzufügen: ", curr+1)
+		await props.addZeitraster(undefined, props.manager().zeitrasterGetStundeMax());
+	}
+
+	async function addZeitrasterEintrag(wochentag: Wochentag, stunde : number) {
+		await props.addZeitraster(wochentag, stunde);
 	}
 
 	async function patchAnfang(zeit: string) {

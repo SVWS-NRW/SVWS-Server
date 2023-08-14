@@ -1,4 +1,4 @@
-import type { List, Stundenplan, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster } from "@core";
+import type { List, Stundenplan, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
 
 export interface StundenplanZeitrasterPausenzeitProps {
 	stundenplanManager: () => StundenplanManager;
@@ -9,7 +9,7 @@ export interface StundenplanZeitrasterPausenzeitProps {
 	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 	listPausenzeiten: List<StundenplanPausenzeit>;
 	patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
-	addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
+	addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
 	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	importZeitraster: () => Promise<void>;
 }
