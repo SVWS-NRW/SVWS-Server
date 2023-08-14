@@ -987,6 +987,15 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
+	 */
+	public klassenunterrichtGetMengeAsList() : List<StundenplanKlassenunterricht> {
+		return this._list_klassenunterricht;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.

@@ -1042,6 +1042,15 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterrichtGetMengeAsList() {
+		return _list_klassenunterricht;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse.
 	 *
 	 * @param idKlasse   Die Datenbank-ID der Klasse.

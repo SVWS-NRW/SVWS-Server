@@ -2,14 +2,14 @@
 	<div class="h-full w-full p-8 flex flex-row flex-grow">
 		<div class="h-full w-96 mr-2 grid grid-cols-1" style="grid-template-rows: 1.8rem 1fr 1.8rem 1fr;">
 			<div>Klassenunterricht</div>
-			<svws-ui-data-table :items="stundenplanManager().kursGetMengeAsList()" :columns="cols">
+			<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeAsList()" :columns="cols">
 				<template #body>
-					<div v-for="kurs in stundenplanManager().kursGetMengeAsList()" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr">
+					<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeAsList()" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr">
 						<div role="cell" class="select-none data-table__td">
-							{{ kurs.bezeichnung }}
+							{{ ku.bezeichnung }}
 						</div>
 						<div role="cell" class="select-none data-table__td">
-							{{ kurs.wochenstunden }}
+							{{ ku.wochenstunden }}
 						</div>
 					</div>
 				</template>
