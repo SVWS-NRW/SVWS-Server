@@ -2335,10 +2335,21 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param wochentag der Wochentag der gewünschten Zeitraster-Objekte
 	 *
-	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergeben Wochentag.
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zum übergebenen Wochentag.
 	 */
 	public getListZeitrasterZuWochentag(wochentag : Wochentag) : List<StundenplanZeitraster> {
 		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (wochentag.id === z.wochentag) });
+	}
+
+	/**
+	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einer bestimmten Unterrichtsstunde.
+	 *
+	 * @param unterrichtstunde   die Unterrichtsstunde der gewünschten Zeitraster-Objekte
+	 *
+	 * @return eine Liste aller {@link StundenplanZeitraster}-Objekte zur übergebenen Unterrichtsstunde.
+	 */
+	public getListZeitrasterZuStunde(unterrichtstunde : number) : List<StundenplanZeitraster> {
+		return CollectionUtils.toFilteredArrayList(this._list_zeitraster, { test : (z: StundenplanZeitraster) => (unterrichtstunde === z.unterrichtstunde) });
 	}
 
 	/**
