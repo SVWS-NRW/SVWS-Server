@@ -177,11 +177,13 @@
 		let zbeginn =  props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
 		let zende =  props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
 		if (wochentag !== undefined) {
-			const z = props.manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde);
-			if (z.stundenbeginn !== null)
-				zbeginn = z.stundenbeginn;
-			if (z.stundenende !== null)
-				zende = z.stundenende;
+			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
+			if (z !== null) {
+				if (z.stundenbeginn !== null)
+					zbeginn = z.stundenbeginn;
+				if (z.stundenende !== null)
+					zende = z.stundenende;
+			}
 		}
 		let top = 0;
 		let height = 10;

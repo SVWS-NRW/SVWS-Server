@@ -2716,6 +2716,19 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 *
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des gesuchten Zeitrasters.
+	 * @param stunde     Die Unterrichtsstunde des gesuchten Zeitrasters.
+	 *
+	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt.
+	 * @throws DeveloperNotificationException falls kein Zeitraster-Eintrag existiert
+	 */
+	public @NotNull StundenplanZeitraster zeitrasterGetByWochentagAndStundeOrException(final int wochentag, final int stunde) {
+		return _map2d_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag, stunde);
+	}
+
+	/**
 	 * Liefert das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt, falls es existiert, sonst NULL.
 	 *
 	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des gesuchten Zeitrasters.
@@ -2723,8 +2736,8 @@ public class StundenplanManager {
 	 *
 	 * @return das zu (wochentag, stunde) zugehörige {@link StundenplanZeitraster}-Objekt, falls es existiert, sonst NULL.
 	 */
-	public @NotNull StundenplanZeitraster zeitrasterGetByWochentagAndStundeOrException(final int wochentag, final int stunde) {
-		return _map2d_wochentag_stunde_zu_zeitraster.getNonNullOrException(wochentag, stunde);
+	public StundenplanZeitraster zeitrasterGetByWochentagAndStundeOrNull(final int wochentag, final int stunde) {
+		return _map2d_wochentag_stunde_zu_zeitraster.getOrNull(wochentag, stunde);
 	}
 
 	/**
