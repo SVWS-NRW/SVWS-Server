@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -163,17 +164,17 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-
-		switch (pConfig.get_algorithmus()) {
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL:
+		final @NotNull KlausurterminblockungAlgorithmen algo = pConfig.algorithmus;
+		switch (algo) {
+			case NORMAL:
 				// Jede Gruppe besteht aus einer einzelnen Klausur
 				initialisiereKlausurgruppenNormal(pInput);
 				break;
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE:
+			case FAECHERWEISE:
 				// Jede Gruppe besteht aus allen Klausuren des selben Faches.
 				initialisiereKlausurgruppenFaecherweise(pInput);
 				break;
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE:
+			case SCHIENENWEISE:
 				// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 				initialisiereKlausurgruppenSchienenweise(pInput);
 				break;

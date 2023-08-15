@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten;
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -72,7 +73,7 @@ public class KlausurterminblockungAlgorithmus {
 			return;
 
 		// Keine Filterung angefordert.
-		if (config.get_quartals_modus() == KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_ZUSAMMEN) {
+		if (config.modusQuartale == KlausurterminblockungModusQuartale.ZUSAMMEN) {
 			berechneRekursivLkGkModus(input, config, out);
 			return;
 		}

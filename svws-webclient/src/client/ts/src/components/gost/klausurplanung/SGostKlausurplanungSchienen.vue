@@ -18,16 +18,12 @@
 			</template>
 			<template #modalContent>
 				<svws-ui-radio-group :row="true" class="justify-center">
-					<svws-ui-radio-option value="algNormal" v-model="algMode" name="blockAlgo" label="Normal" />
-					<svws-ui-radio-option value="algFaecher" v-model="algMode" name="blockAlgo" label="Fächerweise" />
-					<svws-ui-radio-option value="algSchienen" v-model="algMode" name="blockAlgo" label="Schienenweise" />
+					<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
 				</svws-ui-radio-group>
 				<svws-ui-radio-group :row="true" class="justify-center">
-					<template v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id">
-						<svws-ui-radio-option :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
-					</template>
+					<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
 				</svws-ui-radio-group>
-				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === 'algNormal'">
+				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === KlausurterminblockungAlgorithmen.NORMAL">
 					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
 				</svws-ui-checkbox>
 			</template>
@@ -81,8 +77,9 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, GostKlausurtermin} from "@core";
-	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig, KlausurterminblockungModusKursarten } from "@core";
+	import type { GostKursklausur, GostKlausurtermin } from "@core";
+	import { KlausurterminblockungAlgorithmen, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig,
+		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -110,7 +107,7 @@
 
 	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value));
 
-	const algMode = ref("algNormal");
+	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
 	const blockGleicheLehrkraft = ref(false);
 
@@ -120,13 +117,8 @@
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		blockConfig.set_quartals_modus_getrennt();
-		if (algMode.value === "algNormal")
-			blockConfig.set_algorithmus_normal();
-		else if (algMode.value === "algFaecher")
-			blockConfig.set_algorithmus_faecherweise();
-		else if (algMode.value === "algSchienen")
-			blockConfig.set_algorithmus_schienenweise();
+		blockConfig.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT;
+		blockConfig.algorithmus = KlausurterminblockungAlgorithmen.getOrException(algMode.value.id);
 		blockConfig.modusKursarten = KlausurterminblockungModusKursarten.getOrException(lkgkMode.value.id);
 		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
 		const blockAlgo = new KlausurterminblockungAlgorithmus();

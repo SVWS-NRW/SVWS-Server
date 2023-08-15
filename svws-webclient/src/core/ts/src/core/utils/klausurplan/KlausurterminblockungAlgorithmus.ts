@@ -13,6 +13,7 @@ import type { Comparator } from '../../../java/util/Comparator';
 import { Random } from '../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../core/utils/klausurplan/KlausurterminblockungDynDaten';
 import { KlausurterminblockungAlgorithmusGreedy1b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy1b';
+import { KlausurterminblockungModusQuartale } from '../../../core/types/gost/klausurplanung/KlausurterminblockungModusQuartale';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusGreedy2b';
 import type { List } from '../../../java/util/List';
@@ -81,7 +82,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	private berechneRekursivQuartalsModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
 		if (input.isEmpty())
 			return;
-		if (config.get_quartals_modus() === KlausurterminblockungAlgorithmusConfig.QUARTALS_MODUS_ZUSAMMEN) {
+		if (config.modusQuartale as unknown === KlausurterminblockungModusQuartale.ZUSAMMEN as unknown) {
 			this.berechneRekursivLkGkModus(input, config, out);
 			return;
 		}

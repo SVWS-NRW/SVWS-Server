@@ -8,6 +8,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { Logger } from '../../../core/logger/Logger';
 import { System } from '../../../java/lang/System';
 import { Random } from '../../../java/util/Random';
+import { KlausurterminblockungAlgorithmen } from '../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
 import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
@@ -169,16 +170,17 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
-		switch (pConfig.get_algorithmus()) {
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_NORMAL: {
+		const algo : KlausurterminblockungAlgorithmen = pConfig.algorithmus;
+		switch (algo) {
+			case KlausurterminblockungAlgorithmen.NORMAL: {
 				this.initialisiereKlausurgruppenNormal(pInput);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_FAECHERWEISE: {
+			case KlausurterminblockungAlgorithmen.FAECHERWEISE: {
 				this.initialisiereKlausurgruppenFaecherweise(pInput);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.ALGORITHMUS_SCHIENENWEISE: {
+			case KlausurterminblockungAlgorithmen.SCHIENENWEISE: {
 				this.initialisiereKlausurgruppenSchienenweise(pInput);
 				break;
 			}

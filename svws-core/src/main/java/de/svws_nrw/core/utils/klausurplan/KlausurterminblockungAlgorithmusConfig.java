@@ -2,7 +2,9 @@ package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.List;
 
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungAlgorithmen;
 import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten;
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -15,40 +17,17 @@ import jakarta.validation.constraints.NotNull;
  */
 public class KlausurterminblockungAlgorithmusConfig {
 
-	/**
-	 * Alle Klausur werden gemeinsam geblockt werden.
-	 */
-	public static final int QUARTALS_MODUS_ZUSAMMEN = 0;
-
-	/**
-	 * Die Klausuren werden pro Halbjahr und Quartal geblockt.
-	 */
-	public static final int QUARTALS_MODUS_GETRENNT = 1;
-
-	/**
-	 * Der normale Algorithmus minimiert die Anzahl der Termine.
-	 */
-	public static final int ALGORITHMUS_NORMAL = 1;
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static final int ALGORITHMUS_FAECHERWEISE = 2;
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public static final int ALGORITHMUS_SCHIENENWEISE = 3;
-
 	private long max_time_millis;
-	private int algorithmus;
+
+	/** Der Typ des Algorithmus, welcher verwendet wird. */
+	public @NotNull KlausurterminblockungAlgorithmen algorithmus = KlausurterminblockungAlgorithmen.NORMAL;
 
 	/** Der Modus für die Art, ob und wie die beiden Kursarten LK und GK geblockt werden */
 	public @NotNull KlausurterminblockungModusKursarten modusKursarten = KlausurterminblockungModusKursarten.BEIDE;
 
-	private int quartals_modus;
+	/** Der Modus dafür, wie die Klausuren in den Quartalen eines Halbjahres geblockt werden. */
+	public @NotNull KlausurterminblockungModusQuartale modusQuartale = KlausurterminblockungModusQuartale.ZUSAMMEN;
+
 	private boolean regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
 	private boolean regel_bevorzuge_gleiche_kursschienen_pro_termin;
 
@@ -58,8 +37,6 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public KlausurterminblockungAlgorithmusConfig() {
 		set_max_time_millis(1000L);
-		set_quartals_modus_zusammen();
-		set_algorithmus_normal();
 		set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
 		set_regel_bevorzuge_gleiche_kursschienen_pro_termin(false);
 	}
@@ -80,61 +57,6 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public void set_max_time_millis(final long pMaxTimeMillis) {
 		max_time_millis = pMaxTimeMillis;
-	}
-
-	/**
-	 * Liefert den selektierten Algorithmus.
-	 *
-	 * @return den selektierten Algorithmus.
-	 */
-	public int get_algorithmus() {
-		return algorithmus;
-	}
-
-	/**
-	 * Der normale Algorithmus minimiert die Anzahl der Termine.
-	 */
-	public void set_algorithmus_normal() {
-		algorithmus = ALGORITHMUS_NORMAL;
-	}
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Fächer sind.
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public void set_algorithmus_faecherweise() {
-		algorithmus = ALGORITHMUS_FAECHERWEISE;
-	}
-
-	/**
-	 * Dieser Algorithmus forciert, das pro Termin nur die selben Kurs-Schienen sind.
-	 * Im zweiten Schritt werden die Termine versucht zu minimieren.
-	 */
-	public void set_algorithmus_schienenweise() {
-		algorithmus = ALGORITHMUS_SCHIENENWEISE;
-	}
-
-	/**
-	 * Liefert den {@link #quartals_modus}.
-	 *
-	 * @return den {@link #quartals_modus}.
-	 */
-	public int get_quartals_modus() {
-		return quartals_modus;
-	}
-
-	/**
-	 * 	Alle Klausuren werden gemeinsam geblockt werden.
-	 */
-	public void set_quartals_modus_zusammen() {
-		quartals_modus = QUARTALS_MODUS_ZUSAMMEN;
-	}
-
-	/**
-	 * Die Klausuren werden zuerst nach Halbjahr und dann nach Quartal geblockt.
-	 */
-	public void set_quartals_modus_getrennt() {
-		quartals_modus = QUARTALS_MODUS_GETRENNT;
 	}
 
 	/**

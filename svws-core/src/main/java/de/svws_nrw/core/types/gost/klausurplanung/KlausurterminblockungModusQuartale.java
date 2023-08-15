@@ -7,24 +7,15 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Core-Type beschreibt die möglichen Modi bei der Blockung
- * von Klausurterminen in Bezug darauf, ob die Leistungskurse (LK) und
- * die Grundkurse (GK) zusammen geblockt werden sollen und wenn ja,
- * in welcher Reihenfolge dies erfolgen soll.
+ * von Klausurterminen in Bezug auf die Quartale.
  */
-public enum KlausurterminblockungModusKursarten {
+public enum KlausurterminblockungModusQuartale {
 
-	/** Dieser Modus blockt beide Kursarten (LK und GK) gemischt. */
-	BEIDE(0, "Gemischt"),
+	/** Alle Klausuren eines Halbjahres werden gemeinsam geblockt. */
+	ZUSAMMEN(0, "Zusammen"),
 
-	/** Dieser Modus blockt zuerst die Kursart LK, danach die Kursart GK. */
-	GETRENNT(1, "Getrennt"),
-
-	/** Dieser Modus blockt nur die Kursart LK. */
-	NUR_LK(2, "Nur LK"),
-
-	/** Dieser Modus blockt nur die Kursart GK. */
-	NUR_GK(3, "Nur GK");
-
+	/** Die Klausuren werden pro Quartal im Halbjahr geblockt. */
+	GETRENNT(1, "Getrennt");
 
 
 	/** Die ID */
@@ -35,7 +26,7 @@ public enum KlausurterminblockungModusKursarten {
 
 
 	/** Eine Map mit der Zuordnung zu der ID */
-	private static final @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusKursarten> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusQuartale> _mapID = new HashMap<>();
 
 
 	/**
@@ -44,7 +35,7 @@ public enum KlausurterminblockungModusKursarten {
 	 * @param id            die ID
 	 * @param bezeichnung   die Bezeichnung
 	 */
-	KlausurterminblockungModusKursarten(final int id, final @NotNull String bezeichnung) {
+	KlausurterminblockungModusQuartale(final int id, final @NotNull String bezeichnung) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
 	}
@@ -56,9 +47,9 @@ public enum KlausurterminblockungModusKursarten {
 	 *
 	 * @return die Map mit der Zuordnung zu der ID
 	 */
-	private static @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusKursarten> getMapByID() {
+	private static @NotNull HashMap<@NotNull Integer, @NotNull KlausurterminblockungModusQuartale> getMapByID() {
 		if (_mapID.size() == 0)
-			for (final @NotNull KlausurterminblockungModusKursarten e : KlausurterminblockungModusKursarten.values())
+			for (final @NotNull KlausurterminblockungModusQuartale e : KlausurterminblockungModusQuartale.values())
 				_mapID.put(e.id, e);
 		return _mapID;
 	}
@@ -71,7 +62,7 @@ public enum KlausurterminblockungModusKursarten {
 	 *
 	 * @return der Modus oder null, falls die ID ungültig ist
 	 */
-	public static KlausurterminblockungModusKursarten get(final int id) {
+	public static KlausurterminblockungModusQuartale get(final int id) {
 		return getMapByID().get(id);
 	}
 
@@ -84,7 +75,7 @@ public enum KlausurterminblockungModusKursarten {
 	 *
 	 * @throws DeveloperNotificationException falls die ID nicht definiert ist
 	 */
-	public static @NotNull KlausurterminblockungModusKursarten getOrException(final int id) {
+	public static @NotNull KlausurterminblockungModusQuartale getOrException(final int id) {
 		return DeveloperNotificationException.ifMapGetIsNull(getMapByID(), id);
 	}
 
