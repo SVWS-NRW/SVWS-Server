@@ -1,13 +1,13 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
@@ -25,7 +25,6 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungRegelParamete
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -210,17 +209,35 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 			final GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(idRegelTyp);
 			if (regelTyp == GostKursblockungRegelTyp.UNDEFINIERT)
 				throw OperationError.CONFLICT.exception();
+			// Prüfe, ob die Anzahl der Parameter korrekt ist
+	    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
+	    		throw OperationError.CONFLICT.exception();
+			// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
+			final List<DTOGostBlockungRegel> regeln = conn.queryList("SELECT e FROM DTOGostBlockungRegel e WHERE e.Blockung_ID = ?1 AND e.Typ = ?2", DTOGostBlockungRegel.class, idBlockung, regelTyp);
+			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
+			if (!regeln.isEmpty()) {
+				switch (regelTyp) {
+					case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
+						if (regelParameter == null)
+							throw OperationError.CONFLICT.exception();
+						final List<DTOGostBlockungRegelParameter> duplicates = conn.queryList("SELECT e FROM DTOGostBlockungRegelParameter e WHERE e.Regel_ID IN ?1 AND e.Nummer = 0 AND e.Parameter = ?2", DTOGostBlockungRegelParameter.class, regelIDs, regelParameter.get(0));
+						if (!duplicates.isEmpty())
+							throw OperationError.CONFLICT.exception("Es existiert bereits eine Regel zum Auffüllen des Kurses mit der ID %d.".formatted(regelParameter.get(0)));
+						final long anzahl = regelParameter.get(1);
+						if ((anzahl < 1) || (anzahl > 99))
+							throw OperationError.BAD_REQUEST.exception("Die Anzahl der Schüler muss mindestens 1 sein und darf 99 nicht überschreiten.");
+					}
+					default -> { /* TODO weitere Regeltypen prüfen */ }
+				}
+			}
 			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTOSchemaAutoInkremente dbRegelID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Blockung_Regeln");
-			final long idRegel = dbRegelID == null ? 1 : dbRegelID.MaxID + 1;
+			final long idRegel = conn.transactionGetNextID(DTOGostBlockungRegel.class);
 			// Füge die Regel hinzu
 	    	final DTOGostBlockungRegel regel = new DTOGostBlockungRegel(idRegel, idBlockung, regelTyp);
 	    	conn.transactionPersist(regel);
 	    	final GostBlockungRegel daten = new GostBlockungRegel();
 	    	daten.id = idRegel;
 	    	daten.typ = regelTyp.typ;
-	    	if ((regelParameter != null) && (regelTyp.getParamCount() != regelParameter.size()))
-	    		throw OperationError.CONFLICT.exception();
 	    	// Füge Default-Parameter zu der Regel hinzu.
 	    	for (int i = 0; i < regelTyp.getParamCount(); i++) {
 	    		final GostKursblockungRegelParameterTyp paramType = regelTyp.getParamType(i);
