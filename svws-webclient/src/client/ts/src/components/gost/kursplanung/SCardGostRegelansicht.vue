@@ -8,7 +8,7 @@
 		<Blockungsregel_8 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[8].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 		<Blockungsregel_4 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[4].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 		<Blockungsregel_5 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :map-schueler="mapSchueler" :regeln="regeln[5].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
-		<Blockungsregel_9 v-model="regel" :kurse="kurse" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
+		<Blockungsregel_9 v-model="regel" :get-datenmanager="getDatenmanager" :map-faecher="mapFaecher" :regeln="regeln[9].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 		<Blockungsregel_10 v-model="regel" :regeln="regeln[10].value" @regel-speichern="regelSpeichern" @regel-entfernen="regelEntfernen" :disabled="disabled" />
 	</div>
 </template>
