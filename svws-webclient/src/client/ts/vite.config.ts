@@ -3,7 +3,7 @@ import Vue from "@vitejs/plugin-vue";
 import Icons from "unplugin-icons/vite";
 import IconsResolver from "unplugin-icons/resolver";
 import Components from "unplugin-vue-components/vite";
-import Markdown from "vite-plugin-vue-markdown";
+import Markdown from 'unplugin-vue-markdown/vite'
 import { resolve } from "path";
 
 export default defineConfig({
@@ -13,7 +13,7 @@ export default defineConfig({
 		Vue({
 			include: [/\.vue$/, /\.md$/]
 		}),
-		Markdown(),
+		Markdown({}),
 		Components({
 			resolvers: [IconsResolver()],
 			dirs: [
