@@ -11,16 +11,16 @@ import { RGBFarbe } from '../../../core/data/RGBFarbe';
 export class Fachgruppe extends JavaObject implements JavaEnum<Fachgruppe> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Fachgruppe> = [];
+	static readonly all_values_by_ordinal : Array<Fachgruppe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Fachgruppe> = new Map<string, Fachgruppe>();
+	static readonly all_values_by_name : Map<string, Fachgruppe> = new Map<string, Fachgruppe>();
 
 	/**
 	 * Fachgruppe Deutsch

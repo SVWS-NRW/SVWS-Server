@@ -8,6 +8,7 @@ import java.util.Random;
 import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -112,17 +113,18 @@ public class KlausurterminblockungAlgorithmus {
 
 	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausur> input, final @NotNull KlausurterminblockungAlgorithmusConfig config, final @NotNull List<@NotNull List<@NotNull Long>> out) {
 		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste potentiell geblockt werden sollen.
-		switch (config.get_lk_gk_modus()) {
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE:
+		final @NotNull KlausurterminblockungModusKursarten modus = config.modusKursarten;
+		switch (modus) {
+			case BEIDE:
 				berechne_helper(input, config, out); // keine Filterung
 				break;
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK:
+			case NUR_LK:
 				berechne_helper(filter(input, true), config, out);  // nur LK
 				break;
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK:
+			case NUR_GK:
 				berechne_helper(filter(input, false), config, out);  // nur GK (bzw. nicht LK)
 				break;
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT:
+			case GETRENNT:
 				berechne_helper(filter(input, true), config, out);  // nur LK
 				berechne_helper(filter(input, false), config, out);  // nur GK (bzw. nicht LK)
 				break;

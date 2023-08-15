@@ -4,16 +4,16 @@ import { JavaObject } from '../../java/lang/JavaObject';
 export class KursFortschreibungsart extends JavaObject implements JavaEnum<KursFortschreibungsart> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KursFortschreibungsart> = [];
+	static readonly all_values_by_ordinal : Array<KursFortschreibungsart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KursFortschreibungsart> = new Map<string, KursFortschreibungsart>();
+	static readonly all_values_by_name : Map<string, KursFortschreibungsart> = new Map<string, KursFortschreibungsart>();
 
 	/**
 	 * Keine Fortschreibung Kurs wird bei der Versetzung gelöscht.

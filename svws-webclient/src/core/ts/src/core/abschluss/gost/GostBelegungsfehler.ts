@@ -6,16 +6,16 @@ import { GostBelegungsfehlerArt } from '../../../core/abschluss/gost/GostBelegun
 export class GostBelegungsfehler extends JavaObject implements JavaEnum<GostBelegungsfehler> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostBelegungsfehler> = [];
+	static readonly all_values_by_ordinal : Array<GostBelegungsfehler> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostBelegungsfehler> = new Map<string, GostBelegungsfehler>();
+	static readonly all_values_by_name : Map<string, GostBelegungsfehler> = new Map<string, GostBelegungsfehler>();
 
 	/**
 	 * BelegungsfehlerArt ABI_10: Unter den vier Abiturfächern müssen zwei der Fächer Deutsch, Mathematik oder Fremdsprache sein.

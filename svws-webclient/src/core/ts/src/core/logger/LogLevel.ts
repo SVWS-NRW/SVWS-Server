@@ -4,16 +4,16 @@ import { JavaObject } from '../../java/lang/JavaObject';
 export class LogLevel extends JavaObject implements JavaEnum<LogLevel> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LogLevel> = [];
+	static readonly all_values_by_ordinal : Array<LogLevel> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LogLevel> = new Map<string, LogLevel>();
+	static readonly all_values_by_name : Map<string, LogLevel> = new Map<string, LogLevel>();
 
 	/**
 	 * Das Log-Level, bei dem keine Fehler, etc. ausgegeben werden, sondern nur Informationen der Anwendung

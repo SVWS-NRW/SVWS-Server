@@ -2,6 +2,9 @@ package de.svws_nrw.core.utils.klausurplan;
 
 import java.util.List;
 
+import de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusKursarten;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Konfiguration des Algorithmus.
  *
@@ -11,26 +14,6 @@ import java.util.List;
  * @author Benjamin A. Bartsch
  */
 public class KlausurterminblockungAlgorithmusConfig {
-
-	/**
-	 * Dieser LK-GK-Modus blockt beide Kursarten gemischt.
-	 */
-	public static final int LK_GK_MODUS_BEIDE = 0;
-
-	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursart LK.
-	 */
-	public static final int LK_GK_MODUS_NUR_LK = 1;
-
-	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursart GK.
-	 */
-	public static final int LK_GK_MODUS_NUR_GK = 2;
-
-	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach die Kursart GK.
-	 */
-	public static final int LK_GK_MODUS_GETRENNT = 3;
 
 	/**
 	 * Alle Klausur werden gemeinsam geblockt werden.
@@ -61,10 +44,14 @@ public class KlausurterminblockungAlgorithmusConfig {
 
 	private long max_time_millis;
 	private int algorithmus;
-	private int lk_gk_modus;
+
+	/** Der Modus für die Art, ob und wie die beiden Kursarten LK und GK geblockt werden */
+	public @NotNull KlausurterminblockungModusKursarten modusKursarten = KlausurterminblockungModusKursarten.BEIDE;
+
 	private int quartals_modus;
 	private boolean regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin;
 	private boolean regel_bevorzuge_gleiche_kursschienen_pro_termin;
+
 
 	/**
 	 * Der Konstruktor definiert Standardwerte.
@@ -72,7 +59,6 @@ public class KlausurterminblockungAlgorithmusConfig {
 	public KlausurterminblockungAlgorithmusConfig() {
 		set_max_time_millis(1000L);
 		set_quartals_modus_zusammen();
-		set_lk_gk_modus_beide();
 		set_algorithmus_normal();
 		set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(false);
 		set_regel_bevorzuge_gleiche_kursschienen_pro_termin(false);
@@ -126,43 +112,6 @@ public class KlausurterminblockungAlgorithmusConfig {
 	 */
 	public void set_algorithmus_schienenweise() {
 		algorithmus = ALGORITHMUS_SCHIENENWEISE;
-	}
-
-	/**
-	 * Liefert den LK-GK-Modus.
-	 *
-	 * @return den LK-GK-Modus.
-	 */
-	public int get_lk_gk_modus() {
-		return lk_gk_modus;
-	}
-
-	/**
-	 * 	Dieser LK-GK-Modus blockt beide Kursarten gemischt.
-	 */
-	public void set_lk_gk_modus_beide() {
-		lk_gk_modus = LK_GK_MODUS_BEIDE;
-	}
-
-	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursart LK.
-	 */
-	public void set_lk_gk_modus_nur_lk() {
-		lk_gk_modus = LK_GK_MODUS_NUR_LK;
-	}
-
-	/**
-	 * Dieser LK-GK-Modus blockt nur die Kursarten, die nicht LK sind.
-	 */
-	public void set_lk_gk_modus_nur_gk() {
-		lk_gk_modus = LK_GK_MODUS_NUR_GK;
-	}
-
-	/**
-	 * Dieser LK-GK-Modus blockt zuerst die Kursart LK, danach alle Kursarten, die nicht LK sind.
-	 */
-	public void set_lk_gk_modus_getrennt() {
-		lk_gk_modus = LK_GK_MODUS_GETRENNT;
 	}
 
 	/**

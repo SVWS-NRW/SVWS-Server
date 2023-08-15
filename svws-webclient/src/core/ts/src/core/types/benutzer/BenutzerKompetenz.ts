@@ -13,16 +13,16 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKompetenz> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<BenutzerKompetenz> = [];
+	static readonly all_values_by_ordinal : Array<BenutzerKompetenz> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, BenutzerKompetenz> = new Map<string, BenutzerKompetenz>();
+	static readonly all_values_by_name : Map<string, BenutzerKompetenz> = new Map<string, BenutzerKompetenz>();
 
 	/**
 	 * Es werden keinerlei Kompetenzen benötigt.

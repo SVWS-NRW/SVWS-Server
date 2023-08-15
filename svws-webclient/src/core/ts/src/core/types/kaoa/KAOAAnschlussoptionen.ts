@@ -9,16 +9,16 @@ import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAnschlussoptionen> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAAnschlussoptionen> = [];
+	static readonly all_values_by_ordinal : Array<KAOAAnschlussoptionen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAAnschlussoptionen> = new Map<string, KAOAAnschlussoptionen>();
+	static readonly all_values_by_name : Map<string, KAOAAnschlussoptionen> = new Map<string, KAOAAnschlussoptionen>();
 
 	/**
 	 * KAoA-Anschlussoption: Berufspraxisstufe einer Förderschule für Geistige Entwicklung

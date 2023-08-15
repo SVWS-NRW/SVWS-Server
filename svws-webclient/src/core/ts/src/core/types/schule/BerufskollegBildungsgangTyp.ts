@@ -6,16 +6,16 @@ import { BildungsgangTypKatalogEintrag } from '../../../core/data/schule/Bildung
 export class BerufskollegBildungsgangTyp extends JavaObject implements JavaEnum<BerufskollegBildungsgangTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<BerufskollegBildungsgangTyp> = [];
+	static readonly all_values_by_ordinal : Array<BerufskollegBildungsgangTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, BerufskollegBildungsgangTyp> = new Map<string, BerufskollegBildungsgangTyp>();
+	static readonly all_values_by_name : Map<string, BerufskollegBildungsgangTyp> = new Map<string, BerufskollegBildungsgangTyp>();
 
 	/**
 	 * Berufsfachschulen

@@ -6,16 +6,16 @@ import { HashMap } from '../../../java/util/HashMap';
 export class LehrerRechtsverhaeltnis extends JavaObject implements JavaEnum<LehrerRechtsverhaeltnis> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerRechtsverhaeltnis> = [];
+	static readonly all_values_by_ordinal : Array<LehrerRechtsverhaeltnis> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerRechtsverhaeltnis> = new Map<string, LehrerRechtsverhaeltnis>();
+	static readonly all_values_by_name : Map<string, LehrerRechtsverhaeltnis> = new Map<string, LehrerRechtsverhaeltnis>();
 
 	/**
 	 * Rechtsverhältnis 'Beamter auf Lebenszeit'

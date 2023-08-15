@@ -5,16 +5,16 @@ import { LehrerKatalogZugangsgrundEintrag } from '../../../core/data/lehrer/Lehr
 export class LehrerZugangsgrund extends JavaObject implements JavaEnum<LehrerZugangsgrund> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerZugangsgrund> = [];
+	static readonly all_values_by_ordinal : Array<LehrerZugangsgrund> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerZugangsgrund> = new Map<string, LehrerZugangsgrund>();
+	static readonly all_values_by_name : Map<string, LehrerZugangsgrund> = new Map<string, LehrerZugangsgrund>();
 
 	/**
 	 * Grund 'Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung' für das Kommen des Lehrers an die Schule

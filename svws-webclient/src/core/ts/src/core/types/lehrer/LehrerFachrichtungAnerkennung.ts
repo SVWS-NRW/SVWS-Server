@@ -6,16 +6,16 @@ import { LehrerKatalogFachrichtungAnerkennungEintrag } from '../../../core/data/
 export class LehrerFachrichtungAnerkennung extends JavaObject implements JavaEnum<LehrerFachrichtungAnerkennung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerFachrichtungAnerkennung> = [];
+	static readonly all_values_by_ordinal : Array<LehrerFachrichtungAnerkennung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerFachrichtungAnerkennung> = new Map<string, LehrerFachrichtungAnerkennung>();
+	static readonly all_values_by_name : Map<string, LehrerFachrichtungAnerkennung> = new Map<string, LehrerFachrichtungAnerkennung>();
 
 	/**
 	 * Fachrichtungsanerkennung 'erworben durch LABG/OVP bzw. Laufbahnverordnung'

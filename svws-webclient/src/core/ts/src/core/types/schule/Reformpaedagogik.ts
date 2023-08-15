@@ -10,16 +10,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class Reformpaedagogik extends JavaObject implements JavaEnum<Reformpaedagogik> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Reformpaedagogik> = [];
+	static readonly all_values_by_ordinal : Array<Reformpaedagogik> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Reformpaedagogik> = new Map<string, Reformpaedagogik>();
+	static readonly all_values_by_name : Map<string, Reformpaedagogik> = new Map<string, Reformpaedagogik>();
 
 	/**
 	 * Reformpaedagogik KEIN_EINTRAG - Es ist kein Eintrag zur Reformpädagogik vorhanden

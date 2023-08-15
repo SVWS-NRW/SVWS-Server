@@ -5,16 +5,16 @@ import { NotenKatalogEintrag } from '../../core/data/schule/NotenKatalogEintrag'
 export class Note extends JavaObject implements JavaEnum<Note> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Note> = [];
+	static readonly all_values_by_ordinal : Array<Note> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Note> = new Map<string, Note>();
+	static readonly all_values_by_name : Map<string, Note> = new Map<string, Note>();
 
 	/**
 	 * leerer Noteneintrag

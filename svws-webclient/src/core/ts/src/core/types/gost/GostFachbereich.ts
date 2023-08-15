@@ -11,16 +11,16 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbereich> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostFachbereich> = [];
+	static readonly all_values_by_ordinal : Array<GostFachbereich> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostFachbereich> = new Map<string, GostFachbereich>();
+	static readonly all_values_by_name : Map<string, GostFachbereich> = new Map<string, GostFachbereich>();
 
 	/**
 	 * Fachbereich deutsch

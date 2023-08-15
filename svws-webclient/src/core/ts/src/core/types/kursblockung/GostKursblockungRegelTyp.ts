@@ -13,16 +13,16 @@ import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentExce
 export class GostKursblockungRegelTyp extends JavaObject implements JavaEnum<GostKursblockungRegelTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostKursblockungRegelTyp> = [];
+	static readonly all_values_by_ordinal : Array<GostKursblockungRegelTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostKursblockungRegelTyp> = new Map<string, GostKursblockungRegelTyp>();
+	static readonly all_values_by_name : Map<string, GostKursblockungRegelTyp> = new Map<string, GostKursblockungRegelTyp>();
 
 	/**
 	 *  Eine Regel ist nicht definiert.

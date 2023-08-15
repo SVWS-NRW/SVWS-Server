@@ -8,16 +8,16 @@ import { KAOAMerkmal } from '../../../core/types/kaoa/KAOAMerkmal';
 export class KAOAZusatzmerkmal extends JavaObject implements JavaEnum<KAOAZusatzmerkmal> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmal> = [];
+	static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmal> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAZusatzmerkmal> = new Map<string, KAOAZusatzmerkmal>();
+	static readonly all_values_by_name : Map<string, KAOAZusatzmerkmal> = new Map<string, KAOAZusatzmerkmal>();
 
 	/**
 	 * KAoA-Zusatzmerkmal: Schulisches individuelles Beratungsgespräch durchgeführt

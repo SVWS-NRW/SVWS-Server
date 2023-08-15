@@ -6,16 +6,16 @@ import { HashMap } from '../../../java/util/HashMap';
 export class Sprachpruefungniveau extends JavaObject implements JavaEnum<Sprachpruefungniveau> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Sprachpruefungniveau> = [];
+	static readonly all_values_by_ordinal : Array<Sprachpruefungniveau> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Sprachpruefungniveau> = new Map<string, Sprachpruefungniveau>();
+	static readonly all_values_by_name : Map<string, Sprachpruefungniveau> = new Map<string, Sprachpruefungniveau>();
 
 	/**
 	 * Prüfungsniveau angelehnt an 'HA9'

@@ -8,16 +8,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class HerkunftSonstige extends JavaObject implements JavaEnum<HerkunftSonstige> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<HerkunftSonstige> = [];
+	static readonly all_values_by_ordinal : Array<HerkunftSonstige> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, HerkunftSonstige> = new Map<string, HerkunftSonstige>();
+	static readonly all_values_by_name : Map<string, HerkunftSonstige> = new Map<string, HerkunftSonstige>();
 
 	/**
 	 * Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind

@@ -10,16 +10,16 @@ import { Pair } from '../../../core/adt/Pair';
 export class Herkunftsschulnummern extends JavaObject implements JavaEnum<Herkunftsschulnummern> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Herkunftsschulnummern> = [];
+	static readonly all_values_by_ordinal : Array<Herkunftsschulnummern> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Herkunftsschulnummern> = new Map<string, Herkunftsschulnummern>();
+	static readonly all_values_by_name : Map<string, Herkunftsschulnummern> = new Map<string, Herkunftsschulnummern>();
 
 	/**
 	 * Herkunft Schulnummer : Schule aus dem sonstigen Ausland

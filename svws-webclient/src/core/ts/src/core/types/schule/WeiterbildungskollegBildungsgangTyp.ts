@@ -6,16 +6,16 @@ import { BildungsgangTypKatalogEintrag } from '../../../core/data/schule/Bildung
 export class WeiterbildungskollegBildungsgangTyp extends JavaObject implements JavaEnum<WeiterbildungskollegBildungsgangTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<WeiterbildungskollegBildungsgangTyp> = [];
+	static readonly all_values_by_ordinal : Array<WeiterbildungskollegBildungsgangTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, WeiterbildungskollegBildungsgangTyp> = new Map<string, WeiterbildungskollegBildungsgangTyp>();
+	static readonly all_values_by_name : Map<string, WeiterbildungskollegBildungsgangTyp> = new Map<string, WeiterbildungskollegBildungsgangTyp>();
 
 	/**
 	 * Abendgymnasium

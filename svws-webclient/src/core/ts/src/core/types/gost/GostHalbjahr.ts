@@ -10,16 +10,16 @@ import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentExce
 export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostHalbjahr> = [];
+	static readonly all_values_by_ordinal : Array<GostHalbjahr> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostHalbjahr> = new Map<string, GostHalbjahr>();
+	static readonly all_values_by_name : Map<string, GostHalbjahr> = new Map<string, GostHalbjahr>();
 
 	/**
 	 * Einführungsphase 1. Halbjahr = EF1

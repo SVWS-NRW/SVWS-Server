@@ -14,16 +14,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class Schulgliederung extends JavaObject implements JavaEnum<Schulgliederung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Schulgliederung> = [];
+	static readonly all_values_by_ordinal : Array<Schulgliederung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Schulgliederung> = new Map<string, Schulgliederung>();
+	static readonly all_values_by_name : Map<string, Schulgliederung> = new Map<string, Schulgliederung>();
 
 	/**
 	 *  Schulgliederung DEFAULT:

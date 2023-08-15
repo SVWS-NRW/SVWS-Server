@@ -7,16 +7,16 @@ import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 export class HerkunftBildungsgang extends JavaObject implements JavaEnum<HerkunftBildungsgang> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<HerkunftBildungsgang> = [];
+	static readonly all_values_by_ordinal : Array<HerkunftBildungsgang> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, HerkunftBildungsgang> = new Map<string, HerkunftBildungsgang>();
+	static readonly all_values_by_name : Map<string, HerkunftBildungsgang> = new Map<string, HerkunftBildungsgang>();
 
 	/**
 	 * Berufsschule, Fachklassen (Teilzeit)

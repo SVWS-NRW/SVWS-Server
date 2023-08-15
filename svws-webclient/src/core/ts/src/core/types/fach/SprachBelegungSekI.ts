@@ -5,16 +5,16 @@ import { JavaString } from '../../../java/lang/JavaString';
 export class SprachBelegungSekI extends JavaObject implements JavaEnum<SprachBelegungSekI> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<SprachBelegungSekI> = [];
+	static readonly all_values_by_ordinal : Array<SprachBelegungSekI> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, SprachBelegungSekI> = new Map<string, SprachBelegungSekI>();
+	static readonly all_values_by_name : Map<string, SprachBelegungSekI> = new Map<string, SprachBelegungSekI>();
 
 	/**
 	 * Gibt an, dass eine Sprache in der Sekundarstufe I nicht oder weniger als 2 Jahre belegt wurde

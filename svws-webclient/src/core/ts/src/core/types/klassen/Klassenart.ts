@@ -12,16 +12,16 @@ import { Pair } from '../../../core/adt/Pair';
 export class Klassenart extends JavaObject implements JavaEnum<Klassenart> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Klassenart> = [];
+	static readonly all_values_by_ordinal : Array<Klassenart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Klassenart> = new Map<string, Klassenart>();
+	static readonly all_values_by_name : Map<string, Klassenart> = new Map<string, Klassenart>();
 
 	/**
 	 * Klassenart: Kein Eintrag

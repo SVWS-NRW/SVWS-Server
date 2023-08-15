@@ -6,16 +6,16 @@ import { LehrerKatalogFachrichtungEintrag } from '../../../core/data/lehrer/Lehr
 export class LehrerFachrichtung extends JavaObject implements JavaEnum<LehrerFachrichtung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerFachrichtung> = [];
+	static readonly all_values_by_ordinal : Array<LehrerFachrichtung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerFachrichtung> = new Map<string, LehrerFachrichtung>();
+	static readonly all_values_by_name : Map<string, LehrerFachrichtung> = new Map<string, LehrerFachrichtung>();
 
 	/**
 	 * Fachrichtung 'Kraftfahrzeugtechnik'

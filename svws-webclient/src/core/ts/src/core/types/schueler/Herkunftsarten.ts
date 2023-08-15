@@ -11,16 +11,16 @@ import { HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule
 export class Herkunftsarten extends JavaObject implements JavaEnum<Herkunftsarten> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Herkunftsarten> = [];
+	static readonly all_values_by_ordinal : Array<Herkunftsarten> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Herkunftsarten> = new Map<string, Herkunftsarten>();
+	static readonly all_values_by_name : Map<string, Herkunftsarten> = new Map<string, Herkunftsarten>();
 
 	/**
 	 *  Gleiche oder niedrigere Jahrgangsstufe gegenüber dem Vorjahr wegen Nichtversetzung (§ 50 Abs. 5 SchulG)

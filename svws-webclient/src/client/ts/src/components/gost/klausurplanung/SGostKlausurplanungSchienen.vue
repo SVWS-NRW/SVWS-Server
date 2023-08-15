@@ -17,46 +17,23 @@
 				Hier können Sie weitere Einstellungen vornehmen:
 			</template>
 			<template #modalContent>
-				<svws-ui-radio-group :row="true"
-					class="justify-center">
-					<svws-ui-radio-option value="algNormal" v-model="algMode"
-						name="blockAlgo"
-						label="Normal" />
-					<svws-ui-radio-option value="algFaecher" v-model="algMode"
-						name="blockAlgo"
-						label="Fächerweise" />
-					<svws-ui-radio-option value="algSchienen" v-model="algMode"
-						name="blockAlgo"
-						label="Schienenweise" />
+				<svws-ui-radio-group :row="true" class="justify-center">
+					<svws-ui-radio-option value="algNormal" v-model="algMode" name="blockAlgo" label="Normal" />
+					<svws-ui-radio-option value="algFaecher" v-model="algMode" name="blockAlgo" label="Fächerweise" />
+					<svws-ui-radio-option value="algSchienen" v-model="algMode" name="blockAlgo" label="Schienenweise" />
 				</svws-ui-radio-group>
-				<svws-ui-radio-group :row="true"
-					class="justify-center">
-					<svws-ui-radio-option value="lkgkMix" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Gemischt" />
-					<svws-ui-radio-option value="lkgkSep" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Getrennt" />
-					<svws-ui-radio-option value="lkgkOnlyLk" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Nur LK" />
-					<svws-ui-radio-option value="lkgkOnlyGk" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Nur GK" />
+				<svws-ui-radio-group :row="true" class="justify-center">
+					<template v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id">
+						<svws-ui-radio-option :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
+					</template>
 				</svws-ui-radio-group>
 				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === 'algNormal'">
 					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
 				</svws-ui-checkbox>
 			</template>
 			<template #modalActions>
-				<svws-ui-button type="secondary"
-					@click="blocken">
-					Blocken
-				</svws-ui-button>
-				<svws-ui-button type="secondary"
-					@click="modal.closeModal()">
-					Abbrechen
-				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="blocken"> Blocken </svws-ui-button>
+				<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
 			</template>
 		</svws-ui-modal>
 
@@ -105,7 +82,7 @@
 <script setup lang="ts">
 
 	import type { GostKursklausur, GostKlausurtermin} from "@core";
-	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@core";
+	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig, KlausurterminblockungModusKursarten } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -134,7 +111,7 @@
 	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value));
 
 	const algMode = ref("algNormal");
-	const lkgkMode = ref("lkgkMix");
+	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
 	const blockGleicheLehrkraft = ref(false);
 
 	const blocken = async () => {
@@ -150,14 +127,7 @@
 			blockConfig.set_algorithmus_faecherweise();
 		else if (algMode.value === "algSchienen")
 			blockConfig.set_algorithmus_schienenweise();
-		if (lkgkMode.value === "lkgkMix")
-			blockConfig.set_lk_gk_modus_beide();
-		else if (lkgkMode.value === "lkgkSep")
-			blockConfig.set_lk_gk_modus_getrennt();
-		else if (lkgkMode.value === "lkgkOnlyLk")
-			blockConfig.set_lk_gk_modus_nur_lk();
-		else if (lkgkMode.value === "lkgkOnlyGk")
-			blockConfig.set_lk_gk_modus_nur_gk();
+		blockConfig.modusKursarten = KlausurterminblockungModusKursarten.getOrException(lkgkMode.value.id);
 		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));

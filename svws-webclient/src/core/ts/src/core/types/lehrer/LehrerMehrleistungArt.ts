@@ -6,16 +6,16 @@ import { LehrerKatalogMehrleistungsartEintrag } from '../../../core/data/lehrer/
 export class LehrerMehrleistungArt extends JavaObject implements JavaEnum<LehrerMehrleistungArt> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerMehrleistungArt> = [];
+	static readonly all_values_by_ordinal : Array<LehrerMehrleistungArt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerMehrleistungArt> = new Map<string, LehrerMehrleistungArt>();
+	static readonly all_values_by_name : Map<string, LehrerMehrleistungArt> = new Map<string, LehrerMehrleistungArt>();
 
 	/**
 	 * Mehrleistungsart 'Beschäftigungsphase Sabbatjahr'

@@ -6,16 +6,16 @@ import { LehrerKatalogLehramtEintrag } from '../../../core/data/lehrer/LehrerKat
 export class LehrerLehramt extends JavaObject implements JavaEnum<LehrerLehramt> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerLehramt> = [];
+	static readonly all_values_by_ordinal : Array<LehrerLehramt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerLehramt> = new Map<string, LehrerLehramt>();
+	static readonly all_values_by_name : Map<string, LehrerLehramt> = new Map<string, LehrerLehramt>();
 
 	/**
 	 * Lehramt 'für die Primarstufe'

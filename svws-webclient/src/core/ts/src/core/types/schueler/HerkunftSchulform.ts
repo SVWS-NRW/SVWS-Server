@@ -8,16 +8,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class HerkunftSchulform extends JavaObject implements JavaEnum<HerkunftSchulform> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<HerkunftSchulform> = [];
+	static readonly all_values_by_ordinal : Array<HerkunftSchulform> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, HerkunftSchulform> = new Map<string, HerkunftSchulform>();
+	static readonly all_values_by_name : Map<string, HerkunftSchulform> = new Map<string, HerkunftSchulform>();
 
 	/**
 	 * Berufskolleg

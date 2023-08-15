@@ -6,16 +6,16 @@ import { LehrerKatalogAnrechnungsgrundEintrag } from '../../../core/data/lehrer/
 export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<LehrerAnrechnungsgrund> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerAnrechnungsgrund> = [];
+	static readonly all_values_by_ordinal : Array<LehrerAnrechnungsgrund> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerAnrechnungsgrund> = new Map<string, LehrerAnrechnungsgrund>();
+	static readonly all_values_by_name : Map<string, LehrerAnrechnungsgrund> = new Map<string, LehrerAnrechnungsgrund>();
 
 	/**
 	 * Anrechnungsgrund 'Seiteneinsteiger/-in: Entlastung für berufsbegleitende Ausbildung für Universitätsabsolventen OBAS' für Stunden bei einem Lehrer

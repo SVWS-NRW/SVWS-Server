@@ -5,16 +5,16 @@ import { LehrerKatalogAbgangsgrundEintrag } from '../../../core/data/lehrer/Lehr
 export class LehrerAbgangsgrund extends JavaObject implements JavaEnum<LehrerAbgangsgrund> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerAbgangsgrund> = [];
+	static readonly all_values_by_ordinal : Array<LehrerAbgangsgrund> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerAbgangsgrund> = new Map<string, LehrerAbgangsgrund>();
+	static readonly all_values_by_name : Map<string, LehrerAbgangsgrund> = new Map<string, LehrerAbgangsgrund>();
 
 	/**
 	 * Grund 'Eintritt in den Ruhestand' für das Verlassen der Schule durch den Lehrer

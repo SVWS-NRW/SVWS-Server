@@ -402,6 +402,7 @@ export { GostHalbjahr } from './core/types/gost/GostHalbjahr';
 export { GostKursart } from './core/types/gost/GostKursart';
 export { GostLaufbahnplanungFachkombinationTyp } from './core/types/gost/GostLaufbahnplanungFachkombinationTyp';
 export { GostSchriftlichkeit } from './core/types/gost/GostSchriftlichkeit';
+export { KlausurterminblockungModusKursarten } from './core/types/gost/klausurplanung/KlausurterminblockungModusKursarten';
 export { Jahrgaenge } from './core/types/jahrgang/Jahrgaenge';
 export { KAOAAnschlussoptionen } from './core/types/kaoa/KAOAAnschlussoptionen';
 export { KAOABerufsfeld } from './core/types/kaoa/KAOABerufsfeld';

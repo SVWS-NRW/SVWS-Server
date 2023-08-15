@@ -4,16 +4,16 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class GostBelegpruefungsArt extends JavaObject implements JavaEnum<GostBelegpruefungsArt> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostBelegpruefungsArt> = [];
+	static readonly all_values_by_ordinal : Array<GostBelegpruefungsArt> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostBelegpruefungsArt> = new Map<string, GostBelegpruefungsArt>();
+	static readonly all_values_by_name : Map<string, GostBelegpruefungsArt> = new Map<string, GostBelegpruefungsArt>();
 
 	/**
 	 * Prüfung nur der EF.1

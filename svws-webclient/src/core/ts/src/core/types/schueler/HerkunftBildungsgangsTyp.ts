@@ -8,16 +8,16 @@ import { WeiterbildungskollegBildungsgangTyp } from '../../../core/types/schule/
 export class HerkunftBildungsgangsTyp extends JavaObject implements JavaEnum<HerkunftBildungsgangsTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<HerkunftBildungsgangsTyp> = [];
+	static readonly all_values_by_ordinal : Array<HerkunftBildungsgangsTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, HerkunftBildungsgangsTyp> = new Map<string, HerkunftBildungsgangsTyp>();
+	static readonly all_values_by_name : Map<string, HerkunftBildungsgangsTyp> = new Map<string, HerkunftBildungsgangsTyp>();
 
 	/**
 	 * Weiterbildungskolleg: Abendgymnasium

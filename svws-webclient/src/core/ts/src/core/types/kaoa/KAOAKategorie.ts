@@ -8,16 +8,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class KAOAKategorie extends JavaObject implements JavaEnum<KAOAKategorie> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAKategorie> = [];
+	static readonly all_values_by_ordinal : Array<KAOAKategorie> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAKategorie> = new Map<string, KAOAKategorie>();
+	static readonly all_values_by_name : Map<string, KAOAKategorie> = new Map<string, KAOAKategorie>();
 
 	/**
 	 * KAoA-Kategorie: Formen der Orientierung und Beratung

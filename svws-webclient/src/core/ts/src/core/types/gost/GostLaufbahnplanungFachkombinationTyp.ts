@@ -5,16 +5,16 @@ import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentExce
 export class GostLaufbahnplanungFachkombinationTyp extends JavaObject implements JavaEnum<GostLaufbahnplanungFachkombinationTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostLaufbahnplanungFachkombinationTyp> = [];
+	static readonly all_values_by_ordinal : Array<GostLaufbahnplanungFachkombinationTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostLaufbahnplanungFachkombinationTyp> = new Map<string, GostLaufbahnplanungFachkombinationTyp>();
+	static readonly all_values_by_name : Map<string, GostLaufbahnplanungFachkombinationTyp> = new Map<string, GostLaufbahnplanungFachkombinationTyp>();
 
 	/**
 	 * Gibt an, das eine Fachkombination unzulässig ist

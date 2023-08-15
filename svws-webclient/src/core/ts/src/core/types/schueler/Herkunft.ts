@@ -10,16 +10,16 @@ import { HerkunftSonstige, cast_de_svws_nrw_core_types_schueler_HerkunftSonstige
 export class Herkunft extends JavaObject implements JavaEnum<Herkunft> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Herkunft> = [];
+	static readonly all_values_by_ordinal : Array<Herkunft> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Herkunft> = new Map<string, Herkunft>();
+	static readonly all_values_by_name : Map<string, Herkunft> = new Map<string, Herkunft>();
 
 	/**
 	 * Schulform: Berufskolleg

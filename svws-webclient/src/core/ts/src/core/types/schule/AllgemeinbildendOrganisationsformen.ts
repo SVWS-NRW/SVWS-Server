@@ -8,16 +8,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class AllgemeinbildendOrganisationsformen extends JavaObject implements JavaEnum<AllgemeinbildendOrganisationsformen> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<AllgemeinbildendOrganisationsformen> = [];
+	static readonly all_values_by_ordinal : Array<AllgemeinbildendOrganisationsformen> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, AllgemeinbildendOrganisationsformen> = new Map<string, AllgemeinbildendOrganisationsformen>();
+	static readonly all_values_by_name : Map<string, AllgemeinbildendOrganisationsformen> = new Map<string, AllgemeinbildendOrganisationsformen>();
 
 	/**
 	 * Organisationsform: Nicht zuordenbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)

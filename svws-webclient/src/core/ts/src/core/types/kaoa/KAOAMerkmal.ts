@@ -10,16 +10,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class KAOAMerkmal extends JavaObject implements JavaEnum<KAOAMerkmal> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAMerkmal> = [];
+	static readonly all_values_by_ordinal : Array<KAOAMerkmal> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAMerkmal> = new Map<string, KAOAMerkmal>();
+	static readonly all_values_by_name : Map<string, KAOAMerkmal> = new Map<string, KAOAMerkmal>();
 
 	/**
 	 * KAoA-Merkmal: Schulische prozessorientierte Begleitung und Beratung

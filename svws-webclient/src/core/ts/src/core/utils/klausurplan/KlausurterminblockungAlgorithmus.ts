@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { KlausurterminblockungModusKursarten } from '../../../core/types/gost/klausurplanung/KlausurterminblockungModusKursarten';
 import { KlausurterminblockungAlgorithmusConfig } from '../../../core/utils/klausurplan/KlausurterminblockungAlgorithmusConfig';
 import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -106,20 +107,21 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	private berechneRekursivLkGkModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
-		switch (config.get_lk_gk_modus()) {
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_BEIDE: {
+		const modus : KlausurterminblockungModusKursarten = config.modusKursarten;
+		switch (modus) {
+			case KlausurterminblockungModusKursarten.BEIDE: {
 				this.berechne_helper(input, config, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_LK: {
+			case KlausurterminblockungModusKursarten.NUR_LK: {
 				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, true), config, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_NUR_GK: {
+			case KlausurterminblockungModusKursarten.NUR_GK: {
 				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, false), config, out);
 				break;
 			}
-			case KlausurterminblockungAlgorithmusConfig.LK_GK_MODUS_GETRENNT: {
+			case KlausurterminblockungModusKursarten.GETRENNT: {
 				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, true), config, out);
 				this.berechne_helper(KlausurterminblockungAlgorithmus.filter(input, false), config, out);
 				break;
