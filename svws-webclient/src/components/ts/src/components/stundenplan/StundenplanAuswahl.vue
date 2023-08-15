@@ -70,7 +70,8 @@
 			return props.wochentyp();
 		},
 		set: (value : number) => {
-			void props.gotoWochentyp(value);		}
+			void props.gotoWochentyp(value);
+		}
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
@@ -95,16 +96,18 @@
 </script>
 
 <style lang="postcss">
-.svws-ui-stundenplan--auswahl {
-  @apply flex flex-wrap gap-y-5 gap-x-20;
-}
 
-.svws-ui-stundenplan--auswahl--wrapper {
-  @apply flex-grow grid gap-2;
-  grid-template-columns: minmax(12rem, 0.5fr) minmax(12rem, 1fr) minmax(12rem, 1fr);
+	.svws-ui-stundenplan--auswahl {
+		@apply flex flex-wrap gap-y-5 gap-x-20;
+	}
 
-  @media print {
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  }
-}
+	.svws-ui-stundenplan--auswahl--wrapper {
+		@apply flex-grow grid gap-2;
+		grid-template-columns: minmax(12rem, 0.5fr) minmax(12rem, 1fr) minmax(12rem, 1fr);
+
+		@media print {
+			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		}
+	}
+
 </style>

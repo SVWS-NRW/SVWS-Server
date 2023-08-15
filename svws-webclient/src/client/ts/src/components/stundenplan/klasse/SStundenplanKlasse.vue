@@ -4,9 +4,15 @@
 			Für den Stundenplan ist keine Klasse vorhanden.
 		</template>
 		<template v-else>
-			<div class="h-full w-96 mr-2 grid grid-cols-1" style="grid-template-rows: 1.8rem 1.8rem 1fr 1.8rem 1fr;">
+			<div class="h-full w-96 mr-2 grid grid-cols-1" style="grid-template-rows: 3rem 3rem 1.8rem 1fr 1.8rem 1fr;">
 				<div>
 					<svws-ui-multi-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" />
+				</div>
+				<div>
+					<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
+						class="print:hidden"
+						:disabled="wochentypen().size() <= 0"
+						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 				</div>
 				<div>Klassenunterricht</div>
 				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseId(klasse.id)" :columns="cols">
@@ -38,7 +44,7 @@
 			<div class="h-full w-full">
 				TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder
 				die Klassen-Unterricht hineingezogen werden können.
-				<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => 0" :kalenderwoche="() => undefined" />
+				<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined" />
 			</div>
 		</template>
 	</div>
@@ -46,7 +52,7 @@
 
 <script setup lang="ts">
 
-	import { type StundenplanKlasse } from "@core";
+	import { ArrayList, type List, type StundenplanKlasse } from "@core";
 	import { type StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import { ref, computed, type WritableComputedRef } from "vue";
 
@@ -63,6 +69,23 @@
 			return props.stundenplanManager().klasseGetMengeAsList().get(0);
 		},
 		set: (value : StundenplanKlasse) => _klasse.value = value
+	});
+
+	function wochentypen(): List<number> {
+		let modell = props.stundenplanManager().getWochenTypModell();
+		if (modell <= 1)
+			modell = 0;
+		const result = new ArrayList<number>();
+		for (let n = 0; n <= modell; n++)
+			result.add(n);
+		return result;
+	}
+
+	const _wochentyp = ref<number>(0);
+
+	const wochentypAuswahl : WritableComputedRef<number> = computed({
+		get: () : number => _wochentyp.value,
+		set: (value : number) => _wochentyp.value = value
 	});
 
 	const cols = [
