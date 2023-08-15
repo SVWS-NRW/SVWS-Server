@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { GostKursklausur } from '../../../core/data/gost/klausurplanung/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
@@ -15,7 +15,7 @@ import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
 import { Wochentag } from '../../../core/types/Wochentag';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { GostKlausurtermin } from '../../../core/data/gost/klausuren/GostKlausurtermin';
+import { GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 
 export class GostKursklausurManager extends JavaObject {

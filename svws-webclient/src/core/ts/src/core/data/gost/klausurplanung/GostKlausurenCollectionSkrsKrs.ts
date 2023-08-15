@@ -1,8 +1,8 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
-import { GostKlausurraumstunde } from '../../../../core/data/gost/klausuren/GostKlausurraumstunde';
-import { GostSchuelerklausurraumstunde } from '../../../../core/data/gost/klausuren/GostSchuelerklausurraumstunde';
+import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
+import { GostSchuelerklausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 
 export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
@@ -27,7 +27,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkrsKrs {
@@ -121,6 +121,6 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurenCollectionSkrsKrs(obj : unknown) : GostKlausurenCollectionSkrsKrs {
+export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionSkrsKrs(obj : unknown) : GostKlausurenCollectionSkrsKrs {
 	return obj as GostKlausurenCollectionSkrsKrs;
 }

@@ -23,7 +23,7 @@ export class GostKlausurraumstunde extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde'].includes(name);
+		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurraumstunde {
@@ -69,6 +69,6 @@ export class GostKlausurraumstunde extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurraumstunde(obj : unknown) : GostKlausurraumstunde {
+export function cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraumstunde(obj : unknown) : GostKlausurraumstunde {
 	return obj as GostKlausurraumstunde;
 }

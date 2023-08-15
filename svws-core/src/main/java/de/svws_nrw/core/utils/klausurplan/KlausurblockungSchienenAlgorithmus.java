@@ -3,7 +3,7 @@ package de.svws_nrw.core.utils.klausurplan;
 import java.util.List;
 import java.util.Random;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.validation.constraints.NotNull;
 

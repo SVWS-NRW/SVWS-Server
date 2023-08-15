@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.gost.klausuren;
+package de.svws_nrw.core.data.gost.klausurplanung;
 
 import java.util.List;
 import java.util.ArrayList;

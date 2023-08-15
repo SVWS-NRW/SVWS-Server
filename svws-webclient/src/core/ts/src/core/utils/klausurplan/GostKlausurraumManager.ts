@@ -1,23 +1,23 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { GostKursklausur } from '../../../core/data/gost/klausuren/GostKursklausur';
+import { GostKursklausur } from '../../../core/data/gost/klausurplanung/GostKursklausur';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { GostKlausurraumstunde } from '../../../core/data/gost/klausuren/GostKlausurraumstunde';
-import { GostSchuelerklausur } from '../../../core/data/gost/klausuren/GostSchuelerklausur';
+import { GostKlausurraumstunde } from '../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
+import { GostSchuelerklausur } from '../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
-import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausuren/GostKlausurenCollectionSkrsKrs';
+import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
 import { GostKursklausurManager } from '../../../core/utils/klausurplan/GostKursklausurManager';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurraum } from '../../../core/data/gost/klausuren/GostKlausurraum';
+import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum } from '../../../core/data/gost/klausurplanung/GostKlausurraum';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { GostSchuelerklausurraumstunde } from '../../../core/data/gost/klausuren/GostSchuelerklausurraumstunde';
+import { GostSchuelerklausurraumstunde } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 
 export class GostKlausurraumManager extends JavaObject {
 
@@ -125,8 +125,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3? : List<GostSchuelerklausur>) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausuren.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && (typeof __param3 === "undefined")) {
-			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausuren_GostKlausurraum(__param0);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && (typeof __param3 === "undefined")) {
+			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param2);
 			this.addKlausurraum(raum);

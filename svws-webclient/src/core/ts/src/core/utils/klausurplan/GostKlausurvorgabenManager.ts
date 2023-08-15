@@ -10,7 +10,7 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
-import { GostKlausurvorgabe } from '../../../core/data/gost/klausuren/GostKlausurvorgabe';
+import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';

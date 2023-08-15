@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
-import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
-import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurraumstunde;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.Map2DUtils;

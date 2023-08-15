@@ -14,7 +14,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.base.CsvReader;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.utils.klausurplan.KlausurblockungSchienenAlgorithmus;
 import de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusConfig;

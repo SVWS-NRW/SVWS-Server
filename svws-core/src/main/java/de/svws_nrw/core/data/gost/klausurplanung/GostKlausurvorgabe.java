@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.gost.klausuren;
+package de.svws_nrw.core.data.gost.klausurplanung;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
