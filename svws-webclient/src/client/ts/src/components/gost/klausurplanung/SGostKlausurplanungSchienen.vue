@@ -78,7 +78,7 @@
 <script setup lang="ts">
 
 	import type { GostKursklausur, GostKlausurtermin } from "@core";
-	import { KlausurterminblockungAlgorithmen, KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig,
+	import { KlausurterminblockungAlgorithmen, KlausurterminblockungAlgorithmus, GostKlausurterminblockungDaten,
 		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
@@ -114,20 +114,20 @@
 	const blocken = async () => {
 		loading.value = true;
 		modal.value.closeModal();
-		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
-		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		blockConfig.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
-		blockConfig.algorithmus = algMode.value.id;
-		blockConfig.modusKursarten = lkgkMode.value.id;
-		blockConfig.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
+		const daten = new GostKlausurterminblockungDaten();
+		daten.klausuren = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
+		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
+		daten.konfiguration.algorithmus = algMode.value.id;
+		daten.konfiguration.modusKursarten = lkgkMode.value.id;
+		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
-		// await props.persistKlausurblockung(klausurTermine);
-		for await (const klausurList of klausurTermine) {
+		const ergebnis = blockAlgo.apply(daten);
+		// await props.persistKlausurblockung(ergebnis);
+		for await (const t of ergebnis.termine) {
 			let termin = null;
-			for await (const klausurId of klausurList) {
+			for await (const klausurId of t.kursklausuren) {
 				const klausur = props.kursklausurmanager().gibKursklausurById(klausurId);
 				// if (klausur !== null) {
 				if (termin === null)
