@@ -1,5 +1,5 @@
 import { type StundenplanManager } from "@core";
 
-export interface StundenplanUnterrichtProps {
+export interface StundenplanKlasseProps {
 	stundenplanManager: () => StundenplanManager;
 }

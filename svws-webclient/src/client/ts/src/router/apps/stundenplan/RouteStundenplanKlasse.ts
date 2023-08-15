@@ -2,16 +2,17 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan} from "~/router/apps/stundenplan/RouteStundenplan";
+import { type StundenplanKlasseProps } from "~/components/stundenplan/klasse/SStundenplanKlasseProps";
 
-const SStundenplanUnterricht = () => import("~/components/stundenplan/unterricht/SStundenplanUnterricht.vue");
+const SStundenplanKlasse = () => import("~/components/stundenplan/klasse/SStundenplanKlasse.vue");
 
-export class RouteStundenplanUnterricht extends RouteNode<unknown, RouteStundenplan> {
+export class RouteStundenplanKlasse extends RouteNode<unknown, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.unterricht", "unterricht", SStundenplanUnterricht);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.klasse", "klasse", SStundenplanKlasse);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Unterricht";
+		super.text = "Klasse";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -21,7 +22,7 @@ export class RouteStundenplanUnterricht extends RouteNode<unknown, RouteStundenp
 		return { name: this.name, params: { id }};
 	}
 
-	public getProps(to: RouteLocationNormalized): Record<string, any> {
+	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 		};
@@ -29,5 +30,5 @@ export class RouteStundenplanUnterricht extends RouteNode<unknown, RouteStundenp
 
 }
 
-export const routeStundenplanUnterricht = new RouteStundenplanUnterricht();
+export const routeStundenplanKlasse = new RouteStundenplanKlasse();
 

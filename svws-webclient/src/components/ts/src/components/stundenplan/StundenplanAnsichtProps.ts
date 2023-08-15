@@ -3,6 +3,7 @@ import type { StundenplanKalenderwochenzuordnung, StundenplanManager } from "@co
 export interface StundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
 	ignoreEmpty?: boolean;
+	id: number,
 	manager: () => StundenplanManager;
 	wochentyp: () => number;
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;

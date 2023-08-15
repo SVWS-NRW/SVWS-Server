@@ -65,6 +65,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
 		return {
 			mode: 'lehrer',
+			id: routeLehrer.data.stammdaten.id,
 			manager: () => routeLehrerStundenplan.data.manager,
 			wochentyp: () => routeLehrerStundenplan.data.wochentyp,
 			kalenderwoche: () => routeLehrerStundenplan.data.kalenderwoche,
