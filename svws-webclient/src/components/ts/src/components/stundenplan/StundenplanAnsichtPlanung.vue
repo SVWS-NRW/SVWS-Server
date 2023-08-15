@@ -4,9 +4,8 @@
 			<div class="inline-flex gap-1 items-center pl-2">
 				{{ }}
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
-				class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentag.beschreibung }}<i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([...manager().getListZeitrasterZuWochentag(wochentag)])" /></div>
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="font-bold text-center inline-flex items-center w-full justify-center" :class="{'bg-slate-400': toRaw(selected)===wochentag}">
+				<div> {{ wochentag.beschreibung }}<i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([...manager().getListZeitrasterZuWochentag(wochentag)])" /></div>
 			</div>
 			<div @click="addWochentag"><i-ri-add-line class="cursor-pointer" /></div>
 		</div>
@@ -22,40 +21,33 @@
 				</template>
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
-				<div v-for="stunde in zeitrasterRange" :key="stunde"
-					class="svws-ui-stundenplan--stunde text-center justify-center"
-					:style="posZeitraster(undefined, stunde)">
+				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center" :style="posZeitraster(undefined, stunde)" :class="{'bg-slate-400': toRaw(selected)===stunde}">
 					<div class="text-headline-sm">
-						<SvwsUiTextInput :model-value="stunde" @update:model-value="patchStunde" headless style="width: 1rem;" /><span>.&nbsp;Stunde</span><i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([...manager().getListZeitrasterZuStunde(stunde)])" />
+						{{ stunde }}.&nbsp;Stunde <i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([...manager().getListZeitrasterZuStunde(stunde)])" />
 					</div>
 					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center"
-						:style="posPause(undefined, pause)">
-						<div>{{ pause.bezeichnung }}</div>
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" @click="updateSelected(pause)" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
 						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
 					</div>
 				</template>
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
-				class="svws-ui-stundenplan--zeitraster">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'bg-slate-400': selected===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag">
-					<div class="svws-ui-stundenplan--stunde"
-						:style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)">
+					<div class="svws-ui-stundenplan--stunde" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'bg-slate-400': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
 						{{ zeitrasterEintrag.unterrichtstunde }}
 						<div class="flex justify-between">
 							<div class="flex content-start">
-								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id)" @update:model-value="patchAnfang" headless style="width: 3rem;" /> -&nbsp;
-								<SvwsUiTextInput :model-value="manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id)" @update:model-value="patchEnde" headless style="width: 4rem;" />
-							</div> <i-ri-delete-bin-line class="cursor-pointer" @click="removeZeitraster([zeitrasterEintrag])" />
+								{{ manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id) }} - {{ manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id) }}
+							</div> <i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([zeitrasterEintrag])" />
 						</div>
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" />
+					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
 				</template>
 			</div>
 			<div />
@@ -66,14 +58,28 @@
 <script setup lang="ts">
 	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
 	import type { StundenplanZeitraster, Wochentag } from "@core";
-	import { computed } from "vue";
+	import { computed, ref, toRaw } from "vue";
 
 	const props = defineProps<{
 		manager: () => StundenplanManager;
-		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
+		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
 		addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
 		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	}>();
+
+	const emit = defineEmits<{
+		'selected:updated': [item: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined];
+	}>();
+
+	const selected = ref<Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined>();
+
+	function updateSelected(event: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit) {
+		if (event === toRaw(selected.value))
+			selected.value = undefined;
+		else
+			selected.value = event;
+		emit('selected:updated', event);
+	}
 
 	const beginn = computed(() => {
 		// TODO Methoden im Kommentar noch fehlerhaft, verwenden sobald der Bug behoben ist...
