@@ -164,7 +164,7 @@ public class KlausurterminblockungDynDaten {
 	}
 
 	private void initialisiereKlausurgruppen(final @NotNull List<@NotNull GostKursklausur> pInput, final @NotNull KlausurterminblockungAlgorithmusConfig pConfig) {
-		final @NotNull KlausurterminblockungAlgorithmen algo = pConfig.algorithmus;
+		final @NotNull KlausurterminblockungAlgorithmen algo = KlausurterminblockungAlgorithmen.getOrException(pConfig.algorithmus);
 		switch (algo) {
 			case NORMAL:
 				// Jede Gruppe besteht aus einer einzelnen Klausur
@@ -178,8 +178,6 @@ public class KlausurterminblockungDynDaten {
 				// Jede Gruppe besteht aus allen Klausuren der selben Schiene.
 				initialisiereKlausurgruppenSchienenweise(pInput);
 				break;
-			default:
-				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!");
 		}
 
 	}

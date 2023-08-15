@@ -170,7 +170,7 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	}
 
 	private initialisiereKlausurgruppen(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig) : void {
-		const algo : KlausurterminblockungAlgorithmen = pConfig.algorithmus;
+		const algo : KlausurterminblockungAlgorithmen = KlausurterminblockungAlgorithmen.getOrException(pConfig.algorithmus);
 		switch (algo) {
 			case KlausurterminblockungAlgorithmen.NORMAL: {
 				this.initialisiereKlausurgruppenNormal(pInput);
@@ -183,9 +183,6 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 			case KlausurterminblockungAlgorithmen.SCHIENENWEISE: {
 				this.initialisiereKlausurgruppenSchienenweise(pInput);
 				break;
-			}
-			default: {
-				throw new DeveloperNotificationException("Der Algorithmus ist unbekannt!")
 			}
 		}
 	}

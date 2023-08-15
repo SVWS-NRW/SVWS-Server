@@ -242,7 +242,7 @@ class KlausurterminblockungTests {
 		final KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
 
 		final KlausurterminblockungAlgorithmusConfig cfg = new KlausurterminblockungAlgorithmusConfig();
-		cfg.set_max_time_millis(BLOCKUNGS_ZEIT);
+		cfg.maxTimeMillis = BLOCKUNGS_ZEIT;
 
 		// Blockung starten
 		@NotNull

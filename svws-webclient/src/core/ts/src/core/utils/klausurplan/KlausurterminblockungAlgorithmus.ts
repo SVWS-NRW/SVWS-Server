@@ -82,7 +82,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	private berechneRekursivQuartalsModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
 		if (input.isEmpty())
 			return;
-		if (config.modusQuartale as unknown === KlausurterminblockungModusQuartale.ZUSAMMEN as unknown) {
+		if (config.modusQuartale === KlausurterminblockungModusQuartale.ZUSAMMEN.id) {
 			this.berechneRekursivLkGkModus(input, config, out);
 			return;
 		}
@@ -108,7 +108,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	}
 
 	private berechneRekursivLkGkModus(input : List<GostKursklausur>, config : KlausurterminblockungAlgorithmusConfig, out : List<List<number>>) : void {
-		const modus : KlausurterminblockungModusKursarten = config.modusKursarten;
+		const modus : KlausurterminblockungModusKursarten = KlausurterminblockungModusKursarten.getOrException(config.modusKursarten);
 		switch (modus) {
 			case KlausurterminblockungModusKursarten.BEIDE: {
 				this.berechne_helper(input, config, out);
@@ -159,7 +159,7 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	private berechne_helper(pInput : List<GostKursklausur>, pConfig : KlausurterminblockungAlgorithmusConfig, pOut : List<List<number>>) : void {
 		this._logger.log("KlausurterminblockungAlgorithmus");
 		this._logger.modifyIndent(+4);
-		const zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.get_max_time_millis();
+		const zeitEndeGesamt : number = System.currentTimeMillis() + pConfig.maxTimeMillis;
 		const seed : number = KlausurterminblockungAlgorithmus._random.nextLong();
 		const random : Random = new Random(seed);
 		const dynDaten : KlausurterminblockungDynDaten | null = new KlausurterminblockungDynDaten(this._logger, random, pInput, pConfig);

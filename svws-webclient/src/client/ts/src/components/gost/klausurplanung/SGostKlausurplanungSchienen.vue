@@ -23,7 +23,7 @@
 				<svws-ui-radio-group :row="true" class="justify-center">
 					<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
 				</svws-ui-radio-group>
-				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === KlausurterminblockungAlgorithmen.NORMAL">
+				<svws-ui-checkbox v-model="blockeGleicheLehrkraft" v-if="algMode === KlausurterminblockungAlgorithmen.NORMAL">
 					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
 				</svws-ui-checkbox>
 			</template>
@@ -109,7 +109,7 @@
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
-	const blockGleicheLehrkraft = ref(false);
+	const blockeGleicheLehrkraft = ref(false);
 
 	const blocken = async () => {
 		loading.value = true;
@@ -117,10 +117,10 @@
 		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
 		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		blockConfig.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT;
-		blockConfig.algorithmus = KlausurterminblockungAlgorithmen.getOrException(algMode.value.id);
-		blockConfig.modusKursarten = KlausurterminblockungModusKursarten.getOrException(lkgkMode.value.id);
-		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
+		blockConfig.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
+		blockConfig.algorithmus = algMode.value.id;
+		blockConfig.modusKursarten = lkgkMode.value.id;
+		blockConfig.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
 		const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
 		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);

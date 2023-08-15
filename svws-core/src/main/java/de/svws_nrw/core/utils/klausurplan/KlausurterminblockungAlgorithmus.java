@@ -73,7 +73,7 @@ public class KlausurterminblockungAlgorithmus {
 			return;
 
 		// Keine Filterung angefordert.
-		if (config.modusQuartale == KlausurterminblockungModusQuartale.ZUSAMMEN) {
+		if (config.modusQuartale == KlausurterminblockungModusQuartale.ZUSAMMEN.id) {
 			berechneRekursivLkGkModus(input, config, out);
 			return;
 		}
@@ -114,7 +114,7 @@ public class KlausurterminblockungAlgorithmus {
 
 	private void berechneRekursivLkGkModus(final @NotNull List<@NotNull GostKursklausur> input, final @NotNull KlausurterminblockungAlgorithmusConfig config, final @NotNull List<@NotNull List<@NotNull Long>> out) {
 		// Der LK-GK-Modus bestimmt, welche Klausuren aus der Liste potentiell geblockt werden sollen.
-		final @NotNull KlausurterminblockungModusKursarten modus = config.modusKursarten;
+		final @NotNull KlausurterminblockungModusKursarten modus = KlausurterminblockungModusKursarten.getOrException(config.modusKursarten);
 		switch (modus) {
 			case BEIDE:
 				berechne_helper(input, config, out); // keine Filterung
@@ -165,7 +165,7 @@ public class KlausurterminblockungAlgorithmus {
 		_logger.modifyIndent(+4);
 
 		// End-Zeitpunkt berechnet.
-		final long zeitEndeGesamt = System.currentTimeMillis() + pConfig.get_max_time_millis();
+		final long zeitEndeGesamt = System.currentTimeMillis() + pConfig.maxTimeMillis;
 
 		// Random-Objekt erzeugen
 		final long seed = _random.nextLong(); // Trick, um den Seed zu kennen.
