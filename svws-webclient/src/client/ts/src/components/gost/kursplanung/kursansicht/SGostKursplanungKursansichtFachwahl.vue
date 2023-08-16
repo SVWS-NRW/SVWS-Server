@@ -153,7 +153,7 @@
 
 	import { ref, type ComputedRef, computed } from "vue";
 	import type { GostBlockungKurs, GostStatistikFachwahl, LehrerListeEintrag, GostFaecherManager, GostBlockungKursLehrer,
-		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungSchiene, List,
+		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs, List,
 		GostBlockungsergebnisSchiene } from "@core";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
 	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";

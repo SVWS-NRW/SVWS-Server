@@ -31,7 +31,7 @@
 	})
 
 	const kursname2 = computed<string>(() => {
-		return (kurs2.value === undefined) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
+		return (kurs2.value === undefined || !modal.value.isOpen) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
 	})
 
 	const modal = ref();
