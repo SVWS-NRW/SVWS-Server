@@ -36,6 +36,7 @@
 		return result;
 	});
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
 	const disabled = ref<boolean>(props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
 
 	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
@@ -72,7 +73,10 @@
 	async function regelSpeichern() {
 		if (regel.value === undefined)
 			return;
-		await props.addRegel(regel.value);
+		const id = regel.value.id
+		id > 0
+			? await props.patchRegel(regel.value, id)
+			: await props.addRegel(regel.value);
 		regel.value = undefined;
 	}
 

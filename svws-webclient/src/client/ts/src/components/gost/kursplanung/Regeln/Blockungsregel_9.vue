@@ -12,9 +12,8 @@
 
 <script setup lang="ts">
 
-	import { GostBlockungKurs, type List, type GostBlockungRegel, type GostFach, type GostBlockungsdatenManager, ArrayList} from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { GostKursblockungRegelTyp } from "@core";
+	import { GostBlockungKurs, type List, type GostBlockungRegel, type GostFach, type GostBlockungsdatenManager, ArrayList, GostKursblockungRegelTyp } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -66,9 +65,11 @@
 		get: () => {
 			if (regel.value === undefined)
 				return 0;
+			console.log(regel.value.parameter.get(1))
 			return regel.value.parameter.get(1);
 		},
 		set: (value) => {
+			console.log(value)
 			if (regel.value)
 				regel.value.parameter.set(1, value)
 		}
