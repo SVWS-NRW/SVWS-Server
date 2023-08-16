@@ -150,8 +150,6 @@ export class RouteDataStundenplan {
 	}
 
 	patchZeitraster = async (data : Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => {
-		if (this.auswahl === undefined || data.id === undefined)
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		Object.assign(zeitraster, data)
 		await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
 		this.stundenplanManager.zeitrasterPatch(zeitraster);
@@ -255,8 +253,6 @@ export class RouteDataStundenplan {
 	}
 
 	removeZeitraster = async (multi: StundenplanZeitraster[]) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
 			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);

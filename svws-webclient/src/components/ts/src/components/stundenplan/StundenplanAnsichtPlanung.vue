@@ -1,13 +1,16 @@
 <template>
 	<div class="svws-ui-stundenplan">
+		<div class="flex justify-end gap-2 mb-2">
+			<svws-ui-button size="small" type="secondary" @click="addStunde">{{ manager().zeitrasterGetStundeMax() + 1 }}. Stunde hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
+			<svws-ui-button size="small" type="secondary" @click="addWochentag">{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + 1) }} hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
+		</div>
 		<div class="svws-ui-stundenplan--head">
 			<div class="inline-flex gap-1 items-center pl-2">
 				{{ }}
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="font-bold text-center inline-flex items-center w-full justify-center" :class="{'bg-slate-400': toRaw(selected)===wochentag}">
-				<div> {{ wochentag.beschreibung }}<i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([...manager().getListZeitrasterZuWochentag(wochentag)])" /></div>
+				<div> {{ wochentag.beschreibung }}</div>
 			</div>
-			<div @click="addWochentag"><i-ri-add-line class="cursor-pointer" /></div>
 		</div>
 		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
 			<div class="svws-ui-stundenplan--zeitraster svws-einheiten">
@@ -23,7 +26,7 @@
 			<div class="svws-ui-stundenplan--zeitraster">
 				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center" :style="posZeitraster(undefined, stunde)" :class="{'bg-slate-400': toRaw(selected)===stunde}">
 					<div class="text-headline-sm">
-						{{ stunde }}.&nbsp;Stunde <i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([...manager().getListZeitrasterZuStunde(stunde)])" />
+						{{ stunde }}.&nbsp;Stunde
 					</div>
 					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
 						{{ zeiten.replace(' Uhr', '') }}
@@ -42,7 +45,7 @@
 						<div class="flex justify-between">
 							<div class="flex content-start">
 								{{ manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id) }} - {{ manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id) }}
-							</div> <i-ri-delete-bin-line class="cursor-pointer" @click.stop="removeZeitraster([zeitrasterEintrag])" />
+							</div>
 						</div>
 					</div>
 				</template>
@@ -50,14 +53,12 @@
 					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
 				</template>
 			</div>
-			<div />
 		</div>
-		<div @click="addStunde"><i-ri-add-line class="cursor-pointer" /></div>
 	</div>
 </template>
 <script setup lang="ts">
-	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
-	import type { StundenplanZeitraster, Wochentag } from "@core";
+	import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster} from "@core";
+	import  { Wochentag } from "@core";
 	import { computed, ref, toRaw } from "vue";
 
 	const props = defineProps<{
@@ -164,15 +165,6 @@
 		await props.addZeitraster(wochentag, stunde);
 	}
 
-	async function patchAnfang(zeit: string) {
-		console.log(zeit)
-	}
-	async function patchEnde(zeit: string) {
-		console.log(zeit)
-	}
-	async function patchStunde(stunde: number) {
-		console.log(stunde)
-	}
 </script>
 
 <style lang="postcss">
@@ -184,7 +176,7 @@
 .svws-ui-stundenplan--head,
 .svws-ui-stundenplan--body {
   @apply grid grid-flow-col;
-  grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr)) 1rem;
+  grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
 }
 
 .svws-ui-stundenplan--head {
