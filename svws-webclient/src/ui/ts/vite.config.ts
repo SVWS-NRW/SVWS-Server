@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
+import Components from "unplugin-vue-components/vite";
 import Vue from "@vitejs/plugin-vue";
 import { HstVue } from '@histoire/plugin-vue'
 
@@ -82,6 +84,10 @@ export default defineConfig({
 	plugins: [
 		Vue({
 			reactivityTransform: true
+		}),
+		Components({
+			globs: ["src/components/**/!(*story.vue)*.vue"],
+			resolvers: [IconsResolver()]
 		}),
 		Icons(),
 	],
