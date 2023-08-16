@@ -77,7 +77,11 @@
 
 	const hasIcon = computed(() => !!slots.default);
 
-	const debouncedOnInput = useDebounceFn((event) => onDebouncedInput(event), toRef(props, 'debounceMs'))
+	const debouncedOnInput = useDebounceFn((event) => {
+		if (document.activeElement !== input.value)
+			input.value?.focus();
+		onDebouncedInput(event)
+	}, toRef(props, 'debounceMs'))
 
 	/**
 	 * Diese Funktion löst ein Emit aus, wenn das Input-Feld verlassen wird und

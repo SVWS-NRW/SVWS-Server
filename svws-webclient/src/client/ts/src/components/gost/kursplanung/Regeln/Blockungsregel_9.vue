@@ -6,7 +6,7 @@
 		</template>
 		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered.toArray() as GostBlockungKurs[]" />
 		<span class="leading-none">hat externe Schüler: </span>
-		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" />
+		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" :debounce-ms="0" />
 	</BlockungsregelBase>
 </template>
 
@@ -65,11 +65,9 @@
 		get: () => {
 			if (regel.value === undefined)
 				return 0;
-			console.log(regel.value.parameter.get(1))
 			return regel.value.parameter.get(1);
 		},
 		set: (value) => {
-			console.log(value)
 			if (regel.value)
 				regel.value.parameter.set(1, value)
 		}
