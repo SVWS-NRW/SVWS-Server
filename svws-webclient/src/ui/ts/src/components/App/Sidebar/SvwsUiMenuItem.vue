@@ -82,7 +82,7 @@
 	font-size: 0.78rem;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1920px) {
 	.sidebar--menu .sidebar--menu-item--label {
 		font-size: 0.9rem;
 	}

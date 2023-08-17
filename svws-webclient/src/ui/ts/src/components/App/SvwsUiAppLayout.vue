@@ -1,5 +1,5 @@
 <template>
-	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton}">
+	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton, 's-sidebar-expanded': sidebarExpanded, 's-sidebar-collapsed': !sidebarExpanded}">
 		<div v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu">
 			<slot name="sidebar" />
 			<template v-if="skeleton">
@@ -52,6 +52,13 @@
 			</template>
 		</div>
 		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
+			<div class="s-toggle" v-if="!skeleton">
+				<button type="button" @click="updateSidebarExpanded" :title="`Sidebar ${!sidebarExpanded ? 'einblenden' : 'ausblenden'}`">
+					<i-ri-contract-left-line v-if="sidebarExpanded" />
+					<i-ri-corner-up-right-line v-else />
+					<span class="s-title" v-if="!sidebarExpanded">Sidebar einblenden</span>
+				</button>
+			</div>
 			<div class="app--sidebar-container">
 				<slot name="secondaryMenu" />
 				<template v-if="skeleton">
@@ -94,6 +101,8 @@
 </template>
 
 <script setup lang='ts'>
+	import {ref} from "vue";
+
 	const props = withDefaults(defineProps<{
 		skeleton?: boolean;
 		fullwidthContent?: boolean;
@@ -101,6 +110,17 @@
 		skeleton: false,
 		fullwidthContent: false
 	});
+
+	const sidebarExpanded = ref<boolean>(true);
+
+	const updateSidebarExpanded = () => {
+		sidebarExpanded.value = !sidebarExpanded.value;
+		localStorage.setItem('sidebarExpanded', sidebarExpanded.value ? 'true' : 'false');
+	};
+
+	if (localStorage.getItem('sidebarExpanded')) {
+		sidebarExpanded.value = localStorage.getItem('sidebarExpanded') === 'true';
+	}
 
 </script>
 
@@ -149,11 +169,72 @@
 		max-width: 8rem;
 	}
 
+	.app--sidebar,
+	.app--content-container {
+		@apply bg-white dark:bg-black rounded-2xl;
+		@apply h-full;
+		@apply flex flex-col;
+		@apply border border-black/10 dark:border-white/5;
+		@apply overflow-y-auto;
+	}
+
+	.app--content-container {
+		@apply border-l-0 rounded-l-none;
+	}
+
 	.app--sidebar {
-		@apply flex-shrink-0;
+		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
 		min-width: 24rem;
 		max-width: 36rem;
+
+		.app--sidebar-container {
+			@apply rounded-xl border border-black/10 dark:border-white/10 h-full shadow shadow-black/10;
+		}
+
+		.secondary-menu--headline {
+			@apply -mt-2;
+		}
+
+		.s-toggle {
+			@apply absolute right-0 top-0 z-40 pt-3.5 pr-1.5 flex flex-col;
+
+			button {
+				@apply rounded-lg text-black/25 dark:text-white/25 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+
+				svg {
+					@apply flex-shrink-0 text-headline-md;
+				}
+
+				&:hover,
+				&:focus-visible {
+					@apply bg-black/10 dark:bg-white/10 text-black dark:text-white;
+				}
+			}
+
+			.s-title {
+				writing-mode: sideways-lr;
+			}
+		}
+	}
+
+	.s-sidebar-collapsed {
+		.app--sidebar {
+			@apply w-9 min-w-0 bg-white dark:bg-black z-40 pt-1 px-1;
+			@apply -mr-3 lg:-mr-4 3xl:-mr-9 4xl:-mr-12;
+
+			.app--sidebar-container {
+				@apply hidden;
+			}
+		}
+
+		.s-toggle {
+			@apply relative pt-1 pr-0 pl-1;
+
+			button {
+				@apply pb-1 rounded-lg;
+			}
+		}
 	}
 
 	.app--content {
@@ -186,13 +267,8 @@
 		}
 	}
 
-	.app--sidebar-container,
 	.app--content-container {
-		@apply bg-white dark:bg-black rounded-2xl;
-		@apply h-full w-full;
-		@apply flex flex-col;
-		@apply border border-black/25 dark:border-white/10;
-		@apply overflow-y-auto;
+		@apply w-full;
 	}
 
 	.app-layout--aside-container {
