@@ -49,11 +49,13 @@ publish:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - apt-get install jq -y
         - echo $CI_COMMIT_TAG
         - jq --arg version "${CI_COMMIT_TAG#v}" '.project."latest-release" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json
         - cat buildconfig.json
+        - cat gradle.properties
     when: on_success
 
 integration-tests:
