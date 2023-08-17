@@ -1,5 +1,5 @@
 import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart} from "@core";
-import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+import type { ComputedRef, Ref } from "vue";
 import { ArrayList } from "@core";
 import { computed, ref } from "vue";
 

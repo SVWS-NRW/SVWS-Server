@@ -1,10 +1,10 @@
-import { shallowRef } from "vue";
 
 import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeEintrag, LehrerListeEintrag, Schueler} from "@core";
+import { type RouteNode } from "~/router/RouteNode";
 
+import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import { type RouteNode } from "~/router/RouteNode";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 
@@ -18,6 +18,7 @@ interface RouteStateKlassen {
 	mapKatalogeintraege: Map<number, KlassenListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
+	klassenFilter: {search: string, sichtbar: boolean};
 	view: RouteNode<any, any>;
 }
 
@@ -30,8 +31,10 @@ export class RouteDataKlassen {
 		mapKatalogeintraege: new Map(),
 		mapLehrer: new Map(),
 		mapJahrgaenge: new Map(),
+		klassenFilter: {search: '', sichtbar: true},
 		view: routeKlasseDaten,
 	}
+
 	private _state = shallowRef(RouteDataKlassen._defaultState);
 
 	private setPatchedDefaultState(patch: Partial<RouteStateKlassen>) {
@@ -67,7 +70,13 @@ export class RouteDataKlassen {
 	}
 
 	get mapKatalogeintraege(): Map<number, KlassenListeEintrag> {
-		return this._state.value.mapKatalogeintraege;
+		const res = new Map();
+		for (const [k,v] of this._state.value.mapKatalogeintraege.entries())
+			if (v.kuerzel?.toLocaleLowerCase().includes(this.klassenFilter.search.toLocaleLowerCase()) && v.istSichtbar === this.klassenFilter.sichtbar)
+				res.set(k,v);
+		if (this._state.value.auswahl !== undefined && !res.has(this._state.value.auswahl.id))
+			this._state.value.auswahl = undefined;
+		return res;
 	}
 
 	get mapLehrer(): Map<number, LehrerListeEintrag> {
@@ -76,6 +85,10 @@ export class RouteDataKlassen {
 
 	get mapJahrgaenge(): Map<number, JahrgangsListeEintrag> {
 		return this._state.value.mapJahrgaenge;
+	}
+
+	get klassenFilter(): {search: string, sichtbar: boolean} {
+		return this._state.value.klassenFilter;
 	}
 
 	get daten(): KlassenDaten {
@@ -151,4 +164,7 @@ export class RouteDataKlassen {
 		//await api.server.patchKursDaten(data, api.schema, this.item.id);
 	}
 
+	setKlassenFilter = (klassenFilter: {search: string, sichtbar: boolean}) => {
+		this.setPatchedState({klassenFilter});
+	}
 }

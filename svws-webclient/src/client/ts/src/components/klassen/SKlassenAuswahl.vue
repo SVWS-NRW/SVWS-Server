@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols">
+			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
 				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
 				<template #cell(klassenLehrer)="{value}">
 					<span class="separate-items--custom">
@@ -13,10 +13,10 @@
 					</span>
 				</template>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Klasse" />
+					<svws-ui-text-input :model-value="klassenFilter.search" @update:model-value="setKlassenFilter({search: String($event), sichtbar: klassenFilter.sichtbar})" type="search" placeholder="Suche nach Klasse" :debounce-ms="0" />
 				</template>
 				<template #filterSimple>
-					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
+					<svws-ui-toggle :model-value="klassenFilter.sichtbar" @update:model-value="setKlassenFilter({search: klassenFilter.search, sichtbar: Boolean($event)})">Sichtbar</svws-ui-toggle>
 				</template>
 			</svws-ui-data-table>
 		</template>
@@ -26,22 +26,12 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import type { Ref, ComputedRef } from "vue";
-	import { computed, ref } from "vue";
+	import type { ComputedRef } from "vue";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import type {LehrerListeEintrag} from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();
-	const sichtbar: Ref<boolean> = ref(true);
-	const search: Ref<string> = ref("");
-
-	const rowsFiltered = computed(() => {
-		const res = [];
-		for (const k of props.mapKatalogeintraege.values())
-			if (k.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) && k.istSichtbar === sichtbar.value)
-				res.push(k);
-		return res;
-	})
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },

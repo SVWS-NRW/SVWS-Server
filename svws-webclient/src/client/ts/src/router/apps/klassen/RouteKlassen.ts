@@ -1,6 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { KlassenListeEintrag } from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -65,11 +64,13 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			auswahl: this.data.auswahl,
 			mapLehrer: this.data.mapLehrer,
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			klassenFilter: this.data.klassenFilter,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
-			gotoEintrag: this.data.gotoEintrag
+			gotoEintrag: this.data.gotoEintrag,
+			setKlassenFilter: this.data.setKlassenFilter,
 		};
 	}
 
