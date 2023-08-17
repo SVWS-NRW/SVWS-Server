@@ -326,6 +326,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _uKursMapByLehrerId : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
+	private readonly _uKursMapBySchuelerId : HashMap<number, List<StundenplanKurs>> = new HashMap();
+
 	private readonly _uPausenzeitListNichtLeere : List<StundenplanPausenzeit> = new ArrayList();
 
 
@@ -404,6 +406,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update() : void {
+		this.updateIteriereKurs();
 		this.updateIteriereUnterricht();
 		this._uPausenzeitMinutenMin = StundenplanManager.MINUTEN_INF_POS;
 		this._uPausenzeitMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
@@ -487,8 +490,6 @@ export class StundenplanManager extends JavaObject {
 
 	private updateIteriereUnterricht() : void {
 		this._uUnterrichtHatMultiWochen = false;
-		this._uKursMapByKlasseId.clear();
-		this._uKursMapByLehrerId.clear();
 		for (const u of this._list_unterricht) {
 			if (u.wochentyp > 0)
 				this._uUnterrichtHatMultiWochen = true;
@@ -497,10 +498,22 @@ export class StundenplanManager extends JavaObject {
 			} else {
 				const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, u.idKurs);
 				for (const idKlasse of u.klassen)
-					MapUtils.getOrCreateArrayList(this._uKursMapByKlasseId, idKlasse).add(kurs);
+					if (!MapUtils.getOrCreateArrayList(this._uKursMapByKlasseId, idKlasse).contains(kurs))
+						MapUtils.getOrCreateArrayList(this._uKursMapByKlasseId, idKlasse).add(kurs);
 				for (const idLehrer of u.lehrer)
-					MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer).add(kurs);
+					if (!MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer).contains(kurs))
+						MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer).add(kurs);
 			}
+		}
+	}
+
+	private updateIteriereKurs() : void {
+		this._uKursMapByKlasseId.clear();
+		this._uKursMapByLehrerId.clear();
+		this._uKursMapBySchuelerId.clear();
+		for (const kurs of this._list_kurse) {
+			for (const idSchueler of kurs.schueler)
+				MapUtils.getOrCreateArrayList(this._uKursMapBySchuelerId, idSchueler).add(kurs);
 		}
 	}
 
@@ -1351,6 +1364,18 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public kursGetMengeByLehrerIdAsList(idLehrer : number) : List<StundenplanKurs> {
 		return MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte des Schülers.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte des Schülers.
+	 */
+	public kursGetMengeBySchuelerIdAsList(idSchueler : number) : List<StundenplanKurs> {
+		return MapUtils.getOrCreateArrayList(this._uKursMapBySchuelerId, idSchueler);
 	}
 
 	/**
