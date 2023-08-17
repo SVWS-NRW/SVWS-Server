@@ -322,7 +322,9 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _uPausenaufsichtMapByWochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private readonly _uKursMapByKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
+	private readonly _uKursMapByKlasseId : HashMap<number, List<StundenplanKurs>> = new HashMap();
+
+	private readonly _uKursMapByLehrerId : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
 	private readonly _uPausenzeitListNichtLeere : List<StundenplanPausenzeit> = new ArrayList();
 
@@ -485,7 +487,8 @@ export class StundenplanManager extends JavaObject {
 
 	private updateIteriereUnterricht() : void {
 		this._uUnterrichtHatMultiWochen = false;
-		this._uKursMapByKlasse.clear();
+		this._uKursMapByKlasseId.clear();
+		this._uKursMapByLehrerId.clear();
 		for (const u of this._list_unterricht) {
 			if (u.wochentyp > 0)
 				this._uUnterrichtHatMultiWochen = true;
@@ -494,7 +497,9 @@ export class StundenplanManager extends JavaObject {
 			} else {
 				const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, u.idKurs);
 				for (const idKlasse of u.klassen)
-					MapUtils.getOrCreateArrayList(this._uKursMapByKlasse, idKlasse).add(kurs);
+					MapUtils.getOrCreateArrayList(this._uKursMapByKlasseId, idKlasse).add(kurs);
+				for (const idLehrer of u.lehrer)
+					MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer).add(kurs);
 			}
 		}
 	}
@@ -1333,7 +1338,19 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
 	 */
 	public kursGetMengeByKlasseIdAsList(idKlasse : number) : List<StundenplanKurs> {
-		return MapUtils.getOrCreateArrayList(this._uKursMapByKlasse, idKlasse);
+		return MapUtils.getOrCreateArrayList(this._uKursMapByKlasseId, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte des Lehrers.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idLehrer  Die Datenbank-ID des Lehrers.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte des Lehrers.
+	 */
+	public kursGetMengeByLehrerIdAsList(idLehrer : number) : List<StundenplanKurs> {
+		return MapUtils.getOrCreateArrayList(this._uKursMapByLehrerId, idLehrer);
 	}
 
 	/**

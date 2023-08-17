@@ -237,7 +237,8 @@ public class StundenplanManager {
 	private int _uPausenzeitUndZeitrasterMinutenMaxOhneLeere = 480;
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _uPausenzeitMapByWochentag = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> _uPausenaufsichtMapByWochentag = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByKlasse = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByKlasseId = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByLehrerId = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _uPausenzeitListNichtLeere = new ArrayList<>();
 
 
@@ -463,7 +464,8 @@ public class StundenplanManager {
 	private void updateIteriereUnterricht() {
 		// Initialisierungen
 		_uUnterrichtHatMultiWochen = false;
-		_uKursMapByKlasse.clear();
+		_uKursMapByKlasseId.clear();
+		_uKursMapByLehrerId.clear();
 
 		// Iterieren über Unterricht
 		for (final @NotNull StundenplanUnterricht u : _list_unterricht) {
@@ -478,7 +480,9 @@ public class StundenplanManager {
 				// Kursunterricht
 				final @NotNull StundenplanKurs kurs = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, u.idKurs);
 				for (final @NotNull Long idKlasse : u.klassen)
-					MapUtils.getOrCreateArrayList(_uKursMapByKlasse, idKlasse).add(kurs);
+					MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, idKlasse).add(kurs);
+				for (final @NotNull Long idLehrer : u.lehrer)
+					MapUtils.getOrCreateArrayList(_uKursMapByLehrerId, idLehrer).add(kurs);
 			}
 		}
 	}
@@ -1380,7 +1384,19 @@ public class StundenplanManager {
 	 * @return eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
 	 */
 	public @NotNull List<@NotNull StundenplanKurs> kursGetMengeByKlasseIdAsList(final long idKlasse) {
-		return MapUtils.getOrCreateArrayList(_uKursMapByKlasse, idKlasse);
+		return MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte des Lehrers.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idLehrer  Die Datenbank-ID des Lehrers.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte des Lehrers.
+	 */
+	public @NotNull List<@NotNull StundenplanKurs> kursGetMengeByLehrerIdAsList(final long idLehrer) {
+		return MapUtils.getOrCreateArrayList(_uKursMapByLehrerId, idLehrer);
 	}
 
 	/**
