@@ -236,6 +236,7 @@ public class StundenplanManager {
 	private int _uPausenzeitUndZeitrasterMinutenMinOhneLeere = 480;
 	private int _uPausenzeitUndZeitrasterMinutenMaxOhneLeere = 480;
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _uPausenzeitMapByWochentag = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> _uPausenaufsichtMapByWochentag = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _uPausenzeitListNichtLeere = new ArrayList<>();
 
 
@@ -372,6 +373,7 @@ public class StundenplanManager {
 		_uPausenzeitUndZeitrasterMinutenMinOhneLeere = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
 		_uPausenzeitUndZeitrasterMinutenMaxOhneLeere = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
 		_uPausenzeitMapByWochentag.clear();
+		_uPausenaufsichtMapByWochentag.clear();
 		_uPausenzeitListNichtLeere.clear();
 
 		_uZeitrasterMinutenMin = MINUTEN_INF_POS;                       // Ungültiger Dummy-Wert
@@ -385,8 +387,15 @@ public class StundenplanManager {
 		_uZeitrasterMinutenMinByStunde.clear();
 		_uZeitrasterMinutenMaxByStunde.clear();
 
+		// Iterieren über Pausenaufsichten
+		for (final @NotNull StundenplanPausenaufsicht a : _list_pausenaufsichten) {
+			final @NotNull StundenplanPausenzeit p = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, a.idPausenzeit);
+			MapUtils.getOrCreateArrayList(_uPausenaufsichtMapByWochentag, p.wochentag).add(a);
+		}
+
 		// Iterieren über Pausenzeiten
 		for (final @NotNull StundenplanPausenzeit p : _list_pausenzeiten) { // Wichtig: Pausenzeiten sind sortiert!
+			MapUtils.getOrCreateArrayList(_uPausenzeitMapByWochentag, p.wochentag).add(p);
 			_uPausenzeitMinutenMin = BlockungsUtils.minVI(_uPausenzeitMinutenMin, p.beginn);
 			_uPausenzeitMinutenMax = BlockungsUtils.maxVI(_uPausenzeitMinutenMax, p.ende);
 			_uPausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(_uPausenzeitUndZeitrasterMinutenMin, p.beginn);
@@ -1633,6 +1642,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeAsList() {
 		return _list_pausenaufsichten;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Wochentages.
+	 *
+	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Wochentages.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichtGetMengeByWochentagOrEmptyList(final int wochentag) {
+		return MapUtils.getOrCreateArrayList(_uPausenaufsichtMapByWochentag, wochentag);
 	}
 
 	/**
