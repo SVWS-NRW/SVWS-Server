@@ -242,7 +242,7 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idUnterricht_zu_lehrermenge : HashMap<number, List<StundenplanLehrer>> = new HashMap();
 
-	private _unterrichtHatMultiWochen : boolean = false;
+	private _uUnterrichtHatMultiWochen : boolean = false;
 
 	private static readonly _compZeitraster : Comparator<StundenplanZeitraster> = { compare : (a: StundenplanZeitraster, b: StundenplanZeitraster) => {
 		if (a.wochentag < b.wochentag)
@@ -322,6 +322,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _uPausenaufsichtMapByWochentag : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
+	private readonly _uKursMapByKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
+
 	private readonly _uPausenzeitListNichtLeere : List<StundenplanPausenzeit> = new ArrayList();
 
 
@@ -400,12 +402,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update() : void {
-		this._unterrichtHatMultiWochen = false;
-		for (const u of this._list_unterricht)
-			if (u.wochentyp > 0) {
-				this._unterrichtHatMultiWochen = true;
-				break;
-			}
+		this.updateIteriereUnterricht();
 		this._uPausenzeitMinutenMin = StundenplanManager.MINUTEN_INF_POS;
 		this._uPausenzeitMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
 		this._uPausenzeitUndZeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
@@ -484,6 +481,22 @@ export class StundenplanManager extends JavaObject {
 		this._uZeitrasterWochentageAlsEnumRange = Array(this._uZeitrasterWochentagMax - this._uZeitrasterWochentagMin + 1).fill(null);
 		for (let i : number = 0; i < this._uZeitrasterWochentageAlsEnumRange.length; i++)
 			this._uZeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._uZeitrasterWochentagMin + i);
+	}
+
+	private updateIteriereUnterricht() : void {
+		this._uUnterrichtHatMultiWochen = false;
+		this._uKursMapByKlasse.clear();
+		for (const u of this._list_unterricht) {
+			if (u.wochentyp > 0)
+				this._uUnterrichtHatMultiWochen = true;
+			if (u.idKurs === null) {
+				// empty block
+			} else {
+				const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, u.idKurs);
+				for (const idKlasse of u.klassen)
+					MapUtils.getOrCreateArrayList(this._uKursMapByKlasse, idKlasse).add(kurs);
+			}
+		}
 	}
 
 	private aufsichtsbereichAddOhneUpdate(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
@@ -1312,6 +1325,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
+	 */
+	public kursGetMengeByKlasseIdAsList(idKlasse : number) : List<StundenplanKurs> {
+		return MapUtils.getOrCreateArrayList(this._uKursMapByKlasse, idKlasse);
+	}
+
+	/**
 	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
 	 *
 	 * @param idsKurs          Die Liste aller Kurs-IDs.
@@ -1582,6 +1607,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
 	 *
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
@@ -1591,6 +1617,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Wochentages.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
 	 *
 	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
 	 *
@@ -2503,7 +2530,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es {@link StundenplanUnterricht} gibt, der einen Wochentyp > 0 hat.
 	 */
 	public unterrichtHatMultiWochen() : boolean {
-		return this._unterrichtHatMultiWochen;
+		return this._uUnterrichtHatMultiWochen;
 	}
 
 	private unterrichtRemoveByIdOhneUpdate(idUnterricht : number) : void {

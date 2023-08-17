@@ -190,7 +190,7 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanLehrer>> _map_idUnterricht_zu_lehrermenge = new HashMap<>();
-	private boolean _unterrichtHatMultiWochen = false;
+	private boolean _uUnterrichtHatMultiWochen = false;
 
 	// StundenplanZeitraster
 	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
@@ -237,6 +237,7 @@ public class StundenplanManager {
 	private int _uPausenzeitUndZeitrasterMinutenMaxOhneLeere = 480;
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _uPausenzeitMapByWochentag = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenaufsicht>> _uPausenaufsichtMapByWochentag = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByKlasse = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _uPausenzeitListNichtLeere = new ArrayList<>();
 
 
@@ -357,15 +358,9 @@ public class StundenplanManager {
 	}
 
 	private void update() {
-		// Unterricht
-		_unterrichtHatMultiWochen = false;
-		for (final @NotNull StundenplanUnterricht u : _list_unterricht)
-			if (u.wochentyp > 0) {
-				_unterrichtHatMultiWochen = true;
-				break;
-			}
+		updateIteriereUnterricht();
 
-		// Pausenzeit & Zeitraster
+		// Initialisierungen
 		_uPausenzeitMinutenMin = MINUTEN_INF_POS;                       // Ungültiger Dummy-Wert
 		_uPausenzeitMinutenMax = MINUTEN_INF_NEG;                       // Ungültiger Dummy-Wert
 		_uPausenzeitUndZeitrasterMinutenMin = MINUTEN_INF_POS;          // Ungültiger Dummy-Wert
@@ -386,6 +381,8 @@ public class StundenplanManager {
 		_uZeitrasterStundeMaxOhneLeere = STUNDE_INF_NEG;                // Ungültiger Dummy-Wert
 		_uZeitrasterMinutenMinByStunde.clear();
 		_uZeitrasterMinutenMaxByStunde.clear();
+
+
 
 		// Iterieren über Pausenaufsichten
 		for (final @NotNull StundenplanPausenaufsicht a : _list_pausenaufsichten) {
@@ -461,6 +458,29 @@ public class StundenplanManager {
 		_uZeitrasterWochentageAlsEnumRange = new Wochentag[_uZeitrasterWochentagMax - _uZeitrasterWochentagMin + 1];
 		for (int i = 0; i < _uZeitrasterWochentageAlsEnumRange.length; i++)
 			_uZeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_uZeitrasterWochentagMin + i);
+	}
+
+	private void updateIteriereUnterricht() {
+		// Initialisierungen
+		_uUnterrichtHatMultiWochen = false;
+		_uKursMapByKlasse.clear();
+
+		// Iterieren über Unterricht
+		for (final @NotNull StundenplanUnterricht u : _list_unterricht) {
+			// _uUnterrichtHatMultiWochen
+			if (u.wochentyp > 0)
+				_uUnterrichtHatMultiWochen = true;
+
+			// _uKursMapByKlasse
+			if (u.idKurs == null) {
+				// Klassenunterricht
+			} else {
+				// Kursunterricht
+				final @NotNull StundenplanKurs kurs = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, u.idKurs);
+				for (final @NotNull Long idKlasse : u.klassen)
+					MapUtils.getOrCreateArrayList(_uKursMapByKlasse, idKlasse).add(kurs);
+			}
+		}
 	}
 
 	// #####################################################################
@@ -1351,6 +1371,17 @@ public class StundenplanManager {
 		return _list_kurse;
 	}
 
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte der Klasse.
+	 */
+	public @NotNull List<@NotNull StundenplanKurs> kursGetMengeByKlasseIdAsList(final long idKlasse) {
+		return MapUtils.getOrCreateArrayList(_uKursMapByKlasse, idKlasse);
+	}
 
 	/**
 	 * Liefert gefilterte Kurs-IDs, deren Unterricht zu (Wochentyp / Wochentag / Unterrichtsstunde) passt.
@@ -2612,7 +2643,7 @@ public class StundenplanManager {
 	 * @return TRUE, falls es {@link StundenplanUnterricht} gibt, der einen Wochentyp > 0 hat.
 	 */
 	public boolean unterrichtHatMultiWochen() {
-		return _unterrichtHatMultiWochen;
+		return _uUnterrichtHatMultiWochen;
 	}
 
 	private void unterrichtRemoveByIdOhneUpdate(final long idUnterricht) {
