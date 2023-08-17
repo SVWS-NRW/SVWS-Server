@@ -42,7 +42,6 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public class StundenplanManager {
-	// TODO refactor --> pausenaufsichtCheck(); --> patch integrate
 
 	// Static
 	private static final int MINUTEN_INF_POS = 24 * 60 + 1;
@@ -194,9 +193,7 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
 
 	// StundenplanUnterricht
-	private static final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> Long.compare(a.id, b.id);
 	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
@@ -443,12 +440,8 @@ public class StundenplanManager {
 	// #####################################################################
 
 	private void aufsichtsbereichAddOhneUpdate(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
-		// Prüfen
-		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
-		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
-		// aufsicht.beschreibung darf "blank" sein
+		aufsichtsbereichCheck(aufsichtsbereich);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idAufsichtsbereich_zu_aufsichtsbereich, aufsichtsbereich.id, aufsichtsbereich);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_aufsichtsbereiche", _list_aufsichtsbereiche, aufsichtsbereich);
 	}
@@ -476,6 +469,16 @@ public class StundenplanManager {
 			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
 		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
 		update();
+	}
+
+	// #####################################################################
+	// #################### StundenplanAufsichtsbereich ####################
+	// #####################################################################
+
+	private static void aufsichtsbereichCheck(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
+		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
+		// aufsicht.beschreibung darf "blank" sein
 	}
 
 	/**
@@ -510,6 +513,8 @@ public class StundenplanManager {
 	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void aufsichtsbereichPatchAttributes(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		aufsichtsbereichCheck(aufsichtsbereich);
+
 		final @NotNull StundenplanAufsichtsbereich old = DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, aufsichtsbereich.id);
 		old.beschreibung = aufsichtsbereich.beschreibung;
 		old.kuerzel = aufsichtsbereich.kuerzel;
@@ -550,12 +555,8 @@ public class StundenplanManager {
 	}
 
 	private void fachAddOhneUpdate(final @NotNull StundenplanFach fach) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
-		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
-		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+		fachCheck(fach);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idFach_zu_fach, fach.id, fach);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_faecher", _list_faecher, fach);
 	}
@@ -585,6 +586,12 @@ public class StundenplanManager {
 		update();
 	}
 
+	private static void fachCheck(final @NotNull StundenplanFach fach) {
+		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
+		DeveloperNotificationException.ifStringIsBlank("fach.bezeichnung", fach.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
+	}
+
 	/**
 	 * Liefert das Fach mit der übergebenen ID.
 	 *
@@ -606,12 +613,8 @@ public class StundenplanManager {
 	}
 
 	private void jahrgangAddOhneUpdate(final @NotNull StundenplanJahrgang jahrgang) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
-		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
-		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
+		jahrgangCheck(jahrgang);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idJahrgang_zu_jahrgang, jahrgang.id, jahrgang);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_jahrgaenge", _list_jahrgaenge, jahrgang);
 	}
@@ -639,6 +642,12 @@ public class StundenplanManager {
 			jahrgangAddOhneUpdate(jahrgang);
 		_list_jahrgaenge.sort(_compJahrgang);
 		update();
+	}
+
+	private static void jahrgangCheck(final @NotNull StundenplanJahrgang jahrgang) {
+		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.bezeichnung", jahrgang.bezeichnung);
+		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
 	}
 
 	/**
@@ -673,6 +682,8 @@ public class StundenplanManager {
 	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void jahrgangPatchAttributes(final @NotNull StundenplanJahrgang jahrgang) {
+		jahrgangCheck(jahrgang);
+
 		final @NotNull StundenplanJahrgang old = DeveloperNotificationException.ifMapGetIsNull(_map_idJahrgang_zu_jahrgang, jahrgang.id);
 		old.bezeichnung = jahrgang.bezeichnung;
 		old.kuerzel = jahrgang.kuerzel;
@@ -712,44 +723,9 @@ public class StundenplanManager {
 		update();
 	}
 
-	private void kalenderwochenzuordnungErzeugePseudoMenge() {
-		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(_stundenplanGueltigAb);
-		final @NotNull int[] infoBis = DateUtils.extractFromDateISO8601(_stundenplanGueltigBis);
-		final int jahrVon = infoVon[6]; // 6 = kalenderwochenjahr
-		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
-		final int kwVon = infoVon[5]; // 5 = kalenderwoche
-		final int kwBis = infoBis[5]; // 5 = kalenderwoche
-		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
-		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon == jahrBis) && (kwVon > kwBis));
-
-		final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listNeueKWZ = new ArrayList<>();
-
-		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
-			final int von = (jahr == jahrVon) ? kwVon : 1;
-			final int bis = (jahr == jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
-			for (int kw = von; kw <= bis; kw++)
-				if (!_map2d_jahr_kw_zu_kwz.contains(jahr, kw)) { // Überschreibe Objekte der DB nicht!
-					final @NotNull StundenplanKalenderwochenzuordnung kwz = new StundenplanKalenderwochenzuordnung();
-					kwz.id = -1;
-					kwz.jahr = jahr;
-					kwz.kw = kw;
-					kwz.wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
-					listNeueKWZ.add(kwz);
-				}
-		}
-
-		kalenderwochenzuordnungAddAll(listNeueKWZ);
-	}
-
 	private void kalenderwochenzuordnungAddOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		// Überprüfen
-		DeveloperNotificationException.ifTrue("kwz.id < -1", kwz.id < -1);
-		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
-		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
-		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > _stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0); // // kwz.wochentyp darf 0 sein, wegen der Pseudomenge!
+		kalenderwochenzuordnungCheck(kwz);
 
-		// Hinzufügen
 		if (kwz.id != -1)
 			DeveloperNotificationException.ifMapPutOverwrites(_map_idKWZ_zu_kwz, kwz.id, kwz);
 		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, kwz);
@@ -779,6 +755,43 @@ public class StundenplanManager {
 			kalenderwochenzuordnungAddOhneUpdate(kwz);
 		_list_kwz.sort(_compKWZ);
 		update();
+	}
+
+	private void kalenderwochenzuordnungCheck(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		DeveloperNotificationException.ifTrue("kwz.id < -1", kwz.id < -1);
+		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
+		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
+		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("kwz.wochentyp < 0", kwz.wochentyp < 0); // // kwz.wochentyp darf 0 sein, wegen der Pseudomenge!
+	}
+
+	private void kalenderwochenzuordnungErzeugePseudoMenge() {
+		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(_stundenplanGueltigAb);
+		final @NotNull int[] infoBis = DateUtils.extractFromDateISO8601(_stundenplanGueltigBis);
+		final int jahrVon = infoVon[6]; // 6 = kalenderwochenjahr
+		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
+		final int kwVon = infoVon[5]; // 5 = kalenderwoche
+		final int kwBis = infoBis[5]; // 5 = kalenderwoche
+		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
+		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon == jahrBis) && (kwVon > kwBis));
+
+		final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listNeueKWZ = new ArrayList<>();
+
+		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
+			final int von = (jahr == jahrVon) ? kwVon : 1;
+			final int bis = (jahr == jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
+			for (int kw = von; kw <= bis; kw++)
+				if (!_map2d_jahr_kw_zu_kwz.contains(jahr, kw)) { // Überschreibe Objekte der DB nicht!
+					final @NotNull StundenplanKalenderwochenzuordnung kwz = new StundenplanKalenderwochenzuordnung();
+					kwz.id = -1;
+					kwz.jahr = jahr;
+					kwz.kw = kw;
+					kwz.wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
+					listNeueKWZ.add(kwz);
+				}
+		}
+
+		kalenderwochenzuordnungAddAll(listNeueKWZ);
 	}
 
 	/**
@@ -898,6 +911,8 @@ public class StundenplanManager {
 	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void kalenderwochenzuordnungPatchAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		kalenderwochenzuordnungCheck(kwz);
+
 		final @NotNull StundenplanKalenderwochenzuordnung old = DeveloperNotificationException.ifMapGetIsNull(_map_idKWZ_zu_kwz, kwz.id);
 
 		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_jahr_kw_zu_kwz, old.jahr, old.kw);
@@ -976,16 +991,11 @@ public class StundenplanManager {
 	}
 
 	private void klasseAddOhneUpdate(final @NotNull StundenplanKlasse klasse) {
-		// Überprüfen
-		final long idKlasse = klasse.id;
-		DeveloperNotificationException.ifInvalidID("klasse.id", idKlasse);
-		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
-		// klasse.bezeichnung darf "blank" sein
+		klasseCheck(klasse);
 
-		// Hinzufügen
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klasse, idKlasse, klasse);
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klassenunterricht, idKlasse, new ArrayList<>());
-		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_unterrichtmenge, idKlasse, new ArrayList<>());
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klasse, klasse.id, klasse);
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_klassenunterricht, klasse.id, new ArrayList<>());
+		DeveloperNotificationException.ifMapPutOverwrites(_map_idKlasse_zu_unterrichtmenge, klasse.id, new ArrayList<>());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_klassen", _list_klassen, klasse);
 	}
 
@@ -1010,6 +1020,12 @@ public class StundenplanManager {
 			klasseAddOhneUpdate(klasse);
 		_list_klassen.sort(_compKlasse);
 		update();
+	}
+
+	private static void klasseCheck(final @NotNull StundenplanKlasse klasse) {
+		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
+		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
+		// klasse.bezeichnung darf "blank" sein
 	}
 
 	/**
@@ -1046,6 +1062,8 @@ public class StundenplanManager {
 	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void klassePatchAttributes(final @NotNull StundenplanKlasse klasse) {
+		klasseCheck(klasse);
+
 		final @NotNull StundenplanKlasse old = DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klasse, klasse.id);
 		old.bezeichnung = klasse.bezeichnung;
 		old.kuerzel = klasse.kuerzel;
@@ -1092,18 +1110,11 @@ public class StundenplanManager {
 	}
 
 	private void klassenunterrichtAddOhneUpdate(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
-		// Überprüfen
-		final long idKlasse = klassenunterricht.idKlasse;
-		final long idFach = klassenunterricht.idFach;
-		DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, idKlasse);
-		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, idFach);
-		for (final @NotNull Long idSchiene : klassenunterricht.schienen)
-			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchiene);
+		klassenunterrichtCheck(klassenunterricht);
 
-		// Hinzufügen
-		DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klassenunterricht, idKlasse).add(klassenunterricht);
-		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach, klassenunterricht);
-		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach, new ArrayList<>());
+		DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klassenunterricht, klassenunterricht.idKlasse).add(klassenunterricht);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_klassenunterricht, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
+		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_idKlasse_idFach_zu_unterrichtmenge, klassenunterricht.idKlasse, klassenunterricht.idFach, new ArrayList<>());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_klassenunterricht", _list_klassenunterricht, klassenunterricht);
 	}
 
@@ -1128,6 +1139,13 @@ public class StundenplanManager {
 			klassenunterrichtAddOhneUpdate(klassenunterricht);
 		_list_klassenunterricht.sort(_compKlassenunterricht);
 		update();
+	}
+
+	private void klassenunterrichtCheck(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
+		DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, klassenunterricht.idKlasse);
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, klassenunterricht.idFach);
+		for (final @NotNull Long idSchiene : klassenunterricht.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchiene);
 	}
 
 	/**
@@ -1223,17 +1241,8 @@ public class StundenplanManager {
 	}
 
 	private void kursAddOhneUpdate(final @NotNull StundenplanKurs kurs) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
-		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
-		for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
-			DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesKurses);
-		for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
-			DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDesKurses);
-		for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
-			DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
+		kursCheck(kurs);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idKurs_zu_kurs, kurs.id, kurs);
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idKurs_zu_unterrichtmenge, kurs.id, new ArrayList<>());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_kurse", _list_kurse, kurs);
@@ -1260,6 +1269,17 @@ public class StundenplanManager {
 			kursAddOhneUpdate(kurs);
 		_list_kurse.sort(_compKurs);
 		update();
+	}
+
+	private void kursCheck(final @NotNull StundenplanKurs kurs) {
+		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
+		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
+		for (final @NotNull Long idSchieneDesKurses : kurs.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_schieneID_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesKurses);
+		for (final @NotNull Long idJahrgangDesKurses : kurs.jahrgaenge)
+			DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, idJahrgangDesKurses);
+		for (final @NotNull Long idSchuelerDesKurses : kurs.schueler)
+			DeveloperNotificationException.ifMapNotContains("_map_schuelerID_zu_schueler", _map_schuelerID_zu_schueler, idSchuelerDesKurses);
 	}
 
 	/**
@@ -1379,9 +1399,12 @@ public class StundenplanManager {
 	 * @param kurs  Das neue {@link StundenplanKurs}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void kursPatchAttributtes(final @NotNull StundenplanKurs kurs) {
+		kursCheck(kurs);
+
 		final @NotNull StundenplanKurs old = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, kurs.id);
 		old.bezeichnung = kurs.bezeichnung;
 		old.wochenstunden = kurs.wochenstunden;
+
 		_list_kurse.sort(_compKurs);
 		update();
 	}
@@ -1423,13 +1446,8 @@ public class StundenplanManager {
 	}
 
 	private void lehrerAddOhneUpdate(final @NotNull StundenplanLehrer lehrer) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
-		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
+		lehrerCheck(lehrer);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idLehrer_zu_lehrer, lehrer.id, lehrer);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_lehrer", _list_lehrer, lehrer);
 	}
@@ -1455,6 +1473,13 @@ public class StundenplanManager {
 			lehrerAddOhneUpdate(lehrer);
 		_list_lehrer.sort(_compLehrer);
 		update();
+	}
+
+	private static void lehrerCheck(final @NotNull StundenplanLehrer lehrer) {
+		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
+		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
 	}
 
 	/**
@@ -1492,6 +1517,8 @@ public class StundenplanManager {
 	 * @param lehrer  Das neue {@link StundenplanLehrer}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void lehrerPatchAttributes(final @NotNull StundenplanLehrer lehrer) {
+		lehrerCheck(lehrer);
+
 		final @NotNull StundenplanLehrer old = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, lehrer.id);
 		old.kuerzel = lehrer.kuerzel;
 		old.nachname = lehrer.nachname;
@@ -1532,12 +1559,8 @@ public class StundenplanManager {
 	}
 
 	private void pausenaufsichtAddOhneUpdate(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
-		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
-		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > _stundenplanWochenTypModell));
+		pausenaufsichtCheck(pausenaufsicht);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenaufsicht_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
 		DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenaufsicht.idPausenzeit).add(pausenaufsicht);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", _list_pausenaufsichten, pausenaufsicht);
@@ -1564,6 +1587,13 @@ public class StundenplanManager {
 			pausenaufsichtAddOhneUpdate(pausenaufsicht);
 		_list_pausenaufsichten.sort(_compPausenaufsicht);
 		update();
+	}
+
+	private void pausenaufsichtCheck(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
+		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
+		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
+		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", _map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit);
+		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > _stundenplanWochenTypModell));
 	}
 
 	/**
@@ -1600,9 +1630,11 @@ public class StundenplanManager {
 	 * @param pausenaufsicht  Das neue {@link StundenplanPausenaufsicht}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void pausenaufsichtPatchAttributes(final @NotNull StundenplanPausenaufsicht pausenaufsicht) {
+		pausenaufsichtCheck(pausenaufsicht);
+
 		final @NotNull StundenplanPausenaufsicht old = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenaufsicht_zu_pausenaufsicht, pausenaufsicht.id);
-		old.idLehrer = DeveloperNotificationException.ifMapGetIsNull(_map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer).id;
-		old.idPausenzeit = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit).id;
+		old.idLehrer = pausenaufsicht.idLehrer;
+		old.idPausenzeit = pausenaufsicht.idPausenzeit;
 		old.wochentyp = pausenaufsicht.wochentyp;
 
 		_list_pausenaufsichten.sort(_compPausenaufsicht);
@@ -1631,13 +1663,8 @@ public class StundenplanManager {
 	}
 
 	private void pausenzeitAddOhneUpdate(final @NotNull StundenplanPausenzeit pausenzeit) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
-		Wochentag.fromIDorException(pausenzeit.wochentag);
-		if ((pausenzeit.beginn != null) && (pausenzeit.ende != null))
-			DeveloperNotificationException.ifTrue("pausenzeit.beginn >= pausenzeit.ende", pausenzeit.beginn >= pausenzeit.ende);
+		pausenzeitCheck(pausenzeit);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id, pausenzeit);
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idPausenzeit_zu_pausenaufsichtmenge, pausenzeit.id, new ArrayList<>());
 		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenzeiten", _list_pausenzeiten, pausenzeit);
@@ -1664,6 +1691,13 @@ public class StundenplanManager {
 			pausenzeitAddOhneUpdate(pausenzeit);
 		_list_pausenzeiten.sort(_compPausenzeit);
 		update();
+	}
+
+	private static void pausenzeitCheck(final @NotNull StundenplanPausenzeit pausenzeit) {
+		DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
+		Wochentag.fromIDorException(pausenzeit.wochentag);
+		if ((pausenzeit.beginn != null) && (pausenzeit.ende != null))
+			DeveloperNotificationException.ifTrue("pausenzeit.beginn >= pausenzeit.ende", pausenzeit.beginn >= pausenzeit.ende);
 	}
 
 	/**
@@ -1740,6 +1774,8 @@ public class StundenplanManager {
 	 * @param pausenzeit  Das neue {@link StundenplanPausenzeit}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void pausenzeitPatchAttributes(final @NotNull StundenplanPausenzeit pausenzeit) {
+		pausenzeitCheck(pausenzeit);
+
 		final @NotNull StundenplanPausenzeit old = DeveloperNotificationException.ifMapGetIsNull(_map_idPausenzeit_zu_pausenzeit, pausenzeit.id);
 		old.beginn = pausenzeit.beginn;
 		old.bezeichnung = pausenzeit.bezeichnung;
@@ -1841,17 +1877,11 @@ public class StundenplanManager {
 		return _pausenzeitUndZeitrasterMinutenMaxOhneLeere;
 	}
 
-
 	private void raumAddOhneUpdate(final @NotNull StundenplanRaum raum) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
-		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
-		// raum.beschreibung darf "blank" sein!
-		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
+		raumCheck(raum);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idRaum_zu_raum, raum.id, raum);
-		_list_raeume.add(raum);
+		DeveloperNotificationException.ifListAddsDuplicate("_list_raeume", _list_raeume, raum);
 	}
 
 	/**
@@ -1875,6 +1905,13 @@ public class StundenplanManager {
 			raumAddOhneUpdate(raum);
 		_list_raeume.sort(_compRaum);
 		update();
+	}
+
+	private static void raumCheck(final @NotNull StundenplanRaum raum) {
+		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
+		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
+		// raum.beschreibung darf "blank" sein!
+		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
 	}
 
 	/**
@@ -1910,6 +1947,8 @@ public class StundenplanManager {
 	 * @param raum  Das neue {@link StundenplanRaum}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void raumPatchAttributes(final @NotNull StundenplanRaum raum) {
+		raumCheck(raum);
+
 		final @NotNull StundenplanRaum old = DeveloperNotificationException.ifMapGetIsNull(_map_idRaum_zu_raum, raum.id);
 		old.beschreibung = raum.beschreibung;
 		old.groesse = raum.groesse;
@@ -1950,13 +1989,8 @@ public class StundenplanManager {
 	}
 
 	private void schieneAddOhneUpdate(final @NotNull StundenplanSchiene schiene) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
-		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
-		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
-		DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, schiene.idJahrgang);
+		schieneCheck(schiene);
 
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idSchiene_zu_schiene, schiene.id, schiene);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_schienen", _list_schienen, schiene);
 	}
@@ -1984,14 +2018,16 @@ public class StundenplanManager {
 		update();
 	}
 
-	private void schuelerAddOhneUpdate(final @NotNull StundenplanSchueler schueler) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
-		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
-		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
-		DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", _map_idKlasse_zu_klasse, schueler.idKlasse);
+	private void schieneCheck(final @NotNull StundenplanSchiene schiene) {
+		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
+		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
+		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
+		DeveloperNotificationException.ifMapNotContains("_map_jahrgangID_zu_jahrgang", _map_idJahrgang_zu_jahrgang, schiene.idJahrgang);
+	}
 
-		// Hinzufügen
+	private void schuelerAddOhneUpdate(final @NotNull StundenplanSchueler schueler) {
+		schuelerCheck(schueler);
+
 		DeveloperNotificationException.ifMapPutOverwrites(_map_schuelerID_zu_schueler, schueler.id, schueler);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_schueler", _list_schueler, schueler);
 	}
@@ -2017,6 +2053,13 @@ public class StundenplanManager {
 			schuelerAddOhneUpdate(schueler);
 		_list_schueler.sort(_compSchueler);
 		update();
+	}
+
+	private void schuelerCheck(final @NotNull StundenplanSchueler schueler) {
+		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
+		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
+		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
+		DeveloperNotificationException.ifMapNotContains("_map_klasseID_zu_klasse", _map_idKlasse_zu_klasse, schueler.idKlasse);
 	}
 
 	/**
@@ -2124,23 +2167,8 @@ public class StundenplanManager {
 	}
 
 	private void unterrichtAddOhneUpdate(final @NotNull StundenplanUnterricht u) {
-		// Überprüfen
-		DeveloperNotificationException.ifInvalidID("u.id", u.id);
-		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_idZeitraster_zu_zeitraster, u.idZeitraster);
-		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > _stundenplanWochenTypModell);
-		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
+		unterrichtCheck(u);
 
-		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, u.idFach);
-		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
-			DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
-		for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
-			DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
-		for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
-			DeveloperNotificationException.ifMapNotContains("_map_idRaum_zu_raum", _map_idRaum_zu_raum, idRaumDesUnterrichts);
-		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
-			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
-
-		// Hinzufügen
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idUnterricht_zu_unterricht, u.id, u);
 		DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, u.idZeitraster).add(u);
 		Map2DUtils.getOrCreateArrayList(_map2d_idZeitraster_wochentyp_zu_unterrichtmenge, u.idZeitraster, u.wochentyp).add(u);
@@ -2185,6 +2213,23 @@ public class StundenplanManager {
 			unterrichtAddOhneUpdate(unterricht);
 		_list_unterricht.sort(_compUnterricht);
 		update();
+	}
+
+	private void unterrichtCheck(final @NotNull StundenplanUnterricht u) {
+		DeveloperNotificationException.ifInvalidID("u.id", u.id);
+		DeveloperNotificationException.ifMapNotContains("_map_zeitrasterID_zu_zeitraster", _map_idZeitraster_zu_zeitraster, u.idZeitraster);
+		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > _stundenplanWochenTypModell);
+		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
+
+		DeveloperNotificationException.ifMapNotContains("_map_idFach_zu_fach", _map_idFach_zu_fach, u.idFach);
+		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)
+			DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", _map_idLehrer_zu_lehrer, idLehrkraftDesUnterrichts);
+		for (final @NotNull Long idKlasseDesUnterrichts : u.klassen)
+			DeveloperNotificationException.ifMapNotContains("_map_idKlasse_zu_klasse", _map_idKlasse_zu_klasse, idKlasseDesUnterrichts);
+		for (final @NotNull Long idRaumDesUnterrichts : u.raeume)
+			DeveloperNotificationException.ifMapNotContains("_map_idRaum_zu_raum", _map_idRaum_zu_raum, idRaumDesUnterrichts);
+		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
+			DeveloperNotificationException.ifMapNotContains("_map_idSchiene_zu_schiene", _map_idSchiene_zu_schiene, idSchieneDesUnterrichts);
 	}
 
 	/**
@@ -2701,17 +2746,8 @@ public class StundenplanManager {
 	}
 
 	private void zeitrasterAddOhneUpdate(final @NotNull StundenplanZeitraster zeitraster) {
-		// Prüfen.
-		DeveloperNotificationException.ifInvalidID("zeit.id", zeitraster.id);
-		Wochentag.fromIDorException(zeitraster.wochentag);
-		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
-		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
-			final int beginn = zeitraster.stundenbeginn;
-			final int ende = zeitraster.stundenende;
-			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
-		}
+		zeitrasterCheck(zeitraster);
 
-		// Hinzufügen.
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_zeitraster, zeitraster.id, zeitraster);
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idZeitraster_zu_unterrichtmenge, zeitraster.id, new ArrayList<>());
 		DeveloperNotificationException.ifMap2DPutOverwrites(_map2d_wochentag_stunde_zu_zeitraster, zeitraster.wochentag, zeitraster.unterrichtstunde, zeitraster);
@@ -2741,6 +2777,17 @@ public class StundenplanManager {
 			zeitrasterAddOhneUpdate(zeitraster);
 		_list_zeitraster.sort(_compZeitraster);
 		update();
+	}
+
+	private static void zeitrasterCheck(final @NotNull StundenplanZeitraster zeitraster) {
+		DeveloperNotificationException.ifInvalidID("zeit.id", zeitraster.id);
+		Wochentag.fromIDorException(zeitraster.wochentag);
+		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
+		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
+			final int beginn = zeitraster.stundenbeginn;
+			final int ende = zeitraster.stundenende;
+			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+		}
 	}
 
 	/**
@@ -3061,6 +3108,8 @@ public class StundenplanManager {
 	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void zeitrasterPatchAttributes(final @NotNull StundenplanZeitraster zeitraster) {
+		zeitrasterCheck(zeitraster);
+
 		final @NotNull StundenplanZeitraster old = DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_zeitraster, zeitraster.id);
 
 		DeveloperNotificationException.ifMap2DRemoveFailes(_map2d_wochentag_stunde_zu_zeitraster, old.wochentag, old.unterrichtstunde);
