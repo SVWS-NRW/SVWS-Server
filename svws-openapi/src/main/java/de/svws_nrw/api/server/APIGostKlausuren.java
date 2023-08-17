@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformatio
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
@@ -43,6 +44,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die
@@ -300,35 +302,6 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
 			return (new DataGostKlausurenKursklausur(conn, -1).patch(id, is));
-		}
-	}
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage der Klausuren eines Abiturjahrgangs in
-	 * einem bestimmten Halbjahr der Gymnasialen Oberstufe.
-	 *
-	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt
-	 *                   werden soll
-	 * @param blockung die Klausurblockung
-	 * @param request    die Informationen zur HTTP-Anfrage
-	 *
-	 * @return die Liste der Gost-Kursklausuren
-	 */
-	@POST
-	@Path("/kursklausuren/blocken")
-	@Operation(summary = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus.", description = "Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostKursklausur.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
-	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.")
-	public Response blockGostKlausurenKursklausuren(
-			@PathParam("schema") final String schema,
-			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<List<Long>> blockung,
-			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return DataGostKlausurenKursklausur.persistBlockung(conn, blockung);
 		}
 	}
 
@@ -804,6 +777,31 @@ public class APIGostKlausuren {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
 			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).setzeRaumZuSchuelerklausuren(raumid, schuelerklausurIds);
+		}
+	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param schema     das Datenbankschema
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param blockungDaten         die Ids der GostSchuelerklausuren
+	 * @return die HTTP-Antwort
+	 */
+	@POST
+	@Path("/kursklausuren/blocken")
+	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response blockenGostKursklausuren(
+			@PathParam("schema") final String schema,
+			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.blocken(conn, blockungDaten)).build();
 		}
 	}
 

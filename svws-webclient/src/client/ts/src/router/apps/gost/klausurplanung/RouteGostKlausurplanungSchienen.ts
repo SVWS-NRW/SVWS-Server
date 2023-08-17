@@ -48,7 +48,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
-			//persistKlausurblockung: routeGostKlausurplanung.data.persistKlausurblockung,
+			blockenKursklausuren: routeGostKlausurplanung.data.blockenKursklausuren,
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			kursmanager: routeGostKlausurplanung.data.kursManager,

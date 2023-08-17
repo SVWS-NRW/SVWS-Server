@@ -1,6 +1,6 @@
 import { computed, shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
@@ -429,13 +429,13 @@ export class RouteDataGostKlausurplanung {
 		return collectionSkrsKrs;
 	}
 
-	/*persistKlausurblockung = async (blockung: List<List<number>>): Promise<boolean> => {
+	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten): Promise<boolean> => {
 		api.status.start();
-		await api.server.blockGostKlausurenKursklausuren(blockung, api.schema);
+		await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
 		await this.reloadKursklausurmanager(null);
 		this.commit();
 		api.status.stop();
 		return true;
-	}*/
+	}
 
 }

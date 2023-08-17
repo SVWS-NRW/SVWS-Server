@@ -121,7 +121,8 @@
 		daten.konfiguration.algorithmus = algMode.value.id;
 		daten.konfiguration.modusKursarten = lkgkMode.value.id;
 		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
-		const blockAlgo = new KlausurterminblockungAlgorithmus();
+		await props.blockenKursklausuren(daten);
+		/*	const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
 		const ergebnis = blockAlgo.apply(daten);
 		// await props.persistKlausurblockung(ergebnis);
@@ -135,7 +136,7 @@
 				await props.setTerminToKursklausur(termin.id, klausur);
 				// }
 			}
-		}
+		}*/
 		loading.value = false;
 	};
 

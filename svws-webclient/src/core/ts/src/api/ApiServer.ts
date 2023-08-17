@@ -53,6 +53,7 @@ import { GostKlausurenKalenderinformation } from '../core/data/gost/klausurplanu
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumstunde } from '../core/data/gost/klausurplanung/GostKlausurraumstunde';
 import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
+import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
 import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostKursklausur } from '../core/data/gost/klausurplanung/GostKursklausur';
 import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
@@ -4208,31 +4209,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode blockGostKlausurenKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/blocken
+	 * Implementierung der POST-Methode blockenGostKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/blocken
 	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Kursklausuren.
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKursklausur>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {GostKlausurterminblockungDaten} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Liste der Kursklausuren.
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockGostKlausurenKursklausuren(data : List<number>, schema : string) : Promise<List<GostKursklausur>> {
+	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/blocken"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKursklausur>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
 	}
 
 
