@@ -45,7 +45,11 @@ publish:
     only:
         refs:
             - 1115-gradle-build-verbesserung-des-release-prozesses
-    script: ./deployment/cipublish.sh
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/tmp/sec'
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - ls /tmp/sec
     when: on_success
 
 integration-tests:
