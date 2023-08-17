@@ -144,8 +144,7 @@
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
 			@input="debouncedOnInput"
-			@blur="onBlurInput"
-			@focus="debouncedOnInput">
+			@blur="onBlurInput">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"
