@@ -91,8 +91,8 @@
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
 						@drop="dropKursAtSchiene(kurs, schiene)">
-						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable ... -->
-						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="true" :key="kurs.id"
+						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
+						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
 							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black cursor-grab"
 							:class="{
 								'cursor-grabbing': dragDataKursSchiene !== undefined,
@@ -103,7 +103,7 @@
 							}"
 							@dragstart="dragKursStarted(kurs, schiene)" @dragend="dragKursEnded()" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
-							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
 							<div class="icon cursor-pointer group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
@@ -119,8 +119,8 @@
 							<template v-if="dragDataKursSchiene !== undefined">
 								<div v-if="dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
 							</template>
-							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block !opacity-100" /> </div>
-							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
+							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-100" /> </div>
+							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
 						</div>
 					</div>
 					<!-- ... oder das Element in der Zelle ist nicht für Drag & Drop gedacht -->
@@ -133,7 +133,7 @@
 							}">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<div class="icon absolute right-1" v-if="istKursFixiertInSchiene(kurs, schiene).value"> <i-ri-pushpin-fill class="inline-block" /> </div>
-							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock2-line class="inline-block" /> </div>
+							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block" /> </div>
 						</div>
 					</div>
 				</template>
@@ -367,6 +367,8 @@
 		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
 			return false;
 		if (!props.allowRegeln && (dragDataKursSchiene.value.kurs.id !== kurs.id))
+			return false;
+		if (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
 			return false;
 		return true;
 	});
