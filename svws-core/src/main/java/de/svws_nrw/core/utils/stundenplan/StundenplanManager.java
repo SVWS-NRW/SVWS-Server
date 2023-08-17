@@ -217,6 +217,7 @@ public class StundenplanManager {
 
 	// Attribute, die durch update() aktualisiert werden.
 	private @NotNull int @NotNull [] _uZeitrasterStundenRange = new int[] {1};
+	private @NotNull int @NotNull [] _uZeitrasterStundenRangeOhneLeere = new int[] {1};
 	private final @NotNull HashMap<@NotNull Integer, Integer> _uZeitrasterMinutenMinByStunde = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Integer, Integer> _uZeitrasterMinutenMaxByStunde = new HashMap<>();
 	private @NotNull Wochentag @NotNull [] _uZeitrasterWochentageAlsEnumRange = new Wochentag[] {Wochentag.MONTAG};
@@ -235,6 +236,7 @@ public class StundenplanManager {
 	private int _uPausenzeitUndZeitrasterMinutenMinOhneLeere = 480;
 	private int _uPausenzeitUndZeitrasterMinutenMaxOhneLeere = 480;
 	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull StundenplanPausenzeit>> _uPausenzeitMapByWochentag = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanPausenzeit> _uPausenzeitListNichtLeere = new ArrayList<>();
 
 
 	/**
@@ -370,6 +372,7 @@ public class StundenplanManager {
 		_uPausenzeitUndZeitrasterMinutenMinOhneLeere = MINUTEN_INF_POS; // Ungültiger Dummy-Wert
 		_uPausenzeitUndZeitrasterMinutenMaxOhneLeere = MINUTEN_INF_NEG; // Ungültiger Dummy-Wert
 		_uPausenzeitMapByWochentag.clear();
+		_uPausenzeitListNichtLeere.clear();
 
 		_uZeitrasterMinutenMin = MINUTEN_INF_POS;                       // Ungültiger Dummy-Wert
 		_uZeitrasterMinutenMax = MINUTEN_INF_NEG;                       // Ungültiger Dummy-Wert
@@ -393,6 +396,7 @@ public class StundenplanManager {
 			if (!listPA.isEmpty()) {
 				_uPausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(_uPausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
 				_uPausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(_uPausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
+				_uPausenzeitListNichtLeere.add(p);
 			}
 		}
 
@@ -438,6 +442,11 @@ public class StundenplanManager {
 		_uZeitrasterStundenRange = new int[_uZeitrasterStundeMax - _uZeitrasterStundeMin + 1];
 		for (int i = 0; i < _uZeitrasterStundenRange.length; i++)
 			_uZeitrasterStundenRange[i] = _uZeitrasterStundeMin + i;
+
+		// _uZeitrasterStundenRangeOhneLeere
+		_uZeitrasterStundenRangeOhneLeere = new int[_uZeitrasterStundeMaxOhneLeere - _uZeitrasterStundeMinOhneLeere + 1];
+		for (int i = 0; i < _uZeitrasterStundenRangeOhneLeere.length; i++)
+			_uZeitrasterStundenRangeOhneLeere[i] = _uZeitrasterStundeMinOhneLeere + i;
 
 		// _zeitrasterWochentageAlsEnumRange
 		_uZeitrasterWochentageAlsEnumRange = new Wochentag[_uZeitrasterWochentagMax - _uZeitrasterWochentagMin + 1];
@@ -1771,6 +1780,16 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte, die mindestens eine {@link StundenplanPausenaufsicht} beinhalten.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte, die mindestens eine {@link StundenplanPausenaufsicht} beinhalten.
+	 */
+	public @NotNull List<@NotNull StundenplanPausenzeit> pausenzeitGetMengeNichtLeereAsList() {
+		return _uPausenzeitListNichtLeere;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanPausenzeit}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanPausenzeit#id}
@@ -3019,6 +3038,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull int @NotNull [] zeitrasterGetStundenRange() {
 		return _uZeitrasterStundenRange;
+	}
+
+	/**
+	 * Liefert alle verwendeten sortierten Unterrichtsstunden der nicht leeren {@link StundenplanZeitraster}.
+	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMinOhneLeere()} bis {@link #zeitrasterGetStundeMaxOhneLeere()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten Unterrichtsstunden der nicht leeren {@link StundenplanZeitraster}.
+	 */
+	public @NotNull int @NotNull [] zeitrasterGetStundenRangeOhneLeere() {
+		return _uZeitrasterStundenRangeOhneLeere;
 	}
 
 	/**

@@ -282,6 +282,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _uZeitrasterStundenRange : Array<number> = [1];
 
+	private _uZeitrasterStundenRangeOhneLeere : Array<number> = [1];
+
 	private readonly _uZeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
 
 	private readonly _uZeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
@@ -317,6 +319,8 @@ export class StundenplanManager extends JavaObject {
 	private _uPausenzeitUndZeitrasterMinutenMaxOhneLeere : number = 480;
 
 	private readonly _uPausenzeitMapByWochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+
+	private readonly _uPausenzeitListNichtLeere : List<StundenplanPausenzeit> = new ArrayList();
 
 
 	/**
@@ -407,6 +411,7 @@ export class StundenplanManager extends JavaObject {
 		this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = StundenplanManager.MINUTEN_INF_POS;
 		this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = StundenplanManager.MINUTEN_INF_NEG;
 		this._uPausenzeitMapByWochentag.clear();
+		this._uPausenzeitListNichtLeere.clear();
 		this._uZeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
 		this._uZeitrasterMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
 		this._uZeitrasterWochentagMin = StundenplanManager.WOCHENTAG_INF_POS;
@@ -426,6 +431,7 @@ export class StundenplanManager extends JavaObject {
 			if (!listPA.isEmpty()) {
 				this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(this._uPausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
 				this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
+				this._uPausenzeitListNichtLeere.add(p);
 			}
 		}
 		for (const z of this._list_zeitraster) {
@@ -464,6 +470,9 @@ export class StundenplanManager extends JavaObject {
 		this._uZeitrasterStundenRange = Array(this._uZeitrasterStundeMax - this._uZeitrasterStundeMin + 1).fill(0);
 		for (let i : number = 0; i < this._uZeitrasterStundenRange.length; i++)
 			this._uZeitrasterStundenRange[i] = this._uZeitrasterStundeMin + i;
+		this._uZeitrasterStundenRangeOhneLeere = Array(this._uZeitrasterStundeMaxOhneLeere - this._uZeitrasterStundeMinOhneLeere + 1).fill(0);
+		for (let i : number = 0; i < this._uZeitrasterStundenRangeOhneLeere.length; i++)
+			this._uZeitrasterStundenRangeOhneLeere[i] = this._uZeitrasterStundeMinOhneLeere + i;
 		this._uZeitrasterWochentageAlsEnumRange = Array(this._uZeitrasterWochentagMax - this._uZeitrasterWochentagMin + 1).fill(null);
 		for (let i : number = 0; i < this._uZeitrasterWochentageAlsEnumRange.length; i++)
 			this._uZeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._uZeitrasterWochentagMin + i);
@@ -1708,6 +1717,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte, die mindestens eine {@link StundenplanPausenaufsicht} beinhalten.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte, die mindestens eine {@link StundenplanPausenaufsicht} beinhalten.
+	 */
+	public pausenzeitGetMengeNichtLeereAsList() : List<StundenplanPausenzeit> {
+		return this._uPausenzeitListNichtLeere;
+	}
+
+	/**
 	 * Aktualisiert das vorhandene {@link StundenplanPausenzeit}-Objekt durch das neue Objekt.
 	 * <br>Die folgenden Attribute werden nicht aktualisiert:
 	 * <br>{@link StundenplanPausenzeit#id}
@@ -2893,6 +2912,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public zeitrasterGetStundenRange() : Array<number> {
 		return this._uZeitrasterStundenRange;
+	}
+
+	/**
+	 * Liefert alle verwendeten sortierten Unterrichtsstunden der nicht leeren {@link StundenplanZeitraster}.
+	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMinOhneLeere()} bis {@link #zeitrasterGetStundeMaxOhneLeere()}.
+	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
+	 *
+	 * @return alle verwendeten sortierten Unterrichtsstunden der nicht leeren {@link StundenplanZeitraster}.
+	 */
+	public zeitrasterGetStundenRangeOhneLeere() : Array<number> {
+		return this._uZeitrasterStundenRangeOhneLeere;
 	}
 
 	/**
