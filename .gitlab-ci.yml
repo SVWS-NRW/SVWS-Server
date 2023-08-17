@@ -50,7 +50,7 @@ publish:
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         #/builds/svws/SVWS-Server/
-        - docker login
+        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - ./gradlew ciPublishAll
     when: on_success
 
