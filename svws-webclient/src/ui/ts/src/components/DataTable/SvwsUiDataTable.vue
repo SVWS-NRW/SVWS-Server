@@ -284,7 +284,7 @@
 
 	const {columnsComputed, gridTemplateColumns} = useColumns(props);
 
-	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(8rem, 1fr))');
+	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(0, 1fr))');
 
 	const {rowsComputed} = useRows(columnsComputed, props);
 
