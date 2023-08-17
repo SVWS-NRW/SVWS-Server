@@ -1,9 +1,7 @@
 import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag} from "@core";
-import { Wochentag } from "@core";
-import { StundenplanZeitraster } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
 
 import { shallowRef } from "vue";
 import { useDebounceFn } from "@vueuse/core";
@@ -13,7 +11,6 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { arrayBuffer } from "stream/consumers";
 
 interface RouteStateStundenplan {
 	auswahl: StundenplanListeEintrag | undefined;
