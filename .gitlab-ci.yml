@@ -49,7 +49,8 @@ publish:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        #/builds/svws/SVWS-Server/tmp/sec/gradle.properties
+        #/builds/svws/SVWS-Server/
+        - docker login
         - ./gradlew ciPublishAll
     when: on_success
 
