@@ -120,6 +120,22 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idKlasse_zu_unterrichtmenge : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
+	private static readonly _compKlassenunterricht : Comparator<StundenplanKlassenunterricht> = { compare : (a: StundenplanKlassenunterricht, b: StundenplanKlassenunterricht) => {
+		if (a.idKlasse < b.idKlasse)
+			return -1;
+		if (a.idKlasse > b.idKlasse)
+			return +1;
+		if (a.idFach < b.idFach)
+			return -1;
+		if (a.idFach > b.idFach)
+			return +1;
+		if (a.wochenstunden < b.wochenstunden)
+			return -1;
+		if (a.wochenstunden > b.wochenstunden)
+			return +1;
+		return JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+	} };
+
 	private readonly _list_klassenunterricht : List<StundenplanKlassenunterricht> = new ArrayList();
 
 	private readonly _map2d_idKlasse_idFach_zu_klassenunterricht : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
@@ -196,13 +212,43 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idRaum_zu_raum : HashMap<number, StundenplanRaum> = new HashMap();
 
+	private static readonly _compSchiene : Comparator<StundenplanSchiene> = { compare : (a: StundenplanSchiene, b: StundenplanSchiene) => {
+		if (a.idJahrgang < b.idJahrgang)
+			return -1;
+		if (a.idJahrgang > b.idJahrgang)
+			return +1;
+		if (a.nummer < b.nummer)
+			return -1;
+		if (a.nummer > b.nummer)
+			return +1;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_schienen : List<StundenplanSchiene> = new ArrayList();
 
 	private readonly _map_idSchiene_zu_schiene : HashMap<number, StundenplanSchiene> = new HashMap();
 
+	private static readonly _compSchueler : Comparator<StundenplanSchueler> = { compare : (a: StundenplanSchueler, b: StundenplanSchueler) => {
+		if (a.idKlasse < b.idKlasse)
+			return -1;
+		if (a.idKlasse > b.idKlasse)
+			return +1;
+		const cmpNachname : number = JavaString.compareTo(a.nachname, b.nachname);
+		if (cmpNachname !== 0)
+			return cmpNachname;
+		const cmpVorname : number = JavaString.compareTo(a.vorname, b.vorname);
+		if (cmpVorname !== 0)
+			return cmpVorname;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_schueler : List<StundenplanSchueler> = new ArrayList();
 
 	private readonly _map_schuelerID_zu_schueler : HashMap<number, StundenplanSchueler> = new HashMap();
+
+	private static readonly _compUnterricht : Comparator<StundenplanUnterricht> = { compare : (a: StundenplanUnterricht, b: StundenplanUnterricht) => {
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 	private readonly _list_unterricht : List<StundenplanUnterricht> = new ArrayList();
 
@@ -1032,6 +1078,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public klassenunterrichtAdd(klassenunterricht : StundenplanKlassenunterricht) : void {
 		this.klassenunterrichtAddOhneUpdate(klassenunterricht);
+		this._list_klassenunterricht.sort(StundenplanManager._compKlassenunterricht);
 		this.update();
 	}
 
@@ -1043,6 +1090,7 @@ export class StundenplanManager extends JavaObject {
 	private klassenunterrichtAddAll(listKlassenunterricht : List<StundenplanKlassenunterricht>) : void {
 		for (const klassenunterricht of listKlassenunterricht)
 			this.klassenunterrichtAddOhneUpdate(klassenunterricht);
+		this._list_klassenunterricht.sort(StundenplanManager._compKlassenunterricht);
 		this.update();
 	}
 
@@ -1832,6 +1880,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public schieneAdd(schiene : StundenplanSchiene) : void {
 		this.schieneAddOhneUpdate(schiene);
+		this._list_schienen.sort(StundenplanManager._compSchiene);
 		this.update();
 	}
 
@@ -1843,6 +1892,7 @@ export class StundenplanManager extends JavaObject {
 	public schieneAddAll(listSchiene : List<StundenplanSchiene>) : void {
 		for (const schiene of listSchiene)
 			this.schieneAddOhneUpdate(schiene);
+		this._list_schienen.sort(StundenplanManager._compSchiene);
 		this.update();
 	}
 
@@ -1862,6 +1912,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public schuelerAdd(schueler : StundenplanSchueler) : void {
 		this.schuelerAddOhneUpdate(schueler);
+		this._list_schueler.sort(StundenplanManager._compSchueler);
 		this.update();
 	}
 
@@ -1873,6 +1924,7 @@ export class StundenplanManager extends JavaObject {
 	public schuelerAddAll(listSchueler : List<StundenplanSchueler>) : void {
 		for (const schueler of listSchueler)
 			this.schuelerAddOhneUpdate(schueler);
+		this._list_schueler.sort(StundenplanManager._compSchueler);
 		this.update();
 	}
 
@@ -2020,6 +2072,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtAdd(unterricht : StundenplanUnterricht) : void {
 		this.unterrichtAddOhneUpdate(unterricht);
+		this._list_unterricht.sort(StundenplanManager._compUnterricht);
 		this.update();
 	}
 
@@ -2031,6 +2084,7 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtAddAll(listUnterricht : List<StundenplanUnterricht>) : void {
 		for (const unterricht of listUnterricht)
 			this.unterrichtAddOhneUpdate(unterricht);
+		this._list_unterricht.sort(StundenplanManager._compUnterricht);
 		this.update();
 	}
 

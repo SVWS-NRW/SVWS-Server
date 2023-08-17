@@ -43,7 +43,6 @@ import jakarta.validation.constraints.NotNull;
  */
 public class StundenplanManager {
 	// TODO refactor --> pausenaufsichtCheck(); --> patch integrate
-	// TODO refactor --> alle haben comparatoren
 
 	// Static
 	private static final int MINUTEN_INF_POS = 24 * 60 + 1;
@@ -106,6 +105,15 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map_idKlasse_zu_unterrichtmenge = new HashMap<>();
 
 	// StundenplanKlassenunterricht
+	private static final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> _compKlassenunterricht = (final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
+		if (a.idKlasse < b.idKlasse) return -1;
+		if (a.idKlasse > b.idKlasse) return +1;
+		if (a.idFach < b.idFach) return -1;
+		if (a.idFach > b.idFach) return +1;
+		if (a.wochenstunden < b.wochenstunden) return -1;
+		if (a.wochenstunden > b.wochenstunden) return +1;
+		return a.bezeichnung.compareTo(b.bezeichnung);
+	};
 	private final @NotNull List<@NotNull StundenplanKlassenunterricht> _list_klassenunterricht = new ArrayList<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _map2d_idKlasse_idFach_zu_klassenunterricht = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idKlasse_idFach_zu_unterrichtmenge = new HashMap2D<>();
@@ -162,14 +170,33 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanRaum> _map_idRaum_zu_raum = new HashMap<>();
 
 	// StundenplanSchiene
+	private static final @NotNull Comparator<@NotNull StundenplanSchiene> _compSchiene = (final @NotNull StundenplanSchiene a, final @NotNull StundenplanSchiene b) -> {
+		if (a.idJahrgang < b.idJahrgang) return -1;
+		if (a.idJahrgang > b.idJahrgang) return +1;
+		if (a.nummer < b.nummer) return -1;
+		if (a.nummer > b.nummer) return +1;
+		return Long.compare(a.id, b.id);
+	};
 	private final @NotNull List<@NotNull StundenplanSchiene> _list_schienen = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchiene> _map_idSchiene_zu_schiene = new HashMap<>();
 
 	// StundenplanSchueler
+	private static final @NotNull Comparator<@NotNull StundenplanSchueler> _compSchueler = (final @NotNull StundenplanSchueler a, final @NotNull StundenplanSchueler b) -> {
+		if (a.idKlasse < b.idKlasse) return -1;
+		if (a.idKlasse > b.idKlasse) return +1;
+		final int cmpNachname = a.nachname.compareTo(b.nachname);
+		if (cmpNachname != 0) return cmpNachname;
+		final int cmpVorname = a.vorname.compareTo(b.vorname);
+		if (cmpVorname != 0) return cmpVorname;
+		return Long.compare(a.id, b.id);
+	};
 	private final @NotNull List<@NotNull StundenplanSchueler> _list_schueler = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanSchueler> _map_schuelerID_zu_schueler = new HashMap<>();
 
 	// StundenplanUnterricht
+	private static final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
+		return Long.compare(a.id, b.id);
+	};
 	private final @NotNull List<@NotNull StundenplanUnterricht> _list_unterricht = new ArrayList<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanUnterricht> _map_idUnterricht_zu_unterricht = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull List<@NotNull StundenplanUnterricht>> _map2d_idZeitraster_wochentyp_zu_unterrichtmenge = new HashMap2D<>();
@@ -486,6 +513,7 @@ public class StundenplanManager {
 		final @NotNull StundenplanAufsichtsbereich old = DeveloperNotificationException.ifMapGetIsNull(_map_idAufsichtsbereich_zu_aufsichtsbereich, aufsichtsbereich.id);
 		old.beschreibung = aufsichtsbereich.beschreibung;
 		old.kuerzel = aufsichtsbereich.kuerzel;
+
 		_list_aufsichtsbereiche.sort(_compAufsichtsbereich);
 		update();
 	}
@@ -648,6 +676,7 @@ public class StundenplanManager {
 		final @NotNull StundenplanJahrgang old = DeveloperNotificationException.ifMapGetIsNull(_map_idJahrgang_zu_jahrgang, jahrgang.id);
 		old.bezeichnung = jahrgang.bezeichnung;
 		old.kuerzel = jahrgang.kuerzel;
+
 		_list_jahrgaenge.sort(_compJahrgang);
 		update();
 	}
@@ -1020,6 +1049,7 @@ public class StundenplanManager {
 		final @NotNull StundenplanKlasse old = DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klasse, klasse.id);
 		old.bezeichnung = klasse.bezeichnung;
 		old.kuerzel = klasse.kuerzel;
+
 		_list_klassen.sort(_compKlasse);
 		update();
 	}
@@ -1084,6 +1114,7 @@ public class StundenplanManager {
 	 */
 	public void klassenunterrichtAdd(final @NotNull StundenplanKlassenunterricht klassenunterricht) {
 		klassenunterrichtAddOhneUpdate(klassenunterricht);
+		_list_klassenunterricht.sort(_compKlassenunterricht);
 		update();
 	}
 
@@ -1095,6 +1126,7 @@ public class StundenplanManager {
 	private void klassenunterrichtAddAll(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
 			klassenunterrichtAddOhneUpdate(klassenunterricht);
+		_list_klassenunterricht.sort(_compKlassenunterricht);
 		update();
 	}
 
@@ -1464,6 +1496,7 @@ public class StundenplanManager {
 		old.kuerzel = lehrer.kuerzel;
 		old.nachname = lehrer.nachname;
 		old.vorname = lehrer.vorname;
+
 		_list_lehrer.sort(_compLehrer);
 		update();
 	}
@@ -1712,6 +1745,7 @@ public class StundenplanManager {
 		old.bezeichnung = pausenzeit.bezeichnung;
 		old.ende = pausenzeit.ende;
 		old.wochentag = pausenzeit.wochentag;
+
 		_list_pausenzeiten.sort(_compPausenzeit);
 		update();
 	}
@@ -1880,6 +1914,7 @@ public class StundenplanManager {
 		old.beschreibung = raum.beschreibung;
 		old.groesse = raum.groesse;
 		old.kuerzel = raum.kuerzel;
+
 		_list_raeume.sort(_compRaum);
 		update();
 	}
@@ -1933,6 +1968,7 @@ public class StundenplanManager {
 	 */
 	public void schieneAdd(final @NotNull StundenplanSchiene schiene) {
 		schieneAddOhneUpdate(schiene);
+		_list_schienen.sort(_compSchiene);
 		update();
 	}
 
@@ -1944,6 +1980,7 @@ public class StundenplanManager {
 	public void schieneAddAll(final @NotNull List<@NotNull StundenplanSchiene> listSchiene) {
 		for (final @NotNull StundenplanSchiene schiene : listSchiene)
 			schieneAddOhneUpdate(schiene);
+		_list_schienen.sort(_compSchiene);
 		update();
 	}
 
@@ -1966,6 +2003,7 @@ public class StundenplanManager {
 	 */
 	public void schuelerAdd(final @NotNull StundenplanSchueler schueler) {
 		schuelerAddOhneUpdate(schueler);
+		_list_schueler.sort(_compSchueler);
 		update();
 	}
 
@@ -1977,6 +2015,7 @@ public class StundenplanManager {
 	public void schuelerAddAll(final @NotNull List<@NotNull StundenplanSchueler> listSchueler) {
 		for (final @NotNull StundenplanSchueler schueler : listSchueler)
 			schuelerAddOhneUpdate(schueler);
+		_list_schueler.sort(_compSchueler);
 		update();
 	}
 
@@ -2132,6 +2171,7 @@ public class StundenplanManager {
 	 */
 	public void unterrichtAdd(final @NotNull StundenplanUnterricht unterricht) {
 		unterrichtAddOhneUpdate(unterricht);
+		_list_unterricht.sort(_compUnterricht);
 		update();
 	}
 
@@ -2143,6 +2183,7 @@ public class StundenplanManager {
 	public void unterrichtAddAll(final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
 		for (final @NotNull StundenplanUnterricht unterricht : listUnterricht)
 			unterrichtAddOhneUpdate(unterricht);
+		_list_unterricht.sort(_compUnterricht);
 		update();
 	}
 
