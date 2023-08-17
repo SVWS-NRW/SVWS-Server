@@ -1,8 +1,9 @@
 @import 'print.css' print;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@page {
+	size: A4;
+	margin: 12.1mm 12.1mm 5.6mm 12.1mm;
+}
 
 .app-wrapper {
 	@apply flex h-screen w-full flex-grow flex-col;

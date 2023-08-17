@@ -129,25 +129,28 @@
 		updateFontSize(fontSize.value);
 	}
 
-	onMounted(() => {
-		window.addEventListener("beforeprint", () => {
-			if (themeRef.value === 'dark') {
-				document.documentElement.classList.remove('dark');
-				document.documentElement.classList.add('light');
-			}
-		});
+	function handleBeforePrint() {
+		if (themeRef.value === 'dark') {
+			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.add('light');
+		}
+	}
 
-		window.addEventListener("afterprint", () => {
-			if (themeRef.value === 'dark') {
-				document.documentElement.classList.remove('light');
-				document.documentElement.classList.add('dark');
-			}
-		});
+	function handleAfterPrint() {
+		if (themeRef.value === 'dark') {
+			document.documentElement.classList.remove('light');
+			document.documentElement.classList.add('dark');
+		}
+	}
+
+	onMounted(() => {
+		window.addEventListener("beforeprint", handleBeforePrint);
+		window.addEventListener("afterprint", handleAfterPrint);
 	});
 
 	onUnmounted(() => {
-		window.removeEventListener("beforeprint", () => {});
-		window.removeEventListener("afterprint", () => {});
+		window.removeEventListener("beforeprint", handleBeforePrint);
+		window.removeEventListener("afterprint", handleAfterPrint);
 	});
 </script>
 

@@ -95,6 +95,12 @@ html {
 	@apply border-0;
 }
 
+.svws-ui-stundenplan--stunde,
+.svws-ui-stundenplan--unterricht,
+.svws-ui-stundenplan--pausen-aufsicht {
+	page-break-inside: avoid;
+}
+
 .svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pausen-aufsicht {
 	@apply rounded-none bg-transparent content-center leading-tight border-0 py-0 !important;
 }
