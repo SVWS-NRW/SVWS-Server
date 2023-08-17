@@ -1076,7 +1076,8 @@ export class StundenplanManager extends JavaObject {
 
 	private klasseRemoveOhneUpdateById(idKlasse : number) : void {
 		const listKU : List<StundenplanKlassenunterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse);
-		for (const u of listKU)
+		const listKU2 : List<StundenplanKlassenunterricht> = new ArrayList(listKU);
+		for (const u of listKU2)
 			this.klassenunterrichtRemoveOhneUpdateById(u.idKlasse, u.idFach);
 		const k : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, idKlasse);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKlasse_zu_klasse, idKlasse);
@@ -1198,7 +1199,8 @@ export class StundenplanManager extends JavaObject {
 
 	private klassenunterrichtRemoveOhneUpdateById(idKlasse : number, idFach : number) : void {
 		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
-		for (const u of listU)
+		const listU2 : List<StundenplanUnterricht> = new ArrayList(listU);
+		for (const u of listU2)
 			this.unterrichtRemoveByIdOhneUpdate(u.id);
 		const klassenunterricht : StundenplanKlassenunterricht = DeveloperNotificationException.ifMap2DGetIsNull(this._map2d_idKlasse_idFach_zu_klassenunterricht, idKlasse, idFach);
 		DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klassenunterricht, idKlasse).remove(klassenunterricht);
@@ -1394,7 +1396,8 @@ export class StundenplanManager extends JavaObject {
 
 	private kursRemoveOhneUpdateById(idKurs : number) : void {
 		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_unterrichtmenge, idKurs);
-		for (const u of listU)
+		const listU2 : List<StundenplanUnterricht> = new ArrayList(listU);
+		for (const u of listU2)
 			this.unterrichtRemoveByIdOhneUpdate(u.id);
 		const kurs : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, idKurs);
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_zu_kurs, kurs.id);
@@ -3077,7 +3080,8 @@ export class StundenplanManager extends JavaObject {
 
 	private zeitrasterRemoveOhneUpdate(idZeitraster : number) : void {
 		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idZeitraster_zu_unterrichtmenge, idZeitraster);
-		for (const u of listU)
+		const listU2 : List<StundenplanUnterricht> = new ArrayList(listU);
+		for (const u of listU2)
 			this.unterrichtRemoveByIdOhneUpdate(u.id);
 		const z : StundenplanZeitraster = DeveloperNotificationException.ifNull("_map_zeitrasterID_zu_zeitraster.get(" + idZeitraster + ")", this._map_idZeitraster_zu_zeitraster.get(idZeitraster));
 		DeveloperNotificationException.ifMapRemoveFailes(this._map_idZeitraster_zu_zeitraster, idZeitraster);

@@ -1103,7 +1103,8 @@ public class StundenplanManager {
 	private void klasseRemoveOhneUpdateById(final long idKlasse) {
 		// Kaskade: StundenplanUnterricht (des Kurses)
 		final @NotNull List<@NotNull StundenplanKlassenunterricht> listKU = DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klassenunterricht, idKlasse);
-		for (final @NotNull StundenplanKlassenunterricht u : listKU)
+		final @NotNull List<@NotNull StundenplanKlassenunterricht> listKU2 = new ArrayList<>(listKU); // Wichtig, wegen "concurrent modifications"
+		for (final @NotNull StundenplanKlassenunterricht u : listKU2)
 			klassenunterrichtRemoveOhneUpdateById(u.idKlasse, u.idFach);
 
 		// Get
@@ -1233,7 +1234,8 @@ public class StundenplanManager {
 	private void klassenunterrichtRemoveOhneUpdateById(final long idKlasse, final long idFach) {
 		// Kaskade: StundenplanUnterricht (des Klassenunterrichts)
 		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMap2DGetIsNull(_map2d_idKlasse_idFach_zu_unterrichtmenge, idKlasse, idFach);
-		for (final @NotNull StundenplanUnterricht u : listU)
+		final @NotNull List<@NotNull StundenplanUnterricht> listU2 = new ArrayList<>(listU); // Wichtig, wegen "concurrent modifications"
+		for (final @NotNull StundenplanUnterricht u : listU2)
 			unterrichtRemoveByIdOhneUpdate(u.id);
 
 		// Get
@@ -1440,7 +1442,8 @@ public class StundenplanManager {
 	private void kursRemoveOhneUpdateById(final long idKurs) {
 		// Kaskade: StundenplanUnterricht (des Kurses)
 		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_unterrichtmenge, idKurs);
-		for (final @NotNull StundenplanUnterricht u : listU)
+		final @NotNull List<@NotNull StundenplanUnterricht> listU2 = new ArrayList<>(listU); // Wichtig, wegen "concurrent modifications"
+		for (final @NotNull StundenplanUnterricht u : listU2)
 			unterrichtRemoveByIdOhneUpdate(u.id);
 
 		// Get
@@ -1637,6 +1640,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
 	 *
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
@@ -1646,6 +1650,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Wochentages.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
 	 *
 	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
 	 *
@@ -3213,7 +3218,8 @@ public class StundenplanManager {
 	private void zeitrasterRemoveOhneUpdate(final long idZeitraster) {
 		// Kaskade: StundenplanUnterricht
 		final @NotNull List<@NotNull StundenplanUnterricht> listU = DeveloperNotificationException.ifMapGetIsNull(_map_idZeitraster_zu_unterrichtmenge, idZeitraster);
-		for (final @NotNull StundenplanUnterricht u : listU)
+		final @NotNull List<@NotNull StundenplanUnterricht> listU2 = new ArrayList<>(listU); // Wichtig, wegen "concurrent modification".
+		for (final @NotNull StundenplanUnterricht u : listU2)
 			unterrichtRemoveByIdOhneUpdate(u.id);
 
 		// Get
