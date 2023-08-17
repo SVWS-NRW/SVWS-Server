@@ -49,9 +49,9 @@ publish:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        #/builds/svws/SVWS-Server/
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        - ./gradlew ciPublishAll
+        - jq '.project."latest-release" = "xxx"' buildconfig.json > temp.json && mv temp.json buildconfig.json
+        - cat buildconfig.json
     when: on_success
 
 integration-tests:
