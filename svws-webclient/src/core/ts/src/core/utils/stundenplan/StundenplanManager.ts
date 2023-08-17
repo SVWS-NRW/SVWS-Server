@@ -187,20 +187,6 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idPausenzeit_zu_pausenaufsichtmenge : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
-	private _pausenzeitMinutenMin : number = 480;
-
-	private _pausenzeitMinutenMax : number = 480;
-
-	private _pausenzeitUndZeitrasterMinutenMin : number = 480;
-
-	private _pausenzeitUndZeitrasterMinutenMax : number = 480;
-
-	private _pausenzeitUndZeitrasterMinutenMinOhneLeere : number = 480;
-
-	private _pausenzeitUndZeitrasterMinutenMaxOhneLeere : number = 480;
-
-	private readonly _pausenzeitMapByWochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
-
 	private static readonly _compRaum : Comparator<StundenplanRaum> = { compare : (a: StundenplanRaum, b: StundenplanRaum) => {
 		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		if (result !== 0)
@@ -282,26 +268,6 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_stunde_zu_zeitrastermenge : HashMap<number, List<StundenplanZeitraster>> = new HashMap();
 
-	private _zeitrasterStundenRange : Array<number> = [1];
-
-	private readonly _zeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
-
-	private readonly _zeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
-
-	private _zeitrasterWochentageAlsEnumRange : Array<Wochentag> = [Wochentag.MONTAG];
-
-	private _zeitrasterWochentagMin : number = Wochentag.MONTAG.id;
-
-	private _zeitrasterWochentagMax : number = Wochentag.MONTAG.id;
-
-	private _zeitrasterStundeMin : number = 1;
-
-	private _zeitrasterStundeMax : number = 1;
-
-	private _zeitrasterMinutenMin : number = 480;
-
-	private _zeitrasterMinutenMax : number = 480;
-
 	private readonly _stundenplanID : number;
 
 	private readonly _stundenplanWochenTypModell : number;
@@ -313,6 +279,44 @@ export class StundenplanManager extends JavaObject {
 	private readonly _stundenplanGueltigBis : string;
 
 	private readonly _stundenplanBezeichnung : string;
+
+	private _uZeitrasterStundenRange : Array<number> = [1];
+
+	private readonly _uZeitrasterMinutenMinByStunde : HashMap<number, number | null> = new HashMap();
+
+	private readonly _uZeitrasterMinutenMaxByStunde : HashMap<number, number | null> = new HashMap();
+
+	private _uZeitrasterWochentageAlsEnumRange : Array<Wochentag> = [Wochentag.MONTAG];
+
+	private _uZeitrasterWochentagMin : number = Wochentag.MONTAG.id;
+
+	private _uZeitrasterWochentagMax : number = Wochentag.MONTAG.id;
+
+	private _uZeitrasterStundeMin : number = 1;
+
+	private _uZeitrasterStundeMax : number = 1;
+
+	private _uZeitrasterStundeMinOhneLeere : number = 1;
+
+	private _uZeitrasterStundeMaxOhneLeere : number = 1;
+
+	private _uZeitrasterMinutenMin : number = 480;
+
+	private _uZeitrasterMinutenMax : number = 480;
+
+	private _uPausenzeitMinutenMin : number = 480;
+
+	private _uPausenzeitMinutenMax : number = 480;
+
+	private _uPausenzeitUndZeitrasterMinutenMin : number = 480;
+
+	private _uPausenzeitUndZeitrasterMinutenMax : number = 480;
+
+	private _uPausenzeitUndZeitrasterMinutenMinOhneLeere : number = 480;
+
+	private _uPausenzeitUndZeitrasterMinutenMaxOhneLeere : number = 480;
+
+	private readonly _uPausenzeitMapByWochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
 
 
 	/**
@@ -396,67 +400,73 @@ export class StundenplanManager extends JavaObject {
 				this._unterrichtHatMultiWochen = true;
 				break;
 			}
-		this._pausenzeitMinutenMin = StundenplanManager.MINUTEN_INF_POS;
-		this._pausenzeitMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
-		this._pausenzeitUndZeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
-		this._pausenzeitUndZeitrasterMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
-		this._pausenzeitUndZeitrasterMinutenMinOhneLeere = StundenplanManager.MINUTEN_INF_POS;
-		this._pausenzeitUndZeitrasterMinutenMaxOhneLeere = StundenplanManager.MINUTEN_INF_NEG;
-		this._pausenzeitMapByWochentag.clear();
-		this._zeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
-		this._zeitrasterMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
-		this._zeitrasterWochentagMin = StundenplanManager.WOCHENTAG_INF_POS;
-		this._zeitrasterWochentagMax = StundenplanManager.WOCHENTAG_INF_NEG;
-		this._zeitrasterStundeMin = StundenplanManager.STUNDE_INF_POS;
-		this._zeitrasterStundeMax = StundenplanManager.STUNDE_INF_NEG;
-		this._zeitrasterMinutenMinByStunde.clear();
-		this._zeitrasterMinutenMaxByStunde.clear();
+		this._uPausenzeitMinutenMin = StundenplanManager.MINUTEN_INF_POS;
+		this._uPausenzeitMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
+		this._uPausenzeitUndZeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
+		this._uPausenzeitUndZeitrasterMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
+		this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = StundenplanManager.MINUTEN_INF_POS;
+		this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = StundenplanManager.MINUTEN_INF_NEG;
+		this._uPausenzeitMapByWochentag.clear();
+		this._uZeitrasterMinutenMin = StundenplanManager.MINUTEN_INF_POS;
+		this._uZeitrasterMinutenMax = StundenplanManager.MINUTEN_INF_NEG;
+		this._uZeitrasterWochentagMin = StundenplanManager.WOCHENTAG_INF_POS;
+		this._uZeitrasterWochentagMax = StundenplanManager.WOCHENTAG_INF_NEG;
+		this._uZeitrasterStundeMin = StundenplanManager.STUNDE_INF_POS;
+		this._uZeitrasterStundeMax = StundenplanManager.STUNDE_INF_NEG;
+		this._uZeitrasterStundeMinOhneLeere = StundenplanManager.STUNDE_INF_POS;
+		this._uZeitrasterStundeMaxOhneLeere = StundenplanManager.STUNDE_INF_NEG;
+		this._uZeitrasterMinutenMinByStunde.clear();
+		this._uZeitrasterMinutenMaxByStunde.clear();
 		for (const p of this._list_pausenzeiten) {
-			this._pausenzeitMinutenMin = BlockungsUtils.minVI(this._pausenzeitMinutenMin, p.beginn);
-			this._pausenzeitMinutenMax = BlockungsUtils.maxVI(this._pausenzeitMinutenMax, p.ende);
-			this._pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(this._pausenzeitUndZeitrasterMinutenMin, p.beginn);
-			this._pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(this._pausenzeitUndZeitrasterMinutenMax, p.ende);
+			this._uPausenzeitMinutenMin = BlockungsUtils.minVI(this._uPausenzeitMinutenMin, p.beginn);
+			this._uPausenzeitMinutenMax = BlockungsUtils.maxVI(this._uPausenzeitMinutenMax, p.ende);
+			this._uPausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(this._uPausenzeitUndZeitrasterMinutenMin, p.beginn);
+			this._uPausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(this._uPausenzeitUndZeitrasterMinutenMax, p.ende);
 			const listPA : List<StundenplanPausenaufsicht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenaufsichtmenge, p.id);
 			if (!listPA.isEmpty()) {
-				this._pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(this._pausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
-				this._pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(this._pausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
+				this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(this._uPausenzeitUndZeitrasterMinutenMinOhneLeere, p.beginn);
+				this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere, p.ende);
 			}
 		}
 		for (const z of this._list_zeitraster) {
-			this._zeitrasterWochentagMin = BlockungsUtils.minVI(this._zeitrasterWochentagMin, z.wochentag);
-			this._zeitrasterWochentagMax = BlockungsUtils.maxVI(this._zeitrasterWochentagMax, z.wochentag);
-			this._zeitrasterStundeMin = BlockungsUtils.minVI(this._zeitrasterStundeMin, z.unterrichtstunde);
-			this._zeitrasterStundeMax = BlockungsUtils.maxVI(this._zeitrasterStundeMax, z.unterrichtstunde);
-			this._zeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(this._zeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
-			this._zeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(this._zeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.stundenende));
-			this._zeitrasterMinutenMin = BlockungsUtils.minVI(this._zeitrasterMinutenMin, z.stundenbeginn);
-			this._zeitrasterMinutenMax = BlockungsUtils.maxVI(this._zeitrasterMinutenMax, z.stundenende);
-			this._pausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(this._pausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
-			this._pausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(this._pausenzeitUndZeitrasterMinutenMax, z.stundenende);
+			this._uZeitrasterWochentagMin = BlockungsUtils.minVI(this._uZeitrasterWochentagMin, z.wochentag);
+			this._uZeitrasterWochentagMax = BlockungsUtils.maxVI(this._uZeitrasterWochentagMax, z.wochentag);
+			this._uZeitrasterStundeMin = BlockungsUtils.minVI(this._uZeitrasterStundeMin, z.unterrichtstunde);
+			this._uZeitrasterStundeMax = BlockungsUtils.maxVI(this._uZeitrasterStundeMax, z.unterrichtstunde);
+			this._uZeitrasterMinutenMinByStunde.put(z.unterrichtstunde, BlockungsUtils.minII(this._uZeitrasterMinutenMinByStunde.get(z.unterrichtstunde), z.stundenbeginn));
+			this._uZeitrasterMinutenMaxByStunde.put(z.unterrichtstunde, BlockungsUtils.maxII(this._uZeitrasterMinutenMaxByStunde.get(z.unterrichtstunde), z.stundenende));
+			this._uZeitrasterMinutenMin = BlockungsUtils.minVI(this._uZeitrasterMinutenMin, z.stundenbeginn);
+			this._uZeitrasterMinutenMax = BlockungsUtils.maxVI(this._uZeitrasterMinutenMax, z.stundenende);
+			this._uPausenzeitUndZeitrasterMinutenMin = BlockungsUtils.minVI(this._uPausenzeitUndZeitrasterMinutenMin, z.stundenbeginn);
+			this._uPausenzeitUndZeitrasterMinutenMax = BlockungsUtils.maxVI(this._uPausenzeitUndZeitrasterMinutenMax, z.stundenende);
 			const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMapGetIsNull(this._map_idZeitraster_zu_unterrichtmenge, z.id);
 			if (!listU.isEmpty()) {
-				this._pausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(this._pausenzeitUndZeitrasterMinutenMinOhneLeere, z.stundenbeginn);
-				this._pausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(this._pausenzeitUndZeitrasterMinutenMaxOhneLeere, z.stundenende);
+				this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = BlockungsUtils.minVI(this._uPausenzeitUndZeitrasterMinutenMinOhneLeere, z.stundenbeginn);
+				this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = BlockungsUtils.maxVI(this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere, z.stundenende);
+				this._uZeitrasterStundeMinOhneLeere = BlockungsUtils.minVI(this._uZeitrasterStundeMinOhneLeere, z.unterrichtstunde);
+				this._uZeitrasterStundeMaxOhneLeere = BlockungsUtils.maxVI(this._uZeitrasterStundeMaxOhneLeere, z.unterrichtstunde);
 			}
 		}
-		this._pausenzeitMinutenMin = (this._pausenzeitMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._pausenzeitMinutenMin;
-		this._pausenzeitMinutenMax = (this._pausenzeitMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._pausenzeitMinutenMax;
-		this._pausenzeitUndZeitrasterMinutenMin = (this._pausenzeitUndZeitrasterMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._pausenzeitUndZeitrasterMinutenMin;
-		this._pausenzeitUndZeitrasterMinutenMax = (this._pausenzeitUndZeitrasterMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._pausenzeitUndZeitrasterMinutenMax;
-		this._pausenzeitUndZeitrasterMinutenMinOhneLeere = (this._pausenzeitUndZeitrasterMinutenMinOhneLeere === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._pausenzeitUndZeitrasterMinutenMinOhneLeere;
-		this._pausenzeitUndZeitrasterMinutenMaxOhneLeere = (this._pausenzeitUndZeitrasterMinutenMaxOhneLeere === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._pausenzeitUndZeitrasterMinutenMaxOhneLeere;
-		this._zeitrasterMinutenMin = (this._zeitrasterMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._zeitrasterMinutenMin;
-		this._zeitrasterMinutenMax = (this._zeitrasterMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._zeitrasterMinutenMax;
-		this._zeitrasterWochentagMin = (this._zeitrasterWochentagMin === StundenplanManager.WOCHENTAG_INF_POS) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMin;
-		this._zeitrasterWochentagMax = (this._zeitrasterWochentagMax === StundenplanManager.WOCHENTAG_INF_NEG) ? Wochentag.MONTAG.id : this._zeitrasterWochentagMax;
-		this._zeitrasterStundeMin = (this._zeitrasterStundeMin === StundenplanManager.STUNDE_INF_POS) ? 1 : this._zeitrasterStundeMin;
-		this._zeitrasterStundeMax = (this._zeitrasterStundeMax === StundenplanManager.STUNDE_INF_NEG) ? 1 : this._zeitrasterStundeMax;
-		this._zeitrasterStundenRange = Array(this._zeitrasterStundeMax - this._zeitrasterStundeMin + 1).fill(0);
-		for (let i : number = 0; i < this._zeitrasterStundenRange.length; i++)
-			this._zeitrasterStundenRange[i] = this._zeitrasterStundeMin + i;
-		this._zeitrasterWochentageAlsEnumRange = Array(this._zeitrasterWochentagMax - this._zeitrasterWochentagMin + 1).fill(null);
-		for (let i : number = 0; i < this._zeitrasterWochentageAlsEnumRange.length; i++)
-			this._zeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._zeitrasterWochentagMin + i);
+		this._uPausenzeitMinutenMin = (this._uPausenzeitMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._uPausenzeitMinutenMin;
+		this._uPausenzeitMinutenMax = (this._uPausenzeitMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._uPausenzeitMinutenMax;
+		this._uPausenzeitUndZeitrasterMinutenMin = (this._uPausenzeitUndZeitrasterMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._uPausenzeitUndZeitrasterMinutenMin;
+		this._uPausenzeitUndZeitrasterMinutenMax = (this._uPausenzeitUndZeitrasterMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._uPausenzeitUndZeitrasterMinutenMax;
+		this._uPausenzeitUndZeitrasterMinutenMinOhneLeere = (this._uPausenzeitUndZeitrasterMinutenMinOhneLeere === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._uPausenzeitUndZeitrasterMinutenMinOhneLeere;
+		this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere = (this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere;
+		this._uZeitrasterMinutenMin = (this._uZeitrasterMinutenMin === StundenplanManager.MINUTEN_INF_POS) ? 480 : this._uZeitrasterMinutenMin;
+		this._uZeitrasterMinutenMax = (this._uZeitrasterMinutenMax === StundenplanManager.MINUTEN_INF_NEG) ? 480 : this._uZeitrasterMinutenMax;
+		this._uZeitrasterWochentagMin = (this._uZeitrasterWochentagMin === StundenplanManager.WOCHENTAG_INF_POS) ? Wochentag.MONTAG.id : this._uZeitrasterWochentagMin;
+		this._uZeitrasterWochentagMax = (this._uZeitrasterWochentagMax === StundenplanManager.WOCHENTAG_INF_NEG) ? Wochentag.MONTAG.id : this._uZeitrasterWochentagMax;
+		this._uZeitrasterStundeMin = (this._uZeitrasterStundeMin === StundenplanManager.STUNDE_INF_POS) ? 1 : this._uZeitrasterStundeMin;
+		this._uZeitrasterStundeMax = (this._uZeitrasterStundeMax === StundenplanManager.STUNDE_INF_NEG) ? 1 : this._uZeitrasterStundeMax;
+		this._uZeitrasterStundeMinOhneLeere = (this._uZeitrasterStundeMinOhneLeere === StundenplanManager.STUNDE_INF_POS) ? 1 : this._uZeitrasterStundeMinOhneLeere;
+		this._uZeitrasterStundeMaxOhneLeere = (this._uZeitrasterStundeMaxOhneLeere === StundenplanManager.STUNDE_INF_NEG) ? 1 : this._uZeitrasterStundeMaxOhneLeere;
+		this._uZeitrasterStundenRange = Array(this._uZeitrasterStundeMax - this._uZeitrasterStundeMin + 1).fill(0);
+		for (let i : number = 0; i < this._uZeitrasterStundenRange.length; i++)
+			this._uZeitrasterStundenRange[i] = this._uZeitrasterStundeMin + i;
+		this._uZeitrasterWochentageAlsEnumRange = Array(this._uZeitrasterWochentagMax - this._uZeitrasterWochentagMin + 1).fill(null);
+		for (let i : number = 0; i < this._uZeitrasterWochentageAlsEnumRange.length; i++)
+			this._uZeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(this._uZeitrasterWochentagMin + i);
 	}
 
 	private aufsichtsbereichAddOhneUpdate(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
@@ -1694,7 +1704,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
 	 */
 	public pausenzeitGetMengeByWochentagOrEmptyList(wochentag : number) : List<StundenplanPausenzeit> {
-		return MapUtils.getOrCreateArrayList(this._pausenzeitMapByWochentag, wochentag);
+		return MapUtils.getOrCreateArrayList(this._uPausenzeitMapByWochentag, wochentag);
 	}
 
 	/**
@@ -1756,7 +1766,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitGetMinutenMin() : number {
-		return this._pausenzeitMinutenMin;
+		return this._uPausenzeitMinutenMin;
 	}
 
 	/**
@@ -1766,7 +1776,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitGetMinutenMax() : number {
-		return this._pausenzeitMinutenMax;
+		return this._uPausenzeitMinutenMax;
 	}
 
 	/**
@@ -1776,7 +1786,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMin() : number {
-		return this._pausenzeitUndZeitrasterMinutenMin;
+		return this._uPausenzeitUndZeitrasterMinutenMin;
 	}
 
 	/**
@@ -1786,7 +1796,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Minimum aller nicht leeren {@link StundenplanPausenzeit#beginn}-Objekte und aller {@link StundenplanZeitraster#stundenbeginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMinOhneLeere() : number {
-		return this._pausenzeitUndZeitrasterMinutenMinOhneLeere;
+		return this._uPausenzeitUndZeitrasterMinutenMinOhneLeere;
 	}
 
 	/**
@@ -1796,7 +1806,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMax() : number {
-		return this._pausenzeitUndZeitrasterMinutenMax;
+		return this._uPausenzeitUndZeitrasterMinutenMax;
 	}
 
 	/**
@@ -1806,7 +1816,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller nicht leeren {@link StundenplanPausenzeit#ende}-Objekte und aller {@link StundenplanZeitraster#stundenende}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public pausenzeitUndZeitrasterGetMinutenMaxOhneLeere() : number {
-		return this._pausenzeitUndZeitrasterMinutenMaxOhneLeere;
+		return this._uPausenzeitUndZeitrasterMinutenMaxOhneLeere;
 	}
 
 	private raumAddOhneUpdate(raum : StundenplanRaum) : void {
@@ -2509,7 +2519,7 @@ export class StundenplanManager extends JavaObject {
 		const listUhrzeit : List<string> = new ArrayList();
 		const listWochentagVon : List<string> = new ArrayList();
 		const listWochentagBis : List<string> = new ArrayList();
-		for (let wochentag : number = this._zeitrasterWochentagMin; wochentag <= this._zeitrasterWochentagMax; wochentag++) {
+		for (let wochentag : number = this._uZeitrasterWochentagMin; wochentag <= this._uZeitrasterWochentagMax; wochentag++) {
 			const sUhrzeit : string = this.unterrichtsstundeGetUhrzeitAsString(wochentag, stunde);
 			const sWochentag : string = Wochentag.fromIDorException(wochentag).kuerzel;
 			if (listUhrzeit.isEmpty()) {
@@ -2671,7 +2681,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den kleinsten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
 	 */
 	public zeitrasterGetMinutenMin() : number {
-		return this._zeitrasterMinutenMin;
+		return this._uZeitrasterMinutenMin;
 	}
 
 	/**
@@ -2683,7 +2693,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Minimum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public zeitrasterGetMinutenMinDerStunde(stunde : number) : number {
-		const min : number | null = this._zeitrasterMinutenMinByStunde.get(stunde);
+		const min : number | null = this._uZeitrasterMinutenMinByStunde.get(stunde);
 		return (min === null) ? 480 : min;
 	}
 
@@ -2694,7 +2704,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den größten Minuten-Wert aller Zeitraster, oder 480 (8 Uhr).
 	 */
 	public zeitrasterGetMinutenMax() : number {
-		return this._zeitrasterMinutenMax;
+		return this._uZeitrasterMinutenMax;
 	}
 
 	/**
@@ -2706,7 +2716,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Maximum aller {@link StundenplanZeitraster#stundenbeginn}-Objekte einer bestimmten Unterrichtsstunde, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 */
 	public zeitrasterGetMinutenMaxDerStunde(stunde : number) : number {
-		const max : number | null = this._zeitrasterMinutenMaxByStunde.get(stunde);
+		const max : number | null = this._uZeitrasterMinutenMaxByStunde.get(stunde);
 		return (max === null) ? 480 : max;
 	}
 
@@ -2717,7 +2727,17 @@ export class StundenplanManager extends JavaObject {
 	 * @return die kleinste Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetStundeMin() : number {
-		return this._zeitrasterStundeMin;
+		return this._uZeitrasterStundeMin;
+	}
+
+	/**
+	 * Liefert die kleinste nicht leere Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die kleinste nicht leere Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetStundeMinOhneLeere() : number {
+		return this._uZeitrasterStundeMinOhneLeere;
 	}
 
 	/**
@@ -2727,7 +2747,17 @@ export class StundenplanManager extends JavaObject {
 	 * @return die größte Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetStundeMax() : number {
-		return this._zeitrasterStundeMax;
+		return this._uZeitrasterStundeMax;
+	}
+
+	/**
+	 * Liefert die größte nicht leere Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return die größte nicht leere Stunde aller Zeitraster, oder 1 falls es keine Zeitraster gibt.
+	 */
+	public zeitrasterGetStundeMaxOhneLeere() : number {
+		return this._uZeitrasterStundeMaxOhneLeere;
 	}
 
 	/**
@@ -2737,7 +2767,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die ID des kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetWochentagMin() : number {
-		return this._zeitrasterWochentagMin;
+		return this._uZeitrasterWochentagMin;
 	}
 
 	/**
@@ -2747,7 +2777,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den kleinsten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetWochentagMinEnum() : Wochentag {
-		return Wochentag.fromIDorException(this._zeitrasterWochentagMin);
+		return Wochentag.fromIDorException(this._uZeitrasterWochentagMin);
 	}
 
 	/**
@@ -2757,7 +2787,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die ID des größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetWochentagMax() : number {
-		return this._zeitrasterWochentagMax;
+		return this._uZeitrasterWochentagMax;
 	}
 
 	/**
@@ -2767,7 +2797,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den größten {@link Wochentag} oder den Montag falls es keine Zeitraster gibt.
 	 */
 	public zeitrasterGetWochentagMaxEnum() : Wochentag {
-		return Wochentag.fromIDorException(this._zeitrasterWochentagMax);
+		return Wochentag.fromIDorException(this._uZeitrasterWochentagMax);
 	}
 
 	/**
@@ -2862,7 +2892,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
 	 */
 	public zeitrasterGetStundenRange() : Array<number> {
-		return this._zeitrasterStundenRange;
+		return this._uZeitrasterStundenRange;
 	}
 
 	/**
@@ -2873,7 +2903,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return alle verwendeten sortierten {@link Wochentag}-Objekte der {@link StundenplanZeitraster}.
 	 */
 	public zeitrasterGetWochentageAlsEnumRange() : Array<Wochentag> {
-		return this._zeitrasterWochentageAlsEnumRange;
+		return this._uZeitrasterWochentageAlsEnumRange;
 	}
 
 	/**
