@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen;
@@ -74,6 +75,9 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
+		// Lehrer bestimmten
+		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryNamed("DTOKursLehrer.kurs_id.multiple", kursIDs, DTOKursLehrer.class)
+				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Lehrer_ID, Collectors.toList())));
 		// Map für Schienen-IDs bestimmen
 		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", idStundenplan, DTOStundenplanSchienen.class)
 				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
@@ -101,6 +105,11 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			final List<Long> schuelerIDs = mapKursSchuelerIDs.get(k.ID);
 			if (schuelerIDs != null)
 				kurs.schueler.addAll(schuelerIDs);
+			if (k.Lehrer_ID != null)
+				kurs.lehrer.add(k.Lehrer_ID);
+			final List<Long> zusatzkraefteIDs = mapKursZusatzkraefte.get(k.ID);
+			if (zusatzkraefteIDs != null)
+				kurs.lehrer.addAll(zusatzkraefteIDs);
 			daten.add(kurs);
 		}
 		return daten;

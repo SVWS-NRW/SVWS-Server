@@ -171,9 +171,6 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		final Set<Long> klassenIDs = stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).collect(Collectors.toSet());
 		stundenplan.unterrichtsverteilung.klassenunterricht.addAll(DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream()
 				.filter(k -> klassenIDs.contains(k.idKlasse)).toList());
-		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
-		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
-				.filter(f -> fachIDs.contains(f.id)).toList());
 		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen
 		final Set<Long> schuelerIDs = new HashSet<>();
 		schuelerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.schueler.stream()).toList());
@@ -184,6 +181,19 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		weitereKlassenIDs.removeAll(stundenplan.unterrichtsverteilung.klassen.stream().map(k -> k.id).toList());
 		stundenplan.unterrichtsverteilung.klassen.addAll(DataStundenplanKlassen.getKlassen(conn, idStundenplan).stream()
 				.filter(k -> weitereKlassenIDs.contains(k.id)).toList());
+		// Füge ggf. noch die Lehrer der Klassen und der Kurse hinzu
+		final Set<Long> weitereLehrerIDs = new HashSet<>();
+		weitereLehrerIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().flatMap(k -> k.lehrer.stream()).toList());
+		weitereLehrerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.lehrer.stream()).toList());
+		weitereLehrerIDs.removeAll(stundenplan.unterrichtsverteilung.lehrer.stream().map(l -> l.id).toList());
+		if (!weitereLehrerIDs.isEmpty())
+			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
+				.filter(l -> weitereLehrerIDs.contains(l.id)).toList());
+		// Füge die Fächer hinzu
+		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());
+		fachIDs.addAll(stundenplan.unterrichtsverteilung.lehrer.stream().flatMap(l -> l.faecher.stream()).toList());
+		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
+				.filter(f -> fachIDs.contains(f.id)).toList());
 	}
 
 

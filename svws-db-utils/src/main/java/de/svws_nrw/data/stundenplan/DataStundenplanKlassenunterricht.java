@@ -110,6 +110,10 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 				final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
 				if (schuelerID != null)
 					ku.schueler.add(schuelerID);
+				if ((ls.Fachlehrer_ID != null) && (!ku.lehrer.contains(ls.Fachlehrer_ID)))
+					ku.lehrer.add(ls.Fachlehrer_ID);
+				if ((ls.Zusatzkraft_ID != null) && (!ku.lehrer.contains(ls.Zusatzkraft_ID)))
+					ku.lehrer.add(ls.Zusatzkraft_ID);
 			}
 		}
 		// Ergänze die Fachinformationen
@@ -187,6 +191,10 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
 			if (schuelerID != null)
 				daten.schueler.add(schuelerID);
+			if ((ls.Fachlehrer_ID != null) && (!daten.lehrer.contains(ls.Fachlehrer_ID)))
+				daten.lehrer.add(ls.Fachlehrer_ID);
+			if ((ls.Zusatzkraft_ID != null) && (!daten.lehrer.contains(ls.Zusatzkraft_ID)))
+				daten.lehrer.add(ls.Zusatzkraft_ID);
 		}
 		return daten;
 	}

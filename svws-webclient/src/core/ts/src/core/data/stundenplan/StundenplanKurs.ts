@@ -34,6 +34,11 @@ export class StundenplanKurs extends JavaObject {
 	 */
 	public schueler : List<number> = new ArrayList();
 
+	/**
+	 * Die Liste der IDs der Lehrer, die dem Kurs zugeordnet sind.
+	 */
+	public lehrer : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -68,6 +73,11 @@ export class StundenplanKurs extends JavaObject {
 		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(elem);
+			}
+		}
+		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+			for (const elem of obj.lehrer) {
+				result.lehrer?.add(elem);
 			}
 		}
 		return result;
@@ -110,6 +120,18 @@ export class StundenplanKurs extends JavaObject {
 				const elem = obj.schueler.get(i);
 				result += elem;
 				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.lehrer) {
+			result += '"lehrer" : []';
+		} else {
+			result += '"lehrer" : [ ';
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
+				result += elem;
+				if (i < obj.lehrer.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -167,6 +189,20 @@ export class StundenplanKurs extends JavaObject {
 					const elem = obj.schueler.get(i);
 					result += elem;
 					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.lehrer !== "undefined") {
+			if (!obj.lehrer) {
+				result += '"lehrer" : []';
+			} else {
+				result += '"lehrer" : [ ';
+				for (let i = 0; i < obj.lehrer.size(); i++) {
+					const elem = obj.lehrer.get(i);
+					result += elem;
+					if (i < obj.lehrer.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';
