@@ -72,6 +72,13 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map_idFach_zu_fach : HashMap<number, StundenplanFach> = new HashMap();
 
+	private static readonly _compJahrgang : Comparator<StundenplanJahrgang> = { compare : (a: StundenplanJahrgang, b: StundenplanJahrgang) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_jahrgaenge : List<StundenplanJahrgang> = new ArrayList();
 
 	private readonly _map_idJahrgang_zu_jahrgang : HashMap<number, StundenplanJahrgang> = new HashMap();
@@ -98,6 +105,13 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map2d_jahr_kw_zu_kwz : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D();
 
+	private static readonly _compKlasse : Comparator<StundenplanKlasse> = { compare : (a: StundenplanKlasse, b: StundenplanKlasse) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_klassen : List<StundenplanKlasse> = new ArrayList();
 
 	private readonly _map_idKlasse_zu_klasse : HashMap<number, StundenplanKlasse> = new HashMap();
@@ -112,21 +126,30 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _map2d_idKlasse_idFach_zu_unterrichtmenge : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
+	private static readonly _compKurs : Comparator<StundenplanKurs> = { compare : (a: StundenplanKurs, b: StundenplanKurs) => JavaLong.compare(a.id, b.id) };
+
 	private readonly _list_kurse : List<StundenplanKurs> = new ArrayList();
 
 	private readonly _map_idKurs_zu_kurs : HashMap<number, StundenplanKurs> = new HashMap();
 
 	private readonly _map_idKurs_zu_unterrichtmenge : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
+	private static readonly _compLehrer : Comparator<StundenplanLehrer> = { compare : (a: StundenplanLehrer, b: StundenplanLehrer) => {
+		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
+
 	private readonly _list_lehrer : List<StundenplanLehrer> = new ArrayList();
 
 	private readonly _map_idLehrer_zu_lehrer : HashMap<number, StundenplanLehrer> = new HashMap();
 
+	private static readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht> = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => JavaLong.compare(a.id, b.id) };
+
 	private readonly _list_pausenaufsichten : List<StundenplanPausenaufsicht> = new ArrayList();
 
-	private readonly _map_pausenaufsichtID_zu_pausenaufsicht : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
-
-	private static readonly _compPausenaufsicht : Comparator<StundenplanPausenaufsicht> = { compare : (a: StundenplanPausenaufsicht, b: StundenplanPausenaufsicht) => JavaLong.compare(a.id, b.id) };
+	private readonly _map_idPausenaufsicht_zu_pausenaufsicht : HashMap<number, StundenplanPausenaufsicht> = new HashMap();
 
 	private static readonly _compPausenzeit : Comparator<StundenplanPausenzeit> = { compare : (a: StundenplanPausenzeit, b: StundenplanPausenzeit) => {
 		if (a.wochentag < b.wochentag)
@@ -445,14 +468,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanAufsichtsbereich}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanAufsichtsbereich}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanAufsichtsbereich#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanAufsichtsbereich#beschreibung}
+	 * <br>{@link StundenplanAufsichtsbereich#kuerzel}
 	 *
-	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, welches das alte Objekt ersetzt.
+	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public aufsichtsbereichPatch(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		this.aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
-		this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+	public aufsichtsbereichPatchAttributes(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
+		const old : StundenplanAufsichtsbereich = DeveloperNotificationException.ifMapGetIsNull(this._map_idAufsichtsbereich_zu_aufsichtsbereich, aufsichtsbereich.id);
+		old.beschreibung = aufsichtsbereich.beschreibung;
+		old.kuerzel = aufsichtsbereich.kuerzel;
+		this._list_aufsichtsbereiche.sort(StundenplanManager._compAufsichtsbereich);
 		this.update();
 	}
 
@@ -553,6 +583,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public jahrgangAdd(jahrgang : StundenplanJahrgang) : void {
 		this.jahrgangAddOhneUpdate(jahrgang);
+		this._list_jahrgaenge.sort(StundenplanManager._compJahrgang);
 		this.update();
 	}
 
@@ -565,6 +596,7 @@ export class StundenplanManager extends JavaObject {
 	public jahrgangAddAll(listJahrgang : List<StundenplanJahrgang>) : void {
 		for (const jahrgang of listJahrgang)
 			this.jahrgangAddOhneUpdate(jahrgang);
+		this._list_jahrgaenge.sort(StundenplanManager._compJahrgang);
 		this.update();
 	}
 
@@ -589,14 +621,21 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanJahrgang}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanJahrgang}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanJahrgang#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanJahrgang#bezeichnung}
+	 * <br>{@link StundenplanJahrgang#kuerzel}
 	 *
-	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, welches das alte Objekt ersetzt.
+	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public jahrgangPatch(jahrgang : StundenplanJahrgang) : void {
-		this.jahrgangRemoveOhneUpdateById(jahrgang.id);
-		this.jahrgangAddOhneUpdate(jahrgang);
+	public jahrgangPatchAttributes(jahrgang : StundenplanJahrgang) : void {
+		const old : StundenplanJahrgang = DeveloperNotificationException.ifMapGetIsNull(this._map_idJahrgang_zu_jahrgang, jahrgang.id);
+		old.bezeichnung = jahrgang.bezeichnung;
+		old.kuerzel = jahrgang.kuerzel;
+		this._list_jahrgaenge.sort(StundenplanManager._compJahrgang);
 		this.update();
 	}
 
@@ -786,15 +825,25 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand das alte {@link StundenplanKalenderwochenzuordnung}-Objekt anhand der ID und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Ein patchen der ID ist nicht erlaubt. Hierfür muss die
-	 * {@link #kalenderwochenzuordnungReplace(StundenplanKalenderwochenzuordnung, StundenplanKalenderwochenzuordnung)}-Methode verwendet werden.
+	 * Aktualisiert das vorhandene {@link StundenplanKalenderwochenzuordnung}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanKalenderwochenzuordnung#jahr}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#kw}
+	 * <br>{@link StundenplanKalenderwochenzuordnung#wochentyp}
 	 *
-	 * @param kwz Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das alte Objekt ersetzt.
+	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public kalenderwochenzuordnungPatch(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungRemoveOhneUpdateById(kwz.id);
-		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+	public kalenderwochenzuordnungPatchAttributes(kwz : StundenplanKalenderwochenzuordnung) : void {
+		const old : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifMapGetIsNull(this._map_idKWZ_zu_kwz, kwz.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_jahr_kw_zu_kwz, old.jahr, old.kw);
+		old.jahr = kwz.jahr;
+		old.kw = kwz.kw;
+		old.wochentyp = kwz.wochentyp;
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_jahr_kw_zu_kwz, kwz.jahr, kwz.kw, old);
+		this._list_kwz.sort(StundenplanManager._compKWZ);
 		this.update();
 	}
 
@@ -874,6 +923,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public klasseAdd(klasse : StundenplanKlasse) : void {
 		this.klasseAddOhneUpdate(klasse);
+		this._list_klassen.sort(StundenplanManager._compKlasse);
 		this.update();
 	}
 
@@ -885,6 +935,7 @@ export class StundenplanManager extends JavaObject {
 	public klasseAddAll(listKlasse : List<StundenplanKlasse>) : void {
 		for (const klasse of listKlasse)
 			this.klasseAddOhneUpdate(klasse);
+		this._list_klassen.sort(StundenplanManager._compKlasse);
 		this.update();
 	}
 
@@ -909,14 +960,23 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanKlasse}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanKlasse}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanKlasse#id}
+	 * <br>{@link StundenplanKlasse#jahrgaenge}
+	 * <br>{@link StundenplanKlasse#schueler}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanKlasse#bezeichnung}
+	 * <br>{@link StundenplanKlasse#kuerzel}
 	 *
-	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, welches das alte Objekt ersetzt.
+	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public klassePatch(klasse : StundenplanKlasse) : void {
-		this.klasseRemoveOhneUpdateById(klasse.id);
-		this.klasseAddOhneUpdate(klasse);
+	public klassePatchAttributes(klasse : StundenplanKlasse) : void {
+		const old : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._map_idKlasse_zu_klasse, klasse.id);
+		old.bezeichnung = klasse.bezeichnung;
+		old.kuerzel = klasse.kuerzel;
+		this._list_klassen.sort(StundenplanManager._compKlasse);
 		this.update();
 	}
 
@@ -1092,6 +1152,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public kursAdd(kurs : StundenplanKurs) : void {
 		this.kursAddOhneUpdate(kurs);
+		this._list_kurse.sort(StundenplanManager._compKurs);
 		this.update();
 	}
 
@@ -1103,6 +1164,7 @@ export class StundenplanManager extends JavaObject {
 	public kursAddAll(listKurs : List<StundenplanKurs>) : void {
 		for (const kurs of listKurs)
 			this.kursAddOhneUpdate(kurs);
+		this._list_kurse.sort(StundenplanManager._compKurs);
 		this.update();
 	}
 
@@ -1206,14 +1268,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanKurs}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanKurs}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanKurs#id}
+	 * <br>{@link StundenplanKurs#jahrgaenge}
+	 * <br>{@link StundenplanKurs#schienen}
+	 * <br>{@link StundenplanKurs#schueler}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanKurs#bezeichnung}
+	 * <br>{@link StundenplanKurs#wochenstunden}
 	 *
-	 * @param kurs  Das neue {@link StundenplanKurs}-Objekt, welches das alte Objekt ersetzt.
+	 * @param kurs  Das neue {@link StundenplanKurs}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public kursPatch(kurs : StundenplanKurs) : void {
-		this.kursRemoveOhneUpdateById(kurs.id);
-		this.kursAddOhneUpdate(kurs);
+	public kursPatchAttributtes(kurs : StundenplanKurs) : void {
+		const old : StundenplanKurs = DeveloperNotificationException.ifMapGetIsNull(this._map_idKurs_zu_kurs, kurs.id);
+		old.bezeichnung = kurs.bezeichnung;
+		old.wochenstunden = kurs.wochenstunden;
+		this._list_kurse.sort(StundenplanManager._compKurs);
 		this.update();
 	}
 
@@ -1264,6 +1336,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public lehrerAdd(lehrer : StundenplanLehrer) : void {
 		this.lehrerAddOhneUpdate(lehrer);
+		this._list_lehrer.sort(StundenplanManager._compLehrer);
 		this.update();
 	}
 
@@ -1275,6 +1348,7 @@ export class StundenplanManager extends JavaObject {
 	public lehrerAddAll(listLehrer : List<StundenplanLehrer>) : void {
 		for (const lehrer of listLehrer)
 			this.lehrerAddOhneUpdate(lehrer);
+		this._list_lehrer.sort(StundenplanManager._compLehrer);
 		this.update();
 	}
 
@@ -1299,14 +1373,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanLehrer}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanLehrer}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanLehrer#id}
+	 * <br>{@link StundenplanLehrer#faecher}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanLehrer#kuerzel}
+	 * <br>{@link StundenplanLehrer#nachname}
+	 * <br>{@link StundenplanLehrer#vorname}
 	 *
-	 * @param lehrer  Das neue {@link StundenplanLehrer}-Objekt, welches das alte Objekt ersetzt.
+	 * @param lehrer  Das neue {@link StundenplanLehrer}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public lehrerPatch(lehrer : StundenplanLehrer) : void {
-		this.lehrerRemoveOhneUpdateById(lehrer.id);
-		this.lehrerAddOhneUpdate(lehrer);
+	public lehrerPatchAttributes(lehrer : StundenplanLehrer) : void {
+		const old : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._map_idLehrer_zu_lehrer, lehrer.id);
+		old.kuerzel = lehrer.kuerzel;
+		old.nachname = lehrer.nachname;
+		old.vorname = lehrer.vorname;
+		this._list_lehrer.sort(StundenplanManager._compLehrer);
 		this.update();
 	}
 
@@ -1341,7 +1425,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("aufsicht.id", pausenaufsicht.id);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifTrue("(pa.wochentyp > 0) && (pa.wochentyp > stundenplanWochenTypModell)", (pausenaufsicht.wochentyp > 0) && (pausenaufsicht.wochentyp > this._stundenplanWochenTypModell));
-		DeveloperNotificationException.ifMapPutOverwrites(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
+		DeveloperNotificationException.ifMapPutOverwrites(this._map_idPausenaufsicht_zu_pausenaufsicht, pausenaufsicht.id, pausenaufsicht);
 		DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenaufsichtmenge, pausenaufsicht.idPausenzeit).add(pausenaufsicht);
 		DeveloperNotificationException.ifListAddsDuplicate("_list_pausenaufsichten", this._list_pausenaufsichten, pausenaufsicht);
 	}
@@ -1377,7 +1461,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das zur ID zugehörige {@link StundenplanPausenaufsicht}-Objekt.
 	 */
 	public pausenaufsichtGetByIdOrException(idPausenaufsicht : number) : StundenplanPausenaufsicht {
-		return DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
+		return DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenaufsicht_zu_pausenaufsicht, idPausenaufsicht);
 	}
 
 	/**
@@ -1390,20 +1474,30 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanPausenaufsicht}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanPausenaufsicht}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanPausenaufsicht#id}
+	 * <br>{@link StundenplanPausenaufsicht#bereiche}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanPausenaufsicht#idLehrer}
+	 * <br>{@link StundenplanPausenaufsicht#idPausenzeit}
+	 * <br>{@link StundenplanPausenaufsicht#wochentyp}
 	 *
-	 * @param pausenaufsicht Das neue {@link StundenplanPausenaufsicht}-Objekt, welches das alte Objekt ersetzt.
+	 * @param pausenaufsicht  Das neue {@link StundenplanPausenaufsicht}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public pausenaufsichtPatch(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtRemoveOhneUpdateById(pausenaufsicht.id);
-		this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+	public pausenaufsichtPatchAttributes(pausenaufsicht : StundenplanPausenaufsicht) : void {
+		const old : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenaufsicht_zu_pausenaufsicht, pausenaufsicht.id);
+		old.idLehrer = DeveloperNotificationException.ifMapGetIsNull(this._map_idLehrer_zu_lehrer, pausenaufsicht.idLehrer).id;
+		old.idPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, pausenaufsicht.idPausenzeit).id;
+		old.wochentyp = pausenaufsicht.wochentyp;
+		this._list_pausenaufsichten.sort(StundenplanManager._compPausenaufsicht);
 		this.update();
 	}
 
 	private pausenaufsichtRemoveOhneUpdateById(idPausenaufsicht : number) : void {
-		const pausenaufsicht : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._map_pausenaufsichtID_zu_pausenaufsicht, idPausenaufsicht);
-		DeveloperNotificationException.ifMapRemoveFailes(this._map_pausenaufsichtID_zu_pausenaufsicht, pausenaufsicht.id);
+		const pausenaufsicht : StundenplanPausenaufsicht = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenaufsicht_zu_pausenaufsicht, idPausenaufsicht);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idPausenaufsicht_zu_pausenaufsicht, pausenaufsicht.id);
 		DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenaufsichtmenge, pausenaufsicht.idPausenzeit).remove(pausenaufsicht);
 		DeveloperNotificationException.ifListRemoveFailes("_list_pausenaufsichten", this._list_pausenaufsichten, pausenaufsicht);
 	}
@@ -1513,14 +1607,25 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanPausenzeit}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanPausenzeit}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanPausenzeit#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanPausenzeit#beginn}
+	 * <br>{@link StundenplanPausenzeit#bezeichnung}
+	 * <br>{@link StundenplanPausenzeit#ende}
+	 * <br>{@link StundenplanPausenzeit#wochentag}
 	 *
-	 * @param pausenzeit Das neue {@link StundenplanPausenzeit}-Objekt, welches das alte Objekt ersetzt.
+	 * @param pausenzeit  Das neue {@link StundenplanPausenzeit}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public pausenzeitPatch(pausenzeit : StundenplanPausenzeit) : void {
-		this.pausenzeitRemoveOhneUpdateById(pausenzeit.id);
-		this.pausenzeitAddOhneUpdate(pausenzeit);
+	public pausenzeitPatchAttributes(pausenzeit : StundenplanPausenzeit) : void {
+		const old : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._map_idPausenzeit_zu_pausenzeit, pausenzeit.id);
+		old.beginn = pausenzeit.beginn;
+		old.bezeichnung = pausenzeit.bezeichnung;
+		old.ende = pausenzeit.ende;
+		old.wochentag = pausenzeit.wochentag;
+		this._list_pausenzeiten.sort(StundenplanManager._compPausenzeit);
 		this.update();
 	}
 
@@ -1664,14 +1769,23 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanRaum}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanRaum}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanRaum#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanRaum#beschreibung}
+	 * <br>{@link StundenplanRaum#groesse}
+	 * <br>{@link StundenplanRaum#kuerzel}
 	 *
-	 * @param raum Das neue {@link StundenplanRaum}-Objekt, welches das alte Objekt ersetzt.
+	 * @param raum  Das neue {@link StundenplanRaum}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public raumPatch(raum : StundenplanRaum) : void {
-		this.raumRemoveOhneUpdateById(raum.id);
-		this.raumAddOhneUpdate(raum);
+	public raumPatchAttributes(raum : StundenplanRaum) : void {
+		const old : StundenplanRaum = DeveloperNotificationException.ifMapGetIsNull(this._map_idRaum_zu_raum, raum.id);
+		old.beschreibung = raum.beschreibung;
+		old.groesse = raum.groesse;
+		old.kuerzel = raum.kuerzel;
+		this._list_raeume.sort(StundenplanManager._compRaum);
 		this.update();
 	}
 
@@ -2734,14 +2848,31 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt anhand der ID das alte {@link StundenplanZeitraster}-Objekt und fügt dann das neue Objekt hinzu.
-	 * <br>Hinweis: Die ID darf nicht gepatch werden!
+	 * Aktualisiert das vorhandene {@link StundenplanZeitraster}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanZeitraster#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanZeitraster#stundenbeginn}
+	 * <br>{@link StundenplanZeitraster#stundenende}
+	 * <br>{@link StundenplanZeitraster#unterrichtstunde}
+	 * <br>{@link StundenplanZeitraster#wochentag}
 	 *
-	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, welches das alte Objekt ersetzt.
+	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, dessen Attribute kopiert werden.
 	 */
-	public zeitrasterPatch(zeitraster : StundenplanZeitraster) : void {
-		this.zeitrasterRemoveOhneUpdate(zeitraster.id);
-		this.zeitrasterAddOhneUpdate(zeitraster);
+	public zeitrasterPatchAttributes(zeitraster : StundenplanZeitraster) : void {
+		const old : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._map_idZeitraster_zu_zeitraster, zeitraster.id);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._map2d_wochentag_stunde_zu_zeitraster, old.wochentag, old.unterrichtstunde);
+		MapUtils.removeFromListAndTrimOrException(this._map_wochentag_zu_zeitrastermenge, old.wochentag, old);
+		MapUtils.removeFromListAndTrimOrException(this._map_stunde_zu_zeitrastermenge, old.unterrichtstunde, old);
+		old.stundenbeginn = zeitraster.stundenbeginn;
+		old.stundenende = zeitraster.stundenende;
+		old.unterrichtstunde = zeitraster.unterrichtstunde;
+		old.wochentag = zeitraster.wochentag;
+		DeveloperNotificationException.ifMap2DPutOverwrites(this._map2d_wochentag_stunde_zu_zeitraster, old.wochentag, old.unterrichtstunde, old);
+		MapUtils.getOrCreateArrayList(this._map_wochentag_zu_zeitrastermenge, old.wochentag).add(old);
+		MapUtils.getOrCreateArrayList(this._map_stunde_zu_zeitrastermenge, old.unterrichtstunde).add(old);
+		this._list_zeitraster.sort(StundenplanManager._compZeitraster);
 		this.update();
 	}
 

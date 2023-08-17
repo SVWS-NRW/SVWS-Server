@@ -126,7 +126,7 @@ export class RouteDataStundenplan {
 		delete data.id;
 		await api.server.patchStundenplanRaum(data, api.schema, id);
 		const raum = this.stundenplanManager.raumGetByIdOrException(id);
-		this.stundenplanManager.raumPatch(Object.assign(raum, data));
+		this.stundenplanManager.raumPatchAttributes(Object.assign(raum, data));
 		this.commit();
 	}
 
@@ -136,7 +136,7 @@ export class RouteDataStundenplan {
 		delete data.id;
 		await api.server.patchStundenplanPausenzeit(data, api.schema, id);
 		const pausenzeit = this.stundenplanManager.pausenzeitGetByIdOrException(id);
-		this.stundenplanManager.pausenzeitPatch(Object.assign(pausenzeit, data));
+		this.stundenplanManager.pausenzeitPatchAttributes(Object.assign(pausenzeit, data));
 		this.commit();
 	}
 
@@ -145,14 +145,14 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		await api.server.patchStundenplanAufsichtsbereich(data, api.schema, id);
 		const aufsichtsbereich = this.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
-		this.stundenplanManager.aufsichtsbereichPatch(Object.assign(aufsichtsbereich, data));
+		this.stundenplanManager.aufsichtsbereichPatchAttributes(Object.assign(aufsichtsbereich, data));
 		this.commit();
 	}
 
 	patchZeitraster = async (data : Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => {
 		Object.assign(zeitraster, data)
 		await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
-		this.stundenplanManager.zeitrasterPatch(zeitraster);
+		this.stundenplanManager.zeitrasterPatchAttributes(zeitraster);
 		this.commit();
 	}
 
