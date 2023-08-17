@@ -37,16 +37,6 @@ subprojects {
 
 }
 
-task ciPublishAll {
-	dependsOn(':svws-core:signJar')
-	//dependsOn(':svws-db:publishPublishJavaPublicationToSonatypeRepository')
-	//dependsOn(':closeAndReleaseSonatypeStagingRepository')
-	//dependsOn(':svws-core:publishReleaseAll')
-	//dependsOn(':deployment:linux-installer:buildLinuxInstaller')
-	//dependsOn(':deployment:docker:dockerPushAllDockerhub')
-}
-
-
 clean.doLast {
 	file("${appArtifactsDir}").deleteDir()
 }
