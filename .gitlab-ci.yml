@@ -50,10 +50,9 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew :svws-core:signJar
-        - ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
-        - ./gradlew :closeAndReleaseSonatypeStagingRepository
-        - ./gradlew :svws-core:publishReleaseAll
+        - ./gradlew signJar
+        - ./gradlew publishPublishJavaPublicationToSonatypeRepository closeAndReleaseSonatypeStagingRepository
+        - ./gradlew publishReleaseAll
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
         - ./gradlew :deployment:linux-installer:buildLinuxInstaller
     when: on_success
