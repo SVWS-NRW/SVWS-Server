@@ -48,6 +48,7 @@ publish:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
+        - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - echo $CI_COMMIT_TAG
         #- ./gradlew :svws-core:signJar
@@ -75,6 +76,7 @@ integration-tests:
 build:
   stage: build
   script:
+      - chmod +x ./deployment/setupVersion.sh
       - ./deployment/setupVersion.sh
       - echo $CI_COMMIT_TAG
       - echo "build" # ./gradlew --build-cache build -Penvironment=build
