@@ -1,4 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { SchuelerLaufbahnplanungProps } from "@comp";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -10,7 +11,6 @@ import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbah
 
 import { ConfigElement } from "~/components/Config";
 import { SSchuelerLaufbahnplanung } from "@comp";
-import type { SchuelerLaufbahnplanungProps } from "@comp";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
@@ -26,6 +26,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
+		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -73,6 +74,8 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 			resetFachwahlen: this.data.resetFachwahlen,
+			modus: () => this.data.modus,
+			setModus: this.data.setModus,
 		};
 	}
 

@@ -108,6 +108,14 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return this._state.value.zwischenspeicher;
 	}
 
+	get modus(): 'manuell'|'normal'|'hochschreiben' {
+		return api.config.getValue("app.schueler.laufbahnplanung.modus") as 'manuell'|'normal'|'hochschreiben';
+	}
+
+	setModus = async (modus: 'manuell'|'normal'|'hochschreiben') => {
+		await api.config.setValue("app.schueler.laufbahnplanung.modus", modus);
+	}
+
 	createAbiturdatenmanager = async (daten?: Abiturdaten): Promise<AbiturdatenManager | undefined> => {
 		const abiturdaten = daten || this._state.value.abiturdaten;
 		if (abiturdaten === undefined)

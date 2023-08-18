@@ -20,4 +20,6 @@ export interface SchuelerLaufbahnplanungProps {
 	saveLaufbahnplanung: () => Promise<void>;
 	restoreLaufbahnplanung: () => Promise<void>;
 	resetFachwahlen: () => Promise<void>;
+	modus: () => 'manuell'|'normal'|'hochschreiben';
+	setModus: (modus: 'manuell'|'normal'|'hochschreiben') => Promise<void>;
 }
