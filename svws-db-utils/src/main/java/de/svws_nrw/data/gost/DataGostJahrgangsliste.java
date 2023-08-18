@@ -166,9 +166,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 			jahrgangsdaten.TextMailversand = jahrgangsdatenVorlage.TextMailversand;
 			if (!conn.transactionPersist(jahrgangsdaten))
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-	    	if (!conn.transactionCommit())
-	    		throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Abschließen der Transaktion.");
-			conn.transactionBegin();
+			conn.transactionFlush();
 			// Kopiere die Fächer der Gymnasialen Oberstufe aus der allgemeinen Vorlage
 			final List<DTOFach> faecher = conn.queryNamed("DTOFach.istoberstufenfach", true, DTOFach.class);
 			if (faecher == null)
@@ -182,6 +180,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				if (!conn.transactionPersist(gostFach))
 					throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren des Faches der gymnasialen Oberstufe");
 			}
+			conn.transactionFlush();
 			// Kopiere die Informationen zu nicht möglichen und geforderten
 			// Fachkombinationen aus der Vorlage
 			final List<DTOGostJahrgangFachkombinationen> faecherKombis = conn.queryNamed("DTOGostJahrgangFachkombinationen.abi_jahrgang", -1, DTOGostJahrgangFachkombinationen.class);
