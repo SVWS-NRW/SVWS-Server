@@ -29,7 +29,7 @@
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
+				<template v-for="pause in pausenzeiten" :key="pause">
 					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center"
 						:style="posPause(undefined, pause)">
 						<div>{{ pause.bezeichnung }}</div>
@@ -143,7 +143,12 @@
 		if (props.ignoreEmpty)
 			return props.manager().zeitrasterGetStundenRangeOhneLeere();
 		return props.manager().zeitrasterGetStundenRange();
-	})
+	});
+
+	const pausenzeiten = computed(() => {
+		// TODO pausenzeitGetMengeByKlasseAsList, pausenzeitGetMengeByLehrerAsList, pausenzeitGetMengeBySchuelerAsList
+		return props.manager().pausenzeitGetMengeAsList();
+	});
 
 	const gesamtzeit = computed(() => {
 		const tmp = ende.value - beginn.value;
