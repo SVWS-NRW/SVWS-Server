@@ -55,7 +55,7 @@ publish:
         - ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
         - ./gradlew :closeAndReleaseSonatypeStagingRepository
         - ./gradlew :svws-core:publishReleaseAll
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        #- ./gradlew :deployment:docker:dockerPushAllDockerhub
         #- ./gradlew :deployment:linux-installer:buildLinuxInstaller
     when: on_success
 
