@@ -98,5 +98,5 @@ sonarqube_analysis:
   script:
       - apt-get install jq -y
       - echo $CI_COMMIT_TAG
-      - 'if [ -n "$CI_COMMIT_TAG" ]; then jq --arg version "${CI_COMMIT_TAG#v}" '.project."version" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json; fi'
+      - jq --arg version "${CI_COMMIT_TAG#v}" '.project."version" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json
       - echo "build" # ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
