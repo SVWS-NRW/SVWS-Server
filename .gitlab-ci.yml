@@ -48,9 +48,8 @@ publish:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        - apt-get install jq -y
+        - ./deployment/setupVersion.sh
         - echo $CI_COMMIT_TAG
-        - 'if [ -n "$CI_COMMIT_TAG" ]; then jq --arg version "${CI_COMMIT_TAG#v}" '.project."version" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json; fi'
         #- ./gradlew :svws-core:signJar
         #- ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
         #- ./gradlew :closeAndReleaseSonatypeStagingRepository
@@ -96,7 +95,6 @@ sonarqube_analysis:
       - dev
   when: manual
   script:
-      - apt-get install jq -y
+      - ./deployment/setupVersion.sh
       - echo $CI_COMMIT_TAG
-      - jq --arg version "${CI_COMMIT_TAG#v}" '.project."version" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json
       - echo "build" # ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
