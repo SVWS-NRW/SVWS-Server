@@ -4,3 +4,4 @@ if [ -n "$CI_COMMIT_TAG" ]; then
 	jq --arg version "${CI_COMMIT_TAG#v}" '.project."version" = $version' ../buildconfig.json > temp.json && mv temp.json ../buildconfig.json
 fi
 
+cat ../buildconfig.json

@@ -50,7 +50,6 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - cat buildconfig.json
         #- ./gradlew :svws-core:signJar
         #- ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
         #- ./gradlew :closeAndReleaseSonatypeStagingRepository
@@ -78,7 +77,6 @@ build:
   script:
       - chmod +x ./deployment/setupVersion.sh
       - ./deployment/setupVersion.sh
-      - cat buildconfig.json
       - echo "build" # ./gradlew --build-cache build -Penvironment=build
   cache:
     <<: *global_cache
