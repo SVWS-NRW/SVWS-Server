@@ -124,16 +124,14 @@
 	});
 
 	const beginn = computed(() => {
-		// TODO Methoden im Kommentar noch fehlerhaft, verwenden sobald der Bug behoben ist...
-		// if (props.ignoreEmpty)
-		// 	return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
+		if (props.ignoreEmpty)
+			return props.manager().pausenzeitUndZeitrasterGetMinutenMinOhneLeere();
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMin();
 	});
 
 	const ende = computed(() => {
-		// TODO Methoden im Kommentar noch fehlerhaft, verwenden sobald der Bug behoben ist...
-		// if (props.ignoreEmpty)
-		// 	return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
+		if (props.ignoreEmpty)
+			return props.manager().pausenzeitUndZeitrasterGetMinutenMaxOhneLeere();
 		return props.manager().pausenzeitUndZeitrasterGetMinutenMax();
 	});
 
@@ -142,9 +140,8 @@
 	});
 
 	const zeitrasterRange = computed(() => {
-		// TODO warten bis die Methode implementiert ist und dann mit den beiden TODOs oben aktivieren
-		// if (props.ignoreEmpty)
-		// 	return props.manager().zeitrasterGetStundenRangeOhneLeere();
+		if (props.ignoreEmpty)
+			return props.manager().zeitrasterGetStundenRangeOhneLeere();
 		return props.manager().zeitrasterGetStundenRange();
 	})
 
