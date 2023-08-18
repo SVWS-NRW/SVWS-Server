@@ -6,16 +6,16 @@ import { BenutzerKompetenzGruppenKatalogEintrag } from '../../../core/data/benut
 export class BenutzerKompetenzGruppe extends JavaObject implements JavaEnum<BenutzerKompetenzGruppe> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<BenutzerKompetenzGruppe> = [];
+	static readonly all_values_by_ordinal : Array<BenutzerKompetenzGruppe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, BenutzerKompetenzGruppe> = new Map<string, BenutzerKompetenzGruppe>();
+	static readonly all_values_by_name : Map<string, BenutzerKompetenzGruppe> = new Map<string, BenutzerKompetenzGruppe>();
 
 	/**
 	 * Es werden keinerlei Kompetenzen benötigt.

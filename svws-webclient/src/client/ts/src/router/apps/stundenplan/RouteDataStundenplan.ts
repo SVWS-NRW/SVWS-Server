@@ -1,7 +1,7 @@
-import type { StundenplanZeitraster, StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag } from "@core";
+import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
 
 import { shallowRef } from "vue";
 import { useDebounceFn } from "@vueuse/core";
@@ -123,7 +123,7 @@ export class RouteDataStundenplan {
 		delete data.id;
 		await api.server.patchStundenplanRaum(data, api.schema, id);
 		const raum = this.stundenplanManager.raumGetByIdOrException(id);
-		this.stundenplanManager.raumPatch(Object.assign(raum, data));
+		this.stundenplanManager.raumPatchAttributes(Object.assign(raum, data));
 		this.commit();
 	}
 
@@ -133,7 +133,7 @@ export class RouteDataStundenplan {
 		delete data.id;
 		await api.server.patchStundenplanPausenzeit(data, api.schema, id);
 		const pausenzeit = this.stundenplanManager.pausenzeitGetByIdOrException(id);
-		this.stundenplanManager.pausenzeitPatch(Object.assign(pausenzeit, data));
+		this.stundenplanManager.pausenzeitPatchAttributes(Object.assign(pausenzeit, data));
 		this.commit();
 	}
 
@@ -142,18 +142,14 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		await api.server.patchStundenplanAufsichtsbereich(data, api.schema, id);
 		const aufsichtsbereich = this.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
-		this.stundenplanManager.aufsichtsbereichPatch(Object.assign(aufsichtsbereich, data));
+		this.stundenplanManager.aufsichtsbereichPatchAttributes(Object.assign(aufsichtsbereich, data));
 		this.commit();
 	}
 
-	patchZeitraster = async (data : StundenplanZeitraster, multi: StundenplanZeitraster[]) => {
-		if (this.auswahl === undefined || data.id === undefined)
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		for (const zeitraster of multi) {
-			Object.assign(zeitraster, {unterrichtstunde: data.unterrichtstunde, stundenbeginn: data.stundenbeginn, stundenende: data.stundenende})
-			await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
-			this.stundenplanManager.zeitrasterPatch(zeitraster);
-		}
+	patchZeitraster = async (data : Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => {
+		Object.assign(zeitraster, data)
+		await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
+		this.stundenplanManager.zeitrasterPatchAttributes(zeitraster);
 		this.commit();
 	}
 
@@ -187,15 +183,44 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	addZeitraster = async (item: Partial<StundenplanZeitraster>, tage: number[]) => {
-		const id = this._state.value.auswahl?.id;
-		if (id === undefined)
+	addZeitraster = async (wochentag: Wochentag | undefined, stunde : number | undefined) => {
+		const idStundenplan = this._state.value.auswahl?.id;
+		if (idStundenplan === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		for (const tag of tage) {
-			delete item.id;
-			item.wochentag = tag;
-			const _item = await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id)
+		if ((wochentag === undefined) && (stunde === undefined)) {
+			return;
+		} else if ((wochentag === undefined) && (stunde !== undefined)) {
+			// Füge Zeile im Stundenplan hinzu
+			console.log("Stunde hinten anfügen: ", stunde);
+			for (const wochentag of this.stundenplanManager.zeitrasterGetWochentageAlsEnumRange()) {
+				const z = this.stundenplanManager.zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
+				if (z !== null) {
+					const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
+					delete zeitraster.id;
+					zeitraster.wochentag = wochentag.id;
+					zeitraster.unterrichtstunde = stunde + 1;
+					zeitraster.stundenbeginn = (z.stundenende ?? 0) + 5;
+					zeitraster.stundenende = zeitraster.stundenbeginn + ((z.stundenende ?? 0) - (z.stundenbeginn ?? 0));
+					const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
+					this.stundenplanManager.zeitrasterAdd(_item);
+				}
+			}
+		} else if ((wochentag !== undefined) && (stunde === undefined)) {
+			// Füge Spalte im Stundenplan hinzu
+			console.log("Wochentag hinten hinzufügen: ", wochentag.kuerzel);
+			const ersteStunde = this.stundenplanManager.zeitrasterGetStundeMin();
+			const letzterTag = this.stundenplanManager.zeitrasterGetWochentagMax();
+			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
+			delete zeitraster.id;
+			zeitraster.wochentag = Wochentag.fromIDorException(letzterTag + 1).id;
+			zeitraster.unterrichtstunde = ersteStunde;
+			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(ersteStunde);
+			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(ersteStunde);
+			const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
 			this.stundenplanManager.zeitrasterAdd(_item);
+		} else if ((wochentag !== undefined) && (stunde !== undefined)) {
+			// Füge Zelle im Stundenplan hinzu
+			console.log("Zeitrastereintrag ergänzen", wochentag.kuerzel, stunde);
 		}
 		this.commit();
 	}
@@ -225,11 +250,9 @@ export class RouteDataStundenplan {
 	}
 
 	removeZeitraster = async (multi: StundenplanZeitraster[]) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
-			this.stundenplanManager.zeitrasterRemove(zeitraster.id);
+			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);
 		}
 		this.commit();
 	}
@@ -281,7 +304,10 @@ export class RouteDataStundenplan {
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
 		else {
 			const daten = await api.server.getStundenplan(api.schema, auswahl.id);
-			const stundenplanManager = new StundenplanManager(daten, new ArrayList(), new ArrayList(), null);
+			const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
+			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
+			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
+			const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({ auswahl, daten, stundenplanManager });
 		}
 	}

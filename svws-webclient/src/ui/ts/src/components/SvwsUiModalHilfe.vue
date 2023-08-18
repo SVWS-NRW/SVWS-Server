@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<svws-ui-button type="transparent" size="small" @click="modal.openModal()">
-			<span>Hilfe</span>
+		<svws-ui-button type="secondary" @click="modal.openModal()">
 			<i-ri-question-line />
+			<span>Hilfe</span>
 		</svws-ui-button>
 		<svws-ui-modal ref="modal" size="help" class="hidden">
 			<template #modalTitle>
@@ -11,9 +11,7 @@
 				</div>
 			</template>
 			<template #modalDescription>
-				<div class="prose">
-					<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
-				</div>
+				<slot>Für diesen Bereich wurde noch kein Text geschrieben.</slot>
 			</template>
 		</svws-ui-modal>
 	</div>
@@ -26,3 +24,13 @@
 	const modal = ref();
 
 </script>
+
+<style lang="postcss">
+.markdown-body {
+	@apply prose leading-tight;
+
+	* {
+		@apply first:mt-0;
+	}
+}
+</style>

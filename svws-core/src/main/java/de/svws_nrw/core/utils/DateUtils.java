@@ -227,24 +227,6 @@ public final class DateUtils {
 	}
 
 	/**
-	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
-	 * <br>Beispiel: 1000 Minuten --> "16:40"
-	 *
-	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
-	 *
-	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
-	 */
-	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
-		DeveloperNotificationException.ifSmaller("minuten", minuten, 0);
-		DeveloperNotificationException.ifGreater("minuten", minuten, 24L * 60L);
-		final int h = minuten / 60;
-		final int m = minuten - h * 60;
-		final String sStunden = (h < 10 ? "0" : "") + h;
-		final String sMinuten = (m < 10 ? "0" : "") + m;
-		return sStunden + ":" + sMinuten;
-	}
-
-	/**
 	 * Liefert das nach "DIN 5008 optional" konvertierte Datumsformat, z.B. 2023-02-28 zu 28.02.2023.
 	 *
 	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2023-02-28).
@@ -257,6 +239,65 @@ public final class DateUtils {
 		final int monat = info[1];
 		final int tagImMonat = info[2];
 		return StringUtils.padZahl(tagImMonat, 2) + "." + StringUtils.padZahl(monat, 2) + "." + StringUtils.padZahl(jahr, 4);
+	}
+
+	/**
+	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
+	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
+	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
+	 *
+	 * @param zeit  Die Zeitangabe im Format hh:mm.
+	 *
+	 * @return die Minuten einer Zeitangabe im Format hh:mm.
+	 */
+	public static int gibMinutenOfZeitAsString(final @NotNull String zeit) {
+		final @NotNull String @NotNull [] sSplit = zeit.split(":");
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", sSplit.length != 2);
+
+		final @NotNull String sStunden = sSplit[0].trim();
+		final @NotNull String sMinuten = sSplit[1].trim();
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sStunden.length() < 1) || (sStunden.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sMinuten.length() < 1) || (sMinuten.length() > 2));
+
+		final int stunden = Integer.parseInt(sStunden);
+		final int minuten = Integer.parseInt(sMinuten);
+		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten > 59)", (minuten < 0) || (minuten > 59));
+
+		return stunden * 60 + minuten;
+	}
+
+	/**
+	 * Liefert den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 * <br>Gültige Werte sind im Bereich 0 bis 24*60=1440 (exklusive).
+	 *
+	 * @param minuten  Die Anzahl der Minuten.
+	 *
+	 * @return den ZeitString im Format hh:mm zu einer vorgegebenen Minutenanzahl.
+	 */
+	public static @NotNull String gibZeitStringOfMinuten(final int minuten) {
+		DeveloperNotificationException.ifTrue("(minuten < 0) || (minuten >= 1440)", (minuten < 0) || (minuten >= 1440));
+
+		final int std = minuten / 60;
+		final int min = minuten - std * 60;
+
+		final @NotNull String sStd = (std < 10 ? "0" : "") + std;
+		final @NotNull String sMin = (min < 10 ? "0" : "") + min;
+
+		return sStd + ":" + sMin;
+	}
+
+	/**
+	 * Liefert anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 * <br>Beispiel: 1000 Minuten --> "16:40"
+	 *
+	 * @param minuten  Die vergangenen Minuten seit 0 Uhr.
+	 *
+	 * @return anhand der Minuten eine String-Repräsentation der Uhrzeit im Format "hh:mm".
+	 */
+	public static @NotNull String getStringOfUhrzeitFromMinuten(final int minuten) {
+		// TODO remove
+		return gibZeitStringOfMinuten(minuten);
 	}
 
 }

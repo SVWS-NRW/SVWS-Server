@@ -1,20 +1,28 @@
 <template>
-	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false">
+	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false" class="border">
 		<svws-ui-content-card title="Kausurraum">
 			<svws-ui-multi-select title="Raum auswählen"
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-				:items="stundenplanmanager.raumGetMengeAsList()" />
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Klausuren im Raum">
-			<table>
-				<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
-					:klausur="klausur"
-					:kursklausurmanager="kursklausurmanager"
-					:kursmanager="kursmanager"
-					:map-lehrer="mapLehrer" />
-			</table>
+				:items="raummanager.raumVerfuegbarGetMengeAsList(stundenplanmanager.raumGetMengeAsList())" />
+			<div>
+				Belegung:
+				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
+				<span v-else>{{ anzahlSuS }}</span>
+			</div>
+			<svws-ui-content-card title="Klausuren im Raum">
+				<table>
+					<div v-if="klausurenImRaum.size() === 0">Keine Klausuren im Raum</div>
+					<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
+						:klausur="klausur"
+						:termin="kursklausurmanager().getKlausurterminById(raum.idTermin)"
+						:kursklausurmanager="kursklausurmanager"
+						:kursmanager="kursmanager"
+						:map-lehrer="mapLehrer"
+						:patch-kursklausur="patchKursklausur" />
+				</table>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 	</svws-ui-drop-data>
 </template>
@@ -34,6 +42,7 @@
 		raummanager: GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
+		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
 	}>();
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {
@@ -42,8 +51,15 @@
 	};
 
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
+	const anzahlSuS = computed(() => props.raummanager.getSchuelerklausurenInRaum(props.raum.id, props.kursklausurmanager()).size());
 
-	const stundenplanRaumSelected = ref<StundenplanRaum | undefined>(props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum));
 	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum) : null;
+
+	const stundenplanRaumSelected = computed({
+		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),
+		set: (value: StundenplanRaum | undefined): void => {
+			props.raum.idStundenplanRaum = value === undefined ? null : value.id;
+		}
+	});
 
 </script>

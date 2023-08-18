@@ -7,16 +7,16 @@ import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 export class KAOAEbene4 extends JavaObject implements JavaEnum<KAOAEbene4> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAEbene4> = [];
+	static readonly all_values_by_ordinal : Array<KAOAEbene4> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAEbene4> = new Map<string, KAOAEbene4>();
+	static readonly all_values_by_name : Map<string, KAOAEbene4> = new Map<string, KAOAEbene4>();
 
 	/**
 	 * KAoA-Eintrag der SBO Ebene 4: Langzeitpraktikum 1-tägig

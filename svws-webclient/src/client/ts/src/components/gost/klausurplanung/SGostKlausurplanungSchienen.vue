@@ -17,46 +17,19 @@
 				Hier können Sie weitere Einstellungen vornehmen:
 			</template>
 			<template #modalContent>
-				<svws-ui-radio-group :row="true"
-					class="justify-center">
-					<svws-ui-radio-option value="algNormal" v-model="algMode"
-						name="blockAlgo"
-						label="Normal" />
-					<svws-ui-radio-option value="algFaecher" v-model="algMode"
-						name="blockAlgo"
-						label="Fächerweise" />
-					<svws-ui-radio-option value="algSchienen" v-model="algMode"
-						name="blockAlgo"
-						label="Schienenweise" />
+				<svws-ui-radio-group :row="true" class="justify-center">
+					<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
 				</svws-ui-radio-group>
-				<svws-ui-radio-group :row="true"
-					class="justify-center">
-					<svws-ui-radio-option value="lkgkMix" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Gemischt" />
-					<svws-ui-radio-option value="lkgkSep" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Getrennt" />
-					<svws-ui-radio-option value="lkgkOnlyLk" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Nur LK" />
-					<svws-ui-radio-option value="lkgkOnlyGk" v-model="lkgkMode"
-						name="lkgkMode"
-						label="Nur GK" />
+				<svws-ui-radio-group :row="true" class="justify-center">
+					<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
 				</svws-ui-radio-group>
-				<svws-ui-checkbox v-model="blockGleicheLehrkraft" v-if="algMode === 'algNormal'">
+				<svws-ui-checkbox v-model="blockeGleicheLehrkraft" v-if="algMode === KlausurterminblockungAlgorithmen.NORMAL">
 					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
 				</svws-ui-checkbox>
 			</template>
 			<template #modalActions>
-				<svws-ui-button type="secondary"
-					@click="blocken">
-					Blocken
-				</svws-ui-button>
-				<svws-ui-button type="secondary"
-					@click="modal.closeModal()">
-					Abbrechen
-				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="blocken"> Blocken </svws-ui-button>
+				<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
 			</template>
 		</svws-ui-modal>
 
@@ -65,6 +38,7 @@
 				<div class="flex flex-col">
 					<div class="text-headline-md">Zu verplanen:</div>
 					<s-gost-klausurplanung-schienen-termin :quartal="quartalsauswahl.value"
+						:jahrgangsdaten="jahrgangsdaten"
 						:kursklausurmanager="kursklausurmanager"
 						:termin="null"
 						:alle-termine="termine"
@@ -79,6 +53,7 @@
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
 						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+							:jahrgangsdaten="jahrgangsdaten"
 							:class="dropOverCssClasses(termin)"
 							:kursklausurmanager="kursklausurmanager"
 							:termin="termin"
@@ -102,8 +77,9 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, GostKlausurtermin} from "@core";
-	import { KlausurterminblockungAlgorithmus, KlausurterminblockungAlgorithmusConfig } from "@core";
+	import type { GostKursklausur, GostKlausurtermin } from "@core";
+	import { KlausurterminblockungAlgorithmen, KlausurterminblockungAlgorithmus, GostKlausurterminblockungDaten,
+		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 
@@ -131,47 +107,36 @@
 
 	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value));
 
-	const algMode = ref("algNormal");
-	const lkgkMode = ref("lkgkMix");
-	const blockGleicheLehrkraft = ref(false);
+	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
+	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
+	const blockeGleicheLehrkraft = ref(false);
 
 	const blocken = async () => {
 		loading.value = true;
 		modal.value.closeModal();
-		const klausurenUngeblockt = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		// Aufruf von Blockungsalgorithmus
-		const blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		blockConfig.set_quartals_modus_getrennt();
-		if (algMode.value === "algNormal")
-			blockConfig.set_algorithmus_normal();
-		else if (algMode.value === "algFaecher")
-			blockConfig.set_algorithmus_faecherweise();
-		else if (algMode.value === "algSchienen")
-			blockConfig.set_algorithmus_schienenweise();
-		if (lkgkMode.value === "lkgkMix")
-			blockConfig.set_lk_gk_modus_beide();
-		else if (lkgkMode.value === "lkgkSep")
-			blockConfig.set_lk_gk_modus_getrennt();
-		else if (lkgkMode.value === "lkgkOnlyLk")
-			blockConfig.set_lk_gk_modus_nur_lk();
-		else if (lkgkMode.value === "lkgkOnlyGk")
-			blockConfig.set_lk_gk_modus_nur_gk();
-		blockConfig.set_regel_wenn_lehrkraft_fach_kursart_dann_gleicher_termin(blockGleicheLehrkraft.value);
-		const blockAlgo = new KlausurterminblockungAlgorithmus();
+		const daten = new GostKlausurterminblockungDaten();
+		daten.klausuren = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
+		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
+		daten.konfiguration.algorithmus = algMode.value.id;
+		daten.konfiguration.modusKursarten = lkgkMode.value.id;
+		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
+		await props.blockenKursklausuren(daten);
+		/*	const blockAlgo = new KlausurterminblockungAlgorithmus();
 		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		const klausurTermine = blockAlgo.berechne(klausurenUngeblockt, blockConfig);
-		// await props.persistKlausurblockung(klausurTermine);
-		for await (const klausurList of klausurTermine) {
+		const ergebnis = blockAlgo.apply(daten);
+		// await props.persistKlausurblockung(ergebnis);
+		for await (const t of ergebnis.termine) {
 			let termin = null;
-			for await (const klausurId of klausurList) {
-				const klausur = props.kursklausurmanager().gibKursklausur(klausurId);
-				if (klausur !== null) {
-					if (termin === null)
-						termin = await props.erzeugeKlausurtermin(klausur.quartal);
-					await props.setTerminToKursklausur(termin.id, klausur);
-				}
+			for await (const klausurId of t.kursklausuren) {
+				const klausur = props.kursklausurmanager().gibKursklausurById(klausurId);
+				// if (klausur !== null) {
+				if (termin === null)
+					termin = await props.erzeugeKlausurtermin(klausur.quartal);
+				await props.setTerminToKursklausur(termin.id, klausur);
+				// }
 			}
-		}
+		}*/
 		loading.value = false;
 	};
 

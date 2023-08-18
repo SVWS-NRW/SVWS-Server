@@ -5,16 +5,16 @@ import { JavaString } from '../../java/lang/JavaString';
 export class ServerMode extends JavaObject implements JavaEnum<ServerMode> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<ServerMode> = [];
+	static readonly all_values_by_ordinal : Array<ServerMode> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, ServerMode> = new Map<string, ServerMode>();
+	static readonly all_values_by_name : Map<string, ServerMode> = new Map<string, ServerMode>();
 
 	/**
 	 * STABLE: Es werden nur Funktionen angeboten, die als stabil und getestet angesehen werden

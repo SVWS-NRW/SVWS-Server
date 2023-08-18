@@ -2172,16 +2172,16 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// Generate Attributes
 		indentC++;
 		sb.append(getIndent()).append("/** the name of the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private readonly __name : string;").append(System.lineSeparator());
+		sb.append(getIndent()).append("readonly __name : string;").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** the ordinal value for the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private readonly __ordinal : number;").append(System.lineSeparator());
+		sb.append(getIndent()).append("readonly __ordinal : number;").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration */").append(System.lineSeparator());
-		sb.append(getIndent()).append("private static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
+		sb.append(getIndent()).append("static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration indexed by their name*/").append(System.lineSeparator());
-		sb.append(getIndent()).append("private static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
+		sb.append(getIndent()).append("static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
 		for (final VariableTree attribute : Transpiler.getAttributes(node)) {

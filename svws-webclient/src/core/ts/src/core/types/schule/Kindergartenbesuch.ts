@@ -6,16 +6,16 @@ import { KindergartenbesuchKatalogEintrag } from '../../../core/data/schule/Kind
 export class Kindergartenbesuch extends JavaObject implements JavaEnum<Kindergartenbesuch> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Kindergartenbesuch> = [];
+	static readonly all_values_by_ordinal : Array<Kindergartenbesuch> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Kindergartenbesuch> = new Map<string, Kindergartenbesuch>();
+	static readonly all_values_by_name : Map<string, Kindergartenbesuch> = new Map<string, Kindergartenbesuch>();
 
 	/**
 	 * Kein Kindergartenbesuch

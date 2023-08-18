@@ -79,6 +79,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			return new ArrayList<>();
 		final Map<Long, List<Long>> mapKlassenLernabschnittIDs = lernabschnitte.stream()
 				.collect(Collectors.groupingBy(la -> la.Klassen_ID, Collectors.mapping(la -> la.ID, Collectors.toList())));
+		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
 		// Bestimme aus den Lernabschnitte die Klassenunterrichte. Gehe dabei Klassenweise vor...
 		final HashMap2D<Long, Long, StundenplanKlassenunterricht> klassenunterrichte = new HashMap2D<>();
 		final List<StundenplanKlassenunterricht> daten = new ArrayList<>();
@@ -102,7 +103,17 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 					klassenunterrichte.put(ku.idKlasse, ku.idFach, ku);
 					daten.add(ku);
 					faecherIDs.add(ku.idFach);
+				} else {
+					if ((ls.Wochenstunden != null) && (ku.wochenstunden < ls.Wochenstunden))
+						ku.wochenstunden = ls.Wochenstunden;
 				}
+				final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
+				if (schuelerID != null)
+					ku.schueler.add(schuelerID);
+				if ((ls.Fachlehrer_ID != null) && (!ku.lehrer.contains(ls.Fachlehrer_ID)))
+					ku.lehrer.add(ls.Fachlehrer_ID);
+				if ((ls.Zusatzkraft_ID != null) && (!ku.lehrer.contains(ls.Zusatzkraft_ID)))
+					ku.lehrer.add(ls.Zusatzkraft_ID);
 			}
 		}
 		// Ergänze die Fachinformationen
@@ -157,19 +168,34 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception("Kein Fach mit der ID %d gefunden.".formatted(idFach));
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		// Bestimme die Daten anhand der Leistungsdaten, die einem Lernabschnitt der Klasse zugeordnet sind.
-		final List<Long> lernabschnittIDs = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID)
-				.stream().map(l -> l.ID).toList();
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID);
+		final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
 		if (lernabschnittIDs.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Kein Lernabschnitt für die Klasse mit der ID %d gefunden.".formatted(idKlasse));
+		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID = ?2 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')".formatted(ZulaessigeKursart.PUK.daten.kuerzel), DTOSchuelerLeistungsdaten.class, lernabschnittIDs, fach.ID);
 		if (leistungsdaten.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Keine Leistungsdaten für die Klasse mit der ID %d und das Fach mit der ID %d gefunden.".formatted(klasse.ID, fach.ID));
-		final DTOSchuelerLeistungsdaten ld = leistungsdaten.get(0);
-		final StundenplanKlassenunterricht daten = new StundenplanKlassenunterricht();
-		daten.idKlasse = idKlasse;
-		daten.idFach = idFach;
-		daten.bezeichnung = "%s (%s)".formatted(fach.Kuerzel, klasse.Klasse);
-		daten.wochenstunden = ld.Wochenstunden == null ? 1 : ld.Wochenstunden;
+		// Aggregiere die Klassenunterrichte aus den Leistungsdaten
+		StundenplanKlassenunterricht daten = null;
+		for (final DTOSchuelerLeistungsdaten ls : leistungsdaten) {
+			if (daten == null) {
+				daten = new StundenplanKlassenunterricht();
+				daten.idKlasse = idKlasse;
+				daten.idFach = ls.Fach_ID;
+				daten.wochenstunden = ls.Wochenstunden == null ? 1 : ls.Wochenstunden;
+			} else {
+				if ((ls.Wochenstunden != null) && (daten.wochenstunden < ls.Wochenstunden))
+					daten.wochenstunden = ls.Wochenstunden;
+			}
+			final Long schuelerID = mapLernabschnittSchuelerID.get(ls.Abschnitt_ID);
+			if (schuelerID != null)
+				daten.schueler.add(schuelerID);
+			if ((ls.Fachlehrer_ID != null) && (!daten.lehrer.contains(ls.Fachlehrer_ID)))
+				daten.lehrer.add(ls.Fachlehrer_ID);
+			if ((ls.Zusatzkraft_ID != null) && (!daten.lehrer.contains(ls.Zusatzkraft_ID)))
+				daten.lehrer.add(ls.Zusatzkraft_ID);
+		}
 		return daten;
 	}
 

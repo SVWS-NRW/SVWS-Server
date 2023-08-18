@@ -58,7 +58,7 @@ public class APIDatabase {
                description = "Exportiert das aktuelle Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert "
                		       + "administrative Rechte.")
     @ApiResponse(responseCode = "200", description = "Der Export der SQLite-Datenbank",
-    			 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM,
+    			 content = @Content(mediaType = "application/vnd.sqlite3",
     			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {

@@ -23,6 +23,7 @@
 							@drag-start="dragTermin = termin"
 							@drag-end="dragTermin = null">
 							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
+								:jahrgangsdaten="jahrgangsdaten"
 								:faecher-manager="faecherManager"
 								:map-lehrer="mapLehrer"
 								:termin="termin"
@@ -161,7 +162,7 @@
 	const onDrop = async (item: GostKlausurtermin, date: Date | null, stunde: number) => {
 		const termin = (item === undefined) ? props.kursklausurmanager().gibKlausurtermin(dragTermin.value!.id) : props.kursklausurmanager().gibKlausurtermin(item.id);
 		if (termin !== null) {
-			await props.patchKlausurterminDatum(termin.id, {datum: formatDate(date), startzeit: date !== null ? props.stundenplanmanager.zeitrasterGetByWochentagAndStundeOrException(Wochentag.fromIDorException(date.getDay()), stunde).stundenbeginn : null});
+			await props.patchKlausurterminDatum(termin.id, {datum: formatDate(date), startzeit: date !== null ? props.stundenplanmanager.zeitrasterGetByWochentagAndStundeOrException(date.getDay(), stunde).stundenbeginn : null});
 		}
 	};
 

@@ -4,16 +4,16 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class GELeistungsdifferenzierteKursart extends JavaObject implements JavaEnum<GELeistungsdifferenzierteKursart> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GELeistungsdifferenzierteKursart> = [];
+	static readonly all_values_by_ordinal : Array<GELeistungsdifferenzierteKursart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GELeistungsdifferenzierteKursart> = new Map<string, GELeistungsdifferenzierteKursart>();
+	static readonly all_values_by_name : Map<string, GELeistungsdifferenzierteKursart> = new Map<string, GELeistungsdifferenzierteKursart>();
 
 	/**
 	 * Es handelt sich um einen leistungsdifferenzierten Kurs auf Erweiterungsebene (E-Kurs)

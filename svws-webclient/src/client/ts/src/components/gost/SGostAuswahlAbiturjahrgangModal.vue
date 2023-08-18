@@ -41,6 +41,7 @@
 				console.log(id, ok)
 			}
 		}
+		jahrgaenge.value.clear();
 		modal.value.closeModal();
 	}
 

@@ -3,7 +3,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeError } from "~/router/error/RouteError";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeKlassenStundenplan, type RouteKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 
@@ -71,6 +70,7 @@ export class RouteKlassenStundenplanDaten extends RouteNode<unknown, RouteKlasse
 	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
 		return {
 			mode: 'klasse',
+			id: routeKlassen.data.daten.id,
 			manager: () => routeKlassenStundenplan.data.manager,
 			wochentyp: () => routeKlassenStundenplan.data.wochentyp,
 			kalenderwoche: () => routeKlassenStundenplan.data.kalenderwoche,

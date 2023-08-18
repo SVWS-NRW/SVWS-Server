@@ -1,16 +1,17 @@
 <script setup lang='ts'>
+
 	import type { WritableComputedRef} from 'vue';
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		name?: string;
 		label?: string;
-		value?: string | boolean;
+		value?: object | number | string | boolean;
 		disabled?: boolean;
 		statistics?: boolean;
 		icon?: boolean;
 		iconType?: string;
-		modelValue?: string | boolean;
+		modelValue?: object | number | string | boolean;
 		forceChecked?: boolean;
 	}>(), {
 		name: '',
@@ -25,13 +26,14 @@
 	});
 
 	const emit = defineEmits<{
-		(e: 'update:modelValue', value: string | boolean): void,
+		(e: 'update:modelValue', value: object | number | string | boolean): void,
 	}>();
 
-	const checked: WritableComputedRef<boolean | string> = computed({
+	const checked: WritableComputedRef<object | number | boolean | string> = computed({
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	})
+
 </script>
 
 <template>

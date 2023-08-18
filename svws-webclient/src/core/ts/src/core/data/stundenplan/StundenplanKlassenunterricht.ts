@@ -29,6 +29,16 @@ export class StundenplanKlassenunterricht extends JavaObject {
 	 */
 	public schienen : List<number> = new ArrayList();
 
+	/**
+	 * Die Liste der IDs der Schüler, denen der Klassenunterricht zugeordnet ist.
+	 */
+	public schueler : List<number> = new ArrayList();
+
+	/**
+	 * Die Liste der IDs der Lehrer, die dem Klassenunterricht zugeordnet sind.
+	 */
+	public lehrer : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -58,6 +68,16 @@ export class StundenplanKlassenunterricht extends JavaObject {
 				result.schienen?.add(elem);
 			}
 		}
+		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+			for (const elem of obj.schueler) {
+				result.schueler?.add(elem);
+			}
+		}
+		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+			for (const elem of obj.lehrer) {
+				result.lehrer?.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -75,6 +95,30 @@ export class StundenplanKlassenunterricht extends JavaObject {
 				const elem = obj.schienen.get(i);
 				result += elem;
 				if (i < obj.schienen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schueler) {
+			result += '"schueler" : []';
+		} else {
+			result += '"schueler" : [ ';
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
+				result += elem;
+				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.lehrer) {
+			result += '"lehrer" : []';
+		} else {
+			result += '"lehrer" : [ ';
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
+				result += elem;
+				if (i < obj.lehrer.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -107,6 +151,34 @@ export class StundenplanKlassenunterricht extends JavaObject {
 					const elem = obj.schienen.get(i);
 					result += elem;
 					if (i < obj.schienen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schueler !== "undefined") {
+			if (!obj.schueler) {
+				result += '"schueler" : []';
+			} else {
+				result += '"schueler" : [ ';
+				for (let i = 0; i < obj.schueler.size(); i++) {
+					const elem = obj.schueler.get(i);
+					result += elem;
+					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.lehrer !== "undefined") {
+			if (!obj.lehrer) {
+				result += '"lehrer" : []';
+			} else {
+				result += '"lehrer" : [ ';
+				for (let i = 0; i < obj.lehrer.size(); i++) {
+					const elem = obj.lehrer.get(i);
+					result += elem;
+					if (i < obj.lehrer.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -6,16 +6,16 @@ import { LehrerKatalogLehrbefaehigungEintrag } from '../../../core/data/lehrer/L
 export class LehrerLehrbefaehigung extends JavaObject implements JavaEnum<LehrerLehrbefaehigung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerLehrbefaehigung> = [];
+	static readonly all_values_by_ordinal : Array<LehrerLehrbefaehigung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerLehrbefaehigung> = new Map<string, LehrerLehrbefaehigung>();
+	static readonly all_values_by_name : Map<string, LehrerLehrbefaehigung> = new Map<string, LehrerLehrbefaehigung>();
 
 	/**
 	 * Lehrbefähigung 'Arbeitslehre / Schwerpunkt Haushaltslehre'

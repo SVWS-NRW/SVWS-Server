@@ -54,7 +54,10 @@ publishing {
   }
 }
 //Signing Jars
-task signJar(dependsOn: 'jar',description: 'to Sign JAR.',group: 'Build'){
+task signJar(){
+	dependsOn 'assemble'
+	group 'publishing'
+	description '.jar-Files signieren'
     doLast{
       println ":$project.name:${name}"
       ant.signjar(

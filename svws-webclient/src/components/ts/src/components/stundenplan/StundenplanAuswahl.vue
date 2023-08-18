@@ -1,14 +1,26 @@
 <template>
 	<template v-if="stundenplan !== undefined">
-		<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" headless
-			class="w-144 border-l-svws-700 border p-1 pl-2 rounded-md"
-			:item-text="(s: StundenplanListeEintrag) => s.bezeichnung + ' : ' + toDateStr(s.gueltigAb) + ' - ' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + ' - ' + toKW(s.gueltigBis) + ')'" />
-		<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" headless
-			class="w-32 border-l-svws-700 border p-1 pl-2 rounded-md"
-			:item-text="(wt: number) => manager().stundenplanGetWochenTypAsString(wt)" />
-		<svws-ui-multi-select title="Kalenderwochen" v-model="kwAuswahl" :items="kalenderwochen()" headless
-			class="w-96 border-l-svws-700 border p-1 pl-2 rounded-md" removable
-			:item-text="(kw: StundenplanKalenderwochenzuordnung | undefined) => getKalenderwochenString(kw)" />
+		<div class="svws-ui-stundenplan--auswahl">
+			<div class="flex-grow">
+				<h3 class="text-headline-md">{{ stundenplan.bezeichnung }}</h3>
+				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '–' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '–' + toKW(stundenplan.gueltigBis) + ')' }}</div>
+			</div>
+			<div class="svws-ui-stundenplan--auswahl--wrapper">
+				<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
+					class="print:hidden"
+					:disabled="wochentypen().size() <= 0"
+					:item-text="(wt: number) => manager().stundenplanGetWochenTypAsString(wt)" />
+				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+					:class="{'print:hidden': !kwAuswahl}"
+					removable
+					:disabled="wochentypen().size() <= 0"
+					:item-text="(kw: StundenplanKalenderwochenzuordnung | undefined) => getKalenderwochenString(kw)" />
+				<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()"
+					:disabled="mapStundenplaene.size <= 1"
+					class="print:hidden"
+					:item-text="(s: StundenplanListeEintrag) => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '–' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '–' + toKW(s.gueltigBis) + ')'" />
+			</div>
+		</div>
 	</template>
 </template>
 
@@ -58,7 +70,8 @@
 			return props.wochentyp();
 		},
 		set: (value : number) => {
-			void props.gotoWochentyp(value);		}
+			void props.gotoWochentyp(value);
+		}
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
@@ -67,8 +80,8 @@
 
 	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung | undefined): string {
 		if (kw === undefined)
-			return "&ndash;&ndash;&ndash;";
-		return props.manager().kalenderwochenzuordnungGetWocheAsString(kw);
+			return "—";
+		return props.manager().kalenderwochenzuordnungGetWocheAsShortString(kw);
 	}
 
 	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung | undefined> = computed({
@@ -81,3 +94,20 @@
 	});
 
 </script>
+
+<style lang="postcss">
+
+	.svws-ui-stundenplan--auswahl {
+		@apply flex flex-wrap gap-y-5 gap-x-20;
+	}
+
+	.svws-ui-stundenplan--auswahl--wrapper {
+		@apply flex-grow grid gap-2;
+		grid-template-columns: minmax(12rem, 0.5fr) minmax(12rem, 1fr) minmax(12rem, 1fr);
+
+		@media print {
+			grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		}
+	}
+
+</style>

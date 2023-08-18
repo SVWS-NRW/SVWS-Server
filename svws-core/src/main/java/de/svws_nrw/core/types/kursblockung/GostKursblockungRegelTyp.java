@@ -28,11 +28,11 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
 	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
-	KURSART_SPERRE_SCHIENEN_VON_BIS(1, "Kursart: Sperre Schienen (von/bis)", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURSART,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR
-			)),
+	KURSART_SPERRE_SCHIENEN_VON_BIS(1, "Kursart: Sperre Schienen von/bis", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURSART,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+	)),
 
 	/**
 	 * Der Regel-Typ zum Reservieren der Schienen von B bis C für Kurse einer bestimmten Kursart (A).
@@ -42,11 +42,11 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: von - Nummer der Schiene (int) <br>
 	 * - Parameter C: bis - Nummer der Schiene (int)
 	 */
-	KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(6, "Kursart: Allein in Schienen (von/bis)", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURSART,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR
-			)),
+	KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(6, "Kursart: Allein in Schienen von/bis", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURSART,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+	)),
 
 	/**
 	 * Der Regel-Typ zum Fixieren eines Kurses (A) in Schiene (B). Die Schiene B ist 1-indiziert, es gilt
@@ -56,9 +56,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_FIXIERE_IN_SCHIENE(2, "Kurs: Fixiere in Schiene", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURS_ID,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR
-			)),
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+	)),
 
 	/**
 	 * Der Regel-Typ zum Sperren einer Schiene (B) für einen Kurs (A). Die Schiene B ist 1-indiziert, es gilt
@@ -68,9 +68,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Nummer der Schiene (int) <br>
 	 */
 	KURS_SPERRE_IN_SCHIENE(3, "Kurs: Sperre in Schiene", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURS_ID,
-			GostKursblockungRegelParameterTyp.SCHIENEN_NR
-			)),
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.SCHIENEN_NR
+	)),
 
 	/**
 	 * Der Regel-Typ zum Fixieren eines Schülers (A) in einem Kurs (B). <br>
@@ -79,9 +79,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter B: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_FIXIEREN_IN_KURS(4, "Schüler: Fixiere in Kurs", Arrays.asList(
-			GostKursblockungRegelParameterTyp.SCHUELER_ID,
-			GostKursblockungRegelParameterTyp.KURS_ID
-			)),
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
 
 	/**
 	 * Der Regel-Typ zum Verbieten eines Schülers (A) in einem Kurs (B). <br>
@@ -90,9 +90,9 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter A: Datenbank-ID des Kurses (long)
 	 */
 	SCHUELER_VERBIETEN_IN_KURS(5, "Schüler: Verbiete in Kurs", Arrays.asList(
-			GostKursblockungRegelParameterTyp.SCHUELER_ID,
-			GostKursblockungRegelParameterTyp.KURS_ID
-			)),
+		GostKursblockungRegelParameterTyp.SCHUELER_ID,
+		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
 
 	/**
 	 * Der Regel-Typ zum Verbieten eines Kurses (A) mit einem Kurs (B) in der selben Schiene. <br>
@@ -100,10 +100,10 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
-	KURS_VERBIETEN_MIT_KURS(7, "Kurs verbiete mit Kurs", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURS_ID,
-			GostKursblockungRegelParameterTyp.KURS_ID
-			)),
+	KURS_VERBIETEN_MIT_KURS(7, "Kurs: Verbiete mit Kurs in gleicher Schiene", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
 
 	/**
 	 * Der Regel-Typ zum Forcieren, dass Kurs (A) mit einem Kurs (B) in der selben Schiene landet. <br>
@@ -111,20 +111,20 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Datenbank-ID des 2. Kurses (long)
 	 */
-	KURS_ZUSAMMEN_MIT_KURS(8, "Kurs zusammen mit Kurs", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURS_ID,
-			GostKursblockungRegelParameterTyp.KURS_ID
-			)),
+	KURS_ZUSAMMEN_MIT_KURS(8, "Kurs: Zusammen mit Kurs in gleicher Schiene", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.KURS_ID
+	)),
 
 	/**
 	 * Der Regel-Typ zum forcieren, dass ein Kurs mit einer bestimmten Anzahl an Dummy-SuS aufgefüllt wird. <br>
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
-	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Fülle Kurs mit Dummy SuS auf.", Arrays.asList(
-			GostKursblockungRegelParameterTyp.KURS_ID,
-			GostKursblockungRegelParameterTyp.GANZZAHL
-			)),
+	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Kurs: Fülle mit Dummy-SuS auf.", Arrays.asList(
+		GostKursblockungRegelParameterTyp.KURS_ID,
+		GostKursblockungRegelParameterTyp.GANZZAHL
+	)),
 
 	/**
 	 * Der Regel-Typ zum forcieren, dass gleiche Lehrkräfte nicht in der selben Schiene landen.

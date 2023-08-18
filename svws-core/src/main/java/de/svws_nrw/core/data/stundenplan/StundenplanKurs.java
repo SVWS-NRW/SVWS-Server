@@ -41,4 +41,8 @@ public class StundenplanKurs {
 	@Schema(description = "die Liste der IDs der Schüler, die dem Kurs zugeordnet sind")
 	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
 
+	/** Die Liste der IDs der Lehrer, die dem Kurs zugeordnet sind. */
+	@Schema(description = "die Liste der IDs der Lehrer, die dem Kurs zugeordnet sind")
+	public @NotNull List<@NotNull Long> lehrer = new ArrayList<>();
+
 }

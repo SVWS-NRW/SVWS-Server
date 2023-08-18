@@ -48,18 +48,19 @@ import { GostFachwahl } from '../core/data/gost/GostFachwahl';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
-import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausuren/GostKlausurenCollectionSkrsKrs';
-import { GostKlausurenKalenderinformation } from '../core/data/gost/klausuren/GostKlausurenKalenderinformation';
-import { GostKlausurraum } from '../core/data/gost/klausuren/GostKlausurraum';
-import { GostKlausurraumstunde } from '../core/data/gost/klausuren/GostKlausurraumstunde';
-import { GostKlausurtermin } from '../core/data/gost/klausuren/GostKlausurtermin';
-import { GostKlausurvorgabe } from '../core/data/gost/klausuren/GostKlausurvorgabe';
-import { GostKursklausur } from '../core/data/gost/klausuren/GostKursklausur';
+import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
+import { GostKlausurenKalenderinformation } from '../core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
+import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
+import { GostKlausurraumstunde } from '../core/data/gost/klausurplanung/GostKlausurraumstunde';
+import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
+import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
+import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { GostKursklausur } from '../core/data/gost/klausurplanung/GostKursklausur';
 import { GostLaufbahnplanungBeratungsdaten } from '../core/data/gost/GostLaufbahnplanungBeratungsdaten';
 import { GostLaufbahnplanungDaten } from '../core/data/gost/GostLaufbahnplanungDaten';
 import { GostLeistungen } from '../core/data/gost/GostLeistungen';
 import { GostSchuelerFachwahl } from '../core/data/gost/GostSchuelerFachwahl';
-import { GostSchuelerklausur } from '../core/data/gost/klausuren/GostSchuelerklausur';
+import { GostSchuelerklausur } from '../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
@@ -1943,7 +1944,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Export der SQLite-Datenbank
-	 *     - Mime-Type: application/octet-stream
+	 *     - Mime-Type: application/vnd.sqlite3
 	 *     - Rückgabe-Typ: Blob
 	 *   Code 403: Das Schema darf nicht exportiert werden.
 	 *
@@ -4208,31 +4209,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode blockGostKlausurenKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/blocken
+	 * Implementierung der POST-Methode blockenGostKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/blocken
 	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Kursklausuren.
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKursklausur>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *     - Rückgabe-Typ: Boolean
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {GostKlausurterminblockungDaten} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Die Liste der Kursklausuren.
+	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async blockGostKlausurenKursklausuren(data : List<number>, schema : string) : Promise<List<GostKursklausur>> {
+	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/blocken"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKursklausur>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return (text === "true");
 	}
 
 

@@ -2,25 +2,25 @@ package de.svws_nrw.core.klausurblockung;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.base.CsvReader;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
-import de.svws_nrw.core.utils.klausurplan.KlausurblockungSchienenAlgorithmus;
-import de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmus;
-import de.svws_nrw.core.utils.klausurplan.KlausurterminblockungAlgorithmusConfig;
-
-import org.junit.jupiter.api.Test;
-
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmus;
+import de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus;
 import jakarta.validation.constraints.NotNull;
 
 /** Diese Klasse testet die Klasse {@link KlausurblockungSchienenAlgorithmus}. */
@@ -239,36 +239,34 @@ class KlausurterminblockungTests {
 
 	private static void starteKlausurblockungSchiene(@NotNull final List<@NotNull GostKursklausur> pInput) {
 		// Algorithmus-Objekt erzeugen.
-		final KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
+		final @NotNull KlausurterminblockungAlgorithmus alg = new KlausurterminblockungAlgorithmus();
 
-		final KlausurterminblockungAlgorithmusConfig cfg = new KlausurterminblockungAlgorithmusConfig();
-		cfg.set_max_time_millis(BLOCKUNGS_ZEIT);
+		final @NotNull GostKlausurterminblockungDaten daten = new GostKlausurterminblockungDaten();
+		daten.konfiguration.maxTimeMillis = BLOCKUNGS_ZEIT;
+		daten.klausuren = pInput;
 
 		// Blockung starten
-		@NotNull
-		final List<@NotNull List<@NotNull Long>> output = alg.berechne(pInput, cfg);
+		final @NotNull GostKlausurterminblockungErgebnis ergebnis = alg.apply(daten);
 
 		// Gibt es Ergebnisse?
-		assert !output.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";
+		assert !ergebnis.termine.isEmpty() : "'KlausurblockungSchienenOutputs.klausuren' ist leer.";
 
 
 		// Ergebnis überprüfen.
-		check(pInput, output);
+		check(daten, ergebnis);
 	}
 
-	private static void check(@NotNull final List<@NotNull GostKursklausur> pInput, @NotNull final List<@NotNull List<@NotNull Long>> pOutput) {
+	private static void check(@NotNull final GostKlausurterminblockungDaten daten, @NotNull final GostKlausurterminblockungErgebnis ergebnis) {
 
 		// Map: Klausur-ID --> Klausur-Objekt
 		final HashMap<@NotNull Long, @NotNull GostKursklausur> mapKlausur = new HashMap<>();
-		for (@NotNull final GostKursklausur klausur : pInput) {
+		for (@NotNull final GostKursklausur klausur : daten.klausuren) {
 			mapKlausur.put(klausur.id, klausur);
 		}
 
-		for (int schiene = 0; schiene < pOutput.size(); schiene++) {
-			@NotNull
-			final List<@NotNull Long> klausuren = pOutput.get(schiene);
+		for (final @NotNull GostKlausurterminblockungErgebnisTermin termin : ergebnis.termine) {
 			final TreeSet<Long> schueler = new TreeSet<>();
-			for (final long klausurID : klausuren) {
+			for (final long klausurID : termin.kursklausuren) {
 				for (final long susID : mapKlausur.get(klausurID).schuelerIds) {
 					if (!schueler.add(susID)) {
 						fail("Doppelter Schüler an einem Termin!");

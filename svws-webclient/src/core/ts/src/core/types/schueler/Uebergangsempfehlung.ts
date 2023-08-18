@@ -7,16 +7,16 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 export class Uebergangsempfehlung extends JavaObject implements JavaEnum<Uebergangsempfehlung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Uebergangsempfehlung> = [];
+	static readonly all_values_by_ordinal : Array<Uebergangsempfehlung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Uebergangsempfehlung> = new Map<string, Uebergangsempfehlung>();
+	static readonly all_values_by_name : Map<string, Uebergangsempfehlung> = new Map<string, Uebergangsempfehlung>();
 
 	/**
 	 * Übergangsempfehlung Hauptschule

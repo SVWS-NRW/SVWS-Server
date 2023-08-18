@@ -6,16 +6,16 @@ import { HashMap } from '../../../java/util/HashMap';
 export class BerufskollegBerufsebene3 extends JavaObject implements JavaEnum<BerufskollegBerufsebene3> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<BerufskollegBerufsebene3> = [];
+	static readonly all_values_by_ordinal : Array<BerufskollegBerufsebene3> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, BerufskollegBerufsebene3> = new Map<string, BerufskollegBerufsebene3>();
+	static readonly all_values_by_name : Map<string, BerufskollegBerufsebene3> = new Map<string, BerufskollegBerufsebene3>();
 
 	/**
 	 * Berufsebene 3 : Absatzwirtschaft

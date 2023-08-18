@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenCollectionSkrsKrs;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurraum;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurraumstunde;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
-import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausur;
-import de.svws_nrw.core.data.gost.klausuren.GostSchuelerklausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurraumstunde;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.utils.klausurplan.GostKlausurraumManager;
-import de.svws_nrw.core.utils.klausurplan.GostKlausurvorgabenManager;
-import de.svws_nrw.core.utils.klausurplan.GostKursklausurManager;
+import de.svws_nrw.core.utils.klausurplanung.GostKlausurraumManager;
+import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
@@ -129,7 +129,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			if (sk.startzeit != null) {
 				if (sk.startzeit < minStart)
 					minStart = sk.startzeit;
-				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausur(sk.idKursklausur).idVorgabe).dauer;
+				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausurById(sk.idKursklausur).idVorgabe).dauer;
 				if (sk.startzeit + endzeit > maxEnd)
 					maxEnd = endzeit;
 			}

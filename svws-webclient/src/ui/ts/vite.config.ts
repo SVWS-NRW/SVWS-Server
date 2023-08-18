@@ -87,7 +87,6 @@ export default defineConfig({
 		}),
 		Components({
 			globs: ["src/components/**/!(*story.vue)*.vue"],
-			dirs: ['src/components'],
 			resolvers: [IconsResolver()]
 		}),
 		Icons(),

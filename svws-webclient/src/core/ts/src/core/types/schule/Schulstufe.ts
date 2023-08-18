@@ -8,16 +8,16 @@ import { SchulstufeKatalogEintrag } from '../../../core/data/schule/SchulstufeKa
 export class Schulstufe extends JavaObject implements JavaEnum<Schulstufe> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Schulstufe> = [];
+	static readonly all_values_by_ordinal : Array<Schulstufe> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Schulstufe> = new Map<string, Schulstufe>();
+	static readonly all_values_by_name : Map<string, Schulstufe> = new Map<string, Schulstufe>();
 
 	/**
 	 * Die Vorschulstufe

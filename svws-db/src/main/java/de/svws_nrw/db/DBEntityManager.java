@@ -211,6 +211,16 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Synchronisiert den Persistence-Kontext mit der Datenbank.
+	 * Bei Transaktionen kann dies genutzt werden, um eine Reihenfolge der
+	 * Befehle zu garantieren und damit Foreign-Key-Constraints einzuhalten.
+	 */
+	public void transactionFlush() {
+		em.flush();
+	}
+
+
+	/**
 	 * Beendet eine aktuelle Transaction mithilfe eines Commit.
 	 *
 	 * @return true, falls der Commit erfolgreich war und ansonsten false
@@ -322,6 +332,27 @@ public final class DBEntityManager implements AutoCloseable {
 			em.persist(entity);
 			return true;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Persistiert die übergebenen Entities in der Datenbank. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden.
+	 *
+	 * @param entities   die zu persistierenden Entities
+	 *
+	 * @return true, falls die Entities erfolgreich persistiert wurden und ansonsten false
+	 */
+	public boolean transactionPersistAll(final Collection<? extends Object> entities) {
+		if (entities == null)
+			return false;
+		try {
+			for (final Object obj : entities)
+				em.persist(obj);
+			return true;
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalStateException e) {
 			return false;
 		}
 	}

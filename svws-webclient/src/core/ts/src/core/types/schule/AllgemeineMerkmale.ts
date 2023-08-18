@@ -8,16 +8,16 @@ import { Arrays } from '../../../java/util/Arrays';
 export class AllgemeineMerkmale extends JavaObject implements JavaEnum<AllgemeineMerkmale> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<AllgemeineMerkmale> = [];
+	static readonly all_values_by_ordinal : Array<AllgemeineMerkmale> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, AllgemeineMerkmale> = new Map<string, AllgemeineMerkmale>();
+	static readonly all_values_by_name : Map<string, AllgemeineMerkmale> = new Map<string, AllgemeineMerkmale>();
 
 	/**
 	 * Merkmal: Ganztagschule

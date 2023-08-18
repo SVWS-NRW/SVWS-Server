@@ -6,16 +6,16 @@ import { LehrerKatalogEinsatzstatusEintrag } from '../../../core/data/lehrer/Leh
 export class LehrerEinsatzstatus extends JavaObject implements JavaEnum<LehrerEinsatzstatus> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<LehrerEinsatzstatus> = [];
+	static readonly all_values_by_ordinal : Array<LehrerEinsatzstatus> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, LehrerEinsatzstatus> = new Map<string, LehrerEinsatzstatus>();
+	static readonly all_values_by_name : Map<string, LehrerEinsatzstatus> = new Map<string, LehrerEinsatzstatus>();
 
 	/**
 	 * Einsatzstatus: 'Stammschule, ganz oder teilweise auch an anderen Schulen tätig'

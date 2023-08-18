@@ -169,6 +169,11 @@ task buildTS() {
 	group "build"
 }
 
+task publishReleaseAllAndCloseSonatype(type: GradleBuild) {
+	tasks = ['publishAllPublicationsToSonatypeRepository', 'closeAndReleaseSonatypeStagingRepository', 'publishReleaseAll']
+	group "publishing"
+	description 'Publish ins Sonatype Staging, im Anschluss Release nach Maven Central und Schließen des Staging. Danach Release zu anderen Repositories'
+}
 
 
 

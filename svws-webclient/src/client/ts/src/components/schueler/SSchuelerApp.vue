@@ -1,21 +1,21 @@
 <template>
 	<div v-if="stammdaten !== undefined" class="page--flex">
-		<svws-ui-header>
-			<div class="flex items-center">
-				<div class="w-20 mr-6">
-					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
-				</div>
-				<div>
-					<span class="inline-block mr-3"> {{ vorname }} {{ nachname }} </span>
-					<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-						ID:
-						{{ stammdaten()?.id || "" }}
-					</svws-ui-badge>
-					<br>
-					<span class="opacity-40"> {{ inputKlasse ? inputKlasse : '–' }} </span>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<span>{{ vorname }} {{ nachname }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID:
+							{{ stammdaten()?.id || '—' }}
+						</svws-ui-badge>
+					</h2>
+					<span class="svws-subline">{{ inputKlasse ? inputKlasse : '–' }}</span>
 				</div>
 			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
 			<router-view />
 		</svws-ui-router-tab-bar>

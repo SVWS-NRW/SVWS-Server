@@ -211,6 +211,11 @@
 		scrollToActiveItem();
 	}
 
+	function onBackspace() {
+		if (showList.value === false)
+			openListbox();
+	}
+
 	function onEscape() {
 		if (showList.value) {
 			closeListbox();
@@ -298,6 +303,7 @@
 					@keydown.right.prevent="onArrowDown"
 					@keydown.left.prevent="onArrowUp"
 					@keydown.enter.prevent="selectCurrentActiveItem"
+					@keydown.backspace="onBackspace"
 					@keydown.esc.prevent="onEscape"
 					@keydown.space="onSpace" />
 			</div>

@@ -6,8 +6,8 @@
 				Sollen die Kurse {{ kursname1 }} und {{ kursname2 }} zu einem Kurs zusammengefasst werden?
 			</div>
 			<div class="flex gap-1">
+				<svws-ui-button @click="clickNo"> Abbrechen </svws-ui-button>
 				<svws-ui-button @click="clickYes"> Ja </svws-ui-button>
-				<svws-ui-button @click="clickNo"> Nein </svws-ui-button>
 			</div>
 		</template>
 	</svws-ui-modal>
@@ -31,7 +31,7 @@
 	})
 
 	const kursname2 = computed<string>(() => {
-		return (kurs2.value === undefined) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
+		return (kurs2.value === undefined || !modal.value.isOpen) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
 	})
 
 	const modal = ref();

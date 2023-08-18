@@ -1,3 +1,5 @@
+@import 'print.css' print;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -31,6 +33,7 @@
 .page--statistik .router-tab-bar--wrapper,
 .page--statistik .page--content,
 .page--statistik .page--content--dashboard,
+.page--statistik .svws-ui-header,
 .page--statistik .page--header {
 	max-width: 140rem;
 	@apply mx-auto w-full;
@@ -46,7 +49,8 @@
 	@apply px-4 sm:px-5 md:px-6 lg:px-8;
 }
 
-.page--statistik .page--header {
+.page--statistik .page--header,
+.page--statistik .svws-ui-header {
 	@apply 3xl:px-8 4xl:px-8;
 }
 
@@ -61,6 +65,10 @@
 .page--content--full {
 	@apply flex;
 	max-width: unset;
+}
+
+.page--content--flex {
+	@apply flex flex-col min-h-full gap-y-5;
 }
 
 .page--content.page--content--gost-grid {

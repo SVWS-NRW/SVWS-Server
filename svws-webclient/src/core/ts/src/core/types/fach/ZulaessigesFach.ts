@@ -15,16 +15,16 @@ import { Pair } from '../../../core/adt/Pair';
 export class ZulaessigesFach extends JavaObject implements JavaEnum<ZulaessigesFach> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<ZulaessigesFach> = [];
+	static readonly all_values_by_ordinal : Array<ZulaessigesFach> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, ZulaessigesFach> = new Map<string, ZulaessigesFach>();
+	static readonly all_values_by_name : Map<string, ZulaessigesFach> = new Map<string, ZulaessigesFach>();
 
 	/**
 	 * Fach Arbeits- und Betriebswirtschaftslehre

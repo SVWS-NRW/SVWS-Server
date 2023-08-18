@@ -6,16 +6,16 @@ import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../../../core/data
 export class SchulabschlussAllgemeinbildend extends JavaObject implements JavaEnum<SchulabschlussAllgemeinbildend> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<SchulabschlussAllgemeinbildend> = [];
+	static readonly all_values_by_ordinal : Array<SchulabschlussAllgemeinbildend> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, SchulabschlussAllgemeinbildend> = new Map<string, SchulabschlussAllgemeinbildend>();
+	static readonly all_values_by_name : Map<string, SchulabschlussAllgemeinbildend> = new Map<string, SchulabschlussAllgemeinbildend>();
 
 	/**
 	 * Es liegt kein Abschluss vor

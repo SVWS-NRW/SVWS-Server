@@ -77,7 +77,11 @@
 
 	const hasIcon = computed(() => !!slots.default);
 
-	const debouncedOnInput = useDebounceFn((event) => onDebouncedInput(event), toRef(props, 'debounceMs'))
+	const debouncedOnInput = useDebounceFn((event) => {
+		if (document.activeElement !== input.value)
+			input.value?.focus();
+		onDebouncedInput(event)
+	}, toRef(props, 'debounceMs'))
 
 	/**
 	 * Diese Funktion löst ein Emit aus, wenn das Input-Feld verlassen wird und
@@ -140,8 +144,7 @@
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
 			@input="debouncedOnInput"
-			@blur="onBlurInput"
-			@focus="debouncedOnInput">
+			@blur="onBlurInput">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"

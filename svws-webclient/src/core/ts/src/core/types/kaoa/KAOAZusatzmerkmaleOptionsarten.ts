@@ -4,16 +4,16 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class KAOAZusatzmerkmaleOptionsarten extends JavaObject implements JavaEnum<KAOAZusatzmerkmaleOptionsarten> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmaleOptionsarten> = [];
+	static readonly all_values_by_ordinal : Array<KAOAZusatzmerkmaleOptionsarten> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, KAOAZusatzmerkmaleOptionsarten> = new Map<string, KAOAZusatzmerkmaleOptionsarten>();
+	static readonly all_values_by_name : Map<string, KAOAZusatzmerkmaleOptionsarten> = new Map<string, KAOAZusatzmerkmaleOptionsarten>();
 
 	/**
 	 * Keine Option für das KAoA-Zusatzmerkmal

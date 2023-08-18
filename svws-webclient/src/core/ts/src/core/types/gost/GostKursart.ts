@@ -13,16 +13,16 @@ import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostKursart> = [];
+	static readonly all_values_by_ordinal : Array<GostKursart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostKursart> = new Map<string, GostKursart>();
+	static readonly all_values_by_name : Map<string, GostKursart> = new Map<string, GostKursart>();
 
 	/**
 	 * Leistungskurs = LK

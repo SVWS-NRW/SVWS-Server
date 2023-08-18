@@ -13,16 +13,16 @@ import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentExce
 export class StundenplanblockungRegelTyp extends JavaObject implements JavaEnum<StundenplanblockungRegelTyp> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<StundenplanblockungRegelTyp> = [];
+	static readonly all_values_by_ordinal : Array<StundenplanblockungRegelTyp> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, StundenplanblockungRegelTyp> = new Map<string, StundenplanblockungRegelTyp>();
+	static readonly all_values_by_name : Map<string, StundenplanblockungRegelTyp> = new Map<string, StundenplanblockungRegelTyp>();
 
 	/**
 	 *  Eine Regel ist nicht definiert.

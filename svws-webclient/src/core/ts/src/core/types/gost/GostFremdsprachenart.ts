@@ -4,16 +4,16 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 export class GostFremdsprachenart extends JavaObject implements JavaEnum<GostFremdsprachenart> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<GostFremdsprachenart> = [];
+	static readonly all_values_by_ordinal : Array<GostFremdsprachenart> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, GostFremdsprachenart> = new Map<string, GostFremdsprachenart>();
+	static readonly all_values_by_name : Map<string, GostFremdsprachenart> = new Map<string, GostFremdsprachenart>();
 
 	/**
 	 * Ist eine fortgeführte Fremdsprache.

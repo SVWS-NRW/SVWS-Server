@@ -195,8 +195,10 @@ public abstract class DataManager<ID> {
 			initDTO.accept(dto, newID);
 			applyPatchMappings(dto, map, attributeMapper);
 			// Persistiere das DTO in der Datenbank
-			conn.transactionPersist(dto);
-			conn.transactionCommit();
+			if (!conn.transactionPersist(dto))
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			if (!conn.transactionCommit())
+				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			final CoreData daten = dtoMapper.apply(dto);
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {

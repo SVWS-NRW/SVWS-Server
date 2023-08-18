@@ -22,6 +22,7 @@ import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurslehrer;
@@ -127,6 +128,14 @@ public final class DBUtilsGostBlockung {
 			final StringWriter sw = new StringWriter();
 			e.printStackTrace(new PrintWriter(sw));
 			logger.logLn(sw.toString());
+			return false;
+		}
+		// Prüfe, ob der Abiturjahrgang zuvor angelegt wurde
+		logger.logLn("-> Prüfe, ob der Abiturjahrgang %d angelegt ist...".formatted(k42.abiturjahrgang));
+		logger.modifyIndent(2);
+		final DTOGostJahrgangsdaten jahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, k42.abiturjahrgang);
+		if (jahrgangsdaten == null) {
+			logger.logLn("[Fehler] - Der Abiturjahrgang %d ist nicht angelegt.".formatted(k42.abiturjahrgang));
 			return false;
 		}
 		logger.logLn("[OK]");

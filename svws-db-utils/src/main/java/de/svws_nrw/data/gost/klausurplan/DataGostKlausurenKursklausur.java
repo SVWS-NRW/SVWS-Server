@@ -10,9 +10,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
+import de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -20,8 +24,8 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausu
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -106,44 +110,48 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	/**
-	 * Setzt die im Client generierte Blockung in der Datenbank um.
+	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
 	 *
 	 * @param conn     Connection
-	 * @param blockung das Gost-Halbjahr
+	 * @param blockungDaten das GostKlausurterminblockungDaten-Objekt
 	 *
-	 * @return Response
+	 * @return true, wenn die Blockung erstellt werden konnte, false, wenn nicht.
 	 *
 	 */
-	public static Response persistBlockung(final DBEntityManager conn, final List<List<Long>> blockung) {
-		// final KlausurterminblockungAlgorithmusConfig blockConfig = new KlausurterminblockungAlgorithmusConfig();
-		// final KlausurterminblockungAlgorithmus blockAlgo = new KlausurterminblockungAlgorithmus();
+	public static boolean blocken(final DBEntityManager conn, final GostKlausurterminblockungDaten blockungDaten) {
+		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
 		try {
 			conn.transactionBegin();
 			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Termine");
 			Long terminId = lastID == null ? 1 : lastID.MaxID + 1;
-			for (final List<Long> klausuren : blockung) {
-				DTOGostKlausurenTermine termin = null;
-				for (final long klausurId : klausuren) {
-					final DTOGostKlausurenKursklausuren klausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, klausurId);
-					if (klausur == null)
-						throw OperationError.NOT_FOUND.exception("Kursklausur mit ID " + klausurId + " nicht gefunden.");
-					final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, klausur.Vorgabe_ID);
-					if (vorgabe == null)
-						throw OperationError.NOT_FOUND.exception("Kklausurvorgabe mit ID " + klausur.Vorgabe_ID + " nicht gefunden.");
-					if (termin == null) {
-						termin = new DTOGostKlausurenTermine(terminId++, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal);
-						conn.transactionPersist(termin);
-					}
-					if (termin.Abi_Jahrgang != vorgabe.Abi_Jahrgang || termin.Halbjahr != vorgabe.Halbjahr || termin.Quartal != vorgabe.Quartal)
-						throw OperationError.CONFLICT.exception("Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
-					klausur.Termin_ID = termin.ID;
-					conn.transactionPersist(klausur);
-				}
+			for (final GostKlausurterminblockungErgebnisTermin ergebnisTermin : ergebnis.termine) {
+				bearbeiteTermin(conn, ergebnisTermin, terminId++);
 			}
 			conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(true).build();
+			return true;
 		} finally {
 			conn.transactionRollback();
+		}
+	}
+
+	private static void bearbeiteTermin(final DBEntityManager conn, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId) {
+		DTOGostKlausurenTermine termin = null;
+		for (final long klausurId : ergebnisTermin.kursklausuren) {
+			final DTOGostKlausurenKursklausuren klausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, klausurId);
+			if (klausur == null)
+				throw OperationError.NOT_FOUND.exception("Kursklausur mit ID " + klausurId + " nicht gefunden.");
+			final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, klausur.Vorgabe_ID);
+			if (vorgabe == null)
+				throw OperationError.NOT_FOUND.exception("Klausurvorgabe mit ID " + klausur.Vorgabe_ID + " nicht gefunden.");
+			if (termin == null) {
+				termin = new DTOGostKlausurenTermine(terminId, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal);
+				conn.transactionPersist(termin);
+				conn.transactionFlush();
+			}
+			if (termin.Abi_Jahrgang != vorgabe.Abi_Jahrgang || termin.Halbjahr != vorgabe.Halbjahr || termin.Quartal != vorgabe.Quartal)
+				throw OperationError.CONFLICT.exception("Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
+			klausur.Termin_ID = termin.ID;
+			conn.transactionPersist(klausur);
 		}
 	}
 
@@ -265,9 +273,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 						kursklausur.Termin_ID = newTermin;
 					}
 					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-
-					// TODO Was ist mit anderen Attributen, falls sie im InputStream vorkommen?
-
 					default -> throw OperationError.BAD_REQUEST.exception();
 					}
 				}

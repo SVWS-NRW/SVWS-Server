@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.function.Function;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurenKalenderinformation;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenKalenderinformation;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;

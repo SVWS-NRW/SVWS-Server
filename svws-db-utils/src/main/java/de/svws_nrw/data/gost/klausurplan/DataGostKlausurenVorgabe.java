@@ -9,13 +9,13 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurtermin;
-import de.svws_nrw.core.data.gost.klausuren.GostKlausurvorgabe;
-import de.svws_nrw.core.data.gost.klausuren.GostKursklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.utils.klausurplan.GostKlausurvorgabenManager;
+import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -339,53 +339,73 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
 	}
 
+
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
-	 * @param halbjahr das Gost-Halbjahr
+	 *
+	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
+	 * @param quartal      das Quartal, 0 für das gesamte Halbjahr
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public boolean copyVorgabenToJahrgang(final GostHalbjahr halbjahr) {
-
-		return copyVorgabenToJahrgang(halbjahr, 0);
+	public Response copyVorgaben(final GostHalbjahr halbjahr, final int quartal) {
+		try {
+			conn.transactionBegin();
+			final boolean data = copyVorgabenToJahrgang(conn, _abiturjahr, halbjahr, quartal);
+	    	conn.transactionCommit();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(data).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException wae)
+				return wae.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse(e);
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
 	}
 
+
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal das Quartal, 0 für das gesamte Halbjahr
+	 *
+	 * @param conn         die Datenbankverbindung
+	 * @param abiturjahr   das Abiturjahr
+	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
+	 * @param quartal      das Quartal, 0 für das gesamte Halbjahr
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public boolean copyVorgabenToJahrgang(final GostHalbjahr halbjahr, final int quartal) {
+	public static boolean copyVorgabenToJahrgang(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr, final int quartal) {
 		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
-		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", _abiturjahr, DTOGostKlausurenVorgaben.class);
-
+		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", abiturjahr, DTOGostKlausurenVorgaben.class);
+		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
-			throw new NullPointerException();
-		if (!vorgabenVorlage.isEmpty()) {
-			final ArrayList<DTOGostKlausurenVorgaben> gostVorgaben = new ArrayList<>();
-			// Bestimme die ID, für welche der Datensatz eingefügt wird
-			final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Vorgaben");
-			long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
-			for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
-				if (halbjahr != null && vorgabe.Halbjahr != halbjahr || quartal > 0 && quartal != vorgabe.Quartal)
-					continue;
-				boolean exists = false;
-				for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
-					if (vorgabe.Halbjahr.id == v.Halbjahr.id && vorgabe.Quartal == v.Quartal && vorgabe.Fach_ID == v.Fach_ID && vorgabe.Kursart.equals(v.Kursart)) {
-						exists = true;
-						break;
-					}
-				}
-				if (!exists) {
-					final DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, _abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer,
-							vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
-					k.Bemerkungen = vorgabe.Bemerkungen;
-					gostVorgaben.add(k);
+			throw OperationError.NOT_FOUND.exception("Es wurden keine Vorlage-Daten gefunden.");
+		// Wenn keine Vorlage-Daten vorhanden sind, dann ist nichts zu tun und die Operation ist erfolgreich
+		if (vorgabenVorlage.isEmpty())
+			return true;
+
+		// Bestimme die ID, für welche der Datensatz eingefügt wird
+		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
+		for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
+			if (halbjahr != null && vorgabe.Halbjahr != halbjahr || quartal > 0 && quartal != vorgabe.Quartal)
+				continue;
+			boolean exists = false;
+			for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
+				if ((vorgabe.Halbjahr.id == v.Halbjahr.id) && (vorgabe.Quartal == v.Quartal) && (vorgabe.Fach_ID == v.Fach_ID)
+						&& vorgabe.Kursart.equals(v.Kursart)) {
+					exists = true;
+					break;
 				}
 			}
-			return conn.persistAll(gostVorgaben);
+			if (!exists) {
+				final DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal,
+						vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer, vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung,
+						vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
+				k.Bemerkungen = vorgabe.Bemerkungen;
+				if (!conn.transactionPersist(k))
+					throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Vorlage-Daten.");
+			}
 		}
 		return true;
 	}

@@ -6,13 +6,13 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeLehrerStundenplan, type RouteLehrerStundenplan } from "~/router/apps/lehrer/stundenplan/RouteLehrerStundenplan";
 
-import { StundenplanAnsichtPausenzeiten } from "@comp";
+import { StundenplanAnsicht } from "@comp";
 import type { StundenplanAnsichtProps } from "@comp";
 
 export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsichtPausenzeiten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanAnsicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -65,6 +65,7 @@ export class RouteLehrerStundenplanDaten extends RouteNode<unknown, RouteLehrerS
 	public getProps(to: RouteLocationNormalized): StundenplanAnsichtProps {
 		return {
 			mode: 'lehrer',
+			id: routeLehrer.data.stammdaten.id,
 			manager: () => routeLehrerStundenplan.data.manager,
 			wochentyp: () => routeLehrerStundenplan.data.wochentyp,
 			kalenderwoche: () => routeLehrerStundenplan.data.kalenderwoche,

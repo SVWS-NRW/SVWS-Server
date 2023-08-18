@@ -6,16 +6,16 @@ import { VerkehrsspracheKatalogEintrag } from '../../../core/data/schule/Verkehr
 export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrssprache> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Verkehrssprache> = [];
+	static readonly all_values_by_ordinal : Array<Verkehrssprache> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Verkehrssprache> = new Map<string, Verkehrssprache>();
+	static readonly all_values_by_name : Map<string, Verkehrssprache> = new Map<string, Verkehrssprache>();
 
 	/**
 	 * Afar (aar)

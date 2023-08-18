@@ -11,7 +11,7 @@ import type {
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungKalenderProps {
-	jahrgangsdaten: GostJahrgangsdaten | undefined;
+	jahrgangsdaten: GostJahrgangsdaten;
 	kursklausurmanager: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;

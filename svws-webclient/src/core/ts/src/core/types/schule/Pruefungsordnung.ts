@@ -6,16 +6,16 @@ import { PruefungsordnungKatalogEintrag } from '../../../core/data/schule/Pruefu
 export class Pruefungsordnung extends JavaObject implements JavaEnum<Pruefungsordnung> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<Pruefungsordnung> = [];
+	static readonly all_values_by_ordinal : Array<Pruefungsordnung> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, Pruefungsordnung> = new Map<string, Pruefungsordnung>();
+	static readonly all_values_by_name : Map<string, Pruefungsordnung> = new Map<string, Pruefungsordnung>();
 
 	/**
 	 * APO-BK: Verordnung über die Ausbildung und Prüfung in den Bildungsgängen des Berufskollegs

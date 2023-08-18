@@ -6,16 +6,16 @@ import { HashMap } from '../../../java/util/HashMap';
 export class SchulabschlussBerufsbildend extends JavaObject implements JavaEnum<SchulabschlussBerufsbildend> {
 
 	/** the name of the enumeration value */
-	private readonly __name : string;
+	readonly __name : string;
 
 	/** the ordinal value for the enumeration value */
-	private readonly __ordinal : number;
+	readonly __ordinal : number;
 
 	/** an array containing all values of this enumeration */
-	private static readonly all_values_by_ordinal : Array<SchulabschlussBerufsbildend> = [];
+	static readonly all_values_by_ordinal : Array<SchulabschlussBerufsbildend> = [];
 
 	/** an array containing all values of this enumeration indexed by their name*/
-	private static readonly all_values_by_name : Map<string, SchulabschlussBerufsbildend> = new Map<string, SchulabschlussBerufsbildend>();
+	static readonly all_values_by_name : Map<string, SchulabschlussBerufsbildend> = new Map<string, SchulabschlussBerufsbildend>();
 
 	/**
 	 * Es liegt kein Abschluss vor

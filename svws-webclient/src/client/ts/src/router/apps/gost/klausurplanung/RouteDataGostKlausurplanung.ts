@@ -1,6 +1,6 @@
 import { computed, shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs} from "@core";
+import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
@@ -179,10 +179,10 @@ export class RouteDataGostKlausurplanung {
 			const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 			if (abschnitt === undefined) {
 				this.setPatchedState({
-					halbjahr: halbjahr,
+					halbjahr,
 					kursklausurmanager: undefined,
 					stundenplanmanager: undefined,
-					klausurvorgabenmanager: klausurvorgabenmanager,
+					klausurvorgabenmanager,
 				});
 				return true;
 			}
@@ -191,10 +191,10 @@ export class RouteDataGostKlausurplanung {
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
 				this.setPatchedState({
-					halbjahr: halbjahr,
+					halbjahr,
 					kursklausurmanager,
 					stundenplanmanager: undefined,
-					klausurvorgabenmanager: klausurvorgabenmanager,
+					klausurvorgabenmanager,
 				});
 				return true;
 			}
@@ -205,12 +205,9 @@ export class RouteDataGostKlausurplanung {
 			const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
 			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
 			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
-			//const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-			//const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-			//const kursklausurmanager = new GostKursklausurManager(listKursklausuren, listKlausurtermine);
 			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({
-				halbjahr: halbjahr,
+				halbjahr,
 				kursklausurmanager,
 				stundenplanmanager,
 				klausurvorgabenmanager,
@@ -313,6 +310,17 @@ export class RouteDataGostKlausurplanung {
 		klausur.idTermin = idTermin;
 		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
 		this.kursklausurmanager.updateKursklausur(klausur);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id);
+		const oldKlausur = this.kursklausurmanager.gibKursklausurById(id);
+		Object.assign(oldKlausur, klausur);
+		this.kursklausurmanager.updateKursklausur(oldKlausur);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -421,13 +429,15 @@ export class RouteDataGostKlausurplanung {
 		return collectionSkrsKrs;
 	}
 
-	/*persistKlausurblockung = async (blockung: List<List<number>>): Promise<boolean> => {
+	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten): Promise<boolean> => {
 		api.status.start();
-		await api.server.blockGostKlausurenKursklausuren(blockung, api.schema);
-		await this.reloadKursklausurmanager(null);
+		await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
+		this.setPatchedState({
+			kursklausurmanager: await this.reloadKursklausurmanager(null),
+		});
 		this.commit();
 		api.status.stop();
 		return true;
-	}*/
+	}
 
 }
