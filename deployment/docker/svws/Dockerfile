@@ -10,7 +10,7 @@ COPY app /opt/app/svws
 COPY conf /etc/app/svws/conf
 COPY startup.sh /opt/app/svws/startup.sh
 
-RUN unzip -d /opt/app/svws/client /opt/app/svws/svws-client*.zip
+RUN unzip -d /opt/app/svws/client /opt/app/svws/SVWS-Client*.zip
 RUN rm -rf /opt/app/svws/svws-client*.zip
 
 WORKDIR /opt/app/svws

@@ -1,48 +1,32 @@
 def dockerfileAppDir = "$projectDir/svws/app"
 
+dependencies {
+	implementation project(':svws-server-app')
+}
+
 /*
  Task lädt die SVWS-Artefakte einer angegebenen Version
  aus dem Package-Repository von GitHub und speichert diese
  für die Integration in das Docker-Image des SVWSs.
-
-task copyPublishedArtifacts(type: Copy) {
-	dependsOn downloadPublishedArtifacts
-	def appArtifactsDir = project.ext.appArtifactsDir
-	copy {
-		from ("${appArtifactsDir}") {
-			exclude "svws-*.jar"
-			exclude "svws-*.zip"
-		}
-		into "${dockerfileAppDir}/lib"
-	}
-	copy {
-		from ("${appArtifactsDir}") {
-			include "svws-*.jar"
-			include "svws-*.zip"
-		}
-		into "${dockerfileAppDir}"
-	}
-} */
+*/
 
 task copyArtifacts(type: Copy) {
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:doZip')
-	into ("${dockerfileAppDir}/lib") {
+	into dockerfileAppDir
+	into ("lib/") {
 		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
 		}
 	}
-	into ("${dockerfileAppDir}") {
+	into ("/") {
 		from (configurations.runtimeClasspath) {
 			include "svws-*.jar"
 		}
-		from "../svws-webclient/build/SVWS-Client.zip"
+		from "../../svws-webclient/build/SVWS-Client.zip"
 	}
 }
-
-
-
 
 /*
  Task führt ein Docker-Build per docker durch.
@@ -102,7 +86,7 @@ task dockerPushLatestDockerhub(type: Exec) {
 
 task dockerPushAllDockerhub() {
 	dependsOn('dockerPushLatestDockerhub')
-	//group "Publishing"
+	group "Publishing"
 }
 
 
