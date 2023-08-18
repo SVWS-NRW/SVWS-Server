@@ -1,7 +1,7 @@
 def linuxfileAppDir = "$projectDir/svws/app"
 
 task clearAppFolder(type: Delete) {
-	dependsOn downloadPublishedArtifacts
+	//dependsOn downloadPublishedArtifacts
 	file("${linuxfileAppDir}").deleteDir()
 }
 
@@ -36,7 +36,7 @@ task copyPublishedArtifacts(type: Copy) {
 /*
  Verpackt die SVWS-Artefakte als tar.gz
  */
-task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {	
+task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {
 	archiveBaseName = "linux-installer"
 	archiveVersion = project.ext.svwsArtifactVersion
 	archiveExtension = "tar.gz"
