@@ -12,24 +12,19 @@ task clearAppFolder(type: Delete) {
  */
 task copyPublishedArtifacts(type: Copy) {
 	dependsOn clearAppFolder
-	def appArtifactsDir = project.ext.appArtifactsDir
-	copy {
-		from ("${appArtifactsDir}") {
+	mustRunAfter(':svws-webclient:doZip')
+	into ("${linuxfileAppDir}/lib") {
+		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
-			exclude "svws-*.zip"
 		}
-		into "${linuxfileAppDir}/lib"
 	}
-	copy {
-		from ("${appArtifactsDir}") {
-
-			println appArtifactsDir + "/svws-**"+project.ext.svwsArtifactVersion+".jar to " +linuxfileAppDir
-
-			include "svws-**"+project.ext.svwsArtifactVersion+".jar"
-			include "svws-**"+project.ext.svwsArtifactVersion+".zip"
+	into ("${linuxfileAppDir}") {
+		from (configurations.runtimeClasspath) {
+			include "svws-*.jar"
 		}
-		into "${linuxfileAppDir}"
+		from "../svws-webclient/build/SVWS-Client.zip"
 	}
+
 }
 
 

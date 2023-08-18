@@ -25,7 +25,6 @@ task copyPublishedArtifacts(type: Copy) {
 } */
 
 task copyArtifacts(type: Copy) {
-	group = 'testenvironment'
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
 	mustRunAfter(':svws-webclient:doZip')
