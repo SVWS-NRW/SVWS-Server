@@ -51,12 +51,12 @@ publish:
         - apt-get install jq -y
         - echo $CI_COMMIT_TAG
         - jq --arg version "${CI_COMMIT_TAG#v}" '.project."latest-release" = $version' buildconfig.json > temp.json && mv temp.json buildconfig.json
-        #- ./gradlew :svws-core:signJar
-        #- ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
-        #- ./gradlew :closeAndReleaseSonatypeStagingRepository
-        #- ./gradlew :svws-core:publishReleaseAll
-        #- ./gradlew :deployment:docker:dockerPushAllDockerhub
-        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - ./gradlew :svws-core:signJar
+        - ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
+        - ./gradlew :closeAndReleaseSonatypeStagingRepository
+        - ./gradlew :svws-core:publishReleaseAll
+        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        #- ./gradlew :deployment:linux-installer:buildLinuxInstaller
     when: on_success
 
 integration-tests:
