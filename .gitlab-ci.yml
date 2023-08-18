@@ -50,19 +50,19 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        #- ./gradlew :svws-core:signJar
-        #- ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
-        #- ./gradlew :closeAndReleaseSonatypeStagingRepository
-        #- ./gradlew :svws-core:publishReleaseAll
-        #- ./gradlew :deployment:docker:dockerPushAllDockerhub
-        #- ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - ./gradlew :svws-core:signJar
+        - ./gradlew :svws-db:publishPublishJavaPublicationToSonatypeRepository
+        - ./gradlew :closeAndReleaseSonatypeStagingRepository
+        - ./gradlew :svws-core:publishReleaseAll
+        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
     when: on_success
 
 integration-tests:
   dependencies:
   - build
   stage: integration-tests
-  script: echo "tests" #./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+  script: ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
   cache:
     <<: *global_cache
     policy: pull
@@ -77,7 +77,7 @@ build:
   script:
       - chmod +x ./deployment/setupVersion.sh
       - ./deployment/setupVersion.sh
-      - echo "build" # ./gradlew --build-cache build -Penvironment=build
+      - ./gradlew --build-cache build -Penvironment=build
   cache:
     <<: *global_cache
     policy: pull
