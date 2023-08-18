@@ -240,6 +240,8 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByKlasseId = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapByLehrerId = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _uKursMapBySchuelerId = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _uKlassenunterrichtByLehrerId = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlassenunterricht>> _uKlassenunterrichtBySchuelerId = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanPausenzeit> _uPausenzeitListNichtLeere = new ArrayList<>();
 
 
@@ -360,6 +362,7 @@ public class StundenplanManager {
 	}
 
 	private void update() {
+		updateIteriereKlassenunterricht();
 		updateIteriereKurs();
 		updateIteriereUnterricht();
 
@@ -463,46 +466,55 @@ public class StundenplanManager {
 			_uZeitrasterWochentageAlsEnumRange[i] = Wochentag.fromIDorException(_uZeitrasterWochentagMin + i);
 	}
 
+	private void updateIteriereKlassenunterricht() {
+		_uKlassenunterrichtByLehrerId.clear();
+		_uKlassenunterrichtBySchuelerId.clear();
+
+		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : _list_klassenunterricht) {
+			// Der Klassenunterricht des Lehrer.
+			for (final @NotNull Long idLehrer : klassenunterricht.lehrer)
+				MapUtils.getOrCreateArrayList(_uKlassenunterrichtByLehrerId, idLehrer).add(klassenunterricht);
+
+			// Der Klassenunterricht des Schülers
+			for (final @NotNull Long idSchueler : klassenunterricht.schueler)
+				MapUtils.getOrCreateArrayList(_uKlassenunterrichtBySchuelerId, idSchueler).add(klassenunterricht);
+		}
+
+	}
+
+	private void updateIteriereKurs() {
+		_uKursMapBySchuelerId.clear();
+		_uKursMapByLehrerId.clear();
+		_uKursMapByKlasseId.clear();
+
+		for (final @NotNull StundenplanKurs kurs : _list_kurse) {
+			// Die Kurse des Lehrers.
+			for (final @NotNull Long idLehrer : kurs.lehrer)
+				MapUtils.getOrCreateArrayList(_uKursMapByLehrerId, idLehrer).add(kurs);
+
+			// Die Kurse des Schülers.
+			for (final @NotNull Long idSchueler : kurs.schueler) {
+				MapUtils.getOrCreateArrayList(_uKursMapBySchuelerId, idSchueler).add(kurs);
+				// Die Kurse der Klasse, aggregiert über die Klasse des Schülers.
+				final @NotNull StundenplanSchueler schueler = DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_zu_schueler, idSchueler);
+				if ((schueler.idKlasse > 0) && (!MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, schueler.idKlasse).contains(kurs)))
+					MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, schueler.idKlasse).add(kurs);
+			}
+		}
+
+	}
+
 	private void updateIteriereUnterricht() {
 		// Initialisierungen
 		_uUnterrichtHatMultiWochen = false;
 
-		// Iterieren über Unterricht
-		for (final @NotNull StundenplanUnterricht u : _list_unterricht) {
-			// _uUnterrichtHatMultiWochen
-			if (u.wochentyp > 0)
+		for (final @NotNull StundenplanUnterricht u : _list_unterricht)
+			if (u.wochentyp > 0) {
 				_uUnterrichtHatMultiWochen = true;
-
-			// _uKursMapByKlasse
-			if (u.idKurs == null) {
-				// Klassenunterricht
-			} else {
-				// Kursunterricht
-				final @NotNull StundenplanKurs kurs = DeveloperNotificationException.ifMapGetIsNull(_map_idKurs_zu_kurs, u.idKurs);
-
-				for (final @NotNull Long idKlasse : u.klassen)
-					if (!MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, idKlasse).contains(kurs))
-						MapUtils.getOrCreateArrayList(_uKursMapByKlasseId, idKlasse).add(kurs);
-
-				for (final @NotNull Long idLehrer : u.lehrer)
-					if (!MapUtils.getOrCreateArrayList(_uKursMapByLehrerId, idLehrer).contains(kurs))
-						MapUtils.getOrCreateArrayList(_uKursMapByLehrerId, idLehrer).add(kurs);
+				break;
 			}
-		}
+
 	}
-
-	private void updateIteriereKurs() {
-		_uKursMapByKlasseId.clear();
-		_uKursMapByLehrerId.clear();
-		_uKursMapBySchuelerId.clear();
-
-		// Iterieren über Unterricht
-		for (final @NotNull StundenplanKurs kurs : _list_kurse) {
-			for (final @NotNull Long idSchueler : kurs.schueler)
-				MapUtils.getOrCreateArrayList(_uKursMapBySchuelerId, idSchueler).add(kurs);
-		}
-	}
-
 
 	// #####################################################################
 	// #################### StundenplanAufsichtsbereich ####################
@@ -1234,8 +1246,32 @@ public class StundenplanManager {
 	 *
 	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse.
 	 */
-	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterrichtGetMengeByKlasseId(final long idKlasse) {
+	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterrichtGetMengeByKlasseIdAsList(final long idKlasse) {
 		return DeveloperNotificationException.ifMapGetIsNull(_map_idKlasse_zu_klassenunterricht, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte des Lehrers.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idLehrer  Die Datenbank-ID des Lehrers.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte des Lehrers.
+	 */
+	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterrichtGetMengeByLehrerIdAsList(final long idLehrer) {
+		return MapUtils.getOrCreateArrayList(_uKlassenunterrichtByLehrerId, idLehrer);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte des Schülers.
+	 * <br> Laufzeit: O(1), da Referenz zu einer Liste.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte des Schülers.
+	 */
+	public @NotNull List<@NotNull StundenplanKlassenunterricht> klassenunterrichtGetMengeBySchuelerIdAsList(final long idSchueler) {
+		return MapUtils.getOrCreateArrayList(_uKlassenunterrichtBySchuelerId, idSchueler);
 	}
 
 	/**

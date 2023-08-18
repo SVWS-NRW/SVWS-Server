@@ -33,15 +33,15 @@ public class StundenplanKlassenunterricht {
 	@Schema(description = "die Wochenstunden, welche dem Klassenunterricht zugeordnet sind.", example = "3")
 	public int wochenstunden = 0;
 
-	/** Die Liste der IDs der Schienen, denen der Klassenunterricht zugeordnet ist. */
+	/** Die Liste der IDs der {@link StundenplanSchiene}-Objekte, denen der Klassenunterricht zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Schienen, denen der Klassenunterricht zugeordnet ist")
 	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();
 
-	/** Die Liste der IDs der Schüler, denen der Klassenunterricht zugeordnet ist. */
+	/** Die Liste der IDs der {@link StundenplanSchueler}-Objekte, denen der Klassenunterricht zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Schüler, denen der Klassenunterricht zugeordnet ist")
 	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
 
-	/** Die Liste der IDs der Lehrer, die dem Klassenunterricht zugeordnet sind. */
+	/** Die Liste der IDs der {@link StundenplanLehrer}-Objekte, die dem Klassenunterricht zugeordnet sind. */
 	@Schema(description = "die Liste der IDs der Lehrer, die dem Klassenunterricht zugeordnet sind")
 	public @NotNull List<@NotNull Long> lehrer = new ArrayList<>();
 

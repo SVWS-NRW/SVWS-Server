@@ -20,22 +20,22 @@ export class StundenplanKurs extends JavaObject {
 	public wochenstunden : number = 0;
 
 	/**
-	 * Die Liste der IDs der Schienen, denen der Kurs zugeordnet ist.
+	 * Die Liste der IDs der {@link StundenplanSchiene}-Objekte, denen der Kurs zugeordnet ist.
 	 */
 	public schienen : List<number> = new ArrayList();
 
 	/**
-	 * Die Liste der IDs der Jahrgänge, denen der Kurs zugeordnet ist.
+	 * Die Liste der IDs der {@link StundenplanJahrgang}-Objekte, denen der Kurs zugeordnet ist.
 	 */
 	public jahrgaenge : List<number> = new ArrayList();
 
 	/**
-	 * Die Liste der IDs der Schüler, die dem Kurs zugeordnet sind.
+	 * Die Liste der IDs der {@link StundenplanSchueler}-Objekte, die dem Kurs zugeordnet sind.
 	 */
 	public schueler : List<number> = new ArrayList();
 
 	/**
-	 * Die Liste der IDs der Lehrer, die dem Kurs zugeordnet sind.
+	 * Die Liste der IDs der {@link StundenplanLehrer}-Objekte, die dem Kurs zugeordnet sind.
 	 */
 	public lehrer : List<number> = new ArrayList();
 

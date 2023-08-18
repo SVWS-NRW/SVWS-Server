@@ -15,9 +15,9 @@
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 				</div>
 				<div>Klassenunterricht</div>
-				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseId(klasse.id)" :columns="cols">
+				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="cols">
 					<template #body>
-						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseId(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr">
+						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr">
 							<div role="cell" class="select-none data-table__td">
 								{{ ku.bezeichnung }}
 							</div>
