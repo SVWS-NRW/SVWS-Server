@@ -338,6 +338,27 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Persistiert die übergebenen Entities in der Datenbank. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden.
+	 *
+	 * @param entities   die zu persistierenden Entities
+	 *
+	 * @return true, falls die Entities erfolgreich persistiert wurden und ansonsten false
+	 */
+	public boolean transactionPersistAll(final Collection<? extends Object> entities) {
+		if (entities == null)
+			return false;
+		try {
+			for (final Object obj : entities)
+				em.persist(obj);
+			return true;
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalStateException e) {
+			return false;
+		}
+	}
+
+
+	/**
 	 * Entfernt die übergebene Entity aus der Datenbank. Die zugehörige Transaktion
 	 * darum muss manuell gehandhabt werden.
 	 *
