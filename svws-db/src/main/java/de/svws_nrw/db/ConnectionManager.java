@@ -133,9 +133,10 @@ public final class ConnectionManager {
 		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
 		propertyMap.put("eclipselink.allow-zero-id", "true");
 		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "WARNING" : "OFF");
-		// propertyMap.put("eclipselink.logging.level", config.useDBLogging() ?
-		// "INFO" : "OFF");
+		// propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "INFO" : "OFF");
 		// propertyMap.put("eclipselink.logging.level", "ALL");
+		// propertyMap.put("eclipselink.logging.level.sql", "FINE");
+		// propertyMap.put("eclipselink.logging.parameters", "true");
 		// propertyMap.put("eclipselink.profiler","PerformanceProfiler");
 		propertyMap.put("eclipselink.cache.shared.default", "false");
 		// propertyMap.put("eclipselink.exception-handler",
@@ -143,25 +144,8 @@ public final class ConnectionManager {
 		if (config.getDBDriver() == DBDriver.SQLITE) {
 			propertyMap.put("eclipselink.target-database", "Database");
 			// Einstellungen des SQ-Lite-Treibers
-			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66"); // READWRITE
-																					// (2)
-																					// +
-																					// CREATE
-																					// (4)
-																					// +
-																					// OPEN_URI
-																					// (64)
-																					// =
-																					// 70
-																					// bzw.
-																					// //
-																					// READWRITE
-																					// (2)
-																					// +
-																					// OPEN_URI
-																					// (64)
-																					// =
-																					// 66
+			// READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. READWRITE (2) + OPEN_URI (64) = 66
+			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");
 			propertyMap.put("foreign_keys", "true");
 		}
 		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);

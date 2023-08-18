@@ -211,6 +211,16 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Synchronisiert den Persistence-Kontext mit der Datenbank.
+	 * Bei Transaktionen kann dies genutzt werden, um eine Reihenfolge der
+	 * Befehle zu garantieren und damit Foreign-Key-Constraints einzuhalten.
+	 */
+	public void transactionFlush() {
+		em.flush();
+	}
+
+
+	/**
 	 * Beendet eine aktuelle Transaction mithilfe eines Commit.
 	 *
 	 * @return true, falls der Commit erfolgreich war und ansonsten false

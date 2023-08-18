@@ -146,6 +146,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			if (termin == null) {
 				termin = new DTOGostKlausurenTermine(terminId, vorgabe.Abi_Jahrgang, vorgabe.Halbjahr, vorgabe.Quartal);
 				conn.transactionPersist(termin);
+				conn.transactionFlush();
 			}
 			if (termin.Abi_Jahrgang != vorgabe.Abi_Jahrgang || termin.Halbjahr != vorgabe.Halbjahr || termin.Quartal != vorgabe.Quartal)
 				throw OperationError.CONFLICT.exception("Kursklausurn mit unterschiedlichen Jahrgängen, Halbjahren oder Quartalen an einem Termin.");
