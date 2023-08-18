@@ -432,7 +432,9 @@ export class RouteDataGostKlausurplanung {
 	blockenKursklausuren = async (blockungDaten: GostKlausurterminblockungDaten): Promise<boolean> => {
 		api.status.start();
 		await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
-		await this.reloadKursklausurmanager(null);
+		this.setPatchedState({
+			kursklausurmanager: await this.reloadKursklausurmanager(null),
+		});
 		this.commit();
 		api.status.stop();
 		return true;
