@@ -200,6 +200,14 @@ public final class DBEntityManager implements AutoCloseable {
 			mutex.unlock();
 	}
 
+	/**
+	 * Prüft, ob eine Transaktion aktive ist
+	 *
+	 * @return true, falls eine Transaktion aktiv ist.
+	 */
+	public boolean hasActiveTransaction() {
+		return em.getTransaction().isActive();
+	}
 
 	/**
 	 * Beginnt eine neue Transaction.
@@ -307,6 +315,26 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Führt eine Update-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden. Im Anschluss an die Update-Anfrage
+	 * wird ein Flush ausgeführt.
+	 *
+	 * @param sqlQuery   der SQL-Befehl
+	 *
+	 * @return die Anzahl der aktualisierten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	public int transactionNativeUpdateAndFlush(final String sqlQuery) {
+		try {
+			final int result = em.createNativeQuery(sqlQuery).executeUpdate();
+			em.flush();
+			return result;
+		} catch (@SuppressWarnings("unused") PersistenceException  | IllegalStateException e) {
+			return Integer.MIN_VALUE;
+		}
+	}
+
+
+	/**
 	 * Führt eine Delete-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
 	 * darum muss manuell gehandhabt werden.
 	 *
@@ -316,6 +344,20 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public int transactionNativeDelete(final String sqlQuery) {
 		return transactionNativeUpdate(sqlQuery);
+	}
+
+
+	/**
+	 * Führt eine Delete-Anfrage auf der Datenbank aus. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden. Im Anschluss an die Update-Anfrage
+	 * wird ein Flush ausgeführt.
+	 *
+	 * @param sqlQuery   der SQL-Befehl
+	 *
+	 * @return die Anzahl der gelöschten Entities oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	public int transactionNativeDeleteAndFlush(final String sqlQuery) {
+		return transactionNativeUpdateAndFlush(sqlQuery);
 	}
 
 
@@ -372,6 +414,47 @@ public final class DBEntityManager implements AutoCloseable {
 			return true;
 		} catch (@SuppressWarnings("unused") TransactionRequiredException | IllegalArgumentException e) {
 			return false;
+		}
+	}
+
+
+	/**
+	 * Tauscht eine Entity gegen eine andere Entity in der Datenbank aus. Die
+	 * zugehörige Transaktion darum muss manuell gehandhabt werden.
+	 *
+	 * @param oldEntity   die für den Tausch zu entfernende Entity
+	 * @param newEntity   die neue Entity des Tauschs
+	 *
+	 * @return true, falls der Tausch erfolgreich durchgeführt wurde
+	 */
+	public boolean transactionReplace(final Object oldEntity, final Object newEntity) {
+		try {
+			em.remove(oldEntity);
+			em.persist(newEntity);
+			return true;
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | EntityExistsException | IllegalStateException | IllegalArgumentException e) {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Führt den SQL-Befehl direkt auf der JDBC-Connection (siehe {@link Connection}) aus.
+	 * Die zugehörige Transaktion darum muss manuell gehandhabt werden.
+	 *
+	 * @param query   der SQL-Befehl
+	 *
+	 * @return die Anzahl der aktualisierten Entities, 0 falls der Befehl keine Rückgabe hat
+	 *         oder Integer.MIN_VALUE im Fehlerfall
+	 */
+	public int transactionExecuteWithJDBCConnection(final String query) {
+		try {
+			final Connection conn = em.unwrap(Connection.class);
+			try (Statement stmt = conn.createStatement()) {
+				return stmt.executeUpdate(query);
+			}
+		} catch (@SuppressWarnings("unused") final SQLException e) {
+			return Integer.MIN_VALUE;
 		}
 	}
 

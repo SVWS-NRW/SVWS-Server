@@ -3,7 +3,7 @@ package de.svws_nrw.db.utils.schema;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,7 +69,7 @@ public class DBCoreTypeUpdater {
 	 * @param version  die Version des Core-Types
 	 * @param updater  der Lambda-Ausdruck zum Aktualisieren der DB-Tabellen mit Daten des Core-Types
 	 */
-	private record CoreTypeTable(String name, long version, Consumer<Logger> updater) { /**/ }
+	private record CoreTypeTable(String name, long version, BiConsumer<DBEntityManager, Logger> updater) { /**/ }
 
 	/** Eine Liste von Records mit den zu aktualisierenden Tabellen - siehe auch {@link CoreTypeTable}. */
 	private final ArrayList<CoreTypeTable> tables = new ArrayList<>();
@@ -127,9 +127,28 @@ public class DBCoreTypeUpdater {
 	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
 	 */
 	public boolean isUptodate() {
-		_status.update();
+		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
+			_status.update(conn);
+			for (final CoreTypeTable entry : tables)
+				if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
+					return false;
+			return true;
+		}
+	}
+
+
+	/**
+	 * Prüft, ob die Core-Types aktuell sind, d.h. die Version in den Core-Types mit der
+	 * Version in der Datenbank übereinstimmt.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 *
+	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
+	 */
+	public boolean isUptodate(final DBEntityManager conn) {
+		_status.update(conn);
 		for (final CoreTypeTable entry : tables)
-			if ((entry.name == null) || (!pruefeVersion(entry.name, entry.version)))
+			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
 				return false;
 		return true;
 	}
@@ -143,11 +162,13 @@ public class DBCoreTypeUpdater {
 	 * Fall, so wird i.A. eine veraltete Server-Version mit einem neueren Schema
 	 * verwendet.
 	 *
+	 * @param conn   die Datenbankverbindung
+	 *
 	 * @return true, falls eine Aktualisierung möglich ist, sonst false
 	 */
-	public boolean isUpdatable() {
+	private boolean isUpdatable(final DBEntityManager conn) {
 		// Prüfe zunächst, ob ein Update möglich ist
-		_status.update();
+		_status.update(conn);
 		long status_revision;
 		try {
 			status_revision = _status.version.getRevision();
@@ -157,7 +178,7 @@ public class DBCoreTypeUpdater {
 		for (final SchemaTabelle tab : Schema.getTabellen(status_revision)) {
 			if (!tab.hasCoreType())
 				continue;
-			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(tab.name());
+			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tab.name());
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(tab.getCoreType().getCoreTypeVersion(), v.Version) < 0)
@@ -165,7 +186,7 @@ public class DBCoreTypeUpdater {
 		}
 		// TODO unten deprecated, oben aktuell
 		for (final CoreTypeTable entry : tables) {
-			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(entry.name);
+			final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, entry.name);
 			if (v == null)
 				continue; // Bisher keine Version gespeichert - Update also möglich
 			if  (Long.compare(entry.version, v.Version) < 0)
@@ -185,6 +206,34 @@ public class DBCoreTypeUpdater {
 	 * @return true im Erfolgsfall, sonst false
 	 */
 	public boolean update(final boolean lockSchema, final long rev) {
+		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
+			try {
+				conn.transactionBegin();
+				boolean result = update(conn, lockSchema, rev);
+				if (result && (!conn.transactionCommit()))
+					result = false;
+				return result;
+			} catch (final Exception e) {
+				e.printStackTrace();
+				return false;
+			} finally {
+				conn.transactionRollback();
+			}
+		}
+	}
+
+
+	/**
+	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision.
+	 *
+	 * @param conn         die Datenbankverbindung mit aktiver Transaktion
+	 * @param lockSchema   gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
+	 *                     notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.
+	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
+	 *
+	 * @return true im Erfolgsfall, sonst false
+	 */
+	public boolean update(final DBEntityManager conn, final boolean lockSchema, final long rev) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(_schemaManager.getSchemaStatus().schemaName))) {
 			_logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
@@ -194,7 +243,7 @@ public class DBCoreTypeUpdater {
 		try {
 			long revision = rev;
 			// Prüfe zunächst, ob ein Update möglich ist
-			if (!isUpdatable())
+			if (!isUpdatable(conn))
 				throw new DBException("Core-Types können nicht aktualisiert werden, da die Core-Type-Version in der Datenbank neuer sind als die des Servers.");
 			// Bestimme ggf. die aktuelle Datenbank-Revision
 			if (revision < 0)
@@ -207,17 +256,18 @@ public class DBCoreTypeUpdater {
 				if (!tab.hasCoreType())
 					continue;
 				final SchemaTabelleCoreType ct = tab.getCoreType();
-				if (pruefeVersion(tab.name(), ct.getCoreTypeVersion()))
+				if (pruefeVersion(conn, tab.name(), ct.getCoreTypeVersion()))
 					continue;
 				_logger.logLn(strAktualisiereTabelle + tab.name());
-				updateCoreTypeTabelle(tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
+				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
 			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
 			for (final CoreTypeTable entry : tables)
-				if (!pruefeVersion(entry.name, entry.version))
-					entry.updater.accept(_logger);
+				if (!pruefeVersion(conn, entry.name, entry.version))
+					entry.updater.accept(conn, _logger);
 			return true;
 		} catch (@SuppressWarnings("unused") final Exception e) {
+			e.printStackTrace();
 			return false;
 		} finally {
 			// Entsperre ggf. das Datenbankschema
@@ -229,48 +279,44 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Datenbank in Bezug auf den Core-Type in der angegebenen
 	 * Tabelle mithilfe des übergebenen SQL-Befehls.
-	 * Dabei wird in einer Datenbank-Transaktion zunächst eine
-	 * Lösch-Operation für alle Daten der Tabelle durchgeführt und
-	 * anschließend die Insert-Operation, bevor die Version in der Versions-Tabelle
-	 * für die Core-Types aktualisiert wird.
+	 * Dabei wird in der aktiven Datenbank-Transaktion zunächst eine
+	 * Lösch-Operation für alle Daten der Tabelle durchgeführt, dann ein flush und
+	 * anschließend die Insert-Operation gefolgt von einem weiteren flush, bevor
+	 * die Version in der Versions-Tabelle für die Core-Types aktualisiert wird
+	 * und abschließend ein flush erfolgt.
 	 * Die Operationen müssen sicherstellen, dass die referentielle
 	 * Integrität nicht zerstört wird. Ist dies nicht der Fall, so wird
 	 * die Transaktion nicht ausgeführt.
 	 *
+	 * @param conn        die Datenbankverbindung
 	 * @param tabname     der Name der Tabelle
 	 * @param typename    der Simple-Name des Core-Types
 	 * @param version     die neu zu setzende Version des Core-Type
 	 * @param sqlInsert   der Befehl zum Einfügen der Core-type-Daten
 	 */
-	private void updateCoreTypeTabelle(final String tabname, final String typename, final long version, final String sqlInsert) {
-		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				// Lösche alle Daten
-				conn.transactionNativeDelete("DELETE FROM " + tabname);
-				// Füge die aktuellen Daten des Core-Types ein
-				conn.transactionNativeUpdate(sqlInsert);
-				// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
-				DTOSchemaCoreTypeVersion v = conn.queryByKey(DTOSchemaCoreTypeVersion.class, tabname);
-				if (v == null) {
-					v = new DTOSchemaCoreTypeVersion(tabname, typename, version);
-				} else {
-					v.Version = version;
-				}
-				conn.transactionPersist(v);
-				conn.transactionCommit();
-			} catch (final Exception e) {
-				conn.transactionRollback();
-				throw e;
-			}
+	private static void updateCoreTypeTabelle(final DBEntityManager conn, final String tabname, final String typename, final long version, final String sqlInsert) {
+		// Lösche alle Daten
+		conn.transactionNativeDelete("DELETE FROM " + tabname);
+		conn.transactionFlush();
+		// Füge die aktuellen Daten des Core-Types ein
+		conn.transactionNativeUpdate(sqlInsert);
+		conn.transactionFlush();
+		// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
+		DTOSchemaCoreTypeVersion v = conn.queryByKey(DTOSchemaCoreTypeVersion.class, tabname);
+		if (v == null) {
+			v = new DTOSchemaCoreTypeVersion(tabname, typename, version);
+		} else {
+			v.Version = version;
 		}
+		conn.transactionPersist(v);
+		conn.transactionFlush();
 	}
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Fachgruppe.
 	 */
-	private final Consumer<Logger> updateFachgruppen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateFachgruppen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Fachgruppen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -295,14 +341,14 @@ public class DBCoreTypeUpdater {
 			sql.append(f.daten.gueltigVon).append(",");
 			sql.append(f.daten.gueltigBis).append(")");
 		}
-		updateCoreTypeTabelle(tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Jahrgaenge.
 	 */
-	private final Consumer<Logger> updateJahrgaengeKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateJahrgaengeKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Jahrgaenge_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -317,14 +363,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(jg_kuerzel[i]).append("'").append(")");
 		}
-		updateCoreTypeTabelle(tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type KursFortschreibungsart.
 	 */
-	private final Consumer<Logger> updateKursFortschreibungsarten = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateKursFortschreibungsarten = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "KursFortschreibungsarten";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -341,14 +387,14 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
-		updateCoreTypeTabelle(tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Nationalitaeten.
 	 */
-	private final Consumer<Logger> updateNationalitaeten_Keys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateNationalitaeten_Keys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Nationalitaeten_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -363,14 +409,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(code).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Note.
 	 */
-	private final Consumer<Logger> updateNoten = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateNoten = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Noten";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -403,14 +449,14 @@ public class DBCoreTypeUpdater {
 			sql.append(n.gueltigVon).append(",");
 			sql.append(n.gueltigBis).append(")");
 		}
-		updateCoreTypeTabelle(tabname, Note.class.getCanonicalName(), Note.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Note.class.getCanonicalName(), Note.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type PersonalTyp.
 	 */
-	private final Consumer<Logger> updatePersonalTypen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updatePersonalTypen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "PersonalTypen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -427,14 +473,14 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
-		updateCoreTypeTabelle(tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Schulform.
 	 */
-	private final Consumer<Logger> updateSchulformen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateSchulformen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Schulformen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -460,14 +506,14 @@ public class DBCoreTypeUpdater {
 				sql.append(sf.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(tabname, Schulform.class.getCanonicalName(), Schulform.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Schulform.class.getCanonicalName(), Schulform.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private final Consumer<Logger> updateHerkuenfte = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkuenfte = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunft";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -488,14 +534,14 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private final Consumer<Logger> updateHerkuenfteKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkuenfteKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunft_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -510,14 +556,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunft.
 	 */
-	private final Consumer<Logger> updateHerkuenfteSchulformen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkuenfteSchulformen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunft_Schulformen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -538,14 +584,14 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		updateCoreTypeTabelle(tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private final Consumer<Logger> updateHerkunftsarten = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkunftsarten = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunftsart";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -565,14 +611,14 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private final Consumer<Logger> updateHerkunftsartenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkunftsartenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunftsart_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -587,14 +633,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Herkunftsarten.
 	 */
-	private final Consumer<Logger> updateHerkunftsartenSchulformen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateHerkunftsartenSchulformen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Herkunftsart_Schulformen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -616,14 +662,14 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		updateCoreTypeTabelle(tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Klassenart.
 	 */
-	private final Consumer<Logger> updateKlassenartenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateKlassenartenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "KlassenartenKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -638,14 +684,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigeKursart.
 	 */
-	private final Consumer<Logger> updateKursartenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateKursartenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "KursartenKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -660,14 +706,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private final Consumer<Logger> updateZulaessigeFaecher = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateZulaessigeFaecher = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "FachKatalog";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -708,14 +754,14 @@ public class DBCoreTypeUpdater {
 				sql.append(f.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private final Consumer<Logger> updateZulaessigeFaecherKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateZulaessigeFaecherKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "FachKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -730,14 +776,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type ZulaessigesFach.
 	 */
-	private final Consumer<Logger> updateZulaessigeFaecherSchulformen = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateZulaessigeFaecherSchulformen = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "FachKatalog_Schulformen";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -764,14 +810,14 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		updateCoreTypeTabelle(tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Einschulungsart.
 	 */
-	private final Consumer<Logger> updateEinschulungsartenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateEinschulungsartenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "EinschulungsartKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -786,14 +832,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type Religion.
 	 */
-	private final Consumer<Logger> updateReligionenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateReligionenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "Religionen_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -808,14 +854,14 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, Religion.class.getCanonicalName(), Religion.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, Religion.class.getCanonicalName(), Religion.VERSION, sql.toString());
 	};
 
 
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type AllgemeineMerkmale.
 	 */
-	private final Consumer<Logger> updateAllgemeineMerkmaleKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateAllgemeineMerkmaleKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "AllgemeineMerkmaleKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -830,7 +876,7 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
+		updateCoreTypeTabelle(conn, tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
 	};
 
 
@@ -838,7 +884,7 @@ public class DBCoreTypeUpdater {
 	 * Aktualisiert die Tabelle für die Core-Types BerufskollegOrganisationsformen,
 	 * WeiterbildungskollegOrganisationsformen und AllgemeinbildendOrganisationsformen.
 	 */
-	private final Consumer<Logger> updateOrganisationsformenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateOrganisationsformenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "OrganisationsformenKatalog_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
 		final StringBuilder sql = new StringBuilder();
@@ -857,7 +903,7 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(tabname,
+		updateCoreTypeTabelle(conn, tabname,
 				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", " + AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
 				BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
 				sql.toString()
@@ -868,10 +914,10 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Tabelle für den Core-Type LehrerLeitungsfunktion.
 	 */
-	private final Consumer<Logger> updateLehrerLeitungsfunktionenKeys = (final Logger logger) -> {
+	private final BiConsumer<DBEntityManager, Logger> updateLehrerLeitungsfunktionenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "LehrerLeitungsfunktion_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
-		updateCoreTypeTabelle(tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
+		updateCoreTypeTabelle(conn, tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
 				Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
 				.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (", ")"))
 				);
@@ -882,13 +928,14 @@ public class DBCoreTypeUpdater {
 	 * Prüft, ob die übergebene Version mit der Version des in der
 	 * Datenbank gespeicherten Core-Types übereinstimmt oder nicht.
 	 *
+	 * @param conn      die Datenbankverbindung
 	 * @param tabname   der Name der Tabelle, wo der Core-Type gespechert ist
 	 * @param version   die Version, auf welche geprüft wird
 	 *
 	 * @return true, falls die Versionen übereinstimmen, und ansonsten false
 	 */
-	private boolean pruefeVersion(final String tabname, final long version) {
-		final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(tabname);
+	private boolean pruefeVersion(final DBEntityManager conn, final String tabname, final long version) {
+		final DTOSchemaCoreTypeVersion v = _status.getCoreTypeVersion(conn, tabname);
 		if (v == null)
 			return false;
 		return v.Version == version;

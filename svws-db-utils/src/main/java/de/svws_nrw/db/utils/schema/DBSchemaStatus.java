@@ -101,11 +101,21 @@ public final class DBSchemaStatus {
 	 */
 	public void update() {
 		try (DBEntityManager conn = user.getEntityManager()) {
-			tabellen = DTOInformationSchemaTables.queryNames(conn, schemaName);
-			version = leseDBSchemaVersion(conn);
-			coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen initial eingelesen werden
-			// TODO
+			this.update(conn);
 		}
+	}
+
+
+	/**
+	 * Aktualisiert den Schema-Status über die angegebene Datenbabk-Verbindung
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 */
+	public void update(final DBEntityManager conn) {
+		tabellen = DTOInformationSchemaTables.queryNames(conn, schemaName);
+		version = leseDBSchemaVersion(conn);
+		coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen initial eingelesen werden
+		// TODO
 	}
 
 
@@ -165,17 +175,16 @@ public final class DBSchemaStatus {
 	 * Liefert die Version des Core-Types zurück,
 	 * welcher in der übergebenen Tabelle gespeichert wird.
 	 *
+	 * @param conn      die Datenbankverbindung mit aktiver Transaktion
 	 * @param tabname   der Name der Tabelle
 	 *
 	 * @return die Version des Core-Types oder null, wenn aktuell
 	 *         keine Version in der Tabelle gespeichert ist
 	 */
-	public DTOSchemaCoreTypeVersion getCoreTypeVersion(final String tabname) {
+	public DTOSchemaCoreTypeVersion getCoreTypeVersion(final DBEntityManager conn, final String tabname) {
 		if (coreTypeVersionen == null) {
-			try (DBEntityManager conn = user.getEntityManager()) {
-				coreTypeVersionen = conn.queryAll(DTOSchemaCoreTypeVersion.class).stream()
-					.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
-			}
+			coreTypeVersionen = conn.queryAll(DTOSchemaCoreTypeVersion.class).stream()
+				.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
 		}
 		return coreTypeVersionen.get(tabname);
 	}

@@ -335,6 +335,33 @@ public final class DBSchemaManager {
 
 
 	/**
+	 * Setzt die Datenbank-Revision auf die angegebene Revision. Dabei wird die Transaktion aus der übergebenen
+	 * Datenbankverbindung genutzt.
+	 *
+	 * @param conn       die Datenbankverbindung
+	 * @param revision   die zu setzende Revision, bei -1 wird die neueste Revision gesetzt
+	 *
+	 * @return true, falls die Revision erfolgreich gesetzt wurde, sonst false
+	 */
+	public static boolean transactionSetDBRevision(final DBEntityManager conn, final long revision) {
+		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
+		if (rev == -1)
+			return false;
+		final DTOSchemaVersion oldObj = conn.querySingle(DTOSchemaVersion.class);
+		final DTOSchemaVersion newObj = new DTOSchemaVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
+		if (oldObj == null) {
+			if (!conn.transactionPersist(newObj))
+				return false;
+		} else {
+			if (!conn.transactionReplace(oldObj, newObj))
+				return false;
+		}
+		conn.transactionFlush();
+		return true;
+	}
+
+
+	/**
 	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision
 	 *
 	 * @param revision    die Revision für das SVWS-DB-Schema
@@ -375,7 +402,7 @@ public final class DBSchemaManager {
 
 		logger.logLn("- Schreibe die Daten der Core-Types");
 		logger.modifyIndent(2);
-		success = updater.coreTypes.update(false, revision);
+		success = updater.coreTypes.update(false, revision); // TODO use update(conn, false, revision)
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
