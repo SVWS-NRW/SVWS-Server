@@ -83,7 +83,7 @@ task dockerPushLatestDockerhub(type: Exec) {
 
 task dockerPushAllDockerhub() {
 	dependsOn('dockerPushLatestDockerhub')
-	group "Publishing"
+	//group "Publishing"
 }
 
 
