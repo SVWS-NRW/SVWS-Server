@@ -410,7 +410,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const oldRaum: GostKlausurraum = manager.getKlausurraum(id);
 		Object.assign(oldRaum, raum);
-		manager.patchKlausurraum(oldRaum);
+		manager.patchStundenplanraumOrBemerkungToKlausurraum(oldRaum);
 		Object.assign(oldRaum, raum);
 		await api.server.patchGostKlausurenRaum(raum, api.schema, id);
 		this.commit();

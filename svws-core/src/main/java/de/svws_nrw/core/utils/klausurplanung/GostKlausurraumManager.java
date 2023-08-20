@@ -157,8 +157,7 @@ public class GostKlausurraumManager {
 	public void addKlausurraum(final @NotNull GostKlausurraum raum) {
 		DeveloperNotificationException.ifListAddsDuplicate("_raeume", _raeume, raum);
 		_raeume.sort(_compRaumId);
-		if (raum.idStundenplanRaum != null)
-			DeveloperNotificationException.ifMapPutOverwrites(_mapIdstundenplanraumRaum, raum.idStundenplanRaum, raum);
+		addToMapIdstundenplanraumRaum(raum);
 		DeveloperNotificationException.ifMapPutOverwrites(_mapIdRaum, raum.id, raum);
 	}
 
@@ -171,9 +170,7 @@ public class GostKlausurraumManager {
 		final GostKlausurraum raum = DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", _raeume, raum);
 		DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, id);
-		for (@NotNull final Entry<@NotNull Long, @NotNull GostKlausurraum> entry : _mapIdstundenplanraumRaum.entrySet())
-			if (entry.getValue().id == id)
-				_mapIdstundenplanraumRaum.remove(entry.getKey());
+		removeFromMapIdstundenplanraumRaum(id);
 		final @NotNull List<@NotNull GostKlausurraumstunde> stunden = DeveloperNotificationException.ifMapGetIsNull(_mapRaumStunden, id);
 		DeveloperNotificationException.ifMapRemoveFailes(_mapRaumStunden, id);
 		for (@NotNull final GostKlausurraumstunde st : stunden) {
@@ -189,6 +186,17 @@ public class GostKlausurraumManager {
 			DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrsRevert, sk.idSchuelerklausur);
 			refreshSchuelerklausur(sk);
 		}
+	}
+
+	private void addToMapIdstundenplanraumRaum(final @NotNull GostKlausurraum raum) {
+		if (raum.idStundenplanRaum != null)
+			DeveloperNotificationException.ifMapPutOverwrites(_mapIdstundenplanraumRaum, raum.idStundenplanRaum, raum);
+	}
+
+	private void removeFromMapIdstundenplanraumRaum(final long id) {
+		for (@NotNull final Entry<@NotNull Long, @NotNull GostKlausurraum> entry : _mapIdstundenplanraumRaum.entrySet())
+			if (entry.getValue().id == id)
+				_mapIdstundenplanraumRaum.remove(entry.getKey());
 	}
 
 	/**
@@ -246,9 +254,10 @@ public class GostKlausurraumManager {
 	 *
 	 * @param r das GostKlausurraum-Objekt
 	 */
-	public void patchKlausurraum(final @NotNull GostKlausurraum r) {
-		removeKlausurraum(r.id);
-		addKlausurraum(r);
+	public void patchStundenplanraumOrBemerkungToKlausurraum(final @NotNull GostKlausurraum r) {
+		removeFromMapIdstundenplanraumRaum(r.id);
+		addToMapIdstundenplanraumRaum(r);
+
 	}
 
 	/**

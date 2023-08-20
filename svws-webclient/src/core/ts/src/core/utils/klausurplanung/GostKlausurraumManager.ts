@@ -195,8 +195,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public addKlausurraum(raum : GostKlausurraum) : void {
 		DeveloperNotificationException.ifListAddsDuplicate("_raeume", this._raeume, raum);
 		this._raeume.sort(GostKlausurraumManager._compRaumId);
-		if (raum.idStundenplanRaum !== null)
-			DeveloperNotificationException.ifMapPutOverwrites(this._mapIdstundenplanraumRaum, raum.idStundenplanRaum, raum);
+		this.addToMapIdstundenplanraumRaum(raum);
 		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdRaum, raum.id, raum);
 	}
 
@@ -209,9 +208,7 @@ export class GostKlausurraumManager extends JavaObject {
 		const raum : GostKlausurraum | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, raum);
 		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, id);
-		for (const entry of this._mapIdstundenplanraumRaum.entrySet())
-			if (entry.getValue().id === id)
-				this._mapIdstundenplanraumRaum.remove(entry.getKey());
+		this.removeFromMapIdstundenplanraumRaum(id);
 		const stunden : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._mapRaumStunden, id);
 		DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumStunden, id);
 		for (const st of stunden) {
@@ -227,6 +224,17 @@ export class GostKlausurraumManager extends JavaObject {
 			DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrsRevert, sk.idSchuelerklausur);
 			this.refreshSchuelerklausur(sk);
 		}
+	}
+
+	private addToMapIdstundenplanraumRaum(raum : GostKlausurraum) : void {
+		if (raum.idStundenplanRaum !== null)
+			DeveloperNotificationException.ifMapPutOverwrites(this._mapIdstundenplanraumRaum, raum.idStundenplanRaum, raum);
+	}
+
+	private removeFromMapIdstundenplanraumRaum(id : number) : void {
+		for (const entry of this._mapIdstundenplanraumRaum.entrySet())
+			if (entry.getValue().id === id)
+				this._mapIdstundenplanraumRaum.remove(entry.getKey());
 	}
 
 	/**
@@ -280,9 +288,9 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @param r das GostKlausurraum-Objekt
 	 */
-	public patchKlausurraum(r : GostKlausurraum) : void {
-		this.removeKlausurraum(r.id);
-		this.addKlausurraum(r);
+	public patchStundenplanraumOrBemerkungToKlausurraum(r : GostKlausurraum) : void {
+		this.removeFromMapIdstundenplanraumRaum(r.id);
+		this.addToMapIdstundenplanraumRaum(r);
 	}
 
 	/**
