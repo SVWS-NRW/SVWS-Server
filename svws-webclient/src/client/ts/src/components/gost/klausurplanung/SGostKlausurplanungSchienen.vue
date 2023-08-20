@@ -114,7 +114,6 @@
 	const blocken = async () => {
 		loading.value = true;
 		modal.value.closeModal();
-		// Aufruf von Blockungsalgorithmus
 		const daten = new GostKlausurterminblockungDaten();
 		daten.klausuren = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
@@ -122,21 +121,6 @@
 		daten.konfiguration.modusKursarten = lkgkMode.value.id;
 		daten.konfiguration.regelBeiTerminenGleicheLehrkraftFachKursart = blockeGleicheLehrkraft.value;
 		await props.blockenKursklausuren(daten);
-		/*	const blockAlgo = new KlausurterminblockungAlgorithmus();
-		await new Promise((resolve) => setTimeout(() => resolve(true), 0));
-		const ergebnis = blockAlgo.apply(daten);
-		// await props.persistKlausurblockung(ergebnis);
-		for await (const t of ergebnis.termine) {
-			let termin = null;
-			for await (const klausurId of t.kursklausuren) {
-				const klausur = props.kursklausurmanager().gibKursklausurById(klausurId);
-				// if (klausur !== null) {
-				if (termin === null)
-					termin = await props.erzeugeKlausurtermin(klausur.quartal);
-				await props.setTerminToKursklausur(termin.id, klausur);
-				// }
-			}
-		}*/
 		loading.value = false;
 	};
 

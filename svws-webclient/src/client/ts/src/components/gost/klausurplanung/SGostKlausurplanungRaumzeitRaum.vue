@@ -1,6 +1,9 @@
 <template>
 	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false" class="border">
 		<svws-ui-content-card title="Kausurraum">
+			<template #actions>
+				<svws-ui-button type="danger" size="small" @click="loescheKlausurraum(raum.id, raummanager)"><i-ri-delete-bin-line /></svws-ui-button>
+			</template>
 			<svws-ui-multi-select title="Raum auswählen"
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
@@ -41,13 +44,13 @@
 		kursmanager: KursManager;
 		raummanager: GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
+		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
 		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
 	}>();
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {
 		const collectionSkrsKrs = await props.setzeRaumZuSchuelerklausuren(props.raum, props.raummanager.getSchuelerklausurenByKursklausur(klausur.id), props.raummanager);
-		console.log(props.raummanager);
 	};
 
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));

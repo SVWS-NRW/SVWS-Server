@@ -29,6 +29,7 @@
 				:raummanager="(raummanager as GostKlausurraumManager)"
 				:stundenplanmanager="stundenplanmanager"
 				:erzeuge-klausurraum="erzeugeKlausurraum"
+				:loesche-klausurraum="loescheKlausurraum"
 				:patch-klausurraum="patchKlausurraum"
 				:patch-kursklausur="patchKursklausur"
 				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />

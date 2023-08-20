@@ -35,6 +35,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 			kursmanager: routeGostKlausurplanung.data.kursManager,
 			stundenplanmanager: routeGostKlausurplanung.data.stundenplanmanager,
 			erzeugeKlausurraum: routeGostKlausurplanung.data.erzeugeKlausurraum,
+			loescheKlausurraum: routeGostKlausurplanung.data.loescheKlausurraum,
 			patchKlausurraum: routeGostKlausurplanung.data.patchKlausurraum,
 			erzeugeKlausurraummanager: routeGostKlausurplanung.data.erzeugeKlausurraummanager,
 			setzeRaumZuSchuelerklausuren: routeGostKlausurplanung.data.setzeRaumZuSchuelerklausuren,

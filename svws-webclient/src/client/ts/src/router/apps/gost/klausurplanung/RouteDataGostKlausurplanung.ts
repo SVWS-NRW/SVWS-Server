@@ -397,6 +397,15 @@ export class RouteDataGostKlausurplanung {
 		return neuerRaum;
 	}
 
+	loescheKlausurraum = async (id: number, manager: GostKlausurraumManager): Promise<boolean> => {
+		api.status.start();
+		const ergebnis = await api.server.deleteGostKlausurenRaum(api.schema, id);
+		manager.removeKlausurraum(id);
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
 	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager): Promise<boolean> => {
 		api.status.start();
 		const oldRaum: GostKlausurraum = manager.getKlausurraum(id);

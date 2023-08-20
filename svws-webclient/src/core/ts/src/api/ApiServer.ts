@@ -4331,7 +4331,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Klausurraum für die angegebene ID wurden erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Long
+	 *     - Rückgabe-Typ: Boolean
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurraum zu löschen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4340,13 +4340,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Klausurraum für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenRaum(schema : string, id : number) : Promise<number | null> {
+	public async deleteGostKlausurenRaum(schema : string, id : number) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/raeume/delete/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.deleteJSON(path, null);
 		const text = result;
-		return parseFloat(JSON.parse(text));
+		return (text === "true");
 	}
 
 

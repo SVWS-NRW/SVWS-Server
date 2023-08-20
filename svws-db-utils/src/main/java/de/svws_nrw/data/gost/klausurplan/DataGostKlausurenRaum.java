@@ -187,14 +187,10 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 	 * @return die Response
 	 */
 	public Response delete(final Long id) {
-		// TODO use transaction
-		// Bestimme den Raum
 		final DTOGostKlausurenRaeume raum = conn.queryByKey(DTOGostKlausurenRaeume.class, id);
 		if (raum == null)
 			return OperationError.NOT_FOUND.getResponse();
-		// Entferne den Raum
-		conn.remove(raum);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(conn.remove(raum)).build();
 	}
 
 
