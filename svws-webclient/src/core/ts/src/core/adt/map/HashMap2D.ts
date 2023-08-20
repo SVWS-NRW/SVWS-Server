@@ -149,6 +149,17 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
+	 * Entfernt für den Schlüssel (key1) die Submap, falls key1 existiert, andernfalls wird eine {@link DeveloperNotificationException} geworfen.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 */
+	public removeSubMapOrException(key1 : K1) : void {
+		if (!this._map.containsKey(key1))
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!")
+		this._map.remove(key1);
+	}
+
+	/**
 	 * Liefert eine Liste aller Values des 1. Keys in dieser Map.
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
