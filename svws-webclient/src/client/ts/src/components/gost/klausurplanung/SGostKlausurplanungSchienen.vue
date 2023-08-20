@@ -23,7 +23,7 @@
 				<svws-ui-radio-group :row="true" class="justify-center">
 					<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
 				</svws-ui-radio-group>
-				<svws-ui-checkbox v-model="blockeGleicheLehrkraft" v-if="algMode === KlausurterminblockungAlgorithmen.NORMAL">
+				<svws-ui-checkbox v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal">
 					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
 				</svws-ui-checkbox>
 			</template>
