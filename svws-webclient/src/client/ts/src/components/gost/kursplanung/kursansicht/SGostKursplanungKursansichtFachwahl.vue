@@ -101,7 +101,7 @@
 								'p-0.5': dragDataKursSchiene === undefined && !isKursDropZone(kurs, schiene).value,
 								'p-0': dragDataKursSchiene !== undefined || isKursDropZone(kurs, schiene).value,
 							}"
-							@dragstart="dragKursStarted(kurs, schiene)" @dragend="dragKursEnded()" @click="toggleKursAusgewaehlt(kurs)">
+							@dragstart.stop="dragKursStarted(kurs, schiene)" @dragend="dragKursEnded()" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
