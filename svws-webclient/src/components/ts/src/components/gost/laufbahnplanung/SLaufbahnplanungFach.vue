@@ -444,6 +444,7 @@
 			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
 			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
 		}
+		// TODO AT für Sport !!!
 	}
 
 
@@ -464,29 +465,82 @@
 		}
 	}
 
+	function identicalArray<T>(a1: Array<T>, a2: Array<T>) {
+		let i = a1.length;
+		while (i--)
+			if (a1[i] !== a2[i])
+				return false;
+		return true;
+	}
+
 	function setEF1WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
-			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S"; break;
-			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
-			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
+			case null: {
+				// Prüfe, ob die Folgehalbjahre auch leer sind, dann setze auch diese
+				if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = (ist_VTF.value || ist_PJK.value) ? ['M', 'M', 'M', 'M', 'M', 'M'] : ['S', 'S', 'S', 'S', 'S', 'M'];
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				break;
+			}
+			case "S":  {
+				// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
+				if (identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M']) && !(ist_VTF.value || ist_PJK.value))
+					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
+						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
+					else
+						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+				break;
+			}
+			case "M":  {
+				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
+				if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = [null, null, null, null, null, null];
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				break;
+			}
+			// TODO AT für Sport !!!
 		}
 	}
 
 
 	function setEF2WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
-			case null:
-				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+			case null: {
+				if (identicalArray(wahl.halbjahre, ['M', null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
+				else if (identicalArray(wahl.halbjahre, ['S', null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = ['S', 'S', 'S', 'S', 'S', 'M'];
+				else
+					wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
 				break;
-			case "S":
-				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
+			}
+			case "S": {
+				if (identicalArray(wahl.halbjahre, ['M', 'S', null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
+						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
+					else
+						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
+				else if ((identicalArray(wahl.halbjahre, ['S', 'S', null, null, null, null]) || identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = ['S', 'M', 'M', 'M', 'M', 'M'];
+				else
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
-			case "M":
+			}
+			case "M": {
+				if ((identicalArray(wahl.halbjahre, ['M', 'M', null, null, null, null]) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M'])) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = [null, null, null, null, null, null];
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
-				if (GostFachbereich.SPORT.hat(props.fach)) wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				if (GostFachbereich.SPORT.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
 				break;
-			case "AT":
+			}
+			case "AT": {
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+			}
 		}
 	}
 
