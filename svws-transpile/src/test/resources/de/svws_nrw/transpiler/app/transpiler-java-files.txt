@@ -1,0 +1,1 @@
+src/test/java/de/svws_nrw/transpiler/test/EmptyDTO.java
