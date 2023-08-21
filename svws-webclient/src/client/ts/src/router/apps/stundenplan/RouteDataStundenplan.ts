@@ -220,7 +220,15 @@ export class RouteDataStundenplan {
 			this.stundenplanManager.zeitrasterAdd(_item);
 		} else if ((wochentag !== undefined) && (stunde !== undefined)) {
 			// Füge Zelle im Stundenplan hinzu
+			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
+			delete zeitraster.id;
+			zeitraster.wochentag = wochentag.id;
+			zeitraster.unterrichtstunde = stunde;
+			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(stunde);
+			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(stunde);
 			console.log("Zeitrastereintrag ergänzen", wochentag.kuerzel, stunde);
+			const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
+			this.stundenplanManager.zeitrasterAdd(_item);
 		}
 		this.commit();
 	}

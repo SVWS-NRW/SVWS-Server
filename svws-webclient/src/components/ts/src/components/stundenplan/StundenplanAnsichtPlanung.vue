@@ -8,7 +8,7 @@
 			<div class="inline-flex gap-1 items-center pl-2">
 				{{ }}
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="font-bold text-center inline-flex items-center w-full justify-center" :class="{'bg-slate-400': toRaw(selected)===wochentag}">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="font-bold text-center inline-flex items-center w-full justify-center cursor-pointer" :class="{'bg-slate-400': toRaw(selected)===wochentag}">
 				<div> {{ wochentag.beschreibung }}</div>
 			</div>
 		</div>
@@ -24,7 +24,7 @@
 				</template>
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
-				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center" :style="posZeitraster(undefined, stunde)" :class="{'bg-slate-400': toRaw(selected)===stunde}">
+				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'bg-slate-400': toRaw(selected)===stunde}">
 					<div class="text-headline-sm">
 						{{ stunde }}.&nbsp;Stunde
 					</div>
@@ -33,14 +33,14 @@
 					</div>
 				</div>
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" @click="updateSelected(pause)" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center cursor-pointer" @click="updateSelected(pause)" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
 						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
 					</div>
 				</template>
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'bg-slate-400': selected===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag">
-					<div class="svws-ui-stundenplan--stunde" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'bg-slate-400': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'bg-slate-400': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
 						{{ zeitrasterEintrag.unterrichtstunde }}
 						<div class="flex justify-between">
 							<div class="flex content-start">

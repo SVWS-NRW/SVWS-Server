@@ -4,7 +4,7 @@
 		<div>
 			<stundenplan-detail-zeitrastereintrag :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :item="selected" :stundenplan-manager="stundenplanManager" v-if="(selected instanceof StundenplanZeitraster)" />
 			<stundenplan-detail-wochentag :remove-zeitraster="removeZeitraster" :item="selected" :stundenplan-manager="stundenplanManager" v-if="(selected instanceof Wochentag)" />
-			<stundenplan-detail-stunde :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :item="selected" :stundenplan-manager="stundenplanManager" v-if="(typeof selected === 'number')" />
+			<stundenplan-detail-stunde :patch-zeitraster="patchZeitraster" :remove-zeitraster="removeZeitraster" :add-zeitraster="addZeitraster" :item="selected" :stundenplan-manager="stundenplanManager" v-if="(typeof selected === 'number')" />
 			TODO Details zum ausgewählten Zeitraster- oder Pausenzeiten-Eintrag <br>
 			TODO Bei den Pausenzeiten können hier auch direkt Aufsichten zugeordnet werden <br>
 			TODO Bei den Zeitraster-Einträgen wird auch direkt eine Übersicht über die zugeordneten Unterrichte dargestellt
