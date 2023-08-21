@@ -46,7 +46,7 @@
 						<div class="inline-flex items-center gap-2">
 							<span>Schülerauswahl</span>
 							<svws-ui-badge size="big">
-								{{ schuelerFilter.filtered.value.length }}
+								{{ schuelerFilter.filtered.value.length }} {{ weitere }}
 							</svws-ui-badge>
 						</div>
 					</div>
@@ -155,5 +155,12 @@
 	const nichtwahl = (idSchueler: number) : ComputedRef<boolean> => computed(() =>
 		props.getErgebnismanager().getOfSchuelerHatNichtwahl(idSchueler)
 	);
+
+	const weitere = computed(()=>{
+		if (!props.schuelerFilter.kurs)
+			return '';
+		const anzahl = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.schuelerFilter.kurs.id);
+		return anzahl > 0 ? `+${anzahl} weitere`:''
+	})
 
 </script>
