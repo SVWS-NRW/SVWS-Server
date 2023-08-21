@@ -41,7 +41,7 @@
 					<div class="flex flex-grow items-center">
 						<template v-if="kurs.id === edit_name">
 							<span class="flex-shrink-0">{{ kursbezeichnung(kurs).value }}<span class="opacity-50">–</span></span>
-							<svws-ui-text-input :model-value="tmp_name" @update:model-value="tmp_name=String($event)" focus headless @blur="edit_name=undefined" @keyup.enter="setSuffix" />
+							<svws-ui-text-input :model-value="tmp_name" @update:model-value="tmp_name=String($event)" focus headless @blur="edit_name=undefined" @keyup.enter="setSuffix(kurs)" />
 						</template>
 						<template v-else>
 							<span class="underline decoration-dotted decoration-black/50 hover:decoration-solid underline-offset-2 cursor-text" @click="editKursSuffix(kurs)">
