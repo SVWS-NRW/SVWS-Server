@@ -37,7 +37,7 @@
 				</div>
 				<!-- Die Pausenzeiten -->
 				<template v-for="pause in pausenzeiten" :key="pause">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(undefined, pause)">
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(pause)">
 						<div> {{ pause.bezeichnung }} </div>
 						<div> {{ (pause.ende! - pause.beginn!) }} Minuten </div>
 					</div>
@@ -100,17 +100,16 @@
 					</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-for="pause in pausenzeiten" :key="pause">
-					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" @dragover="checkDropZonePausenzeit($event, wochentag, pause)" @drop="onDrop(pause)" />
-				</template>
-				<template v-for="pausenaufsicht in getPausenaufsichtenWochentag(wochentag)" :key="pausenaufsicht.id">
-					<div class="svws-ui-stundenplan--pause" :style="posPausenaufsicht(pausenaufsicht)">
-						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}"
-							:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
-							<div class="font-bold"> {{ pausenzeit(pausenaufsicht).bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pausenzeit(pausenaufsicht).bezeichnung }} </div>
-							<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
-							<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
-						</div>
+				<template v-for="pause in getPausenzeitenWochentag(wochentag)" :key="pause">
+					<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
+						<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
+							<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+								:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
+								<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+								<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
+								<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
+							</div>
+						</template>
 					</div>
 				</template>
 			</div>
@@ -172,10 +171,6 @@
 		return Math.round(gesamtzeit.value / 5);
 	});
 
-	function pausenzeit(pausenaufsicht: StundenplanPausenaufsicht): StundenplanPausenzeit {
-		return props.manager().pausenzeitGetByIdOrException(pausenaufsicht.idPausenzeit);
-	}
-
 	function aufsichtsbereiche(pausenaufsicht: StundenplanPausenaufsicht): string {
 		let result = "";
 		for (const idBereich of pausenaufsicht.bereiche) {
@@ -197,14 +192,18 @@
 		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp);
 	}
 
-	function getPausenaufsichtenWochentag(wochentag : Wochentag): List<StundenplanPausenaufsicht> {
-		// TODO ersetzen mit entsprechender Methode pausenaufsichtGetMengeByWochentagOrEmptyList im Manager und nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
+	function getPausenzeitenWochentag(wochentag: Wochentag) : List<StundenplanPausenzeit> {
+		// TODO Nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
+		return props.manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id);
+	}
+
+	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
+		// TODO ersetzen mit entsprechender Methode pausenaufsichtGetMengeByPausenzeitOrEmptyList im Manager und nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
 		const allePausenaufsichten = props.manager().pausenaufsichtGetMengeAsList();
 		const result = new ArrayList<StundenplanPausenaufsicht>();
-		for (const p of allePausenaufsichten) {
-			if (pausenzeit(p).wochentag === wochentag.id)
+		for (const p of allePausenaufsichten)
+			if (p.idPausenzeit === pause.id)
 				result.add(p);
-		}
 		return result;
 	}
 
@@ -229,23 +228,8 @@
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 
-	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
-		if (pause.wochentag !== (wochentag?.id || wochentag === undefined ? 1 : wochentag.id))
-			return 'display: none;';
-		const p = props.manager().pausenzeitGetByIdOrException(pause.id);
-		let rowStart = 0;
-		let rowEnd = 10;
-		if ((p.beginn === null) || (p.ende === null)) {
-			rowStart = 1;
-		} else {
-			rowStart = (p.beginn - beginn.value) / 5;
-			rowEnd = (p.ende - beginn.value) / 5;
-		}
-		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
-	}
-
-	function posPausenaufsicht(p : StundenplanPausenaufsicht) : string {
-		const pzeit = pausenzeit(p);
+	function posPause(pause: StundenplanPausenzeit): string {
+		const pzeit = props.manager().pausenzeitGetByIdOrException(pause.id);
 		let rowStart = 0;
 		let rowEnd = 10;
 		if ((pzeit.beginn !== null) && (pzeit.ende !== null)) {
@@ -278,16 +262,17 @@
 			event.preventDefault();
 	}
 
-	function isDropZonePausenzeit(wochentag: Wochentag, pause : StundenplanPausenzeit) : boolean {
+	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {
 		const data = props.dragAndDropData();
 		if ((data === undefined) || (!(data instanceof StundenplanPausenaufsicht)))
 			return false;
-		// TODO Prüfe idPausenzeit
+		if (pause.id === data.idPausenzeit)
+			return false;
 		return true;
 	}
 
-	function checkDropZonePausenzeit(event: DragEvent, wochentag : Wochentag, pause : StundenplanPausenzeit) {
-		if (isDropZonePausenzeit(wochentag, pause))
+	function checkDropZonePausenzeit(event: DragEvent, pause : StundenplanPausenzeit) {
+		if (isDropZonePausenzeit(pause))
 			event.preventDefault();
 	}
 
