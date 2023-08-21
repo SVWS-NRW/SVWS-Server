@@ -2,7 +2,7 @@
 	<svws-ui-content-card :title="title" class="table--with-background sticky top-8">
 		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden>
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact" :class="{'text-error': manuellerModus}" :title="manuellerModus ? 'Manueller Modus aktiviert' : ''">
+				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<svws-ui-table-cell thead>
 						Kürzel
 					</svws-ui-table-cell>
@@ -81,7 +81,7 @@
 			<template #body>
 				<template v-for="row in abiturdatenManager().faecher().faecher()" :key="row.id">
 					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="row" :manueller-modus="manuellerModus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
+						:fach="row" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
 				</template>
 			</template>
 			<template #footer>
@@ -223,11 +223,12 @@
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
-		manuellerModus: boolean;
+		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 		title?: string | undefined;
 	}>(), {
 		title: undefined,
+		modus: 'normal',
 		ignoriereSprachenfolge: false,
 	});
 

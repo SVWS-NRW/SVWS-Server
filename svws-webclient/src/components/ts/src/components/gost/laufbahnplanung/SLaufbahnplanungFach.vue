@@ -113,9 +113,10 @@
 		abiturdatenManager: () => AbiturdatenManager;
 		gostJahrgangsdaten: GostJahrgangsdaten;
 		fach: GostFach;
-		manuellerModus: boolean;
+		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 	}>(), {
+		modus: 'normal',
 		ignoriereSprachenfolge: false,
 	});
 
@@ -326,7 +327,7 @@
 	})
 
 	function stepperAbi() {
-		if (props.manuellerModus) {
+		if (props.modus === 'manuell') {
 			stepper_manuellAbi();
 			return;
 		}
@@ -338,7 +339,7 @@
 	}
 
 	function stepper(halbjahr: GostHalbjahr) {
-		if (props.manuellerModus) {
+		if (props.modus === 'manuell') {
 			stepper_manuell(halbjahr);
 			return;
 		}
@@ -348,9 +349,9 @@
 		if (halbjahr === undefined)
 			setAbiturWahl(wahl);
 		else if (halbjahr === GostHalbjahr.EF1)
-			setEF1Wahl(wahl);
+			props.modus === 'normal' ? setEF1Wahl(wahl) : setEF1WahlHochschreiben(wahl);
 		else if (halbjahr === GostHalbjahr.EF2)
-			setEF2Wahl(wahl);
+			props.modus === 'normal' ? setEF2Wahl(wahl) : setEF2WahlHochschreiben(wahl);
 		else if (halbjahr === GostHalbjahr.Q11)
 			setQ11Wahl(wahl);
 		else if (halbjahr === GostHalbjahr.Q12)
@@ -447,6 +448,32 @@
 
 
 	function setEF2Wahl(wahl: GostSchuelerFachwahl): void {
+		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
+			case null:
+				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				break;
+			case "S":
+				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
+				break;
+			case "M":
+				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				if (GostFachbereich.SPORT.hat(props.fach)) wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				break;
+			case "AT":
+				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+		}
+	}
+
+	function setEF1WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
+		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
+			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S"; break;
+			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
+			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
+		}
+	}
+
+
+	function setEF2WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";

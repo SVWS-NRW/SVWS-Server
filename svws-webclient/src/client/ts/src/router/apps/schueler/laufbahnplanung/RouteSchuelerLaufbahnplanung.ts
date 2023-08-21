@@ -74,7 +74,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			saveLaufbahnplanung: this.data.saveLaufbahnplanung,
 			restoreLaufbahnplanung: this.data.restoreLaufbahnplanung,
 			resetFachwahlen: this.data.resetFachwahlen,
-			modus: () => this.data.modus,
+			modus: this.data.modus,
 			setModus: this.data.setModus,
 		};
 	}
