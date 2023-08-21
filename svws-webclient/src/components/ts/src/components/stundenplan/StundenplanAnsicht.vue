@@ -1,15 +1,19 @@
 <template>
 	<div class="svws-ui-stundenplan">
+		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
+			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
 			<div class="inline-flex gap-1 items-center pl-2" :class="{'opacity-50 font-normal print:invisible': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
-				class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentage[wochentag.id] }}</div>
+			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center inline-flex items-center w-full justify-center">
+				<div> {{ wochentage[wochentag.id] }} </div>
 			</div>
 		</div>
+		<!-- Die Daten des Stundenplans -->
 		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
+			<!-- Die Zeitachse des Stundenplans auf der linken Seite -->
 			<div class="svws-ui-stundenplan--zeitraster svws-einheiten">
 				<i-ri-time-line class="svws-time-icon" />
 				<template v-for="n in zeitrasterRows" :key="n">
@@ -20,87 +24,86 @@
 					</span>
 				</template>
 			</div>
+			<!-- Zeige auf der linken Seite die Zeitraster- und Pausenzeiten-Einträge an der Zeitachse -->
 			<div class="svws-ui-stundenplan--zeitraster">
+				<!-- Die Zeitraster-Einträge -->
 				<div v-for="stunde in zeitrasterRange" :key="stunde"
 					class="svws-ui-stundenplan--stunde text-center justify-center"
 					:style="posZeitraster(undefined, stunde)">
-					<div class="text-headline-sm">{{ stunde }}. Stunde</div>
+					<div class="text-headline-sm"> {{ stunde }}. Stunde </div>
 					<div v-for="zeiten in manager().unterrichtsstundeGetUhrzeitenAsStrings(stunde)" :key="zeiten" class="font-bold text-sm">
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
+				<!-- Die Pausenzeiten -->
 				<template v-for="pause in pausenzeiten" :key="pause">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center"
-						:style="posPause(undefined, pause)">
-						<div>{{ pause.bezeichnung }}</div>
-						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(undefined, pause)">
+						<div> {{ pause.bezeichnung }} </div>
+						<div> {{ (pause.ende! - pause.beginn!) }} Minuten </div>
 					</div>
 				</template>
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id"
-				class="svws-ui-stundenplan--zeitraster">
+			<!-- Zeige die Unterrichte und Pausenaufsichten des Stundenplans -->
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
+				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<div class="svws-ui-stundenplan--stunde"
-						:style="posZeitraster(wochentag, stunde)">
-						<template v-if="(wochentyp() !== 0) && (manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, 0) || manager().zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag, stunde, wochentyp()))">
+					<div class="svws-ui-stundenplan--stunde" :style="posZeitraster(wochentag, stunde)">
+						<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
+						<template v-if="(wochentyp() !== 0)">
+							<!-- Spezieller Wochentyp ausgewählt: Darstellung des allgemeinen und des speziellen Unterrichts eines Wochentyps -->
 							<div v-if="(mode === 'lehrer' || mode === 'schueler') && manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
-								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel</span>
-								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')">Einblenden</svws-ui-button>
+								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel </span>
+								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')"> Einblenden </svws-ui-button>
 							</div>
-							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)"
-								:key="unterricht.id"
+							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
-								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }}</div>
-								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
-								<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
-								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
+								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }} </div>
+								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 							</div>
 						</template>
-						<template v-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag, stunde)">
+						<template v-else>
+							<!-- Allgemeiner Wochentyp ausgewählt -->
 							<div v-if="(mode === 'lehrer' || mode === 'schueler') && manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
-								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel</span>
-								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')">Einblenden</svws-ui-button>
+								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel </span>
+								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')"> Einblenden </svws-ui-button>
 							</div>
-							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)"
-								:key="unterricht.id"
+							<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
+							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
-								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
-								<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
-								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
+								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+							</div>
+							<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
+							<div v-if="manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)"
+								class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
+								<template v-for="wt in manager().getWochenTypModell()" :key="wt">
+									<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)" :key="unterricht.id"
+										class="svws-ui-stundenplan--unterricht svws-compact"
+										:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column-start: ${wt}`">
+										<div class="col-span-full text-sm mb-0.5"> {{ manager().stundenplanGetWochenTypAsString(wt) }} </div>
+										<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+										<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+										<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+									</div>
+								</template>
 							</div>
 						</template>
-						<div v-else-if="(wochentyp() === 0) && manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)"
-							class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
-							<div v-if="(mode === 'lehrer' || mode === 'schueler') && manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 1).size() > 1" class="svws-ui-stundenplan--unterricht--warning col-span-full">
-								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel</span>
-								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')">Einblenden</svws-ui-button>
-							</div>
-							<template v-for="wt in manager().getWochenTypModell()" :key="wt">
-								<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)"
-									:key="unterricht.id"
-									class="svws-ui-stundenplan--unterricht svws-compact"
-									:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column-start: ${wt}`">
-									<div class="col-span-full text-sm mb-0.5">{{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
-									<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</div>
-									<div v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }}</div>
-									<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }}</div>
-								</div>
-							</template>
-						</div>
 					</div>
 				</template>
+				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause"
-						:style="posPause(wochentag, pause)" />
+					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" />
 				</template>
-				<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)"
-					:key="pausenaufsicht.id">
+				<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)" :key="pausenaufsicht.id">
 					<div class="svws-ui-stundenplan--pause" :style="posPausenaufsicht(pausenaufsicht)">
 						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
 							<div class="font-bold"> {{ pausenzeit(pausenaufsicht).bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pausenzeit(pausenaufsicht).bezeichnung }} </div>
-							<div><span v-if="mode !== 'lehrer'" title="Lehrkraft">{{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }}</span></div>
+							<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
 							<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
 						</div>
 					</div>
