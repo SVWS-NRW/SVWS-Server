@@ -146,7 +146,7 @@ public class APIClientConfig {
     @Operation(summary = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die benutzerspezifische Konfiguration",
                description = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die "
                		       + "benutzerspezifische Konfiguration.")
-    @ApiResponse(responseCode = "200", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben")
+    @ApiResponse(responseCode = "204", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben")
     public void setClientConfigUserKey(@PathParam("schema") final String schema, @PathParam("app") final String app, @PathParam("key") final String key,
     		                          @RequestBody(description = "Der Wert des Konfigurationseintrags", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream data,
     		                          @Context final HttpServletRequest request) {
@@ -186,7 +186,7 @@ public class APIClientConfig {
     @Operation(summary = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die globale Konfiguration.",
                description = "Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die "
                		       + "globale Konfiguration. Dabei wird geprüft, ob der angemeldete Benutzer administrative Rechte hat.")
-    @ApiResponse(responseCode = "200", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben")
+    @ApiResponse(responseCode = "204", description = "Der Konfigurationseintrag wurde erfolgreich geschrieben")
     public void setClientConfigGlobalKey(@PathParam("schema") final String schema, @PathParam("app") final String app, @PathParam("key") final String key,
     		                                @RequestBody(description = "Der Wert des Konfigurationseintrags", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream data,
     		                                @Context final HttpServletRequest request) {
