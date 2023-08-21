@@ -51,11 +51,11 @@
 						<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
 						<template v-if="(wochentyp() !== 0)">
 							<!-- Spezieller Wochentyp ausgewählt: Darstellung des allgemeinen und des speziellen Unterrichts eines Wochentyps -->
-							<div v-if="(mode === 'lehrer' || mode === 'schueler') && manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
+							<div v-if="(mode === 'lehrer' || mode === 'schueler') && getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp()).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
 								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel </span>
 								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')"> Einblenden </svws-ui-button>
 							</div>
-							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp(), true)" :key="unterricht.id"
+							<div v-for="unterricht in getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp())" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
 								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }} </div>
@@ -66,12 +66,12 @@
 						</template>
 						<template v-else>
 							<!-- Allgemeiner Wochentyp ausgewählt -->
-							<div v-if="(mode === 'lehrer' || mode === 'schueler') && manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
+							<div v-if="(mode === 'lehrer' || mode === 'schueler') && getUnterrichtWochentypAllgemein(wochentag, stunde, 0).size() > 1" class="svws-ui-stundenplan--unterricht--warning">
 								<span class="text-sm font-bold"><i-ri-alert-line class="inline-block -mt-0.5" /> Mehrere Kurse parallel </span>
 								<svws-ui-button type="secondary" size="small" @click="$event.target.parentNode.classList.toggle('svws-show')"> Einblenden </svws-ui-button>
 							</div>
 							<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
-							<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, 0)" :key="unterricht.id"
+							<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, 0)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
 								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -82,7 +82,7 @@
 							<div v-if="manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)"
 								class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
 								<template v-for="wt in manager().getWochenTypModell()" :key="wt">
-									<div v-for="unterricht in manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wt)" :key="unterricht.id"
+									<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, wt)" :key="unterricht.id"
 										class="svws-ui-stundenplan--unterricht svws-compact"
 										:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column-start: ${wt}`">
 										<div class="col-span-full text-sm mb-0.5"> {{ manager().stundenplanGetWochenTypAsString(wt) }} </div>
@@ -96,10 +96,10 @@
 					</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
+				<template v-for="pause in pausenzeiten" :key="pause">
 					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" />
 				</template>
-				<template v-for="pausenaufsicht in pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag)" :key="pausenaufsicht.id">
+				<template v-for="pausenaufsicht in getPausenaufsichtenWochentag(wochentag)" :key="pausenaufsicht.id">
 					<div class="svws-ui-stundenplan--pause" :style="posPausenaufsicht(pausenaufsicht)">
 						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
 							<div class="font-bold"> {{ pausenzeit(pausenaufsicht).bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pausenzeit(pausenaufsicht).bezeichnung }} </div>
@@ -115,7 +115,7 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach } from "@core";
+	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
@@ -178,8 +178,18 @@
 		return result;
 	}
 
-	// TODO ersetzen mit entsprechender Methode im Manager
-	function pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag : Wochentag): List<StundenplanPausenaufsicht> {
+	function getUnterrichtWochentypSpeziell(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
+		// TODO Nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
+		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp, true);
+	}
+
+	function getUnterrichtWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
+		// TODO Nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
+		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp);
+	}
+
+	function getPausenaufsichtenWochentag(wochentag : Wochentag): List<StundenplanPausenaufsicht> {
+		// TODO ersetzen mit entsprechender Methode pausenaufsichtGetMengeByWochentagOrEmptyList im Manager und nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
 		const allePausenaufsichten = props.manager().pausenaufsichtGetMengeAsList();
 		const result = new ArrayList<StundenplanPausenaufsicht>();
 		for (const p of allePausenaufsichten) {
@@ -243,123 +253,124 @@
 </script>
 
 <style lang="postcss">
-.svws-ui-stundenplan {
-  @apply flex flex-col h-full min-w-max flex-grow;
-  --zeitrasterRows: 0;
-}
 
-.svws-ui-stundenplan--head,
-.svws-ui-stundenplan--body {
-  @apply grid grid-flow-col;
-  grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
-}
-
-.svws-ui-stundenplan--head {
-  @apply bg-white dark:bg-black py-1 text-button;
-  @apply h-[2.75rem] sticky -top-px z-10;
-  @apply border border-black/25 dark:border-white/10;
-}
-
-.svws-ui-stundenplan--body {
-  @apply flex-grow border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
-}
-
-.svws-ui-stundenplan--zeitraster {
-  @apply grid grid-cols-1;
-  grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
-
-	&.svws-einheiten {
-		@apply print:hidden absolute h-full w-4 -ml-4 border-b border-r border-transparent;
-
-    .svws-time-icon {
-      @apply absolute -top-7 right-0 w-3.5 h-3.5 opacity-50;
-    }
+	.svws-ui-stundenplan {
+		@apply flex flex-col h-full min-w-max flex-grow;
+		--zeitrasterRows: 0;
 	}
-}
 
-.svws-ui-stundenplan--stunde,
-.svws-ui-stundenplan--pause {
-  @apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-y-auto;
-  @apply border border-l-0 border-black/25 dark:border-white/10;
+	.svws-ui-stundenplan--head,
+	.svws-ui-stundenplan--body {
+		@apply grid grid-flow-col;
+		grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
+	}
 
-  .svws-ui-stundenplan--zeitraster:last-child & {
-    @apply border-r-0;
-  }
+	.svws-ui-stundenplan--head {
+		@apply bg-white dark:bg-black py-1 text-button;
+		@apply h-[2.75rem] sticky -top-px z-10;
+		@apply border border-black/25 dark:border-white/10;
+	}
 
-  .svws-multiple {
-    @apply grid gap-1 h-full grid-flow-col;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  }
-}
+	.svws-ui-stundenplan--body {
+		@apply flex-grow border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
+	}
 
-.svws-ui-stundenplan--pause {
-  @apply bg-light dark:bg-white/5 text-black/50 dark:text-white/50;
-}
+	.svws-ui-stundenplan--zeitraster {
+		@apply grid grid-cols-1;
+		grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
 
-.svws-ui-stundenplan--unterricht,
-.svws-ui-stundenplan--pausen-aufsicht {
- @apply rounded grid grid-cols-3 gap-x-1 flex-grow w-full border border-black/10 px-2 py-1 content-center leading-none dark:text-black;
+		&.svws-einheiten {
+			@apply print:hidden absolute h-full w-4 -ml-4 border-b border-r border-transparent;
 
-  &.svws-compact {
-    @apply grid-cols-2;
-  }
-
-	+ .svws-ui-stundenplan--unterricht,
-	+ .svws-ui-stundenplan--pausen-aufsicht {
-		@apply rounded-t-none;
-
-		.svws-multiple & {
-			@apply rounded-t;
+			.svws-time-icon {
+				@apply absolute -top-7 right-0 w-3.5 h-3.5 opacity-50;
+			}
 		}
 	}
 
-	&:not(:last-child) {
-		@apply rounded-b-none;
+	.svws-ui-stundenplan--stunde,
+	.svws-ui-stundenplan--pause {
+		@apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-y-auto;
+		@apply border border-l-0 border-black/25 dark:border-white/10;
 
-		.svws-multiple & {
-			@apply rounded-b;
+		.svws-ui-stundenplan--zeitraster:last-child & {
+			@apply border-r-0;
+		}
+
+		.svws-multiple {
+			@apply grid gap-1 h-full grid-flow-col;
+			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 		}
 	}
-}
 
-.svws-ui-stundenplan--unterricht--warning {
-  @apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;
-
-  ~ .svws-ui-stundenplan--unterricht {
-    @apply flex-grow-0 min-h-[2rem] hidden print:grid;
-
-    &.svws-compact {
-      @apply min-h-[5rem];
-    }
-  }
-
-  &.svws-show {
-    @apply hidden;
-
-    ~ .svws-ui-stundenplan--unterricht {
-      @apply grid;
-    }
-  }
-}
-
-.svws-ui-stundenplan--pausen-aufsicht {
-  &.svws-lehrkraft {
-    @apply bg-black/75 dark:bg-white/75 text-white dark:text-black;
-  }
-}
-
-.svws-ui-stundenplan--einheit {
-	@apply border-t border-black/50 dark:border-white/50 h-full w-1/2 pt-0.5 py-0.5 opacity-50 ml-auto;
-  font-size: 0.66rem;
-  writing-mode: vertical-lr;
-
-	&.svws-small {
-		@apply w-1/2 opacity-50;
+	.svws-ui-stundenplan--pause {
+		@apply bg-light dark:bg-white/5 text-black/50 dark:text-white/50;
 	}
 
-	&.svws-extended {
-		@apply w-full;
+	.svws-ui-stundenplan--unterricht,
+	.svws-ui-stundenplan--pausen-aufsicht {
+		@apply rounded grid grid-cols-3 gap-x-1 flex-grow w-full border border-black/10 px-2 py-1 content-center leading-none dark:text-black;
+
+		&.svws-compact {
+			@apply grid-cols-2;
+		}
+
+		+ .svws-ui-stundenplan--unterricht,
+		+ .svws-ui-stundenplan--pausen-aufsicht {
+			@apply rounded-t-none;
+
+			.svws-multiple & {
+				@apply rounded-t;
+			}
+		}
+
+		&:not(:last-child) {
+			@apply rounded-b-none;
+
+			.svws-multiple & {
+				@apply rounded-b;
+			}
+		}
 	}
-}
+
+	.svws-ui-stundenplan--unterricht--warning {
+		@apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;
+
+		~ .svws-ui-stundenplan--unterricht {
+			@apply flex-grow-0 min-h-[2rem] hidden print:grid;
+
+			&.svws-compact {
+				@apply min-h-[5rem];
+			}
+		}
+
+		&.svws-show {
+			@apply hidden;
+
+			~ .svws-ui-stundenplan--unterricht {
+				@apply grid;
+			}
+		}
+	}
+
+	.svws-ui-stundenplan--pausen-aufsicht {
+		&.svws-lehrkraft {
+			@apply bg-black/75 dark:bg-white/75 text-white dark:text-black;
+		}
+	}
+
+	.svws-ui-stundenplan--einheit {
+		@apply border-t border-black/50 dark:border-white/50 h-full w-1/2 pt-0.5 py-0.5 opacity-50 ml-auto;
+		font-size: 0.66rem;
+		writing-mode: vertical-lr;
+
+		&.svws-small {
+			@apply w-1/2 opacity-50;
+		}
+
+		&.svws-extended {
+			@apply w-full;
+		}
+	}
 
 </style>
