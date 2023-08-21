@@ -129,9 +129,9 @@
 		mode: 'schueler',
 		ignoreEmpty: false,
 		useDragAndDrop: false,
-		dragAndDropData: () => undefined,
+		dragData: () => undefined,
 		onDrag: (data: StundenplanAnsichtDragData) => {},
-		onDrop: (data: StundenplanAnsichtDropZone) => {},
+		onDrop: (zone: StundenplanAnsichtDropZone) => {},
 	});
 
 	const beginn = computed(() => {
@@ -244,11 +244,11 @@
 	}
 
 	function isDraggable() : boolean {
-		return props.useDragAndDrop && (props.dragAndDropData() === undefined);
+		return props.useDragAndDrop && (props.dragData() === undefined);
 	}
 
 	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number) : boolean {
-		const data = props.dragAndDropData();
+		const data = props.dragData();
 		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
 			return false;
 		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
@@ -263,7 +263,7 @@
 	}
 
 	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {
-		const data = props.dragAndDropData();
+		const data = props.dragData();
 		if ((data === undefined) || (!(data instanceof StundenplanPausenaufsicht)))
 			return false;
 		if (pause.id === data.idPausenzeit)
