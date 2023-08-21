@@ -81,7 +81,7 @@
 	function getKalenderwochenString(kw: StundenplanKalenderwochenzuordnung | undefined): string {
 		if (kw === undefined)
 			return "—";
-		return props.manager().kalenderwochenzuordnungGetWocheAsShortString(kw);
+		return props.manager().kalenderwochenzuordnungGetWocheAsString(kw);
 	}
 
 	const kwAuswahl : WritableComputedRef<StundenplanKalenderwochenzuordnung | undefined> = computed({
