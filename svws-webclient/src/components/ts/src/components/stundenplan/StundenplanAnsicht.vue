@@ -47,7 +47,8 @@
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<div class="svws-ui-stundenplan--stunde" :style="posZeitraster(wochentag, stunde)">
+					<div class="svws-ui-stundenplan--stunde" :style="posZeitraster(wochentag, stunde)"
+						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
 						<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
 						<template v-if="(wochentyp() !== 0)">
 							<!-- Spezieller Wochentyp ausgewählt: Darstellung des allgemeinen und des speziellen Unterrichts eines Wochentyps -->
@@ -57,7 +58,8 @@
 							</div>
 							<div v-for="unterricht in getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp())" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
+								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`"
+								:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }} </div>
 								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
@@ -73,7 +75,8 @@
 							<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
 							<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, 0)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`">
+								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`"
+								:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
@@ -84,7 +87,8 @@
 								<template v-for="wt in manager().getWochenTypModell()" :key="wt">
 									<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, wt)" :key="unterricht.id"
 										class="svws-ui-stundenplan--unterricht svws-compact"
-										:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column-start: ${wt}`">
+										:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}; grid-column-start: ${wt}`"
+										:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 										<div class="col-span-full text-sm mb-0.5"> {{ manager().stundenplanGetWochenTypAsString(wt) }} </div>
 										<div class="font-bold" :class="{'col-span-2': mode === 'lehrer'}" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 										<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
@@ -97,11 +101,12 @@
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
 				<template v-for="pause in pausenzeiten" :key="pause">
-					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" />
+					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" @dragover="checkDropZonePausenzeit($event, wochentag, pause)" @drop="onDrop(pause)" />
 				</template>
 				<template v-for="pausenaufsicht in getPausenaufsichtenWochentag(wochentag)" :key="pausenaufsicht.id">
 					<div class="svws-ui-stundenplan--pause" :style="posPausenaufsicht(pausenaufsicht)">
-						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
+						<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+							:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 							<div class="font-bold"> {{ pausenzeit(pausenaufsicht).bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pausenzeit(pausenaufsicht).bezeichnung }} </div>
 							<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
 							<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
@@ -115,15 +120,19 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, type Wochentag, type StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht } from "@core";
+	import { ArrayList, type List, type Wochentag, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht } from "@core";
 	import { computed } from "vue";
-	import { type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
+	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		mode: 'schueler',
 		ignoreEmpty: false,
+		useDragAndDrop: false,
+		dragAndDropData: () => undefined,
+		onDrag: (data: StundenplanAnsichtDragData) => {},
+		onDrop: (data: StundenplanAnsichtDropZone) => {},
 	});
 
 	const beginn = computed(() => {
@@ -248,6 +257,38 @@
 
 	function getBgColor(fach: string): string {
 		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+	}
+
+	function isDraggable() : boolean {
+		return props.useDragAndDrop && (props.dragAndDropData() === undefined);
+	}
+
+	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number) : boolean {
+		const data = props.dragAndDropData();
+		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
+			return false;
+		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
+			return true;
+		const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
+		return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
+	}
+
+	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
+		if (isDropZoneZeitraster(wochentag, stunde))
+			event.preventDefault();
+	}
+
+	function isDropZonePausenzeit(wochentag: Wochentag, pause : StundenplanPausenzeit) : boolean {
+		const data = props.dragAndDropData();
+		if ((data === undefined) || (!(data instanceof StundenplanPausenaufsicht)))
+			return false;
+		// TODO Prüfe idPausenzeit
+		return true;
+	}
+
+	function checkDropZonePausenzeit(event: DragEvent, wochentag : Wochentag, pause : StundenplanPausenzeit) {
+		if (isDropZonePausenzeit(wochentag, pause))
+			event.preventDefault();
 	}
 
 </script>

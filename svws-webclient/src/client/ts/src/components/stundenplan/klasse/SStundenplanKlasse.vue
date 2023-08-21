@@ -44,7 +44,8 @@
 			<div class="h-full w-full">
 				TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder
 				die Klassen-Unterricht hineingezogen werden können.
-				<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined" />
+				<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+					use-drag-and-drop :drag-and-drop-data="() => dragData" :on-drag="onDragStundenplan" :on-drop="onDropStundenplan" />
 			</div>
 		</template>
 	</div>
@@ -55,6 +56,7 @@
 	import { ArrayList, type List, type StundenplanKlasse } from "@core";
 	import { type StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import { ref, computed, type WritableComputedRef } from "vue";
+	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone } from "@comp";
 
 	const props = defineProps<StundenplanKlasseProps>();
 
@@ -80,6 +82,17 @@
 			result.add(n);
 		return result;
 	}
+
+	const dragData = ref<StundenplanAnsichtDragData>(undefined);
+
+	const onDragStundenplan = (data: StundenplanAnsichtDragData) => {
+		dragData.value = data;
+		// console.log("drag", data);
+	};
+
+	const onDropStundenplan = (data: StundenplanAnsichtDropZone) => {
+		// console.log("drop", data);
+	};
 
 	const _wochentyp = ref<number>(0);
 
