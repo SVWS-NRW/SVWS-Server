@@ -2655,7 +2655,7 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
 	 * <br>Beispiel:  "08:00-8:45", falls sie nicht abweichen.
-	 * <br>Beispiel:  "Mo.-Mi. 08:00-8:45", "Do. 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
+	 * <br>Beispiel:  "Mo-Mi 08:00-8:45", "Do 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
 	 *
 	 * @param stunde  Die Nr. der Unterrichtsstunde.
 	 *
@@ -2690,9 +2690,9 @@ export class StundenplanManager extends JavaObject {
 			const sWochentagVon : string = listWochentagVon.get(i);
 			const sWochentagBis : string = listWochentagBis.get(i);
 			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
-				listUhrzeit.set(i, sWochentagVon! + ". " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon! + " " + sUhrzeit!);
 			else
-				listUhrzeit.set(i, sWochentagVon! + ".-" + sWochentagBis! + ". " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon! + "-" + sWochentagBis! + " " + sUhrzeit!);
 		}
 		return listUhrzeit;
 	}

@@ -2777,7 +2777,7 @@ public class StundenplanManager {
 	/**
 	 * Liefert eine String-Menge aller Uhrzeiten der Zeitraster einer bestimmten Unterrichtsstunde. Dabei werden identische Uhrzeiten zusammengefasst.
 	 * <br>Beispiel:  "08:00-8:45", falls sie nicht abweichen.
-	 * <br>Beispiel:  "Mo.-Mi. 08:00-8:45", "Do. 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
+	 * <br>Beispiel:  "Mo-Mi 08:00-8:45", "Do 07:55-8:40", "Fr. 07:40-8:25", falls sie abweichen.
 	 *
 	 * @param stunde  Die Nr. der Unterrichtsstunde.
 	 *
@@ -2821,9 +2821,9 @@ public class StundenplanManager {
 			final @NotNull String sWochentagVon = listWochentagVon.get(i);
 			final @NotNull String sWochentagBis = listWochentagBis.get(i);
 			if (sWochentagVon.equals(sWochentagBis))
-				listUhrzeit.set(i, sWochentagVon + ". " + sUhrzeit);
+				listUhrzeit.set(i, sWochentagVon + " " + sUhrzeit);
 			else
-				listUhrzeit.set(i, sWochentagVon + ".-" + sWochentagBis + ". " + sUhrzeit);
+				listUhrzeit.set(i, sWochentagVon + "-" + sWochentagBis + " " + sUhrzeit);
 		}
 
 		return listUhrzeit;
