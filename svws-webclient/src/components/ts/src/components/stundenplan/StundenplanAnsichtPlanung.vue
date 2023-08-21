@@ -39,7 +39,7 @@
 				</template>
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'bg-slate-400': selected===wochentag}">
-				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag">
+				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
 					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'bg-slate-400': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
 						{{ zeitrasterEintrag.unterrichtstunde }}
 						<div class="flex justify-between">
@@ -49,7 +49,7 @@
 						</div>
 					</div>
 				</template>
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
+				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
 				</template>
 			</div>
@@ -140,16 +140,13 @@
 	}
 
 	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
-		if (pause.wochentag !== (wochentag?.id || wochentag === undefined ? 1 : wochentag.id))
-			return 'display: none;';
-		const p = props.manager().pausenzeitGetByIdOrException(pause.id);
 		let rowStart = 0;
 		let rowEnd = 10;
-		if ((p.beginn === null) || (p.ende === null)) {
+		if ((pause.beginn === null) || (pause.ende === null)) {
 			rowStart = 1;
 		} else {
-			rowStart = (p.beginn - beginn.value) / 5;
-			rowEnd = (p.ende - beginn.value) / 5;
+			rowStart = (pause.beginn - beginn.value) / 5;
+			rowEnd = (pause.ende - beginn.value) / 5;
 		}
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
