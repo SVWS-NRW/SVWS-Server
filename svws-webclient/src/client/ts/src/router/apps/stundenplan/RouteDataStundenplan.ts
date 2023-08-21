@@ -233,7 +233,7 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	removeRaeume = async (raeume: StundenplanRaum[]) => {
+	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
 		for (const raum of raeume) {
 			await api.server.deleteStundenplanRaum(api.schema, raum.id);
 			this.stundenplanManager.raumRemoveById(raum.id);
@@ -241,7 +241,7 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	removePausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {
+	removePausenzeiten = async (pausenzeiten: Iterable<StundenplanPausenzeit>) => {
 		for (const pausenzeit of pausenzeiten) {
 			await api.server.deleteStundenplanPausenzeit(api.schema, pausenzeit.id);
 			this.stundenplanManager.pausenzeitRemoveById(pausenzeit.id);
@@ -249,7 +249,7 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	removeAufsichtsbereiche = async (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => {
+	removeAufsichtsbereiche = async (aufsichtsbereiche: Iterable<StundenplanAufsichtsbereich>) => {
 		for (const aufsichtsbereich of aufsichtsbereiche) {
 			await api.server.deleteStundenplanAufsichtsbereich(api.schema, aufsichtsbereich.id);
 			this.stundenplanManager.aufsichtsbereichRemoveById(aufsichtsbereich.id);
@@ -257,7 +257,7 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	removeZeitraster = async (multi: StundenplanZeitraster[]) => {
+	removeZeitraster = async (multi: Iterable<StundenplanZeitraster>) => {
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
 			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);

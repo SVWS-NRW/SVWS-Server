@@ -32,8 +32,8 @@
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center cursor-pointer" @click="updateSelected(pause)" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
+				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
+					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
 						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
 					</div>
 				</template>
@@ -49,8 +49,8 @@
 						</div>
 					</div>
 				</template>
-				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause">
-					<div class="svws-ui-stundenplan--pause" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
+				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
+					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
 				</template>
 			</div>
 		</div>
@@ -58,7 +58,7 @@
 </template>
 <script setup lang="ts">
 	import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster} from "@core";
-	import  { Wochentag } from "@core";
+	import { Wochentag } from "@core";
 	import { computed, ref, toRaw } from "vue";
 
 	const props = defineProps<{
@@ -75,6 +75,7 @@
 	const selected = ref<Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined>();
 
 	function updateSelected(event: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit) {
+		console.log(event)
 		if (event === toRaw(selected.value))
 			selected.value = undefined;
 		else

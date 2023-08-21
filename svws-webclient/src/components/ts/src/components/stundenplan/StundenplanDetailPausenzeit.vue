@@ -1,0 +1,40 @@
+<template>
+	<svws-ui-content-card>
+		<svws-ui-input-wrapper :grid="4">
+			<div class="text-headline-md text-left">
+				<span>{{ Wochentag.fromIDorException(item.wochentag) }}</span>
+			</div>
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" required placeholder="Pausenbeginn" @update:model-value="patchBeginn" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @update:model-value="patchEnde" />
+		</svws-ui-input-wrapper>
+		<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
+	</svws-ui-content-card>
+</template>
+
+<script setup lang="ts">
+	import type { StundenplanManager, StundenplanPausenzeit } from "@core";
+	import { DateUtils, Wochentag } from "@core";
+
+	const props = defineProps<{
+		item: StundenplanPausenzeit;
+		stundenplanManager: () => StundenplanManager;
+		patchPausenzeit: (data: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
+		removePausenzeiten: (multi: Iterable<StundenplanPausenzeit>) => Promise<void>;
+	}>();
+
+	async function patchBeginn(event: string | number) {
+		if (typeof event === 'number')
+			return;
+		const beginn = DateUtils.gibMinutenOfZeitAsString(event);
+		await props.patchPausenzeit({beginn}, props.item.id);
+	}
+
+	async function patchEnde(event: string | number) {
+		if (typeof event === 'number')
+			return;
+		const ende = DateUtils.gibMinutenOfZeitAsString(event);
+		await props.patchPausenzeit({ende}, props.item.id);
+	}
+
+
+</script>

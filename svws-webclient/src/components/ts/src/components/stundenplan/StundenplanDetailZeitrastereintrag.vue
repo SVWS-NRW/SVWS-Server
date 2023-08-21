@@ -19,7 +19,7 @@
 		item: StundenplanZeitraster;
 		stundenplanManager: () => StundenplanManager;
 		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
-		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
 	async function patchBeginn(event: string | number) {

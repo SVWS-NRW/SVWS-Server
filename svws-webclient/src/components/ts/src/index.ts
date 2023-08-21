@@ -5,4 +5,3 @@ export type { StundenplanAnsichtProps, StundenplanAnsichtDragData, StundenplanAn
 export { default as StundenplanAnsicht } from './components/stundenplan/StundenplanAnsicht.vue'
 export type { StundenplanAuswahlProps } from './components/stundenplan/StundenplanAuswahlProps'
 export { default as StundenplanAuswahl } from './components/stundenplan/StundenplanAuswahl.vue'
-export { default as StundenplanDetailZeitrastereintrag } from './components/stundenplan/StundenplanDetailZeitrastereintrag.vue'
