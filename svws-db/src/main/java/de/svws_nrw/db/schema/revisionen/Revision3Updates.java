@@ -107,7 +107,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 					logger.logLn("- Verschiebe bei allen Schülern den aktuellen Lernabschnitt in den Folgelernabschnitt, wo noch kein Folgelernabschnitt für diesen existiert.");
 					String sql = "UPDATE SchuelerLernabschnittsdaten sla1"
-							+ " JOIN SchuljahresAbschnitte sja ON sla1.Schuljahresabschnitts_ID = sja.ID AND sla1.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell
+							+ " JOIN Schuljahresabschnitte sja ON sla1.Schuljahresabschnitts_ID = sja.ID AND sla1.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell
 							+ " LEFT JOIN SchuelerLernabschnittsdaten sla2 ON sla2.Schuljahresabschnitts_ID = sja.FolgeAbschnitt_ID AND sla1.Schueler_ID = sla2.Schueler_ID AND sla2.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID
 							+ " SET sla1.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID + " WHERE sla2.ID IS NULL";
 					if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
@@ -117,7 +117,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 					logger.logLn("- Verschiebe dann bei diesen Lernabschnitte die Noten-Einträge in das Feld für die Quartalsnoten des Halbjahres.");
 					sql = "UPDATE SchuelerLeistungsdaten SET NotenKrzQuartal = NotenKrz, NotenKrz = NULL WHERE Abschnitt_ID IN ("
-							+ "SELECT sla1.ID FROM SchuljahresAbschnitte sja"
+							+ "SELECT sla1.ID FROM Schuljahresabschnitte sja"
 							+ " JOIN SchuelerLernabschnittsdaten sla1 ON sla1.Schuljahresabschnitts_ID = sja.ID AND sla1.Schuljahresabschnitts_ID = " + aktFolgeAbschnittID
 					        + " LEFT JOIN SchuelerLernabschnittsdaten sla2 ON sla2.Schuljahresabschnitts_ID = sja.VorigerAbschnitt_ID AND sla1.Schueler_ID = sla2.Schueler_ID AND sla2.Schuljahresabschnitts_ID = " + schuljahresabschnittAktuell
 							+ " WHERE sla2.ID IS NULL)";
