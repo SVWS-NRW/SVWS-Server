@@ -170,7 +170,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 						startzeit, v.dauer);
 				conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden v WHERE v.Schuelerklausur_ID = %d".formatted(sk.idSchuelerklausur));
 				for (final StundenplanZeitraster stunde : zeitrasterSk) {
-					final DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur, raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
+					final DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur,
+							raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
 					conn.transactionPersist(skRaumStundeNeu);
 					result.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 				}
@@ -222,14 +223,16 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<DTOGostKlausurenRaeumeStunden> raumStunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id.multiple", listRaeume.stream().map(s -> s.id).toList(),
 				DTOGostKlausurenRaeumeStunden.class);
 
-		for (final DTOGostKlausurenRaeumeStunden s : raumStunden)
-			retCollection.raumstunden.add(DataGostKlausurenRaumstunde.dtoMapper.apply(s));
+		if (!raumStunden.isEmpty()) {
+			for (final DTOGostKlausurenRaeumeStunden s : raumStunden)
+				retCollection.raumstunden.add(DataGostKlausurenRaumstunde.dtoMapper.apply(s));
 
-		final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> skrStunden = conn.queryNamed("DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple", raumStunden.stream().map(s -> s.ID).toList(),
-				DTOGostKlausurenSchuelerklausurenRaeumeStunden.class);
+			final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> skrStunden = conn.queryNamed("DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple",
+					raumStunden.stream().map(s -> s.ID).toList(), DTOGostKlausurenSchuelerklausurenRaeumeStunden.class);
 
-		for (final DTOGostKlausurenSchuelerklausurenRaeumeStunden s : skrStunden)
-			retCollection.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(s));
+			for (final DTOGostKlausurenSchuelerklausurenRaeumeStunden s : skrStunden)
+				retCollection.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(s));
+		}
 
 		return retCollection;
 	}

@@ -55,9 +55,7 @@ public class GostKlausurraumManager {
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull GostKlausurraumstunde> _mapRaumZeitrasterStunde = new HashMap2D<>();
 
 	/** Ein Comparator für die GostKlausurräume. */
-	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaumId = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> {
-		return Long.compare(a.id, b.id);
-	};
+	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaumId = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> Long.compare(a.id, b.id);
 
 	/** Die Schuelerklausuren, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostSchuelerklausur> _schuelerklausuren = new ArrayList<>();
@@ -167,12 +165,10 @@ public class GostKlausurraumManager {
 	 * @param id die ID des Gost-Klausurraums
 	 */
 	public void removeKlausurraum(final long id) {
-		final GostKlausurraum raum = DeveloperNotificationException.ifMapGetIsNull(_mapIdRaum, id);
+		final GostKlausurraum raum = DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", _raeume, raum);
-		DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, id);
 		removeFromMapIdstundenplanraumRaum(id);
-		final @NotNull List<@NotNull GostKlausurraumstunde> stunden = DeveloperNotificationException.ifMapGetIsNull(_mapRaumStunden, id);
-		DeveloperNotificationException.ifMapRemoveFailes(_mapRaumStunden, id);
+		final @NotNull List<@NotNull GostKlausurraumstunde> stunden = DeveloperNotificationException.ifMapRemoveFailes(_mapRaumStunden, id);
 		for (@NotNull final GostKlausurraumstunde st : stunden) {
 			DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaumStunde, st.id);
 			DeveloperNotificationException.ifListRemoveFailes("_stunden", _stunden, st);
@@ -180,8 +176,7 @@ public class GostKlausurraumManager {
 		}
 		_mapRaumKursklausurSchuelerklausur.removeSubMapOrException(id);
 		_mapRaumZeitrasterStunde.removeSubMapOrException(id);
-		final @NotNull List<@NotNull GostSchuelerklausur> sks = DeveloperNotificationException.ifMapGetIsNull(_mapRaumSchuelerklausuren, id);
-		DeveloperNotificationException.ifMapRemoveFailes(_mapRaumSchuelerklausuren, id);
+		final @NotNull List<@NotNull GostSchuelerklausur> sks = DeveloperNotificationException.ifMapRemoveFailes(_mapRaumSchuelerklausuren, id);
 		for (@NotNull final GostSchuelerklausur sk : sks) {
 			DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrsRevert, sk.idSchuelerklausur);
 			refreshSchuelerklausur(sk);

@@ -69,9 +69,7 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Ein Comparator für die GostKlausurräume.
 	 */
-	private static readonly _compRaumId : Comparator<GostKlausurraum> = { compare : (a: GostKlausurraum, b: GostKlausurraum) => {
-		return JavaLong.compare(a.id, b.id);
-	} };
+	private static readonly _compRaumId : Comparator<GostKlausurraum> = { compare : (a: GostKlausurraum, b: GostKlausurraum) => JavaLong.compare(a.id, b.id) };
 
 	/**
 	 * Die Schuelerklausuren, die im Manager vorhanden sind
@@ -205,12 +203,10 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param id die ID des Gost-Klausurraums
 	 */
 	public removeKlausurraum(id : number) : void {
-		const raum : GostKlausurraum | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdRaum, id);
+		const raum : GostKlausurraum | null = DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, raum);
-		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, id);
 		this.removeFromMapIdstundenplanraumRaum(id);
-		const stunden : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._mapRaumStunden, id);
-		DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumStunden, id);
+		const stunden : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumStunden, id);
 		for (const st of stunden) {
 			DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaumStunde, st.id);
 			DeveloperNotificationException.ifListRemoveFailes("_stunden", this._stunden, st);
@@ -218,8 +214,7 @@ export class GostKlausurraumManager extends JavaObject {
 		}
 		this._mapRaumKursklausurSchuelerklausur.removeSubMapOrException(id);
 		this._mapRaumZeitrasterStunde.removeSubMapOrException(id);
-		const sks : List<GostSchuelerklausur> = DeveloperNotificationException.ifMapGetIsNull(this._mapRaumSchuelerklausuren, id);
-		DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumSchuelerklausuren, id);
+		const sks : List<GostSchuelerklausur> = DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumSchuelerklausuren, id);
 		for (const sk of sks) {
 			DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrsRevert, sk.idSchuelerklausur);
 			this.refreshSchuelerklausur(sk);
