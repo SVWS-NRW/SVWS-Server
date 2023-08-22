@@ -382,6 +382,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listKlassenunterricht : List<StundenplanKlassenunterricht>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
+		console.log(JSON.stringify("INIT START"));
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", this._stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", this._stundenplanWochenTypModell === 1);
 		this.kalenderwochenzuordnungAddAll(listKWZ);
@@ -399,6 +400,7 @@ export class StundenplanManager extends JavaObject {
 		this.pausenaufsichtAddAll(listPausenaufsicht);
 		this.kursAddAll(listKurs);
 		this.unterrichtAddAll(listUnterricht);
+		console.log(JSON.stringify("INIT ENDE"));
 	}
 
 	private update_aufsichtsbereichmenge() : void {
@@ -672,7 +674,7 @@ export class StundenplanManager extends JavaObject {
 	private update_unterrichtmenge_by_idZeitraster() : void {
 		this._unterrichtmenge_by_idZeitraster.clear();
 		for (const u of this._unterricht_by_id.values())
-			DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idZeitraster, u.idZeitraster).add(u);
+			MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster, u.idZeitraster).add(u);
 		for (const z of this._zeitraster_by_id.values())
 			MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster, z.id).sort(StundenplanManager._compUnterricht);
 	}
@@ -2317,7 +2319,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schuelerAddOhneUpdate(schueler : StundenplanSchueler) : void {
-		this.schuelerCheck(schueler);
+		StundenplanManager.schuelerCheck(schueler);
 		DeveloperNotificationException.ifMapPutOverwrites(this._schueler_by_id, schueler.id, schueler);
 	}
 
@@ -2342,7 +2344,7 @@ export class StundenplanManager extends JavaObject {
 		this.schuelerRevalidate();
 	}
 
-	private schuelerCheck(schueler : StundenplanSchueler) : void {
+	private static schuelerCheck(schueler : StundenplanSchueler) : void {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);

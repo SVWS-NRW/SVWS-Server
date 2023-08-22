@@ -336,6 +336,7 @@ public class StundenplanManager {
 			             final @NotNull List<@NotNull StundenplanKurs> listKurs,
 			             final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
 
+		System.out.println("INIT START");
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", _stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", _stundenplanWochenTypModell == 1);
 
@@ -354,6 +355,7 @@ public class StundenplanManager {
 		pausenaufsichtAddAll(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
 		kursAddAll(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
 		unterrichtAddAll(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		System.out.println("INIT ENDE");
 	}
 
 	private void update_aufsichtsbereichmenge() {
@@ -650,7 +652,7 @@ public class StundenplanManager {
 	private void update_unterrichtmenge_by_idZeitraster() {
 		_unterrichtmenge_by_idZeitraster.clear();
 		for (final @NotNull StundenplanUnterricht u : _unterricht_by_id.values())
-			DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idZeitraster, u.idZeitraster).add(u);
+			MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster, u.idZeitraster).add(u);
 
 		for (final @NotNull StundenplanZeitraster z : _zeitraster_by_id.values())
 			MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idZeitraster, z.id).sort(_compUnterricht);
@@ -2445,11 +2447,11 @@ public class StundenplanManager {
 		schuelerRevalidate();
 	}
 
-	private void schuelerCheck(final @NotNull StundenplanSchueler schueler) {
+	private static void schuelerCheck(final @NotNull StundenplanSchueler schueler) {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
-		// TODO Henne-Ei-Problem lösen: DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, schueler.idKlasse);
+		// schueler.idKlasse nicht nötig, ein Schüler kann auch keine Klasse haben. Die Zuordnung erfolgt über StundenplanKlasse.
 	}
 
 	/**
