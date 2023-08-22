@@ -1687,7 +1687,7 @@ export class ApiServer extends BaseApi {
 	 * Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die globale Konfiguration. Dabei wird geprüft, ob der angemeldete Benutzer administrative Rechte hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 *   Code 204: Der Konfigurationseintrag wurde erfolgreich geschrieben
 	 *
 	 * @param {string | null} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -1737,7 +1737,7 @@ export class ApiServer extends BaseApi {
 	 * Schreibt den Konfigurationseintrag der angegebenen Anwendung für den angebenen Schlüsselwert in die benutzerspezifische Konfiguration.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Konfigurationseintrag wurde erfolgreich geschrieben
+	 *   Code 204: Der Konfigurationseintrag wurde erfolgreich geschrieben
 	 *
 	 * @param {string | null} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
