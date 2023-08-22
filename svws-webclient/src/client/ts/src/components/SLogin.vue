@@ -2,20 +2,19 @@
 	<svws-ui-app-layout :fullwidth-content="!authentication_success" :skeleton="authentication_success" :class="{'app--layout--login': !authentication_success}">
 		<template #main>
 			<div class="login-wrapper">
-				<div class="login-container">
-					<div class="login-form modal modal--sm">
-						<div class="modal--content-wrapper">
+				<div class="login-container pt-5">
+					<div class="login-form modal modal--sm my-auto">
+						<div class="modal--content-wrapper pb-3">
 							<div class="modal--content">
-								<div class="login-form-header mb-8 px-6 py-6 mt-4">
-									<h1 class="flex gap-2 leading-none font-bold w-full justify-center text-headline-xl">
-										<span>SVWS</span>
-										<span>NRW</span>
+								<div class="mb-5">
+									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
+										SVWS NRW
 									</h1>
-									<h2>Schulverwaltung</h2>
+									<h2 class="text-headline-sm leading-tight opacity-50">Schulverwaltung für<br>Nordrhein-Westfalen</h2>
 								</div>
-								<svws-ui-input-wrapper class="px-6" center>
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
-									<svws-ui-button type="secondary" @click="connect" :disabled="connecting" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
+								<svws-ui-input-wrapper center>
+									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+									<svws-ui-button type="secondary" @click="connect" :disabled="!(inputDBSchemata.size() === 0 || connecting || inputFocus )" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
 										<svws-ui-spinner :spinning="connecting" />
@@ -23,41 +22,46 @@
 									</svws-ui-button>
 								</svws-ui-input-wrapper>
 								<Transition>
-									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-9 px-6" center>
+									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
-										<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
-											Anmelden
-											<svws-ui-spinner v-if="authenticating" spinning />
-											<i-ri-login-circle-line v-else />
-										</svws-ui-button>
+										<svws-ui-spacing />
+										<div class="flex gap-2">
+											<svws-ui-button type="transparent" disabled>
+												Hilfe
+											</svws-ui-button>
+											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
+												Anmelden
+												<svws-ui-spinner v-if="authenticating" spinning />
+												<i-ri-login-circle-line v-else />
+											</svws-ui-button>
+										</div>
 									</svws-ui-input-wrapper>
 								</Transition>
-								<div class="mt-12 text-center text-sm font-medium">
-									<p class="mb-2 opacity-50">
-										Powered by SVWS-NRW<br>Client Version {{ version }}
-									</p>
-									<nav class="login-footer-links mb-4">
-										<a class="login-footer-link" href="#">Impressum</a>
-										<a class="login-footer-link" href="#">Datenschutz</a>
-										<a class="login-footer-link" href="#">
-											<span class="inline-flex items-center gap-0.5 align-middle">
-												<span class="hover-underline">Hilfe</span> <i-ri-question-line />
-											</span>
-										</a>
-									</nav>
-									<div class="mt-8 px-6 pt-4 pb-5">
-										<p class="text-sm opacity-50 text-left">
-											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
-											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
-											Geschlechter gleichermaßen zu berücksichtigen.
-										</p>
-										<img class="h-12 mt-6" src="/images/MSB_NRW_Logo.svg" alt="Das NRW-Logo">
-									</div>
-								</div>
 							</div>
+						</div>
+					</div>
+					<div class="mt-12 text-sm font-medium max-w-modal-sm relative z-10">
+						<div class="flex gap-3">
+							<img src="/images/Wappenzeichen_NRW_bw.svg" alt="" class="h-10">
+							<div>
+								<p class="mb-1 opacity-50">
+									Powered by SVWS-NRW Version {{ version }}
+								</p>
+								<nav class="flex flex-row items-center gap-2 relative z-20 mb-5">
+									<a class="login-footer-link" href="#">Impressum</a>
+									<a class="login-footer-link" href="#">Datenschutz</a>
+								</nav>
+							</div>
+						</div>
+						<div class="mt-5 pb-3">
+							<p class="text-sm text-left">
+								Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
+								geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+								zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
+								Geschlechter gleichermaßen zu berücksichtigen.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -152,50 +156,6 @@
 			throw new Error("Passwort oder Benutzername falsch.");
 	}
 
-	// const gradients = [
-	// 	[{color:"00000c",position:0},{color:"00000c",position:0}],
-	// 	[{color:"020111",position:85},{color:"191621",position:100}],
-	// 	[{color:"020111",position:60},{color:"20202c",position:100}],
-	// 	[{color:"020111",position:10},{color:"3a3a52",position:100}],
-	// 	[{color:"20202c",position:0},{color:"515175",position:100}],
-	// 	[{color:"40405c",position:0},{color:"6f71aa",position:80},{color:"8a76ab",position:100}],
-	// 	[{color:"4a4969",position:0},{color:"7072ab",position:50},{color:"cd82a0",position:100}],
-	// 	[{color:"757abf",position:0},{color:"8583be",position:60},{color:"eab0d1",position:100}],
-	// 	[{color:"82addb",position:0},{color:"ebb2b1",position:100}],
-	// 	[{color:"94c5f8",position:1},{color:"a6e6ff",position:70},{color:"b1b5ea",position:100}],
-	// 	[{color:"b7eaff",position:0},{color:"94dfff",position:100}],
-	// 	[{color:"9be2fe",position:0},{color:"67d1fb",position:100}],
-	// 	[{color:"90dffe",position:0},{color:"38a3d1",position:100}],
-	// 	[{color:"57c1eb",position:0},{color:"246fa8",position:100}],
-	// 	[{color:"2d91c2",position:0},{color:"1e528e",position:100}],
-	// 	[{color:"2473ab",position:0},{color:"1e528e",position:70},{color:"5b7983",position:100}],
-	// 	[{color:"1e528e",position:0},{color:"265889",position:50},{color:"9da671",position:100}],
-	// 	[{color:"1e528e",position:0},{color:"728a7c",position:50},{color:"e9ce5d",position:100}],
-	// 	[{color:"154277",position:0},{color:"576e71",position:30},{color:"e1c45e",position:70},{color:"b26339",position:100}],
-	// 	[{color:"163C52",position:0},{color:"4F4F47",position:30},{color:"C5752D",position:60},{color:"B7490F",position:80},{color:"2F1107",position:100}],
-	// 	[{color:"071B26",position:0},{color:"071B26",position:30},{color:"8A3B12",position:80},{color:"240E03",position:100}],
-	// 	[{color:"010A10",position:30},{color:"59230B",position:80},{color:"2F1107",position:100}],
-	// 	[{color:"090401",position:50},{color:"4B1D06",position:100}],
-	// 	[{color:"00000c",position:80},{color:"150800",position:100}],
-	// ];
-
-	// function toCSSGradient(data) {
-	// 	let css = "linear-gradient(to bottom, ";
-	// 	let len = data.length;
-
-	// 	for (let i = 0; i < len; i++) {
-	// 		let item = data[i];
-	// 		css += " #" + item.color + " " + item.position + "%";
-	// 		if (i < len - 1) css += ",";
-	// 	}
-	// 	return css + ")";
-	// }
-
-	// const now = new Date();
-	// const hour = now.getHours();
-	// const gradient = gradients[hour];
-	/*document.documentElement.style.backgroundImage = toCSSGradient(gradient);*/
-
 </script>
 
 <style lang="postcss" scoped>
@@ -213,25 +173,36 @@
 
 .login-container {
 	@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-	/*background-image: radial-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.3)), url("/images/login-background-1.jpg");*/
-	/*background-image: radial-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.2)), url("/images/placeholder-background.jpg");*/
-	background-image: url("/images/placeholder-background.jpg");
+	background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 90%),
+	linear-gradient(to top, #2285d5 0%, transparent 70%),
+	linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4) 70%),
+	#e3eefb;
+	animation: bg 30s infinite;
+
+	&:before {
+		content: '';
+		@apply absolute inset-0 pointer-events-none;
+		background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent 60%);
+	}
+
+	&:after {
+		content: '';
+		@apply absolute inset-0 opacity-10 pointer-events-none;
+    background-image:  linear-gradient(rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 0) 1px);
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+	}
+}
+
+@keyframes bg {
+	0%, 100% { background-color: #2285d5; }
+  25% { background-color: #8a5cf6; }
+  50% { background-color: #84cc16; }
+  75% { background-color: #fff693; }
 }
 
 .modal {
-	@apply shadow-2xl shadow-black/50 rounded-2xl;
-}
-
-.login-form .modal--content {
-	@apply p-0;
-}
-
-.login-form-header {
-	@apply flex flex-col items-center justify-between gap-2 leading-tight;
-}
-
-.login-footer-links {
-	@apply flex flex-row items-center gap-2 justify-center;
+	@apply shadow-2xl shadow-black/25 rounded-2xl;
 }
 
 .login-footer-link {

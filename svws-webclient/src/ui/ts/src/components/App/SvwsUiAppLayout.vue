@@ -55,7 +55,7 @@
 			<div class="s-toggle" v-if="!skeleton">
 				<button type="button" @click="updateSidebarExpanded" :title="`Sidebar ${!sidebarExpanded ? 'einblenden' : 'ausblenden'}`">
 					<i-ri-contract-left-line v-if="sidebarExpanded" />
-					<i-ri-corner-up-right-line v-else />
+					<i-ri-corner-up-right-double-line v-else />
 					<span class="s-title" v-if="!sidebarExpanded">Sidebar einblenden</span>
 				</button>
 			</div>
@@ -189,7 +189,7 @@
 		max-width: 36rem;
 
 		.app--sidebar-container {
-			@apply rounded-xl border border-black/10 dark:border-white/10 h-full shadow shadow-black/10;
+			@apply rounded-xl border border-black/25 dark:border-white/25 h-full shadow shadow-black/10;
 		}
 
 		.secondary-menu--headline {

@@ -44,7 +44,11 @@
 }
 
 .secondary-menu--content .secondary-menu--navigation {
-	@apply flex flex-col items-start
+	@apply flex flex-col items-start;
+
+	.sidebar--menu-item {
+		@apply my-0.5;
+	}
 }
 
 .secondary-menu--navigation + .secondary-menu--navigation {
