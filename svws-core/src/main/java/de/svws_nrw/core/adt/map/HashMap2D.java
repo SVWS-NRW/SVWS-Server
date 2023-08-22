@@ -148,26 +148,31 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
+	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final @NotNull Map<@NotNull K2, V> map2 = getSubMapOrException(key1);
-		if (!map2.containsKey(key2))
+		final V value = map2.remove(key2);
+		if (value == null)
 			throw new DeveloperNotificationException("Mapping " + key1 + ", " + key2 + " existiert nicht");
-		map2.remove(key2);
-
 		if (map2.isEmpty())
 			_map.remove(key1);
+		return value;
 	}
 
 	/**
 	 * Entfernt für den Schlüssel (key1) die Submap, falls key1 existiert, andernfalls wird eine {@link DeveloperNotificationException} geworfen.
 	 *
 	 * @param key1  Der 1. Schlüssel.
+	 *
+	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public void removeSubMapOrException(final @NotNull K1 key1) {
-		if (!_map.containsKey(key1))
+	public @NotNull Map<@NotNull K2, V> removeSubMapOrException(final @NotNull K1 key1) {
+		final Map<@NotNull K2, V> value = _map.remove(key1);
+		if (value == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!");
-		_map.remove(key1);
+		return value;
 	}
 
 	/**

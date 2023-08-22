@@ -239,12 +239,14 @@ public class DeveloperNotificationException extends RuntimeException {
 	 * @param map Die Map.
 	 * @param key Der Schlüssel des Mappings K --> V.
 	 *
+	 * @return den zugeordneten (nicht NULL) Wert des gelöschten Schlüssels.
 	 * @throws DeveloperNotificationException falls das Element nicht in der Map existiert.
 	 */
-	public static <@NotNull K, @NotNull V> void ifMapRemoveFailes(@NotNull final Map<@NotNull K, @NotNull V> map, final @NotNull K key) throws DeveloperNotificationException {
-		if (!map.containsKey(key))
+	public static <@NotNull K, @NotNull V> @NotNull V ifMapRemoveFailes(@NotNull final Map<@NotNull K, @NotNull V> map, final @NotNull K key) throws DeveloperNotificationException {
+		final V value = map.remove(key);
+		if (value == null)
 			throw new DeveloperNotificationException("REMOVE von " + key + " fehlgeschlagen, da kein Mapping existiert!");
-		map.remove(key);
+		return value;
 	}
 
 	/**
@@ -278,12 +280,14 @@ public class DeveloperNotificationException extends RuntimeException {
 	 * @param key1  Der 1. Schlüssel.
 	 * @param key2  Der 2. Schlüssel.
 	 *
+	 * @return den vor dem Löschen zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * @throws DeveloperNotificationException falls das Mapping(K1, K2) nicht existiert.
 	 */
-	public static <@NotNull K1, @NotNull K2, @NotNull V>  void ifMap2DRemoveFailes(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> map, final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
-		if (!map.contains(key1, key2))
+	public static <@NotNull K1, @NotNull K2, @NotNull V>  @NotNull V ifMap2DRemoveFailes(final @NotNull HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> map, final @NotNull K1 key1, final @NotNull K2 key2) throws DeveloperNotificationException {
+		final V value = map.removeOrException(key1, key2);
+		if (value == null)
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!");
-		map.removeOrException(key1, key2);
+		return value;
 	}
 
 	/**

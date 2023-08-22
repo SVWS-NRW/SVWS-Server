@@ -138,25 +138,31 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
 	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	public removeOrException(key1 : K1, key2 : K2) : void {
+	public removeOrException(key1 : K1, key2 : K2) : V {
 		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
-		if (!map2.containsKey(key2))
+		const value : V | null = map2.remove(key2);
+		if (value === null)
 			throw new DeveloperNotificationException("Mapping " + key1 + ", " + key2 + " existiert nicht")
-		map2.remove(key2);
 		if (map2.isEmpty())
 			this._map.remove(key1);
+		return value;
 	}
 
 	/**
 	 * Entfernt für den Schlüssel (key1) die Submap, falls key1 existiert, andernfalls wird eine {@link DeveloperNotificationException} geworfen.
 	 *
 	 * @param key1  Der 1. Schlüssel.
+	 *
+	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder eine Exception.
 	 */
-	public removeSubMapOrException(key1 : K1) : void {
-		if (!this._map.containsKey(key1))
+	public removeSubMapOrException(key1 : K1) : JavaMap<K2, V | null> {
+		const value : JavaMap<K2, V | null> | null = this._map.remove(key1);
+		if (value === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") existiert nicht!")
-		this._map.remove(key1);
+		return value;
 	}
 
 	/**

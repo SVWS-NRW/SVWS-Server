@@ -232,12 +232,14 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * @param map Die Map.
 	 * @param key Der Schlüssel des Mappings K --> V.
 	 *
+	 * @return den zugeordneten (nicht NULL) Wert des gelöschten Schlüssels.
 	 * @throws DeveloperNotificationException falls das Element nicht in der Map existiert.
 	 */
-	public static ifMapRemoveFailes<K, V>(map : JavaMap<K, V>, key : K) : void {
-		if (!map.containsKey(key))
+	public static ifMapRemoveFailes<K, V>(map : JavaMap<K, V>, key : K) : V {
+		const value : V | null = map.remove(key);
+		if (value === null)
 			throw new DeveloperNotificationException("REMOVE von " + key + " fehlgeschlagen, da kein Mapping existiert!")
-		map.remove(key);
+		return value;
 	}
 
 	/**
@@ -271,12 +273,14 @@ export class DeveloperNotificationException extends RuntimeException {
 	 * @param key1  Der 1. Schlüssel.
 	 * @param key2  Der 2. Schlüssel.
 	 *
+	 * @return den vor dem Löschen zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
 	 * @throws DeveloperNotificationException falls das Mapping(K1, K2) nicht existiert.
 	 */
-	public static ifMap2DRemoveFailes<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : void {
-		if (!map.contains(key1, key2))
+	public static ifMap2DRemoveFailes<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2) : V {
+		const value : V | null = map.removeOrException(key1, key2);
+		if (value === null)
 			throw new DeveloperNotificationException("GET von (" + key1 + ", " + key2 + ") fehlgeschlagen, da kein Mapping existiert!")
-		map.removeOrException(key1, key2);
+		return value;
 	}
 
 	/**
