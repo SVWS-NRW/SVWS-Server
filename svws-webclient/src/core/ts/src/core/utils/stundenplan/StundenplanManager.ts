@@ -2346,7 +2346,6 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
-		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", this._klasse_by_id, schueler.idKlasse);
 	}
 
 	/**

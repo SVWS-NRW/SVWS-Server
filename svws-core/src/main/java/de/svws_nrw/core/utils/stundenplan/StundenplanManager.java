@@ -2449,7 +2449,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
-		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, schueler.idKlasse);
+		// TODO Henne-Ei-Problem lösen: DeveloperNotificationException.ifMapNotContains("_klasse_by_id", _klasse_by_id, schueler.idKlasse);
 	}
 
 	/**
