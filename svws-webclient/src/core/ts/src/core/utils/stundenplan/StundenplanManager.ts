@@ -263,6 +263,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _unterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
+	private readonly _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+
 	private readonly _unterrichtmenge_by_idKurs : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
 	private readonly _unterrichtmenge_by_idZeitraster : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
@@ -660,6 +662,16 @@ export class StundenplanManager extends JavaObject {
 				MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, idKlasse).add(unterricht);
 		for (const klasse of this._klasse_by_id.values())
 			MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse, klasse.id).sort(StundenplanManager._compUnterricht);
+	}
+
+	private update_unterrichtmenge_by_idKlasse_and_idZeitraster() : void {
+		this._unterrichtmenge_by_idKlasse_and_idZeitraster.clear();
+		for (const u of this._unterricht_by_id.values())
+			for (const idKlasse of u.klassen)
+				Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster).add(u);
+		for (const idKlasse of this._unterrichtmenge_by_idKlasse_and_idZeitraster.getKeySet())
+			for (const idZeitraster of this._unterrichtmenge_by_idKlasse_and_idZeitraster.getKeySetOf(idKlasse))
+				Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, idZeitraster).sort(StundenplanManager._compUnterricht);
 	}
 
 	private update_unterrichtmenge_by_idKurs() : void {
@@ -1230,6 +1242,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idKlasse();
 		this.update_klassenunterrichtmenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idKlasse_and_idFach();
+		this.update_unterrichtmenge_by_idKlasse_and_idZeitraster();
 	}
 
 	private klasseAddOhneUpdate(klasse : StundenplanKlasse) : void {
@@ -2694,22 +2707,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
-	 *
-	 * @param wochentag  Der {@link Wochentag}-ENUM.
-	 * @param stunde     Die Unterrichtsstunde.
-	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
-	 *
-	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
-	 */
-	public unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number) : List<StundenplanUnterricht> {
-		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
-		if (zeitraster !== null)
-			return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
-		return new ArrayList();
-	}
-
-	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, die im übergebenen Zeitraster und Wochentyp liegen.
 	 * Falls der Parameter inklWoche0 TRUE ist, wird Unterricht des Wochentyps 0 hinzugefügt.
 	 *
@@ -2729,6 +2726,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 *
+	 * @param wochentag  Der {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
+	 */
+	public unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number) : List<StundenplanUnterricht> {
+		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+		if (zeitraster !== null)
+			return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
+		return new ArrayList();
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, die in der Stundenplanzelle "wochentag, stunde" und "wochentyp" liegen.
 	 * Falls der Parameter inklWoche0 TRUE ist, wird Unterricht des Wochentyps 0 hinzugefügt.
 	 *
@@ -2742,6 +2755,28 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
 		const idZeitraster : number = this.zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde).id;
 		return this.unterrichtGetMengeByZeitrasterIdAndWochentypAndInklusiveOrEmptyList(idZeitraster, wochentyp, inklWoche0);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
+	 * Falls der Parameter inklWoche0 TRUE ist und der wochentyp größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
+	 */
+	public unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		if (z !== null)
+			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
+				if ((u.wochentyp === wochentyp) || ((wochentyp === 0) && inklWoche0))
+					list.add(u);
+		return list;
 	}
 
 	/**
@@ -2949,6 +2984,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idZeitraster();
 		this.update_unterrichtmenge_by_idZeitraster_and_wochentyp();
 		this.update_zeitrastermengeOhneLeereUnterrichtmenge();
+		this.update_unterrichtmenge_by_idKlasse_and_idZeitraster();
 	}
 
 	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {
@@ -3321,8 +3357,22 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
 	 */
 	public zeitrasterHatUnterrichtMitWochentyp0ByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
-		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
-		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp0(zeitraster.id);
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+		return (z !== null) && this.zeitrasterHatUnterrichtMitWochentyp0(z.id);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Klasse am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param wochentag  Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls die Klasse am "wochtag, stunde" Unterricht mit Wochentyp 0 hat.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp0ByKlasseIdWochentagAndStunde(idKlasse : number, wochentag : number, stunde : number) : boolean {
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		return (z !== null) && this.zeitrasterHatUnterrichtByKlasseIdWochentagAndStundeAndWochentyp(idKlasse, wochentag, stunde, 0);
 	}
 
 	/**
@@ -3340,16 +3390,34 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 * Liefert TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem Wochentyp 1 bis N gibt.
 	 *
 	 * @param wochentag  Der {@link Wochentag}-ENUM.
 	 * @param stunde     Die Unterrichtsstunde.
 	 *
-	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 1 bis N gibt.
+	 * @return TRUE, falls das Zeitraster existiert und es mindestens einen Unterricht im Zeitraster mit einem Wochentyp 1 bis N gibt.
 	 */
 	public zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag : Wochentag, stunde : number) : boolean {
-		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
-		return (zeitraster !== null) && this.zeitrasterHatUnterrichtMitWochentyp1BisN(zeitraster.id);
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+		return (z !== null) && this.zeitrasterHatUnterrichtMitWochentyp1BisN(z.id);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Klasse am "wochentag, stunde" Unterricht mit einem Wochentyp von 1 bis N hat.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param wochentag  Der ID des {@link Wochentag}-ENUM.
+	 * @param stunde     Die Unterrichtsstunde.
+	 *
+	 * @return TRUE, falls die Klasse am "wochentag, stunde" Unterricht mit einem Wochentyp von 1 bis N hat.
+	 */
+	public zeitrasterHatUnterrichtMitWochentyp1BisNByKlasseIdWochentagAndStunde(idKlasse : number, wochentag : number, stunde : number) : boolean {
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		if (z !== null)
+			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
+				if (u.wochentyp >= 1)
+					return true;
+		return false;
 	}
 
 	/**
@@ -3362,16 +3430,35 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" gibt.
 	 */
 	public zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag : Wochentag, stunde : number, wochentyp : number) : boolean {
-		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
-		if (zeitraster === null)
-			return false;
-		return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp).isEmpty();
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
+		if (z !== null)
+			return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, z.id, wochentyp).isEmpty();
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls die Klasse in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des Zeitrasters.
+	 * @param stunde     Die Unterrichtsstunde.
+	 * @param wochentyp  Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 *
+	 * @return TRUE, falls die Klasse in der Stundenplanzelle "wochtag, stunde" Unterricht eines "wochentyps" hat.
+	 */
+	public zeitrasterHatUnterrichtByKlasseIdWochentagAndStundeAndWochentyp(idKlasse : number, wochentag : number, stunde : number, wochentyp : number) : boolean {
+		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
+		if (z !== null)
+			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
+				if (u.wochentyp === wochentyp)
+					return true;
+		return false;
 	}
 
 	/**
 	 * Liefert TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
 	 *
-	 * @param wochentag  Der ENUM-ID des {@link Wochentag} des Zeitrasters.
+	 * @param wochentag  Die ENUM-ID des {@link Wochentag} des Zeitrasters.
 	 * @param stunde     Die Unterrichtsstunde des Zeitrasters.
 	 *
 	 * @return TRUE, falls zu (wochentag, stunde) ein zugehöriges {@link StundenplanZeitraster}-Objekt existiert.
