@@ -39,7 +39,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
 			next(): V {
 				const e = next_item.value
 				next_item = it.next()
-				return e.getValue();
+				return e;
 			},
 			remove() {
 			},
