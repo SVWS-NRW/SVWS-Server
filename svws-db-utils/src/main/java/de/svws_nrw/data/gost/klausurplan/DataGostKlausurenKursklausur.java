@@ -234,6 +234,22 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(halbjahr.intValue())).build();
 	}
 
+	/**
+	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+	 *
+	 * @param conn     Connection
+	 * @param id die ID der Kursklausur
+	 *
+	 * @return das Kursklausur-Objekt
+	 *
+	 */
+	public static GostKursklausur getKursklausurById(final DBEntityManager conn, final long id) {
+		final DTOGostKlausurenKursklausuren data = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
+		if (data != null)
+			return dtoMapper2.apply(data);
+		return null;
+	}
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);

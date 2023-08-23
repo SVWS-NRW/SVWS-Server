@@ -14,14 +14,17 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurraumstunde;
+import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.core.utils.klausurplanung.GostKlausurraumManager;
 import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
 import de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager;
+import de.svws_nrw.core.utils.stundenplan.StundenplanListUtils;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
+import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
@@ -63,10 +66,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @param idRaum               die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
+	 * @param idAbschnitt		   die ID des Schuljahresabschnitts
 	 *
 	 * @return die Antwort
 	 */
-	public Response setzeRaumZuSchuelerklausuren(final long idRaum, final List<Long> idsSchuelerklausuren) {
+	public Response setzeRaumZuSchuelerklausuren(final long idRaum, final List<Long> idsSchuelerklausuren, final long idAbschnitt) {
 		// Raum und Termin holen
 		final GostKlausurraum raum = DataGostKlausurenRaum.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenRaeume.class, idRaum));
 		final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, raum.idTermin);
@@ -100,9 +104,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 		listSchuelerklausuren.addAll(listSchuelerklausurenNeu);
 
-		// TODO: Richtige Stundenplan-ID verwenden
-		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, 1L), new ArrayList<>(), new ArrayList<>(), null);
-		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(listKursklausuren);
 
 		final List<GostKlausurvorgabe> listVorgaben = conn
 				.queryNamed("DTOGostKlausurenVorgaben.id.multiple", listKursklausuren.stream().map(k -> k.idVorgabe).distinct().toList(), DTOGostKlausurenVorgaben.class).stream()
@@ -113,6 +114,12 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				.map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();
 
 		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren);
+
+		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.Datum);
+
+		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
+		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(listKursklausuren);
+
 
 		// Zeitraster_min und _max ermitteln
 		int minStart = termin.Startzeit;

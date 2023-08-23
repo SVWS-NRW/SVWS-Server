@@ -4514,7 +4514,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\d+}
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\d+}/abschnitt/{abschnittid : -?\d+}
 	 *
 	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
@@ -4528,13 +4528,15 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} raumid - der Pfad-Parameter raumid
+	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<number>, schema : string, raumid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\\d+}"
+	public async setzeGostSchuelerklausurenZuRaum(data : List<number>, schema : string, raumid : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/{raumid : -?\\d+}/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{raumid\s*(:[^}]+)?}/g, raumid.toString());
+			.replace(/{raumid\s*(:[^}]+)?}/g, raumid.toString())
+			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;

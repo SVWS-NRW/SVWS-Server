@@ -16,6 +16,7 @@ import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanu
 interface RouteStateGostKlausurplanung {
 	// Daten nur abhängig von dem Abiturjahrgang
 	abiturjahr: number | undefined;
+	abschnitt : Schuljahresabschnitt | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	faecherManager: GostFaecherManager;
@@ -35,6 +36,7 @@ export class RouteDataGostKlausurplanung {
 
 	private static _defaultState : RouteStateGostKlausurplanung = {
 		abiturjahr: undefined,
+		abschnitt: undefined,
 		jahrgangsdaten: undefined,
 		mapSchueler: new Map(),
 		faecherManager: new GostFaecherManager(),
@@ -168,6 +170,7 @@ export class RouteDataGostKlausurplanung {
 			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 			if (this._state.value.abiturjahr === -1) {
 				this.setPatchedState({
+					abschnitt: undefined,
 					halbjahr: halbjahr,
 					kursklausurmanager: undefined,
 					stundenplanmanager: undefined,
@@ -179,6 +182,7 @@ export class RouteDataGostKlausurplanung {
 			const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 			if (abschnitt === undefined) {
 				this.setPatchedState({
+					abschnitt: undefined,
 					halbjahr,
 					kursklausurmanager: undefined,
 					stundenplanmanager: undefined,
@@ -191,6 +195,7 @@ export class RouteDataGostKlausurplanung {
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
 				this.setPatchedState({
+					abschnitt,
 					halbjahr,
 					kursklausurmanager,
 					stundenplanmanager: undefined,
@@ -207,6 +212,7 @@ export class RouteDataGostKlausurplanung {
 			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
 			this.setPatchedState({
+				abschnitt,
 				halbjahr,
 				kursklausurmanager,
 				stundenplanmanager,
@@ -431,7 +437,7 @@ export class RouteDataGostKlausurplanung {
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
 		api.status.start();
 		const skids = Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur));
-		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum.id);
+		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum.id, this._state.value.abschnitt!.id);
 		manager.setzeRaumZuSchuelerklausuren(skids, collectionSkrsKrs);
 		this.commit();
 		api.status.stop();

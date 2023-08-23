@@ -410,4 +410,20 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return true;
 	}
 
+	/**
+	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+	 *
+	 * @param conn     Connection
+	 * @param id die ID der Kursklausur
+	 *
+	 * @return das Kursklausur-Objekt
+	 *
+	 */
+	public static GostKlausurvorgabe getVorgabeById(final DBEntityManager conn, final long id) {
+		final DTOGostKlausurenVorgaben data = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
+		if (data != null)
+			return dtoMapper.apply(data);
+		return null;
+	}
+
 }

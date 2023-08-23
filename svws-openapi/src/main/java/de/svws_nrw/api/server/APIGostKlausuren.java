@@ -758,11 +758,12 @@ public class APIGostKlausuren {
 	 * @param schema     das Datenbankschema
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 * @param raumid         die Id des Klausurraums
+	 * @param abschnittid	die Id des Schuljahresabschnitts
 	 * @param schuelerklausurIds         die Ids der GostSchuelerklausuren
 	 * @return die HTTP-Antwort
 	 */
 	@POST
-	@Path("/schuelerklausuren/zuraum/{raumid : -?\\d+}")
+	@Path("/schuelerklausuren/zuraum/{raumid : -?\\d+}/abschnitt/{abschnittid : -?\\d+}")
 	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
 	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
@@ -771,12 +772,13 @@ public class APIGostKlausuren {
 	public Response setzeGostSchuelerklausurenZuRaum(
 			@PathParam("schema") final String schema,
 			@PathParam("raumid") final long raumid,
+			@PathParam("abschnittid") final long abschnittid,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerklausurIds,
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).setzeRaumZuSchuelerklausuren(raumid, schuelerklausurIds);
+			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).setzeRaumZuSchuelerklausuren(raumid, schuelerklausurIds, abschnittid);
 		}
 	}
 
