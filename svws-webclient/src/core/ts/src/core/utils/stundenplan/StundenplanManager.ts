@@ -1304,9 +1304,9 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
-	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
-	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
-	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
+	 * <br>Beispiel: Jahr 2023, KW  5 --> "KW 5 (30.01.2023–05.02.2023)"
+	 * <br>Beispiel: Jahr 2025, KW  1 --> "KW 1 (30.12.2024–05.01.2025)"
+	 * <br>Beispiel: Jahr 2026, KW 53 --> "KW 53 (28.12.2026–03.01.2027)"
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
@@ -1318,8 +1318,8 @@ export class StundenplanManager extends JavaObject {
 		const sSo : string = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
 		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
 		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
-		const sJahrKW : string = "(KW " + kwz.jahr + "." + kwz.kw + ")";
-		return sMoGer! + " - " + sSoGer! + " " + sJahrKW!;
+		const sJahrKW : string = "KW " + kwz.kw;
+		return sJahrKW! + " (" + sMoGer! + "–" + sSoGer! + ")";
 	}
 
 	/**
@@ -2771,7 +2771,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert zum übergebenen Wochentyp einen passenden String.
-	 * <br>Beispiel: 0 -> "Alle", 1 -> "A-Woche", ...
+	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
@@ -2780,7 +2780,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanGetWochenTypAsString(wochenTyp : number) : string {
 		if (wochenTyp <= 0)
-			return "Alle";
+			return "Alle Wochen";
 		const zahl : number = wochenTyp - 1;
 		const z2 : number = Math.trunc(zahl / 26);
 		const z1 : number = zahl - z2 * 26;
@@ -3283,7 +3283,7 @@ export class StundenplanManager extends JavaObject {
 			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
 				listUhrzeit.set(i, sWochentagVon! + " " + sUhrzeit!);
 			else
-				listUhrzeit.set(i, sWochentagVon! + "-" + sWochentagBis! + " " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon! + "–" + sWochentagBis! + " " + sUhrzeit!);
 		}
 		return listUhrzeit;
 	}
@@ -3294,7 +3294,7 @@ export class StundenplanManager extends JavaObject {
 			return "???";
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-		return sBeginn! + " - " + sEnde! + " Uhr";
+		return sBeginn! + "–" + sEnde! + " Uhr";
 	}
 
 	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {

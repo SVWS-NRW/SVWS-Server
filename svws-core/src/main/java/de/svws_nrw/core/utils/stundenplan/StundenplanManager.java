@@ -1358,9 +1358,9 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
-	 * <br>Beispiel: Jahr 2023, KW  5 --> "30.01.2023 - 05.02.2023 (KW 2023.5)"
-	 * <br>Beispiel: Jahr 2025, KW  1 --> "30.12.2024 - 05.01.2025 (KW 2025.1)"
-	 * <br>Beispiel: Jahr 2026, KW 53 --> "28.12.2026 - 03.01.2027 (KW 2026.53)"
+	 * <br>Beispiel: Jahr 2023, KW  5 --> "KW 5 (30.01.2023–05.02.2023)"
+	 * <br>Beispiel: Jahr 2025, KW  1 --> "KW 1 (30.12.2024–05.01.2025)"
+	 * <br>Beispiel: Jahr 2026, KW 53 --> "KW 53 (28.12.2026–03.01.2027)"
 	 * <br>Laufzeit: O(1)
 
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt.
@@ -1372,8 +1372,8 @@ public class StundenplanManager {
 		final @NotNull String sSo = DateUtils.gibDatumDesSonntagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw);
 		final @NotNull String sMoGer = DateUtils.gibDatumGermanFormat(sMo);
 		final @NotNull String sSoGer = DateUtils.gibDatumGermanFormat(sSo);
-		final @NotNull String sJahrKW = "(KW " + kwz.jahr + "." + kwz.kw + ")";
-		return sMoGer + " - " + sSoGer + " " + sJahrKW;
+		final @NotNull String sJahrKW = "KW " + kwz.kw;
+		return sJahrKW + " (" + sMoGer + "–" + sSoGer + ")";
 	}
 
 	/**
@@ -2946,7 +2946,7 @@ public class StundenplanManager {
 
 	/**
 	 * Liefert zum übergebenen Wochentyp einen passenden String.
-	 * <br>Beispiel: 0 -> "Alle", 1 -> "A-Woche", ...
+	 * <br>Beispiel: 0 -> "Alle Wochen", 1 -> "A-Woche", ...
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param wochenTyp  Der umzuwandelnde Wochentyp.
@@ -2955,7 +2955,7 @@ public class StundenplanManager {
 	 */
 	public @NotNull String stundenplanGetWochenTypAsString(final int wochenTyp) {
 		if (wochenTyp <= 0)
-			return "Alle";
+			return "Alle Wochen";
 
 		final int zahl = wochenTyp - 1; // 0-basierter Wochentyp
 		final int z2 = zahl / 26;       // 2. Stelle im 26. System
@@ -3505,7 +3505,7 @@ public class StundenplanManager {
 			if (sWochentagVon.equals(sWochentagBis))
 				listUhrzeit.set(i, sWochentagVon + " " + sUhrzeit);
 			else
-				listUhrzeit.set(i, sWochentagVon + "-" + sWochentagBis + " " + sUhrzeit);
+				listUhrzeit.set(i, sWochentagVon + "–" + sWochentagBis + " " + sUhrzeit);
 		}
 
 		return listUhrzeit;
@@ -3520,7 +3520,7 @@ public class StundenplanManager {
 		final @NotNull String sBeginn = (zeitraster.stundenbeginn == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		final @NotNull String sEnde = (zeitraster.stundenende == null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
 
-		return sBeginn + " - " + sEnde + " Uhr";
+		return sBeginn + "–" + sEnde + " Uhr";
 	}
 
 	// #####################################################################
