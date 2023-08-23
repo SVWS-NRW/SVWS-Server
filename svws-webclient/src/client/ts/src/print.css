@@ -96,7 +96,11 @@ html {
 }
 
 .svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pausen-aufsicht {
-	@apply rounded-none bg-transparent grid-cols-3 content-center leading-tight border-0 py-0 !important;
+	@apply rounded-none bg-transparent content-center leading-tight border-0 py-0 !important;
+}
+
+.svws-ui-stundenplan--unterricht:not(.svws-compact), .svws-ui-stundenplan--pausen-aufsicht:not(.svws-compact) {
+	@apply grid-cols-4 !important;
 }
 
 .svws-ui-stundenplan--stunde .font-bold.text-sm {
@@ -112,8 +116,12 @@ html {
 }
 
 .svws-ui-stundenplan--stunde {
-	@apply border-black border-l-0 !important;
+	@apply border-black border-l-0 gap-4 pt-2 !important;
 	border-width: 1pt;
+}
+
+.svws-ui-stundenplan--stunde .svws-multiple .flex {
+	@apply gap-1 pb-2;
 }
 
 .svws-ui-stundenplan--stunde, .svws-ui-stundenplan--pause {
