@@ -384,7 +384,6 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listKlassenunterricht : List<StundenplanKlassenunterricht>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
-		console.log(JSON.stringify("INIT START"));
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", this._stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", this._stundenplanWochenTypModell === 1);
 		this.kalenderwochenzuordnungAddAll(listKWZ);
@@ -402,7 +401,6 @@ export class StundenplanManager extends JavaObject {
 		this.pausenaufsichtAddAll(listPausenaufsicht);
 		this.kursAddAll(listKurs);
 		this.unterrichtAddAll(listUnterricht);
-		console.log(JSON.stringify("INIT ENDE"));
 	}
 
 	private update_aufsichtsbereichmenge() : void {
