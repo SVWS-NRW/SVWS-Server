@@ -206,19 +206,21 @@ export class GostKlausurraumManager extends JavaObject {
 		const raum : GostKlausurraum | null = DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", this._raeume, raum);
 		this.removeFromMapIdstundenplanraumRaum(id);
-		const stunden : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumStunden, id);
-		for (const st of stunden) {
-			DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaumStunde, st.id);
-			DeveloperNotificationException.ifListRemoveFailes("_stunden", this._stunden, st);
-			DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrs, st.id);
-		}
-		this._mapRaumKursklausurSchuelerklausur.removeSubMapOrException(id);
-		this._mapRaumZeitrasterStunde.removeSubMapOrException(id);
-		const sks : List<GostSchuelerklausur> = DeveloperNotificationException.ifMapRemoveFailes(this._mapRaumSchuelerklausuren, id);
-		for (const sk of sks) {
-			DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrsRevert, sk.idSchuelerklausur);
-			this.refreshSchuelerklausur(sk);
-		}
+		const stunden : List<GostKlausurraumstunde> | null = this._mapRaumStunden.remove(id);
+		if (stunden !== null)
+			for (const st of stunden) {
+				DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaumStunde, st.id);
+				DeveloperNotificationException.ifListRemoveFailes("_stunden", this._stunden, st);
+				DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrs, st.id);
+			}
+		this._mapRaumKursklausurSchuelerklausur.removeSubMap(id);
+		this._mapRaumZeitrasterStunde.removeSubMap(id);
+		const sks : List<GostSchuelerklausur> | null = this._mapRaumSchuelerklausuren.remove(id);
+		if (sks !== null)
+			for (const sk of sks) {
+				DeveloperNotificationException.ifMapRemoveFailes(this._mapidRsSkrsRevert, sk.idSchuelerklausur);
+				this.refreshSchuelerklausur(sk);
+			}
 	}
 
 	private addToMapIdstundenplanraumRaum(raum : GostKlausurraum) : void {
@@ -395,9 +397,10 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von Stundenplanräumen, die nicht für diesen Klausurtermin verplant sind.
+	 * Liefert eine Liste von Stundenplanräumen, die nicht für diesen Klausurtermin
+	 * verplant sind.
 	 *
-	 * @param alleRaeume  die Liste aller Stundenplanräume
+	 * @param alleRaeume die Liste aller Stundenplanräume
 	 *
 	 * @return die Liste der nicht verplanten StundenplanRäume
 	 */

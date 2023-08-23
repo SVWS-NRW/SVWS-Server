@@ -168,19 +168,21 @@ public class GostKlausurraumManager {
 		final GostKlausurraum raum = DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaum, id);
 		DeveloperNotificationException.ifListRemoveFailes("_raeume", _raeume, raum);
 		removeFromMapIdstundenplanraumRaum(id);
-		final @NotNull List<@NotNull GostKlausurraumstunde> stunden = DeveloperNotificationException.ifMapRemoveFailes(_mapRaumStunden, id);
-		for (@NotNull final GostKlausurraumstunde st : stunden) {
-			DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaumStunde, st.id);
-			DeveloperNotificationException.ifListRemoveFailes("_stunden", _stunden, st);
-			DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrs, st.id);
-		}
-		_mapRaumKursklausurSchuelerklausur.removeSubMapOrException(id);
-		_mapRaumZeitrasterStunde.removeSubMapOrException(id);
-		final @NotNull List<@NotNull GostSchuelerklausur> sks = DeveloperNotificationException.ifMapRemoveFailes(_mapRaumSchuelerklausuren, id);
-		for (@NotNull final GostSchuelerklausur sk : sks) {
-			DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrsRevert, sk.idSchuelerklausur);
-			refreshSchuelerklausur(sk);
-		}
+		final List<@NotNull GostKlausurraumstunde> stunden = _mapRaumStunden.remove(id);
+		if (stunden != null)
+			for (@NotNull final GostKlausurraumstunde st : stunden) {
+				DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaumStunde, st.id);
+				DeveloperNotificationException.ifListRemoveFailes("_stunden", _stunden, st);
+				DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrs, st.id);
+			}
+		_mapRaumKursklausurSchuelerklausur.removeSubMap(id);
+		_mapRaumZeitrasterStunde.removeSubMap(id);
+		final List<@NotNull GostSchuelerklausur> sks = _mapRaumSchuelerklausuren.remove(id);
+		if (sks != null)
+			for (@NotNull final GostSchuelerklausur sk : sks) {
+				DeveloperNotificationException.ifMapRemoveFailes(_mapidRsSkrsRevert, sk.idSchuelerklausur);
+				refreshSchuelerklausur(sk);
+			}
 	}
 
 	private void addToMapIdstundenplanraumRaum(final @NotNull GostKlausurraum raum) {
@@ -240,7 +242,8 @@ public class GostKlausurraumManager {
 		final List<@NotNull GostKlausurraumstunde> raumstunden = _mapidRsSkrsRevert.get(klausur.idSchuelerklausur);
 		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList",
 				Map2DUtils.getOrCreateArrayList(_mapRaumKursklausurSchuelerklausur, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum, klausur.idKursklausur), klausur);
-		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumSchuelerklausurenList", MapUtils.getOrCreateArrayList(_mapRaumSchuelerklausuren, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum), klausur);
+		DeveloperNotificationException.ifListAddsDuplicate("_mapRaumSchuelerklausurenList",
+				MapUtils.getOrCreateArrayList(_mapRaumSchuelerklausuren, raumstunden == null || raumstunden.isEmpty() ? -1L : raumstunden.get(0).idRaum), klausur);
 	}
 
 	/**
@@ -295,8 +298,8 @@ public class GostKlausurraumManager {
 			addSchuelerklausurraumstunde(skrs);
 		for (final long skid : skids) {
 			final GostSchuelerklausur schuelerklausur = DeveloperNotificationException.ifMapGetIsNull(_mapIdSchuelerklausur, skid);
-			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumSchuelerklausurenList",
-					MapUtils.getOrCreateArrayList(_mapRaumSchuelerklausuren, collectionSkrsKrs.idKlausurraum), schuelerklausur);
+			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumSchuelerklausurenList", MapUtils.getOrCreateArrayList(_mapRaumSchuelerklausuren, collectionSkrsKrs.idKlausurraum),
+					schuelerklausur);
 			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList",
 					Map2DUtils.getOrCreateArrayList(_mapRaumKursklausurSchuelerklausur, collectionSkrsKrs.idKlausurraum, schuelerklausur.idKursklausur), schuelerklausur);
 		}
@@ -366,9 +369,10 @@ public class GostKlausurraumManager {
 	}
 
 	/**
-	 * Liefert eine Liste von Stundenplanräumen, die nicht für diesen Klausurtermin verplant sind.
+	 * Liefert eine Liste von Stundenplanräumen, die nicht für diesen Klausurtermin
+	 * verplant sind.
 	 *
-	 * @param alleRaeume  die Liste aller Stundenplanräume
+	 * @param alleRaeume die Liste aller Stundenplanräume
 	 *
 	 * @return die Liste der nicht verplanten StundenplanRäume
 	 */
