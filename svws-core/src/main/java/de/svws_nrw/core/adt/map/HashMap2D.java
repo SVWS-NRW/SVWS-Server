@@ -162,6 +162,17 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Entfernt für den Schlüssel (key1) die Submap, falls key1 existiert, andernfalls passiert nichts.
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 *
+	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder null.
+	 */
+	public Map<@NotNull K2, V> removeSubMap(final @NotNull K1 key1) {
+		return _map.remove(key1);
+	}
+
+	/**
 	 * Entfernt für den Schlüssel (key1) die Submap, falls key1 existiert, andernfalls wird eine {@link DeveloperNotificationException} geworfen.
 	 *
 	 * @param key1  Der 1. Schlüssel.
