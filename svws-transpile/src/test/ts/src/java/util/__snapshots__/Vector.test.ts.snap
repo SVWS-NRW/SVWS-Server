@@ -36,3 +36,17 @@ exports[`java.util.Vector, getestet mit 'String' > toArray: returns given array 
   3,
 ]
 `;
+
+exports[`java.util.Vector, getestet mit 'TestPerson' > toArray: returns given array with elements 1`] = `
+[
+  TestPerson {
+    "id": 0,
+    "kuerzel": "",
+    "nachname": "",
+    "titel": null,
+    "vorname": "",
+  },
+  2,
+  3,
+]
+`;

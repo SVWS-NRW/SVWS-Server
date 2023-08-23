@@ -1,14 +1,6 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import type {
-	JavaIterator} from "~/index";
-import {
-	LinkedCollection,
-	LinkedCollectionIterator,
-	LehrerListeEintrag,
-	ConcurrentModificationException,
-	NoSuchElementException,
-	ArrayList
-} from "~/index";
+import type { JavaIterator } from "@core";
+import { LinkedCollection, LinkedCollectionIterator, LehrerListeEintrag, ConcurrentModificationException, NoSuchElementException, ArrayList } from "@core";
 import { TestMaxComparator } from "../../../shared/TestComparator";
 
 const maxComparator = new TestMaxComparator();

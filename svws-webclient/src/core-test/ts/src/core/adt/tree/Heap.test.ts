@@ -1,15 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { describe, test, expect, beforeEach } from "vitest";
-import {
-	MinHeap,
-	LehrerListeEintrag,
-	IllegalArgumentException,
-	NoSuchElementException
-} from "~/index";
-import {
-	TestMinComparator,
-//    TestMaxComparator,
-} from "../../../shared/TestComparator";
+import { MinHeap, LehrerListeEintrag, IllegalArgumentException, NoSuchElementException } from "@core";
+import { TestMinComparator } from "../../../shared/TestComparator";
 
 const minComparator = new TestMinComparator();
 //const maxComparator = new TestMaxComparator();

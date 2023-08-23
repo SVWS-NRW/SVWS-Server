@@ -9,6 +9,7 @@ export default defineConfig({
 		coverage: {
 			provider: "v8",
 			reportsDirectory: "../../../build/coverage/core",
+			all: true,
 		},
 		include: [
 			"src/**/*.test.ts",
@@ -17,7 +18,7 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"~": resolve(__dirname, "src"),
-			"@core": resolve(__dirname, '../../core/ts/src/index.ts'),
+			"@transpiled": resolve(__dirname, '../../../build/tests/ts/index.ts'),
 		},
 	},
 });

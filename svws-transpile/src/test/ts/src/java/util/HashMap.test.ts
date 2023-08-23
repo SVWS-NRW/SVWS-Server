@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import {l,n,s} from "../../shared/TestObjects";
 
-import { HashMap } from "~/index";
+import { HashMap } from "@transpiled";
 
 let v: HashMap<unknown, unknown>;
 

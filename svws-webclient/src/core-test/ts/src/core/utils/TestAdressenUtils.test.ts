@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 import { describe, expect, it } from "vitest";
 
-import { AdressenUtils } from "~/index";
+import { AdressenUtils } from "@core";
 import { TestdatenSplitStrasse } from "./TestdatenSplitStrasse";
 
 const test_dir = resolve(__dirname, "../../../../../../../svws-core/src/test/resources/de/svws_nrw/core/utils/");

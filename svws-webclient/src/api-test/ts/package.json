@@ -4,16 +4,16 @@
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
 	"version": "0.6.18-SNAPSHOT",
-  "files": [ "dist" ],
-  "main": "./dist/index.js",
-  "type": "module",
-  "types": "./dist/index.d.ts",
+	"files": [ "dist" ],
+	"main": "./dist/index.js",
+	"type": "module",
+	"types": "./dist/index.d.ts",
 	"scripts": {
 		"test": "vitest",
 		"test:run": "vitest run --coverage",
 		"test:runAgainstTestEnv": "vitest run --coverage.reporter=html",
-  	"lint": "eslint 'src/**/*.{ts,vue}' --cache",
-  	"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'src/**/*.{ts,vue}' --cache --fix",
 		"build": "tsc",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown"
 	}

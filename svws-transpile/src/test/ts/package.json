@@ -1,6 +1,6 @@
 {
-	"name": "@svws-nrw/svws-core-test",
-	"description": "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients (Tests)",
+	"name": "@svws-nrw/svws-transpiler-test",
+	"description": "SVWS-Server-Projekt: Tests für den erzeugten Transpiler-Code",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
 	"version": "0.6.18-SNAPSHOT",

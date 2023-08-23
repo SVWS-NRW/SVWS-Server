@@ -2,14 +2,16 @@
 	"extends": "../../../../tsconfig.base.json",
 	"compilerOptions": {
 		"isolatedModules": false,
-		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"@transpiled": ["../../../build/tests/ts/index.ts"]
 		}
 	},
 	"include": [
-		"src/**/*"
+		"./*.ts",
+		"./src/**/*",
+		"../../../build/tests/ts/**/*"
 	]
 }

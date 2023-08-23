@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { NullPointerException } from "~/index";
+import { NullPointerException } from "@transpiled";
 
 describe("Different cases of Throwable Errors", ()=>{
 	const e = new NullPointerException()

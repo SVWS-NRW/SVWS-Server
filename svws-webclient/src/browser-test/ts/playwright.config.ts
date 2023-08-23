@@ -15,9 +15,9 @@ export default defineConfig({
 	timeout: 30 * 1000,
 	expect: {
 		/**
-     * Maximum time expect() should wait for the condition to be met.
-     * For example in `await expect(locator).toHaveText();`
-     */
+		 * Maximum time expect() should wait for the condition to be met.
+		 * For example in `await expect(locator).toHaveText();`
+		 */
 		timeout: 10000
 	},
 	/* Run tests in files in parallel */
@@ -36,8 +36,6 @@ export default defineConfig({
 		actionTimeout: 0,
 		/* Base URL to use in actions like `await page.goto('/')`. */
 		baseURL: 'http://localhost:3000',
-		//baseURL: 'https://nightly.svws-nrw.de',
-
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'on-first-retry',
 		headless: false,

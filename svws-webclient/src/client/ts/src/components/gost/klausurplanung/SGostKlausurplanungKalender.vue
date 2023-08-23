@@ -82,8 +82,8 @@
 
 <script setup lang="ts">
 	import { CalendarView, CalendarViewHeader } from "vue-simple-calendar"
-	import "./../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
-	import "./../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
+	import "./../../../../../../../../node_modules/vue-simple-calendar/dist/style.css";
+	import "./../../../../../../../../node_modules/vue-simple-calendar/dist/css/default.css";
 	import { computed, ref } from "vue";
 	import type { GostJahrgangsdaten, GostKursklausurManager, GostKursklausur, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, StundenplanZeitraster} from "@core";
 	import { ArrayList} from "@core";

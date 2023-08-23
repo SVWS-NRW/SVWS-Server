@@ -15,13 +15,15 @@ module.exports = {
 		tsconfigRootDir: __dirname,
 		project: [
 			"./tsconfig.base.json",
-			"./src/components/ts/tsconfig.json",
-			"./src/core/ts/tsconfig.json",
-			"./src/core-test/ts/tsconfig.json",
-			"./src/client/ts/tsconfig.json",
-			"./src/client-test/ts/tsconfig.json",
-			"./src/ui/ts/tsconfig.json",
-			"./src/browser-test/ts/tsconfig.json",
+			"./svws-transpile/src/test/ts/tsconfig.json",
+			"./svws-webclient/src/components/ts/tsconfig.json",
+			"./svws-webclient/src/core/ts/tsconfig.json",
+			"./svws-webclient/src/core-test/ts/tsconfig.json",
+			"./svws-webclient/src/client/ts/tsconfig.json",
+			"./svws-webclient/src/client-test/ts/tsconfig.json",
+			"./svws-webclient/src/ui/ts/tsconfig.json",
+			"./svws-webclient/src/api-test/ts/tsconfig.json",
+			"./svws-webclient/src/browser-test/ts/tsconfig.json",
 		]
 	},
 	rules: {
@@ -75,9 +77,9 @@ module.exports = {
 		},
 		{
 			files: [
-				"src/components/ts/src/**/*.{ts,js,cjs,mjs}",
-				"src/ui/ts/src/**/*.{ts,js,cjs,mjs}",
-				"src/client/ts/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/src/components/ts/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/src/ui/ts/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/src/client/ts/src/**/*.{ts,js,cjs,mjs}",
 			],
 			env: {
 				// diese Packages haben keinen Zugriff auf Node APIs da es im Browser läuft.
@@ -85,7 +87,7 @@ module.exports = {
 			},
 		},
 		{
-			files: ["**/*.vue"],
+			files: ["svws-webclient/**/*.vue"],
 			rules: {
 				// für SFCs gibt es eigene Regeln bzgl. Indentation
 				"indent": "off",

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import type { JavaMap } from "~/index";
-import { ArrayMap, ArrayMapCollection, ArrayMapEntrySet, ArrayMapKeySet, GostKursart, IllegalArgumentException } from "~/index";
+import type { JavaMap } from "@core";
+import { ArrayMap, ArrayMapCollection, ArrayMapEntrySet, ArrayMapKeySet, GostKursart, IllegalArgumentException } from "@core";
 
 let m: ArrayMap<unknown, unknown>;
 

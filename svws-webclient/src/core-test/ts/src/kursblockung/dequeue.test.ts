@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import { LinkedCollection, NoSuchElementException, Random } from "~/index";
+import { LinkedCollection, NoSuchElementException, Random } from "@core";
 import { TestRandomComparator } from "../shared/TestComparator";
 import { random_numbers } from "./random_numbers1k";
 

@@ -36,3 +36,17 @@ exports[`java.util.ArrayList, getestet mit 'String' > toArray: returns given arr
   3,
 ]
 `;
+
+exports[`java.util.ArrayList, getestet mit 'TestPerson' > toArray: returns given array with elements 1`] = `
+[
+  TestPerson {
+    "id": 0,
+    "kuerzel": "",
+    "nachname": "",
+    "titel": null,
+    "vorname": "",
+  },
+  2,
+  3,
+]
+`;

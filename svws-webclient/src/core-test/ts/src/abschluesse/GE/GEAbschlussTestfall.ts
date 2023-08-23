@@ -1,4 +1,4 @@
-import { AbschlussErgebnis, GEAbschlussFaecher } from "~/index";
+import { AbschlussErgebnis, GEAbschlussFaecher } from "@core";
 
 export class GEAbschlussTestfall {
 	/** Die Fachinformationen für die Abschlussberechnung. */

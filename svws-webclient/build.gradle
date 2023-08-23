@@ -4,211 +4,8 @@ plugins {
 	id 'svws.gradle.node.plugin'
 }
 
-configurations {
-	api_test
-	core
-	core_test
-	ui
-	client
-	client_test
-	package_json
-}
-
-dependencies {
-	api_test files(
-		'config/core/package-template.json', 
-		'config/core/vite.config-template.ts', 
-		'config/core/vitest.config-template.ts'
-	)
-	core files(
-		'config/core/package-template.json'
-	)
-	core_test files(
-		'config/core/package-template.json', 
-		'config/core/vite.config-template.ts', 
-		'config/core/vitest.config-template.ts'
-	)
-	ui files(
-		'config/ui/package-template.json', 
-	)
-	client files(
-		'config/client/package-template.json', 
-		'config/client/version-template.ts',
-	)
-	client_test files(
-		'config/client/package-template.json', 
-	)
-	package_json files(
-		'package.json',
-		'src/api-test/ts/package.json',
-		'src/core/ts/package.json',
-		'src/core-test/ts/package.json',
-		'src/ui/package.json',
-		'src/client/ts/package.json',
-		'src/client-test/ts/package.json'
-	)
-}
-
-project.ext.npm_properties = [
-	npm_organization: "svws-nrw",
-	npm_packagename_apitest: "svws-api-test",
-	npm_packagename_core: "svws-core",
-	npm_packagename_ui: "svws-ui",
-	npm_packagename_client: "svws-client",
-	npm_description_apitest: "SVWS-Server-Projekt: API Tests",
-	npm_description_client: "SVWS-Server-Projekt: client",
-	npm_description_ui: "SVWS-Server-Projekt: UI-Komponenten",
-	npm_description_core: "SVWS-Server-Projekt: Generierter Code für die Client-API und transpilierter Server-Code zur Verwendung in Clients",
-	npm_exclude_from_tests: 'api-test","browser-test',
-	npm_exclude_from_api_tests: 'core-test","client-test","browser-test',
-	npm_author: "MSB NRW",
-	npm_license: "BSD-3-Clause",
-	ts_out: ".",
-	coverage_out: "../../../build/coverage/",
-	version: "$project.version"
-]
-
-task copyConfigApiTest(type: Copy) {
-	group "build"
-	from configurations.api_test
-	into "$projectDir/src/api-test/ts"
-	inputs.files configurations.api_test.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_apitest.toString(),
-		npm_description: project.ext.npm_properties.npm_description_apitest.toString(),
-		npm_author: project.ext.npm_properties.npm_author,
-		npm_license: project.ext.npm_properties.npm_license,
-		ts_out: project.ext.npm_properties.ts_out,
-		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_apitest.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_api_tests,
-		modulename: project.ext.npm_properties.npm_packagename_apitest.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfigCore(type: Copy) {
-	group "build"
-	from configurations.core
-	into "$projectDir/src/core/ts"
-	inputs.files configurations.core.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_core.toString(),
-		npm_description: project.ext.npm_properties.npm_description_core.toString(),
-		npm_author: project.ext.npm_properties.npm_author.toString(),
-		npm_license: project.ext.npm_properties.npm_license.toString(),
-		ts_out: project.ext.npm_properties.ts_out.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_tests.toString(),
-		modulename: project.ext.npm_properties.npm_packagename_core.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfigCoreTest(type: Copy) {
-	group "build"
-	from configurations.core_test
-	into "$projectDir/src/core-test/ts"
-	inputs.files configurations.core_test.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_core.toString() + '-test',
-		npm_description: project.ext.npm_properties.npm_description_core.toString() + ' (Tests)',
-		npm_author: project.ext.npm_properties.npm_author,
-		npm_license: project.ext.npm_properties.npm_license,
-		ts_out: project.ext.npm_properties.ts_out,
-		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_core.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_tests.toString(),
-		modulename: project.ext.npm_properties.npm_packagename_core.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfigUi(type: Copy) {
-	group "build"
-	from configurations.ui
-	into "$projectDir/src/ui/ts"
-	inputs.files configurations.ui.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_ui.toString(),
-		npm_description: project.ext.npm_properties.npm_description_ui.toString(),
-		npm_author: project.ext.npm_properties.npm_author.toString(),
-		npm_license: project.ext.npm_properties.npm_license.toString(),
-		ts_out: project.ext.npm_properties.ts_out.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_tests.toString(),
-		modulename: project.ext.npm_properties.npm_packagename_ui.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfigClient(type: Copy) {
-	group "build"
-	from configurations.client
-	into "$projectDir/src/client/ts"
-	inputs.files configurations.client.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_client.toString(),
-		npm_description: project.ext.npm_properties.npm_description_client.toString(),
-		npm_author: project.ext.npm_properties.npm_author.toString(),
-		npm_license: project.ext.npm_properties.npm_license.toString(),
-		ts_out: project.ext.npm_properties.ts_out.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_tests.toString(),
-		modulename: project.ext.npm_properties.npm_packagename_client.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfigClientTest(type: Copy) {
-	group "build"
-	from configurations.client_test
-	into "$projectDir/src/client-test/ts"
-	inputs.files configurations.client_test.files
-	inputs.properties project.ext.npm_properties
-	rename(/(\S+)-template(\S+)/, '$1$2')
-	filteringCharset = 'UTF-8'
-	filter(ReplaceTokens, tokens: [
-		npm_organization: project.ext.npm_properties.npm_organization.toString(),
-		npm_package: project.ext.npm_properties.npm_packagename_client.toString() + '-test',
-		npm_description: project.ext.npm_properties.npm_description_client.toString() + " (Tests)",
-		npm_author: project.ext.npm_properties.npm_author.toString(),
-		npm_license: project.ext.npm_properties.npm_license.toString(),
-		ts_out: project.ext.npm_properties.ts_out.toString(),
-		coverage_out: project.ext.npm_properties.coverage_out.toString() + project.ext.npm_properties.npm_packagename_client.toString(),
-		version: project.ext.npm_properties.version.toString(),
-		vitest_excludes: project.ext.npm_properties.npm_exclude_from_tests.toString(),
-		modulename: project.ext.npm_properties.npm_packagename_client.toString().replace("svws-", "")//TODO beautify
-	])
-}
-
-task copyConfig {
-	group "build"
-    dependsOn copyConfigApiTest, copyConfigCore, copyConfigCoreTest, copyConfigUi, copyConfigClient, copyConfigClientTest
-}
-
-task npmInstallDev(type: NpmInstall) {
-    dependsOn project(':svws-transpile').tasks.assemble, copyConfig;
-    inputs.files configurations.package_json.files
-}
-
 task assembleCore(type: NpmRun) {
-	dependsOn npmInstallDev, ':svws-transpile:assemble', copyConfigCore
+	dependsOn rootProject.npmPrepare, project(':svws-transpile').tasks.assemble
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
@@ -217,7 +14,7 @@ task assembleCore(type: NpmRun) {
 }
 
 task assembleUi(type: NpmRun) {
-	dependsOn npmInstallDev, copyConfigUi
+	dependsOn rootProject.npmPrepare
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" } 
@@ -238,7 +35,6 @@ task assembleClient(type: NpmRun) {
 	dependsOn assembleCore
 	dependsOn assembleUi
 	dependsOn assembleUiHistoire
-	dependsOn copyConfigClient
 	group "build"
 	args = ['build']
 	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, 
@@ -255,7 +51,7 @@ assemble.dependsOn assembleClient
 
 task testApi(type: NpmRun) {
 	group "svws"
-	dependsOn assembleCore, cleanTestApi, copyConfigApiTest
+	dependsOn assembleCore, cleanTestApi
 	inputs.files file("$projectDir/src/api-test/ts/src")
 	outputs.dir file("$projectDir/build/coverage/api-test")
 	args = [ 'test:runAgainstTestEnv' ]
@@ -268,7 +64,7 @@ task testApi(type: NpmRun) {
 
 task testCore(type: NpmRun) {
 	group "svws"
-	dependsOn assembleCore, copyConfigCoreTest
+	dependsOn assembleCore
 	inputs.files file("$projectDir/src/core-test/ts/src")
 	outputs.dir file("$projectDir/build/coverage/core")
 	args = [ 'test:run' ]

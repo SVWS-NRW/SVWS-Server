@@ -1,18 +1,8 @@
 import { readFileSync, readdirSync } from "fs";
 import { resolve, basename } from "path";
 import { describe, test, expect } from "vitest";
-import type { GostBelegpruefungErgebnisFehler} from "~/index";
-import {
-	Abiturdaten,
-	AbiturdatenManager,
-	GostJahrgangFachkombination,
-	GostFaecherManager,
-	GostJahrgangsdaten,
-	GostBelegpruefungErgebnis,
-	GostBelegpruefungsArt,
-	GostFach,
-	ArrayList
-} from "~/index";
+import { Abiturdaten, AbiturdatenManager, GostJahrgangFachkombination, GostFaecherManager, GostJahrgangsdaten, GostBelegpruefungErgebnis,
+	GostBelegpruefungsArt, GostFach, ArrayList, type GostBelegpruefungErgebnisFehler } from "@core";
 
 
 const test_dir = resolve(

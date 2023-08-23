@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { type Comparator, LehrerListeEintrag } from "@core";
+import { type Comparator } from "@transpiled";
+import { TestPerson } from "./TestPerson";
 
-export class TestMinComparator
-implements Comparator<string | number | LehrerListeEintrag>
-{
-	public compare(a: unknown, b: unknown): 1 | -1 | 0 {
+export class TestMinComparator implements Comparator<string | number | TestPerson> {
+	public compare(a: unknown, b: unknown) : 1 | -1 | 0 {
 		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
 			return (a.valueOf() < b?.valueOf()) ? -1 : ((a.valueOf() === b?.valueOf()) ? 0 : 1);
-		} else if (a instanceof LehrerListeEintrag && b instanceof LehrerListeEintrag) {
+		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
 			return ((a.nachname ?? "") < (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);
 		} else {
@@ -15,13 +13,12 @@ implements Comparator<string | number | LehrerListeEintrag>
 		}
 	}
 }
-export class TestMaxComparator
-implements Comparator<string | number | LehrerListeEintrag>
-{
+
+export class TestMaxComparator implements Comparator<string | number | TestPerson> {
 	public compare(a: unknown, b: unknown): 1 | -1 | 0 {
 		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
 			return (a.valueOf() > b?.valueOf()) ? -1 : ((a.valueOf() === b?.valueOf()) ? 0 : 1);
-		} else if (a instanceof LehrerListeEintrag && b instanceof LehrerListeEintrag) {
+		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
 			return ((a.nachname ?? "") > (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);
 		} else {

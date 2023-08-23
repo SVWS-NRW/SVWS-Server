@@ -25,7 +25,6 @@
 	},
 	"include": [
 		".eslintrc.cjs",
-		"tailwind.preset.cjs",
-		"config/**/*.ts"
+		"svws-webclient/tailwind.preset.cjs"
 	]
 }

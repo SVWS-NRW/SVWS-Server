@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { JavaString } from "~/index";
+import { JavaString } from "@transpiled";
 
 describe("java.util.StringBuilder", () => {
 	test("contains: detects a substring", () => {

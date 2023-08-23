@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { IndexOutOfBoundsException, StringBuilder, StringIndexOutOfBoundsException } from "~/index";
+import { IndexOutOfBoundsException, StringBuilder, StringIndexOutOfBoundsException } from "@transpiled";
 
 let s: StringBuilder;
 

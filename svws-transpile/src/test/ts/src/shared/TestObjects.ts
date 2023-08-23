@@ -1,4 +1,4 @@
-import { LehrerListeEintrag } from "@core";
+import { TestPerson } from "./TestPerson";
 
 export const s = { name: "String", a: new String("a"), b: new String("b"), c: new String("c"), d: new String("d"), e: new String("e") };
 export const n = {
@@ -10,10 +10,10 @@ export const n = {
 	e: new Number(5),
 };
 export const l = {
-	name: "LehrerListeEintrag",
-	a: new LehrerListeEintrag(),
-	b: new LehrerListeEintrag(),
-	c: new LehrerListeEintrag(),
-	d: new LehrerListeEintrag(),
-	e: new LehrerListeEintrag(),
+	name: "TestPerson",
+	a: new TestPerson(),
+	b: new TestPerson(),
+	c: new TestPerson(),
+	d: new TestPerson(),
+	e: new TestPerson(),
 };

@@ -1,68 +1,68 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { Vector, VectorEnumerator, ArrayIndexOutOfBoundsException, NullPointerException } from "~/index";
+import { ArrayList, ArrayListEnumerator, ArrayIndexOutOfBoundsException, NullPointerException } from "@transpiled";
 import { l,n,s } from "../../shared/TestObjects";
 import { TestConsumer } from "../../shared/TestConsumer";
 import { TestMaxComparator } from "../../shared/TestComparator";
 
 const maxComparator = new TestMaxComparator();
 
-let v: Vector<unknown>;
+let v: ArrayList<unknown>;
 
-describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, e }) => {
+describe.each([s, n, l])("java.util.ArrayList, getestet mit $name", ({ a, b, c, d, e }) => {
 	beforeEach(() => {
-		v = new Vector();
+		v = new ArrayList();
 		v.add(a);
 	});
-	test("constructor: Vector is a Vector", () => {
-		const vv = new Vector();
-		expect(vv).toBeInstanceOf(Vector);
+	test("constructor: ArrayList is a ArrayList", () => {
+		const vv = new ArrayList();
+		expect(vv).toBeInstanceOf(ArrayList);
 	});
-	test("constructor: Vector is empty when created", () => {
-		const vv = new Vector();
+	test("constructor: ArrayList is empty when created", () => {
+		const vv = new ArrayList();
 		expect(vv.size()).toEqual(0);
 	});
-	test("constructor: Vector has one element", () => {
+	test("constructor: ArrayList has one element", () => {
 		expect(v.size()).toEqual(1);
 	});
-	test("add: Vector can add null", () => {
+	test("add: ArrayList can add null", () => {
 		expect(() => v.add(null)).toThrow(NullPointerException);
 	});
-	test("add: Vector can add one element", () => {
+	test("add: ArrayList can add one element", () => {
 		v.add(b);
 		expect(v.size()).toEqual(2);
 		expect(v.contains(a)).toBeTruthy();
 		expect(v.contains(b)).toBeTruthy();
 	});
-	test("add: Vector contains 'c' element in second position", () => {
+	test("add: ArrayList contains 'c' element in second position", () => {
 		v.add(c);
 		expect(v.indexOf(c)).toEqual(1);
 	});
-	test("add: Vector add at parcular position position", () => {
+	test("add: ArrayList add at parcular position position", () => {
 		v.add(b);
 		v.add(c);
 		v.add(1, "a+");
 		expect(v.indexOf("a+")).toEqual(1);
 	});
-	test("addAll: add Collection to Vector", () => {
+	test("addAll: add Collection to ArrayList", () => {
 		//
 	});
-	test("addElement: Vector adds element", () => {
+	test("addElement: ArrayList adds element", () => {
 		v.addElement(b);
 		expect(v.contains(b)).toBeTruthy();
 	});
-	test("capacity: returns size of Vector", () => {
+	test("capacity: returns size of ArrayList", () => {
 		v.add(c);
 		expect(v.capacity()).toEqual(2);
 		v.add(c);
 		expect(v.capacity()).toEqual(3);
 	});
-	test("size: returns size of Vector", () => {
+	test("size: returns size of ArrayList", () => {
 		v.add(c);
 		expect(v.size()).toEqual(2);
 		v.add(c);
 		expect(v.size()).toEqual(3);
 	});
-	test("clear: empes e Vector", () => {
+	test("clear: empes e ArrayList", () => {
 		v.add(c);
 		v.clear();
 		expect(v.size()).toEqual(0);
@@ -73,7 +73,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.clear();
 		expect(v.isEmpty()).toBeTruthy();
 	});
-	test("clone: returns copy of Vector", () => {
+	test("clone: returns copy of ArrayList", () => {
 		v.add(c);
 		const v2 = v.clone();
 		expect(v.size()).toEqual(2);
@@ -82,41 +82,41 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.contains(c)).toBeFalsy();
 		expect(v2.contains(c)).toBeTruthy();
 	});
-	test("removeElementAt: Vector throws on wrong index", () => {
+	test("removeElementAt: ArrayList throws on wrong index", () => {
 		expect(() => v.removeElementAt(1)).toThrow(
 			ArrayIndexOutOfBoundsException
 		);
 	});
-	test("removeElementAt: Vector throws on negative index", () => {
+	test("removeElementAt: ArrayList throws on negative index", () => {
 		expect(() => v.removeElementAt(-2)).toThrow(
 			ArrayIndexOutOfBoundsException
 		);
 	});
-	test("removeElementAt: Vector removes 'c' element in second position", () => {
+	test("removeElementAt: ArrayList removes 'c' element in second position", () => {
 		v.add(c);
 		v.removeElementAt(1);
 		expect(v.contains(c)).toBeFalsy();
 		expect(v.contains(a)).toBeTruthy();
 		expect(v.size()).toEqual(1);
 	});
-	test("removeElement: Vector removes 'b' element", () => {
+	test("removeElement: ArrayList removes 'b' element", () => {
 		v.add(b);
 		expect(v.removeElement(b)).toBeTruthy();
 		expect(v.contains(b)).toBeFalsy();
 	});
-	test("remove: Vector 'c' element is removed", () => {
+	test("remove: ArrayList 'c' element is removed", () => {
 		v.add(c);
 		expect(v.remove(c)).toBeTruthy();
 		expect(v.contains(c)).toBeFalsy();
 		expect(v.size()).toEqual(1);
 	});
-	test("removeElementAt: Vector firstelement is removed", () => {
+	test("removeElementAt: ArrayList firstelement is removed", () => {
 		v.add(c);
 		v.removeElementAt(0);
 		expect(v.contains(a)).toBeFalsy();
 		expect(v.size()).toEqual(1);
 	});
-	test("copyInto: Vector copies elements into array", () => {
+	test("copyInto: ArrayList copies elements into array", () => {
 		const array = [1, 2, 3];
 		v.copyInto(array);
 		expect(array).toEqual([a, 2, 3]);
@@ -127,7 +127,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.copyInto(array);
 		expect(array).toEqual([a, b, c, d, e]);
 	});
-	test("elementAt: Vector throws on wrong index", () => {
+	test("elementAt: ArrayList throws on wrong index", () => {
 		expect(() => v.elementAt(-1)).toThrow(
 			ArrayIndexOutOfBoundsException
 		);
@@ -142,17 +142,17 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.add(b);
 		expect(v.lastElement()).toEqual(b);
 	});
-	test("setElementAt: Vector throws on wrong index", () => {
+	test("setElementAt: ArrayList throws on wrong index", () => {
 		expect(() => v.setElementAt(c, 3)).toThrow(
 			ArrayIndexOutOfBoundsException
 		);
 	});
-	test("setElementAt: Vector throws on negative index", () => {
+	test("setElementAt: ArrayList throws on negative index", () => {
 		expect(() => v.setElementAt(c, -2)).toThrow(
 			ArrayIndexOutOfBoundsException
 		);
 	});
-	test("setElementAt: Vector sets element at index", () => {
+	test("setElementAt: ArrayList sets element at index", () => {
 		v.setElementAt(b, 0);
 		expect(v.elementAt(0)).toEqual(b);
 	});
@@ -198,12 +198,12 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.setSize(2);
 		expect(v.size()).toBe(2);
 	});
-	test("elements: returns an instance of VectorEnumerator", () => {
-		expect(v.elements()).toBeInstanceOf(VectorEnumerator);
+	test("elements: returns an instance of ArrayListEnumerator", () => {
+		expect(v.elements()).toBeInstanceOf(ArrayListEnumerator);
 		expect(v.elements().nextElement()).toEqual(a);
 	});
 	test("equals: checks if object is equal to test", () => {
-		const v2 = new Vector();
+		const v2 = new ArrayList();
 		v2.add(a);
 		expect(v.equals(v2)).toBeTruthy();
 		v2.add(b);
@@ -237,15 +237,15 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.elementAt(1)).toEqual(b);
 		expect(v.size()).toEqual(2);
 	});
-	test("containsAll: whether incoming Collection is part of Vector", () => {
-		const v2 = new Vector();
+	test("containsAll: whether incoming Collection is part of ArrayList", () => {
+		const v2 = new ArrayList();
 		v2.add(a);
 		expect(v.containsAll(v2)).toBeTruthy();
 		v2.add(b);
 		expect(v.containsAll(v2)).toBeFalsy();
 	});
 	test("addAll: adds all elements of incoming Collection", () => {
-		const v2 = new Vector();
+		const v2 = new ArrayList();
 		v2.add(a);
 		v2.add(b);
 		v.addAll(v2);
@@ -254,7 +254,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.elementAt(1)).toEqual(a);
 	});
 	test("adAll: add all incoming elements from Collection beginning from index", () => {
-		const v2 = new Vector();
+		const v2 = new ArrayList();
 		v2.add(a);
 		v2.add(b);
 		v.addAll(1, v2);
@@ -270,7 +270,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(c.value).toEqual([a, b]);
 	});
 	test("removeAll: removes all elements of incoming Collection", () => {
-		const v2 = new Vector();
+		const v2 = new ArrayList();
 		v2.add(b);
 		v.add(b);
 		v.add(c);
@@ -279,7 +279,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(v.elementAt(0)).toEqual(a);
 		expect(v.elementAt(1)).toEqual(c);
 	});
-	test("iterator: returns an Iterator for the Vector", () => {
+	test("iterator: returns an Iterator for the ArrayList", () => {
 		v.add(b);
 		v.add(c);
 		const it = v.iterator();
@@ -296,7 +296,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 			expect(e).toBeInstanceOf(Object);
 		}
 	});
-	test("listIterator: returns an Iterator for the Vector", () => {
+	test("listIterator: returns an Iterator for the ArrayList", () => {
 		v.add(b);
 		v.add(c);
 		const it = v.listIterator();
@@ -305,7 +305,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(it.next()).toEqual(c);
 		expect(it.hasNext()).toBeFalsy();
 	});
-	test("listIterator: returns an Iterator for the Vector starting at index", () => {
+	test("listIterator: returns an Iterator for the ArrayList starting at index", () => {
 		v.add(b);
 		v.add(c);
 		const it = v.listIterator(1);
@@ -314,7 +314,7 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		expect(it.hasNext()).toBeFalsy();
 	});
 	test("retainAll: only keeps Elements given in Collection", () => {
-		const v2 = new Vector();
+		const v2 = new ArrayList();
 		v2.add(b);
 		v.add(b);
 		v.add(c);
@@ -328,13 +328,13 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		//expect(v2.elementAt(0)).toEqual(b);
 	});
 	test.todo(
-		"removeIf: remove elements from vector if they meet condition",
+		"removeIf: remove elements from ArrayList if they meet condition",
 		() => {
 			//
 		}
 	);
 	test.todo("spliterator: creates a Spliterator instance", () => {
-		//expect(v.spliterator()).toBeInstanceOf(VectorSpliterator);
+		//expect(v.spliterator()).toBeInstanceOf(ArrayListSpliterator);
 	});
 	test("sort: Sortiere Elemente mit Comparator Funktion", () => {
 		v.add(b);

@@ -1,12 +1,16 @@
 {
 	"name": "svws-monorepo",
+	"description": "SVWS-Server-Projekt: Monorepo-Workspace",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "0.6.18-SNAPSHOT",
 	"workspaces": [
-		"src/core/ts",
-		"src/core-test/ts",
-		"src/ui/ts",
-		"src/components/ts",
-		"src/client/ts",
-		"src/client-test/ts"
+		"svws-webclient/src/core/ts",
+		"svws-webclient/src/core-test/ts",
+		"svws-webclient/src/ui/ts",
+		"svws-webclient/src/components/ts",
+		"svws-webclient/src/client/ts",
+		"svws-webclient/src/client-test/ts"
 	],
 	"devDependencies": {
 		"@histoire/plugin-vue": "^0.16.1",
@@ -46,6 +50,7 @@
 	"type": "module",
 	"dependencies": {
 		"@floating-ui/vue": "^1.0.0",
-		"unplugin-vue-markdown": "^0.24.1"
+		"unplugin-vue-markdown": "^0.24.1",
+		"vue-simple-calendar": "^6.3.1"
 	}
 }

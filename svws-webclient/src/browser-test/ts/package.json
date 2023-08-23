@@ -1,14 +1,14 @@
 {
-  "name": "svws-test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@playwright/test": "^1.36.0"
-  }
+	"name": "svws-test",
+	"version": "0.6.18-SNAPSHOT",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@playwright/test": "^1.36.0"
+	}
 }

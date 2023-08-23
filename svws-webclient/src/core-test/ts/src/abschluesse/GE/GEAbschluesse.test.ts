@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 import { describe, test, expect } from "vitest";
 
-import { AbschlussManager, ServicePrognose } from "~/index";
+import { AbschlussManager, ServicePrognose } from "@core";
 import { GEAbschlussTestfall } from "./GEAbschlussTestfall";
 
 const test_dir = resolve(

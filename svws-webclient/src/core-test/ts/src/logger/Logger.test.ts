@@ -1,6 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import type { List} from "~/index";
-import { LogData, Logger, LogLevel, LogConsumerList } from "~/index";
+import { type List, LogData, Logger, LogLevel, LogConsumerList } from "@core";
 
 describe("Logger Class", () => {
 	test("is Logger instance", () => {

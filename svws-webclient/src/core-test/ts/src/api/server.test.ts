@@ -1,17 +1,6 @@
 import { describe, test, expect } from "vitest";
-import type {
-	LehrerListeEintrag,
-	List
-} from "~/index";
-import {
-	ApiServer,
-	BetriebListeEintrag,
-	DBSchemaListeEintrag,
-	Erzieherart,
-	ErzieherListeEintrag,
-	FaecherListeEintrag,
-	GostFach
-} from "~/index";
+import { type LehrerListeEintrag, type List, ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag,
+	FaecherListeEintrag, GostFach } from "@core";
 
 const username = "Admin";
 const password = "";

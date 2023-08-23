@@ -1,13 +1,13 @@
 import { bench, describe } from "vitest";
-import { Vector } from "~/index";
+import { ArrayList } from "@transpiled";
 import { l, n, s } from "../../shared/TestObjects";
 
-let v: Vector<unknown>;
+let v: ArrayList<unknown>;
 
 describe.each([s, n, l])(
-	"java.util.Vector, getestet mit $name",
+	"java.util.ArrayList, getestet mit $name",
 	({ a, b, c, d, e }) => {
-		v = new Vector();
+		v = new ArrayList();
 		v.add(a);
 		v.add(b);
 		v.add(c);
