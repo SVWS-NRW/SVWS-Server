@@ -151,11 +151,11 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
+	public V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2) {
 		final @NotNull Map<@NotNull K2, V> map2 = getSubMapOrException(key1);
+		if (!map2.containsKey(key2))
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!");
 		final V value = map2.remove(key2);
-		if (value == null)
-			throw new DeveloperNotificationException("Mapping " + key1 + ", " + key2 + " existiert nicht");
 		if (map2.isEmpty())
 			_map.remove(key1);
 		return value;

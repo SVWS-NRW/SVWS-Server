@@ -141,11 +141,11 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2) vor dem Löschen.
 	 */
-	public removeOrException(key1 : K1, key2 : K2) : V {
+	public removeOrException(key1 : K1, key2 : K2) : V | null {
 		const map2 : JavaMap<K2, V | null> = this.getSubMapOrException(key1);
+		if (!map2.containsKey(key2))
+			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ") ungültig!")
 		const value : V | null = map2.remove(key2);
-		if (value === null)
-			throw new DeveloperNotificationException("Mapping " + key1 + ", " + key2 + " existiert nicht")
 		if (map2.isEmpty())
 			this._map.remove(key1);
 		return value;
