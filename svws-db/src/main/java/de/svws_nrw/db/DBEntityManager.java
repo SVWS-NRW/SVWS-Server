@@ -417,6 +417,26 @@ public final class DBEntityManager implements AutoCloseable {
 		}
 	}
 
+	/**
+	 * Entfernt die übergebenen Entities aus der Datenbank. Die zugehörige Transaktion
+	 * darum muss manuell gehandhabt werden.
+	 *
+	 * @param entities   die zu entfernenden Entities
+	 *
+	 * @return true, falls die Entities erfolgreich entfernt wurden und ansonsten false
+	 */
+	public boolean transactionRemoveAll(final Collection<? extends Object> entities) {
+		if (entities == null)
+			return false;
+		try {
+			for (final Object obj : entities)
+				em.remove(obj);
+			return true;
+		} catch (@SuppressWarnings("unused") TransactionRequiredException | IllegalStateException e) {
+			return false;
+		}
+	}
+
 
 	/**
 	 * Tauscht eine Entity gegen eine andere Entity in der Datenbank aus. Die
