@@ -91,7 +91,7 @@ if [[ "$1" == "--update" ]]; then
     cp -r ./svws/app $APP_PATH
 
     # Entpacke den Client in das Client-Verzeichnis
-    unzip -d $APP_PATH/client $APP_PATH/app/svws-client*.zip
+    unzip -d $APP_PATH/client $APP_PATH/app/SVWS-Client*.zip
 
     # Lösche die entpackte Client-Datei
     rm -rf $APP_PATH/app/svws-client*.zip

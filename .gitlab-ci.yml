@@ -16,60 +16,86 @@ image: svwsnrw/dockerrunner
 # runtime for each build is more reliable since the runtime is completely
 # isolated from any previous builds.
 variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 cache: &global_cache
-  key: "$CI_COMMIT_REF_NAME"
-  policy: pull-push
-  paths:
-    - ./**/build
-    - .gradle_user
-    - .gradle
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull-push
+    paths:
+        - ./**/build
+        - .gradle_user
+        - .gradle
 
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle_user
-  - ./gradlew --version
-  - java --version
+    - export GRADLE_USER_HOME=`pwd`/.gradle_user
+    - ./gradlew --version
+    - java --version
 
 stages:
-  - build
-  - integration-tests
-  - analyze
+    - build
+    - integration-tests
+    - analyze
+    - publish
+
+publish:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+          when: manual
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: build
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew signJar publishReleaseAllAndCloseSonatype
+        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+    when: on_success
 
 integration-tests:
-  dependencies:
-  - build
-  stage: integration-tests
-  script: ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
-  cache:
-    <<: *global_cache
-    policy: pull
-  artifacts:
-    when: always
-    expire_in: "7 days"
-    reports:
-      junit: ./testing/**/build/test-results/**/*.xml
+    dependencies:
+        - build
+    stage: integration-tests
+    script: ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+    cache:
+        <<: *global_cache
+        policy: pull
+    artifacts:
+        when: always
+        expire_in: "7 days"
+        reports:
+            junit: ./testing/**/build/test-results/**/*.xml
 
 build:
-  stage: build
-  script: ./gradlew --build-cache build -Penvironment=build
-  cache:
-    <<: *global_cache
-    policy: pull
-  when: always
-  artifacts:
+    stage: build
+    script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew --build-cache build -Penvironment=build
+        # - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+
+    cache:
+        <<: *global_cache
+        policy: pull
     when: always
-    reports:
-      junit: ./**/build/test-results/test/**/TEST-*.xml
-    paths:
-      - "./build/**"
-      - "./**/build/**"
-    expire_in: "1 days"
+    artifacts:
+        when: always
+        reports:
+            junit: ./**/build/test-results/test/**/TEST-*.xml
+        paths:
+            - "./build/**"
+            - "./**/build/**"
+        expire_in: "1 days"
 
 sonarqube_analysis:
-  stage: analyze
-  only:
-    refs:
-      - dev
-  when: manual
-  script: ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace
+    stage: analyze
+    only:
+        refs:
+            - dev
+    when: manual
+    script:
+        - ./gradlew sonarqube -Dsonar.projectKey=svws-server -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.password=$SONAR_PASSWORD --full-stacktrace

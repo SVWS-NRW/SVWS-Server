@@ -1,35 +1,38 @@
 def dockerfileAppDir = "$projectDir/svws/app"
 
+dependencies {
+	implementation project(':svws-server-app')
+}
+
 /*
  Task lädt die SVWS-Artefakte einer angegebenen Version
  aus dem Package-Repository von GitHub und speichert diese
  für die Integration in das Docker-Image des SVWSs.
- */
-task copyPublishedArtifacts(type: Copy) {
-	dependsOn downloadPublishedArtifacts
-	def appArtifactsDir = project.ext.appArtifactsDir
-	copy {
-		from ("${appArtifactsDir}") {
+*/
+
+task copyArtifacts(type: Copy) {
+	description = 'Kopieren der aktuellen Artefakte'
+	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
+	mustRunAfter(':svws-webclient:doZip')
+	into dockerfileAppDir
+	into ("lib/") {
+		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
-			exclude "svws-*.zip"
 		}
-		into "${dockerfileAppDir}/lib"
 	}
-	copy {
-		from ("${appArtifactsDir}") {
+	into ("/") {
+		from (configurations.runtimeClasspath) {
 			include "svws-*.jar"
-			include "svws-*.zip"
 		}
-		into "${dockerfileAppDir}"
+		from "../../svws-webclient/build/SVWS-Client.zip"
 	}
 }
-
 
 /*
  Task führt ein Docker-Build per docker durch.
  */
 task dockerBuildTag(type: Exec) {
-	dependsOn copyPublishedArtifacts
+	dependsOn copyArtifacts
 	workingDir "$projectDir/svws"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/svws-server:'+project.ext.svwsArtifactVersion
@@ -92,7 +95,7 @@ task dockerPushAllDockerhub() {
  Task führt ein Docker-Build per docker compose durch.
  */
 task dockerComposeBuild(type: Exec) {
-	dependsOn copyPublishedArtifacts
+	dependsOn copyArtifacts
 	workingDir "$projectDir"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
 		commandLine 'cmd', '/c', 'docker compose build'
@@ -118,7 +121,7 @@ task dockerComposeUp(type: Exec) {
  Task führt einen Image-Build des SVWS durch.
  */
 task dockerBuildSvws(type: Exec) {
-	dependsOn downloadPublishedArtifacts
+	dependsOn copyArtifacts
 	workingDir "$projectDir"
 	def cmd = "docker build svws/. -t svws:${svwsArtifactVersion}"
 	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {

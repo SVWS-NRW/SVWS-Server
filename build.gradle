@@ -44,7 +44,7 @@ allprojects {
 	// apply plugin: 'de.jjohannes.extra-java-module-info'
 
 	version = config.project.version
-	project.ext.latestRelease = config.project.'latest-release'
+	project.ext.latestRelease = config.project.version
 	group = 'de.svws-nrw'
 
 	svwsmavenrepo {

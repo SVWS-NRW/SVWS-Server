@@ -1,7 +1,11 @@
 def linuxfileAppDir = "$projectDir/svws/app"
 
+dependencies {
+	implementation project(':svws-server-app')
+}
+
 task clearAppFolder(type: Delete) {
-	dependsOn downloadPublishedArtifacts
+	//dependsOn downloadPublishedArtifacts
 	file("${linuxfileAppDir}").deleteDir()
 }
 
@@ -10,33 +14,32 @@ task clearAppFolder(type: Delete) {
  aus dem Package-Repository von GitHub und speichert diese
  für die Integration in der tar.gz des SVWSs.
  */
-task copyPublishedArtifacts(type: Copy) {
+
+task copyArtifacts(type: Copy) {
 	dependsOn clearAppFolder
-	def appArtifactsDir = project.ext.appArtifactsDir
-	copy {
-		from ("${appArtifactsDir}") {
+	description = 'Kopieren der aktuellen Artefakte'
+	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
+	mustRunAfter(':svws-webclient:doZip')
+	into linuxfileAppDir
+	into ("lib/") {
+		from (configurations.runtimeClasspath) {
 			exclude "svws-*.jar"
-			exclude "svws-*.zip"
 		}
-		into "${linuxfileAppDir}/lib"
 	}
-	copy {
-		from ("${appArtifactsDir}") {
-
-			println appArtifactsDir + "/svws-**"+project.ext.svwsArtifactVersion+".jar to " +linuxfileAppDir
-
-			include "svws-**"+project.ext.svwsArtifactVersion+".jar"
-			include "svws-**"+project.ext.svwsArtifactVersion+".zip"
+	into ("/") {
+		from (configurations.runtimeClasspath) {
+			include "svws-*.jar"
 		}
-		into "${linuxfileAppDir}"
+		from "../../svws-webclient/build/SVWS-Client.zip"
 	}
 }
+
 
 
 /*
  Verpackt die SVWS-Artefakte als tar.gz
  */
-task linuxZipBuild(type: Tar, dependsOn: copyPublishedArtifacts) {	
+task linuxZipBuild(type: Tar, dependsOn: copyArtifacts) {
 	archiveBaseName = "linux-installer"
 	archiveVersion = project.ext.svwsArtifactVersion
 	archiveExtension = "tar.gz"
