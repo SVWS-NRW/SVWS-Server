@@ -250,6 +250,18 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
+	 * @param idStunde die ID des Gost-Klausurraumstunde-Objekts
+	 */
+	public removeKlausurraumstunde(idStunde : number) : void {
+		const stunde : GostKlausurraumstunde = DeveloperNotificationException.ifMapRemoveFailes(this._mapIdRaumStunde, idStunde);
+		DeveloperNotificationException.ifListRemoveFailes("_stunden", this._stunden, stunde);
+		DeveloperNotificationException.ifListRemoveFailes("_mapRaumStundenList", MapUtils.getOrCreateArrayList(this._mapRaumStunden, stunde.idRaum), stunde);
+		DeveloperNotificationException.ifMap2DRemoveFailes(this._mapRaumZeitrasterStunde, stunde.idRaum, stunde.idZeitraster);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
 	 * @param stunde das Gost-Klausurraumstunde-Objekt
 	 */
 	public addSchuelerklausurraumstunde(stunde : GostSchuelerklausurraumstunde) : void {
@@ -298,6 +310,8 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public setzeRaumZuSchuelerklausuren(skids : List<number>, collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
+		for (const rs of collectionSkrsKrs.raumstundenGeloescht)
+			this.removeKlausurraumstunde(rs.id);
 		for (const skid of skids) {
 			const schuelerklausur : GostSchuelerklausur | null = DeveloperNotificationException.ifMapGetIsNull(this._mapIdSchuelerklausur, skid);
 			const listKrs : List<GostKlausurraumstunde | null> | null = this._mapidRsSkrsRevert.get(skid);

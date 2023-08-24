@@ -12,6 +12,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	public raumstunden : List<GostKlausurraumstunde> = new ArrayList();
 
 	/**
+	 * Die ID der Schülerklausur.
+	 */
+	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList();
+
+	/**
 	 * Die ID der Klausurraumstunde.
 	 */
 	public skRaumstunden : List<GostSchuelerklausurraumstunde> = new ArrayList();
@@ -38,6 +43,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.raumstunden?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.raumstundenGeloescht !== undefined) && (obj.raumstundenGeloescht !== null)) {
+			for (const elem of obj.raumstundenGeloescht) {
+				result.raumstundenGeloescht?.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if ((obj.skRaumstunden !== undefined) && (obj.skRaumstunden !== null)) {
 			for (const elem of obj.skRaumstunden) {
 				result.skRaumstunden?.add(GostSchuelerklausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
@@ -59,6 +69,18 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				const elem = obj.raumstunden.get(i);
 				result += GostKlausurraumstunde.transpilerToJSON(elem);
 				if (i < obj.raumstunden.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.raumstundenGeloescht) {
+			result += '"raumstundenGeloescht" : []';
+		} else {
+			result += '"raumstundenGeloescht" : [ ';
+			for (let i = 0; i < obj.raumstundenGeloescht.size(); i++) {
+				const elem = obj.raumstundenGeloescht.get(i);
+				result += GostKlausurraumstunde.transpilerToJSON(elem);
+				if (i < obj.raumstundenGeloescht.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -92,6 +114,20 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 					const elem = obj.raumstunden.get(i);
 					result += GostKlausurraumstunde.transpilerToJSON(elem);
 					if (i < obj.raumstunden.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.raumstundenGeloescht !== "undefined") {
+			if (!obj.raumstundenGeloescht) {
+				result += '"raumstundenGeloescht" : []';
+			} else {
+				result += '"raumstundenGeloescht" : [ ';
+				for (let i = 0; i < obj.raumstundenGeloescht.size(); i++) {
+					const elem = obj.raumstundenGeloescht.get(i);
+					result += GostKlausurraumstunde.transpilerToJSON(elem);
+					if (i < obj.raumstundenGeloescht.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -212,6 +212,18 @@ public class GostKlausurraumManager {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
+	 * @param idStunde die ID des Gost-Klausurraumstunde-Objekts
+	 */
+	public void removeKlausurraumstunde(final long idStunde) {
+		final @NotNull GostKlausurraumstunde stunde = DeveloperNotificationException.ifMapRemoveFailes(_mapIdRaumStunde, idStunde);
+		DeveloperNotificationException.ifListRemoveFailes("_stunden", _stunden, stunde);
+		DeveloperNotificationException.ifListRemoveFailes("_mapRaumStundenList", MapUtils.getOrCreateArrayList(_mapRaumStunden, stunde.idRaum), stunde);
+		DeveloperNotificationException.ifMap2DRemoveFailes(_mapRaumZeitrasterStunde, stunde.idRaum, stunde.idZeitraster);
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
 	 * @param stunde das Gost-Klausurraumstunde-Objekt
 	 */
 	public void addSchuelerklausurraumstunde(final @NotNull GostSchuelerklausurraumstunde stunde) {
@@ -266,6 +278,9 @@ public class GostKlausurraumManager {
 	 * @param collectionSkrsKrs das GostKlausurraum-Objekt
 	 */
 	public void setzeRaumZuSchuelerklausuren(final @NotNull List<@NotNull Long> skids, final @NotNull GostKlausurenCollectionSkrsKrs collectionSkrsKrs) {
+		for (final @NotNull GostKlausurraumstunde rs : collectionSkrsKrs.raumstundenGeloescht)
+			removeKlausurraumstunde(rs.id);
+
 		for (final long skid : skids) {
 			final GostSchuelerklausur schuelerklausur = DeveloperNotificationException.ifMapGetIsNull(_mapIdSchuelerklausur, skid);
 			final List<GostKlausurraumstunde> listKrs = _mapidRsSkrsRevert.get(skid);

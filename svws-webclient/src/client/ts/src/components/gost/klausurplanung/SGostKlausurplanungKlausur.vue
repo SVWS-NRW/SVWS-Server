@@ -6,7 +6,7 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKursklausur" :placeholder="termin.startzeit !== null ? termin.startzeit + '' : ''"
+			<svws-ui-text-input v-if="patchKursklausur" :placeholder="termin.startzeit !== null && startzeit === undefined ? termin.startzeit + '' : ''"
 				v-model="startzeit"
 				@update:model-value="patchKursklausur(klausur.id, { startzeit: klausur.startzeit })" />
 		</td>

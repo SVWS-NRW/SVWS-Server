@@ -129,7 +129,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				minStart = kk.startzeit;
 			final int startzeit = kk.startzeit != null ? kk.startzeit : termin.Startzeit;
 			final int endzeit = startzeit + vorgabenManager.gibGostKlausurvorgabe(kk.idVorgabe).dauer;
-			if (startzeit + endzeit > maxEnd)
+			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
 		for (final GostSchuelerklausur sk : listSchuelerklausuren) {
@@ -137,7 +137,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				if (sk.startzeit < minStart)
 					minStart = sk.startzeit;
 				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausurById(sk.idKursklausur).idVorgabe).dauer;
-				if (sk.startzeit + endzeit > maxEnd)
+				if (endzeit > maxEnd)
 					maxEnd = endzeit;
 			}
 		}
@@ -183,6 +183,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					result.skRaumstunden.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 				}
 			}
+
+			// Nicht mehr benötigte Raumstunden ermitteln und aus DB löschen
+			final List<DTOGostKlausurenRaeumeStunden> stundenAlt = conn.queryList("SELECT e FROM DTOGostKlausurenRaeumeStunden e WHERE e.ID NOT IN (SELECT w.KlausurRaumStunde_ID FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden w)", DTOGostKlausurenRaeumeStunden.class);
+			conn.transactionRemoveAll(stundenAlt);
+			result.raumstundenGeloescht = stundenAlt.stream().map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();
 
 			if (!conn.transactionCommit())
 				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Gost-Klausurraumstunden");
