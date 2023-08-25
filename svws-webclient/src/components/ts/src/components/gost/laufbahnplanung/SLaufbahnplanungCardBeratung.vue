@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="Beratung" class="mt-9">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select :items="mapLehrer.values()" v-model="beratungslehrer" :item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`" @update:model-value="dirty = true" :item-filter="filter" removable autocomplete title="Letzte Beratung durchgeführt von" />
-			<svws-ui-text-input v-model="beratungsdatum" type="date" placeholder="Beratungsdatum" @update:model-value="dirty = true" />
-			<svws-ui-textarea-input placeholder="Kommentar" v-model="kommentar" resizeable="vertical" :autoresize="true" @update:model-value="dirty = true" span="full" />
-			<svws-ui-button :disabled="!dirty" @click="speichern()">Beratungsdaten speichern</svws-ui-button>
+			<svws-ui-multi-select :items="mapLehrer.values()" :model-value="mapLehrer.get(gostLaufbahnBeratungsdaten().beratungslehrerID || props.id || -1)" :item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`" @update:model-value="beratungsdaten.beratungslehrerID = $event.id || null" :item-filter="filter" removable autocomplete title="Letzte Beratung durchgeführt von" />
+			<svws-ui-text-input :model-value="gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14)" type="date" placeholder="Beratungsdatum" @update:model-value="beratungsdaten.beratungsdatum = $event" />
+			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar || ''" :autoresize="true" @update:model-value="beratungsdaten.kommentar = $event" span="full" />
+			<svws-ui-button @click="speichern()">Beratungsdaten speichern</svws-ui-button>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -13,7 +13,7 @@
 
 	import type { LehrerListeEintrag } from "@core";
 	import { GostLaufbahnplanungBeratungsdaten } from "@core";
-	import { computed, ref } from "vue";
+	import { ref } from "vue";
 
 	const props = defineProps<{
 		gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
@@ -23,23 +23,9 @@
 	}>();
 
 	const beratungsdaten = ref(new GostLaufbahnplanungBeratungsdaten());
-	const beratungsdatum = computed({
-		get: () => props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14),
-		set: value => beratungsdaten.value.beratungsdatum = value
-	})
-	const kommentar = computed({
-		get: ()=>props.gostLaufbahnBeratungsdaten().kommentar || "",
-		set: value => beratungsdaten.value.kommentar = value
-	})
-	const beratungslehrer = computed({
-		get: ()=>props.mapLehrer.get(props.gostLaufbahnBeratungsdaten().beratungslehrerID || props.id || -1),
-		set: value => beratungsdaten.value.beratungslehrerID = value?.id || null
-	});
-	const dirty = ref(false);
 
 	async function speichern() {
 		await props.patchBeratungsdaten(beratungsdaten.value);
-		dirty.value = false;
 	}
 
 	const filter = (items: LehrerListeEintrag[], search: string) =>
