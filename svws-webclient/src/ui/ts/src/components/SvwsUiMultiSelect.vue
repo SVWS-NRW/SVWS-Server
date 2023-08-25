@@ -235,6 +235,14 @@
 		}
 	}
 
+	function onTab(e: InputEvent) {
+		if (props.autocomplete) {
+			e.preventDefault();
+			activeItemIndex.value = 0;
+			selectCurrentActiveItem();
+		}
+	}
+
 	function scrollToActiveItem() {
 		(itemRefs.value as HTMLElement[])[activeItemIndex.value]?.scrollIntoView({
 			block: "nearest",
@@ -305,7 +313,8 @@
 					@keydown.enter.prevent="selectCurrentActiveItem"
 					@keydown.backspace="onBackspace"
 					@keydown.esc.prevent="onEscape"
-					@keydown.space="onSpace" />
+					@keydown.space="onSpace"
+					@keydown.tab.prevent="onTab" />
 			</div>
 			<div v-if="tags" class="tag-list-wrapper"
 				@click.self="toggleListbox" ref="inputElTags">
