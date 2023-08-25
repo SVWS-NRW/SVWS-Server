@@ -188,7 +188,12 @@
 	}
 
 	function getUnterrichtWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
-		// TODO Nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
+		if (props.mode === 'schueler')
+			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+		if (props.mode === 'lehrer')
+			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+		if (props.mode === 'klasse')
+			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp);
 	}
 
