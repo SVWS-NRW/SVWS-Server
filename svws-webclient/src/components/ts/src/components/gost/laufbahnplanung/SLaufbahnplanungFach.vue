@@ -465,6 +465,14 @@
 		}
 	}
 
+	function identicalArrayIgnoreFirstAndSecond<T>(a1: Array<T>, a2: Array<T>) {
+		let i = a1.length-2;
+		while (i--)
+			if (a1[i+2] !== a2[i])
+				return false;
+		return true;
+	}
+
 	function identicalArray<T>(a1: Array<T>, a2: Array<T>) {
 		let i = a1.length;
 		while (i--)
@@ -510,29 +518,28 @@
 	function setEF2WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null: {
-				if (identicalArray(wahl.halbjahre, ['M', null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-				else if (identicalArray(wahl.halbjahre, ['S', null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = ['S', 'S', 'S', 'S', 'S', 'M'];
+				if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = [wahl.halbjahre[0], 'S', 'S', 'S', 'S', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
 				break;
 			}
 			case "S": {
-				if (identicalArray(wahl.halbjahre, ['M', 'S', null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+				if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
 					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
-						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
+						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', null, null];
 					else
-						wahl.halbjahre = ['M', 'M', 'M', 'M', 'M', 'M'];
-				else if ((identicalArray(wahl.halbjahre, ['S', 'S', null, null, null, null]) || identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = ['S', 'M', 'M', 'M', 'M', 'M'];
+						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', 'M', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
 			}
 			case "M": {
-				if ((identicalArray(wahl.halbjahre, ['M', 'M', null, null, null, null]) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M'])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [null, null, null, null, null, null];
+				if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', 'M', 'M'])
+					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
+					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
 				if (GostFachbereich.SPORT.hat(props.fach))
 					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
