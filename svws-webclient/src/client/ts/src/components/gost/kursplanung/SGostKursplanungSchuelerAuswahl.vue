@@ -66,9 +66,10 @@
 									<template #content>{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}</template>
 								</svws-ui-tooltip>
 								<svws-ui-tooltip>
-									<span class="badge badge--light badge--lg">{{ s.geschlecht }}</span>
-									<template #content>{{ s.geschlecht }}</template>
+									<span class="badge badge--light badge--lg">{{ 's/m' }}</span>
+									<template #content>{{ 'schriftlich/mündlich folgt' }}</template>
 								</svws-ui-tooltip>
+								<span class="badge badge--light badge--lg">{{ s.geschlecht }}</span>
 								<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value, }">
 									<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value">
 										<i-ri-alert-line /> <template #content> Kollision </template>
@@ -125,7 +126,7 @@
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import { GostKursart, SchuelerStatus } from "@core";
+	import { Geschlecht, GostKursart, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
