@@ -65,9 +65,9 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 				// Nur wenn zum Schüler GOSt-Daten und Abiturdaten gefunden werden, dann werden die gefundenen Fächer in den Ergebnisvektor eingetragen. Andernfalls wird ein leerer Vektor zurückgegeben.
 				// Alternativ wäre der vollständige Abbruch im Fehlerfall: throw OperationError.INTERNAL_SERVER_ERROR.exception("Parameter der Abfrage ungültig: Die GOSt-Daten oder Abiturdaten des Schülers mit der ID " + schuelerID.toString() + " konnten nicht ermittelt werden.")
 
-				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgang, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
+				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgangs, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
 				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)) {
-					jahrgangGostFaecher.put(abidaten.abiturjahr, DBUtilsFaecherGost.getFaecherListeGost(conn, abidaten.abiturjahr));
+					jahrgangGostFaecher.put(abidaten.abiturjahr, DBUtilsFaecherGost.getWaehlbareFaecherListeGost(conn, abidaten.abiturjahr));
 				}
 
 				// Erzeuge eine Map Fach-ID → AbiturFachbelegung aus den AbiturDaten
