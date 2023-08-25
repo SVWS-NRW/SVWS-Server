@@ -14,9 +14,9 @@
 				</template>
 				<template #filter>
 					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full mb-3" />
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text_klasse" removable />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text_jahrgang" removable />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text_kurs" removable />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text" removable autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text" removable autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text" removable autocomplete :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" removable />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<i-ri-filter-line />
@@ -181,16 +181,16 @@
 		return status.bezeichnung;
 	}
 
-	function text_klasse(klasse: KlassenListeEintrag): string {
+	function text(klasse: KlassenListeEintrag|KursListeEintrag|JahrgangsListeEintrag): string {
 		return klasse.kuerzel ?? "";
 	}
 
-	function text_jahrgang(jahrgang: JahrgangsListeEintrag): string {
-		return jahrgang.kuerzel ?? "";
-	}
-
-	function text_kurs(kurs: KursListeEintrag): string {
-		return kurs.kuerzel;
+	const find = (items: Iterable<KlassenListeEintrag|KursListeEintrag|JahrgangsListeEintrag>, search: string) => {
+		const list = [];
+		for (const i of items)
+			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				list.push(i);
+		return list;
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
