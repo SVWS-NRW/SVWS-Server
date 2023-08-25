@@ -395,8 +395,6 @@ public class StundenplanManager {
 		update_lehrermenge_by_idUnterricht();                      // ✔, referenziert ---
 		update_pausenaufsichtmenge_by_wochentag();                 // ✔, referenziert ---
 		update_pausenzeitmenge_by_wochentag();                     // ✔, referenziert ---
-		update_unterrichtmenge_by_idKlasse();                      // ✔, referenziert ---
-		update_unterrichtmenge_by_idKlasse_and_idZeitraster();     // ✔, referenziert ---
 		update_unterrichtmenge_by_idLehrer_and_idZeitraster();     // ✔, referenziert ---
 		update_unterrichtmenge_by_idKurs();                        // ✔, referenziert ---
 		update_unterrichtmenge_by_idKlasse_and_idFach();           // ✔, referenziert ---
@@ -410,6 +408,8 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idSchueler_and_idZeitraster();   // ✔, referenziert '_schuelermenge_by_idKlasse', '_schuelermenge_by_idKurs'
 
 		update_klassenmenge_by_idKurs();                           // ✔, referenziert '_schuelermenge_by_idKurs'
+		update_unterrichtmenge_by_idKlasse();                      // ✔, referenziert '_klassenmenge_by_idKurs'
+		update_unterrichtmenge_by_idKlasse_and_idZeitraster();     // ✔, referenziert '_klassenmenge_by_idKurs'
 	}
 
 	private void update_klassenmenge_by_idKurs() {
@@ -417,7 +417,7 @@ public class StundenplanManager {
 
 		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
 			for (final @NotNull StundenplanSchueler schueler : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, kurs.id))
-				if (schueler.idKlasse < 0) {
+				if (schueler.idKlasse >= 0) {
 					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, schueler.idKlasse);
 					if (!MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).contains(klasse))
 						MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).add(klasse);
@@ -700,9 +700,16 @@ public class StundenplanManager {
 
 	private void update_unterrichtmenge_by_idKlasse() {
 		_unterrichtmenge_by_idKlasse.clear();
-		for (final @NotNull StundenplanUnterricht unterricht : _unterrichtmenge_sortiert)
-			for (final @NotNull Long idKlasse : unterricht.klassen)
-				MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, idKlasse).add(unterricht);
+		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge_sortiert)
+			if (u.idKurs == null) {
+				// Klassenunterricht
+				for (final @NotNull Long idKlasse : u.klassen)
+					MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, idKlasse).add(u);
+			} else {
+				// Kursunterricht
+				for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, u.idKurs))
+					MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse, klasse.id).add(u);
+			}
 	}
 
 
@@ -2921,7 +2928,7 @@ public class StundenplanManager {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, z.id))
-				if  ((u.wochentyp == wochentyp) || ((wochentyp == 0) && inklWoche0))
+				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
@@ -2945,7 +2952,7 @@ public class StundenplanManager {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, z.id))
-				if  ((u.wochentyp == wochentyp) || ((wochentyp == 0) && inklWoche0))
+				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
@@ -2969,7 +2976,7 @@ public class StundenplanManager {
 		final StundenplanZeitraster z = _zeitraster_by_wochentag_and_stunde.getOrNull(wochentag, stunde);
 		if (z != null)
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idSchueler_and_idZeitraster, idSchueler, z.id))
-				if  ((u.wochentyp == wochentyp) || ((wochentyp == 0) && inklWoche0))
+				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
 
 		return list;
