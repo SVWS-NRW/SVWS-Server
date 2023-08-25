@@ -227,6 +227,12 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _pausenaufsichtmenge_by_idPausenzeit : HashMap<number, List<StundenplanPausenaufsicht>> = new HashMap();
 
+	private readonly _pausenaufsichtmenge_by_idSchueler_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+
+	private readonly _pausenaufsichtmenge_by_idKlasse_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+
+	private readonly _pausenaufsichtmenge_by_idLehrer_and_idPausenzeit : HashMap2D<number, number, List<StundenplanPausenaufsicht>> = new HashMap2D();
+
 	private readonly _pausenzeit_by_id : HashMap<number, StundenplanPausenzeit> = new HashMap();
 
 	private readonly _pausenzeitmenge_sortiert : List<StundenplanPausenzeit> = new ArrayList();
@@ -234,6 +240,18 @@ export class StundenplanManager extends JavaObject {
 	private readonly _pausenzeitmengeOhneLeere_sortiert : List<StundenplanPausenzeit> = new ArrayList();
 
 	private readonly _pausenzeitmenge_by_wochentag : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+
+	private readonly _pausenzeitmenge_by_idKlasse : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+
+	private readonly _pausenzeitmenge_by_idSchueler : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+
+	private readonly _pausenzeitmenge_by_idLehrer : HashMap<number, List<StundenplanPausenzeit>> = new HashMap();
+
+	private readonly _pausenzeitmenge_by_idSchueler_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+
+	private readonly _pausenzeitmenge_by_idKlasse_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
+
+	private readonly _pausenzeitmenge_by_idLehrer_and_wochentag : HashMap2D<number, number, List<StundenplanPausenzeit>> = new HashMap2D();
 
 	private _pausenzeitMinutenMin : number | null = null;
 
@@ -451,6 +469,108 @@ export class StundenplanManager extends JavaObject {
 		this.update_klassenmenge_by_idKurs();
 		this.update_unterrichtmenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idKlasse_and_idZeitraster();
+		this.update_pausenzeitmenge_by_idLehrer();
+		this.update_pausenzeitmenge_by_idKlasse();
+		this.update_pausenzeitmenge_by_idSchueler();
+		this.update_pausenzeitmenge_by_idLehrer_and_wochentag();
+		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
+		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
+		this.update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit();
+		this.update_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit();
+		this.update_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit();
+	}
+
+	private update_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit() : void {
+		this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit.clear();
+		for (const aufsicht of this._pausenaufsichtmenge_sortiert) {
+			const zeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, aufsicht.idPausenzeit);
+			if (zeit.klassen.isEmpty()) {
+				for (const klasse of this._klassenmenge_sortiert)
+					for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, klasse.id))
+						Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, schueler.id, aufsicht.idPausenzeit).add(aufsicht);
+			} else {
+				for (const idKlasse of zeit.klassen)
+					for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, idKlasse))
+						Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, schueler.id, aufsicht.idPausenzeit).add(aufsicht);
+			}
+		}
+	}
+
+	private update_pausenaufsichtmenge_by_idKlasse_and_idPausenzeit() : void {
+		this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit.clear();
+		for (const aufsicht of this._pausenaufsichtmenge_sortiert) {
+			const zeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, aufsicht.idPausenzeit);
+			if (zeit.klassen.isEmpty()) {
+				for (const klasse of this._klassenmenge_sortiert)
+					Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, klasse.id, aufsicht.idPausenzeit).add(aufsicht);
+			} else {
+				for (const idKlasse of zeit.klassen)
+					Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, aufsicht.idPausenzeit).add(aufsicht);
+			}
+		}
+	}
+
+	private update_pausenaufsichtmenge_by_idLehrer_and_idPausenzeit() : void {
+		this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit.clear();
+		for (const aufsicht of this._pausenaufsichtmenge_sortiert)
+			Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, aufsicht.idLehrer, aufsicht.idPausenzeit).add(aufsicht);
+	}
+
+	private update_pausenzeitmenge_by_idSchueler() : void {
+		this._pausenzeitmenge_by_idSchueler.clear();
+		for (const zeit of this._pausenzeitmenge_sortiert) {
+			if (zeit.klassen.isEmpty()) {
+				for (const klasse of this._klassenmenge_sortiert)
+					for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, klasse.id))
+						MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler, schueler.id).add(zeit);
+			} else {
+				for (const idKlasse of zeit.klassen)
+					for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKlasse, idKlasse))
+						MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler, schueler.id).add(zeit);
+			}
+		}
+	}
+
+	private update_pausenzeitmenge_by_idKlasse() : void {
+		this._pausenzeitmenge_by_idKlasse.clear();
+		for (const zeit of this._pausenzeitmenge_sortiert) {
+			if (zeit.klassen.isEmpty()) {
+				for (const klasse of this._klassenmenge_sortiert)
+					MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse, klasse.id).add(zeit);
+			} else {
+				for (const idKlasse of zeit.klassen)
+					MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse, idKlasse).add(zeit);
+			}
+		}
+	}
+
+	private update_pausenzeitmenge_by_idLehrer() : void {
+		this._pausenzeitmenge_by_idLehrer.clear();
+		for (const pausenaufsicht of this._pausenaufsichtmenge_sortiert) {
+			const pausenzeit : StundenplanPausenzeit = DeveloperNotificationException.ifMapGetIsNull(this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
+			MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer, pausenaufsicht.idLehrer).add(pausenzeit);
+		}
+	}
+
+	private update_pausenzeitmenge_by_idSchueler_and_wochentag() : void {
+		this._pausenzeitmenge_by_idSchueler_and_wochentag.clear();
+		for (const idSchueler of this._pausenzeitmenge_by_idSchueler.keySet())
+			for (const zeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler, idSchueler))
+				Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler_and_wochentag, idSchueler, zeit.wochentag).add(zeit);
+	}
+
+	private update_pausenzeitmenge_by_idKlasse_and_wochentag() : void {
+		this._pausenzeitmenge_by_idKlasse_and_wochentag.clear();
+		for (const idKlasse of this._pausenzeitmenge_by_idKlasse.keySet())
+			for (const pausenzeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse, idKlasse))
+				Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse_and_wochentag, idKlasse, pausenzeit.wochentag).add(pausenzeit);
+	}
+
+	private update_pausenzeitmenge_by_idLehrer_and_wochentag() : void {
+		this._pausenzeitmenge_by_idLehrer_and_wochentag.clear();
+		for (const idLehrer of this._pausenzeitmenge_by_idLehrer.keySet())
+			for (const pausenzeit of MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer, idLehrer))
+				Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer_and_wochentag, idLehrer, pausenzeit.wochentag).add(pausenzeit);
 	}
 
 	private update_klassenmenge_by_idKurs() : void {
@@ -1890,7 +2010,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
-	 * <br> Laufzeit: O(1)
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @return eine sortierte Liste aller {@link StundenplanPausenaufsicht}-Objekte.
 	 */
@@ -1900,7 +2020,7 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Wochentages.
-	 * <br> Laufzeit: O(1)
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
 	 *
@@ -1908,6 +2028,75 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenaufsichtGetMengeByWochentagOrEmptyList(wochentag : number) : List<StundenplanPausenaufsicht> {
 		return MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_wochentag, wochentag);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Pausenzeit.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Pausenzeit.
+	 */
+	public pausenaufsichtGetMengeByPausenzeitId(idPausenzeit : number) : List<StundenplanPausenaufsicht> {
+		return MapUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idPausenzeit, idPausenzeit);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Schülers zu einer bestimmten Pausenzeit.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idSchueler    Die Datenbank-ID des Schülers.
+	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
+	 * @param wochentyp     Der Wochentyp
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Schülers zu einer bestimmten Pausenzeit.
+	 */
+	public pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(idSchueler : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
+		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idSchueler_and_idPausenzeit, idSchueler, idPausenzeit))
+			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+				list.add(a);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
+	 * @param wochentyp     Der Wochentyp
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte einer bestimmten Klasse zu einer bestimmten Pausenzeit.
+	 */
+	public pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(idKlasse : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
+		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idKlasse_and_idPausenzeit, idKlasse, idPausenzeit))
+			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+				list.add(a);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers zu einer bestimmten Pausenzeit.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idLehrer      Die Datenbank-ID des Lehrers.
+	 * @param idPausenzeit  Die Datenbank-ID der Pausenzeit.
+	 * @param wochentyp     Der Wochentyp
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenaufsicht}-Objekte eines bestimmten Lehrers zu einer bestimmten Pausenzeit.
+	 */
+	public pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(idLehrer : number, idPausenzeit : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanPausenaufsicht> {
+		const list : List<StundenplanPausenaufsicht> = new ArrayList();
+		for (const a of Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idLehrer_and_idPausenzeit, idLehrer, idPausenzeit))
+			if ((a.wochentyp === wochentyp) || ((a.wochentyp === 0) && inklWoche0))
+				list.add(a);
+		return list;
 	}
 
 	/**
@@ -2029,6 +2218,42 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Klasse.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Klasse.
+	 */
+	public pausenzeitGetMengeByKlasseIdAsList(idKlasse : number) : List<StundenplanPausenzeit> {
+		return MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse, idKlasse);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Lehrkraft.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idLehrer  Die Datenbank-ID der Lehrkraft.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Lehrkraft.
+	 */
+	public pausenzeitGetMengeByLehrerIdAsList(idLehrer : number) : List<StundenplanPausenzeit> {
+		return MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer, idLehrer);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Schülers.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Schülers.
+	 */
+	public pausenzeitGetMengeBySchuelerIdAsList(idSchueler : number) : List<StundenplanPausenzeit> {
+		return MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler, idSchueler);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Wochentages, oder eine leere Liste.
 	 * <br> Laufzeit: O(1)
 	 *
@@ -2038,6 +2263,45 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public pausenzeitGetMengeByWochentagOrEmptyList(wochentag : number) : List<StundenplanPausenzeit> {
 		return MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_wochentag, wochentag);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Klasse zu einem bestimmten Wochentag.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idKlasse   Die Datenbank-ID der Klasse.
+	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Klasse zu einem bestimmten Wochentag.
+	 */
+	public pausenzeitGetMengeByKlasseIdAndWochentagAsList(idKlasse : number, wochentag : number) : List<StundenplanPausenzeit> {
+		return Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idKlasse_and_wochentag, idKlasse, wochentag);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Lehrkraft.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idLehrer   Die Datenbank-ID der Lehrkraft.
+	 * @param wochentag  Die ID des ENUMS {@link Wochentag}.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte einer bestimmten Lehrkraft.
+	 */
+	public pausenzeitGetMengeByLehrerIdAndWochentagAsList(idLehrer : number, wochentag : number) : List<StundenplanPausenzeit> {
+		return Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idLehrer_and_wochentag, idLehrer, wochentag);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Schülers.
+	 * <br> Laufzeit: O(1)
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param wochentag   Die ID des ENUMS {@link Wochentag}.
+	 *
+	 * @return eine Liste aller {@link StundenplanPausenzeit}-Objekte eines bestimmten Schülers.
+	 */
+	public pausenzeitGetMengeBySchuelerIdAndWochentagAsList(idSchueler : number, wochentag : number) : List<StundenplanPausenzeit> {
+		return Map2DUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idSchueler_and_wochentag, idSchueler, wochentag);
 	}
 
 	/**

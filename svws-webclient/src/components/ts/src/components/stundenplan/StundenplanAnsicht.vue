@@ -119,7 +119,7 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, type Wochentag, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht } from "@core";
+	import { ArrayList, type List, Wochentag, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
@@ -157,8 +157,13 @@
 	});
 
 	const pausenzeiten = computed(() => {
-		// TODO pausenzeitGetMengeByKlasseAsList, pausenzeitGetMengeByLehrerAsList, pausenzeitGetMengeBySchuelerAsList
-		return props.manager().pausenzeitGetMengeAsList();
+		if (props.mode === 'schueler')
+			return props.manager().pausenzeitGetMengeBySchuelerIdAsList(props.id);
+		if (props.mode === 'lehrer')
+			return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
+		if (props.mode === 'klasse')
+			return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
+		throw new DeveloperNotificationException("const pausenzeiten: Unbekannter Mode " + props.mode);
 	});
 
 	const gesamtzeit = computed(() => {
@@ -189,7 +194,7 @@
 			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
 		if (props.mode === 'klasse')
 			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
-		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(wochentag, stunde, wochentyp, true);
+		throw new DeveloperNotificationException("function getUnterrichtWochentypSpeziell: Unbekannter Mode " + props.mode);
 	}
 
 	function getUnterrichtWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
@@ -199,22 +204,28 @@
 			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		if (props.mode === 'klasse')
 			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
-		return props.manager().unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag, stunde, wochentyp);
+		throw new DeveloperNotificationException("function getUnterrichtWochentypAllgemein: Unbekannter Mode " + props.mode);
 	}
 
 	function getPausenzeitenWochentag(wochentag: Wochentag) : List<StundenplanPausenzeit> {
-		// TODO Nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
-		return props.manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id);
+		if (props.mode === 'schueler')
+			return props.manager().pausenzeitGetMengeBySchuelerIdAndWochentagAsList(props.id, wochentag.id);
+		if (props.mode === 'lehrer')
+			return props.manager().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag.id);
+		if (props.mode === 'klasse')
+			return props.manager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
+		throw new DeveloperNotificationException("function getPausenzeitenWochentag: Unbekannter Mode " + props.mode);
 	}
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
-		// TODO ersetzen mit entsprechender Methode pausenaufsichtGetMengeByPausenzeitOrEmptyList im Manager und nutze Versionen für Filter mit Schüler-, Lehrer- und Klassen-ID
-		const allePausenaufsichten = props.manager().pausenaufsichtGetMengeAsList();
-		const result = new ArrayList<StundenplanPausenaufsicht>();
-		for (const p of allePausenaufsichten)
-			if (p.idPausenzeit === pause.id)
-				result.add(p);
-		return result;
+		// TODO Pausenaufsicht zusätzlich pro "wochentyp" UND "inklWoche0=true"
+		if (props.mode === 'schueler')
+			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+		if (props.mode === 'lehrer')
+			return props.manager().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+		if (props.mode === 'klasse')
+			return props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
+		throw new DeveloperNotificationException("function getPausenaufsichtenPausenzeit: Unbekannter Mode " + props.mode);
 	}
 
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
