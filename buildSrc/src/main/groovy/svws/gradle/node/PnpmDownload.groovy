@@ -12,7 +12,7 @@ abstract class PnpmDownload extends Exec {
 
 	PnpmDownload() {
 		group "pnpm"
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 		    
 		def cfg = project.nodeconfig;
 		if (cfg.isWindows()) {

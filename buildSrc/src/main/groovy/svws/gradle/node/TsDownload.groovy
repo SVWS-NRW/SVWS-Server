@@ -14,7 +14,7 @@ abstract class TsDownload extends Exec {
 
 	TsDownload() {
 		group "node"
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 
 	@OutputFile

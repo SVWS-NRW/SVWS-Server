@@ -15,7 +15,7 @@ abstract class PnpxTask extends AbstractExecTask<PnpxTask> {
 
 	PnpxTask() {
 		super(PnpxTask.class);
-		dependsOn project.tasks.getByPath('pnpmInstall')
+		dependsOn project.rootProject.tasks.getByPath('pnpmInstall')
 	}
 
 	@TaskAction

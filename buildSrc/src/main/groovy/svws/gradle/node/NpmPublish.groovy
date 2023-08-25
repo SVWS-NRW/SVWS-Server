@@ -21,7 +21,7 @@ abstract class NpmPublish extends AbstractExecTask<NpmPublish> {
 
 	NpmPublish() {
 		super(NpmPublish.class);
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 
 	@TaskAction

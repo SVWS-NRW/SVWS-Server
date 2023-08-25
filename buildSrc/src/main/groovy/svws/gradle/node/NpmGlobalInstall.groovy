@@ -15,7 +15,7 @@ abstract class NpmGlobalInstall extends AbstractExecTask<NpmGlobalInstall> {
 
 	NpmGlobalInstall() {
 		super(NpmGlobalInstall.class);
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 	
 	@TaskAction

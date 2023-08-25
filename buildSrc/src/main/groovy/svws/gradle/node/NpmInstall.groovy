@@ -16,7 +16,7 @@ abstract class NpmInstall extends AbstractExecTask<NpmInstall> {
 
 	NpmInstall() {
 		super(NpmInstall.class);
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 		def cfg = project.nodeconfig;
 	}
 	

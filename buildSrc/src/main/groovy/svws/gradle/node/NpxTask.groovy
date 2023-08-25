@@ -16,7 +16,7 @@ abstract class NpxTask extends AbstractExecTask<NpxTask> {
 
 	NpxTask() {
 		super(NpxTask.class);
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 
 	@TaskAction

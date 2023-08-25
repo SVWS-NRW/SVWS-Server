@@ -15,7 +15,7 @@ abstract class NpmRun extends AbstractExecTask<NpmRun> {
 
 	NpmRun() {
 		super(NpmRun.class);
-		dependsOn project.tasks.getByPath('nodeDownload')
+		dependsOn project.rootProject.tasks.getByPath('nodeDownload')
 	}
 
 	@TaskAction
