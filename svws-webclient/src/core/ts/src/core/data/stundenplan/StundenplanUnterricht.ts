@@ -20,7 +20,7 @@ export class StundenplanUnterricht extends JavaObject {
 	public wochentyp : number = -1;
 
 	/**
-	 * Die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.
+	 * Die ID des Kurses, sofern es sich um {@link StundenplanKurs} handelt, andernfalls NULL.
 	 */
 	public idKurs : number | null = null;
 
@@ -35,7 +35,8 @@ export class StundenplanUnterricht extends JavaObject {
 	public lehrer : List<number> = new ArrayList();
 
 	/**
-	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind.
+	 * Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
+	 *   Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!
 	 */
 	public klassen : List<number> = new ArrayList();
 

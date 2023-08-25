@@ -30,7 +30,7 @@ public class StundenplanUnterricht {
 	@Schema(description = "der Wochen-Typ bei der Unterscheidung von (A,B,... -Wochen -> 1, 2, ...) oder 0 ", example = "0")
 	public int wochentyp = -1;
 
-	/** Die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.*/
+	/** Die ID des Kurses, sofern es sich um {@link StundenplanKurs} handelt, andernfalls NULL.*/
 	@Schema(description = "die ID des Kurses, sofern es sich um Kursunterricht handelt, andernfalls NULL.", example = "89")
 	public Long idKurs = null;
 
@@ -42,7 +42,8 @@ public class StundenplanUnterricht {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Lehrer, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<@NotNull Long> lehrer = new ArrayList<>();
 
-	/** Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. */
+	/** Die IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind. Diese Liste ist leer, falls idKurs definiert ist.
+	 *  Dann müssen die Klassen über die Schüler des Kurses aggregiert werden!*/
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klassen, die dieser Unterrichtseinheit zugeordnet sind."))
 	public @NotNull List<@NotNull Long> klassen = new ArrayList<>();
 

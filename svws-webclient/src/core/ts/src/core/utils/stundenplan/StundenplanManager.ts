@@ -191,6 +191,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _klassenmenge_sortiert : List<StundenplanKlasse> = new ArrayList();
 
+	private readonly _klassenmenge_by_idKurs : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+
 	private readonly _klassenunterricht_by_idKlasse_and_idFach : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
 
 	private readonly _klassenunterrichtmenge_sortiert : List<StundenplanKlassenunterricht> = new ArrayList();
@@ -448,6 +450,20 @@ export class StundenplanManager extends JavaObject {
 		this.update_schuelermenge_by_idKurs();
 		this.update_schuelermenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idSchueler_and_idZeitraster();
+		this.update_klassenmenge_by_idKurs();
+	}
+
+	private update_klassenmenge_by_idKurs() : void {
+		this._klassenmenge_by_idKurs.clear();
+		for (const kurs of this._kursmenge_sortiert) {
+			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
+				if (schueler.idKlasse < 0) {
+					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, schueler.idKlasse);
+					if (!MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).contains(klasse))
+						MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).add(klasse);
+				}
+			MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).sort(StundenplanManager._compKlasse);
+		}
 	}
 
 	private update_aufsichtsbereichmenge() : void {
@@ -691,8 +707,13 @@ export class StundenplanManager extends JavaObject {
 	private update_unterrichtmenge_by_idKlasse_and_idZeitraster() : void {
 		this._unterrichtmenge_by_idKlasse_and_idZeitraster.clear();
 		for (const u of this._unterrichtmenge_sortiert)
-			for (const idKlasse of u.klassen)
-				Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster).add(u);
+			if (u.idKurs === null) {
+				for (const idKlasse of u.klassen)
+					Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster).add(u);
+			} else {
+				for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, u.idKurs))
+					Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idZeitraster, klasse.id, u.idZeitraster).add(u);
+			}
 	}
 
 	private update_unterrichtmenge_by_idLehrer_and_idZeitraster() : void {

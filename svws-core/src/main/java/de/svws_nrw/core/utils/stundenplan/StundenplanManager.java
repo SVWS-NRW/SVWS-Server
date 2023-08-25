@@ -147,6 +147,7 @@ public class StundenplanManager {
 	// StundenplanKlasse
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanKlasse> _klasse_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanKlasse> _klassenmenge_sortiert = new ArrayList<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKlasse>> _klassenmenge_by_idKurs = new HashMap<>();
 
 	// StundenplanKlassenunterricht
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull StundenplanKlassenunterricht> _klassenunterricht_by_idKlasse_and_idFach = new HashMap2D<>();
@@ -407,6 +408,23 @@ public class StundenplanManager {
 		update_schuelermenge_by_idKurs();                          // ✔, referenziert ---
 		update_schuelermenge_by_idKlasse();                        // ✔, referenziert ---
 		update_unterrichtmenge_by_idSchueler_and_idZeitraster();   // ✔, referenziert '_schuelermenge_by_idKlasse', '_schuelermenge_by_idKurs'
+
+		update_klassenmenge_by_idKurs();                           // ✔, referenziert '_schuelermenge_by_idKurs'
+	}
+
+	private void update_klassenmenge_by_idKurs() {
+		_klassenmenge_by_idKurs.clear();
+
+		for (final @NotNull StundenplanKurs kurs : _kursmenge_sortiert) {
+			for (final @NotNull StundenplanSchueler schueler : MapUtils.getOrCreateArrayList(_schuelermenge_by_idKurs, kurs.id))
+				if (schueler.idKlasse < 0) {
+					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, schueler.idKlasse);
+					if (!MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).contains(klasse))
+						MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).add(klasse);
+				}
+			MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).sort(_compKlasse);
+		}
+
 	}
 
 
@@ -691,9 +709,16 @@ public class StundenplanManager {
     private void update_unterrichtmenge_by_idKlasse_and_idZeitraster() {
 		_unterrichtmenge_by_idKlasse_and_idZeitraster.clear();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge_sortiert)
-			for (final @NotNull Long idKlasse : u.klassen)
-				Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster).add(u);
-	}
+			if (u.idKurs == null) {
+				// Klassenunterricht
+				for (final @NotNull Long idKlasse : u.klassen)
+					Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idZeitraster, idKlasse, u.idZeitraster).add(u);
+			} else {
+				// Kursunterricht
+				for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, u.idKurs))
+					Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idKlasse_and_idZeitraster, klasse.id, u.idZeitraster).add(u);
+			}
+    }
 
     private void update_unterrichtmenge_by_idLehrer_and_idZeitraster() {
     	_unterrichtmenge_by_idLehrer_and_idZeitraster.clear();
