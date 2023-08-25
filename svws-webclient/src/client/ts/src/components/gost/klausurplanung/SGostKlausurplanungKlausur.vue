@@ -6,16 +6,16 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKursklausur" :placeholder="termin.startzeit !== null && startzeit === undefined ? termin.startzeit + '' : ''"
+			<svws-ui-text-input v-if="patchKlausurUhrzeit" :placeholder="termin.startzeit !== null && startzeit === undefined ? termin.startzeit + '' : ''"
 				v-model="startzeit"
-				@update:model-value="patchKursklausur(klausur.id, { startzeit: klausur.startzeit })" />
+				@update:model-value="patchKlausurUhrzeit({id: klausur.id, startzeit: klausur.startzeit})" />
 		</td>
 	</svws-ui-drag-data>
 </template>
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, LehrerListeEintrag, GostKursklausurManager, KursListeEintrag, KursManager, GostKlausurtermin } from "@core";
+	import type { GostKursklausur, LehrerListeEintrag, GostKursklausurManager, KursListeEintrag, KursManager, GostKlausurtermin, GostSchuelerklausur } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -24,7 +24,7 @@
 		termin: GostKlausurtermin;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
-		patchKursklausur?: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
+		patchKlausurUhrzeit?: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
 	}>();
 
 	const emit = defineEmits<{

@@ -778,7 +778,7 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return (new DataGostKlausurenSchuelerklausurraumstunde(conn)).setzeRaumZuSchuelerklausuren(raumid, schuelerklausurIds, abschnittid);
+			return DataGostKlausurenSchuelerklausurraumstunde.setzeRaumZuSchuelerklausuren(conn, raumid, schuelerklausurIds, abschnittid);
 		}
 	}
 
@@ -806,5 +806,33 @@ public class APIGostKlausuren {
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.blocken(conn, blockungDaten)).build();
 		}
 	}
+
+	/**
+	 * Die OpenAPI-Methode für das Erstellen einer neuen Klausurraumstunde.
+	 *
+	 * @param schema     das Datenbankschema
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abschnittid         die Ids der GostSchuelerklausuren
+	 * @param is
+	 * @return die HTTP-Antwort
+	 */
+	@PATCH
+	@Path("/kursklausuren/startzeit/abschnitt/{abschnittid : -?\\d+}")
+	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.", description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
+	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response patchGostKursklausurenStartzeit(
+			@PathParam("schema") final String schema,
+			@PathParam("abschnittid") final long abschnittid,
+			@RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKursklausur.class))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
+			return new DataGostKlausurenKursklausur(conn, -1).patchKlausurzeit(is, abschnittid);
+		}
+	}
+
 
 }

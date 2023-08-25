@@ -60,16 +60,27 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		return this.getList();
 	}
 
-	private List<GostSchuelerklausur> ermittleSchuelerklausurenSchonImRaum(final long idRaum) {
+	private static long ermittleRaumidAusSchuelerklausuren(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
+		final List<Long> idsRaumstunden = conn
+				.queryNamed("DTOGostKlausurenSchuelerklausurenRaeumeStunden.schuelerklausur_id.multiple", idsSchuelerklausuren, DTOGostKlausurenSchuelerklausurenRaeumeStunden.class).stream()
+				.map(skrs -> skrs.KlausurRaumStunde_ID).distinct().toList();
+		final List<Long> idsRaeume = conn.queryNamed("DTOGostKlausurenRaeumeStunden.id.multiple", idsRaumstunden, DTOGostKlausurenRaeumeStunden.class).stream().map(krs -> krs.Klausurraum_ID)
+				.distinct().toList();
+		if (idsRaeume.size() != 1)
+			return -1;
+		return idsRaeume.get(0);
+	}
+
+	private static List<GostSchuelerklausur> ermittleSchuelerklausurenSchonImRaum(final DBEntityManager conn, final long idRaum) {
 		final List<DTOGostKlausurenRaeumeStunden> listKlausurraumstunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class);
 		if (!listKlausurraumstunden.isEmpty()) {
 			final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> listSchuelerklausurenSchonImRaumRaumStunden = conn.queryNamed(
 					"DTOGostKlausurenSchuelerklausurenRaeumeStunden.klausurraumstunde_id.multiple", listKlausurraumstunden.stream().map(krs -> krs.ID).toList(),
 					DTOGostKlausurenSchuelerklausurenRaeumeStunden.class);
 			if (!listSchuelerklausurenSchonImRaumRaumStunden.isEmpty()) {
-				return new ArrayList<>(conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple",
-										listSchuelerklausurenSchonImRaumRaumStunden.stream().map(skrs -> skrs.Schuelerklausur_ID).distinct().toList(), DTOGostKlausurenSchuelerklausuren.class)
-								.stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList());
+				return new ArrayList<>(
+						conn.queryNamed("DTOGostKlausurenSchuelerklausuren.id.multiple", listSchuelerklausurenSchonImRaumRaumStunden.stream().map(skrs -> skrs.Schuelerklausur_ID).distinct().toList(),
+								DTOGostKlausurenSchuelerklausuren.class).stream().map(DataGostKlausurenSchuelerklausur.dtoMapper::apply).toList());
 			}
 		}
 		return new ArrayList<>();
@@ -78,13 +89,50 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	/**
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
-	 * @param idRaum               die ID des Klausurraums
+	 * @param conn
+	 * @param _idRaum              die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
-	 * @param idAbschnitt		   die ID des Schuljahresabschnitts
+	 * @param idAbschnitt          die ID des Schuljahresabschnitts
 	 *
 	 * @return die Antwort
 	 */
-	public Response setzeRaumZuSchuelerklausuren(final long idRaum, final List<Long> idsSchuelerklausuren, final long idAbschnitt) {
+	public static Response setzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausuren, final long idAbschnitt) {
+		try {
+			conn.transactionBegin();
+
+			GostKlausurenCollectionSkrsKrs result = transactionSetzeRaumZuSchuelerklausuren(conn, _idRaum, idsSchuelerklausuren, idAbschnitt);
+
+			if (!conn.transactionCommit())
+				throw OperationError.CONFLICT.exception("Datenbankfehler beim Persistieren der Gost-Klausurraumstunden");
+
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+//	} catch (final Exception e) {
+//		if (e instanceof final WebApplicationException webApplicationException)
+//			return webApplicationException.getResponse();
+//		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
+
+	}
+
+	/**
+	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
+	 *
+	 * @param conn
+	 * @param _idRaum              die ID des Klausurraums
+	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
+	 * @param idAbschnitt          die ID des Schuljahresabschnitts
+	 *
+	 * @return die Antwort
+	 */
+	public static GostKlausurenCollectionSkrsKrs transactionSetzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausuren,
+			final long idAbschnitt) {
+
+		final long idRaum = _idRaum != null ? _idRaum : ermittleRaumidAusSchuelerklausuren(conn, idsSchuelerklausuren);
+		if (idRaum == -1)
+			throw OperationError.CONFLICT.exception(); // TODO Exceptionhandling Klausurraum nicht eindeutig
+
 		// Raum und Termin holen
 		final GostKlausurraum raum = DataGostKlausurenRaum.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenRaeume.class, idRaum));
 		final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, raum.idTermin);
@@ -96,15 +144,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			throw OperationError.NOTHING_TO_DO.exception(); // TODO Exceptionhandling
 
 		// Schon im Raum existente Schülerklausuren ermitteln
-		final List<GostSchuelerklausur> listSchuelerklausuren = ermittleSchuelerklausurenSchonImRaum(idRaum);
+		final List<GostSchuelerklausur> listSchuelerklausuren = ermittleSchuelerklausurenSchonImRaum(conn, idRaum);
 
 		final List<GostKursklausur> listKursklausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.id.multiple",
 				Stream.concat(listSchuelerklausuren.stream().map(sk -> sk.idKursklausur).distinct(), listSchuelerklausurenNeu.stream().map(sk -> sk.idKursklausur).distinct()).distinct().toList(),
 				DTOGostKlausurenKursklausuren.class).stream().map(DataGostKlausurenKursklausur.dtoMapper2::apply).toList();
 
-		listSchuelerklausuren.addAll(listSchuelerklausurenNeu);
-
-
+		if (_idRaum != null) // überarbeiten! null bedeutet: Zeit der Kursklausur wird neu gesetzt, nicht null bedeutet: Raum wird Schülerklausuren zugewiesen
+			listSchuelerklausuren.addAll(listSchuelerklausurenNeu);
 
 		final List<GostKlausurraumstunde> listRaumstunden = conn.queryNamed("DTOGostKlausurenRaeumeStunden.klausurraum_id", idRaum, DTOGostKlausurenRaeumeStunden.class).stream()
 				.map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();
@@ -119,9 +166,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.Datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
 
-
 		// Zeitraster_min und _max ermitteln
-		int minStart = termin.Startzeit;
+		int minStart = 1440;
 		int maxEnd = -1;
 		for (final GostKursklausur kk : listKursklausuren) {
 			if (kk.startzeit != null && kk.startzeit < minStart)
@@ -140,6 +186,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					maxEnd = endzeit;
 			}
 		}
+		if (minStart == 1440)
+			minStart = termin.Startzeit;
 
 		final LocalDate klausurdatum = LocalDate.parse(termin.Datum);
 		final List<StundenplanZeitraster> zeitrasterRaum = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
@@ -150,34 +198,27 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		result.idKlausurraum = idRaum;
 
-		try {
-			conn.transactionBegin();
+		result.raumstunden = createRaumStundenInDb(conn, idRaum, zeitrasterRaum, raumManager);
+		conn.transactionFlush();
+		result.skRaumstunden = createSchuelerklausurraumstundenInDb(conn, listSchuelerklausurenNeu, idRaum, termin, kursklausurManager, vorgabenManager, stundenplanManager, raumManager);
+		conn.transactionFlush();
+		result.raumstundenGeloescht = removeRaumStundenInDb(conn);
 
-			result.raumstunden = createRaumStundenInDb(idRaum, zeitrasterRaum, raumManager);
-			result.skRaumstunden = createSchuelerklausurraumstundenInDb(listSchuelerklausurenNeu, idRaum, termin, kursklausurManager, vorgabenManager, stundenplanManager, raumManager);
-			result.raumstundenGeloescht = removeRaumStundenInDb();
-
-			if (!conn.transactionCommit())
-				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Gost-Klausurraumstunden");
-//		} catch (final Exception e) {
-//			if (e instanceof final WebApplicationException webApplicationException)
-//				return webApplicationException.getResponse();
-//			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
-
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+		return result;
 	}
 
 	/**
-	 * Legt die Raumstunden für den gesamten Raum an (Befüllen der Tabelle Gost_Klausuren_Raeume_Stunden)
+	 * Legt die Raumstunden für den gesamten Raum an (Befüllen der Tabelle
+	 * Gost_Klausuren_Raeume_Stunden)
+	 *
+	 * @param conn
 	 * @param idRaum
 	 * @param zeitrasterRaum
 	 * @param raumManager
 	 * @return Liste
 	 */
-	private List<GostKlausurraumstunde> createRaumStundenInDb(final long idRaum, final List<StundenplanZeitraster> zeitrasterRaum, final GostKlausurraumManager raumManager) {
+	private static List<GostKlausurraumstunde> createRaumStundenInDb(final DBEntityManager conn, final long idRaum, final List<StundenplanZeitraster> zeitrasterRaum,
+			final GostKlausurraumManager raumManager) {
 		// Bestimme die ID der ersten neuen Klausurraumstunde
 		final DTOSchemaAutoInkremente lastKrsID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Raeume_Stunden");
 		long idKrs = lastKrsID == null ? 1 : lastKrsID.MaxID + 1;
@@ -196,18 +237,26 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	}
 
 	/**
-	 * Ermittelt und löscht die nicht mehr benötigten Raumstunden (Aufräumen der Tabelle Gost_Klausuren_Raeume_Stunden)
+	 * Ermittelt und löscht die nicht mehr benötigten Raumstunden (Aufräumen der
+	 * Tabelle Gost_Klausuren_Raeume_Stunden)
+	 *
+	 * @param conn
 	 * @return Liste
 	 */
-	private List<GostKlausurraumstunde> removeRaumStundenInDb() {
-		final List<DTOGostKlausurenRaeumeStunden> stundenAlt = conn.queryList("SELECT e FROM DTOGostKlausurenRaeumeStunden e WHERE e.ID NOT IN (SELECT w.KlausurRaumStunde_ID FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden w)", DTOGostKlausurenRaeumeStunden.class);
+	private static List<GostKlausurraumstunde> removeRaumStundenInDb(final DBEntityManager conn) {
+		final List<DTOGostKlausurenRaeumeStunden> stundenAlt = conn.queryList(
+				"SELECT e FROM DTOGostKlausurenRaeumeStunden e WHERE e.ID NOT IN (SELECT w.KlausurRaumStunde_ID FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden w)",
+				DTOGostKlausurenRaeumeStunden.class);
 		conn.transactionRemoveAll(stundenAlt);
 		return stundenAlt.stream().map(DataGostKlausurenRaumstunde.dtoMapper::apply).toList();
 
 	}
 
 	/**
-	 * Legt die Schuelerklausurraumstunden für jede Klausur an (Befüllen der Tabelle Gost_Klausuren_Schuelerklausuren_Raeume_Stunden)
+	 * Legt die Schuelerklausurraumstunden für jede Klausur an (Befüllen der Tabelle
+	 * Gost_Klausuren_Schuelerklausuren_Raeume_Stunden)
+	 *
+	 * @param conn
 	 * @param listSchuelerklausurenNeu
 	 * @param idRaum
 	 * @param termin
@@ -217,15 +266,17 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param stundenplanManager
 	 * @return List
 	 */
-	private List<GostSchuelerklausurraumstunde> createSchuelerklausurraumstundenInDb(final List<GostSchuelerklausur> listSchuelerklausurenNeu, final long idRaum, final DTOGostKlausurenTermine termin, final GostKursklausurManager kursklausurManager, final GostKlausurvorgabenManager vorgabenManager, final StundenplanManager stundenplanManager, final GostKlausurraumManager raumManager) {
+	private static List<GostSchuelerklausurraumstunde> createSchuelerklausurraumstundenInDb(final DBEntityManager conn, final List<GostSchuelerklausur> listSchuelerklausurenNeu, final long idRaum,
+			final DTOGostKlausurenTermine termin, final GostKursklausurManager kursklausurManager, final GostKlausurvorgabenManager vorgabenManager, final StundenplanManager stundenplanManager,
+			final GostKlausurraumManager raumManager) {
 		final List<GostSchuelerklausurraumstunde> result = new ArrayList<>();
 		final LocalDate klausurdatum = LocalDate.parse(termin.Datum);
 		for (final GostSchuelerklausur sk : listSchuelerklausurenNeu) {
 			final GostKursklausur kk = kursklausurManager.getKursklausurById(sk.idKursklausur);
 			final GostKlausurvorgabe v = vorgabenManager.gibGostKlausurvorgabe(kk.idVorgabe);
 			final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : termin.Startzeit);
-			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
-					startzeit, v.dauer);
+			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit,
+					v.dauer);
 			if (zeitrasterSk.isEmpty())
 				throw OperationError.NOTHING_TO_DO.exception(); // TODO Exceptionhandling, Zeitraster konnte nicht ermittelt werden
 			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden v WHERE v.Schuelerklausur_ID = %d".formatted(sk.idSchuelerklausur));

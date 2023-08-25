@@ -1,6 +1,6 @@
 import { computed, shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, ListUtils, Arrays, StundenplanListeEintrag, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
@@ -450,6 +450,14 @@ export class RouteDataGostKlausurplanung {
 		this.setPatchedState({
 			kursklausurmanager: await this.reloadKursklausurmanager(null),
 		});
+		this.commit();
+		api.status.stop();
+		return true;
+	}
+
+	patchKlausurUhrzeit = async(klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<boolean> => {
+		api.status.start();
+		await api.server.patchGostKursklausurenStartzeit(klausur, api.schema, this._state.value.abschnitt!.id);
 		this.commit();
 		api.status.stop();
 		return true;

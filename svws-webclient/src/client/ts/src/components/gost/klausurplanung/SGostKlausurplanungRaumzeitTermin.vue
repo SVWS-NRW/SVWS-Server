@@ -40,7 +40,7 @@
 				:patch-klausurraum="patchKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
 				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren"
-				:patch-kursklausur="patchKursklausur"
+				:patch-klausur-uhrzeit="patchKlausurUhrzeit"
 				:faecher-manager="faecherManager"
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
@@ -66,7 +66,7 @@
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
-		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
+		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
 	}>();
 
 	const klausurenOhneRaum = computed(() => props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager()));

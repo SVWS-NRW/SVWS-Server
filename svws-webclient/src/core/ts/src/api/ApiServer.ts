@@ -4269,6 +4269,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchGostKursklausurenStartzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/startzeit/abschnitt/{abschnittid : -?\d+}
+	 *
+	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 */
+	public async patchGostKursklausurenStartzeit(data : Partial<GostKursklausur>, schema : string, abschnittid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/startzeit/abschnitt/{abschnittid : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
+		const body : string = GostKursklausur.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/{id : \d+}
 	 *
 	 * Patcht einen Gost-Klausurraum.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurraums besitzt.

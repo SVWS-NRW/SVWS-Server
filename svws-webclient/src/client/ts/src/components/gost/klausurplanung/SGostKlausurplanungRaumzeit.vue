@@ -31,7 +31,7 @@
 				:erzeuge-klausurraum="erzeugeKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
 				:patch-klausurraum="patchKlausurraum"
-				:patch-kursklausur="patchKursklausur"
+				:patch-klausur-uhrzeit="patchKlausurUhrzeit"
 				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren" />
 		</div>
 	</div>

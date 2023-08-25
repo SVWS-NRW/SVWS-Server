@@ -96,7 +96,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final Map<Long, DTOKurs> mapKurse = conn.queryNamed("DTOKurs.id.multiple", kursIDs, DTOKurs.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));
 
 		kursklausuren.stream().forEach(k -> {
-//			GostKursklausur kk = new GostKursklausur();
 			final DTOGostKlausurenVorgaben v = mapVorgaben.get(k.Vorgabe_ID);
 			final DTOKurs kurs = mapKurse.get(k.Kurs_ID);
 
@@ -110,9 +109,31 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	/**
-	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
-	 * @param conn     Connection
+	 * @param is          die ID des Klausurraums
+	 * @param idAbschnitt die ID des Schuljahresabschnitts
+	 *
+	 * @return die Antwort
+	 */
+	public Response patchKlausurzeit(final InputStream is, final long idAbschnitt) {
+		try {
+			conn.transactionBegin();
+			GostKursklausur klausur = transactionPatch(null, is);
+			final List<Long> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", klausur.id, DTOGostKlausurenSchuelerklausuren.class).stream().map(sk -> sk.ID).toList();
+			DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, idAbschnitt);
+			conn.transactionCommit();
+		} finally {
+			conn.transactionRollback();
+		}
+		return Response.status(Status.OK).build();
+	}
+
+	/**
+	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
+	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+	 *
+	 * @param conn          Connection
 	 * @param blockungDaten das GostKlausurterminblockungDaten-Objekt
 	 *
 	 * @return true, wenn die Blockung erstellt werden konnte, false, wenn nicht.
@@ -235,10 +256,11 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	/**
-	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
+	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
 	 *
-	 * @param conn     Connection
-	 * @param id die ID der Kursklausur
+	 * @param conn Connection
+	 * @param id   die ID der Kursklausur
 	 *
 	 * @return das Kursklausur-Objekt
 	 *
@@ -250,61 +272,79 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return null;
 	}
 
-	@Override
-	public Response patch(final Long id, final InputStream is) {
+	/**
+	 * Patcht ein GostKursklausur-Objekt. Die zugehörige Datenbank-Transaktion muss
+	 * selbst verwaltet werden.
+	 *
+	 * @param id die ID der Kursklausur
+	 * @param is der InputStream
+	 * @return x
+	 *
+	 */
+	public GostKursklausur transactionPatch(final Long id, final InputStream is) {
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				final DTOGostKlausurenKursklausuren kursklausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
-				if (kursklausur == null)
-					throw OperationError.NOT_FOUND.exception();
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "idVorgabe" -> {
-						final long patch_vorgabeid = JSONMapper.convertToLong(value, false);
-						if ((patch_vorgabeid != kursklausur.Vorgabe_ID))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "idKurs" -> {
-						final long patch_kursid = JSONMapper.convertToLong(value, false);
-						if ((patch_kursid != kursklausur.Kurs_ID))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "idTermin" -> {
-						final Long newTermin = JSONMapper.convertToLong(value, true);
-						if (newTermin != null) {
-							final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
-							final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
-							if (!Objects.equals(termin.Quartal, vorgabe.Quartal))
-								throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
-						}
-						kursklausur.Termin_ID = newTermin;
-					}
-					case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-					default -> throw OperationError.BAD_REQUEST.exception();
-					}
+			long idIs = -1;
+			if (id == null)
+				idIs = JSONMapper.convertToLong(map.get("id"), false);
+			final DTOGostKlausurenKursklausuren kursklausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id != null ? id : idIs);
+			if (kursklausur == null)
+				throw OperationError.NOT_FOUND.exception();
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+				case "id" -> {
+					final Long patch_id = JSONMapper.convertToLong(value, true);
+					if ((patch_id == null) || (patch_id.longValue() != kursklausur.ID))
+						throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(kursklausur);
-				if (!conn.transactionCommit()) {
-					// TODO so richtig? Fremdschlüsselbedingung schlägt fehl
-					throw OperationError.CONFLICT.exception();
+				case "idVorgabe" -> {
+					final long patch_vorgabeid = JSONMapper.convertToLong(value, false);
+					if ((patch_vorgabeid != kursklausur.Vorgabe_ID))
+						throw OperationError.BAD_REQUEST.exception();
 				}
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
+				case "idKurs" -> {
+					final long patch_kursid = JSONMapper.convertToLong(value, false);
+					if ((patch_kursid != kursklausur.Kurs_ID))
+						throw OperationError.BAD_REQUEST.exception();
+				}
+				case "idTermin" -> {
+					final Long newTermin = JSONMapper.convertToLong(value, true);
+					if (newTermin != null) {
+						final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
+						final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
+						if (!Objects.equals(termin.Quartal, vorgabe.Quartal))
+							throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
+					}
+					kursklausur.Termin_ID = newTermin;
+				}
+				case "startzeit" -> kursklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
+				default -> throw OperationError.BAD_REQUEST.exception();
+				}
 			}
+			conn.transactionPersist(kursklausur);
+			return dtoMapper2.apply(kursklausur);
+		}
+		return null;
+	}
+
+	@Override
+	public Response patch(final Long id, final InputStream is) {
+		try {
+			conn.transactionBegin();
+			transactionPatch(id, is);
+			if (!conn.transactionCommit()) {
+				// TODO so richtig? Fremdschlüsselbedingung schlägt fehl
+				throw OperationError.CONFLICT.exception();
+			}
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
 		}
 		return Response.status(Status.OK).build();
 	}

@@ -23,7 +23,7 @@
 						:kursklausurmanager="kursklausurmanager"
 						:kursmanager="kursmanager"
 						:map-lehrer="mapLehrer"
-						:patch-kursklausur="patchKursklausur" />
+						:patch-klausur-uhrzeit="patchKlausurUhrzeit" />
 				</table>
 			</svws-ui-content-card>
 		</svws-ui-content-card>
@@ -46,7 +46,7 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
-		patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<boolean>;
+		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
 	}>();
 
 	const setKlausurToRaum = async (klausur : GostKursklausur) => {
