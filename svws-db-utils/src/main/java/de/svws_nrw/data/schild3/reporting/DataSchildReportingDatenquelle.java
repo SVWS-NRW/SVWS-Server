@@ -333,6 +333,7 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen();
 			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
 			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
+			new DataSchildReportingDatenquelleSchuelerSprachpruefungen();
         }
         return datenquellen;
     }

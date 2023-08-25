@@ -1,31 +1,31 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class Sprachpruefung extends JavaObject {
+export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 
 	/**
-	 * Das einstellige Sprachkürzel des geprüften Faches
+	 * Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören.
 	 */
-	public sprache : string | null = null;
+	public schuelerID : number = 0;
+
+	/**
+	 * Das Sprachkürzel des geprüften Faches
+	 */
+	public sprache : string = "";
 
 	/**
 	 * Gibt an, in welchem ASD-Jahrgang die Prüfung abgelegt wurde
 	 */
-	public jahrgang : string | null = null;
+	public jahrgang : string = "";
 
 	/**
-	 * ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung
+	 * Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung
 	 */
-	public anspruchsniveauId : number | null = null;
-
-	/**
-	 * Gibt das Datum an, an dem die Prüfung abgelegt wurde
-	 */
-	public pruefungsdatum : string | null = null;
+	public anspruchsniveau : string = "";
 
 	/**
 	 * Sprache, die durch die Prüfung ersetzt wird
 	 */
-	public ersetzteSprache : string | null = null;
+	public ersetzteSprache : string = "";
 
 	/**
 	 * Prüfung ist eine Prüfung im herkunftssprachlichen Unterricht
@@ -58,14 +58,19 @@ export class Sprachpruefung extends JavaObject {
 	public kannBelegungAlsFortgefuehrteSpracheErlauben : boolean = false;
 
 	/**
-	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde
+	 * Datum der Sprachprüfung.
 	 */
-	public referenzniveau : string | null = null;
+	public pruefungsdatum : string = "";
 
 	/**
-	 * Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist)
+	 * Das Kürzel des GeR-Referenzniveaus, welches durch die Prüfung erreicht wurde
 	 */
-	public note : number | null = null;
+	public referenzniveau : string = "";
+
+	/**
+	 * Die Note, die in der Sprachprüfung erreicht wurde
+	 */
+	public note : string = "";
 
 
 	public constructor() {
@@ -73,17 +78,27 @@ export class Sprachpruefung extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schueler.Sprachpruefung'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.SchildReportingSchuelerSprachpruefungen'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): Sprachpruefung {
+	public static transpilerFromJSON(json : string): SchildReportingSchuelerSprachpruefungen {
 		const obj = JSON.parse(json);
-		const result = new Sprachpruefung();
-		result.sprache = typeof obj.sprache === "undefined" ? null : obj.sprache === null ? null : obj.sprache;
-		result.jahrgang = typeof obj.jahrgang === "undefined" ? null : obj.jahrgang === null ? null : obj.jahrgang;
-		result.anspruchsniveauId = typeof obj.anspruchsniveauId === "undefined" ? null : obj.anspruchsniveauId === null ? null : obj.anspruchsniveauId;
-		result.pruefungsdatum = typeof obj.pruefungsdatum === "undefined" ? null : obj.pruefungsdatum === null ? null : obj.pruefungsdatum;
-		result.ersetzteSprache = typeof obj.ersetzteSprache === "undefined" ? null : obj.ersetzteSprache === null ? null : obj.ersetzteSprache;
+		const result = new SchildReportingSchuelerSprachpruefungen();
+		if (typeof obj.schuelerID === "undefined")
+			 throw new Error('invalid json format, missing attribute schuelerID');
+		result.schuelerID = obj.schuelerID;
+		if (typeof obj.sprache === "undefined")
+			 throw new Error('invalid json format, missing attribute sprache');
+		result.sprache = obj.sprache;
+		if (typeof obj.jahrgang === "undefined")
+			 throw new Error('invalid json format, missing attribute jahrgang');
+		result.jahrgang = obj.jahrgang;
+		if (typeof obj.anspruchsniveau === "undefined")
+			 throw new Error('invalid json format, missing attribute anspruchsniveau');
+		result.anspruchsniveau = obj.anspruchsniveau;
+		if (typeof obj.ersetzteSprache === "undefined")
+			 throw new Error('invalid json format, missing attribute ersetzteSprache');
+		result.ersetzteSprache = obj.ersetzteSprache;
 		if (typeof obj.istHSUPruefung === "undefined")
 			 throw new Error('invalid json format, missing attribute istHSUPruefung');
 		result.istHSUPruefung = obj.istHSUPruefung;
@@ -102,47 +117,55 @@ export class Sprachpruefung extends JavaObject {
 		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben === "undefined")
 			 throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
-		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
-		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
+		if (typeof obj.pruefungsdatum === "undefined")
+			 throw new Error('invalid json format, missing attribute pruefungsdatum');
+		result.pruefungsdatum = obj.pruefungsdatum;
+		if (typeof obj.referenzniveau === "undefined")
+			 throw new Error('invalid json format, missing attribute referenzniveau');
+		result.referenzniveau = obj.referenzniveau;
+		if (typeof obj.note === "undefined")
+			 throw new Error('invalid json format, missing attribute note');
+		result.note = obj.note;
 		return result;
 	}
 
-	public static transpilerToJSON(obj : Sprachpruefung) : string {
+	public static transpilerToJSON(obj : SchildReportingSchuelerSprachpruefungen) : string {
 		let result = '{';
-		result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
-		result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
-		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
+		result += '"schuelerID" : ' + obj.schuelerID + ',';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
+		result += '"anspruchsniveau" : ' + JSON.stringify(obj.anspruchsniveau!) + ',';
+		result += '"ersetzteSprache" : ' + JSON.stringify(obj.ersetzteSprache!) + ',';
 		result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
 		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
 		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
 		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
 		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
 		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
+		result += '"pruefungsdatum" : ' + JSON.stringify(obj.pruefungsdatum!) + ',';
+		result += '"referenzniveau" : ' + JSON.stringify(obj.referenzniveau!) + ',';
+		result += '"note" : ' + JSON.stringify(obj.note!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<Sprachpruefung>) : string {
+	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerSprachpruefungen>) : string {
 		let result = '{';
+		if (typeof obj.schuelerID !== "undefined") {
+			result += '"schuelerID" : ' + obj.schuelerID + ',';
+		}
 		if (typeof obj.sprache !== "undefined") {
-			result += '"sprache" : ' + ((!obj.sprache) ? 'null' : JSON.stringify(obj.sprache)) + ',';
+			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		}
-		if (typeof obj.anspruchsniveauId !== "undefined") {
-			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
-		}
-		if (typeof obj.pruefungsdatum !== "undefined") {
-			result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
+		if (typeof obj.anspruchsniveau !== "undefined") {
+			result += '"anspruchsniveau" : ' + JSON.stringify(obj.anspruchsniveau!) + ',';
 		}
 		if (typeof obj.ersetzteSprache !== "undefined") {
-			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
+			result += '"ersetzteSprache" : ' + JSON.stringify(obj.ersetzteSprache!) + ',';
 		}
 		if (typeof obj.istHSUPruefung !== "undefined") {
 			result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
@@ -162,11 +185,14 @@ export class Sprachpruefung extends JavaObject {
 		if (typeof obj.kannBelegungAlsFortgefuehrteSpracheErlauben !== "undefined") {
 			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
 		}
+		if (typeof obj.pruefungsdatum !== "undefined") {
+			result += '"pruefungsdatum" : ' + JSON.stringify(obj.pruefungsdatum!) + ',';
+		}
 		if (typeof obj.referenzniveau !== "undefined") {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+			result += '"referenzniveau" : ' + JSON.stringify(obj.referenzniveau!) + ',';
 		}
 		if (typeof obj.note !== "undefined") {
-			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
+			result += '"note" : ' + JSON.stringify(obj.note!) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
@@ -175,6 +201,6 @@ export class Sprachpruefung extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schueler_Sprachpruefung(obj : unknown) : Sprachpruefung {
-	return obj as Sprachpruefung;
+export function cast_de_svws_nrw_core_data_schild3_SchildReportingSchuelerSprachpruefungen(obj : unknown) : SchildReportingSchuelerSprachpruefungen {
+	return obj as SchildReportingSchuelerSprachpruefungen;
 }

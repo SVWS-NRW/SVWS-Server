@@ -243,6 +243,7 @@ export { SchildReportingSchuelerGOStLaufbahnplanungFehler } from './core/data/sc
 export { SchildReportingSchuelerGOStLaufbahnplanungGrunddaten } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungGrunddaten';
 export { SchildReportingSchuelerGOStLaufbahnplanungHinweise } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungHinweise';
 export { SchildReportingSchuelerGOStLaufbahnplanungSummen } from './core/data/schild3/SchildReportingSchuelerGOStLaufbahnplanungSummen';
+export { SchildReportingSchuelerSprachpruefungen } from './core/data/schild3/SchildReportingSchuelerSprachpruefungen';
 export { SchildReportingSchuelerleistungsdaten } from './core/data/schild3/SchildReportingSchuelerleistungsdaten';
 export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';

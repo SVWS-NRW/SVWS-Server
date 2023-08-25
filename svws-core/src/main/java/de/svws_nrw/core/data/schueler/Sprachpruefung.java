@@ -17,6 +17,9 @@ public class Sprachpruefung {
 	/** ID der Bezeichnung des am Schulabschluss orientierte Anspruchsniveau der Sprachprüfung */
 	public Integer anspruchsniveauId;
 
+	/** Gibt das Datum an, an dem die Prüfung abgelegt wurde */
+	public String pruefungsdatum;
+
 	/** Sprache, die durch die Prüfung ersetzt wird */
 	public String ersetzteSprache;
 
