@@ -139,6 +139,11 @@ public class LupoMDB {
 			fehlermeldungen = ABPSchuelerFehlermeldungen.read(db);
 			schuelerSprachenfolge = ABPSchuelerSprachenfolge.read(db);
 		}
+		// Prüfe, die eingelesen Daten, ob diese weiter verarbeitet werden können.
+		for (final ABPSchueler s : schueler) {
+			if (s.Schild_ID == null)
+				throw new IOException("Fehler beim Einlesen der Schüler-Daten. Alle Schüler der LuPO-Datei müssen gültige IDs zugewiesen haben.");
+		}
 	}
 
 
