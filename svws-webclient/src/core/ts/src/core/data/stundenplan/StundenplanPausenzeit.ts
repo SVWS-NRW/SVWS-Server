@@ -1,4 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 
 export class StundenplanPausenzeit extends JavaObject {
 
@@ -27,6 +29,11 @@ export class StundenplanPausenzeit extends JavaObject {
 	 */
 	public bezeichnung : string = "Pause";
 
+	/**
+	 * Die IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen!
+	 */
+	public klassen : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -50,6 +57,11 @@ export class StundenplanPausenzeit extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+			for (const elem of obj.klassen) {
+				result.klassen?.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -60,6 +72,18 @@ export class StundenplanPausenzeit extends JavaObject {
 		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
 		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		if (!obj.klassen) {
+			result += '"klassen" : []';
+		} else {
+			result += '"klassen" : [ ';
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
+				result += elem;
+				if (i < obj.klassen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -81,6 +105,20 @@ export class StundenplanPausenzeit extends JavaObject {
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		}
+		if (typeof obj.klassen !== "undefined") {
+			if (!obj.klassen) {
+				result += '"klassen" : []';
+			} else {
+				result += '"klassen" : [ ';
+				for (let i = 0; i < obj.klassen.size(); i++) {
+					const elem = obj.klassen.get(i);
+					result += elem;
+					if (i < obj.klassen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -1,7 +1,11 @@
 package de.svws_nrw.core.data.stundenplan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.Wochentag;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -34,5 +38,9 @@ public class StundenplanPausenzeit {
 	/** Die Bezeichnung der Pausenzeit, welche die Art der Pausenzeit genauer beschreibt (z.B. Mittagspause).  */
 	@Schema(description = "die Bezeichnung der Pausenzeit, welche die Art der Pausenzeit genauer beschreibt", example = "Mittagspause")
 	public @NotNull String bezeichnung = "Pause";
+
+	/** Die IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen! */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klassen, denen diese Pausenzeit zugeordnet sind. Ist die Liste leer, so gilt die Pausenzeit für alle Klassen!"))
+	public @NotNull List<@NotNull Long> klassen = new ArrayList<>();
 
 }
