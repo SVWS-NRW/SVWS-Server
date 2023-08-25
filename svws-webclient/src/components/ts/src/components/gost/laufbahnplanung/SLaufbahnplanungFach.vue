@@ -484,16 +484,20 @@
 	function setEF1WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
 			case null: {
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre auch leer sind, dann setze auch diese
-				if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+				else if (identicalArray(wahl.halbjahre, [null, null, null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
 					wahl.halbjahre = (ist_VTF.value || ist_PJK.value) ? ['M', 'M', 'M', 'M', 'M', 'M'] : ['S', 'S', 'S', 'S', 'S', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
 				break;
 			}
 			case "S":  {
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF1.id] = 'M';
 				// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
-				if (identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M']) && !(ist_VTF.value || ist_PJK.value))
+				else if (identicalArray(wahl.halbjahre, ['S', 'S', 'S', 'S', 'S', 'M']) && !(ist_VTF.value || ist_PJK.value))
 					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
 						wahl.halbjahre = ['M', 'M', 'M', 'M', null, null];
 					else
@@ -503,8 +507,10 @@
 				break;
 			}
 			case "M":  {
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
-				if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
+				else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
 					wahl.halbjahre = [null, null, null, null, null, null];
 				else
 					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
@@ -518,14 +524,18 @@
 	function setEF2WahlHochschreiben(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF2.id]) {
 			case null: {
-				if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
+				else if (identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null]) && !(ist_VTF.value || ist_PJK.value))
 					wahl.halbjahre = [wahl.halbjahre[0], 'S', 'S', 'S', 'S', 'M'];
 				else
 					wahl.halbjahre[GostHalbjahr.EF2.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
 				break;
 			}
 			case "S": {
-				if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF2.id] = 'M';
+				else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
 					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['S', 'S', 'S', 'M'])) && !(ist_VTF.value || ist_PJK.value))
 					if (GostFachbereich.KUNST_MUSIK.hat(props.fach) || GostFachbereich.RELIGION.hat(props.fach))
 						wahl.halbjahre = [wahl.halbjahre[0], 'M', 'M', 'M', null, null];
@@ -536,7 +546,9 @@
 				break;
 			}
 			case "M": {
-				if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+				if (wahl.abiturFach !== null)
+					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
+				else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
 					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', 'M', 'M'])
 					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
 					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
