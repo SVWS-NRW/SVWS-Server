@@ -813,7 +813,7 @@ public class APIGostKlausuren {
 	 * @param schema     das Datenbankschema
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 * @param abschnittid         die Ids der GostSchuelerklausuren
-	 * @param is
+	 * @param is x
 	 * @return die HTTP-Antwort
 	 */
 	@PATCH

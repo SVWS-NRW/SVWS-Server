@@ -89,7 +89,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	/**
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
-	 * @param conn
+	 * @param conn x
 	 * @param _idRaum              die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
 	 * @param idAbschnitt          die ID des Schuljahresabschnitts
@@ -119,7 +119,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	/**
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
-	 * @param conn
+	 * @param conn x
 	 * @param _idRaum              die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
 	 * @param idAbschnitt          die ID des Schuljahresabschnitts
@@ -211,10 +211,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Legt die Raumstunden für den gesamten Raum an (Befüllen der Tabelle
 	 * Gost_Klausuren_Raeume_Stunden)
 	 *
-	 * @param conn
-	 * @param idRaum
-	 * @param zeitrasterRaum
-	 * @param raumManager
+	 * @param conn x
+	 * @param idRaum x
+	 * @param zeitrasterRaum x
+	 * @param raumManager x
 	 * @return Liste
 	 */
 	private static List<GostKlausurraumstunde> createRaumStundenInDb(final DBEntityManager conn, final long idRaum, final List<StundenplanZeitraster> zeitrasterRaum,
@@ -240,8 +240,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Ermittelt und löscht die nicht mehr benötigten Raumstunden (Aufräumen der
 	 * Tabelle Gost_Klausuren_Raeume_Stunden)
 	 *
-	 * @param conn
-	 * @return Liste
+	 * @param conn x
+	 * @return Liste x
 	 */
 	private static List<GostKlausurraumstunde> removeRaumStundenInDb(final DBEntityManager conn) {
 		final List<DTOGostKlausurenRaeumeStunden> stundenAlt = conn.queryList(
@@ -256,14 +256,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Legt die Schuelerklausurraumstunden für jede Klausur an (Befüllen der Tabelle
 	 * Gost_Klausuren_Schuelerklausuren_Raeume_Stunden)
 	 *
-	 * @param conn
-	 * @param listSchuelerklausurenNeu
-	 * @param idRaum
-	 * @param termin
-	 * @param kursklausurManager
-	 * @param vorgabenManager
-	 * @param raumManager
-	 * @param stundenplanManager
+	 * @param conn x
+	 * @param listSchuelerklausurenNeu x
+	 * @param idRaum x
+	 * @param termin x
+	 * @param kursklausurManager x
+	 * @param vorgabenManager x
+	 * @param raumManager x
+	 * @param stundenplanManager x
 	 * @return List
 	 */
 	private static List<GostSchuelerklausurraumstunde> createSchuelerklausurraumstundenInDb(final DBEntityManager conn, final List<GostSchuelerklausur> listSchuelerklausurenNeu, final long idRaum,
