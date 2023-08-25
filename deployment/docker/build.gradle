@@ -84,6 +84,26 @@ task dockerPushLatestDockerhub(type: Exec) {
 	}
 }
 
+/*
+ Task führt ein Docker-Push zu dockerhub durch.
+ */
+task dockerRunnerPushLatestDockerhub(type: Exec) {
+	workingDir "$projectDir/dockerrunner"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker builder prune -a'
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:latest'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:latest'
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker builder prune -a'
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:latest'
+		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:latest'
+	}
+}
+
+
+
 task dockerPushAllDockerhub() {
 	dependsOn('dockerPushLatestDockerhub')
 	group "Publishing"
