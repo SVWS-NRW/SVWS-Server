@@ -1,22 +1,18 @@
 <template>
-	<div class="h-full w-full p-8 flex flex-row flex-grow">
+	<div class="page--content page--content--full">
 		<template v-if="props.stundenplanManager().klasseGetMengeAsList().isEmpty()">
-			Für den Stundenplan ist keine Klasse vorhanden.
+			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
 		<template v-else>
-			<div class="h-full w-96 mr-2 grid grid-cols-1" style="grid-template-rows: 3rem 3rem 1.8rem 1fr 1.8rem 1fr;"
-				@dragover="checkDropZone($event)" @drop="onDrop(undefined)">
-				<div>
+			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined)" class="flex flex-col gap-y-8 justify-start mb-auto">
+				<svws-ui-input-wrapper>
 					<svws-ui-multi-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" />
-				</div>
-				<div>
 					<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
 						class="print:hidden"
 						:disabled="wochentypen().size() <= 0"
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
-				</div>
-				<div>Klassenunterricht</div>
-				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="cols">
+				</svws-ui-input-wrapper>
+				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr"
 							:draggable="isDraggable()" @dragstart="onDrag(ku)" @dragend="onDrag(undefined)">
@@ -29,8 +25,7 @@
 						</div>
 					</template>
 				</svws-ui-data-table>
-				<div>Kursunterricht</div>
-				<svws-ui-data-table :items="stundenplanManager().kursGetMengeAsList()" :columns="cols">
+				<svws-ui-data-table :items="stundenplanManager().kursGetMengeAsList()" :columns="colsKursunterricht">
 					<template #body>
 						<div v-for="kurs in stundenplanManager().kursGetMengeAsList()" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
 							:draggable="isDraggable()" @dragstart="onDrag(kurs)" @dragend="onDrag(undefined)">
@@ -44,12 +39,9 @@
 					</template>
 				</svws-ui-data-table>
 			</div>
-			<div class="h-full w-full">
-				TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder
-				die Klassen-Unterricht hineingezogen werden können.
-				<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
-					use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
-			</div>
+			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
+			<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>
 </template>
@@ -126,9 +118,21 @@
 		set: (value : number) => _wochentyp.value = value
 	});
 
-	const cols = [
-		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
-		{ key: "wochenstunden", label: "WS", span: 1, sortable: false }
+	const colsKlassenunterricht = [
+		{ key: "bezeichnung", label: "Klassenunterricht", span: 2, sortable: false },
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false }
+	];
+
+	const colsKursunterricht = [
+		{ key: "bezeichnung", label: "Kursunterricht", span: 2, sortable: false },
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false }
 	];
 
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply grid;
+  grid-template-columns: minmax(20rem, 0.5fr) 2fr;
+}
+</style>
