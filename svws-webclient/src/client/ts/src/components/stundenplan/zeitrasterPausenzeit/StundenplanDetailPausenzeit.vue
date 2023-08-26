@@ -8,6 +8,13 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @update:model-value="patchEnde" />
 		</svws-ui-input-wrapper>
 		<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
+		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols">
+			<template #cell(id)="{ rowData }">
+				<div>
+					{{ rowData.idLehrer }}
+				</div>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
@@ -21,6 +28,10 @@
 		patchPausenzeit: (data: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 		removePausenzeiten: (multi: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	}>();
+
+	const cols = [
+		{ key: "id", label: "Aufsicht", span: 2, sortable: false },
+	];
 
 	async function patchBeginn(event: string | number) {
 		if (typeof event === 'number')
