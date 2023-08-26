@@ -14,7 +14,6 @@ import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
 import de.svws_nrw.db.schema.DBSchemaViews;
 import de.svws_nrw.db.schema.Schema;
-import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
@@ -229,38 +228,6 @@ public final class DBSchemaManager {
 
 
 	/**
-	 * Führt die manuellen SQL-Skripte zum Erstellen eines Schemas der angegebenen Schema-Revision
-	 * aus.
-	 *
-	 * @param revision   die Revision des Datenbank-Schemas
-	 *
-	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
-	 */
-	private boolean executeManualSQLOnCreate(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			final var dbms = conn.getDBDriver();
-			for (long r = 0; r <= revision; r++) {
-				final SchemaRevisionUpdateSQL msqlAll = SchemaRevisionen.get(revision).getUpdater();
-				if ((!msqlAll.runFirst(conn, logger)) && returnOnError)
-					return false;
-				for (int i = 0; i < msqlAll.size(); i++) {
-					final String script = msqlAll.getSQL(dbms, i);
-					if ((script == null) || "".equals(script))
-						continue; // should not happen
-					logger.logLn(msqlAll.getKommentar(i));
-					if ((conn.executeNativeUpdate(script) == Integer.MIN_VALUE) && (returnOnError))
-						return false;
-				}
-				if ((!msqlAll.runLast(conn, logger)) && returnOnError)
-					return false;
-			}
-			return true;
-		}
-	}
-
-
-
-	/**
 	 * Erstellt die Views für das Schemas der angegebenen Schema-Revision.
 	 *
 	 * @param revision   die Revision des Datenbank-Schemas
@@ -403,16 +370,6 @@ public final class DBSchemaManager {
 		logger.logLn("- Schreibe die Daten der Core-Types");
 		logger.modifyIndent(2);
 		success = updater.coreTypes.update(false, revision); // TODO use update(conn, false, revision)
-		logger.modifyIndent(-2);
-		if (!success) {
-			logger.logLn(strError);
-			if (returnOnError) return false;
-		}
-		logger.logLn(strOK);
-
-		logger.logLn("- Führe manuelle SQL-Befehle aus: ");
-		logger.modifyIndent(2);
-		success = executeManualSQLOnCreate(revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
