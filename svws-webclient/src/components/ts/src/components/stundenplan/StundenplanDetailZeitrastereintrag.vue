@@ -8,6 +8,7 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @update:model-value="patchEnde" />
 		</svws-ui-input-wrapper>
 		<svws-ui-button type="danger" @click="removeZeitraster([item])"> Eintrag entfernen </svws-ui-button>
+		<svws-ui-data-table :item="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" />
 	</svws-ui-content-card>
 </template>
 
@@ -17,6 +18,7 @@
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
+		wochentyp: number;
 		stundenplanManager: () => StundenplanManager;
 		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
