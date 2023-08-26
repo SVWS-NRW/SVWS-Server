@@ -65,10 +65,7 @@
 									<span class="badge badge--light badge--lg badge--short">{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}</span>
 									<template #content>{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}</template>
 								</svws-ui-tooltip>
-								<svws-ui-tooltip>
-									<span class="badge badge--light badge--lg">{{ 's/m' }}</span>
-									<template #content>{{ 'schriftlich/mündlich folgt' }}</template>
-								</svws-ui-tooltip>
+								<span class="badge badge--light badge--lg">{{ istSchriftlich(s.id) }}</span>
 								<span class="badge badge--light badge--lg">{{ s.geschlecht }}</span>
 								<div class="leading-none overflow-hidden w-5" style="margin-bottom: -0.1em;" :class="{ 'text-error': kollision(s.id).value, 'text-black': !kollision(s.id).value, }">
 									<svws-ui-tooltip v-if="kollision(s.id).value && !nichtwahl(s.id).value">
@@ -126,7 +123,7 @@
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import { Geschlecht, GostKursart, SchuelerStatus } from "@core";
+	import { GostKursart, SchuelerStatus } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -163,5 +160,11 @@
 		const anzahl = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.schuelerFilter.kurs.id);
 		return anzahl > 0 ? `+${anzahl} weitere`:''
 	})
+
+	function istSchriftlich(id: number) {
+		if (fach.value !== undefined)
+			return props.getErgebnismanager().getParent()?.schuelerGetOfFachFachwahl(id, fach.value.id).istSchriftlich ? 's':'m';
+		return '';
+	}
 
 </script>
