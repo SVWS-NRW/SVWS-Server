@@ -65,4 +65,16 @@ public class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen {
 	@Schema(description = "Nummer des Abiturfaches", example = "3")
 	public @NotNull String abiturfach = "";
 
+	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
+	@Schema(description = "Aufgabenfeld, der das Fach zugeordnet ist", example = "3")
+	public @NotNull int aufgabenfeld;
+
+	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
+	@Schema(description = "Fachgruppe, der das Fach zugeordnet ist", example = "FG_M")
+	public @NotNull String fachgruppe = "";
+
+	/** Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde */
+	@Schema(description = "RGB-Farbe des Faches im Oberstufen-Client", example = "????")
+	public @NotNull String farbeClientRGB = "";
+
 }

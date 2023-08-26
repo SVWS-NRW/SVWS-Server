@@ -80,6 +80,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 				// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 				for (final GostFach fach : jahrgangGostFaecher.get(abidaten.abiturjahr).faecher()) {
 					final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach = new SchildReportingSchuelerGOStLaufbahnplanungFachwahlen();
+
 					laufbahnplanungFach.schuelerID = schuelerID;
 
 					// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
@@ -114,6 +115,15 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 							laufbahnplanungFach.abiturfach = belegung.abiturFach.toString();
 						}
 					}
+
+					final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+					if (zulaessigesFach.daten.aufgabenfeld == null)
+						laufbahnplanungFach.aufgabenfeld = 0;
+					else
+						laufbahnplanungFach.aufgabenfeld = zulaessigesFach.daten.aufgabenfeld;
+					laufbahnplanungFach.fachgruppe = zulaessigesFach.daten.fachgruppe;
+					laufbahnplanungFach.farbeClientRGB = zulaessigesFach.getHMTLFarbeRGB().replace("rgba(", "").replace(")", "");
+
 					result.add(laufbahnplanungFach);
 				}
 			}
