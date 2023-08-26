@@ -531,20 +531,20 @@ public class LupoMDB {
 						}
 						final DTOGostSchuelerFachbelegungen lupoSFach = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID,
 								dtoFach.ID);
-						lupoSFach.EF1_Kursart = abpSFach.Kursart_E1;
-						lupoSFach.EF1_Punkte = abpSFach.Punkte_E1;
-						lupoSFach.EF2_Kursart = abpSFach.Kursart_E2;
-						lupoSFach.EF2_Punkte = abpSFach.Punkte_E2;
-						lupoSFach.Q11_Kursart = abpSFach.Kursart_Q1;
-						lupoSFach.Q11_Punkte = abpSFach.Punkte_Q1;
-						lupoSFach.Q12_Kursart = abpSFach.Kursart_Q2;
-						lupoSFach.Q12_Punkte = abpSFach.Punkte_Q2;
-						lupoSFach.Q21_Kursart = abpSFach.Kursart_Q3;
-						lupoSFach.Q21_Punkte = abpSFach.Punkte_Q3;
-						lupoSFach.Q22_Kursart = abpSFach.Kursart_Q4;
-						lupoSFach.Q22_Punkte = abpSFach.Punkte_Q4;
+						lupoSFach.EF1_Kursart = convertBlankToNull(abpSFach.Kursart_E1);
+						lupoSFach.EF1_Punkte = convertBlankToNull(abpSFach.Punkte_E1);
+						lupoSFach.EF2_Kursart = convertBlankToNull(abpSFach.Kursart_E2);
+						lupoSFach.EF2_Punkte = convertBlankToNull(abpSFach.Punkte_E2);
+						lupoSFach.Q11_Kursart = convertBlankToNull(abpSFach.Kursart_Q1);
+						lupoSFach.Q11_Punkte = convertBlankToNull(abpSFach.Punkte_Q1);
+						lupoSFach.Q12_Kursart = convertBlankToNull(abpSFach.Kursart_Q2);
+						lupoSFach.Q12_Punkte = convertBlankToNull(abpSFach.Punkte_Q2);
+						lupoSFach.Q21_Kursart = convertBlankToNull(abpSFach.Kursart_Q3);
+						lupoSFach.Q21_Punkte = convertBlankToNull(abpSFach.Punkte_Q3);
+						lupoSFach.Q22_Kursart = convertBlankToNull(abpSFach.Kursart_Q4);
+						lupoSFach.Q22_Punkte = convertBlankToNull(abpSFach.Punkte_Q4);
 						lupoSFach.AbiturFach = abpSFach.AbiturFach;
-						lupoSFach.Bemerkungen = abpSFach.Bemerkungen;
+						lupoSFach.Bemerkungen = convertBlankToNull(abpSFach.Bemerkungen);
 						lupoSFach.Markiert_Q1 = abpSFach.Markiert_Q1 != null && "J".equals(abpSFach.Markiert_Q1);
 						lupoSFach.Markiert_Q2 = abpSFach.Markiert_Q2 != null && "J".equals(abpSFach.Markiert_Q2);
 						lupoSFach.Markiert_Q3 = abpSFach.Markiert_Q3 != null && "J".equals(abpSFach.Markiert_Q3);
@@ -561,6 +561,13 @@ public class LupoMDB {
 			}
 			logger.modifyIndent(-2);
 		}
+	}
+
+
+	private String convertBlankToNull(final String input) {
+		if ((input == null) || (input.isBlank()))
+			return null;
+		return input;
 	}
 
 
