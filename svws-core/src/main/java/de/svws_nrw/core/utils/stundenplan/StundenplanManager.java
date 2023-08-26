@@ -41,6 +41,8 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public class StundenplanManager {
+    // TODO filtere Listen mit Lambda.
+	// TODO Halte die DTOs aktuell.
 
 	// Comparators
 	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {

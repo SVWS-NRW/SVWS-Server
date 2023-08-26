@@ -1411,7 +1411,21 @@ public class GostBlockungsergebnisManager {
 		return menge;
 	}
 
-	private boolean getOfSchuelerErfuelltKriterien(final long idSchueler, final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, @NotNull final String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
+	/**
+	 * Liefert TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 *
+	 * @param idSchueler        Die Datenbank-ID des Schülers.
+	 * @param idKurs            Falls >= 0, muss der Schüler in dem Kurs sein.
+	 * @param idFach            Falls >= 0, muss der Schüler das Fach haben.
+	 * @param idKursart         Falls >= 0, und idFach >= muss der Schüler auch die zugehörige Kursart haben.
+	 * @param konfliktTyp       Falls > 0 muss der Schüler "1=Kollisionen", "2=Nichtwahlen" oder "3= Kollisionen und Nichtwahlen" haben.
+	 * @param subString         Falls length() > 0 muss der Schüler den Substring im Vor- oder Nachnamen haben.
+	 * @param geschlecht        Falls != null, muss der Schüler das definierte Geschlecht haben.
+	 * @param schriftlichkeit   Falls != null, muss der Schüler das definierte {@link GostSchriftlichkeit} haben.
+	 *
+	 * @return TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 */
+	public boolean getOfSchuelerErfuelltKriterien(final long idSchueler, final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, @NotNull final String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
 
 		if ((konfliktTyp == 1) && (!getOfSchuelerHatKollision(idSchueler)))
 			return false;
@@ -1429,7 +1443,7 @@ public class GostBlockungsergebnisManager {
 			return false;
 
 		// Kurs-Filter
-		if (idKurs > 0) {
+		if (idKurs >= 0) {
 			if (!getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
 			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
@@ -1437,8 +1451,8 @@ public class GostBlockungsergebnisManager {
 				return false;
 		}
 
-		if (idFach > 0) {
-			if (idKursart > 0) {
+		if (idFach >= 0) {
+			if (idKursart >= 0) {
 				// Fach/Kursart-Filter
 				if (!getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart))
 					return false;
