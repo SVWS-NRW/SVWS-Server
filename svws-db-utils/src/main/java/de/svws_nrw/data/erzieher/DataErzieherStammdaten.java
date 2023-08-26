@@ -50,7 +50,6 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.titel = e.Titel1;
         eintrag.anrede = e.Anrede1;
 		eintrag.nachname = e.Name1;
-		eintrag.zusatzNachname = e.Erz1ZusatzNachname;
         eintrag.vorname = e.Vorname1;
 		eintrag.strassenname = e.ErzStrassenname;
 		eintrag.hausnummer = e.ErzHausNr;
@@ -75,7 +74,6 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
 		eintrag.titel = e.Titel2;
         eintrag.anrede = e.Anrede2;
 		eintrag.nachname = e.Name2;
-		eintrag.zusatzNachname = e.Erz2ZusatzNachname;
         eintrag.vorname = e.Vorname2;
 		eintrag.strassenname = e.ErzStrassenname;
 		eintrag.hausnummer = e.ErzHausNr;
@@ -188,13 +186,6 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
                                 erzieher.Name1 = tmp;
                             else
                                 erzieher.Name2 = tmp;
-                        }
-                        case "zusatzNachname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Erz1ZusatzNachname.datenlaenge());
-                            if (nr == 1)
-                                erzieher.Erz1ZusatzNachname = tmp;
-                            else
-                                erzieher.Erz2ZusatzNachname = tmp;
                         }
                         case "vorname" -> {
                             final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Vorname1.datenlaenge());

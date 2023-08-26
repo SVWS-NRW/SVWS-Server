@@ -376,6 +376,7 @@
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichten</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenaufsichtenBereiche</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeit</class>
+        <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanPausenzeitKlassenzuordnung</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanSchienen</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht</class>

@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.util.List;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
@@ -63,7 +64,9 @@ public class APISchema {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
     	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-		final long max_revision = SchemaRevisionen.maxRevision.revision;
+		final long max_revision = SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE
+		        ? SchemaRevisionen.maxRevision.revision
+		        : SchemaRevisionen.maxDeveloperRevision.revision;
 		long rev = revision;
 		if (rev < 0)
 			rev = max_revision;

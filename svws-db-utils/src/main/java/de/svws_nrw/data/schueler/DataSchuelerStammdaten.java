@@ -52,7 +52,6 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.id = schueler.ID;
 		daten.foto = "";
 		daten.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
-		daten.zusatzNachname = schueler.ZusatzNachname == null ? "" : schueler.ZusatzNachname;
 		daten.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		daten.alleVornamen = schueler.AlleVornamen == null ? "" : schueler.AlleVornamen;
 		daten.geschlecht = schueler.Geschlecht.id;
@@ -145,7 +144,6 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				conn.transactionPersist(schuelerFoto);
 			}),
 			Map.entry("nachname", (schueler, value, map) -> schueler.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Name.datenlaenge())),
-			Map.entry("zusatzNachname", (schueler, value, map) -> schueler.ZusatzNachname = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_ZusatzNachname.datenlaenge())),
 			Map.entry("vorname", (schueler, value, map) -> schueler.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_Schueler.col_Vorname.datenlaenge())),
 			Map.entry("alleVornamen", (schueler, value, map) -> schueler.AlleVornamen = JSONMapper.convertToString(value, false, true, Schema.tab_Schueler.col_Zusatz.datenlaenge())),
 			Map.entry("geschlecht", (schueler, value, map) -> {

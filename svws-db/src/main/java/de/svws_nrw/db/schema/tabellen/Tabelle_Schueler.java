@@ -688,6 +688,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ZusatzNachname */
 	public SchemaTabelleSpalte col_ZusatzNachname = add("ZusatzNachname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
+		.setVeraltet(SchemaRevisionen.REV_10)
 		.setJavaComment("Gibt ggf. den Zusatz zum Nachnamen an.");
 
 	/** Die Definition der Tabellenspalte EndeEingliederung */

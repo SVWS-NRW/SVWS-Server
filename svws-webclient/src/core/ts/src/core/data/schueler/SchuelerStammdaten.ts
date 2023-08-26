@@ -18,11 +18,6 @@ export class SchuelerStammdaten extends JavaObject {
 	public nachname : string = "";
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes.
-	 */
-	public zusatzNachname : string = "";
-
-	/**
 	 * Der Vorname des Schülerdatensatzes.
 	 */
 	public vorname : string = "";
@@ -266,9 +261,6 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.zusatzNachname === "undefined")
-			 throw new Error('invalid json format, missing attribute zusatzNachname');
-		result.zusatzNachname = obj.zusatzNachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
@@ -344,7 +336,6 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"zusatzNachname" : ' + JSON.stringify(obj.zusatzNachname!) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"alleVornamen" : ' + JSON.stringify(obj.alleVornamen!) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht + ',';
@@ -405,9 +396,6 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		}
-		if (typeof obj.zusatzNachname !== "undefined") {
-			result += '"zusatzNachname" : ' + JSON.stringify(obj.zusatzNachname!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';

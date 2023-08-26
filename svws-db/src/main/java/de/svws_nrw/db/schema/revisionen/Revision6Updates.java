@@ -6,7 +6,7 @@ import de.svws_nrw.db.schema.SchemaRevisionen;
 
 /**
  * Diese Klasse enthält die SQL-Befehle für Revisions-Updates
- * auf Revision 3.
+ * auf Revision 6.
  */
 public class Revision6Updates extends SchemaRevisionUpdateSQL {
 

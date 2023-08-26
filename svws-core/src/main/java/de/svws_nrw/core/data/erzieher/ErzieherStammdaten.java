@@ -37,10 +37,6 @@ public class ErzieherStammdaten {
 	@Schema(description = "Der Nachname des Erziehers", example = "Müller")
 	public String nachname;
 
-	/** Ggf. Zusatz zum Nachnamen des Erziehers. */
-	@Schema(description = "ggf. ein Zusatz zum Nachnamen", example = "von")
-	public String zusatzNachname;
-
 	/** Der Vorname des Erziehers. */
 	@Schema(description = "Der Vorname des Erziehers", example = "Max")
 	public String vorname;

@@ -72,7 +72,6 @@ public interface IAdressbuchKontaktRepository {
 		k.kategorien.addAll(categories);
 		k.strassenname = dtoSchueler.Strassenname;
 		k.vorname = dtoSchueler.Vorname;
-		k.zusatzNachname = dtoSchueler.ZusatzNachname;
 		k.rolle = "Schüler";
 		k.organisation = schulName;
 		return k;

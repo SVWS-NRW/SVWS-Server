@@ -28,7 +28,7 @@ public class VCardV4Test {
 			+ "REV:2014-03-01T22:11:10Z\r\n" + "END:VCARD";
 
 	private static final String MAX_MUSTERMANN_VCF = "BEGIN:VCARD\r\n" + "VERSION:4.0\r\n" + "KIND:individual\r\n"
-			+ "FN:Max Mustermann\r\n" + "N:Mustermann;Max;;;von\r\n" + "ADR:;;Musterstraße 1b;Musterstadt;;1111;\r\n"
+			+ "FN:Max Mustermann\r\n" + "N:Mustermann;Max;;;\r\n" + "ADR:;;Musterstraße 1b;Musterstadt;;1111;\r\n"
 			+ "EMAIL:mail@server.de\r\n" + "URL:maxmustermann.de\r\n" + "CATEGORIES:Klasse-9k-2018-2\r\n"
 			+ "TEL;TYPE=VOICE:+49 123 45 678\r\n" + "TEL;TYPE=FAX:+49 987 654 321\r\n"
 			+ "TEL;TYPE=CELL:+49 555 555 55555\r\n" + "UID:3fdfc8af-135c-3331-8d8b-ebed54ee74db\r\n" + "END:VCARD";
@@ -37,7 +37,7 @@ public class VCardV4Test {
 			+ "FN:Der Fullname der VCard\r\n" + "END:VCARD";
 
 	private static final String NAME_VCF = "BEGIN:VCARD\r\n" + "VERSION:4.0\r\n" + "KIND:individual\r\n"
-			+ "FN:Hnr Prfx Given Family\r\n" + "N:Family;Given;Additional1,Additional2;Hnr,Prfx;Hnr,Sfx,MBA\r\n"
+			+ "FN:Hnr Prfx Given Family\r\n" + "N:Family;Given;Additional1,Additional2;Hnr,Prfx;\r\n"
 			+ "END:VCARD";
 
 	/**
@@ -101,7 +101,6 @@ public class VCardV4Test {
 		k.telefonnummern.add(tel);
 		k.vorname = "Max";
 		k.webAdresse = "maxmustermann.de";
-		k.zusatzNachname = "von";
 		k.adressbuchId = ("Klasse-9k-2018-2");
 		k.id = ("S_123");
 		k.uri = ("https://example.com/db/gymabi/carddav/S_123");
@@ -139,9 +138,6 @@ public class VCardV4Test {
 		np.getAdditionalNames().add("Additional2");
 		np.getHonorificPrefixes().add("Hnr");
 		np.getHonorificPrefixes().add("Prfx");
-		np.getHonorificSuffixes().add("Hnr");
-		np.getHonorificSuffixes().add("Sfx");
-		np.getHonorificSuffixes().add("MBA");
 		VCard vc = new VCard(np);
 		vc.setVersion(Version.V4);
 		String serialize = vc.serialize();

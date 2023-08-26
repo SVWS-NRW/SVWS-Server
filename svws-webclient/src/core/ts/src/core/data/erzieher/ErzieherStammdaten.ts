@@ -33,11 +33,6 @@ export class ErzieherStammdaten extends JavaObject {
 	public nachname : string | null = null;
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Erziehers.
-	 */
-	public zusatzNachname : string | null = null;
-
-	/**
 	 * Der Vorname des Erziehers.
 	 */
 	public vorname : string | null = null;
@@ -109,7 +104,6 @@ export class ErzieherStammdaten extends JavaObject {
 		result.titel = typeof obj.titel === "undefined" ? null : obj.titel === null ? null : obj.titel;
 		result.anrede = typeof obj.anrede === "undefined" ? null : obj.anrede === null ? null : obj.anrede;
 		result.nachname = typeof obj.nachname === "undefined" ? null : obj.nachname === null ? null : obj.nachname;
-		result.zusatzNachname = typeof obj.zusatzNachname === "undefined" ? null : obj.zusatzNachname === null ? null : obj.zusatzNachname;
 		result.vorname = typeof obj.vorname === "undefined" ? null : obj.vorname === null ? null : obj.vorname;
 		result.strassenname = typeof obj.strassenname === "undefined" ? null : obj.strassenname === null ? null : obj.strassenname;
 		result.hausnummer = typeof obj.hausnummer === "undefined" ? null : obj.hausnummer === null ? null : obj.hausnummer;
@@ -131,7 +125,6 @@ export class ErzieherStammdaten extends JavaObject {
 		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
-		result += '"zusatzNachname" : ' + ((!obj.zusatzNachname) ? 'null' : JSON.stringify(obj.zusatzNachname)) + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
@@ -166,9 +159,6 @@ export class ErzieherStammdaten extends JavaObject {
 		}
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
-		}
-		if (typeof obj.zusatzNachname !== "undefined") {
-			result += '"zusatzNachname" : ' + ((!obj.zusatzNachname) ? 'null' : JSON.stringify(obj.zusatzNachname)) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';

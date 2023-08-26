@@ -208,6 +208,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Kalenderwochen_Zuordnu
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenaufsichten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_PausenaufsichtenBereich;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenzeit;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Raeume;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Schienen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Unterricht;
@@ -837,6 +838,9 @@ public final class Schema {
 
 	/** Tabelle_Stundenplan_Kalenderwochen_Zuordnung */
 	public static final Tabelle_Stundenplan_Kalenderwochen_Zuordnung tab_Stundenplan_Kalenderwochen_Zuordnung = add(new Tabelle_Stundenplan_Kalenderwochen_Zuordnung());
+
+    /** Tabelle Stundenplan_Pausenzeit */
+    public static final Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung tab_Stundenplan_Pausenzeit_Klassenzuordnung = add(new Tabelle_Stundenplan_Pausenzeit_Klassenzuordnung());
 
 	/** Tabelle Stundentafel */
 	public static final Tabelle_Stundentafel tab_Stundentafel = add(new Tabelle_Stundentafel());

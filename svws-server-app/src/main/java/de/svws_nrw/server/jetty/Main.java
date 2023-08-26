@@ -9,6 +9,7 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
@@ -47,6 +48,7 @@ public class Main {
 
 		// Lese Konfiguration
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
+		final boolean devMode = svwsconfig.getServerMode() != ServerMode.STABLE;
 
 		// Read all HTML, CSS and Javascript resource files from the Web-Client
 		ResourceFile.add(svwsconfig.getClientPath());
@@ -69,10 +71,10 @@ public class Main {
 						continue;
 					}
 					final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
-					if (!dbManager.updater.isUptodate(-1, false)) {
+					if (!dbManager.updater.isUptodate(-1, devMode)) {
 						logger.logLn("Revision veraltet - führe Update aus...");
 						logger.modifyIndent(2);
-						dbManager.updater.update(-1, false, true);
+						dbManager.updater.update(-1, devMode, true);
 						logger.modifyIndent(-2);
 					}
 					if (!dbManager.updater.coreTypes.isUptodate()) {

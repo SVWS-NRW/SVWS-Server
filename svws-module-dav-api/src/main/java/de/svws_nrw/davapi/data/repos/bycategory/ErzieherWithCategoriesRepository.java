@@ -212,7 +212,6 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 		k.kategorien.addAll(categories);
 		k.strassenname = dtoSchuelerErzieherAdresse.ErzStrassenname;
 		k.vorname = dtoSchuelerErzieherAdresse.Vorname1;
-		k.zusatzNachname = dtoSchuelerErzieherAdresse.Erz1ZusatzNachname;
 		k.idKind = IAdressbuchKontaktRepository.createSchuelerId(dtoSchuelerErzieherAdresse.Schueler_ID);
 		return k;
 	}

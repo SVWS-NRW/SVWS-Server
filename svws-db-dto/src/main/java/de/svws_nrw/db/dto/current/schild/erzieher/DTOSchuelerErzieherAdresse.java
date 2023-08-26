@@ -79,17 +79,13 @@ import de.svws_nrw.csv.converter.current.NationalitaetenConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.erz2staatkrz.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Erz2StaatKrz IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.erzemail2", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ErzEmail2 = :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.erzemail2.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ErzEmail2 IN :value")
-@NamedQuery(name = "DTOSchuelerErzieherAdresse.erz1zusatznachname", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Erz1ZusatzNachname = :value")
-@NamedQuery(name = "DTOSchuelerErzieherAdresse.erz1zusatznachname.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Erz1ZusatzNachname IN :value")
-@NamedQuery(name = "DTOSchuelerErzieherAdresse.erz2zusatznachname", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Erz2ZusatzNachname = :value")
-@NamedQuery(name = "DTOSchuelerErzieherAdresse.erz2zusatznachname.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Erz2ZusatzNachname IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.bemerkungen", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Bemerkungen = :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.bemerkungen.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.credentialid", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.CredentialID = :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.credentialid.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.all.migration", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Schueler_ID", "ErzieherArt_ID", "Anrede1", "Titel1", "Name1", "Vorname1", "Anrede2", "Titel2", "Name2", "Vorname2", "ErzOrt_ID", "ErzStrassenname", "ErzHausNr", "ErzOrtsteil_ID", "ErzHausNrZusatz", "ErzAnschreiben", "Sortierung", "ErzEmail", "ErzAdrZusatz", "Erz1StaatKrz", "Erz2StaatKrz", "ErzEmail2", "Erz1ZusatzNachname", "Erz2ZusatzNachname", "Bemerkungen", "CredentialID"})
+@JsonPropertyOrder({"ID", "Schueler_ID", "ErzieherArt_ID", "Anrede1", "Titel1", "Name1", "Vorname1", "Anrede2", "Titel2", "Name2", "Vorname2", "ErzOrt_ID", "ErzStrassenname", "ErzHausNr", "ErzOrtsteil_ID", "ErzHausNrZusatz", "ErzAnschreiben", "Sortierung", "ErzEmail", "ErzAdrZusatz", "Erz1StaatKrz", "Erz2StaatKrz", "ErzEmail2", "Bemerkungen", "CredentialID"})
 public final class DTOSchuelerErzieherAdresse {
 
 	/** ID des Erzieherdatensatzes */
@@ -217,16 +213,6 @@ public final class DTOSchuelerErzieherAdresse {
 	@JsonProperty
 	public String ErzEmail2;
 
-	/** Zusatznachname1 zum Erzieherdatensatz */
-	@Column(name = "Erz1ZusatzNachname")
-	@JsonProperty
-	public String Erz1ZusatzNachname;
-
-	/** Zusatznachname2 zum Erzieherdatensatz */
-	@Column(name = "Erz2ZusatzNachname")
-	@JsonProperty
-	public String Erz2ZusatzNachname;
-
 	/** Memofeld Bemerkungen zum Erzieherdatensatz */
 	@Column(name = "Bemerkungen")
 	@JsonProperty
@@ -283,7 +269,7 @@ public final class DTOSchuelerErzieherAdresse {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchuelerErzieherAdresse(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", ErzieherArt_ID=" + this.ErzieherArt_ID + ", Anrede1=" + this.Anrede1 + ", Titel1=" + this.Titel1 + ", Name1=" + this.Name1 + ", Vorname1=" + this.Vorname1 + ", Anrede2=" + this.Anrede2 + ", Titel2=" + this.Titel2 + ", Name2=" + this.Name2 + ", Vorname2=" + this.Vorname2 + ", ErzOrt_ID=" + this.ErzOrt_ID + ", ErzStrassenname=" + this.ErzStrassenname + ", ErzHausNr=" + this.ErzHausNr + ", ErzOrtsteil_ID=" + this.ErzOrtsteil_ID + ", ErzHausNrZusatz=" + this.ErzHausNrZusatz + ", ErzAnschreiben=" + this.ErzAnschreiben + ", Sortierung=" + this.Sortierung + ", ErzEmail=" + this.ErzEmail + ", ErzAdrZusatz=" + this.ErzAdrZusatz + ", Erz1StaatKrz=" + this.Erz1StaatKrz + ", Erz2StaatKrz=" + this.Erz2StaatKrz + ", ErzEmail2=" + this.ErzEmail2 + ", Erz1ZusatzNachname=" + this.Erz1ZusatzNachname + ", Erz2ZusatzNachname=" + this.Erz2ZusatzNachname + ", Bemerkungen=" + this.Bemerkungen + ", CredentialID=" + this.CredentialID + ")";
+		return "DTOSchuelerErzieherAdresse(ID=" + this.ID + ", Schueler_ID=" + this.Schueler_ID + ", ErzieherArt_ID=" + this.ErzieherArt_ID + ", Anrede1=" + this.Anrede1 + ", Titel1=" + this.Titel1 + ", Name1=" + this.Name1 + ", Vorname1=" + this.Vorname1 + ", Anrede2=" + this.Anrede2 + ", Titel2=" + this.Titel2 + ", Name2=" + this.Name2 + ", Vorname2=" + this.Vorname2 + ", ErzOrt_ID=" + this.ErzOrt_ID + ", ErzStrassenname=" + this.ErzStrassenname + ", ErzHausNr=" + this.ErzHausNr + ", ErzOrtsteil_ID=" + this.ErzOrtsteil_ID + ", ErzHausNrZusatz=" + this.ErzHausNrZusatz + ", ErzAnschreiben=" + this.ErzAnschreiben + ", Sortierung=" + this.Sortierung + ", ErzEmail=" + this.ErzEmail + ", ErzAdrZusatz=" + this.ErzAdrZusatz + ", Erz1StaatKrz=" + this.Erz1StaatKrz + ", Erz2StaatKrz=" + this.Erz2StaatKrz + ", ErzEmail2=" + this.ErzEmail2 + ", Bemerkungen=" + this.Bemerkungen + ", CredentialID=" + this.CredentialID + ")";
 	}
 
 }

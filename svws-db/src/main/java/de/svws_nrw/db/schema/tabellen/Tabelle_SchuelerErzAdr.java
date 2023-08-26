@@ -134,10 +134,12 @@ public class Tabelle_SchuelerErzAdr extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Erz1ZusatzNachname */
 	public SchemaTabelleSpalte col_Erz1ZusatzNachname = add("Erz1ZusatzNachname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
-		.setJavaComment("Zusatznachname1 zum Erzieherdatensatz");
+		.setVeraltet(SchemaRevisionen.REV_10)
+	    .setJavaComment("Zusatznachname1 zum Erzieherdatensatz");
 
 	/** Die Definition der Tabellenspalte Erz2ZusatzNachname */
 	public SchemaTabelleSpalte col_Erz2ZusatzNachname = add("Erz2ZusatzNachname", SchemaDatentypen.VARCHAR, false).setDatenlaenge(30)
+	    .setVeraltet(SchemaRevisionen.REV_10)
 		.setJavaComment("Zusatznachname2 zum Erzieherdatensatz");
 
 	/** Die Definition der Tabellenspalte Bemerkungen */

@@ -105,9 +105,6 @@ public class VCard {
 
 		np.setFamilyName(kontakt.nachname);
 		np.setGivenName(kontakt.vorname);
-		if (kontakt.zusatzNachname != null) {
-			np.getHonorificSuffixes().add(kontakt.zusatzNachname);
-		}
 		addProperty(np);
 		this.fnProperty = np.toFullnameProperty();
 		if (kontakt.organisation != null) {

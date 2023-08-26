@@ -23,10 +23,6 @@ public class AdressbuchKontakt extends AdressbuchEintrag {
 	@Schema(description = "der Nachname", example = "Mustermann")
 	public @NotNull String nachname = "";
 
-	/** Ggf. Zusatz zum Nachnamen des Schülerdatensatzes. */
-	@Schema(description = "ggf. ein Zusatz zum Nachnamen", example = "von")
-	public @NotNull String zusatzNachname = "";
-
 	/** Der Vorname des Schülerdatensatzes. */
 	@Schema(description = "der Vorname", example = "Max")
 	public @NotNull String vorname = "";

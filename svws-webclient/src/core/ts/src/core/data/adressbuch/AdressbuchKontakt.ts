@@ -11,11 +11,6 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public nachname : string = "";
 
 	/**
-	 * Ggf. Zusatz zum Nachnamen des Schülerdatensatzes.
-	 */
-	public zusatzNachname : string = "";
-
-	/**
 	 * Der Vorname des Schülerdatensatzes.
 	 */
 	public vorname : string = "";
@@ -100,9 +95,6 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
-		if (typeof obj.zusatzNachname === "undefined")
-			 throw new Error('invalid json format, missing attribute zusatzNachname');
-		result.zusatzNachname = obj.zusatzNachname;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
@@ -133,7 +125,6 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public static transpilerToJSON(obj : AdressbuchKontakt) : string {
 		let result = '{';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"zusatzNachname" : ' + JSON.stringify(obj.zusatzNachname!) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
@@ -179,9 +170,6 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 		let result = '{';
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		}
-		if (typeof obj.zusatzNachname !== "undefined") {
-			result += '"zusatzNachname" : ' + JSON.stringify(obj.zusatzNachname!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
