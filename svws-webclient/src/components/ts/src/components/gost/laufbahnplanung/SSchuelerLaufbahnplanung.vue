@@ -43,16 +43,33 @@
 	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== undefined);
 
 	async function switchModus() {
-		switch (props.modus) {
-			case 'normal':
-				await props.setModus('hochschreiben');
-				break;
-			case 'hochschreiben':
-				await props.setModus('manuell');
-				break;
-			case 'manuell':
-				await props.setModus('normal');
-				break;
+		// wenn EF1 und EF2 bereits festgelegt sind, macht der Hochschreibemodus
+		// keinen Sinn mehr und wird deaktiviert.
+		const festgelegt = props.gostJahrgangsdaten.istBlockungFestgelegt
+		if (festgelegt[0] && festgelegt[1]) {
+			switch (props.modus) {
+				case 'normal':
+					await props.setModus('manuell');
+					break;
+				case 'manuell':
+					await props.setModus('normal');
+					break;
+				case 'hochschreiben':
+					await props.setModus('normal');
+					break;
+			}
+		} else {
+			switch (props.modus) {
+				case 'normal':
+					await props.setModus('hochschreiben');
+					break;
+				case 'hochschreiben':
+					await props.setModus('manuell');
+					break;
+				case 'manuell':
+					await props.setModus('normal');
+					break;
+			}
 		}
 	}
 
