@@ -11,7 +11,7 @@
 		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols">
 			<template #cell(id)="{ rowData }">
 				<div>
-					{{ rowData.idLehrer }}
+					{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 				</div>
 			</template>
 		</svws-ui-data-table>
