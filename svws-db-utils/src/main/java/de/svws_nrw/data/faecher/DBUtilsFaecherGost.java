@@ -135,23 +135,7 @@ public final class DBUtilsFaecherGost {
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe
 	 */
 	public static @NotNull GostFaecherManager getFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
-		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
-			return new GostFaecherManager();
-    	final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-    	if (faecher == null)
-    		throw OperationError.NOT_FOUND.exception();
-		if ((abiJahrgang == null) || (abiJahrgang == -1)) {
-	    	return new GostFaecherManager(faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
-	    		.map(fach -> mapFromDTOFach(fach, faecher)).filter(Objects::nonNull).toList()
-	    	);
-		}
-
-		final Map<Long, DTOGostJahrgangFaecher> jahrgangfaecher = conn.queryNamed("DTOGostJahrgangFaecher.abi_jahrgang", abiJahrgang, DTOGostJahrgangFaecher.class)
-				.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
-		final List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
-	    		.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
-    	return new GostFaecherManager(tmpFaecher);
+		return getListeGOStFaecher(conn, abiJahrgang, false);
     }
 
 	/**
@@ -162,7 +146,20 @@ public final class DBUtilsFaecherGost {
 	 *
 	 * @return die Liste aller Fächer der gymnasialen Oberstufe die in mindestens einem Halbjahr des Abiturjahrgangs wählbar sind.
 	 */
-	public static @NotNull GostFaecherManager getWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
+	public static @NotNull GostFaecherManager getNurWaehlbareFaecherListeGost(final DBEntityManager conn, final Integer abiJahrgang) {
+		return getListeGOStFaecher(conn, abiJahrgang, true);
+	}
+
+	/**
+	 * Ermittelt die Liste aller Fächer der gymnasialen Oberstufe, je nach Parameter alle oder nur die in mindestens einem Halbjahr anwählbaren Fächer.
+	 *
+	 * @param conn          		die Datenbank-Verbindung
+	 * @param abiJahrgang   		der Abiturjahrgang, für den die Liste erstellt werden soll
+	 * @param nurWaehlbareFaecher   legt fest, ob nur Fächer zurückgegeben werden, die in mindestens einem Halbjahr angewählt werden können.
+	 *
+	 * @return die Liste aller Fächer der gymnasialen Oberstufe
+	 */
+	private static @NotNull GostFaecherManager getListeGOStFaecher(final DBEntityManager conn, final Integer abiJahrgang, final boolean nurWaehlbareFaecher) {
 		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 		if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
 			return new GostFaecherManager();
@@ -179,7 +176,13 @@ public final class DBUtilsFaecherGost {
 			.stream().collect(Collectors.toMap(f -> f.Fach_ID, f -> f));
 		final List<GostFach> tmpFaecher = faecher.values().stream().filter(fach -> fach.IstOberstufenFach)
 			.map(fach -> mapFromDTOGostJahrgangFaecher(fach.ID, jahrgangfaecher.get(fach.ID), faecher)).filter(Objects::nonNull).toList();
-		return new GostFaecherManager(tmpFaecher.stream().filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22)).toList());
+		if (nurWaehlbareFaecher)
+			return new GostFaecherManager(tmpFaecher.stream().filter(f -> (f.istMoeglichEF1 || f.istMoeglichEF2 || f.istMoeglichQ11 || f.istMoeglichQ12 || f.istMoeglichQ21 || f.istMoeglichQ22)).toList());
+		else
+			return new GostFaecherManager(tmpFaecher);
 	}
+
+
+
 
 }

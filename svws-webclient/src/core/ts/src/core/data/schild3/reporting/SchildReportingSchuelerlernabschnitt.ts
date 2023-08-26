@@ -1,4 +1,4 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
@@ -83,7 +83,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.SchildReportingSchuelerlernabschnitt'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerlernabschnitt'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerlernabschnitt {
@@ -211,6 +211,6 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_SchildReportingSchuelerlernabschnitt(obj : unknown) : SchildReportingSchuelerlernabschnitt {
+export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerlernabschnitt(obj : unknown) : SchildReportingSchuelerlernabschnitt {
 	return obj as SchildReportingSchuelerlernabschnitt;
 }

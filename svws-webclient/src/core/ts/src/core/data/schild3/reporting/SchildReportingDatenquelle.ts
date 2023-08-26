@@ -1,7 +1,7 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchildReportingDatenquelleAttribut } from '../../../core/data/schild3/SchildReportingDatenquelleAttribut';
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { JavaObject } from '../../../../java/lang/JavaObject';
+import { SchildReportingDatenquelleAttribut } from '../../../../core/data/schild3/reporting/SchildReportingDatenquelleAttribut';
+import { ArrayList } from '../../../../java/util/ArrayList';
+import type { List } from '../../../../java/util/List';
 
 export class SchildReportingDatenquelle extends JavaObject {
 
@@ -51,7 +51,7 @@ export class SchildReportingDatenquelle extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.SchildReportingDatenquelle'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingDatenquelle {
@@ -148,6 +148,6 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_SchildReportingDatenquelle(obj : unknown) : SchildReportingDatenquelle {
+export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingDatenquelle(obj : unknown) : SchildReportingDatenquelle {
 	return obj as SchildReportingDatenquelle;
 }

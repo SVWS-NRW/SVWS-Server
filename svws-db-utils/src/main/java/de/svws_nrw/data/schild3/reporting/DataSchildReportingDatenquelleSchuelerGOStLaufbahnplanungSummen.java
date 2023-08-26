@@ -9,7 +9,7 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungSummen;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungSummen;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;

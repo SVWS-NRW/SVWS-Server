@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.schild3;
+package de.svws_nrw.core.data.schild3.reporting;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;

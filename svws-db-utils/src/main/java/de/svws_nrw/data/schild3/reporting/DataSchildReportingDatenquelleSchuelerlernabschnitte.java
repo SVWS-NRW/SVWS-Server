@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerlernabschnitt;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerlernabschnitt;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;

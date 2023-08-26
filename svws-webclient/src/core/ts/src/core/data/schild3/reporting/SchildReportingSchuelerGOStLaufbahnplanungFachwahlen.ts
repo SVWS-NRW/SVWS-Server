@@ -1,4 +1,4 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaObject {
 
@@ -67,13 +67,28 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaOb
 	 */
 	public abiturfach : string = "";
 
+	/**
+	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
+	 */
+	public aufgabenfeld : number = 0;
+
+	/**
+	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
+	 */
+	public fachgruppe : string = "";
+
+	/**
+	 * Abiturfacheintrag, sofern das belegte Fach als Abiturfach gewählt wurde
+	 */
+	public farbeClientRGB : string = "";
+
 
 	public constructor() {
 		super();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerGOStLaufbahnplanungFachwahlen {
@@ -116,6 +131,15 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaOb
 		if (typeof obj.abiturfach === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturfach');
 		result.abiturfach = obj.abiturfach;
+		if (typeof obj.aufgabenfeld === "undefined")
+			 throw new Error('invalid json format, missing attribute aufgabenfeld');
+		result.aufgabenfeld = obj.aufgabenfeld;
+		if (typeof obj.fachgruppe === "undefined")
+			 throw new Error('invalid json format, missing attribute fachgruppe');
+		result.fachgruppe = obj.fachgruppe;
+		if (typeof obj.farbeClientRGB === "undefined")
+			 throw new Error('invalid json format, missing attribute farbeClientRGB');
+		result.farbeClientRGB = obj.farbeClientRGB;
 		return result;
 	}
 
@@ -134,6 +158,9 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaOb
 		result += '"belegungQ21" : ' + JSON.stringify(obj.belegungQ21!) + ',';
 		result += '"belegungQ22" : ' + JSON.stringify(obj.belegungQ22!) + ',';
 		result += '"abiturfach" : ' + JSON.stringify(obj.abiturfach!) + ',';
+		result += '"aufgabenfeld" : ' + obj.aufgabenfeld + ',';
+		result += '"fachgruppe" : ' + JSON.stringify(obj.fachgruppe!) + ',';
+		result += '"farbeClientRGB" : ' + JSON.stringify(obj.farbeClientRGB!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -180,6 +207,15 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaOb
 		if (typeof obj.abiturfach !== "undefined") {
 			result += '"abiturfach" : ' + JSON.stringify(obj.abiturfach!) + ',';
 		}
+		if (typeof obj.aufgabenfeld !== "undefined") {
+			result += '"aufgabenfeld" : ' + obj.aufgabenfeld + ',';
+		}
+		if (typeof obj.fachgruppe !== "undefined") {
+			result += '"fachgruppe" : ' + JSON.stringify(obj.fachgruppe!) + ',';
+		}
+		if (typeof obj.farbeClientRGB !== "undefined") {
+			result += '"farbeClientRGB" : ' + JSON.stringify(obj.farbeClientRGB!) + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -187,6 +223,6 @@ export class SchildReportingSchuelerGOStLaufbahnplanungFachwahlen extends JavaOb
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_SchildReportingSchuelerGOStLaufbahnplanungFachwahlen(obj : unknown) : SchildReportingSchuelerGOStLaufbahnplanungFachwahlen {
+export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerGOStLaufbahnplanungFachwahlen(obj : unknown) : SchildReportingSchuelerGOStLaufbahnplanungFachwahlen {
 	return obj as SchildReportingSchuelerGOStLaufbahnplanungFachwahlen;
 }

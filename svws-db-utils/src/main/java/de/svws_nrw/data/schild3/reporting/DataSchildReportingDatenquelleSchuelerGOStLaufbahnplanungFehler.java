@@ -12,7 +12,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungFehler;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFehler;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;

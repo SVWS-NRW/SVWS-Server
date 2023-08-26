@@ -1,7 +1,7 @@
 package de.svws_nrw.data.schild3.reporting;
 
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungGrunddaten;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungGrunddaten;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.db.DBEntityManager;

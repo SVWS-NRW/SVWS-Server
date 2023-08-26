@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 import de.svws_nrw.base.annotations.SchildReportingDate;
 import de.svws_nrw.base.annotations.SchildReportingMemo;
-import de.svws_nrw.core.data.schild3.SchildReportingDatenquelle;
-import de.svws_nrw.core.data.schild3.SchildReportingDatenquelleAttribut;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;

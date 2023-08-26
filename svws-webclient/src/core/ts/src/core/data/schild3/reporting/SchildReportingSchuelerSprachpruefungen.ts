@@ -1,4 +1,4 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaObject } from '../../../../java/lang/JavaObject';
 
 export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 
@@ -78,7 +78,7 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.SchildReportingSchuelerSprachpruefungen'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerSprachpruefungen {
@@ -201,6 +201,6 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_SchildReportingSchuelerSprachpruefungen(obj : unknown) : SchildReportingSchuelerSprachpruefungen {
+export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerSprachpruefungen(obj : unknown) : SchildReportingSchuelerSprachpruefungen {
 	return obj as SchildReportingSchuelerSprachpruefungen;
 }

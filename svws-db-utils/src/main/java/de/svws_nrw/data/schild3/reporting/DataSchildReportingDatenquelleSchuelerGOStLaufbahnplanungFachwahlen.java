@@ -4,7 +4,7 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -67,7 +67,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 
 				// Ergänze die Map Abiturjahr → GostFaecher des Abiturjahrgangs, wenn die Fächer des Abiturjahrgangs noch nicht enthalten sind.
 				if (!jahrgangGostFaecher.containsKey(abidaten.abiturjahr)) {
-					jahrgangGostFaecher.put(abidaten.abiturjahr, DBUtilsFaecherGost.getWaehlbareFaecherListeGost(conn, abidaten.abiturjahr));
+					jahrgangGostFaecher.put(abidaten.abiturjahr, DBUtilsFaecherGost.getNurWaehlbareFaecherListeGost(conn, abidaten.abiturjahr));
 				}
 
 				// Erzeuge eine Map Fach-ID → AbiturFachbelegung aus den AbiturDaten

@@ -1,6 +1,6 @@
 package de.svws_nrw.data.schild3.reporting;
 
-import de.svws_nrw.core.data.schild3.SchildReportingSchuelerSprachpruefungen;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
