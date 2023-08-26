@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-drop-data @drop="setKlausurToRaum" :drop-allowed="false" class="border">
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="border">
 		<svws-ui-content-card title="Kausurraum">
 			<template #actions>
 				<svws-ui-button type="danger" size="small" @click="loescheKlausurraum(raum.id, raummanager)"><i-ri-delete-bin-line /></svws-ui-button>
@@ -19,6 +19,9 @@
 					<div v-if="klausurenImRaum.size() === 0">Keine Klausuren im Raum</div>
 					<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
 						:klausur="klausur"
+						:draggable="true"
+						@dragstart="onDrag(klausur)"
+						@dragend="onDrag(undefined)"
 						:termin="kursklausurmanager().getKlausurterminById(raum.idTermin)"
 						:kursklausurmanager="kursklausurmanager"
 						:kursmanager="kursmanager"
@@ -27,13 +30,14 @@
 				</table>
 			</svws-ui-content-card>
 		</svws-ui-content-card>
-	</svws-ui-drop-data>
+	</div>
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List, GostFaecherManager, GostKursklausurManager, KursManager, LehrerListeEintrag } from '@core';
+	import { type StundenplanRaum, type StundenplanManager, type GostKlausurraumManager, type GostKursklausur, type GostKlausurenCollectionSkrsKrs, type GostSchuelerklausur, type List, type GostFaecherManager, type GostKursklausurManager, type KursManager, type LehrerListeEintrag, StundenplanKlassenunterricht, StundenplanKurs } from '@core';
 	import type { GostKlausurraum } from '@core';
 	import { computed, ref } from 'vue';
+	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone } from './SGostKlausurplanungRaumzeitProps';
 
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
@@ -45,18 +49,14 @@
 		raummanager: GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
-		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
+		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<boolean>;
+		dragData: () => GostKlausurplanungRaumzeitDragData;
+		onDrag: (data: GostKlausurplanungRaumzeitDragData) => void;
+		onDrop: (zone: GostKlausurplanungRaumzeitDropZone) => void;
 	}>();
-
-	const setKlausurToRaum = async (klausur : GostKursklausur) => {
-		const collectionSkrsKrs = await props.setzeRaumZuSchuelerklausuren(props.raum, props.raummanager.getSchuelerklausurenByKursklausur(klausur.id), props.raummanager);
-	};
 
 	const klausurenImRaum = computed(() => props.raummanager.getKursklausurenInRaum(props.raum.id, props.kursklausurmanager()));
 	const anzahlSuS = computed(() => props.raummanager.getSchuelerklausurenInRaum(props.raum.id, props.kursklausurmanager()).size());
-
-	const getStundenplanraum = () => props.raum.idStundenplanRaum !== null ? props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum) : null;
 
 	const stundenplanRaumSelected = computed({
 		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),
@@ -64,5 +64,16 @@
 			props.raum.idStundenplanRaum = value === undefined ? null : value.id;
 		}
 	});
+
+	function isDropZone() : boolean {
+		if ((props.dragData() === undefined) || (props.dragData() instanceof StundenplanKurs) || (props.dragData() instanceof StundenplanKlassenunterricht))
+			return false;
+		return true;
+	}
+
+	function checkDropZone(event: DragEvent) {
+		if (isDropZone())
+			event.preventDefault();
+	}
 
 </script>

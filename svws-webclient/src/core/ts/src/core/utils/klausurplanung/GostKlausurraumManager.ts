@@ -77,7 +77,7 @@ export class GostKlausurraumManager extends JavaObject {
 	private readonly _schuelerklausuren : List<GostSchuelerklausur> = new ArrayList();
 
 	/**
-	 * Eine Map Schülerklausur-Id -> GostSchuelerklausuren
+	 * Eine Map Schülerklausur-Id -> GostSchuelerklausur
 	 */
 	private readonly _mapIdSchuelerklausur : JavaMap<number, GostSchuelerklausur> = new HashMap();
 
@@ -424,6 +424,21 @@ export class GostKlausurraumManager extends JavaObject {
 			if (!this._mapIdstundenplanraumRaum.containsKey(raum.id))
 				raeume.add(raum);
 		return raeume;
+	}
+
+	/**
+	 * Prüft, ob alle zu einer Kursklausur gehörenden Schülerklausuren einem Raum zugeordnet sind.
+	 *
+	 * @param kk die zu prüfende Kursklausur
+	 *
+	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
+	 */
+	public alleSchuelerklausurenVerplant(kk : GostKursklausur) : boolean {
+		for (let sk of DeveloperNotificationException.ifMapGetIsNull(this._mapKkidSk, kk.id)) {
+			if (!this._mapidRsSkrsRevert.containsKey(sk.idSchuelerklausur))
+				return false;
+		}
+		return true;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

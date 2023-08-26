@@ -90,6 +90,41 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
 	 * @param conn x
+	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
+	 *
+	 * @return die Antwort
+	 */
+	public static Response loescheRaumZuSchuelerklausuren(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
+		try {
+			conn.transactionBegin();
+
+			final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
+
+			final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> stundenAlt = conn.queryList(
+					"SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IN ?1",
+					DTOGostKlausurenSchuelerklausurenRaeumeStunden.class, idsSchuelerklausuren);
+			conn.transactionRemoveAll(stundenAlt);
+			conn.transactionFlush();
+			result.raumstundenGeloescht = removeRaumStundenInDb(conn);
+
+
+			if (!conn.transactionCommit())
+				throw OperationError.CONFLICT.exception("Datenbankfehler beim Persistieren der Gost-Klausurraumstunden");
+
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+//	} catch (final Exception e) {
+//		if (e instanceof final WebApplicationException webApplicationException)
+//			return webApplicationException.getResponse();
+//		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			conn.transactionRollback();
+		}
+	}
+
+	/**
+	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
+	 *
+	 * @param conn x
 	 * @param _idRaum              die ID des Klausurraums
 	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
 	 * @param idAbschnitt          die ID des Schuljahresabschnitts
@@ -113,7 +148,6 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		} finally {
 			conn.transactionRollback();
 		}
-
 	}
 
 	/**

@@ -17,16 +17,6 @@
 		</table>
 	</svws-ui-content-card>
 
-	<svws-ui-content-card title="Klausuren ohne Raum" v-if="klausurenOhneRaum.size() > 0">
-		<table>
-			<s-gost-klausurplanung-klausur v-for="klausur of klausurenOhneRaum" :key="klausur.id"
-				:klausur="klausur"
-				:termin="termin"
-				:kursklausurmanager="kursklausurmanager"
-				:kursmanager="kursmanager"
-				:map-lehrer="mapLehrer" />
-		</table>
-	</svws-ui-content-card>
 	<svws-ui-content-card class="f-full" title="Klausurräume">
 		<template #actions>
 			<svws-ui-button size="small" type="secondary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
@@ -39,20 +29,22 @@
 				:raummanager="(raummanager as GostKlausurraumManager)"
 				:patch-klausurraum="patchKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
-				:setze-raum-zu-schuelerklausuren="setzeRaumZuSchuelerklausuren"
 				:patch-klausur-uhrzeit="patchKlausurUhrzeit"
 				:faecher-manager="faecherManager"
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
-				:map-lehrer="mapLehrer" />
+				:map-lehrer="mapLehrer"
+				:drag-data="() => dragData"
+				:on-drag="onDrag"
+				:on-drop="onDrop" />
 		</div>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
-	import type { GostJahrgangsdaten, GostKursklausurManager, GostFaecherManager, StundenplanRaum, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List } from '@core';
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List } from '@core';
 	import { GostKlausurraum } from '@core';
-	import { computed, ref } from 'vue';
+	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone } from './SGostKlausurplanungRaumzeitProps';
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
@@ -65,11 +57,12 @@
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		setzeRaumZuSchuelerklausuren: (raum: GostKlausurraum, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager) => Promise<GostKlausurenCollectionSkrsKrs>;
-		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
-	}>();
+		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<boolean>;
+		dragData: () => GostKlausurplanungRaumzeitDragData;
+		onDrag: (data: GostKlausurplanungRaumzeitDragData) => void;
+		onDrop: (zone: GostKlausurplanungRaumzeitDropZone) => void;
 
-	const klausurenOhneRaum = computed(() => props.raummanager.getKursklausurenInRaum(-1, props.kursklausurmanager()));
+	}>();
 
 	const erzeugeNeuenRaum = async () => {
 		let nR = new GostKlausurraum();

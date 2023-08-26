@@ -60,7 +60,7 @@ public class GostKlausurraumManager {
 	/** Die Schuelerklausuren, die im Manager vorhanden sind */
 	private final @NotNull List<@NotNull GostSchuelerklausur> _schuelerklausuren = new ArrayList<>();
 
-	/** Eine Map Schülerklausur-Id -> GostSchuelerklausuren */
+	/** Eine Map Schülerklausur-Id -> GostSchuelerklausur */
 	private final @NotNull Map<@NotNull Long, @NotNull GostSchuelerklausur> _mapIdSchuelerklausur = new HashMap<>();
 
 	/** Eine Map Kursklausur-Id -> Liste von GostSchuelerklausuren */
@@ -397,6 +397,21 @@ public class GostKlausurraumManager {
 			if (!_mapIdstundenplanraumRaum.containsKey(raum.id))
 				raeume.add(raum);
 		return raeume;
+	}
+
+	/**
+	 * Prüft, ob alle zu einer Kursklausur gehörenden Schülerklausuren einem Raum zugeordnet sind.
+	 *
+	 * @param kk die zu prüfende Kursklausur
+	 *
+	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
+	 */
+	public boolean alleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
+		for (@NotNull GostSchuelerklausur sk : DeveloperNotificationException.ifMapGetIsNull(_mapKkidSk, kk.id)) {
+			if (!_mapidRsSkrsRevert.containsKey(sk.idSchuelerklausur))
+				return false;
+		}
+		return true;
 	}
 
 }
