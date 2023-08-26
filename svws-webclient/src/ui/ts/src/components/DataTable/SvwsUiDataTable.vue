@@ -441,10 +441,6 @@
 			}
 		}
 
-		&__id {
-			@apply font-mono;
-		}
-
 		&__align-left {
 			.data-table__th-wrapper__sortable {
 				@apply -ml-1;

@@ -13,7 +13,7 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<unknown, Rou
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.zeitrasterpausenzeit", "zeitrasterpausenzeit", SStundenplanZeitrasterPausenzeit);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Zeitraster/Pausenzeit";
+		super.text = "Zeitraster";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {

@@ -1,20 +1,18 @@
 <template>
-	<div class="svws-ui-stundenplan">
-		<div class="flex justify-end gap-2 mb-2">
-			<svws-ui-button size="small" type="secondary" @click="addStunde">{{ manager().zeitrasterGetStundeMax() + 1 }}. Stunde hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
-			<svws-ui-button size="small" type="secondary" @click="addWochentag">{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + 1) }} hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
-		</div>
+	<div class="svws-ui-stundenplan svws-ui-stundenplan--mode-planung" :class="`${showZeitachse ? 'svws-hat-zeitachse' : 'svws-ohne-zeitachse'}`">
 		<div class="svws-ui-stundenplan--head">
-			<div class="inline-flex gap-1 items-center pl-2">
-				{{ }}
-			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="font-bold text-center inline-flex items-center w-full justify-center cursor-pointer" :class="{'bg-slate-400': toRaw(selected)===wochentag}">
-				<div> {{ wochentag.beschreibung }}</div>
+			<i-ri-time-line class="svws-time-icon print:hidden" v-if="showZeitachse" />
+			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
+			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start opacity-50 text-sm font-bold pb-0.5" />
+			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': toRaw(selected)===wochentag}">
+				<span class="px-2 py-1 rounded"> {{ wochentag.beschreibung }}</span>
 			</div>
 		</div>
+		<!-- Die Daten des Stundenplans -->
 		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
-			<div class="svws-ui-stundenplan--zeitraster svws-einheiten">
-				<i-ri-time-line class="svws-time-icon" />
+			<!-- Die Zeitachse des Stundenplans auf der linken Seite -->
+			<div class="svws-ui-stundenplan--zeitraster svws-zeitachse" v-if="showZeitachse">
 				<template v-for="n in zeitrasterRows" :key="n">
 					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
 						<template v-if="n % 4 === 2">
@@ -24,7 +22,8 @@
 				</template>
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
-				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'bg-slate-400': toRaw(selected)===stunde}">
+				<!-- Die Zeitraster-Einträge -->
+				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde svws-label text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'svws-selected-stunde': toRaw(selected)===stunde}">
 					<div class="text-headline-sm">
 						{{ stunde }}.&nbsp;Stunde
 					</div>
@@ -32,29 +31,47 @@
 						{{ zeiten.replace(' Uhr', '') }}
 					</div>
 				</div>
+				<!-- Die Pausenzeiten -->
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(undefined, pause)" :class="{'bg-slate-400': toRaw(selected)===pause}">
+					<div class="svws-ui-stundenplan--pause text-sm text-center justify-center svws-no-hover" :style="posPause(undefined, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
 						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
 					</div>
 				</template>
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'bg-slate-400': selected===wochentag}">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': toRaw(selected)===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
-					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'bg-slate-400': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
-						{{ zeitrasterEintrag.unterrichtstunde }}
-						<div class="flex justify-between">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
+						<div class="svws-ui-stundenplan--unterricht">
+							<span>{{ zeitrasterEintrag.unterrichtstunde }}</span>
 							<div class="flex content-start">
-								{{ manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id) }} - {{ manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id) }}
+								{{ manager().zeitrasterGetByIdStringOfUhrzeitBeginn(zeitrasterEintrag.id) }}–{{ manager().zeitrasterGetByIdStringOfUhrzeitEnde(zeitrasterEintrag.id) }}
 							</div>
 						</div>
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'bg-slate-400': selected===pause}" />
+					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
+						<div v-if="toRaw(selected)===pause" class="svws-ui-stundenplan--pausen-aufsicht">
+							<i-ri-cup-line />
+						</div>
+					</div>
 				</template>
 			</div>
 		</div>
 	</div>
+	<aside>
+		<div class="sticky top-8 flex flex-col gap-5">
+			<div class="flex gap-1 flex-wrap mb-5">
+				<svws-ui-button type="secondary" @click="addStunde">
+					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ manager().zeitrasterGetStundeMax() + 1 }}. Stunde
+				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="addWochentag" :disabled="wochentagRange.length > 7">
+					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + 1) }}
+				</svws-ui-button>
+			</div>
+			<slot />
+		</div>
+	</aside>
 </template>
 <script setup lang="ts">
 	import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster} from "@core";
@@ -68,6 +85,8 @@
 		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 	}>();
 
+	const showZeitachse = true;
+
 	const emit = defineEmits<{
 		'selected:updated': [item: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined];
 	}>();
@@ -75,11 +94,13 @@
 	const selected = ref<Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined>();
 
 	function updateSelected(event: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit) {
-		if (event === toRaw(selected.value))
+		if (event === toRaw(selected.value)) {
 			selected.value = undefined;
-		else
+			emit('selected:updated', undefined);
+		} else {
 			selected.value = event;
-		emit('selected:updated', event);
+			emit('selected:updated', event);
+		}
 	}
 
 	const beginn = computed(() => {
@@ -163,125 +184,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-.svws-ui-stundenplan {
-  @apply flex flex-col h-full min-w-max flex-grow select-none;
-  --zeitrasterRows: 0;
-}
-
-.svws-ui-stundenplan--head,
-.svws-ui-stundenplan--body {
-  @apply grid grid-flow-col;
-  grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
-}
-
-.svws-ui-stundenplan--head {
-  @apply bg-white dark:bg-black py-1 text-button;
-  @apply h-[2.75rem] sticky -top-px z-10;
-  @apply border border-black/25 dark:border-white/10;
-}
-
-.svws-ui-stundenplan--body {
-  @apply flex-grow border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
-}
-
-.svws-ui-stundenplan--zeitraster {
-  @apply grid grid-cols-1;
-  grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
-
-	&.svws-einheiten {
-		@apply print:hidden absolute h-full w-4 -ml-4 border-b border-r border-transparent;
-
-    .svws-time-icon {
-      @apply absolute -top-7 right-0 w-3.5 h-3.5 opacity-50;
-    }
-	}
-}
-
-.svws-ui-stundenplan--stunde,
-.svws-ui-stundenplan--pause {
-  @apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-y-auto;
-  @apply border border-l-0 border-black/25 dark:border-white/10;
-
-  .svws-ui-stundenplan--zeitraster:last-child & {
-    @apply border-r-0;
-  }
-
-  .svws-multiple {
-    @apply grid gap-1 h-full grid-flow-col;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-  }
-}
-
-.svws-ui-stundenplan--pause {
-  @apply bg-light dark:bg-white/5 text-black/50 dark:text-white/50;
-}
-
-.svws-ui-stundenplan--unterricht,
-.svws-ui-stundenplan--pausen-aufsicht {
- @apply rounded grid grid-cols-3 gap-x-1 flex-grow w-full border border-black/10 px-2 py-1 content-center leading-none dark:text-black;
-
-  &.svws-compact {
-    @apply grid-cols-2;
-  }
-
-	+ .svws-ui-stundenplan--unterricht,
-	+ .svws-ui-stundenplan--pausen-aufsicht {
-		@apply rounded-t-none;
-
-		.svws-multiple & {
-			@apply rounded-t;
-		}
-	}
-
-	&:not(:last-child) {
-		@apply rounded-b-none;
-
-		.svws-multiple & {
-			@apply rounded-b;
-		}
-	}
-}
-
-.svws-ui-stundenplan--unterricht--warning {
-  @apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;
-
-  ~ .svws-ui-stundenplan--unterricht {
-    @apply flex-grow-0 min-h-[2rem] hidden print:grid;
-
-    &.svws-compact {
-      @apply min-h-[5rem];
-    }
-  }
-
-  &.svws-show {
-    @apply hidden;
-
-    ~ .svws-ui-stundenplan--unterricht {
-      @apply grid;
-    }
-  }
-}
-
-.svws-ui-stundenplan--pausen-aufsicht {
-  &.svws-lehrkraft {
-    @apply bg-black/75 dark:bg-white/75 text-white dark:text-black;
-  }
-}
-
-.svws-ui-stundenplan--einheit {
-	@apply border-t border-black/50 dark:border-white/50 h-full w-1/2 pt-0.5 py-0.5 opacity-50 ml-auto;
-  font-size: 0.66rem;
-  writing-mode: vertical-lr;
-
-	&.svws-small {
-		@apply w-1/2 opacity-50;
-	}
-
-	&.svws-extended {
-		@apply w-full;
-	}
-}
-
-</style>

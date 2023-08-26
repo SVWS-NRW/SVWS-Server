@@ -4,7 +4,7 @@
 		<div class="svws-ui-stundenplan--head">
 			<i-ri-time-line class="svws-time-icon print:hidden" v-if="showZeitachse" />
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
-			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}">
+			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start" :class="{'opacity-50 print:invisible': wochentyp() === 0, 'font-bold text-headline-md pb-0.5': wochentyp() !== 0}">
 				{{ manager().stundenplanGetWochenTypAsString(wochentyp()) }}
 			</div>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
@@ -125,7 +125,8 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, type List, Wochentag, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
+	import type { Wochentag} from "@core";
+	import { ArrayList, type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
@@ -395,10 +396,33 @@
 			@apply grid h-full grid-flow-col -m-1 flex-grow;
 			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 		}
+
+    .svws-ui-stundenplan--mode-planung & {
+      &:hover,
+      &:focus-visible {
+        .svws-ui-stundenplan--unterricht,
+        .svws-ui-stundenplan--pausen-aufsicht,
+        &.svws-label {
+          @apply bg-light dark:bg-white/5;
+        }
+
+      }
+
+      &.svws-selected-stunde {
+        @apply text-svws;
+      }
+    }
 	}
 
 	.svws-ui-stundenplan--pause {
-		@apply bg-light dark:bg-white/5 border-y-0;
+		@apply border-y-0;
+
+    .svws-ui-stundenplan--mode-planung &:not(.svws-no-hover) {
+      &:hover,
+      &:focus-visible {
+          @apply bg-light dark:bg-white/5;
+      }
+    }
 	}
 
 	.svws-ui-stundenplan--unterricht,
@@ -409,6 +433,10 @@
 			@apply grid-cols-1 py-1;
 		}
 
+    .svws-ui-stundenplan--mode-planung & {
+      @apply flex flex-col gap-1 items-center flex-grow justify-center;
+    }
+
 		+ .svws-ui-stundenplan--unterricht,
 		+ .svws-ui-stundenplan--pausen-aufsicht {
 			@apply rounded-t-none;
@@ -418,6 +446,34 @@
 			@apply rounded-b-none;
 		}
 	}
+
+  .svws-ui-stundenplan--mode-planung {
+    .svws-wochentag-label {
+      @apply font-bold text-center inline-flex items-center w-full justify-center cursor-pointer;
+
+      &:hover,
+      &:focus-visible {
+        span {
+          @apply bg-light dark:bg-white/5;
+        }
+      }
+
+      &.svws-selected {
+        span {
+          @apply bg-svws/5 text-svws font-bold border-svws/25;
+        }
+      }
+    }
+
+    .svws-ui-stundenplan--zeitraster.svws-selected,
+    .svws-ui-stundenplan--stunde.svws-selected,
+    .svws-ui-stundenplan--pause.svws-selected {
+      .svws-ui-stundenplan--unterricht,
+      .svws-ui-stundenplan--pausen-aufsicht {
+        @apply bg-svws/5 text-svws font-bold;
+      }
+    }
+  }
 
 	.svws-ui-stundenplan--unterricht--warning {
 		@apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;

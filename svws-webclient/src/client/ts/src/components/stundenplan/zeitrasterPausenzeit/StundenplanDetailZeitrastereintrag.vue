@@ -1,16 +1,16 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-input-wrapper :grid="4">
-			<div class="text-headline-md text-left">
-				<span>{{ Wochentag.fromIDorException(item.wochentag) }}</span>
-			</div>
+	<svws-ui-content-card :title="`${Wochentag.fromIDorException(item.wochentag)} ${item.unterrichtstunde}. Stunde`">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @update:model-value="patchBeginn" />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @update:model-value="patchEnde" />
+			<div class="col-span-full">
+				<svws-ui-button type="danger" @click="removeZeitraster([item])"><i-ri-delete-bin-line /> Eintrag entfernen </svws-ui-button>
+			</div>
 		</svws-ui-input-wrapper>
-		<svws-ui-button type="danger" @click="removeZeitraster([item])"> Eintrag entfernen </svws-ui-button>
-		<svws-ui-data-table :items="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :columns="cols">
+		<svws-ui-spacing :size="2" />
+		<svws-ui-data-table :items="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :columns="cols" no-data-html="Kein Unterricht zu diesem Eintrag gefunden.">
 			<template #cell(idFach)="{ rowData }">
-				<div :style="`background-color: ${getBgColor(stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id).split('-')[0])}`">
+				<div class="rounded -m-1 px-1.5 py-0.5" :style="`background-color: ${getBgColor(stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id).split('-')[0])}`">
 					{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}
 				</div>
 			</template>
@@ -34,7 +34,7 @@
 	}
 
 	const cols = [
-		{ key: "idFach", label: "Fach", span: 2, sortable: false },
+		{ key: "idFach", label: "Unterricht", sortable: false },
 	];
 
 	async function patchBeginn(event: string | number) {

@@ -1,13 +1,13 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-input-wrapper :grid="4">
-			<div class="text-headline-md text-left">
-				<span>{{ Wochentag.fromIDorException(item.wochentag) }}</span>
-			</div>
+	<svws-ui-content-card :title="`Pause am ${Wochentag.fromIDorException(item.wochentag)}`">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" required placeholder="Pausenbeginn" @update:model-value="patchBeginn" />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @update:model-value="patchEnde" />
+			<div class="col-span-full">
+				<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
+			</div>
 		</svws-ui-input-wrapper>
-		<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
+		<svws-ui-spacing :size="2" />
 		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols">
 			<template #cell(id)="{ rowData }">
 				<div>
