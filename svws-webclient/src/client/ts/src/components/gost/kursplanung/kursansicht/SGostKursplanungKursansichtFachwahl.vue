@@ -90,18 +90,18 @@
 							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
-						@drop="dropKursAtSchiene(kurs, schiene)">
+						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
 							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black cursor-grab"
 							:class="{
-								'cursor-grabbing': dragDataKursSchiene !== undefined,
+								'cursor-grabbing': dragDataKursSchiene() !== undefined,
 								'bg-light text-primary font-bold': istKursAusgewaehlt(kurs).value,
 								'bg-light/75': !istKursAusgewaehlt(kurs).value,
-								'p-0.5': dragDataKursSchiene === undefined && !isKursDropZone(kurs, schiene).value,
-								'p-0': dragDataKursSchiene !== undefined || isKursDropZone(kurs, schiene).value,
+								'p-0.5': dragDataKursSchiene() === undefined && !isKursDropZone(kurs, schiene).value,
+								'p-0': dragDataKursSchiene() !== undefined || isKursDropZone(kurs, schiene).value,
 							}"
-							@dragstart.stop="dragKursStarted(kurs, schiene)" @dragend="dragKursEnded()" @click="toggleKursAusgewaehlt(kurs)">
+							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
@@ -116,11 +116,11 @@
 							:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
 							:class="{ 'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							&NonBreakingSpace;
-							<template v-if="dragDataKursSchiene !== undefined">
-								<div v-if="dragDataKursSchiene !== undefined && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
+							<template v-if="dragDataKursSchiene() !== undefined">
+								<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs.id === kurs.id) && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
 							</template>
-							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-100" /> </div>
-							<div v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
+							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-100" /> </div>
+							<div v-if="allowRegeln && (dragDataKursSchiene() === undefined) && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
 						</div>
 					</div>
 					<!-- ... oder das Element in der Zelle ist nicht für Drag & Drop gedacht -->
@@ -133,7 +133,7 @@
 							}">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
 							<div class="icon absolute right-1" v-if="istKursFixiertInSchiene(kurs, schiene).value"> <i-ri-pushpin-fill class="inline-block" /> </div>
-							<div v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block" /> </div>
+							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block" /> </div>
 						</div>
 					</div>
 				</template>
@@ -144,47 +144,18 @@
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>
-		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
-		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 	</template>
 </template>
 
 <script setup lang="ts">
 
 	import { ref, type ComputedRef, computed } from "vue";
-	import type { GostBlockungKurs, GostStatistikFachwahl, LehrerListeEintrag, GostFaecherManager, GostBlockungKursLehrer,
-		GostBlockungsergebnisManager, GostBlockungsdatenManager, GostBlockungsergebnisKurs, List,
-		GostBlockungsergebnisSchiene } from "@core";
+	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
-	import type { GostKursplanungSchuelerFilter } from "../GostKursplanungSchuelerFilter";
-	import type { Config } from "~/components/Config";
 	import { lehrer_filter } from "~/helfer";
+	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 
-	const props = defineProps<{
-		getDatenmanager: () => GostBlockungsdatenManager;
-		getErgebnismanager: () => GostBlockungsergebnisManager;
-		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
-		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
-		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
-		patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;
-		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
-		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
-		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
-		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
-		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
-		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
-		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
-		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
-		config: Config;
-		hatErgebnis: boolean;
-		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
-		fachwahlen: GostStatistikFachwahl;
-		faecherManager: GostFaecherManager;
-		fachwahlenAnzahl: number;
-		kursart: GostKursart;
-		mapLehrer: Map<number, LehrerListeEintrag>;
-		allowRegeln: boolean;
-	}>();
+	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
@@ -203,14 +174,9 @@
 		await props.addKurs(props.fachwahlen.id, art.id);
 	}
 
-	const modal_regel_kurse = ref();
-	const modal_combine_kurse = ref();
-
 	const edit_name = ref<number | undefined>(undefined);
 	const tmp_name = ref("");
 	const kursdetail_anzeige = ref<boolean>(false);
-
-	const dragDataKursSchiene = ref<{ kurs: GostBlockungKurs; schiene: GostBlockungsergebnisSchiene} | undefined>(undefined)
 
 	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
@@ -345,54 +311,30 @@
 			props.schuelerFilter.reset();
 	}
 
-	function dragKursStarted(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		dragDataKursSchiene.value = { kurs, schiene };
-	}
-
-	function dragKursEnded() {
-		dragDataKursSchiene.value = undefined;
-	}
-
 	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (dragDataKursSchiene.value !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id !== schiene.id);
+		const dragData = props.dragDataKursSchiene();
+		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id !== schiene.id);
 	});
 
 	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		return (dragDataKursSchiene.value !== undefined) && (dragDataKursSchiene.value.kurs.id === kurs.id) && (dragDataKursSchiene.value.schiene.id === schiene.id);
+		const dragData = props.dragDataKursSchiene();
+		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id === schiene.id);
 	});
 
 	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
-		if (dragDataKursSchiene.value === undefined)
+		const dragData = props.dragDataKursSchiene();
+		if (dragData === undefined)
 			return false;
-		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (istZugeordnetKursSchiene(kurs, schiene).value))
+		if ((istZugeordnetKursSchiene(kurs, schiene).value) && ((dragData.kurs.id === kurs.id) || (dragData.fachId !== props.fachwahlen.id)))
 			return false;
-		if (!props.allowRegeln && (dragDataKursSchiene.value.kurs.id !== kurs.id))
+		if (!props.allowRegeln && (dragData.kurs.id !== kurs.id))
 			return false;
-		if (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
+		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id))
+			return false;
+		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, dragData.schiene.id))
 			return false;
 		return true;
 	});
-
-	async function dropKursAtSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		if (dragDataKursSchiene.value === undefined)
-			return;
-		if (dragDataKursSchiene.value.kurs.id !== kurs.id) {
-			const schienen = props.getErgebnismanager().getOfKursSchienenmenge(kurs.id);
-			if (schienen.contains(schiene))
-				modal_combine_kurse.value.openModal(dragDataKursSchiene.value.kurs, kurs);
-			else
-				modal_regel_kurse.value.openModal(dragDataKursSchiene.value.kurs.id, kurs.id);
-			return;
-		}
-		if ((dragDataKursSchiene.value.kurs.id === kurs.id) && (!istZugeordnetKursSchiene(kurs, schiene).value) ) {
-			// Entferne potentielle Fixierung beim Verschieben.
-			if (props.allowRegeln && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, schiene.id)) {
-				const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(kurs.id, schiene.id);
-				await props.removeRegel(regel.id);
-			}
-			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, schiene.id);
-		}
-	}
 
 	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
 		return props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id);

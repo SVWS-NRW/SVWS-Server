@@ -125,7 +125,8 @@
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
+								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
 				</template>
@@ -139,13 +140,16 @@
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
 								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
-								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
+								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
+								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
 				</template>
 			</template>
 		</svws-ui-data-table>
 		<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" ref="modalRegelKursartSchienen" />
+		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
+		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
 	</svws-ui-content-card>
 </template>
 
@@ -160,6 +164,7 @@
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
+	import { type SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten;
@@ -191,6 +196,7 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	}>();
+
 
 	const edit_schienenname: Ref<number|undefined> = ref()
 
@@ -315,5 +321,38 @@
 	function dragSchieneEnded() {
 		dragDataKursartSchiene.value = undefined;
 	}
+
+
+	const dragDataKursSchiene = ref<SGostKursplanungKursansichtDragData>(undefined);
+
+	const modal_regel_kurse = ref();
+	const modal_combine_kurse = ref();
+
+
+	function dragKursSchiene(data: SGostKursplanungKursansichtDragData) {
+		dragDataKursSchiene.value = data;
+	}
+
+	async function dropKursSchiene(zone: SGostKursplanungKursansichtDragData) {
+		if ((zone === undefined) || (dragDataKursSchiene.value === undefined))
+			return;
+		if (dragDataKursSchiene.value.kurs.id !== zone.kurs.id) {
+			const schienen = props.getErgebnismanager().getOfKursSchienenmenge(zone.kurs.id);
+			if (schienen.contains(zone.schiene))
+				modal_combine_kurse.value.openModal(dragDataKursSchiene.value.kurs, zone.kurs);
+			else
+				modal_regel_kurse.value.openModal(dragDataKursSchiene.value.kurs.id, zone.kurs.id);
+			return;
+		}
+		if ((dragDataKursSchiene.value.kurs.id === zone.kurs.id) && (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(zone.kurs.id, zone.schiene.id)) ) {
+			// Entferne potentielle Fixierung beim Verschieben.
+			if (allow_regeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragDataKursSchiene.value.kurs.id, zone.schiene.id)) {
+				const regel = props.getDatenmanager().kursGetRegelFixierungInSchiene(zone.kurs.id, zone.schiene.id);
+				await props.removeRegel(regel.id);
+			}
+			await props.updateKursSchienenZuordnung(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id, zone.schiene.id);
+		}
+	}
+
 
 </script>
