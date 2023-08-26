@@ -8,21 +8,34 @@
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @update:model-value="patchEnde" />
 		</svws-ui-input-wrapper>
 		<svws-ui-button type="danger" @click="removeZeitraster([item])"> Eintrag entfernen </svws-ui-button>
-		<svws-ui-data-table :item="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" />
+		<svws-ui-data-table :items="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :columns="cols">
+			<template #cell(idFach)="{ rowData }">
+				<div :style="`background-color: ${getBgColor(stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id).split('-')[0])}`">
+					{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}
+				</div>
+			</template>
+		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 	import type { StundenplanManager, StundenplanZeitraster} from "@core";
-	import { DateUtils, Wochentag } from "@core";
+	import { DateUtils, Wochentag, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
-		wochentyp: number;
 		stundenplanManager: () => StundenplanManager;
 		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	function getBgColor(fach: string): string {
+		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+	}
+
+	const cols = [
+		{ key: "idFach", label: "Fach", span: 2, sortable: false },
+	];
 
 	async function patchBeginn(event: string | number) {
 		if (typeof event === 'number')

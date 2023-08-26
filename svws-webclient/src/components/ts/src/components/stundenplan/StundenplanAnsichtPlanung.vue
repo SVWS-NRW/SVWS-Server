@@ -75,7 +75,6 @@
 	const selected = ref<Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined>();
 
 	function updateSelected(event: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit) {
-		console.log(event)
 		if (event === toRaw(selected.value))
 			selected.value = undefined;
 		else
