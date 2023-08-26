@@ -259,10 +259,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 		final List<GostKlausurraumstunde> result = new ArrayList<>();
 		for (final StundenplanZeitraster stunde : zeitrasterRaum) {
-			if (raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id) == null) {
+			if (raumManager.klausurraumstundeGetByRaumidAndZeitrasterid(idRaum, stunde.id) == null) {
 				final DTOGostKlausurenRaeumeStunden dtoStundeNeu = new DTOGostKlausurenRaeumeStunden(idKrs++, idRaum, stunde.id);
 				final GostKlausurraumstunde stundeNeu = DataGostKlausurenRaumstunde.dtoMapper.apply(dtoStundeNeu);
-				raumManager.addKlausurraumstunde(stundeNeu);
+				raumManager.raumstundeAdd(stundeNeu);
 				result.add(stundeNeu);
 				conn.transactionPersist(dtoStundeNeu);
 			}
@@ -316,7 +316,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			conn.transactionExecuteDelete("DELETE FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden v WHERE v.Schuelerklausur_ID = %d".formatted(sk.idSchuelerklausur));
 			for (final StundenplanZeitraster stunde : zeitrasterSk) {
 				final DTOGostKlausurenSchuelerklausurenRaeumeStunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenRaeumeStunden(sk.idSchuelerklausur,
-						raumManager.getKlausurraumstundeByRaumZeitraster(idRaum, stunde.id).id);
+						raumManager.klausurraumstundeGetByRaumidAndZeitrasterid(idRaum, stunde.id).id);
 				conn.transactionPersist(skRaumStundeNeu);
 				result.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 			}

@@ -406,7 +406,7 @@ export class RouteDataGostKlausurplanung {
 	loescheKlausurraum = async (id: number, manager: GostKlausurraumManager): Promise<boolean> => {
 		api.status.start();
 		const ergebnis = await api.server.deleteGostKlausurenRaum(api.schema, id);
-		manager.removeKlausurraum(id);
+		manager.raumRemoveById(id);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -414,9 +414,9 @@ export class RouteDataGostKlausurplanung {
 
 	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager): Promise<boolean> => {
 		api.status.start();
-		const oldRaum: GostKlausurraum = manager.getKlausurraum(id);
+		const oldRaum: GostKlausurraum = manager.raumGetByIdOrException(id);
 		Object.assign(oldRaum, raum);
-		manager.patchStundenplanraumOrBemerkungToKlausurraum(oldRaum);
+		manager.raumPatchAttributes(oldRaum);
 		Object.assign(oldRaum, raum);
 		await api.server.patchGostKlausurenRaum(raum, api.schema, id);
 		this.commit();
@@ -438,7 +438,8 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const skids = Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur));
 		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt!.id);
-		manager.setzeRaumZuSchuelerklausuren(skids, collectionSkrsKrs);
+		console.log(collectionSkrsKrs);
+		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
 		api.status.stop();
 		return collectionSkrsKrs;
