@@ -1305,7 +1305,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		return menge;
 	}
 
-	private getOfSchuelerErfuelltKriterien(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : boolean {
+	/**
+	 * Liefert TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 *
+	 * @param idSchueler        Die Datenbank-ID des Schülers.
+	 * @param idKurs            Falls >= 0, muss der Schüler in dem Kurs sein.
+	 * @param idFach            Falls >= 0, muss der Schüler das Fach haben.
+	 * @param idKursart         Falls >= 0, und idFach >= muss der Schüler auch die zugehörige Kursart haben.
+	 * @param konfliktTyp       Falls > 0 muss der Schüler "1=Kollisionen", "2=Nichtwahlen" oder "3= Kollisionen und Nichtwahlen" haben.
+	 * @param subString         Falls length() > 0 muss der Schüler den Substring im Vor- oder Nachnamen haben.
+	 * @param geschlecht        Falls != null, muss der Schüler das definierte Geschlecht haben.
+	 * @param schriftlichkeit   Falls != null, muss der Schüler das definierte {@link GostSchriftlichkeit} haben.
+	 *
+	 * @return TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 */
+	public getOfSchuelerErfuelltKriterien(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : boolean {
 		if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
 			return false;
 		if ((konfliktTyp === 2) && (!this.getOfSchuelerHatNichtwahl(idSchueler)))
@@ -1316,14 +1330,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler) as unknown !== geschlecht as unknown))
 			return false;
-		if (idKurs > 0) {
+		if (idKurs >= 0) {
 			if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
 			if ((schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
 				return false;
 		}
-		if (idFach > 0) {
-			if (idKursart > 0) {
+		if (idFach >= 0) {
+			if (idKursart >= 0) {
 				if (!this.getOfSchuelerHatFachwahl(idSchueler, idFach, idKursart))
 					return false;
 			} else {
