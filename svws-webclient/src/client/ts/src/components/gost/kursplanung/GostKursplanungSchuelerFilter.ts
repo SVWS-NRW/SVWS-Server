@@ -69,9 +69,9 @@ export class GostKursplanungSchuelerFilter {
 		if (this.ergebnismanager === undefined)
 			return gefiltert;
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
-		const res = this.ergebnismanager.getOfSchuelerMengeGefiltert(this.kurs?.id || 0,
-			this.fach || 0,
-			this.kursart?.id || 0,
+		const res = this.ergebnismanager.getOfSchuelerMengeGefiltert(this.kurs?.id || -1,
+			this.fach || -1,
+			this.kursart?.id || -1,
 			pKonfliktTyp,
 			this._name.value);
 		for (const s of res) {
