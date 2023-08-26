@@ -644,15 +644,15 @@ export class RouteDataGostKursplanung {
 			await api.server.deleteGostBlockungsergebnis(api.schema, ergebnis.id);
 			this.datenmanager.ergebnisRemove(ergebnis);
 		}
+		this.commit();
+		api.status.stop();
 		if (reselect) {
 			for (const e of this.ergebnisse)
 				if (!ergebnisse.includes(e)) {
 					await this.gotoErgebnis(e);
 					break;
 				}
-		} else
-			this.commit();
-		api.status.stop();
+		}
 	}
 
 	rechneGostBlockung = async (): Promise<List<number>> => {
