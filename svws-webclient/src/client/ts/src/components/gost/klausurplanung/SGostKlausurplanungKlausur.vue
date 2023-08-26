@@ -6,16 +6,15 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKlausurUhrzeit" :placeholder="termin.startzeit !== null && startzeit === undefined ? termin.startzeit + '' : ''"
-				v-model="startzeit"
-				@update:model-value="patchKlausurUhrzeit({id: klausur.id, startzeit: klausur.startzeit})" />
+			<svws-ui-text-input v-if="patchKlausurUhrzeit" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) : 'Startzeit'" @update:model-value="patchKlausurbeginn($event, klausur.id)" />
 		</td>
 	</svws-ui-drag-data>
 </template>
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, LehrerListeEintrag, GostKursklausurManager, KursListeEintrag, KursManager, GostKlausurtermin, GostSchuelerklausur } from "@core";
+	import { DateUtils} from "@core";
+	import type { GostKursklausur, LehrerListeEintrag, GostKursklausurManager, KursManager, GostKlausurtermin, GostSchuelerklausur } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -26,6 +25,17 @@
 		kursmanager: KursManager;
 		patchKlausurUhrzeit?: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
 	}>();
+
+	async function patchKlausurbeginn(event: string | number, id: number) {
+		if (typeof event === 'number')
+			return;
+		try {
+			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
+			await props.patchKlausurUhrzeit!({id, startzeit});
+		} catch(e) {
+			// Do nothing
+		}
+	}
 
 	const emit = defineEmits<{
 		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;

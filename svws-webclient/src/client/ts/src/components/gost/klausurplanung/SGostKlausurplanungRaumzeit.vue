@@ -61,7 +61,8 @@
 </template>
 
 <script setup lang="ts">
-	import { GostKlausurtermin, GostKlausurraumManager} from '@core';
+	import type { GostKlausurraumManager} from '@core';
+	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone, GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
@@ -71,10 +72,6 @@
 	const raummanager = ref<GostKlausurraumManager | null>(null);
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
-		// if (selectedTermin.value !== null) {
-		// 	selectedTermin.value = null;
-		// 	return;
-		// }
 		if (selectedTermin.value === null || termin.id !== selectedTermin.value.id) {
 			raummanager.value = await props.erzeugeKlausurraummanager(termin);
 			selectedTermin.value = termin;

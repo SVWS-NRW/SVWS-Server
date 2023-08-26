@@ -7,7 +7,7 @@
 			</tr>
 			<tr>
 				<th>Startzeit</th>
-				<td>{{ termin.startzeit }}</td>
+				<td>{{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</td>
 			</tr>
 
 			<tr>
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostKlausurenCollectionSkrsKrs, GostSchuelerklausur, List } from '@core';
-	import { GostKlausurraum } from '@core';
+	import { GostKlausurraum, DateUtils} from '@core';
 	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone } from './SGostKlausurplanungRaumzeitProps';
 
 	const props = defineProps<{
