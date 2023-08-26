@@ -410,21 +410,22 @@ export class StundenplanManager extends JavaObject {
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listKlassenunterricht : List<StundenplanKlassenunterricht>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", this._stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", this._stundenplanWochenTypModell === 1);
-		this.kalenderwochenzuordnungAddAll(listKWZ);
-		this.fachAddAll(listFach);
-		this.jahrgangAddAll(listJahrgang);
-		this.zeitrasterAddAll(listZeitraster);
-		this.raumAddAll(listRaum);
-		this.pausenzeitAddAll(listPausenzeit);
-		this.aufsichtsbereichAddAll(listAufsichtsbereich);
-		this.lehrerAddAll(listLehrer);
-		this.schuelerAddAll(listSchueler);
-		this.klasseAddAll(listKlasse);
-		this.schieneAddAll(listSchiene);
-		this.klassenunterrichtAddAll(listKlassenunterricht);
-		this.pausenaufsichtAddAll(listPausenaufsicht);
-		this.kursAddAll(listKurs);
-		this.unterrichtAddAll(listUnterricht);
+		this.kalenderwochenzuordnungAddAllOhneUpdate(listKWZ);
+		this.fachAddAllOhneUpdate(listFach);
+		this.jahrgangAddAllOhneUpdate(listJahrgang);
+		this.zeitrasterAddAllOhneUpdate(listZeitraster);
+		this.raumAddAllOhneUpdate(listRaum);
+		this.pausenzeitAddAllOhneUpdate(listPausenzeit);
+		this.aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich);
+		this.lehrerAddAllOhneUpdate(listLehrer);
+		this.schuelerAddAllOhneUpdate(listSchueler);
+		this.klasseAddAllOhneUpdate(listKlasse);
+		this.schieneAddAllOhneUpdate(listSchiene);
+		this.klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);
+		this.pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);
+		this.kursAddAllOhneUpdate(listKurs);
+		this.unterrichtAddAllOhneUpdate(listUnterricht);
+		this.update_all();
 	}
 
 	private update_all() : void {
@@ -978,6 +979,11 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
+		for (const aufsichtsbereich of listAufsichtsbereich)
+			this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
@@ -985,8 +991,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listAufsichtsbereich  Die Menge der {@link StundenplanAufsichtsbereich}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public aufsichtsbereichAddAll(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
-		for (const aufsichtsbereich of listAufsichtsbereich)
-			this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+		this.aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich);
 		this.update_all();
 	}
 
@@ -1076,6 +1081,11 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private fachAddAllOhneUpdate(listFach : List<StundenplanFach>) : void {
+		for (const fach of listFach)
+			this.fachAddOhneUpdate(fach);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
@@ -1083,8 +1093,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public fachAddAll(listFach : List<StundenplanFach>) : void {
-		for (const fach of listFach)
-			this.fachAddOhneUpdate(fach);
+		this.fachAddAllOhneUpdate(listFach);
 		this.update_all();
 	}
 
@@ -1131,6 +1140,11 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private jahrgangAddAllOhneUpdate(listJahrgang : List<StundenplanJahrgang>) : void {
+		for (const jahrgang of listJahrgang)
+			this.jahrgangAddOhneUpdate(jahrgang);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
@@ -1138,8 +1152,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public jahrgangAddAll(listJahrgang : List<StundenplanJahrgang>) : void {
-		for (const jahrgang of listJahrgang)
-			this.jahrgangAddOhneUpdate(jahrgang);
+		this.jahrgangAddAllOhneUpdate(listJahrgang);
 		this.update_all();
 	}
 
@@ -1229,14 +1242,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private kalenderwochenzuordnungAddAllOhneUpdate(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
+		for (const kwz of listKWZ)
+			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKalenderwochenzuordnung}-Objekte hinzu.
 	 *
 	 * @param listKWZ  Die Menge der {@link StundenplanKalenderwochenzuordnung}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public kalenderwochenzuordnungAddAll(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
-		for (const kwz of listKWZ)
-			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungAddAllOhneUpdate(listKWZ);
 		this.update_all();
 	}
 
@@ -1406,14 +1423,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private klasseAddAllOhneUpdate(listKlasse : List<StundenplanKlasse>) : void {
+		for (const klasse of listKlasse)
+			this.klasseAddOhneUpdate(klasse);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
 	 *
 	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public klasseAddAll(listKlasse : List<StundenplanKlasse>) : void {
-		for (const klasse of listKlasse)
-			this.klasseAddOhneUpdate(klasse);
+		this.klasseAddAllOhneUpdate(listKlasse);
 		this.update_all();
 	}
 
@@ -1510,14 +1531,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private klassenunterrichtAddAllOhneUpdate(listKlassenunterricht : List<StundenplanKlassenunterricht>) : void {
+		for (const klassenunterricht of listKlassenunterricht)
+			this.klassenunterrichtAddOhneUpdate(klassenunterricht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKlassenunterricht}-Objekte hinzu.
 	 *
 	 * @param listKlassenunterricht  Die Menge der {@link StundenplanKlassenunterricht}-Objekte, welche hinzugefügt werden soll.
 	 */
-	private klassenunterrichtAddAll(listKlassenunterricht : List<StundenplanKlassenunterricht>) : void {
-		for (const klassenunterricht of listKlassenunterricht)
-			this.klassenunterrichtAddOhneUpdate(klassenunterricht);
+	public klassenunterrichtAddAll(listKlassenunterricht : List<StundenplanKlassenunterricht>) : void {
+		this.klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);
 		this.update_all();
 	}
 
@@ -1649,14 +1674,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private kursAddAllOhneUpdate(listKurs : List<StundenplanKurs>) : void {
+		for (const kurs of listKurs)
+			this.kursAddOhneUpdate(kurs);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKurs}-Objekte hinzu.
 	 *
 	 * @param listKurs  Die Menge der {@link StundenplanKurs}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public kursAddAll(listKurs : List<StundenplanKurs>) : void {
-		for (const kurs of listKurs)
-			this.kursAddOhneUpdate(kurs);
+		this.kursAddAllOhneUpdate(listKurs);
 		this.update_all();
 	}
 
@@ -1874,14 +1903,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private lehrerAddAllOhneUpdate(listLehrer : List<StundenplanLehrer>) : void {
+		for (const lehrer of listLehrer)
+			this.lehrerAddOhneUpdate(lehrer);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanLehrer}-Objekte hinzu.
 	 *
 	 * @param listLehrer  Die Menge der {@link StundenplanLehrer}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public lehrerAddAll(listLehrer : List<StundenplanLehrer>) : void {
-		for (const lehrer of listLehrer)
-			this.lehrerAddOhneUpdate(lehrer);
+		this.lehrerAddAllOhneUpdate(listLehrer);
 		this.update_all();
 	}
 
@@ -1976,14 +2009,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private pausenaufsichtAddAllOhneUpdate(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
+		for (const pausenaufsicht of listPausenaufsicht)
+			this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanPausenaufsicht}-Objekte hinzu.
 	 *
 	 * @param listPausenaufsicht  Die Menge der {@link StundenplanPausenaufsicht}-Objekte, welche hinzugefügt werden soll.
 	 */
-	private pausenaufsichtAddAll(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
-		for (const pausenaufsicht of listPausenaufsicht)
-			this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+	public pausenaufsichtAddAll(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
+		this.pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);
 		this.update_all();
 	}
 
@@ -2149,14 +2186,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private pausenzeitAddAllOhneUpdate(listPausenzeit : List<StundenplanPausenzeit>) : void {
+		for (const pausenzeit of listPausenzeit)
+			this.pausenzeitAddOhneUpdate(pausenzeit);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanPausenzeit}-Objekte hinzu.
 	 *
 	 * @param listPausenzeit  Die Menge der {@link StundenplanPausenzeit}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public pausenzeitAddAll(listPausenzeit : List<StundenplanPausenzeit>) : void {
-		for (const pausenzeit of listPausenzeit)
-			this.pausenzeitAddOhneUpdate(pausenzeit);
+		this.pausenzeitAddAllOhneUpdate(listPausenzeit);
 		this.update_all();
 	}
 
@@ -2440,14 +2481,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private raumAddAllOhneUpdate(listRaum : List<StundenplanRaum>) : void {
+		for (const raum of listRaum)
+			this.raumAddOhneUpdate(raum);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
 	 *
 	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public raumAddAll(listRaum : List<StundenplanRaum>) : void {
-		for (const raum of listRaum)
-			this.raumAddOhneUpdate(raum);
+		this.raumAddAllOhneUpdate(listRaum);
 		this.update_all();
 	}
 
@@ -2538,14 +2583,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private schieneAddAllOhneUpdate(listSchiene : List<StundenplanSchiene>) : void {
+		for (const schiene of listSchiene)
+			this.schieneAddOhneUpdate(schiene);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanSchiene}-Objekte hinzu.
 	 *
 	 * @param listSchiene  Die Menge der {@link StundenplanSchiene}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public schieneAddAll(listSchiene : List<StundenplanSchiene>) : void {
-		for (const schiene of listSchiene)
-			this.schieneAddOhneUpdate(schiene);
+		this.schieneAddAllOhneUpdate(listSchiene);
 		this.update_all();
 	}
 
@@ -2571,14 +2620,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private schuelerAddAllOhneUpdate(listSchueler : List<StundenplanSchueler>) : void {
+		for (const schueler of listSchueler)
+			this.schuelerAddOhneUpdate(schueler);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanSchueler}-Objekte hinzu.
 	 *
 	 * @param listSchueler  Die Menge der {@link StundenplanSchueler}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public schuelerAddAll(listSchueler : List<StundenplanSchueler>) : void {
-		for (const schueler of listSchueler)
-			this.schuelerAddOhneUpdate(schueler);
+		this.schuelerAddAllOhneUpdate(listSchueler);
 		this.update_all();
 	}
 
@@ -2759,14 +2812,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private unterrichtAddAllOhneUpdate(listUnterricht : List<StundenplanUnterricht>) : void {
+		for (const unterricht of listUnterricht)
+			this.unterrichtAddOhneUpdate(unterricht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanUnterricht}-Objekte hinzu.
 	 *
 	 * @param listUnterricht  Die Menge der {@link StundenplanUnterricht}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public unterrichtAddAll(listUnterricht : List<StundenplanUnterricht>) : void {
-		for (const unterricht of listUnterricht)
-			this.unterrichtAddOhneUpdate(unterricht);
+		this.unterrichtAddAllOhneUpdate(listUnterricht);
 		this.update_all();
 	}
 
@@ -3255,14 +3312,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	private zeitrasterAddAllOhneUpdate(listZeitraster : List<StundenplanZeitraster>) : void {
+		for (const zeitraster of listZeitraster)
+			this.zeitrasterAddOhneUpdate(zeitraster);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanZeitraster}-Objekte hinzu.
 	 *
 	 * @param listZeitraster  Die Menge der {@link StundenplanZeitraster}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public zeitrasterAddAll(listZeitraster : List<StundenplanZeitraster>) : void {
-		for (const zeitraster of listZeitraster)
-			this.zeitrasterAddOhneUpdate(zeitraster);
+		this.zeitrasterAddAllOhneUpdate(listZeitraster);
 		this.update_all();
 	}
 

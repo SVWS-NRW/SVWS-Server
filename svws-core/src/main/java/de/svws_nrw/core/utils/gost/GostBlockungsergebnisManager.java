@@ -1153,9 +1153,9 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Liefert die Anzahl der Schüler, die den Filterkriterien entsprechen.
 	 *
-	 * @param  idKurs           falls > 0, werden Schüler des Kurses herausgefiltert.
-	 * @param  idFach           falls > 0, werden Schüler mit diesem Fach herausgefiltert.
-	 * @param  idKursart        falls > 0 und idFach > 0, werden Schüler mit dieser Fach/Kursart Kombination herausgefiltert.
+	 * @param  idKurs           falls >= 0, werden Schüler des Kurses herausgefiltert.
+	 * @param  idFach           falls >= 0, werden Schüler mit diesem Fach herausgefiltert.
+	 * @param  idKursart        falls >= 0 und idFach >= 0, werden Schüler mit dieser Fach/Kursart Kombination herausgefiltert.
 	 * @param  konfliktTyp      falls 1 = mit Kollisionen, 2 = mit Nichtwahlen, 3 = mit Kollisionen und Nichtwahlen, sonst alle Schüler.
 	 * @param  subString        falls |pSubString| > 0 werden Schüler deren Vor- oder Nachname diesen String enthält herausgefiltert.
 	 * @param  geschlecht       falls != null, werden die Schüler mit diesem {@link Geschlecht} herausgefiltert.

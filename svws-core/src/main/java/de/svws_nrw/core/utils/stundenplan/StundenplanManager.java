@@ -354,21 +354,23 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell < 0", _stundenplanWochenTypModell < 0);
 		DeveloperNotificationException.ifTrue("stundenplanWochenTypModell == 1", _stundenplanWochenTypModell == 1);
 
-		kalenderwochenzuordnungAddAll(listKWZ);          // ✔, referenziert ---
-		fachAddAll(listFach);                            // ✔, referenziert ---
-		jahrgangAddAll(listJahrgang);                    // ✔, referenziert ---
-		zeitrasterAddAll(listZeitraster);                // ✔, referenziert ---
-		raumAddAll(listRaum);                            // ✔, referenziert ---
-		pausenzeitAddAll(listPausenzeit);                // ✔, referenziert ---
-		aufsichtsbereichAddAll(listAufsichtsbereich);    // ✔, referenziert ---
-		lehrerAddAll(listLehrer);                        // ✔, referenziert [Fach]
-		schuelerAddAll(listSchueler);                    // ✔, referenziert Klasse
-		klasseAddAll(listKlasse);                        // ✔, referenziert [Jahrgang], [Schueler]
-		schieneAddAll(listSchiene);                      // ✔, referenziert Jahrgang
-		klassenunterrichtAddAll(listKlassenunterricht);  // ✔, referenziert Klasse, [Jahrgang], [Schienen]
-		pausenaufsichtAddAll(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
-		kursAddAll(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
-		unterrichtAddAll(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+		kalenderwochenzuordnungAddAllOhneUpdate(listKWZ);          // ✔, referenziert ---
+		fachAddAllOhneUpdate(listFach);                            // ✔, referenziert ---
+		jahrgangAddAllOhneUpdate(listJahrgang);                    // ✔, referenziert ---
+		zeitrasterAddAllOhneUpdate(listZeitraster);                // ✔, referenziert ---
+		raumAddAllOhneUpdate(listRaum);                            // ✔, referenziert ---
+		pausenzeitAddAllOhneUpdate(listPausenzeit);                // ✔, referenziert ---
+		aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich);    // ✔, referenziert ---
+		lehrerAddAllOhneUpdate(listLehrer);                        // ✔, referenziert [Fach]
+		schuelerAddAllOhneUpdate(listSchueler);                    // ✔, referenziert Klasse
+		klasseAddAllOhneUpdate(listKlasse);                        // ✔, referenziert [Jahrgang], [Schueler]
+		schieneAddAllOhneUpdate(listSchiene);                      // ✔, referenziert Jahrgang
+		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);  // ✔, referenziert Klasse, [Jahrgang], [Schienen]
+		pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
+		kursAddAllOhneUpdate(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
+		unterrichtAddAllOhneUpdate(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
+
+		update_all();
 	}
 
 	private void update_all() {
@@ -1006,6 +1008,11 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void aufsichtsbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
+			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
@@ -1013,9 +1020,7 @@ public class StundenplanManager {
 	 * @param listAufsichtsbereich  Die Menge der {@link StundenplanAufsichtsbereich}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void aufsichtsbereichAddAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
-		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
-			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
-
+		aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich);
 		update_all();
 	}
 
@@ -1116,6 +1121,11 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void fachAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanFach> listFach) {
+		for (final @NotNull StundenplanFach fach : listFach)
+			fachAddOhneUpdate(fach);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanFach}-Objekte hinzu.
 	 * <br>Laufzeit: O(|StundenplanFach|), da fachUpdate() aufgerufen wird.
@@ -1123,9 +1133,7 @@ public class StundenplanManager {
 	 * @param listFach  Die Menge der {@link StundenplanFach}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void fachAddAll(final @NotNull List<@NotNull StundenplanFach> listFach) {
-		for (final @NotNull StundenplanFach fach : listFach)
-			fachAddOhneUpdate(fach);
-
+		fachAddAllOhneUpdate(listFach);
 		update_all();
 	}
 
@@ -1173,8 +1181,12 @@ public class StundenplanManager {
 	 */
 	public void jahrgangAdd(final @NotNull StundenplanJahrgang jahrgang) {
 		jahrgangAddOhneUpdate(jahrgang);
-
 		update_all();
+	}
+
+	private void jahrgangAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
+		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
+			jahrgangAddOhneUpdate(jahrgang);
 	}
 
 	/**
@@ -1184,9 +1196,7 @@ public class StundenplanManager {
 	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void jahrgangAddAll(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
-		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
-			jahrgangAddOhneUpdate(jahrgang);
-
+		jahrgangAddAllOhneUpdate(listJahrgang);
 		update_all();
 	}
 
@@ -1286,15 +1296,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void kalenderwochenzuordnungAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listKWZ) {
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : listKWZ)
+			kalenderwochenzuordnungAddOhneUpdate(kwz);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKalenderwochenzuordnung}-Objekte hinzu.
 	 *
 	 * @param listKWZ  Die Menge der {@link StundenplanKalenderwochenzuordnung}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void kalenderwochenzuordnungAddAll(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listKWZ) {
-		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : listKWZ)
-			kalenderwochenzuordnungAddOhneUpdate(kwz);
-
+		kalenderwochenzuordnungAddAllOhneUpdate(listKWZ);
 		update_all();
 	}
 
@@ -1484,15 +1497,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void klasseAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKlasse> listKlasse) {
+		for (final @NotNull StundenplanKlasse klasse : listKlasse)
+			klasseAddOhneUpdate(klasse);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKlasse}-Objekte hinzu.
 	 *
 	 * @param listKlasse  Die Menge der {@link StundenplanKlasse}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void klasseAddAll(final @NotNull List<@NotNull StundenplanKlasse> listKlasse) {
-		for (final @NotNull StundenplanKlasse klasse : listKlasse)
-			klasseAddOhneUpdate(klasse);
-
+		klasseAddAllOhneUpdate(listKlasse);
 		update_all();
 	}
 
@@ -1603,15 +1619,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void klassenunterrichtAddAllOhneUpdate(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
+			klassenunterrichtAddOhneUpdate(klassenunterricht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKlassenunterricht}-Objekte hinzu.
 	 *
 	 * @param listKlassenunterricht  Die Menge der {@link StundenplanKlassenunterricht}-Objekte, welche hinzugefügt werden soll.
 	 */
-	private void klassenunterrichtAddAll(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
-		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
-			klassenunterrichtAddOhneUpdate(klassenunterricht);
-
+	public void klassenunterrichtAddAll(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);
 		update_all();
 	}
 
@@ -1755,15 +1774,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void kursAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
+		for (final @NotNull  StundenplanKurs kurs : listKurs)
+			kursAddOhneUpdate(kurs);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanKurs}-Objekte hinzu.
 	 *
 	 * @param listKurs  Die Menge der {@link StundenplanKurs}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void kursAddAll(final @NotNull List<@NotNull StundenplanKurs> listKurs) {
-		for (final @NotNull  StundenplanKurs kurs : listKurs)
-			kursAddOhneUpdate(kurs);
-
+		kursAddAllOhneUpdate(listKurs);
 		update_all();
 	}
 
@@ -1996,15 +2018,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void lehrerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
+		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
+			lehrerAddOhneUpdate(lehrer);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanLehrer}-Objekte hinzu.
 	 *
 	 * @param listLehrer  Die Menge der {@link StundenplanLehrer}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void lehrerAddAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
-		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
-			lehrerAddOhneUpdate(lehrer);
-
+		lehrerAddAllOhneUpdate(listLehrer);
 		update_all();
 	}
 
@@ -2110,15 +2135,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void pausenaufsichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
+		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : listPausenaufsicht)
+			pausenaufsichtAddOhneUpdate(pausenaufsicht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanPausenaufsicht}-Objekte hinzu.
 	 *
 	 * @param listPausenaufsicht  Die Menge der {@link StundenplanPausenaufsicht}-Objekte, welche hinzugefügt werden soll.
 	 */
-	private void pausenaufsichtAddAll(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
-		for (final @NotNull StundenplanPausenaufsicht pausenaufsicht : listPausenaufsicht)
-			pausenaufsichtAddOhneUpdate(pausenaufsicht);
-
+	public void pausenaufsichtAddAll(final @NotNull List<@NotNull StundenplanPausenaufsicht> listPausenaufsicht) {
+		pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);
 		update_all();
 	}
 
@@ -2299,15 +2327,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void pausenzeitAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanPausenzeit> listPausenzeit) {
+		for (final @NotNull StundenplanPausenzeit pausenzeit : listPausenzeit)
+			pausenzeitAddOhneUpdate(pausenzeit);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanPausenzeit}-Objekte hinzu.
 	 *
 	 * @param listPausenzeit  Die Menge der {@link StundenplanPausenzeit}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void pausenzeitAddAll(final @NotNull List<@NotNull StundenplanPausenzeit> listPausenzeit) {
-		for (final @NotNull StundenplanPausenzeit pausenzeit : listPausenzeit)
-			pausenzeitAddOhneUpdate(pausenzeit);
-
+		pausenzeitAddAllOhneUpdate(listPausenzeit);
 		update_all();
 	}
 
@@ -2604,15 +2635,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void raumAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
+		for (final @NotNull StundenplanRaum raum : listRaum)
+			raumAddOhneUpdate(raum);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanRaum}-Objekte hinzu.
 	 *
 	 * @param listRaum  Die Menge der {@link StundenplanRaum}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void raumAddAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
-		for (final @NotNull StundenplanRaum raum : listRaum)
-			raumAddOhneUpdate(raum);
-
+		raumAddAllOhneUpdate(listRaum);
 		update_all();
 	}
 
@@ -2714,15 +2748,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void schieneAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanSchiene> listSchiene) {
+		for (final @NotNull StundenplanSchiene schiene : listSchiene)
+			schieneAddOhneUpdate(schiene);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanSchiene}-Objekte hinzu.
 	 *
 	 * @param listSchiene  Die Menge der {@link StundenplanSchiene}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void schieneAddAll(final @NotNull List<@NotNull StundenplanSchiene> listSchiene) {
-		for (final @NotNull StundenplanSchiene schiene : listSchiene)
-			schieneAddOhneUpdate(schiene);
-
+		schieneAddAllOhneUpdate(listSchiene);
 		update_all();
 	}
 
@@ -2753,15 +2790,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void schuelerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanSchueler> listSchueler) {
+		for (final @NotNull StundenplanSchueler schueler : listSchueler)
+			schuelerAddOhneUpdate(schueler);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanSchueler}-Objekte hinzu.
 	 *
 	 * @param listSchueler  Die Menge der {@link StundenplanSchueler}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void schuelerAddAll(final @NotNull List<@NotNull StundenplanSchueler> listSchueler) {
-		for (final @NotNull StundenplanSchueler schueler : listSchueler)
-			schuelerAddOhneUpdate(schueler);
-
+		schuelerAddAllOhneUpdate(listSchueler);
 		update_all();
 	}
 
@@ -2954,15 +2994,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void unterrichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
+		for (final @NotNull StundenplanUnterricht unterricht : listUnterricht)
+			unterrichtAddOhneUpdate(unterricht);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanUnterricht}-Objekte hinzu.
 	 *
 	 * @param listUnterricht  Die Menge der {@link StundenplanUnterricht}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void unterrichtAddAll(final @NotNull List<@NotNull StundenplanUnterricht> listUnterricht) {
-		for (final @NotNull StundenplanUnterricht unterricht : listUnterricht)
-			unterrichtAddOhneUpdate(unterricht);
-
+		unterrichtAddAllOhneUpdate(listUnterricht);
 		update_all();
 	}
 
@@ -3500,15 +3543,18 @@ public class StundenplanManager {
 		update_all();
 	}
 
+	private void zeitrasterAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanZeitraster> listZeitraster) {
+		for (final @NotNull StundenplanZeitraster zeitraster : listZeitraster)
+			zeitrasterAddOhneUpdate(zeitraster);
+	}
+
 	/**
 	 * Fügt alle {@link StundenplanZeitraster}-Objekte hinzu.
 	 *
 	 * @param listZeitraster  Die Menge der {@link StundenplanZeitraster}-Objekte, welche hinzugefügt werden soll.
 	 */
 	public void zeitrasterAddAll(final @NotNull List<@NotNull StundenplanZeitraster> listZeitraster) {
-		for (final @NotNull StundenplanZeitraster zeitraster : listZeitraster)
-			zeitrasterAddOhneUpdate(zeitraster);
-
+		zeitrasterAddAllOhneUpdate(listZeitraster);
 		update_all();
 	}
 
