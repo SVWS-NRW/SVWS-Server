@@ -373,11 +373,9 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	patchKlausurterminDatum = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
+	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
 		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.terminGetByIdOrException(id);
-		// if (termin.datum !== undefined && oldTtermin.datum !== termin.datum)
-		// 	this.kursklausurmanager.terminPatchAttributes(id, termin.datum);
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
 		this.kursklausurmanager.terminPatchAttributes(oldTtermin);

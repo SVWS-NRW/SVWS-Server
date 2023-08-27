@@ -103,11 +103,9 @@
 
 	const onDrag = (data: GostKlausurplanungRaumzeitDragData) => {
 		dragData.value = data;
-		console.log("drag", data);
 	};
 
 	const onDrop = async (zone: GostKlausurplanungRaumzeitDropZone) => {
-		console.log("drop", zone);
 		if (dragData.value instanceof GostKursklausur)
 			if (zone instanceof GostKlausurraum)
 				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);

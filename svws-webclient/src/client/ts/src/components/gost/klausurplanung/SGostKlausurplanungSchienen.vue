@@ -64,7 +64,7 @@
 							:drag-klausur="dragKlausur"
 							:map-schueler="mapSchueler"
 							:loesche-klausurtermine="loescheKlausurtermine"
-							:patch-klausurtermin-datum="patchKlausurterminDatum"
+							:patch-klausurtermin="patchKlausurtermin"
 							@drag-start-klausur="dragStartKlausur"
 							@drag-end-klausur="dragEndKlausur"
 							:kursmanager="kursmanager" />
