@@ -657,7 +657,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public kursklausurmengeGetList(manager : GostKursklausurManager) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		for (const kkId of this._schuelerklausurmenge_by_idKursklausur.keySet()) {
-			kursklausuren.add(manager.getKursklausurById(kkId));
+			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
 		}
 		return kursklausuren;
 	}
@@ -687,7 +687,7 @@ export class GostKlausurraumManager extends JavaObject {
 			return kursklausuren;
 		for (const idKK of this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
 			if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
-				kursklausuren.add(manager.getKursklausurById(idKK));
+				kursklausuren.add(manager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
 	}

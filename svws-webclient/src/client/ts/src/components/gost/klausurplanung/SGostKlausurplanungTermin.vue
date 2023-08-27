@@ -73,7 +73,7 @@
 		emit("dragEndKlausur", e);
 	}
 
-	const klausuren = () => props.kursklausurmanager().getKursklausurenByTermin(props.termin.id);
+	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
 
 	const anzahlSuS = computed(() => {
 		let anzahl = 0;

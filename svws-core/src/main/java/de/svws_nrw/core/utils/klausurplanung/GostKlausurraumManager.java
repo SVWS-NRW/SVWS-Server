@@ -657,6 +657,8 @@ public class GostKlausurraumManager {
 		update_all();
 	}
 
+	// ################################################################################
+
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
@@ -679,45 +681,6 @@ public class GostKlausurraumManager {
 		raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
 		raumstundeAddAll(collectionSkrsKrs.raumstunden);
 		schuelerklausurraumstundeAddAll(collectionSkrsKrs.skRaumstunden);
-
-//		for (final long skid : skids) {
-//			final GostSchuelerklausur schuelerklausur = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausur_by_id, skid);
-//			final List<GostKlausurraumstunde> listKrs = _raumstundenmenge_by_idSchuelerklausur.get(skid);
-//			if (listKrs == null) {
-//				DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurmenge_by_idRaum, -1L).remove(schuelerklausur);
-//				DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurmenge_by_idRaum_and_idKursklausur, -1L, schuelerklausur.idKursklausur).remove(schuelerklausur);
-//				continue;
-//			}
-//			DeveloperNotificationException.ifMapRemoveFailes(_raumstundenmenge_by_idSchuelerklausur, skid);
-//			for (final GostKlausurraumstunde rsid : listKrs) {
-//				if (rsid == null)
-//					continue;
-//				final @NotNull List<@NotNull GostSchuelerklausurraumstunde> skrsList = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurraumstundenmenge_by_idRaumstunde, rsid.id);
-//				final List<@NotNull GostSchuelerklausurraumstunde> toRemove = new ArrayList<>();
-//				for (final @NotNull GostSchuelerklausurraumstunde skrs : skrsList) {
-//					if (skrs.idSchuelerklausur == skid)
-//						toRemove.add(skrs);
-//				}
-//				skrsList.removeAll(toRemove);
-//				DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurmenge_by_idRaum, rsid.idRaum).remove(schuelerklausur);
-//				DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurmenge_by_idRaum_and_idKursklausur, rsid.idRaum, schuelerklausur.idKursklausur).remove(schuelerklausur);
-//			}
-//		}
-//
-//		final @NotNull List<@NotNull GostKlausurraumstunde> raumstunden = collectionSkrsKrs.raumstunden;
-//		final @NotNull List<@NotNull GostSchuelerklausurraumstunde> skRaumstunden = collectionSkrsKrs.skRaumstunden;
-//		for (final @NotNull GostKlausurraumstunde rs : raumstunden)
-//			addKlausurraumstunde(rs);
-//		for (final @NotNull GostSchuelerklausurraumstunde skrs : skRaumstunden)
-//			addSchuelerklausurraumstunde(skrs);
-//		for (final long skid : skids) {
-//			final GostSchuelerklausur schuelerklausur = DeveloperNotificationException.ifMapGetIsNull(_schuelerklausur_by_id, skid);
-//			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumSchuelerklausurenList", MapUtils.getOrCreateArrayList(_schuelerklausurmenge_by_idRaum, collectionSkrsKrs.idKlausurraum),
-//					schuelerklausur);
-//			DeveloperNotificationException.ifListAddsDuplicate("_mapRaumKursklausurSchuelerklausurList",
-//					Map2DUtils.getOrCreateArrayList(_schuelerklausurmenge_by_idRaum_and_idKursklausur, collectionSkrsKrs.idKlausurraum, schuelerklausur.idKursklausur), schuelerklausur);
-//		}
-
 	}
 
 	/**
@@ -730,7 +693,7 @@ public class GostKlausurraumManager {
 	public @NotNull List<@NotNull GostKursklausur> kursklausurmengeGetList(final @NotNull GostKursklausurManager manager) {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		for (final long kkId : _schuelerklausurmenge_by_idKursklausur.keySet()) {
-			kursklausuren.add(manager.getKursklausurById(kkId));
+			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
 		}
 		return kursklausuren;
 	}
@@ -760,7 +723,7 @@ public class GostKlausurraumManager {
 			return kursklausuren;
 		for (final long idKK : _schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
 			if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
-				kursklausuren.add(manager.getKursklausurById(idKK));
+				kursklausuren.add(manager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
 	}

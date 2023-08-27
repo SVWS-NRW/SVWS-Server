@@ -80,15 +80,15 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = computed(() => props.kursklausurmanager().getKlausurtermineMitDatumByQuartal(props.quartalsauswahl.value));
+	const termine = computed(() => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value));
 
 	const calculatCssClassesTermin = (termin: GostKlausurtermin) => ({
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,
 	});
 
 	const calculatCssClassesKlausur = (klausur: GostKursklausur) => ({
-		"bg-green-500": raummanager.value!.alleSchuelerklausurenVerplant(klausur),
-		"bg-yellow-500": !raummanager.value!.alleSchuelerklausurenVerplant(klausur),
+		"bg-green-500": raummanager.value!.isAlleSchuelerklausurenVerplant(klausur),
+		"bg-yellow-500": !raummanager.value!.isAlleSchuelerklausurenVerplant(klausur),
 	});
 
 
@@ -97,7 +97,7 @@
 	function isDraggable(object: any) : boolean {
 		if (selectedTermin.value !== null && object instanceof GostKursklausur)
 			if (object.idTermin === selectedTermin.value.id)
-				return !raummanager.value!.alleSchuelerklausurenVerplant(object);
+				return !raummanager.value!.isAlleSchuelerklausurenVerplant(object);
 		return false;
 	}
 
@@ -110,12 +110,12 @@
 		console.log("drop", zone);
 		if (dragData.value instanceof GostKursklausur)
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.getSchuelerklausurenByKursklausur(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurmengeGetByKursklausurid(dragData.value.id), raummanager.value!);
 			else if (zone instanceof GostKlausurtermin)
-				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.getSchuelerklausurenByKursklausur(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurmengeGetByKursklausurid(dragData.value.id), raummanager.value!);
 	};
 
-	const klausuren = (termin: GostKlausurtermin) => props.kursklausurmanager().getKursklausurenByTermin(termin.id);
+	const klausuren = (termin: GostKlausurtermin) => props.kursklausurmanager().kursklausurGetMengeByTerminid(termin.id);
 
 	function anzahlSuS(termin: GostKlausurtermin) {
 		let anzahl = 0;

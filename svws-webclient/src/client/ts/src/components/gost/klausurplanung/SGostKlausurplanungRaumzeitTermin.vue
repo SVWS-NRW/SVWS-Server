@@ -12,7 +12,7 @@
 
 			<tr>
 				<th>Anzahl Klausurschreiber:innen</th>
-				<td>{{ kursklausurmanager().gibSchuelerIDsZuTermin(termin.id)?.size() }}</td>
+				<td>{{ kursklausurmanager().schueleridsGetMengeByTerminid(termin.id)?.size() }}</td>
 			</tr>
 		</table>
 	</svws-ui-content-card>
@@ -22,7 +22,7 @@
 			<svws-ui-button size="small" type="secondary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
 		<div class="flex flex-col flex-wrap gap-4 w-full">
-			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager?.getKlausurraeume()"
+			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager?.raumGetMengeAsList()"
 				:key="raum.id"
 				:stundenplanmanager="stundenplanmanager"
 				:raum="raum"
@@ -68,7 +68,7 @@
 		let nR = new GostKlausurraum();
 		nR.idTermin = props.termin.id;
 		nR = await props.erzeugeKlausurraum(nR);
-		props.raummanager.addKlausurraum(nR);
+		props.raummanager.raumAdd(nR);
 	}
 
 </script>

@@ -71,7 +71,7 @@
 
 	const showDetails = ref(true);
 
-	const klausurenOhneTermin = () => (props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().getKursklausurenOhneTermin() : props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartal));
+	const klausurenOhneTermin = () => props.quartal === undefined || props.quartal <= 0 ? props.kursklausurmanager().kursklausurOhneTerminGetMenge() : props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartal);
 
 	const emit = defineEmits<{
 		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;
@@ -90,11 +90,11 @@
 		let konfliktfreiZuFremdtermin = false;
 		for (const termin of props.alleTermine) {
 			if (termin.id !== klausur.idTermin && termin.quartal === klausur.quartal)
-				konfliktfreiZuFremdtermin = props.kursklausurmanager().gibKonfliktTerminKursklausurIds(termin.id, klausur.id).isEmpty();
+				konfliktfreiZuFremdtermin = props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(termin.id, klausur.id).isEmpty();
 			if (konfliktfreiZuFremdtermin)
 				break;
 		}
-		const konfliktZuEigenemTermin = props.termin === undefined || props.termin === null || klausur === null ? false : props.kursklausurmanager().gibKonfliktTerminInternKursklausur(props.termin, klausur).size() > 0;
+		const konfliktZuEigenemTermin = props.termin === undefined || props.termin === null || klausur === null ? false : props.kursklausurmanager().konfliktTermininternSchueleridsGetMengeByTerminAndKursklausur(props.termin, klausur).size() > 0;
 		return {
 			"bg-success": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			"bg-error": konfliktZuEigenemTermin,
@@ -102,7 +102,7 @@
 	};
 
 	const setKlausurToTermin = async (pKlausur: GostKursklausur) => {
-		const klausur = props.kursklausurmanager().gibKursklausurById(pKlausur.id);
+		const klausur = props.kursklausurmanager().kursklausurGetByIdOrException(pKlausur.id);
 		const terminNeu = props.termin !== null ? props.termin.id : null;
 		if (props.termin !== null && props.termin.quartal !== klausur.quartal)
 			return;
@@ -110,11 +110,11 @@
 	}
 
 	const konflikteTerminDragKlausur = computed(() =>
-		props.termin !== null && props.dragKlausur !== null ? props.kursklausurmanager().gibKonfliktTerminKursklausurIds(props.termin.id, props.dragKlausur!.id).size() : -1
+		props.termin !== null && props.dragKlausur !== null ? props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(props.termin.id, props.dragKlausur!.id).size() : -1
 	);
 
 	const konflikteTermin = computed(() =>
-		props.termin !== null ? props.kursklausurmanager().gibAnzahlKonflikteZuTermin(props.termin.id) : 0
+		props.termin !== null ? props.kursklausurmanager().konflikteAnzahlGetByTerminid(props.termin.id) : 0
 	);
 
 </script>

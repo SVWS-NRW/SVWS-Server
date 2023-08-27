@@ -295,7 +295,7 @@ export class RouteDataGostKlausurplanung {
 	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
 		api.status.start();
 		const termin = await api.server.createGostKlausurenKlausurtermin(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.kursklausurmanager.addKlausurtermin(termin);
+		this.kursklausurmanager.terminAdd(termin);
 		this.commit();
 		api.status.stop();
 		return termin;
@@ -305,7 +305,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const terminIds = Arrays.asList((termine.toArray() as GostKlausurtermin[]).map((termin) => termin.id));
 		const result = await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
-		this.kursklausurmanager.removeKlausurtermine(terminIds);
+		this.kursklausurmanager.terminRemoveAll(termine);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -315,7 +315,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		klausur.idTermin = idTermin;
 		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
-		this.kursklausurmanager.updateKursklausur(klausur);
+		this.kursklausurmanager.kursklausurPatchAttributes(klausur);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -324,9 +324,9 @@ export class RouteDataGostKlausurplanung {
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<boolean> => {
 		api.status.start();
 		await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id);
-		const oldKlausur = this.kursklausurmanager.gibKursklausurById(id);
+		const oldKlausur = this.kursklausurmanager.kursklausurGetByIdOrException(id);
 		Object.assign(oldKlausur, klausur);
-		this.kursklausurmanager.updateKursklausur(oldKlausur);
+		this.kursklausurmanager.kursklausurPatchAttributes(oldKlausur);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -367,7 +367,7 @@ export class RouteDataGostKlausurplanung {
 	erzeugeKursklausurenAusVorgaben = async (quartal: number): Promise<boolean> => {
 		api.status.start();
 		const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.kursklausurmanager.addKlausuren(result);
+		this.kursklausurmanager.kursklausurAddAll(result);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -375,11 +375,12 @@ export class RouteDataGostKlausurplanung {
 
 	patchKlausurterminDatum = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
-		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.gibKlausurtermin(id);
-		if (termin.datum !== undefined && oldTtermin.datum !== termin.datum)
-			this.kursklausurmanager.patchKlausurterminDatum(id, termin.datum);
+		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.terminGetByIdOrException(id);
+		// if (termin.datum !== undefined && oldTtermin.datum !== termin.datum)
+		// 	this.kursklausurmanager.terminPatchAttributes(id, termin.datum);
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
+		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -438,7 +439,6 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const skids = Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur));
 		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt!.id);
-		console.log(collectionSkrsKrs);
 		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
 		api.status.stop();

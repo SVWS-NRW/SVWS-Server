@@ -78,7 +78,7 @@
 <script setup lang="ts">
 
 	import type { GostKursklausur, GostKlausurtermin } from "@core";
-	import { KlausurterminblockungAlgorithmen, KlausurterminblockungAlgorithmus, GostKlausurterminblockungDaten,
+	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten,
 		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
@@ -105,7 +105,7 @@
 		"opacity-40": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
 	});
 
-	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().getKlausurtermine() : props.kursklausurmanager().getKlausurtermineByQuartal(props.quartalsauswahl.value));
+	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().terminGetMengeAsList() : props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value));
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
@@ -115,7 +115,7 @@
 		loading.value = true;
 		modal.value.closeModal();
 		const daten = new GostKlausurterminblockungDaten();
-		daten.klausuren = props.kursklausurmanager().getKursklausurenOhneTerminByQuartal(props.quartalsauswahl.value);
+		daten.klausuren = props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;
 		daten.konfiguration.algorithmus = algMode.value.id;
 		daten.konfiguration.modusKursarten = lkgkMode.value.id;
@@ -125,6 +125,5 @@
 	};
 
 	const loescheTermine = async () => await props.loescheKlausurtermine(termine.value);
-
 
 </script>

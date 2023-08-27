@@ -215,7 +215,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			if (sk.startzeit != null) {
 				if (sk.startzeit < minStart)
 					minStart = sk.startzeit;
-				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.gibKursklausurById(sk.idKursklausur).idVorgabe).dauer;
+				final int endzeit = sk.startzeit + vorgabenManager.gibGostKlausurvorgabe(kursklausurManager.kursklausurGetByIdOrException(sk.idKursklausur).idVorgabe).dauer;
 				if (endzeit > maxEnd)
 					maxEnd = endzeit;
 			}
@@ -306,7 +306,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<GostSchuelerklausurraumstunde> result = new ArrayList<>();
 		final LocalDate klausurdatum = LocalDate.parse(termin.Datum);
 		for (final GostSchuelerklausur sk : listSchuelerklausurenNeu) {
-			final GostKursklausur kk = kursklausurManager.getKursklausurById(sk.idKursklausur);
+			final GostKursklausur kk = kursklausurManager.kursklausurGetByIdOrException(sk.idKursklausur);
 			final GostKlausurvorgabe v = vorgabenManager.gibGostKlausurvorgabe(kk.idVorgabe);
 			final int startzeit = sk.startzeit != null ? sk.startzeit : (kk.startzeit != null ? kk.startzeit : termin.Startzeit);
 			final List<StundenplanZeitraster> zeitrasterSk = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), startzeit,
