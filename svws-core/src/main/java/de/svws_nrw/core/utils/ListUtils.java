@@ -82,4 +82,30 @@ public final class ListUtils {
 		return list;
 	}
 
+    /**
+     * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
+     *
+     * @param <E>    Der Inhaltstyp der Liste.
+     * @param list   Die Liste in welche hinzugefügt wird.
+     * @param e      Das Element, welches ggf. hinzugefügt wird.
+     *
+     */
+    public static <@NotNull E> void addIfNotExists(final @NotNull List<@NotNull E> list, final @NotNull E e) {
+        if (!list.contains(e))
+        	list.add(e);
+    }
+
+    /**
+     * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
+     *
+     * @param <E>        Der Inhaltstyp der Liste.
+     * @param list       Die Liste in welche hinzugefügt wird.
+     * @param listToAdd  Die Liste aus welcher kopiert wird.
+     */
+    public static <@NotNull E> void addAllIfNotExists(final @NotNull List<@NotNull E> list, final @NotNull List<@NotNull E> listToAdd) {
+        for (final E e : listToAdd)
+        	if (!list.contains(e))
+        		list.add(e);
+    }
+
 }

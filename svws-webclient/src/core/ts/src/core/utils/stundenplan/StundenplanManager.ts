@@ -33,6 +33,7 @@ import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSc
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { Wochentag } from '../../../core/types/Wochentag';
+import { ListUtils } from '../../../core/utils/ListUtils';
 import { StundenplanKomplett, cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett } from '../../../core/data/stundenplan/StundenplanKomplett';
 
 export class StundenplanManager extends JavaObject {
@@ -297,6 +298,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
+	private readonly _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+
 	private readonly _schueler_by_id : HashMap<number, StundenplanSchueler> = new HashMap();
 
 	private readonly _schuelermenge_sortiert : List<StundenplanSchueler> = new ArrayList();
@@ -326,6 +329,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
 	private readonly _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
+
+	private readonly _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
 	private readonly _unterrichtmenge_by_idSchueler_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
@@ -506,20 +511,22 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenaufsichtmenge_by_idAufsichtsbereich();
 		this.update_pausenzeitmenge_by_wochentag();
 		this.update_schienenmenge_by_idJahrgang();
+		this.update_schienenmenge_by_idUnterricht();
 		this.update_unterrichtmenge_by_idSchiene();
 		this.update_unterrichtmenge_by_idKurs();
+		this.update_unterrichtmenge_by_idKlasse_and_idFach();
+		this.update_unterrichtmenge_by_idZeitraster_and_wochentyp();
+		this.update_zeitraster_by_wochentag_and_stunde();
+		this.update_zeitrastermenge_by_wochentag();
+		this.update_zeitrastermenge_by_stunde();
 		this.update_unterrichtmenge_by_idRaum();
+		this.update_unterrichtmenge_by_idRaum_and_idZeitraster();
 		this.update_jahrgangmenge_by_idKurs();
 		this.update_jahrgangmenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idJahrgang();
 		this.update_unterrichtmenge_by_idJahrgang_and_idZeitraster();
 		this.update_unterrichtmenge_by_idLehrer();
 		this.update_unterrichtmenge_by_idLehrer_and_idZeitraster();
-		this.update_unterrichtmenge_by_idKlasse_and_idFach();
-		this.update_unterrichtmenge_by_idZeitraster_and_wochentyp();
-		this.update_zeitraster_by_wochentag_and_stunde();
-		this.update_zeitrastermenge_by_wochentag();
-		this.update_zeitrastermenge_by_stunde();
 		this.update_schuelermenge_by_idKurs();
 		this.update_schuelermenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idSchueler();
@@ -541,13 +548,28 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit();
 	}
 
+	private update_unterrichtmenge_by_idRaum_and_idZeitraster() : void {
+		this._unterrichtmenge_by_idRaum_and_idZeitraster.clear();
+		for (const idRaum of this._unterrichtmenge_by_idRaum.keySet())
+			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idRaum, idRaum))
+				Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idRaum_and_idZeitraster, idRaum, u.idZeitraster).add(u);
+	}
+
+	private update_schienenmenge_by_idUnterricht() : void {
+		this._schienenmenge_by_idUnterricht.clear();
+		for (const u of this._unterrichtmenge_sortiert)
+			for (const idSchiene of u.schienen) {
+				const schiene : StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
+				MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id).add(schiene);
+			}
+	}
+
 	private update_pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit() : void {
 		this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit.clear();
 		for (const aufsicht of this._pausenaufsichtmenge_sortiert)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, aufsicht.idPausenzeit))
 				for (const jahrgang of MapUtils.getOrCreateArrayList(this._jahrgangmenge_by_idKlasse, klasse.id))
-					if (!Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, jahrgang.id, aufsicht.idPausenzeit).contains(aufsicht))
-						Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, jahrgang.id, aufsicht.idPausenzeit).add(aufsicht);
+					ListUtils.addIfNotExists(Map2DUtils.getOrCreateArrayList(this._pausenaufsichtmenge_by_idJahrgang_and_idPausenzeit, jahrgang.id, aufsicht.idPausenzeit), aufsicht);
 	}
 
 	private update_pausenzeitmenge_by_idJahrgang_and_wochentag() : void {
@@ -575,8 +597,7 @@ export class StundenplanManager extends JavaObject {
 		for (const pausenzeit of this._pausenzeitmenge_sortiert)
 			for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id))
 				for (const idJahrgang of klasse.jahrgaenge)
-					if (!MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idJahrgang, idJahrgang).contains(pausenzeit))
-						MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idJahrgang, idJahrgang).add(pausenzeit);
+					ListUtils.addIfNotExists(MapUtils.getOrCreateArrayList(this._pausenzeitmenge_by_idJahrgang, idJahrgang), pausenzeit);
 	}
 
 	private update_unterrichtmenge_by_idSchueler() : void {
@@ -778,8 +799,7 @@ export class StundenplanManager extends JavaObject {
 			for (const schueler of MapUtils.getOrCreateArrayList(this._schuelermenge_by_idKurs, kurs.id))
 				if (schueler.idKlasse >= 0) {
 					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, schueler.idKlasse);
-					if (!MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).contains(klasse))
-						MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).add(klasse);
+					ListUtils.addIfNotExists(MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id), klasse);
 				}
 			MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).sort(StundenplanManager._compKlasse);
 		}
@@ -2859,6 +2879,82 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
 		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
 		DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", this._jahrgang_by_id, schiene.idJahrgang);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte der Klasse am "wochentag, stunde, wochentyp".
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
+	 */
+	public schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
+		const list : List<StundenplanSchiene> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
+			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte des Lehrers am "wochentag, stunde, wochentyp".
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idLehrer      Die Datenbank-ID des Lehrers.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Lehrers am "wochentag, stunde, wochentyp".
+	 */
+	public schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
+		const list : List<StundenplanSchiene> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
+			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte des Schülers am "wochentag, stunde, wochentyp".
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idSchueler    Die Datenbank-ID des Schülers.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Schülers am "wochentag, stunde, wochentyp".
+	 */
+	public schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
+		const list : List<StundenplanSchiene> = new ArrayList();
+		for (const u of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
+			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idJahrgang    Die Datenbank-ID des Jahrgangs.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekten, des Jahrgangs am "wochentag, stunde, wochentyp".
+	 */
+	public schieneGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang : number, wochentag : number, stunde : number, wochentyp : number, inklWoche0 : boolean) : List<StundenplanSchiene> {
+		const list : List<StundenplanSchiene> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
+			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		return list;
 	}
 
 	private schieneRemoveOhneUpdateById(idSchiene : number) : void {

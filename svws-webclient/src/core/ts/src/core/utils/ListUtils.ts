@@ -71,6 +71,31 @@ export class ListUtils extends JavaObject {
 		return list;
 	}
 
+	/**
+	 * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
+	 *
+	 * @param <E>    Der Inhaltstyp der Liste.
+	 * @param list   Die Liste in welche hinzugefügt wird.
+	 * @param e      Das Element, welches ggf. hinzugefügt wird.
+	 */
+	public static addIfNotExists<E>(list : List<E>, e : E) : void {
+		if (!list.contains(e))
+			list.add(e);
+	}
+
+	/**
+	 * Fügt das Element der Liste hinzu, falls es nicht bereits existiert. Verhindert so Duplikate.
+	 *
+	 * @param <E>        Der Inhaltstyp der Liste.
+	 * @param list       Die Liste in welche hinzugefügt wird.
+	 * @param listToAdd  Die Liste aus welcher kopiert wird.
+	 */
+	public static addAllIfNotExists<E>(list : List<E>, listToAdd : List<E>) : void {
+		for (const e of listToAdd)
+			if (!list.contains(e))
+				list.add(e);
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.ListUtils'].includes(name);
 	}
