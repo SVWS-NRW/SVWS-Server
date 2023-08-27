@@ -49,6 +49,18 @@
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
 						<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0">{{ sumSchreiber(wochentag, stunde) }}</span>
 						<span v-for="kurs in kurseGefiltert(wochentag, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
+						<svws-ui-drag-data v-if="!kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).isEmpty()"
+											:data="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+											:draggable="true"
+											@dragstart="onDrag(kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0))"
+											@drag-end="onDrag(undefined)">
+											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
+												:termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+												:faecher-manager="faecherManager"
+												:map-lehrer="mapLehrer"
+												:kursmanager="kursmanager"
+												:class="{'opacity-40': dragData !== undefined}" />
+										</svws-ui-drag-data>
 					</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->

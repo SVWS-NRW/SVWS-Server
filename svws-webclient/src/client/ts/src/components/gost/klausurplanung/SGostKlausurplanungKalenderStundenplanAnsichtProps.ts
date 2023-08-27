@@ -1,4 +1,4 @@
-import type { GostKlausurtermin, KursManager, List, Wochentag } from "@core";
+import type { GostFaecherManager, GostKlausurtermin, GostKursklausurManager, KursManager, LehrerListeEintrag, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
 import { type StundenplanManager, type StundenplanPausenaufsicht,
 	type StundenplanKurs, type StundenplanKlassenunterricht, type StundenplanUnterricht, type StundenplanZeitraster, type StundenplanPausenzeit } from "@core";
 
@@ -9,9 +9,11 @@ export type KlausurplanungKalenderDropZone = StundenplanZeitraster | Stundenplan
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse';
 	ignoreEmpty?: boolean;
-	id: number,
+	id: number;
+	kwAuswahl: StundenplanKalenderwochenzuordnung;
 	manager: () => StundenplanManager;
 	kursmanager: KursManager;
+	kursklausurmanager: () => GostKursklausurManager;
 	wochentyp: () => number;
 	// kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
@@ -20,4 +22,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	dragData: () => KlausurplanungKalenderDragData;
 	onDrag: (data: KlausurplanungKalenderDragData) => void;
 	onDrop: (zone: KlausurplanungKalenderDropZone) => void;
+	faecherManager: GostFaecherManager;
+	mapLehrer: Map<number, LehrerListeEintrag>;
+
 }

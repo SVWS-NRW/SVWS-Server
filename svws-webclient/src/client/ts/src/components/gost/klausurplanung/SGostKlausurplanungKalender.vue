@@ -16,7 +16,7 @@
 						<li v-for="termin in termineOhne"
 							:key="termin.id"
 							:data="termin"
-							:draggable="isDraggable"
+							:draggable="isDraggable(termin)"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
 							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
@@ -36,9 +36,9 @@
 					removable
 					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
 
-				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33"
-					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" />
+				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
+					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
+					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
 				<!--<calendar-view :display-period-uom="displayPeriodUom"
 					:display-period-count="displayPeriodUom === 'month' ? 1 : 2"
 					:starting-day-of-week="1"
