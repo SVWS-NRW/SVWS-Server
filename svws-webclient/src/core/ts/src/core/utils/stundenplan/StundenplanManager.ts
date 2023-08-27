@@ -1279,6 +1279,18 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	/**
+	 * Liefert zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und einem {@link StundenplanZeitraster}-Objekt das zugehörige Datum.
+	 *
+	 * @param kwz   Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das Datum zum Teil definiert.
+	 * @param zeit  Das {@link StundenplanZeitraster}-Objekt, welches das Datum zum Teil definiert.
+	 *
+	 * @return zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und einem {@link StundenplanZeitraster}-Objekt das zugehörige Datum.
+	 */
+	public datumGetBy(kwz : StundenplanKalenderwochenzuordnung, zeit : StundenplanZeitraster) : string {
+		return DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw, zeit.wochentag);
+	}
+
 	private fachAddOhneUpdate(fach : StundenplanFach) : void {
 		StundenplanManager.fachCheck(fach);
 		DeveloperNotificationException.ifMapPutOverwrites(this._fach_by_id, fach.id, fach);

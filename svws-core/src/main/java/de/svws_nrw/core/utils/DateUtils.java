@@ -120,6 +120,28 @@ public final class DateUtils {
 	}
 
 	/**
+	 * Liefert das Datum im ISO8601-Format (uuuu-MM-dd) des Wochentags (aus dem Intervall 1 bis 7) der Kalenderwoche des Kalenderwochenjahres.
+	 * <br>Hinweis: Der Montag kann bei der 1. KW im Vorjahr liegen!
+	 *
+	 * @param kalenderwochenjahr  Das Jahr der Kalenderwoche.
+	 * @param kalenderwoche       Die Kalenderwoche.
+	 * @param wochentag           Der Wochentag aus dem Intervall 1 bis 7.
+	 *
+	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) des Wochentags (aus dem Intervall 1 bis 7) der Kalenderwoche des Kalenderwochenjahres.
+	 */
+	public static @NotNull String gibDatumDesWochentagsOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche, final int wochentag) {
+		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
+		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
+		DeveloperNotificationException.ifTrue("(wochentag < 1) || (wochentag > 7)", (wochentag < 1) || (wochentag > 7));
+		// Der 4. Januar ist immer in der 1. Kalenderwoche
+		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
+		final int tagImJahrAmJanuar4 = 4;
+		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
+		final int tagImJahr = 7 * kalenderwoche - wochentagAmJanuar4 + wochentag - 3;
+		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
+	}
+
+	/**
 	 * Liefert das Datum im ISO8601-Format (uuuu-MM-dd)des Montags der Kalenderwoche des Jahres.
 	 * <br>Hinweis: Der Montag kann bei der 1. KW im Vorjahr liegen!
 	 * <br>Beispiel 1: Der Montag der 1. KW im 2023 ist der 02.01.2023
@@ -132,14 +154,7 @@ public final class DateUtils {
 	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) des Montags der Kalenderwoche des Jahres.
 	 */
 	public static @NotNull String gibDatumDesMontagsOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche) {
-		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
-		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
-		// Der 4. Januar ist immer in der 1. Kalenderwoche
-		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
-		final int tagImJahrAmJanuar4 = 4;
-		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		final int tagImJahr = 7 * kalenderwoche - 2 - wochentagAmJanuar4;
-		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
+		return gibDatumDesWochentagsOfJahrAndKalenderwoche(kalenderwochenjahr, kalenderwoche, 1);
 	}
 
 	/**
@@ -157,14 +172,7 @@ public final class DateUtils {
 	 * @return das Datum im ISO8601-Format (uuuu-MM-dd) des Sonntags der Kalenderwoche des Jahres.
 	 */
 	public static @NotNull String gibDatumDesSonntagsOfJahrAndKalenderwoche(final int kalenderwochenjahr, final int kalenderwoche) {
-		DeveloperNotificationException.ifTrue("kalenderwoche < 1", kalenderwoche < 1);
-		DeveloperNotificationException.ifTrue("kalenderwoche > gibKalenderwochenOfJahr(jahr)", kalenderwoche > gibKalenderwochenOfJahr(kalenderwochenjahr));
-		// Der 4. Januar ist immer in der 1. Kalenderwoche
-		final int schalttage1 = ((kalenderwochenjahr - 1) / 4) - ((kalenderwochenjahr - 1) / 100) + ((kalenderwochenjahr - 1) / 400);
-		final int tagImJahrAmJanuar4 = 4;
-		final int wochentagAmJanuar4 = (kalenderwochenjahr + schalttage1 + tagImJahrAmJanuar4 + 5) % 7 + 1;
-		final int tagImJahr = 7 * kalenderwoche + 4 - wochentagAmJanuar4;
-		return gibDatumDesTagesOfJahr(kalenderwochenjahr, tagImJahr);
+		return gibDatumDesWochentagsOfJahrAndKalenderwoche(kalenderwochenjahr, kalenderwoche, 7);
 	}
 
 	/**

@@ -1264,6 +1264,22 @@ public class StundenplanManager {
 	}
 
 	// #####################################################################
+	// #################### Datum ##########################################
+	// #####################################################################
+
+	/**
+	 * Liefert zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und einem {@link StundenplanZeitraster}-Objekt das zugehörige Datum.
+	 *
+	 * @param kwz   Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das Datum zum Teil definiert.
+	 * @param zeit  Das {@link StundenplanZeitraster}-Objekt, welches das Datum zum Teil definiert.
+	 *
+	 * @return zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und einem {@link StundenplanZeitraster}-Objekt das zugehörige Datum.
+	 */
+	public @NotNull String datumGetBy(final @NotNull StundenplanKalenderwochenzuordnung kwz, final @NotNull StundenplanZeitraster zeit) {
+		return DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw, zeit.wochentag);
+	}
+
+	// #####################################################################
 	// #################### StundenplanFach ################################
 	// #####################################################################
 
