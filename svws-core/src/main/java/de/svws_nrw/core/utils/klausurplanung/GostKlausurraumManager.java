@@ -690,7 +690,7 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostKursklausur> kursklausurmengeGetList(final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMenge(final @NotNull GostKursklausurManager manager) {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		for (final long kkId : _schuelerklausurmenge_by_idKursklausur.keySet()) {
 			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
@@ -705,7 +705,7 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurmengeGetByKursklausurid(final long idKursklausur) {
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByKursklausurid(final long idKursklausur) {
 		return DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurmenge_by_idKursklausur, idKursklausur);
 	}
 
@@ -717,7 +717,7 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostKursklausur> kursklausurmengeGetByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMengeByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
@@ -736,7 +736,7 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurmengeGetByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
 		final List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
 		if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
@@ -753,7 +753,7 @@ public class GostKlausurraumManager {
 	 *
 	 * @return die Liste der nicht verplanten StundenplanRäume
 	 */
-	public @NotNull List<@NotNull StundenplanRaum> stundenplanraummengeVerfuegbarGetAsList(@NotNull final List<@NotNull StundenplanRaum> alleRaeume) {
+	public @NotNull List<@NotNull StundenplanRaum> stundenplanraumVerfuegbarGetMenge(@NotNull final List<@NotNull StundenplanRaum> alleRaeume) {
 		final List<@NotNull StundenplanRaum> raeume = new ArrayList<>();
 		for (@NotNull final StundenplanRaum raum : alleRaeume)
 			if (!_klausurraum_by_idStundenplanraum.containsKey(raum.id))

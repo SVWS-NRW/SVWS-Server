@@ -654,7 +654,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public kursklausurmengeGetList(manager : GostKursklausurManager) : List<GostKursklausur> {
+	public kursklausurGetMenge(manager : GostKursklausurManager) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		for (const kkId of this._schuelerklausurmenge_by_idKursklausur.keySet()) {
 			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
@@ -669,7 +669,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurmengeGetByKursklausurid(idKursklausur : number) : List<GostSchuelerklausur> {
+	public schuelerklausurGetMengeByKursklausurid(idKursklausur : number) : List<GostSchuelerklausur> {
 		return DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurmenge_by_idKursklausur, idKursklausur);
 	}
 
@@ -681,7 +681,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public kursklausurmengeGetByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
+	public kursklausurGetMengeByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
@@ -700,7 +700,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurmengeGetByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostSchuelerklausur> {
+	public schuelerklausurGetMengeByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostSchuelerklausur> {
 		const schuelerklausuren : List<GostSchuelerklausur> | null = new ArrayList();
 		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
@@ -717,7 +717,7 @@ export class GostKlausurraumManager extends JavaObject {
 	 *
 	 * @return die Liste der nicht verplanten StundenplanRäume
 	 */
-	public stundenplanraummengeVerfuegbarGetAsList(alleRaeume : List<StundenplanRaum>) : List<StundenplanRaum> {
+	public stundenplanraumVerfuegbarGetMenge(alleRaeume : List<StundenplanRaum>) : List<StundenplanRaum> {
 		const raeume : List<StundenplanRaum> | null = new ArrayList();
 		for (const raum of alleRaeume)
 			if (!this._klausurraum_by_idStundenplanraum.containsKey(raum.id))

@@ -8,7 +8,7 @@
 				v-model="stundenplanRaumSelected"
 				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-				:items="raummanager.stundenplanraummengeVerfuegbarGetAsList(stundenplanmanager.raumGetMengeAsList())" />
+				:items="raummanager.stundenplanraumVerfuegbarGetMenge(stundenplanmanager.raumGetMengeAsList())" />
 			<div>
 				Belegung:
 				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
@@ -55,8 +55,8 @@
 		onDrop: (zone: GostKlausurplanungRaumzeitDropZone) => void;
 	}>();
 
-	const klausurenImRaum = computed(() => props.raummanager.kursklausurmengeGetByRaumid(props.raum.id, props.kursklausurmanager()));
-	const anzahlSuS = computed(() => props.raummanager.kursklausurmengeGetByRaumid(props.raum.id, props.kursklausurmanager()).size());
+	const klausurenImRaum = computed(() => props.raummanager.kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()));
+	const anzahlSuS = computed(() => props.raummanager.kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
 
 	const stundenplanRaumSelected = computed({
 		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),

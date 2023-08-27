@@ -110,9 +110,9 @@
 		console.log("drop", zone);
 		if (dragData.value instanceof GostKursklausur)
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurmengeGetByKursklausurid(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
 			else if (zone instanceof GostKlausurtermin)
-				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurmengeGetByKursklausurid(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
 	};
 
 	const klausuren = (termin: GostKlausurtermin) => props.kursklausurmanager().kursklausurGetMengeByTerminid(termin.id);
