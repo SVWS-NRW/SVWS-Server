@@ -1540,7 +1540,9 @@ export class StundenplanManager extends JavaObject {
 		if (kwz !== null)
 			return kwz;
 		const kwzFirst : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
-		return kwzFirst;
+		if ((kwJahr < kwzFirst.jahr) || ((kwJahr === kwzFirst.jahr) && (kw < kwzFirst.kw)))
+			return kwzFirst;
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
 	}
 
 	/**

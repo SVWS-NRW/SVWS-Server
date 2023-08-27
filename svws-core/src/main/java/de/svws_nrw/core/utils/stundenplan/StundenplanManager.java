@@ -1552,12 +1552,17 @@ public class StundenplanManager {
 		final int kw = e[5];
 		final StundenplanKalenderwochenzuordnung kwz = _kwz_by_jahr_and_kw.getOrNull(kwJahr, kw);
 
+		// Datum innerhalb von "First" und "Last"?
 		if (kwz != null)
 			return kwz;
 
+		// Datum kleiner First?
 		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+		if ((kwJahr < kwzFirst.jahr) || ((kwJahr == kwzFirst.jahr) && (kw < kwzFirst.kw)))
+			return kwzFirst;
 
-		return kwzFirst;
+		// Datum größer Last
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
 	}
 
 	/**
