@@ -1512,12 +1512,36 @@ public class StundenplanManager {
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param jahr           Das Jahr der Kalenderwoche.
-	 * @param kalenderwoche  Die gewünschten Kalenderwoche.
+	 * @param kalenderwoche  Die gewünschte Kalenderwoche.
 	 *
 	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge.
 	 */
 	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetByJahrAndKWOrException(final int jahr, final int kalenderwoche) {
 		return DeveloperNotificationException.ifMap2DGetIsNull(_kwz_by_jahr_and_kw, jahr, kalenderwoche);
+	}
+
+	/**
+	 * Liefert das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
+	 */
+	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetByDatum(final @NotNull String datumISO8601) {
+		final int[] e = DateUtils.extractFromDateISO8601(datumISO8601);
+
+		final int kwJahr = e[6];
+		final int kw = e[5];
+		final StundenplanKalenderwochenzuordnung kwz = _kwz_by_jahr_and_kw.getOrNull(kwJahr, kw);
+
+		if (kwz != null)
+			return kwz;
+
+		final @NotNull StundenplanKalenderwochenzuordnung kwzFirst = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", _kwzmenge_sortiert);
+
+		return kwzFirst;
 	}
 
 	/**

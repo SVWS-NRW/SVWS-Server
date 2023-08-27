@@ -268,6 +268,39 @@ export class DateUtils extends JavaObject {
 		return DateUtils.gibZeitStringOfMinuten(minuten);
 	}
 
+	/**
+	 * Liefert die Kalenderwoche zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Kalenderwoche zu einem bestimmten Datum.
+	 */
+	public static gibKwDesDatumsISO8601(datumISO8601 : string) : number {
+		return DateUtils.extractFromDateISO8601(datumISO8601)[5];
+	}
+
+	/**
+	 * Liefert das Kalenderwochenjahr zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Kalenderwochenjahr zu einem bestimmten Datum.
+	 */
+	public static gibKwJahrDesDatumsISO8601(datumISO8601 : string) : number {
+		return DateUtils.extractFromDateISO8601(datumISO8601)[6];
+	}
+
+	/**
+	 * Liefert den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
+	 */
+	public static gibWochentagDesDatumsISO8601(datumISO8601 : string) : number {
+		return DateUtils.extractFromDateISO8601(datumISO8601)[3];
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}

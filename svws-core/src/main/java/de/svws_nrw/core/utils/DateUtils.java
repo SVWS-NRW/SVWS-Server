@@ -300,4 +300,37 @@ public final class DateUtils {
 		return gibZeitStringOfMinuten(minuten);
 	}
 
+	/**
+	 * Liefert die Kalenderwoche zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Kalenderwoche zu einem bestimmten Datum.
+	 */
+	public static int gibKwDesDatumsISO8601(final @NotNull String datumISO8601) {
+		return extractFromDateISO8601(datumISO8601)[5];
+	}
+
+	/**
+	 * Liefert das Kalenderwochenjahr zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Kalenderwochenjahr zu einem bestimmten Datum.
+	 */
+	public static int gibKwJahrDesDatumsISO8601(final @NotNull String datumISO8601) {
+		return extractFromDateISO8601(datumISO8601)[6];
+	}
+
+	/**
+	 * Liefert den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
+	 *
+	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
+	 */
+	public static int gibWochentagDesDatumsISO8601(final @NotNull String datumISO8601) {
+		return extractFromDateISO8601(datumISO8601)[3];
+	}
+
 }
