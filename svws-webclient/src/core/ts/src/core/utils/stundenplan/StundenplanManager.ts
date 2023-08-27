@@ -1532,7 +1532,7 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @return das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 */
-	public kalenderwochenzuordnungGetByDatum(datumISO8601 : string) : StundenplanKalenderwochenzuordnung | null {
+	public kalenderwochenzuordnungGetByDatum(datumISO8601 : string) : StundenplanKalenderwochenzuordnung {
 		const e : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
 		const kwJahr : number = e[6];
 		const kw : number = e[5];

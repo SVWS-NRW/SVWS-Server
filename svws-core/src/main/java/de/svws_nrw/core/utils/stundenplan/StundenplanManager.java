@@ -1545,7 +1545,7 @@ public class StundenplanManager {
 	 *
 	 * @return das dem Datum zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 */
-	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetByDatum(final @NotNull String datumISO8601) {
+	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetByDatum(final @NotNull String datumISO8601) {
 		final int[] e = DateUtils.extractFromDateISO8601(datumISO8601);
 
 		final int kwJahr = e[6];
