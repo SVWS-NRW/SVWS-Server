@@ -107,7 +107,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
 
 		for (final DTOKurs kurs : kurse) {
-			final List<GostKlausurvorgabe> listKursVorgaben = manager.gibGostKlausurvorgabenByQuartalKursartFach(quartal, kurs.KursartAllg, kurs.Fach_ID);
+			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID)
 						&& mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {

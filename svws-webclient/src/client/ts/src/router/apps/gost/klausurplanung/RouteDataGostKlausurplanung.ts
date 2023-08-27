@@ -337,7 +337,7 @@ export class RouteDataGostKlausurplanung {
 		vorgabe.abiJahrgang = this.abiturjahr;
 		vorgabe.halbjahr = this.halbjahr.id;
 		const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
-		this.klausurvorgabenmanager.addKlausurvorgabe(neueVorgabe);
+		this.klausurvorgabenmanager.vorgabeAdd(neueVorgabe);
 		this.commit();
 		api.status.stop();
 		return neueVorgabe;
@@ -346,9 +346,9 @@ export class RouteDataGostKlausurplanung {
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number): Promise<boolean> => {
 		api.status.start();
 		await api.server.patchGostKlausurenVorgabe(vorgabe, api.schema, id);
-		const oldVorgabe = this.klausurvorgabenmanager.gibGostKlausurvorgabe(id);
+		const oldVorgabe = this.klausurvorgabenmanager.vorgabeGetByIdOrException(id);
 		Object.assign(oldVorgabe, vorgabe);
-		this.klausurvorgabenmanager.updateKlausurvorgabe(oldVorgabe);
+		this.klausurvorgabenmanager.vorgabePatchAttributes(oldVorgabe);
 		this.commit();
 		api.status.stop();
 		return true;
@@ -358,7 +358,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		const result = await api.server.deleteGostKlausurenVorgabe(api.schema, vorgabe.idVorgabe);
 		// TODO Falls Constraint verletzt, nicht löschen
-		this.klausurvorgabenmanager.removeVorgabe(vorgabe.idVorgabe);
+		this.klausurvorgabenmanager.vorgabeRemoveById(vorgabe.idVorgabe);
 		this.commit();
 		api.status.stop();
 		return true;

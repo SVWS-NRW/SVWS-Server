@@ -107,7 +107,7 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const vorgaben = computed(() => props.klausurvorgabenmanager().getKlausurvorgabenByQuartal(props.quartalsauswahl.value));
+	const vorgaben = computed(() => props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value));
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());
@@ -153,7 +153,7 @@
 	};
 
 	const loescheKlausurvorgabe = async () => {
-		const vorgabe = props.klausurvorgabenmanager().gibGostKlausurvorgabe(activeVorgabe.value.idVorgabe);
+		const vorgabe = props.klausurvorgabenmanager().vorgabeGetByIdOrException(activeVorgabe.value.idVorgabe);
 		if (vorgabe === null)
 			return;
 		const result = await props.loescheKlausurvorgabe(vorgabe);
@@ -168,7 +168,7 @@
 
 	const startEdit = () => {
 		if (selectedVorgabeRow.value !== null && selectedVorgabeRow.value !== undefined) {
-			const v = props.klausurvorgabenmanager().gibGostKlausurvorgabe(selectedVorgabeRow.value.idVorgabe);
+			const v = props.klausurvorgabenmanager().vorgabeGetByIdOrException(selectedVorgabeRow.value.idVorgabe);
 			activeVorgabe.value = v !== null ? v : new GostKlausurvorgabe();
 		}
 	};

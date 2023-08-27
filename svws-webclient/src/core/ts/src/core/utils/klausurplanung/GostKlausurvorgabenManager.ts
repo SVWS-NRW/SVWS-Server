@@ -19,34 +19,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	private _faecherManager : GostFaecherManager = new GostFaecherManager();
 
-	/**
-	 * Die GostKlausurvorgaben, die im Manager vorhanden sind
-	 */
-	private readonly _vorgaben : List<GostKlausurvorgabe> = new ArrayList();
-
-	/**
-	 * Eine Map quartal -> Liste von GostKlausurvorgaben
-	 */
-	private readonly _mapQuartalKlausurvorgaben : JavaMap<number, List<GostKlausurvorgabe>> = new HashMap();
-
-	/**
-	 * Eine Map id -> GostKlausurvorgabe
-	 */
-	private readonly _mapIdKlausurvorgabe : JavaMap<number, GostKlausurvorgabe> = new HashMap();
-
-	/**
-	 * Eine Map quartal -> kursartAllg -> fachId -> GostKlausurvorgabe
-	 */
-	private readonly _mapQuartalKursartFachKlausurvorgabe : HashMap3D<number, string, number, GostKlausurvorgabe> = new HashMap3D();
-
-	/**
-	 * Eine Map kursartAllg -> fachId -> Liste von GostKlausurvorgabe
-	 */
-	private readonly _mapKursartFachKlausurvorgaben : HashMap2D<string, number, List<GostKlausurvorgabe>> = new HashMap2D();
-
-	/**
-	 * Ein Comparator für die Klausurvorgaben.
-	 */
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
 		if (this._faecherManager !== null) {
 			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
@@ -65,75 +37,162 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		return JavaInteger.compare(a.quartal, b.quartal);
 	} };
 
+	private readonly _vorgabe_by_id : JavaMap<number, GostKlausurvorgabe> = new HashMap();
+
+	private readonly _vorgabenmenge : List<GostKlausurvorgabe> = new ArrayList();
+
+	private readonly _vorgabenmenge_by_quartal : JavaMap<number, List<GostKlausurvorgabe>> = new HashMap();
+
+	private readonly _vorgabe_by_quartal_and_kursartAllg_and_idFach : HashMap3D<number, string, number, GostKlausurvorgabe> = new HashMap3D();
+
+	private readonly _vorgabenmenge_by_kursartAllg_and_idFach : HashMap2D<string, number, List<GostKlausurvorgabe>> = new HashMap2D();
+
 
 	/**
-	 * Erstellt einen neuen Manager mit den als Liste angegebenen
-	 * GostKlausurvorgaben und erzeugt die privaten Attribute.
+	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
-	 * @param vorgaben       die Liste der GostKlausurvorgaben eines Abiturjahrgangs
-	 *                       und Gost-Halbjahres
-	 * @param faecherManager der Gost-Fächermanager
+	 * @param listVorgaben die Liste der GostKlausurvorgaben eines Abiturjahrgangs
+	 *                      und Gost-Halbjahres
+	 * @param faecherManager   der Fächermanager
 	 */
-	public constructor(vorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager) {
+	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager) {
 		super();
 		this._faecherManager = faecherManager;
-		for (const v of vorgaben) {
-			this.addKlausurvorgabe(v);
-		}
+		this.initAll(listVorgaben);
+	}
+
+	private initAll(listVorgaben : List<GostKlausurvorgabe>) : void {
+		this.vorgabeAddAll(listVorgaben);
+		this.update_all();
+	}
+
+	private update_all() : void {
+		this.update_vorgabemenge();
+		this.update_vorgabenmenge_by_quartal();
+		this.update_vorgabe_by_quartal_and_kursartAllg_and_idFach();
+		this.update_vorgabenmenge_by_kursartAllg_and_idFach();
+	}
+
+	private update_vorgabenmenge_by_quartal() : void {
+		this._vorgabenmenge_by_quartal.clear();
+		for (const v of this._vorgabenmenge)
+			MapUtils.getOrCreateArrayList(this._vorgabenmenge_by_quartal, v.quartal).add(v);
+	}
+
+	private update_vorgabe_by_quartal_and_kursartAllg_and_idFach() : void {
+		this._vorgabe_by_quartal_and_kursartAllg_and_idFach.clear();
+		for (const v of this._vorgabenmenge)
+			this._vorgabe_by_quartal_and_kursartAllg_and_idFach.put(v.quartal, v.kursart, v.idFach, v);
+	}
+
+	private update_vorgabenmenge_by_kursartAllg_and_idFach() : void {
+		this._vorgabenmenge_by_kursartAllg_and_idFach.clear();
+		for (const v of this._vorgabenmenge)
+			Map2DUtils.getOrCreateArrayList(this._vorgabenmenge_by_kursartAllg_and_idFach, v.kursart, v.idFach).add(v);
+	}
+
+	private update_vorgabemenge() : void {
+		this._vorgabenmenge.clear();
+		this._vorgabenmenge.addAll(this._vorgabe_by_id.values());
+		this._vorgabenmenge.sort(this._compVorgabe);
+	}
+
+	private vorgabeAddOhneUpdate(vorgabe : GostKlausurvorgabe) : void {
+		GostKlausurvorgabenManager.vorgabeCheck(vorgabe);
+		DeveloperNotificationException.ifMapPutOverwrites(this._vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
 	}
 
 	/**
-	 * Aktualisiert die internen Strukturen, nachdem sich Informationen einer
-	 * Klausurvorgabe geändert hat.
+	 * Fügt ein {@link GostKlausurvorgabe}-Objekt hinzu.
 	 *
-	 * @param vorgabe das GostKlausurvorgabe-Objekt
+	 * @param vorgabe Das {@link GostKlausurvorgabe}-Objekt, welches hinzugefügt
+	 *                    werden soll.
 	 */
-	public updateKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
-		const vorgabeOrig : GostKlausurvorgabe = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, vorgabe.idVorgabe);
-		this.removeUpdateKlausurvorgabeCommons(vorgabeOrig);
-		this.addKlausurvorgabe(vorgabe);
+	public vorgabeAdd(vorgabe : GostKlausurvorgabe) : void {
+		this.vorgabeAddOhneUpdate(vorgabe);
+		this.update_all();
+	}
+
+	private vorgabeAddAllOhneUpdate(listVorgaben : List<GostKlausurvorgabe>) : void {
+		for (const vorgabe of listVorgaben)
+			this.vorgabeAddOhneUpdate(vorgabe);
 	}
 
 	/**
-	 * Fügt die Klausurvorgabe den internen Strukturen hinzu.
+	 * Fügt alle {@link GostKlausurvorgabe}-Objekte hinzu.
 	 *
-	 * @param vorgabe das GostKlausurvorgabe-Objekt
+	 * @param listVorgaben Die Menge der {@link GostKlausurvorgabe}-Objekte,
+	 *                          welche hinzugefügt werden soll.
 	 */
-	public addKlausurvorgabe(vorgabe : GostKlausurvorgabe) : void {
-		DeveloperNotificationException.ifListAddsDuplicate("_vorgaben", this._vorgaben, vorgabe);
-		this._vorgaben.sort(this._compVorgabe);
-		DeveloperNotificationException.ifMapPutOverwrites(this._mapIdKlausurvorgabe, vorgabe.idVorgabe, vorgabe);
-		DeveloperNotificationException.ifListAddsDuplicate("_mapQuartalKlausurvorgabenList", MapUtils.getOrCreateArrayList(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
-		this._mapQuartalKursartFachKlausurvorgabe.put(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
-		DeveloperNotificationException.ifListAddsDuplicate("_mapKursartFachKlausurvorgabenList", Map2DUtils.getOrCreateArrayList(this._mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
-		this._mapKursartFachKlausurvorgaben.getNonNullOrException(vorgabe.kursart, vorgabe.idFach).sort(this._compVorgabe);
+	public vorgabeAddAll(listVorgaben : List<GostKlausurvorgabe>) : void {
+		this.vorgabeAddAllOhneUpdate(listVorgaben);
+		this.update_all();
 	}
 
-	private removeUpdateKlausurvorgabeCommons(vorgabe : GostKlausurvorgabe) : void {
-		DeveloperNotificationException.ifListRemoveFailes("_vorgaben", this._vorgaben, vorgabe);
-		DeveloperNotificationException.ifMapRemoveFailes(this._mapIdKlausurvorgabe, vorgabe.idVorgabe);
-		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMapGetIsNull(this._mapQuartalKlausurvorgaben, vorgabe.quartal), vorgabe);
-		this._mapQuartalKursartFachKlausurvorgabe.removeOrException(vorgabe.quartal, vorgabe.kursart, vorgabe.idFach);
-		DeveloperNotificationException.ifListRemoveFailes("_mapQuartalKlausurvorgabenList", DeveloperNotificationException.ifMap2DGetIsNull(this._mapKursartFachKlausurvorgaben, vorgabe.kursart, vorgabe.idFach), vorgabe);
+	private static vorgabeCheck(vorgabe : GostKlausurvorgabe) : void {
+		DeveloperNotificationException.ifInvalidID("kursklausur.id", vorgabe.idVorgabe);
 	}
 
 	/**
-	 * Löscht eine Klausurvorgabe aus den internen Strukturen
+	 * Liefert das zur ID zugehörige {@link GostKlausurvorgabe}-Objekt. <br>
+	 * Laufzeit: O(1)
 	 *
-	 * @param vId das GostKlausurvorgabe-Objekt
+	 * @param idVorgabe Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link GostKlausurvorgabe}-Objekt.
 	 */
-	public removeVorgabe(vId : number) : void {
-		const vorgabe : GostKlausurvorgabe = DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, vId);
-		this.removeUpdateKlausurvorgabeCommons(vorgabe);
+	public vorgabeGetByIdOrException(idVorgabe : number) : GostKlausurvorgabe {
+		return DeveloperNotificationException.ifMapGetIsNull(this._vorgabe_by_id, idVorgabe);
 	}
 
 	/**
-	 * Liefert eine Liste von GostKlausurvorgabe-Objekten des Halbjahres
+	 * Liefert eine Liste aller {@link GostKlausurvorgabe}-Objekte. <br>
+	 * Laufzeit: O(1)
 	 *
-	 * @return die Liste von GostKlausurvorgabe-Objekten
+	 * @return eine Liste aller {@link GostKlausurvorgabe}-Objekte.
 	 */
-	public getKlausurvorgaben() : List<GostKlausurvorgabe> {
-		return this._vorgaben;
+	public vorgabeGetMengeAsList() : List<GostKlausurvorgabe> {
+		return this._vorgabenmenge;
+	}
+
+	/**
+	 * Aktualisiert das vorhandene {@link GostKlausurvorgabe}-Objekt durch das neue
+	 * Objekt.
+	 *
+	 * @param vorgabe Das neue {@link GostKlausurvorgabe}-Objekt.
+	 */
+	public vorgabePatchAttributes(vorgabe : GostKlausurvorgabe) : void {
+		GostKlausurvorgabenManager.vorgabeCheck(vorgabe);
+		DeveloperNotificationException.ifMapRemoveFailes(this._vorgabe_by_id, vorgabe.idVorgabe);
+		DeveloperNotificationException.ifMapPutOverwrites(this._vorgabe_by_id, vorgabe.idVorgabe, vorgabe);
+		this.update_all();
+	}
+
+	private vorgabeRemoveOhneUpdateById(idVorgabe : number) : void {
+		DeveloperNotificationException.ifMapRemoveFailes(this._vorgabe_by_id, idVorgabe);
+	}
+
+	/**
+	 * Entfernt ein existierendes {@link GostKlausurvorgabe}-Objekt.
+	 *
+	 * @param idVorgabe Die ID des {@link GostKlausurvorgabe}-Objekts.
+	 */
+	public vorgabeRemoveById(idVorgabe : number) : void {
+		this.vorgabeRemoveOhneUpdateById(idVorgabe);
+		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link GostKlausurvorgabe}-Objekte.
+	 *
+	 * @param listVorgaben Die Liste der zu entfernenden
+	 *                          {@link GostKlausurvorgabe}-Objekte.
+	 */
+	public vorgabeRemoveAll(listVorgaben : List<GostKlausurvorgabe>) : void {
+		for (const vorgabe of listVorgaben)
+			this.vorgabeRemoveOhneUpdateById(vorgabe.idVorgabe);
+		this.update_all();
 	}
 
 	/**
@@ -143,22 +202,11 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public getKlausurvorgabenByQuartal(quartal : number) : List<GostKlausurvorgabe> {
+	public vorgabeGetMengeByQuartal(quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0)
-			return this.getKlausurvorgaben();
-		let vorgaben : List<GostKlausurvorgabe> | null = this._mapQuartalKlausurvorgaben.get(quartal);
+			return this.vorgabeGetMengeAsList();
+		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_quartal.get(quartal);
 		return vorgaben !== null ? vorgaben : new ArrayList();
-	}
-
-	/**
-	 * Gibt das GostKlausurvorgabe-Objekt zur übergebenen id zurück.
-	 *
-	 * @param idVorgabe die ID der Klausurvorgabe
-	 *
-	 * @return das GostKlausurvorgabe-Objekt
-	 */
-	public gibGostKlausurvorgabe(idVorgabe : number) : GostKlausurvorgabe {
-		return DeveloperNotificationException.ifMapGetIsNull(this._mapIdKlausurvorgabe, idVorgabe);
 	}
 
 	/**
@@ -170,8 +218,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public gibGostKlausurvorgabeByQuartalKursartFach(quartal : number, kursartAllg : string, idFach : number) : GostKlausurvorgabe | null {
-		return this._mapQuartalKursartFachKlausurvorgabe.getOrNull(quartal, kursartAllg, idFach);
+	public vorgabeGetByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : string, idFach : number) : GostKlausurvorgabe | null {
+		return this._vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(quartal, kursartAllg, idFach);
 	}
 
 	/**
@@ -184,15 +232,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public gibGostKlausurvorgabenByQuartalKursartFach(quartal : number, kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
 		if (quartal > 0) {
 			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
-			const vorgabe : GostKlausurvorgabe | null = this.gibGostKlausurvorgabeByQuartalKursartFach(quartal, kursartAllg, idFach);
+			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
 			if (vorgabe !== null)
 				retList.add(vorgabe);
 			return retList;
 		}
-		return this.gibGostKlausurvorgabenByKursartFach(kursartAllg, idFach);
+		return this.vorgabeGetMengeByKursartallgAndFachid(kursartAllg, idFach);
 	}
 
 	/**
@@ -204,8 +252,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public gibGostKlausurvorgabenByKursartFach(kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
-		const list : List<GostKlausurvorgabe> | null = this._mapKursartFachKlausurvorgaben.getOrNull(kursartAllg, idFach);
+	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
+		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg, idFach);
 		return list !== null ? list : new ArrayList();
 	}
 
