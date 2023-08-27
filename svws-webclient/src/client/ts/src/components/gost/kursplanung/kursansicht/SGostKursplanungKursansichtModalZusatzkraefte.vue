@@ -7,7 +7,7 @@
 					:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			</template>
 			<template #modalActions>
-				<svws-ui-button @click="toggle_zusatzkraefte_modal">Fertig</svws-ui-button>
+				<svws-ui-button type="secondary" @click="toggle_zusatzkraefte_modal">Schließen</svws-ui-button>
 			</template>
 		</svws-ui-modal>
 		<svws-ui-button type="secondary" @click="toggle_zusatzkraefte_modal">

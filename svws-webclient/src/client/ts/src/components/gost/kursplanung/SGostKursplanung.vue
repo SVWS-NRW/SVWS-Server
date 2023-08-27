@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content page--content--full page--content--gost-grid">
+	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
 		<template v-if="hatBlockung">
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:jahrgangsdaten="jahrgangsdaten"
@@ -10,6 +10,8 @@
 				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
 				:ergebnis-hochschreiben="ergebnisHochschreiben"
+				:toggle-blockungstabelle="toggleBlockungstabelle"
+				:blockungstabelle-visible="blockungstabelleVisible"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs">
 				<template #triggerRegeln>
 					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
@@ -43,7 +45,7 @@
 
 <script setup lang="ts">
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
-	import { computed, ref } from "vue";
+	import { computed, ref, onMounted } from "vue";
 
 	const props = defineProps<GostKursplanungProps>();
 
@@ -55,4 +57,32 @@
 		collapsed.value = !collapsed.value;
 	}
 
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
+
+	const blockungstabelleVisible = ref(true);
+
+	const toggleBlockungstabelle = () => {
+		blockungstabelleVisible.value = !blockungstabelleVisible.value;
+	}
+
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
+  grid-auto-rows: 100%;
+  grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
+  grid-auto-columns: max-content;
+
+  &.svws-blockungstabelle-hidden {
+    grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
+
+    .s-gost-kursplanung-schueler-auswahl {
+      @apply -ml-8 lg:-ml-16;
+    }
+  }
+}
+</style>

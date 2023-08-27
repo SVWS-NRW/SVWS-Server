@@ -1,14 +1,12 @@
 <template>
 	<svws-ui-modal ref="modal" size="small">
 		<template #modalTitle>Kurse zusammenfassen</template>
-		<template #modalDescription>
-			<div class="">
-				Sollen die Kurse {{ kursname1 }} und {{ kursname2 }} zu einem Kurs zusammengefasst werden?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="clickNo"> Abbrechen </svws-ui-button>
-				<svws-ui-button @click="clickYes"> Ja </svws-ui-button>
-			</div>
+		<template #modalContent>
+			<p>Sollen die Kurse {{ kursname1 }} und {{ kursname2 }} zu einem Kurs zusammengefasst werden?</p>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="clickNo"> Abbrechen </svws-ui-button>
+			<svws-ui-button @click="clickYes"> Ja </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

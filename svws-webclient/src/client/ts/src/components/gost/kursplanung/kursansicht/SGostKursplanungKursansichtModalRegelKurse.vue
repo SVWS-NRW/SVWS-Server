@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-modal ref="modal" size="small">
-		<template #modalTitle>Regel erstellen für Kurse</template>
-		<template #modalDescription>
-			<div class="">
+		<template #modalTitle>Regel erstellen</template>
+		<template #modalContent>
+			<p>
 				Sollen die Kurse {{ getDatenmanager().kursGetName(id1) }} und {{ getDatenmanager().kursGetName(id2) }} immer oder nie zusammen auf einer Schiene liegen?
-			</div>
-			<div class="flex gap-1">
-				<svws-ui-button @click="regelImmerZusammen"> Immer </svws-ui-button>
-				<svws-ui-button @click="regelNieZusammen"> Nie </svws-ui-button>
-			</div>
+			</p>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="regelImmerZusammen"> Immer </svws-ui-button>
+			<svws-ui-button type="secondary" @click="regelNieZusammen"> Nie </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

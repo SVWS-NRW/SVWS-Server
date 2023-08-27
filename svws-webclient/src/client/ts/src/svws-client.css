@@ -73,13 +73,6 @@
 	@apply flex flex-col min-h-full gap-y-5;
 }
 
-.page--content.page--content--gost-grid {
-	@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
-	grid-auto-rows: 100%;
-	grid-template-columns: minmax(min-content, 2fr) minmax(18rem, 0.4fr) minmax(min-content, 1fr);
-	grid-auto-columns: max-content;
-}
-
 .separate-items--custom > *:not(:last-child):after {
 	content: ', ';
 }

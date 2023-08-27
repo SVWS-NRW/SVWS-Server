@@ -1,6 +1,6 @@
 <template>
 	<div class="table--row-kursdetail" :style="{ 'background-color': bgColor }">
-		<div class="pr-3 pl-6 pt-2 pb-6 flex gap-10 items-center">
+		<div class="pr-3 pl-6 pt-2 pb-5 flex gap-10 items-center">
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			<div class="flex items-center gap-1">
@@ -19,11 +19,11 @@
 					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
 			</div>
 			<div class="flex items-center gap-1 ml-auto">
-				<div class="mr-1 text-sm font-bold">Schienen:</div>
+				<div class="mr-1 text-sm">Schienen:</div>
 				<svws-ui-button type="icon" @click="del_schiene" size="small">
 					<i-ri-subtract-line />
 				</svws-ui-button>
-				<div class="font-bold mx-1">{{ kurs.anzahlSchienen }}</div>
+				<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
 				<svws-ui-button type="icon" @click="add_schiene" size="small">
 					<i-ri-add-line />
 				</svws-ui-button>
@@ -87,14 +87,21 @@
 </script>
 
 <style lang="postcss">
-
 	.table--row-kursdetail {
 		@apply relative z-10 border-b border-black/25;
-		box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);
+		/*box-shadow: inset 0 -4px 5px 0 rgba(0, 0, 0, 0.1);*/
+    @apply shadow-inner shadow-black/10;
 
 		.data-table__contrast-border & {
 			@apply border-black/50;
 		}
-	}
 
+    .button--secondary {
+      @apply hover:text-black hover:border-black hover:bg-black/10;
+    }
+
+    .text-input-component {
+      @apply text-sm;
+    }
+	}
 </style>

@@ -1,24 +1,39 @@
 <template>
-	<svws-ui-content-card class="h-full table--with-background" overflow-scroll style="width: calc(100% + 2rem); padding-right: 2rem;">
+	<svws-ui-content-card class="h-full table--with-background" overflow-scroll :style="blockungstabelleVisible ? 'width: calc(100% + 2rem); padding-right: 2rem;' : ''">
 		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
+				<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
+					<template v-if="blockungstabelleVisible">
+						<i-ri-eye-off-line />
+						Tabelle ausblenden
+					</template>
+					<template v-else>
+						<i-ri-eye-line />
+						Tabelle einblenden
+					</template>
+				</svws-ui-button>
 				<slot name="triggerRegeln" />
 				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<svws-ui-tooltip>
-						<svws-ui-button :disabled="!aktivieren_moeglich" type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
-						<template #content>
-							<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
-							<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
-							<span v-else />
-						</template>
-					</svws-ui-tooltip>
+					<template v-if="aktivieren_moeglich">
+						<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+					</template>
+					<template v-else>
+						<svws-ui-tooltip>
+							<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
+							<template #content>
+								<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
+								<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
+								<span v-else />
+							</template>
+						</svws-ui-tooltip>
+					</template>
 				</s-card-gost-kursansicht-blockung-aktivieren-modal>
 				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="transparent" size="small" @click="openModal()">Hochschreiben</svws-ui-button>
+					<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
 				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer>
+		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer contrast-border>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader"
@@ -27,7 +42,7 @@
 							<span>Schiene</span>
 							<template v-if="allow_regeln">
 								<svws-ui-button type="transparent" size="small" @click="add_schiene" title="Schiene hinzufügen" class="h-6 py-0 px-1">
-									Hinzufügen <i-ri-add-circle-line />
+									<i-ri-add-box-line />Hinzufügen
 								</svws-ui-button>
 							</template>
 						</div>
@@ -100,8 +115,8 @@
 								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)"
 									class="select-none cursor-grab text-center" :class="{'cursor-grabbing': dragDataKursartSchiene !== undefined}"
 									:draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
-									<span class="rounded w-3 absolute top-0 left-0">
-										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
+									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem]">
+										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 									</span>
 									<i-ri-lock-unlock-line class="inline-block" />
 								</div>
@@ -195,6 +210,8 @@
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
+		blockungstabelleVisible: boolean;
+		toggleBlockungstabelle: () => void;
 	}>();
 
 	const edit_schienenname: Ref<number|undefined> = ref()

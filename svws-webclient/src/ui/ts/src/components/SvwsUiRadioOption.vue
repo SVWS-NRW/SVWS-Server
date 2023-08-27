@@ -42,6 +42,7 @@
 		'radio--statistics': statistics,
 		'radio--label--checked-': forceChecked || modelValue === value || checked,
 		'radio--label--no-icon': !icon,
+		'radio--label--no-text': !label,
 		'radio--icon-type-view': iconType === 'view'
 	}">
 		<input v-model="checked" type="radio" :name="name" :value="value" :disabled="disabled" class="radio--indicator">
@@ -68,9 +69,13 @@
 
 .radio--label--text {
 	@apply flex items-center rounded-md;
-	@apply space-x-2;
-	min-height: 1.4em;
+	@apply gap-x-2;
+	min-height: 1.8rem;
 	padding: 0.45em 0.75em 0.45em 2em;
+
+  .radio--label--no-text & {
+    padding-left: 1.5em;
+  }
 
 	.radio--icon-type-view:not(.radio--label--checked) & {
 		padding-left: 0.75em;

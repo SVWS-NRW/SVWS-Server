@@ -53,11 +53,15 @@
 		</div>
 		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
 			<div class="s-toggle" v-if="!skeleton">
-				<button type="button" @click="updateSidebarExpanded" :title="`Sidebar ${!sidebarExpanded ? 'einblenden' : 'ausblenden'}`">
-					<i-ri-skip-left-line v-if="sidebarExpanded" />
-					<i-ri-skip-right-line v-else />
-					<span class="s-title" v-if="!sidebarExpanded">Sidebar</span>
-				</button>
+				<svws-ui-tooltip>
+					<button type="button" @click="updateSidebarExpanded">
+						<i-ri-skip-left-line v-if="sidebarExpanded" />
+						<i-ri-expand-right-line v-else />
+					</button>
+					<template #content>
+						Sidebar {{ !sidebarExpanded ? 'einblenden' : 'ausblenden' }}
+					</template>
+				</svws-ui-tooltip>
 			</div>
 			<div class="app--sidebar-container">
 				<slot name="secondaryMenu" />
@@ -228,7 +232,7 @@
   @media (orientation: landscape) {
     .s-sidebar-collapsed {
       .app--sidebar {
-        @apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 xl:pt-5 px-1 border-0;
+        @apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
         @apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
 
         .app--sidebar-container {
@@ -237,11 +241,7 @@
       }
 
       .s-toggle {
-        @apply relative pt-1 pr-0 pl-1 pointer-events-auto;
-
-        button {
-          @apply pb-2 rounded-md text-button;
-        }
+        @apply relative pt-0 pr-0 pl-1 pointer-events-auto top-0.5 left-0.5;
       }
 
       .app--content-container {

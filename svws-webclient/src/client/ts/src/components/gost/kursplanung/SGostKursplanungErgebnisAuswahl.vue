@@ -23,7 +23,7 @@
 			<template #cell(bewertung)="{ rowData: row }">
 				<span class="flex gap-1 cell--bewertung items-center text-sm cursor-pointer">
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
+						<span :style="{'background-color': getDatenmanager().ergebnisGetBewertung1Wert(row.id) === 0 ? 'rgba(0,0,0,0.1)' : color1(row)}">{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
 								{{ getDatenmanager().ergebnisGetBewertung1Wert(row.id) }} Regelverletzungen
@@ -34,7 +34,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
+						<span :style="{'background-color': getDatenmanager().ergebnisGetBewertung2Wert(row.id) === 0 ? 'rgba(0,0,0,0.1)' : color2(row)}">{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
 								{{ getDatenmanager().ergebnisGetBewertung2Wert(row.id) }} Wahlkonflikte
@@ -45,7 +45,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
+						<span :style="{'background-color': getDatenmanager().ergebnisGetBewertung3Wert(row.id) === 0 ? 'rgba(0,0,0,0.1)' : color3(row)}">{{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
 								max. Kursdifferenz: {{ getDatenmanager().ergebnisGetBewertung3Wert(row.id) }}
@@ -56,7 +56,7 @@
 						</template>
 					</svws-ui-tooltip>
 					<svws-ui-tooltip position="right">
-						<span :style="{'background-color': color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
+						<span :style="{'background-color': getDatenmanager().ergebnisGetBewertung4Wert(row.id) === 0 ? 'rgba(0,0,0,0.1)' : color4(row)}">{{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}</span>
 						<template #content>
 							<span class="inline-flex items-center gap-0.5">
 								Fächerparallelität: {{ getDatenmanager().ergebnisGetBewertung4Wert(row.id) }}

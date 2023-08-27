@@ -19,7 +19,11 @@
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
 				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="text-black">
-					Kurs anlegen <i-ri-add-circle-line class="-mr-0.5" />
+					<span class="inline-flex items-center">
+						<i-ri-presentation-line />
+						<i-ri-add-line class="-ml-1" />
+					</span>
+					Kurs anlegen
 				</svws-ui-button>
 			</div>
 		</div>
@@ -69,7 +73,7 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-line class="absolute right-0" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-primary' : 'invisible group-hover:visible opacity-25'" />
+						<i-ri-filter-line class="absolute right-0" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
 						{{ kursdifferenz(kurs).value[1] }}
@@ -86,6 +90,7 @@
 						class="data-table__td data-table__td__no-padding data-table__td__align-center"
 						:class="{
 							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
+							'p-0.5': !istDraggedKursInAndererSchiene(kurs, schiene).value,
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
 							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 						}"
@@ -93,7 +98,7 @@
 						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
-							class="select-none w-full h-full rounded flex items-center justify-center relative group text-black cursor-grab"
+							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black cursor-grab"
 							:class="{
 								'cursor-grabbing': dragDataKursSchiene() !== undefined,
 								'bg-light text-primary font-bold': istKursAusgewaehlt(kurs).value,
@@ -103,8 +108,8 @@
 							}"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
-							<span class="group-hover:bg-white rounded w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
-								<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
+							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
+								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
 							<div class="icon cursor-pointer group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
 								<i-ri-pushpin-fill v-if="istKursFixiertInSchiene(kurs, schiene).value" class="inline-block group-hover:opacity-75" />

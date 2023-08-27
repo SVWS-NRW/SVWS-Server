@@ -9,8 +9,8 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)">Sperren</svws-ui-button>
-			<svws-ui-button @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">Alleine</svws-ui-button>
+			<svws-ui-button type="secondary" @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_SPERRE_SCHIENEN_VON_BIS)"><i-ri-lock-line /> Sperren</svws-ui-button>
+			<svws-ui-button type="secondary" @click="regel_hinzufuegen(GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS)">Alleine</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

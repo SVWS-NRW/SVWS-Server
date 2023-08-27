@@ -1,36 +1,36 @@
 <template>
-	<svws-ui-content-card v-if="schueler !== undefined" class="min-w-[30rem]">
+	<svws-ui-content-card v-if="schueler !== undefined" class="min-w-[30rem]" overflow-scroll :title="`${schueler.vorname} ${schueler.nachname}`">
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
 		<div class="flex gap-4 -mt-2" v-if="fachbelegungen.size() > 0">
 			<!-- Übersicht über die Fachwahlen des Schülers -->
-			<div class="w-1/6 min-w-[9rem]">
+			<div class="w-1/6 min-w-[10rem]">
 				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
-				<div class="mb-4" @dragover="$event.preventDefault()" @drop="drop_entferne_kurszuordnung">
-					<div class="border-2 -m-[2px]" :class="{ 'border-dashed border-error': dragAndDropData !== undefined, 'border-transparent': dragAndDropData === undefined }">
+				<div class="mb-5" @dragover="$event.preventDefault()" @drop="drop_entferne_kurszuordnung">
+					<div>
 						<!-- Die Liste mit den Fachwahlen -->
 						<svws-ui-data-table :items="[]" :no-data="false" :disable-header="true">
 							<template #body>
-								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'text-error font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
+								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
 									<div role="cell" :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id"
 										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)"
 										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
 										@dragend="drag_ended()"
 										class="select-none data-table__td group"
 										:class="{
-											'bg-white' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined),
+											'bg-white text-black/50 dark:text-white/50' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined),
 											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)
 										}"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
 										<div class="flex items-center justify-between gap-1 w-full">
 											<div class="inline-flex items-center gap-1">
-												<span class="group-hover:bg-light rounded w-3 -ml-1">
-													<i-ri-draggable class="w-5 -ml-1 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" v-if="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" />
+												<span class="group-hover:bg-light rounded-sm w-3 -ml-1.5">
+													<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" v-if="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" />
 												</span>
 												<span>{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
 											</div>
-											<div class="flex items-center gap-1 cursor-pointer">
+											<!--<div class="flex items-center gap-1 cursor-pointer">
 												<svws-ui-tooltip v-if="!fachwahlKurszuordnung(fach.fachID, schueler.id).value"> <i-ri-forbid-2-line /> <template #content> <span>Nichtverteilt</span> </template> </svws-ui-tooltip>
-											</div>
+											</div>-->
 										</div>
 									</div>
 								</div>
@@ -39,14 +39,14 @@
 
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
 						<template v-if="!blockung_aktiv">
-							<div class="flex items-center py-2 px-3 m-1" :class="{'bg-error text-white': dragAndDropData !== undefined}">
-								<div v-if="dragAndDropData !== undefined" class="flex gap-2 items-center w-full h-full">
+							<div class="flex items-center mt-2" :class="{'text-error': dragAndDropData !== undefined, 'border-2 border-dashed border-black/10 dark:border-white/10': dragAndDropData === undefined}">
+								<div v-if="dragAndDropData !== undefined" class="py-2 px-3 flex flex-col text-center gap-2 items-center w-full h-full text-sm border-2 border-dashed">
 									<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
-									<span>Entfernen</span>
+									<span class="font-bold">Kurs-Zuordnung aufheben </span>
 								</div>
-								<div v-else class="flex gap-2 items-center w-full h-full">
-									<i-ri-delete-bin-line class="w-6 h-6 opacity-25" :class="{ 'bg-error': is_dragging }" />
-									<span class="opacity-25">Entfernen</span>
+								<div v-else class="py-2 px-3 flex flex-col text-center gap-2 items-center w-full h-full text-sm">
+									<i-ri-delete-bin-line class="w-6 h-6 opacity-25" />
+									<span class="opacity-25">Kurse hier zum Löschen ablegen</span>
 								</div>
 							</div>
 						</template>
@@ -54,9 +54,9 @@
 				</div>
 
 				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
-				<div class="flex flex-col gap-2">
-					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen" v-if="!blockung_aktiv">Verteilen<i-ri-sparkling-line /></svws-ui-button>
-					<svws-ui-button class="w-full justify-center" type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`"> Laufbahn <i-ri-group-line /></svws-ui-button>
+				<div class="flex flex-col gap-1">
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" disabled title="Automatisch verteilen" v-if="!blockung_aktiv"><i-ri-sparkling-line />Verteilen</svws-ui-button>
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`"><i-ri-link />Zur Laufbahn</svws-ui-button>
 				</div>
 			</div>
 
@@ -66,10 +66,10 @@
 					<template #header><div /></template>
 					<template #body>
 						<div v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="index"
-							role="row" class="data-table__tr data-table__thead__tr" :class="{ 'border border-error': hatSchieneKollisionen(schiene.id, schueler.id).value }">
+							role="row" class="data-table__tr data-table__thead__tr">
 							<!-- Informationen zu der Schiene und der Statistik dazu auf der linken Seite der Tabelle -->
-							<div role="cell" class="data-table__td" :class="{ 'text-error': hatSchieneKollisionen(schiene.id, schueler.id).value }">
-								<div class="flex flex-col py-1" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
+							<div role="cell" class="data-table__td" :class="{ 'bg-error': hatSchieneKollisionen(schiene.id, schueler.id).value }">
+								<div class="flex flex-col py-1" :class="{'text-white': hatSchieneKollisionen(schiene.id, schueler.id).value}" :title="getErgebnismanager().getSchieneG(schiene.id).bezeichnung">
 									<span class="font-medium inline-flex items-center gap-1 text-base">
 										<svws-ui-tooltip v-if="hatSchieneKollisionen(schiene.id, schueler.id).value">
 											<i-ri-alert-line />
@@ -93,8 +93,8 @@
 								@dragend="drag_ended()">
 								<div class="w-full h-full flex flex-col justify-center items-center rounded" :style="{ 'background-color': bgColor(kurs.id, schueler.id) }"
 									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs, schueler.id)">
-									<span class="group-hover:bg-white rounded w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value">
-										<i-ri-draggable class="w-5 -ml-1 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
+									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value">
+										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 									</span>
 									<span class="text-sm opacity-50 relative" title="Schriftlich/Insgesamt im Kurs">
 										{{ getErgebnismanager().getOfKursAnzahlSchuelerSchriftlich(kurs.id) }}/{{ kurs.schueler.size() }}

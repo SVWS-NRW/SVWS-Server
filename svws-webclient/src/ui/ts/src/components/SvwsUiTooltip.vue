@@ -127,7 +127,7 @@
 <style lang="postcss">
 .tooltip-trigger {
 	.icon--indicator {
-		@apply text-black;
+		@apply text-black dark:text-white;
 		width: 1em;
 		height: 1em;
 		margin-left: 0.1em;
@@ -142,7 +142,7 @@
 	}
 
 	&--triggered {
-		svg {
+		.icon--indicator svg {
 			@apply text-svws;
 
 			.page--statistik & {
