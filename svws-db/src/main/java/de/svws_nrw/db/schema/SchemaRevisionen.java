@@ -88,7 +88,7 @@ public enum SchemaRevisionen {
 	REV_9(9, "2022-12-30"),
 
 	/**
-     * Tabellen für Stundenplan ergänzt, Feld Namenszusatz entfernen
+     * Tabellen für Stundenplan ergänzt, Feld Namenszusatz entfernen, Fehlerhafte Kurszuordnung in Leistungsdaten behoben
      */
     REV_10(10, "2023-08-26");
 

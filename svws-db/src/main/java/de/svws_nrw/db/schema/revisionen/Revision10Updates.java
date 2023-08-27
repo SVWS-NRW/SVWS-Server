@@ -45,6 +45,12 @@ public class Revision10Updates extends SchemaRevisionUpdateSQL {
                     Schema.tab_SchuelerErzAdr.col_Erz2ZusatzNachname.name()),
             Schema.tab_SchuelerErzAdr
         );
+        add("Entfernen fehlerhafter Kurszurordnungen bei Leistungsdaten",
+        	"UPDATE SchuelerLeistungsdaten JOIN Kurse ON SchuelerLeistungsdaten.Kurs_ID = Kurse.ID "
+        		+ "SET SchuelerLeistungsdaten.Kurs_ID = NULL "
+        		+ "WHERE SchuelerLeistungsdaten.Fach_ID != Kurse.Fach_ID;",
+        	Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurse
+        );
 	}
 
 }
