@@ -54,9 +54,9 @@
 		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
 			<div class="s-toggle" v-if="!skeleton">
 				<button type="button" @click="updateSidebarExpanded" :title="`Sidebar ${!sidebarExpanded ? 'einblenden' : 'ausblenden'}`">
-					<i-ri-contract-left-line v-if="sidebarExpanded" />
-					<i-ri-corner-up-right-double-line v-else />
-					<span class="s-title" v-if="!sidebarExpanded">Sidebar einblenden</span>
+					<i-ri-skip-left-line v-if="sidebarExpanded" />
+					<i-ri-skip-right-line v-else />
+					<span class="s-title" v-if="!sidebarExpanded">Sidebar</span>
 				</button>
 			</div>
 			<div class="app--sidebar-container">
@@ -171,7 +171,7 @@
 
 	.app--sidebar,
 	.app--content-container {
-		@apply bg-white dark:bg-black rounded-2xl;
+		@apply bg-white dark:bg-black rounded-3xl;
 		@apply h-full;
 		@apply flex flex-col;
 		@apply border border-black/10 dark:border-white/5;
@@ -186,10 +186,11 @@
 		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
 		min-width: 24rem;
-		max-width: 36rem;
+		max-width: 32rem;
 
 		.app--sidebar-container {
-			@apply rounded-xl border border-black/25 dark:border-white/25 h-full shadow shadow-black/10;
+			@apply rounded-2xl h-full;
+      @apply border border-black/20 dark:border-white/20;
 		}
 
 		.secondary-menu--headline {
@@ -197,10 +198,10 @@
 		}
 
 		.s-toggle {
-			@apply absolute right-0 top-0 z-40 pt-3.5 pr-1.5 flex flex-col;
+			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 			button {
-				@apply rounded-lg text-black/25 dark:text-white/25 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				@apply rounded-lg text-black/50 dark:text-white/50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
 
 				svg {
 					@apply flex-shrink-0 text-headline-md;
@@ -218,24 +219,36 @@
 		}
 	}
 
-	.s-sidebar-collapsed {
-		.app--sidebar {
-			@apply w-9 min-w-0 bg-white dark:bg-black z-40 pt-1 px-1;
-			@apply -mr-3 lg:-mr-4 3xl:-mr-9 4xl:-mr-12;
+  @media (orientation: portrait) {
+    .app--sidebar .s-toggle {
+      @apply hidden;
+    }
+  }
 
-			.app--sidebar-container {
-				@apply hidden;
-			}
-		}
+  @media (orientation: landscape) {
+    .s-sidebar-collapsed {
+      .app--sidebar {
+        @apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 xl:pt-5 px-1 border-0;
+        @apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
 
-		.s-toggle {
-			@apply relative pt-1 pr-0 pl-1;
+        .app--sidebar-container {
+          @apply hidden;
+        }
+      }
 
-			button {
-				@apply pb-1 rounded-lg;
-			}
-		}
-	}
+      .s-toggle {
+        @apply relative pt-1 pr-0 pl-1 pointer-events-auto;
+
+        button {
+          @apply pb-2 rounded-md text-button;
+        }
+      }
+
+      .app--content-container {
+        @apply border border-black/10 dark:border-white/5 rounded-l-2xl;
+      }
+    }
+  }
 
 	.app--content {
 		@apply flex-1 overflow-hidden relative;
@@ -325,10 +338,6 @@
 		.secondary-menu--content .v-table tr:not(.table--row-indent) td:first-child:not(.column--checkbox),
 		.secondary-menu--content .v-table tr.table--row-indent {
 			@apply pl-8;
-		}
-
-		.app--layout {
-			@apply gap-3 p-3;
 		}
 	}
 

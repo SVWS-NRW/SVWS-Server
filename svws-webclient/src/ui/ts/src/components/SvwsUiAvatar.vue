@@ -110,7 +110,7 @@
 }
 
 .avatar {
-	@apply w-full rounded-lg overflow-hidden relative bg-light;
+	@apply w-full rounded-xl overflow-hidden relative bg-light;
 	@apply border border-black/5 dark:border-white/5;
 	padding-bottom: 100%;
 

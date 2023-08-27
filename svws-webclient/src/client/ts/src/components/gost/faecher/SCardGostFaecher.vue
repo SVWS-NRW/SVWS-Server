@@ -1,9 +1,11 @@
 <template>
-	<svws-ui-content-card title="Angebotene Fächer im Jahrgang" class="table--with-background">
-		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-content-card class="table--with-background" title="Angebotene Fächer im Jahrgang">
+		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" contrast-border>
 			<template #header>
 				<svws-ui-table-row compact thead>
-					<svws-ui-table-cell thead align="center" separate class="col-span-4" />
+					<svws-ui-table-cell thead align="center" separate class="col-span-4">
+						Fächer
+					</svws-ui-table-cell>
 					<svws-ui-table-cell thead align="center" separate class="col-span-2">
 						Leitfächer
 					</svws-ui-table-cell>
@@ -14,7 +16,7 @@
 						im Abitur
 					</svws-ui-table-cell>
 				</svws-ui-table-row>
-				<svws-ui-table-row compact thead>
+				<svws-ui-table-row thead>
 					<svws-ui-table-cell thead>
 						Kürzel
 					</svws-ui-table-cell>

@@ -24,13 +24,13 @@
 .page--content--dashboard {
 	@apply grid grid-cols-2 lg:grid-cols-4 w-full;
 	@apply gap-2 sm:gap-3 lg:gap-4;
-	@apply p-4 sm:p-6 lg:p-8;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
 	@apply overflow-y-auto;
 	grid-auto-rows: min-content;
 	max-width: 140rem;
-	@apply mx-auto;
 }
 
+/*
 .page--statistik .router-tab-bar--wrapper,
 .page--statistik .page--content,
 .page--statistik .page--content--dashboard,
@@ -54,6 +54,7 @@
 .page--statistik .svws-ui-header {
 	@apply 3xl:px-8 4xl:px-8;
 }
+*/
 
 .page--content .page--content {
 	@apply p-0 !important;

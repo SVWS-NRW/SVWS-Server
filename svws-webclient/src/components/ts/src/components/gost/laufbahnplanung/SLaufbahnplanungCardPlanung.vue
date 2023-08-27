@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card :title="title" class="table--with-background sticky top-8">
-		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden>
+		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden contrast-border>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
 					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
@@ -39,7 +39,7 @@
 						</div>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
+				<div role="row" class="data-table__tr data-table__thead__tr">
 					<svws-ui-table-cell thead>
 						Kürzel
 					</svws-ui-table-cell>

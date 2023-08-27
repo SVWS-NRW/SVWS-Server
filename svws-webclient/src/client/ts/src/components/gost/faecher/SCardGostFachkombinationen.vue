@@ -1,11 +1,11 @@
 <template>
-	<svws-ui-content-card :title="title+'e Fachkombinationen'">
+	<svws-ui-content-card :title="title+'e Kombinationen'">
 		<template #actions>
 			<svws-ui-button size="small" type="secondary" @click="add_kurskombi">Hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
-		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols">
+		<svws-ui-data-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
 			<template #header>
-				<svws-ui-table-row thead compact>
+				<!--				<svws-ui-table-row thead compact>
 					<svws-ui-table-cell thead align="center" separate class="col-span-4">
 						{{ title }}
 					</svws-ui-table-cell>
@@ -13,10 +13,10 @@
 						Gültig in
 					</svws-ui-table-cell>
 					<svws-ui-table-cell thead align="center" class="col-span-2">
-						<!--Hinweis-->
+						&lt;!&ndash;Hinweis&ndash;&gt;
 					</svws-ui-table-cell>
-				</svws-ui-table-row>
-				<svws-ui-table-row thead compact>
+				</svws-ui-table-row>-->
+				<svws-ui-table-row thead>
 					<svws-ui-table-cell thead>
 						Fach
 					</svws-ui-table-cell>

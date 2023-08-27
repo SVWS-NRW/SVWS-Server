@@ -36,7 +36,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu v-if="app.name !== 'statistik'">
+		<template #secondaryMenu>
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>

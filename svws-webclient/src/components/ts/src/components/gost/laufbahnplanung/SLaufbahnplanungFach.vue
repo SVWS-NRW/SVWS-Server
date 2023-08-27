@@ -1,26 +1,26 @@
 <template>
 	<div role="row" class="data-table__tr data-table__tbody__tr">
-		<div role="cell" class="data-table__td select-text" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td select-text" :style="{ '--background-color': bgColor }">
 			<div class="whitespace-nowrap min-w-fit">
 				{{ fach.kuerzelAnzeige }}
 			</div>
 		</div>
-		<div role="cell" class="data-table__td select-all" :style="{ 'background-color': bgColor }">
-			<div class="whitespace-nowrap text-ellipsis overflow-hidden">
+		<div role="cell" class="data-table__td select-all" :style="{ '--background-color': bgColor }">
+			<div class="whitespace-nowrap text-ellipsis overflow-hidden svws-cell-background">
 				{{ fach.bezeichnung }}
 			</div>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__th__separate" :style="{ '--background-color': bgColor }">
 			{{ fach.wochenstundenQualifikationsphase }}
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :class="{ 'data-table__td__disabled': !istFremdsprache }" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium" :class="{ 'data-table__td__disabled': !istFremdsprache }" :style="{ '--background-color': bgColor }">
 			<template v-if="istFremdsprache">
 				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
 				<span v-else> {{ sprachenfolgeNr }} </span>
 			</template>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :class="{ 'data-table__td__disabled': !istFremdsprache}" :style="{ 'background-color': bgColor }">
+		<div role="cell" class="data-table__td data-table__td__align-center font-medium data-table__th__separate" :class="{ 'data-table__td__disabled': !istFremdsprache}" :style="{ '--background-color': bgColor }">
 			<template v-if="istFremdsprache">
 				<span v-if="ignoriereSprachenfolge" class="text-black/25"> ? </span>
 				<span v-else-if="sprachenfolgeNr === 0 && !sprachenfolgeJahrgang" class="text-black/25"> — </span>
@@ -34,7 +34,7 @@
 				'data-table__td__separate': halbjahr?.halbjahr === 2 && (halbjahr.jahrgang === 'EF' || halbjahr.jahrgang === 'Q2'),
 				'data-table__td__disabled': !istMoeglich[halbjahr.id],
 				'data-table__td__disabled-light': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
-			}" :style="{ 'background-color': bgColor }" @click.stop="stepper(halbjahr)" :title="istBewertet(halbjahr) ? 'Bewertet, keine Änderungen mehr möglich' : (!istMoeglich[halbjahr.id] ? 'Wahl nicht möglich' : '')">
+			}" :style="{ '--background-color': bgColor }" @click.stop="stepper(halbjahr)" :title="istBewertet(halbjahr) ? 'Bewertet, keine Änderungen mehr möglich' : (!istMoeglich[halbjahr.id] ? 'Wahl nicht möglich' : '')">
 				<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 					<div class="inline-flex items-center relative w-full">
 						<span class="w-full text-center">{{ wahlen[halbjahr.id] }}&#8203;</span>
@@ -95,7 +95,7 @@
 			'cursor-not-allowed': !istMoeglichAbi,
 			'data-table__td__disabled': !istMoeglichAbi,
 			'data-table__td__disabled-light': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
-		}" :style="{ 'background-color': bgColor }" @click.stop="stepperAbi()">
+		}" :style="{ '--background-color': bgColor }" @click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
 		</div>
 	</div>
@@ -961,3 +961,30 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+.data-table__tr {
+  --background-color: #ffffff;
+
+  .data-table__td {
+    background-color: var(--background-color);
+  }
+
+  &.svws-background-on-hover {
+    .data-table__td {
+      @apply bg-transparent;
+    }
+
+    &:hover {
+      .data-table__td {
+        background-color: var(--background-color);
+      }
+    }
+
+    .svws-cell-background {
+      @apply -m-1 px-1 py-0.5 rounded;
+      background-color: var(--background-color);
+    }
+  }
+}
+</style>

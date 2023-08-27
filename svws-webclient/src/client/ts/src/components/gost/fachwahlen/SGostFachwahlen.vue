@@ -1,13 +1,7 @@
 <template>
-	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<div class="flex-grow">
-			<s-gost-fachwahlen-uebersicht :fachwahlen="fachwahlen" :do-select="doSelect" />
-		</div>
-		<div class="w-2/5 3xl:w-1/2 min-w-[36rem]">
-			<div class="flex flex-col gap-16">
-				<router-view />
-			</div>
-		</div>
+	<div class="page--content page--content--full">
+		<s-gost-fachwahlen-uebersicht :fachwahlen="fachwahlen" :do-select="doSelect" />
+		<router-view />
 	</div>
 </template>
 
@@ -18,3 +12,10 @@
 	defineProps<GostFachwahlenProps>();
 
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply grid;
+  grid-template-columns: 1fr minmax(20rem, 0.5fr);
+}
+</style>

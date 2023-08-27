@@ -2,24 +2,22 @@
 	<div v-if="data" class="page--flex page--statistik">
 		<svws-ui-header>
 			<div class="flex flex-col">
-				<div class="inline-block">Statistik</div>
+				<div class="inline-block">{{ schulname }}</div>
 				<!--TODO: Dynamischer Schuljahresabschnitt-->
-				<div class="opacity-50">2023.1</div>
+				<div class="opacity-50">
+					<svws-ui-tooltip>
+						{{ schulform }} {{ schulNr }}
+						<template #content>
+							Schulform und Nummer
+						</template>
+					</svws-ui-tooltip>
+				</div>
 			</div>
 		</svws-ui-header>
 		<svws-ui-router-tab-bar :routes="routes" v-model="selectedRoute" :hidden="hidden">
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
-					<svws-ui-dashboard-tile :span="2" color="transparent">
-						<template #title>
-							<svws-ui-tooltip>
-								{{ schulform }} {{ schulNr }}
-								<template #content>
-									Schulform und Nummer
-								</template>
-							</svws-ui-tooltip>
-						</template>
-						<div>{{ schulname }}</div>
+					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
 						<div class="mt-5 whitespace-pre-line">{{ adresse }}</div>
 						<div class="mt-2 flex gap-1">
 							<svws-ui-button type="secondary" size="small">Schuldaten bearbeiten</svws-ui-button>

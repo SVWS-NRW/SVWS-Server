@@ -85,10 +85,6 @@
 		@apply h-4 w-4;
 		@apply left-0 top-0;
 		content: "";
-
-		.toggle:hover & {
-			@apply translate-x-[10%];
-		}
 	}
 }
 
@@ -113,12 +109,6 @@
 
 	&:before {
 		@apply bg-white translate-x-full border-svws;
-	}
-}
-
-.toggle:hover input:checked+.toggle--indicator {
-	&:before {
-		@apply translate-x-[90%];
 	}
 }
 

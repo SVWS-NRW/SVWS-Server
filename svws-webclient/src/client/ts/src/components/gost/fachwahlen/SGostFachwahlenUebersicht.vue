@@ -1,11 +1,11 @@
 <template>
-	<svws-ui-content-card class="table--with-background">
-		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" panel-height overflow-x-hidden>
+	<svws-ui-content-card class="table--with-background" :class="{'svws-selected-initial': selected.group === 'Fach' && !selected.row}">
+		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" panel-height overflow-x-hidden :contrast-border="selected.group === 'Fach' && !selected.row">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
 					<div role="columnheader" v-for="heading in colHeadings" :key="heading.text"
 						class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate cursor-pointer"
-						:class="{ [`col-span-${heading.cols.length}`]: true, 'bg-svws/5 text-svws': isSelected(undefined, heading.text) }"
+						:class="{ [`col-span-${heading.cols.length}`]: true, 'svws-selected': isSelected(undefined, heading.text) }"
 						@click="selectData(undefined, heading.text)">
 						<div class="data-table__th-wrapper">
 							<div class="data-table__th-title">
@@ -14,11 +14,11 @@
 						</div>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
+				<div role="row" class="data-table__tr data-table__thead__tr select-none">
 					<template v-for="heading in colHeadings" :key="heading.text">
 						<div role="columnheader" v-for="(h, n) in heading.cols" :key="n" class="data-table__th data-table__thead__th cursor-pointer"
 							:class="{ 'data-table__th__align-center': h.center, 'data-table__th__separate': (n === heading.cols.length - 1),
-								'bg-svws/5 text-svws': isSelected(undefined, heading.text) }"
+								'svws-selected': isSelected(undefined, heading.text) }"
 							@click="selectData(undefined, heading.text)">
 							<div class="data-table__th-wrapper">
 								<div class="data-table__th-title">
@@ -30,13 +30,13 @@
 				</div>
 			</template>
 			<template #body>
-				<div role="row" v-for="row in rows" :key="row.id" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': getBgColor(row) }">
+				<div role="row" v-for="row in rows" :key="row.id" class="data-table__tr data-table__tbody__tr" :style="{ '--background-color': getBgColor(row) }">
 					<template v-for="heading in colHeadings" :key="heading.text">
 						<div role="cell" v-for="(h, n) in heading.cols" :key="n" class="data-table__td select-none"
 							:class="{
 								'data-table__th__align-center': h.center, 'data-table__th__separate': (n === heading.cols.length - 1),
-								'bg-white/75 text-svws font-bold': isSelected(row, heading.text),
-								'cursor-pointer': isSelectable(row, heading.text) }"
+								'svws-selected': isSelected(row, heading.text),
+								'svws-selectable': isSelectable(row, heading.text) }"
 							@click="selectData(row, heading.text)">
 							{{ getData(row, heading.text, h.text) }}
 						</div>
@@ -189,3 +189,28 @@
 	];
 
 </script>
+
+<style lang="postcss" scoped>
+.svws-selectable {
+  @apply cursor-pointer;
+}
+
+.data-table__tr {
+  --background-color: transparent;
+
+  .svws-selected-initial &,
+  .svws-selectable:hover {
+    background-color: var(--background-color);
+  }
+
+  .svws-selected {
+    background-color: var(--background-color);
+  }
+}
+
+.data-table__th {
+  &.svws-selected {
+    /*@apply bg-svws/5 text-svws;*/
+  }
+}
+</style>

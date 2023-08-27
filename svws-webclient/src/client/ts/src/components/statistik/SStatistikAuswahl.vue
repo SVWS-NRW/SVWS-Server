@@ -1,5 +1,10 @@
 <template>
-	<span />
+	<svws-ui-secondary-menu>
+		<template #headline>
+			<div>Statistik</div>
+			<div class="opacity-50">2023.1</div>
+		</template>
+	</svws-ui-secondary-menu>
 	<!--<svws-ui-secondary-menu>
 		<template #headline>Statistik</template>
 		<template #header />

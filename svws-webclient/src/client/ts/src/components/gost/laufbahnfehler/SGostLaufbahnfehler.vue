@@ -2,27 +2,25 @@
 	<div class="page--content">
 		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
-				<svws-ui-button size="small" type="transparent" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
-					Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
-				</svws-ui-button>
 				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
-		<svws-ui-content-card>
-			<div class="flex justify-between items-center gap-12 mb-4 mt-1">
+		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+			<svws-ui-button type="secondary" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
+				<i-ri-printer-line />Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
+			</svws-ui-button>
+		</Teleport>
+		<svws-ui-content-card title="Laufbahnfehler">
+			<template #actions>
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
-				<svws-ui-toggle v-model="filterExterne">keine Externen</svws-ui-toggle>
+			</template>
+			<div class="flex flex-wrap gap-10 mb-3 -mt-3">
 				<svws-ui-toggle v-model="filterFehler">Nur Fehler</svws-ui-toggle>
+				<svws-ui-toggle v-model="filterExterne">Keine Externe</svws-ui-toggle>
 			</div>
-			<div v-if="filtered.isEmpty()">
-				Keine Laufbahnfehler vorhanden.
-			</div>
-			<svws-ui-data-table v-else :items="filtered" :no-data="false" clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
+			<svws-ui-data-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler vorhanden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 				<template #cell(schueler)="{value: s}: {value: Schueler}">
-					<svws-ui-button type="icon" size="small" @click.stop="gotoLaufbahnplanung(s.id)">
-						<i-ri-link />
-					</svws-ui-button>
-					<div class="flex justify-between w-full ml-2">
+					<div class="flex gap-2 w-full">
 						<div>{{ s.nachname }}, {{ s.vorname }}</div>
 						<svws-ui-badge v-if="s.status !== 2" size="big" title="Status" class="-my-0.5 leading-none">
 							{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
@@ -34,13 +32,14 @@
 				</template>
 			</svws-ui-data-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card v-if="!filtered.isEmpty()" :title="`${schueler.schueler.vorname} ${schueler.schueler.nachname} (ID: ${schueler.schueler.id})`" class="sticky top-8" large-title>
-			<template #actions>
+		<svws-ui-content-card v-if="!filtered.isEmpty()" :title="`Details zu Schüler ID: ${schueler.schueler.id}`" class="sticky top-8">
+			<div class="text-headline inline-flex gap-x-5 -mt-3 flex-wrap" :class="counter(schueler.ergebnis.fehlercodes) === 0 ? 'mb-6' : 'mb-1'">
+				<span>{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
 				<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(schueler.schueler.id)">
-					<i-ri-group-line />
+					<i-ri-link />
 					Zur Laufbahnplanung
 				</svws-ui-button>
-			</template>
+			</div>
 			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 		</svws-ui-content-card>
 	</div>
@@ -136,3 +135,10 @@
 	});
 
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply gap-y-3;
+  grid-template-columns: minmax(20rem, 0.5fr) 1fr;
+}
+</style>

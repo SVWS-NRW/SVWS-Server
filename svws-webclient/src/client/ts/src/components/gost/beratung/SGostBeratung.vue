@@ -9,8 +9,10 @@
 					</template>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="resetFachwahlen" />
-				<svws-ui-modal-hilfe class="ml-auto"> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 			</svws-ui-sub-nav>
+		</Teleport>
+		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="flex-grow">
 			<s-laufbahnplanung-card-planung title="Vorlage für Laufbahnplanungen von Schülern des Abiturjahrgangs"

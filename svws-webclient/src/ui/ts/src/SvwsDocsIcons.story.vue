@@ -153,9 +153,14 @@
 					<td><code>{{ '<' }}i-ri-printer-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-upload-cloud-2-line /></th>
+					<th><i-ri-upload-2-line /></th>
 					<td>Importieren, Hochladen</td>
-					<td><code>{{ '<' }}i-ri-upload-cloud-2-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-upload-2-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-download-2-line /></th>
+					<td>Exportieren, Herunterladen</td>
+					<td><code>{{ '<' }}i-ri-download-2-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-bar-chart2-line /></th>

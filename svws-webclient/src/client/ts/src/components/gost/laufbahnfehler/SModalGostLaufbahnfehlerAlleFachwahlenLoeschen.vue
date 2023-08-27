@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger">Fachwahlen zurücksetzen…</svws-ui-button>
+		<svws-ui-button @click="toggle_modal" size="small" type="transparent" class="hover--danger"><i-ri-delete-bin-line />Fachwahlen zurücksetzen</svws-ui-button>
 		<svws-ui-modal ref="modal" size="medium" type="danger">
 			<template #modalTitle>Alle Fachwahlen aller Schüler im Abiturjahrgang zurücksetzen</template>
 			<template #modalDescription>

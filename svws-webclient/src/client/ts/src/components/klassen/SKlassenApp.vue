@@ -4,11 +4,15 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						{{ auswahl?.kuerzel || '—' }}
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							ID:
-							{{ auswahl?.id || '—' }}
-						</svws-ui-badge>
+						<svws-ui-tooltip :indicator="false">
+							{{ auswahl?.kuerzel ? 'Klasse ' + auswahl.kuerzel : '—' }}
+							<template #content>
+								<span class="font-mono">
+									ID:
+									{{ auswahl?.id || '—' }}
+								</span>
+							</template>
+						</svws-ui-tooltip>
 					</h2>
 					<span class="svws-subline separate-items--custom">
 						<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>

@@ -43,7 +43,7 @@
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
-		{ key: "idJahrgaenge", label: "Jahrgang", sortable: true, span: 0.5 },
+		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5 },
 	];
 

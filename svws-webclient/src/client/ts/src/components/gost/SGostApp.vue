@@ -1,10 +1,15 @@
 <template>
 	<template v-if="bezeichnung_abiturjahr">
-		<svws-ui-header>
-			<span class="inline-block mr-3">{{ bezeichnung_abiturjahr }}</span>
-			<!-- <br>
-			<span class="opacity-50">{{ jahrgang ? jahrgang : '—' }}</span> -->
-		</svws-ui-header>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<span>{{ bezeichnung_abiturjahr }}</span>
+					</h2>
+				</div>
+			</div>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab" :class="`router--tab--${tab.name}`">
 			<router-view />
 		</svws-ui-router-tab-bar>
