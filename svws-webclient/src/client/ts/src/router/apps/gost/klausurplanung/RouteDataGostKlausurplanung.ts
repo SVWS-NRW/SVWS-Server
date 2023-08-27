@@ -379,6 +379,7 @@ export class RouteDataGostKlausurplanung {
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
 		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
+		console.log("Termin: ", oldTtermin);
 		this.commit();
 		api.status.stop();
 		return true;

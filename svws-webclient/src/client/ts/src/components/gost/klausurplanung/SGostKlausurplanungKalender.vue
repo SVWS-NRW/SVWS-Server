@@ -1,10 +1,6 @@
 <template>
 	<svws-ui-sub-nav>
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-		<!--		<svws-ui-radio-group id="rgDisplayPeriodUom" :row="true">
-			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Monat" value="month" />
-			<svws-ui-radio-option name="rgDisplayPeriodUom" v-model="displayPeriodUom" label="Woche" value="week" />
-		</svws-ui-radio-group>-->
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 
@@ -17,11 +13,12 @@
 					@drop="onDrop($event)"
 					class="h-full">
 					<ul class="flex flex-col gap-y-1">
-						<svws-ui-drag-data tag="li" v-for="termin in termineOhne"
+						<li v-for="termin in termineOhne"
 							:key="termin.id"
 							:data="termin"
-							@drag-start="onDrag(termin)"
-							@drag-end="onDrag(undefined)">
+							:draggable="isDraggable"
+							@dragstart="onDrag(termin)"
+							@dragend="onDrag(undefined)">
 							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
 								:jahrgangsdaten="jahrgangsdaten"
 								:faecher-manager="faecherManager"
@@ -29,14 +26,19 @@
 								:termin="termin"
 								:kursmanager="kursmanager"
 								:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}" />
-						</svws-ui-drag-data>
+						</li>
 					</ul>
 				</svws-ui-drop-data>
 			</div>
 			<div class="w-full">
+				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+					:class="{'print:hidden': !kwAuswahl}"
+					removable
+					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+
 				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33"
 					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-					:on-drop="onDrop" :on-drag="onDrag" />
+					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" />
 				<!--<calendar-view :display-period-uom="displayPeriodUom"
 					:display-period-count="displayPeriodUom === 'month' ? 1 : 2"
 					:starting-day-of-week="1"
@@ -86,26 +88,16 @@
 	import { computed, ref } from "vue";
 	import { GostKlausurtermin, StundenplanZeitraster} from "@core";
 	import { ArrayList} from "@core";
-	import type { Wochentag , GostKursklausur} from "@core";
+	import type { Wochentag , GostKursklausur, StundenplanKalenderwochenzuordnung, List} from "@core";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { KlausurplanungKalenderDragData, KlausurplanungKalenderDropZone } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
-	function formatDate(date: Date | null) {
-		if (date === null)
-			return null;
-		var d = new Date(date),
-			month = '' + (d.getMonth() + 1),
-			day = '' + d.getDate(),
-			year = d.getFullYear();
+	const kwAuswahl = ref<StundenplanKalenderwochenzuordnung>(props.stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString()));
 
-		if (month.length < 2)
-			month = '0' + month;
-		if (day.length < 2)
-			day = '0' + day;
-
-		return [year, month, day].join('-');
+	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
+		return props.stundenplanmanager.kalenderwochenzuordnungGetMengeAsList();
 	}
 
 	const dropOverCssClasses = () => ({
@@ -143,8 +135,10 @@
 
 	const onDrop = async (zone: KlausurplanungKalenderDropZone) => {
 		if (dragData.value instanceof GostKlausurtermin)
-			if (zone instanceof StundenplanZeitraster)
-				await props.patchKlausurtermin(dragData.value.id, {datum: formatDate(date), startzeit: date !== null ? props.stundenplanmanager.zeitrasterGetByWochentagAndStundeOrException(date.getDay(), stunde).stundenbeginn : null});
+			if (zone instanceof StundenplanZeitraster) {
+				const date = props.stundenplanmanager.datumGetBy(kwAuswahl.value, zone);
+				await props.patchKlausurtermin(dragData.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
+			}
 	};
 
 	const termineOhne = computed(() => (props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
@@ -156,6 +150,7 @@
 			startDate: obj.datum !== null ? new Date(obj.datum) : null,
 		}));
 	});
+
 
 </script>
 

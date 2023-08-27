@@ -5,7 +5,7 @@
 		<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben kopieren</svws-ui-button>
 		<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0" class="ml-auto">Vorgabe speichern</svws-ui-button>
 		<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0"><i-ri-delete-bin-line />Vorgabe löschen</svws-ui-button>
-		<svws-ui-modal-hilfe > <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
+		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">

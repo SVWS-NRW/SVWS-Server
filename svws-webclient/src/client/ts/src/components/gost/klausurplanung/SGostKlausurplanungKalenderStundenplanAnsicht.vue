@@ -201,13 +201,14 @@
 	}
 
 	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number) : boolean {
-		const data = props.dragData();
-		if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
-			return false;
-		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
-			return true;
-		const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-		return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
+		return true;
+		// const data = props.dragData();
+		// if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
+		// 	return false;
+		// if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
+		// 	return true;
+		// const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
+		// return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
 	}
 
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
