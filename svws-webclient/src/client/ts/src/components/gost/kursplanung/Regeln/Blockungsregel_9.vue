@@ -6,7 +6,7 @@
 		</template>
 		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered.toArray() as GostBlockungKurs[]" />
 		<span class="leading-none">hat externe Schüler: </span>
-		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" :debounce-ms="0" />
+		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" />
 	</BlockungsregelBase>
 </template>
 

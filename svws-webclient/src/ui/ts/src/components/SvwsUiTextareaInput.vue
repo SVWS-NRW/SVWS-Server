@@ -1,13 +1,13 @@
 <script setup lang="ts">
+	import { useTextareaAutosize } from '@vueuse/core'
 	import { ref, computed } from 'vue';
-	import { useTextareaAutosize, useVModel } from '@vueuse/core'
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
 	const props = withDefaults(defineProps<{
 		modelValue?: string;
 		placeholder?: string;
-		valid?: boolean;
+		valid?: (value: string) => boolean;
 		statistics?: boolean;
 		required?: boolean;
 		disabled?: boolean;
@@ -19,7 +19,7 @@
 	}>(), {
 		modelValue: "",
 		placeholder: "",
-		valid: true,
+		valid: ()=>true,
 		statistics: false,
 		required: false,
 		disabled: false,
@@ -39,8 +39,8 @@
 		(e: "keydown", event: Event): void;
 	}>();
 
-	const value = useVModel(props, "modelValue", emit);
-	const { textarea, input } = useTextareaAutosize({input: value})
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const { textarea, input } = useTextareaAutosize({ input: props.modelValue })
 	const focused = ref(false);
 	const bindings = computed(() => {
 		return {
@@ -61,6 +61,7 @@
 
 	function onBlur(event: FocusEvent) {
 		focused.value = false;
+		emit("update:modelValue", input.value);
 		emit("blur", event);
 	}
 
@@ -82,7 +83,7 @@
 		:class="{
 			'textarea-input--focus': focused,
 			'textarea-input--filled': !!modelValue,
-			'textarea-input--invalid': valid === false,
+			'textarea-input--invalid': valid(input) === false,
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',

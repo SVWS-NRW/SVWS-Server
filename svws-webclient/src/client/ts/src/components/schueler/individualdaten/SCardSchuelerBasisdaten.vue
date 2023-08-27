@@ -39,15 +39,18 @@
 		emit('patch', data);
 	}
 
-	const istGeburtsdatumGueltig = computed<boolean>(() => {
-		const strDate = props.data().geburtsdatum;
-		if (strDate == null)
+	const istGeburtsdatumGueltig = (strDate: string | number | null) => {
+		if (strDate === null || typeof strDate === 'number')
 			return false;
-		const date = DateUtils.extractFromDateISO8601(strDate);
-		const curDate = new Date();
-		const diffYear = curDate.getFullYear() - date[0];
-		return (diffYear > 3) && (diffYear < 51);
-	});
+		try {
+			const date = DateUtils.extractFromDateISO8601(strDate);
+			const curDate = new Date();
+			const diffYear = curDate.getFullYear() - date[0];
+			return (diffYear > 3) && (diffYear < 51);
+		} catch (e) {
+			return false;
+		}
+	};
 
 	const geschlecht: WritableComputedRef<Geschlecht> = computed({
 		get: () => Geschlecht.fromValue(props.data().geschlecht) ?? Geschlecht.X,

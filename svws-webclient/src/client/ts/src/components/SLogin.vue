@@ -14,7 +14,7 @@
 									<h2>Schulverwaltung</h2>
 								</div>
 								<svws-ui-input-wrapper class="px-6" center>
-									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" :debounce-ms="0" />
+									<svws-ui-text-input v-model="inputHostname" type="text" url placeholder="Serveraddresse" @keyup.enter="connect" @focus="inputFocus = true" />
 									<svws-ui-button type="secondary" @click="connect" :disabled="connecting" :class="{'opacity-25 hover:opacity-100': inputDBSchemata.size() > 0 && !inputFocus}">
 										<span v-if="inputDBSchemata.size() === 0 || connecting || inputFocus">Verbinden</span>
 										<span v-else>Verbunden</span>
@@ -25,8 +25,8 @@
 								<Transition>
 									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-9 px-6" center>
 										<svws-ui-multi-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
-										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" :debounce-ms="0" />
-										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" :debounce-ms="0" />
+										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 											Anmelden
 											<svws-ui-spinner v-if="authenticating" spinning />

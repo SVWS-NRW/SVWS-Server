@@ -5,16 +5,15 @@
 </script>
 <script setup lang="ts">
 	import type { InputType } from "../types";
-	import { useSlots, ref, computed, toRef } from "vue";
+	import { useSlots, ref, computed } from "vue";
 	import { genId } from "../utils";
-	import { useDebounceFn } from "@vueuse/core";
 
 	const props = withDefaults(defineProps<{
 		type?: InputType;
 		modelValue?: string | number | null;
 		placeholder?: string;
 		statistics?: boolean;
-		valid?: boolean;
+		valid?: (value: string|number|null) => boolean;
 		disabled?: boolean;
 		required?: boolean;
 		readonly?: boolean;
@@ -24,13 +23,12 @@
 		url?: boolean;
 		maxLen?: number;
 		span?: 'full' | '2';
-		debounceMs?: number;
 	}>(), {
 		type: "text",
 		modelValue: "",
 		placeholder: "",
 		statistics: false,
-		valid: true,
+		valid: ()=>true,
 		disabled: false,
 		required: false,
 		readonly: false,
@@ -40,15 +38,14 @@
 		url: false,
 		maxLen: undefined,
 		span: undefined,
-		debounceMs: 1000
 	});
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", value: string | number): void;
+		"update:modelValue": [value: string | number];
 	}>();
 
 	const slots = useSlots();
-	const input = ref<null | HTMLElement>(null);
+	const input = ref<null | HTMLInputElement>(null);
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
 			if (props.focus) el.focus();
@@ -56,54 +53,34 @@
 	};
 
 	const maxLenValid = computed(()=>{
-		if (props.maxLen === undefined)
+		if (props.maxLen === undefined || input.value === null)
 			return true;
-		return typeof props.modelValue === 'string' && props.modelValue.toLocaleString().length <= props.maxLen;
+		return typeof props.modelValue === 'string' && input.value.value.toLocaleString().length <= props.maxLen;
 	})
 
 	const emailValid = computed(() => {
-		if (props.type !== "email" || !props.modelValue || typeof props.modelValue === 'number')
+		if (props.type !== "email" || !props.modelValue || typeof props.modelValue === 'number' || input.value === null)
 			return true;
 		else
 			return (
 				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(props.modelValue) ||
+				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(input.value.value) ||
 				// eslint-disable-next-line no-useless-escape
 				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-					props.modelValue
+					input.value.value
 				)
 			);
 	});
 
 	const hasIcon = computed(() => !!slots.default);
 
-	const debouncedOnInput = useDebounceFn((event) => {
-		if (document.activeElement !== input.value)
-			input.value?.focus();
-		onDebouncedInput(event)
-	}, toRef(props, 'debounceMs'))
-
-	/**
-	 * Diese Funktion löst ein Emit aus, wenn das Input-Feld verlassen wird und
-	 * wenn der Wert noch nicht vom onInput verschickt wurde
-	 * @param event
-	 */
-	function onBlurInput(event: Event) {
-		const eventValue = (event.target as HTMLInputElement).value;
-		if (props.modelValue !== eventValue)
-			emit("update:modelValue", eventValue);
+	function onBlur(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (value !== props.modelValue)
+			emit("update:modelValue", value);
 	}
 
-	/**
-	 * Diese Funktion verschickt den State des Inputs mittels der o.a. Debounce-Funktion
-	 * und nur dann, wenn der Focus gesetzt ist. Wird der Focus verlassen, bricht diese Funktion ab
-	 * und stattdessen verschickt die `onblurInput`-Funktion den Wert.
-	 * @param event
-	 */
-	function onDebouncedInput(event: Event) {
-		if (input.value === document.activeElement)
-			emit("update:modelValue", (event.target as HTMLInputElement).value);
-	}
+	const isValid = ref<boolean>(true);
 
 	defineExpose({
 		input
@@ -116,7 +93,7 @@
 	<label class="text-input-component"
 		:class="{
 			'text-input--filled': `${modelValue}`.length > 0 && `${modelValue}` !== 'null',
-			'text-input--invalid': (valid === false) || (emailValid === false) || (maxLenValid === false),
+			'text-input--invalid': (isValid === false) || (emailValid === false) || (maxLenValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
 			'text-input--icon': hasIcon,
@@ -143,8 +120,7 @@
 			:readonly="readonly"
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
-			@input="debouncedOnInput"
-			@blur="onBlurInput">
+			@blur="onBlur">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"
 			class="text-input--placeholder"
@@ -153,13 +129,13 @@
 				'text-input--placeholder--prefix': url
 			}">
 			<span>{{ placeholder }}</span>
-			<i-ri-alert-line v-if="(valid === false) || (emailValid === false) || (maxLenValid === false)" class="ml-0.5" />
+			<i-ri-alert-line v-if="(isValid === false) || (emailValid === false) || (maxLenValid === false)" class="ml-0.5" />
 			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${modelValue?.toLocaleString() ? modelValue?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="`${modelValue}`.length === 0 || `${modelValue}` === 'null'" />
+						<i-ri-alert-fill v-if="`${input?.value}`.length === 0 || `${input?.value}` === 'null'" />
 					</span>
 					<template #content>
 						Relevant für die Statistik

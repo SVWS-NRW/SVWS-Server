@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" :valid="eingabeStrasseOk" span="full" />
+			<svws-ui-text-input placeholder="Straße" v-model="inputStrasse" type="text" span="full" />
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
@@ -21,12 +21,11 @@
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef } from "vue";
-	import { computed, ref } from "vue";
-	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
-
 	import type { OrtKatalogEintrag, OrtsteilKatalogEintrag, SchuelerStammdaten } from "@core";
+	import { orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/helfer";
 	import { AdressenUtils } from "@core";
+	import { computed } from "vue";
+
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;
@@ -42,9 +41,9 @@
 		emit('patch', data);
 	}
 
-	const eingabeStrasseOk = ref(true);
+	// const eingabeStrasseOk = ref(true);
 
-	const inputStrasse: WritableComputedRef<string | undefined> = computed({
+	const inputStrasse = computed<string | undefined>({
 		get: () => {
 			const ret = AdressenUtils.combineStrasse(props.data().strassenname || "", props.data().hausnummer || "", props.data().hausnummerZusatz || "");
 			return ret ?? undefined;
@@ -53,12 +52,11 @@
 			if (value) {
 				const vals = AdressenUtils.splitStrasse(value);
 				doPatch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
-				eingabeStrasseOk.value = !!vals;
 			}
 		}
 	});
 
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
+	const inputWohnortID = computed<OrtKatalogEintrag | undefined>({
 		get: () => {
 			const id = props.data().wohnortID;
 			return id === null ? undefined : props.mapOrte.get(id)
@@ -66,7 +64,7 @@
 		set: (value) => doPatch({ wohnortID: value === undefined ? null : value.id })
 	});
 
-	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
+	const inputOrtsteilID = computed<OrtsteilKatalogEintrag | undefined>({
 		get: () => {
 			const id = props.data().ortsteilID;
 			return id === null ? undefined : props.mapOrtsteile.get(id)

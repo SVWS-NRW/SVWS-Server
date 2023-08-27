@@ -21,10 +21,10 @@
 			<div class="flex flex-col gap-12">
 				<svws-ui-content-card title="Textvorlagen für die Laufbahnplanung">
 					<div class="flex flex-col gap-4">
-						<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
-							@update:model-value="doPatch({ textBeratungsbogen: String($event) })" resizeable="vertical" autoresize />
-						<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
-							@update:model-value="doPatch({ textMailversand: String($event) })" resizeable="vertical" autoresize />
+						<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen ?? ''"
+							@update:model-value="textBeratungsbogen => doPatch({ textBeratungsbogen })" resizeable="vertical" autoresize />
+						<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand ?? ''"
+							@update:model-value="textMailversand => doPatch({ textMailversand })" resizeable="vertical" autoresize />
 					</div>
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="opacity-50">

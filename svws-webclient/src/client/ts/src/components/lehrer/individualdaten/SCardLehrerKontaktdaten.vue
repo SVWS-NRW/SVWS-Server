@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required :valid="eingabeStrasseOk" span="full" />
+			<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required span="full" />
 			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
 				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort"
@@ -17,15 +17,11 @@
 
 <script setup lang="ts">
 
-	import type { Ref, WritableComputedRef } from "vue";
-	import { computed, ref } from "vue";
-
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { AdressenUtils } from "@core";
+	import type { WritableComputedRef } from "vue";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
-
-	const eingabeStrasseOk: Ref<boolean> = ref(true);
-
+	import { AdressenUtils } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		stammdaten: LehrerStammdaten;
@@ -41,7 +37,7 @@
 		emit('patch', data);
 	}
 
-	const inputStrasse: WritableComputedRef<string | undefined> = computed({
+	const inputStrasse = computed<string | undefined>({
 		get(): string {
 			const d = props.stammdaten;
 			const ret = AdressenUtils.combineStrasse(d.strassenname || "", d.hausnummer || "", d.hausnummerZusatz || "");
@@ -51,22 +47,21 @@
 			if (val) {
 				const vals = AdressenUtils.splitStrasse(val);
 				doPatch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
-				eingabeStrasseOk.value = !!vals;
 			}
 		}
 	});
 
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
+	const inputWohnortID = computed<OrtKatalogEintrag | undefined>({
 		get: () =>props.stammdaten.wohnortID ? props.mapOrte.get(props.stammdaten.wohnortID) : undefined,
 		set: (val) =>	doPatch({ wohnortID: val?.id })
 	});
 
-	const inputOrtsteilID: WritableComputedRef<OrtsteilKatalogEintrag | undefined> = computed({
+	const inputOrtsteilID = computed<OrtsteilKatalogEintrag | undefined>({
 		get: () => props.stammdaten.ortsteilID ? props.mapOrtsteile.get(props.stammdaten.ortsteilID) : undefined,
 		set: (val) =>	doPatch({ ortsteilID: val?.id })
 	});
 
-	const inputTelefon: WritableComputedRef<string | undefined> = computed({
+	const inputTelefon = computed<string | undefined>({
 		get: () => props.stammdaten.telefon ?? undefined,
 		set: (val) => doPatch({ telefon: val })
 	});
@@ -80,7 +75,7 @@
 		}
 	});
 
-	const inputEmailPrivat: WritableComputedRef<string | undefined> = computed({
+	const inputEmailPrivat = computed<string | undefined>({
 		get(): string | undefined {
 			return props.stammdaten.emailPrivat ?? undefined;
 		},
@@ -89,7 +84,7 @@
 		}
 	});
 
-	const inputEmailDienstlich: WritableComputedRef<string | undefined> = computed({
+	const inputEmailDienstlich = computed<string | undefined>({
 		get(): string | undefined {
 			return props.stammdaten.emailDienstlich ?? undefined;
 		},
