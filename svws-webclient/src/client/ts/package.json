@@ -26,6 +26,5 @@
 		"@floating-ui/vue": "^1.0.0",
 		"vue": "^3.2",
 		"vue-router": "^4.1.5",
-		"vue-simple-calendar": "^6.3.1"
 	}
 }
