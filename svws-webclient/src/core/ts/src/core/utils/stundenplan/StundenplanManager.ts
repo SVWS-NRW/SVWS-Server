@@ -1585,6 +1585,22 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 */
+	public kalenderwochenzuordnungGetNextOhneDummyOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
+		const temp : StundenplanKalenderwochenzuordnung | null = this.kalenderwochenzuordnungGetNextOrNull(kwz);
+		if (temp === null)
+			return null;
+		return temp.id < 0 ? null : temp;
+	}
+
+	/**
 	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
@@ -1598,6 +1614,22 @@ export class StundenplanManager extends JavaObject {
 		this.kalenderwochenzuordnungCheck(kwz);
 		const max : number = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1) : this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
+	}
+
+	/**
+	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 */
+	public kalenderwochenzuordnungGetPrevOhneDummyOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
+		const temp : StundenplanKalenderwochenzuordnung | null = this.kalenderwochenzuordnungGetPrevOrNull(kwz);
+		if (temp === null)
+			return null;
+		return temp.id < 0 ? null : temp;
 	}
 
 	/**

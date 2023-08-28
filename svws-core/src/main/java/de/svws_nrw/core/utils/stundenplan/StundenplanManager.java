@@ -1606,6 +1606,22 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 */
+	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetNextOhneDummyOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		final StundenplanKalenderwochenzuordnung temp = kalenderwochenzuordnungGetNextOrNull(kwz);
+		if (temp == null)
+			return null;
+		return temp.id < 0 ? null : temp;
+	}
+
+	/**
 	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
@@ -1620,6 +1636,22 @@ public class StundenplanManager {
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1)
 		                    : _kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
+	}
+
+	/**
+	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
+	 */
+	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetPrevOhneDummyOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		final StundenplanKalenderwochenzuordnung temp = kalenderwochenzuordnungGetPrevOrNull(kwz);
+		if (temp == null)
+			return null;
+		return temp.id < 0 ? null : temp;
 	}
 
 	/**
