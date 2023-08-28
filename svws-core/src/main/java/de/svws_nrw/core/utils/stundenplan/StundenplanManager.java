@@ -1484,7 +1484,7 @@ public class StundenplanManager {
 	// #####################################################################
 
 	private void kalenderwochenzuordnungAddOhneUpdate(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz);
+		kalenderwochenzuordnungCheck(kwz, true);
 		DeveloperNotificationException.ifMapPutOverwrites(_kwz_by_id, kwz.id, kwz);
 	}
 
@@ -1514,8 +1514,9 @@ public class StundenplanManager {
 		update_all();
 	}
 
-	private void kalenderwochenzuordnungCheck(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
+	private void kalenderwochenzuordnungCheck(final @NotNull StundenplanKalenderwochenzuordnung kwz, final boolean checkID) {
+		if (checkID)
+			DeveloperNotificationException.ifInvalidID("kwz.id", kwz.id);
 		DeveloperNotificationException.ifTrue("(kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR)", (kwz.jahr < DateUtils.MIN_GUELTIGES_JAHR) || (kwz.jahr > DateUtils.MAX_GUELTIGES_JAHR));
 		DeveloperNotificationException.ifTrue("(kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr))", (kwz.kw < 1) || (kwz.kw > DateUtils.gibKalenderwochenOfJahr(kwz.jahr)));
 		DeveloperNotificationException.ifTrue("kwz.wochentyp > stundenplanWochenTypModell", kwz.wochentyp > _stundenplanWochenTypModell);
@@ -1599,7 +1600,7 @@ public class StundenplanManager {
 	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetNextOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz);
+		kalenderwochenzuordnungCheck(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
 		return (kwz.kw < max) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw + 1)
                               : _kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
@@ -1616,42 +1617,10 @@ public class StundenplanManager {
 	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
 	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetPrevOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz);
+		kalenderwochenzuordnungCheck(kwz, false);
 		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
 		return (kwz.kw > 1) ? _kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1)
 		                    : _kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
-	}
-
-	/**
-	 * Liefert das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
-	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 *
-	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
-	 */
-	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetNextOhneDummyOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		final StundenplanKalenderwochenzuordnung temp = kalenderwochenzuordnungGetNextOrNull(kwz);
-		if (temp == null)
-			return null;
-		return temp.id < 0 ? null : temp;
-	}
-
-	/**
-	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
-	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
-	 * <br>Laufzeit: O(1)
-	 *
-	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
-	 *
-	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt (ohne Dummys) falls dieses gültig ist, sonst NULL.
-	 */
-	public StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetPrevOhneDummyOrNull(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		final StundenplanKalenderwochenzuordnung temp = kalenderwochenzuordnungGetPrevOrNull(kwz);
-		if (temp == null)
-			return null;
-		return temp.id < 0 ? null : temp;
 	}
 
 	/**
@@ -1739,7 +1708,7 @@ public class StundenplanManager {
 	 * @param kwz  Das neue {@link StundenplanKalenderwochenzuordnung}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void kalenderwochenzuordnungPatchAttributes(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
-		kalenderwochenzuordnungCheck(kwz);
+		kalenderwochenzuordnungCheck(kwz, true);
 
 		// Altes Objekt durch neues Objekt ersetzen
 		DeveloperNotificationException.ifMapRemoveFailes(_kwz_by_id, kwz.id);
