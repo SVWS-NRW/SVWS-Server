@@ -188,20 +188,11 @@
 </script>
 
 <script lang="ts" setup>
+	import type { DataTableCell, DataTableColumnInternal, DataTableColumnSource, DataTableItem, DataTableRow, DataTableSortingOrder, UseColumnProps } from "./types";
 	import type { TableHTMLAttributes } from "vue";
-	import { defineComponent, computed, useAttrs, toRef } from "vue";
-
-	import useColumns from "./hooks/useColumns";
-	import useRows from "./hooks/useRows";
-	import useSortable from "./hooks/useSortable";
-	import useSelectable from "./hooks/useSelectable";
-	import useClickable from "./hooks/useClickable";
-
-	import type {
-		DataTableColumnSource,
-		DataTableItem,
-		DataTableSortingOrder,
-	} from "./types";
+	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
+	import { DataTableSortingOptions } from "./types";
+	import { useDebounceFn } from "@vueuse/core";
 
 	const props = withDefaults(
 		defineProps<{
@@ -281,20 +272,126 @@
 	}>();
 
 	const attrs = useAttrs();
+	function capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+	function getKeys<K extends object>(items: Iterable<K>): string[] {
+		const accumulatedObject = [...items].reduce((accumulator, value) => {
+			return {...accumulator, ...value};
+		}, {});
+		return Object.keys(accumulatedObject);
+	}
 
-	const {columnsComputed, gridTemplateColumns} = useColumns(props);
+	const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
+		const input = typeof source === 'string' ? { key: source } : source;
+		return {
+			source,
+			initialIndex,
+			key: input.key,
+			name: input.name || input.key,
+			label: input.label || capitalizeFirstLetter(input.key),
+			sortable: input.sortable || false,
+			span: input.span || 1,
+			fixedWidth: input.fixedWidth || 0,
+			minWidth: input.minWidth || 0,
+			align: input.align || 'left',
+			tooltip: input.tooltip || '',
+			disabled: input.disabled || false,
+			type: input.type || 'text'
+		}
+	}
+
+	const buildColumnsFromItems = (props: UseColumnProps) => {
+		return getKeys(props.items).map((item, index) => buildTableColumn(item, index));
+	}
+
+	const buildNormalizedColumns = (props: UseColumnProps) => {
+		return props.columns.map((item, index) => buildTableColumn(item, index));
+	}
+
+	const columnsComputed = computed(() =>
+		(props.columns.length === 0) ? buildColumnsFromItems(props) : buildNormalizedColumns(props)
+	)
+
+	const gridTemplateColumns = computed(() => {
+		return columnsComputed.value.map(column =>
+			`minmax(${
+				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : (column.minWidth ? (column.minWidth + (typeof column.minWidth === "number" ? 'rem' : '')) : '4rem')
+			}, ${
+				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
+			})`
+		).join(' ');
+	})
 
 	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const {rowsComputed} = useRows(columnsComputed, props);
+	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) => {
+		return { initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
+			return { rowIndex: index, rowData: toRaw(source), column, value: source?.[column.key] as string ?? '' } as DataTableCell;
+		})}
+	}));
 
-	const {
-		sortBy, sortingOrder,
-		toggleSorting, sortedRows} = useSortable(
-			columnsComputed,
-			rowsComputed,
-			props
-		);
+	function useSafeVModel<P extends object, F, K extends keyof P>(props: P, fallbackValue: F, key?: K) {
+		const instance = getCurrentInstance();
+		const emit = instance?.emit;
+		if (!key)
+			key = 'modelValue' as K;
+		const event = `update:${key.toString()}`;
+		const fallback = ref<F>(fallbackValue)
+		return computed<F>({
+			get: () => {
+				// @ts-expect-error fix later
+				if (props[key] === undefined)
+					return fallback.value;
+				// @ts-expect-error fix later
+				return props[key];
+			},
+			set: (value) => {
+				// @ts-expect-error fix later
+				if (props[key] === undefined) {
+					// @ts-expect-error fix later
+					fallback.value = value;
+				}
+				emit?.(event, value);
+			},
+		})
+	}
+
+	const sortBy = useSafeVModel(props, '', 'sortBy');
+	const sortingOrder = useSafeVModel(props, null as DataTableSortingOrder, 'sortingOrder');
+
+	const sortedRows = computed(() => {
+		if (rowsComputed.value.length <= 1)
+			return rowsComputed.value;
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => sortBy.value === key && sortable, );
+		const column = columnsComputed.value[columnIndex];
+		if (!column)
+			return rowsComputed.value;
+		const sortingOrderRatio = sortingOrder.value === 'desc' ? -1 : 1
+		return [...rowsComputed.value].sort((a, b) => {
+			if (sortingOrder.value === null)
+				return a.initialIndex - b.initialIndex;
+			const firstValue = String(a.cells[columnIndex].value);
+			const secondValue = String(b.cells[columnIndex].value);
+			return sortingOrderRatio * (firstValue.localeCompare(secondValue));
+		})
+	})
+
+	const cycleSorting = (value: DataTableSortingOrder) => {
+		const index = DataTableSortingOptions.findIndex((sortingValue) => sortingValue === value)
+		return (index !== -1)
+			? DataTableSortingOptions[(index + 1) % DataTableSortingOptions.length]
+			: DataTableSortingOptions[0];
+	}
+
+	function toggleSorting(column: DataTableColumnInternal) {
+		if (column.key === sortBy.value) {
+			sortingOrder.value = cycleSorting(sortingOrder.value);
+		} else {
+			sortBy.value = column.key;
+			sortingOrder.value = DataTableSortingOptions[0];
+		}
+	}
 
 	const filterOpenRef = toRef(props, 'filterOpen');
 
@@ -302,26 +399,96 @@
 		filterOpenRef.value = !filterOpenRef.value;
 	}
 
-	const {
-		toggleBulkSelection,
-		isRowSelected,
-		allRowsSelected,
-		someNotAllRowsSelected,
-		toggleRowSelection
-	} = useSelectable({
-		isActive: () => props.selectable,
-		sortedRows,
-		selectedItems: () => props.modelValue,
-		emit: (v: DataTableItem[]) => emit('update:modelValue', v),
-	});
+	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))
+	const noRowsSelected = computed(() => (!sortedRows.value.some(isRowSelected)))
+	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.every(isRowSelected));
+	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
 
-	const {isRowClicked, toggleRowClick, setClickedRow } = useClickable({
-		isActive: () => props.clickable,
-		canReset: () => props.allowUnclick,
-		clickedItem: () => props.clicked,
-		emit: (v: DataTableItem | null) => emit('update:clicked', v),
-		scrollIntoView: () => props.scrollIntoView,
-	});
+	function isRowSelected(row: DataTableRow) {
+		return selectedItemsRaw.value.includes(row.source)
+	}
+
+	function selectAllRows() {
+		emit('update:modelValue', [...sortedRows.value.map(row => row.source)]);
+	}
+
+	function unselectAllRows() {
+		emit('update:modelValue', []);
+	}
+
+	function selectRow(row: DataTableRow) {
+		emit('update:modelValue', selectedItemsRaw.value.concat(row.source))
+	}
+
+	function unselectRow(row: DataTableRow) {
+		const index = selectedItemsRaw.value.indexOf(row.source)
+		const newSelection = selectedItemsRaw.value.slice()
+		newSelection.splice(index, 1)
+		emit('update:modelValue', newSelection)
+	}
+
+	function toggleRowSelection(row: DataTableRow) {
+		if (!props.selectable)
+			return;
+		if (isRowSelected(row))
+			unselectRow(row)
+		else
+			selectRow(row)
+	}
+
+	function toggleBulkSelection() {
+		if (allRowsSelected.value)
+			unselectAllRows()
+		else
+			selectAllRows()
+	}
+
+
+
+
+	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));
+	function isRowClicked(row: DataTableRow) {
+		return row.source === clickedItemRaw.value;
+	}
+	function resetClickedRow() {
+		if (props.allowUnclick)
+			emit('update:clicked', null);
+	}
+
+	function toggleRowClick(row: DataTableRow) {
+		if (!props.clickable)
+			return;
+		if (isRowClicked(row))
+			resetClickedRow();
+		else
+			setClickedRow(row);
+	}
+	function setClickedRow(row: DataTableRow) {
+		if (!props.clickable)
+			return;
+		emit('update:clicked', row.source);
+	}
+
+	onMounted(scrollToClickedElement);
+	onUpdated(useDebounceFn(scrollToClickedElement, 250));
+
+	function isInView(el: Element) {
+		const box = el.getBoundingClientRect();
+		return box.top < window.innerHeight && box.bottom >= 0;
+	}
+
+	function scrollToClickedElement() {
+		if (!props.scrollIntoView)
+			return;
+		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
+		const clickedElementHtml: any = document.querySelector('.data-table__tr--clicked');
+		const scrollOptions: ScrollIntoViewOptions = { behavior: "smooth", block: "center" };
+		if (clickedElementHtml) {
+			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function") clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions)
+			else if(!isInView(clickedElementHtml)) clickedElementHtml.scrollIntoView(scrollOptions);
+		}
+	}
+
 
 	const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
 
