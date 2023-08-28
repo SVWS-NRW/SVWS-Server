@@ -1566,10 +1566,10 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
-	public kalenderwochenzuordnungGetNext(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung {
+	public kalenderwochenzuordnungGetNextOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
 		this.kalenderwochenzuordnungCheck(kwz);
 		const max : number = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
-		return (kwz.kw < max) ? DeveloperNotificationException.ifMap2DGetIsNull(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw + 1) : DeveloperNotificationException.ifMap2DGetIsNull(this._kwz_by_jahr_and_kw, kwz.jahr + 1, 1);
+		return (kwz.kw < max) ? this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw + 1) : this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr + 1, 1);
 	}
 
 	/**
@@ -1582,10 +1582,10 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
 	 */
-	public kalenderwochenzuordnungGetPrev(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung {
+	public kalenderwochenzuordnungGetPrevOrNull(kwz : StundenplanKalenderwochenzuordnung) : StundenplanKalenderwochenzuordnung | null {
 		this.kalenderwochenzuordnungCheck(kwz);
 		const max : number = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
-		return (kwz.kw > 1) ? DeveloperNotificationException.ifMap2DGetIsNull(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw - 1) : DeveloperNotificationException.ifMap2DGetIsNull(this._kwz_by_jahr_and_kw, kwz.jahr - 1, max);
+		return (kwz.kw > 1) ? this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr, kwz.kw - 1) : this._kwz_by_jahr_and_kw.getOrNull(kwz.jahr - 1, max);
 	}
 
 	/**
