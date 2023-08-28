@@ -5,7 +5,7 @@
 			<div class="inline-flex gap-1 items-center pl-2" :class="{'opacity-50 font-normal print:invisible': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentage[wochentag.id] }} </div>
+				<div> {{ wochentage[wochentag.id] }} <br> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }} </div>
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -48,13 +48,13 @@
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
 						<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0">{{ sumSchreiber(wochentag, stunde) }}</span>
 						<span v-for="kurs in kurseGefiltert(wochentag, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-						<div v-if="!kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).isEmpty()"
-							:data="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+						<div v-if="!kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).isEmpty()"
+							:data="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
 							:draggable="true"
-							@dragstart="onDrag(kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0))"
+							@dragstart="onDrag(kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0))"
 							@dragend="onDrag(undefined)">
 							<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
-								:termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetBy(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+								:termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
 								:faecher-manager="faecherManager"
 								:map-lehrer="mapLehrer"
 								:kursmanager="kursmanager"
@@ -81,7 +81,7 @@
 <script setup lang="ts">
 
 	import type { Wochentag} from "@core";
-	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
+	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils } from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 

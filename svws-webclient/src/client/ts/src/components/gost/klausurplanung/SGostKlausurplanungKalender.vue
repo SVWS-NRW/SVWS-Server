@@ -32,10 +32,14 @@
 				</div>
 			</div>
 			<div class="w-full">
-				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-					:class="{'print:hidden': !kwAuswahl}"
-					removable
-					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+				<div class="flex flex-row gap-2 mb-2">
+					<svws-ui-button @click="navKalenderwoche(-1)"><i-ri-arrow-left-double-fill /></svws-ui-button>
+					<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+						:class="{'print:hidden': !kwAuswahl}"
+						removable
+						:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+					<svws-ui-button @click="navKalenderwoche(+1)"><i-ri-arrow-right-double-fill /></svws-ui-button>
+				</div>
 
 				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
 					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
@@ -59,6 +63,20 @@
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
 		return props.stundenplanmanager.kalenderwochenzuordnungGetMengeAsList();
+	}
+
+	function navKalenderwoche(by: number) {
+		if (by > 0) {
+			const nextKw = props.stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl.value);
+			console.log(nextKw);
+			if (nextKw !== null)
+				kwAuswahl.value = nextKw;
+		} else if (by < 0) {
+			const prevKw = props.stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl.value);
+			console.log(prevKw);
+			if (prevKw !== null)
+				kwAuswahl.value = prevKw;
+		}
 	}
 
 	const dropOverCssClasses = () => ({
@@ -104,7 +122,7 @@
 			if (zone === undefined)
 				await props.patchKlausurtermin(dragData.value.id, {datum: null, startzeit: null});
 			else if (zone instanceof StundenplanZeitraster) {
-				const date = props.stundenplanmanager.datumGetBy(kwAuswahl.value, zone);
+				const date = props.stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl.value, zone);
 				await props.patchKlausurtermin(dragData.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
 			}
 	};
