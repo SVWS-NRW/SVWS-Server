@@ -311,15 +311,15 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	setTerminToKursklausur = async (idTermin: number | null, klausur: GostKursklausur): Promise<boolean> => {
-		api.status.start();
-		klausur.idTermin = idTermin;
-		await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
-		this.kursklausurmanager.kursklausurPatchAttributes(klausur);
-		this.commit();
-		api.status.stop();
-		return true;
-	}
+	// setTerminToKursklausur = async (idTermin: number | null, klausur: GostKursklausur): Promise<boolean> => {
+	// 	api.status.start();
+	// 	klausur.idTermin = idTermin;
+	// 	await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
+	// 	this.kursklausurmanager.kursklausurPatchAttributes(klausur);
+	// 	this.commit();
+	// 	api.status.stop();
+	// 	return true;
+	// }
 
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<boolean> => {
 		api.status.start();
@@ -379,7 +379,6 @@ export class RouteDataGostKlausurplanung {
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
 		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
-		console.log("Termin: ", oldTtermin);
 		this.commit();
 		api.status.stop();
 		return true;

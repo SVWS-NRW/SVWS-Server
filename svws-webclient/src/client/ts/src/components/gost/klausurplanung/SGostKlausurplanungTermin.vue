@@ -19,13 +19,12 @@
 			<table class="w-full">
 				<thead />
 				<tbody>
-					<svws-ui-drag-data v-for="klausur in klausuren()"
+					<tr v-for="klausur in klausuren()"
 						:key="klausur.id"
 						:data="klausur"
-						:draggable="klausurDraggable"
-						@drag-start="dragStartKlausur($event, klausur)"
-						@drag-end="dragEndKlausur($event)"
-						tag="tr"
+						:draggable="true"
+						@dragstart="onDragTermin(klausur)"
+						@dragend="onDragTermin(undefined)"
 						:class="props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur)">
 						<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
 						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
@@ -33,7 +32,7 @@
 						<td class="text-center">{{ klausur.dauer }}</td>
 						<td>&nbsp;</td>
 						<td />
-					</svws-ui-drag-data>
+					</tr>
 				</tbody>
 			</table>
 		</slot>
@@ -44,6 +43,7 @@
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, KursManager, GostJahrgangsdaten} from "@core";
 	import { computed, ref } from 'vue';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten;
@@ -56,22 +56,16 @@
 		quartal?: number;
 		klausurDraggable: boolean;
 		klausurCssClasses?: (klausur: GostKursklausur) => void;
+		onDrag?: (data: GostKlausurplanungDragData) => void;
+
 	}>();
 
+	function onDragTermin(data: GostKlausurplanungDragData) {
+		if (props.onDrag !== undefined)
+			props.onDrag(data);
+	}
+
 	const showDetails = ref(props.showDetails);
-
-	const emit = defineEmits<{
-		(e: 'dragStartKlausur', data: DragEvent, klausur: GostKursklausur): void;
-		(e: 'dragEndKlausur', data: DragEvent): void;
-	}>()
-
-	function dragStartKlausur(e: DragEvent, klausur: GostKursklausur) {
-		emit("dragStartKlausur", e, klausur);
-	}
-
-	function dragEndKlausur(e: DragEvent) {
-		emit("dragEndKlausur", e);
-	}
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
 

@@ -40,14 +40,14 @@
 					<s-gost-klausurplanung-schienen-termin :quartal="quartalsauswahl.value"
 						:jahrgangsdaten="jahrgangsdaten"
 						:kursklausurmanager="kursklausurmanager"
-						:termin="null"
+						:termin="undefined"
 						:alle-termine="termine"
 						:faecher-manager="faecherManager"
 						:map-lehrer="mapLehrer"
-						:set-termin-to-kursklausur="setTerminToKursklausur"
 						:map-schueler="mapSchueler"
-						@drag-start-klausur="dragStartKlausur"
-						@drag-end-klausur="dragEndKlausur"
+						:drag-data="() => dragData"
+						:on-drag="onDrag"
+						:on-drop="onDrop"
 						:kursmanager="kursmanager" />
 				</div>
 				<div class="flex flex-col">
@@ -60,13 +60,12 @@
 							:alle-termine="termine"
 							:faecher-manager="faecherManager"
 							:map-lehrer="mapLehrer"
-							:set-termin-to-kursklausur="setTerminToKursklausur"
-							:drag-klausur="dragKlausur"
+							:drag-data="() => dragData"
+							:on-drag="onDrag"
+							:on-drop="onDrop"
 							:map-schueler="mapSchueler"
 							:loesche-klausurtermine="loescheKlausurtermine"
 							:patch-klausurtermin="patchKlausurtermin"
-							@drag-start-klausur="dragStartKlausur"
-							@drag-end-klausur="dragEndKlausur"
 							:kursmanager="kursmanager" />
 					</div>
 				</div>
@@ -77,11 +76,12 @@
 
 <script setup lang="ts">
 
-	import type { GostKursklausur, GostKlausurtermin } from "@core";
+	import { GostKursklausur, GostKlausurtermin } from "@core";
 	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten,
 		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 	const modal = ref<any>(null);
 
@@ -89,20 +89,28 @@
 
 	const loading = ref<boolean>(false);
 
-	const dragKlausur = ref<GostKursklausur | null>(null);
+	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
-	const dragStartKlausur = (e: DragEvent, klausur: GostKursklausur) =>	{
-		dragKlausur.value = klausur;
-	}
+	const onDrag = (data: GostKlausurplanungDragData) => {
+		dragData.value = data;
+	};
 
-	const dragEndKlausur = (e: DragEvent) =>	{
-		dragKlausur.value = null;
-	}
-
+	const onDrop = async (zone: GostKlausurplanungDropZone) => {
+		if (dragData.value instanceof GostKursklausur) {
+			const klausur = dragData.value;
+			if (zone === undefined && klausur.idTermin != null)
+				await props.patchKursklausur(klausur.id, {idTermin: null});
+			else if (zone instanceof GostKlausurtermin) {
+				const termin = zone;
+				if (termin.id != klausur.idTermin)
+					await props.patchKursklausur(klausur.id, {idTermin: termin.id});
+			}
+		}
+	};
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
-		"bg-success": dragKlausur.value !== null && dragKlausur.value.quartal === termin.quartal,
-		"opacity-40": dragKlausur.value !== null && dragKlausur.value.quartal !== termin.quartal,
+		"bg-success": dragData.value !== undefined && dragData.value.quartal === termin.quartal,
+		"opacity-40": dragData.value !== undefined && dragData.value.quartal !== termin.quartal,
 	});
 
 	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().terminGetMengeAsList() : props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value));

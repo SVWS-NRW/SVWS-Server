@@ -43,7 +43,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new ArrayList(), new ArrayList())},
-			setTerminToKursklausur: routeGostKlausurplanung.data.setTerminToKursklausur,
+			patchKursklausur: routeGostKlausurplanung.data.patchKursklausur,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,
 			erzeugeKlausurtermin: routeGostKlausurplanung.data.erzeugeKlausurtermin,
 			loescheKlausurtermine: routeGostKlausurplanung.data.loescheKlausurtermine,

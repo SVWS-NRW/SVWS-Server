@@ -65,7 +65,8 @@
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone, GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
+	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
@@ -92,7 +93,7 @@
 	});
 
 
-	const dragData = ref<GostKlausurplanungRaumzeitDragData>(undefined);
+	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	function isDraggable(object: any) : boolean {
 		if (selectedTermin.value !== null && object instanceof GostKursklausur)
@@ -101,17 +102,28 @@
 		return false;
 	}
 
-	const onDrag = (data: GostKlausurplanungRaumzeitDragData) => {
+	const onDrag = (data: GostKlausurplanungDragData) => {
 		dragData.value = data;
 	};
 
-	const onDrop = async (zone: GostKlausurplanungRaumzeitDropZone) => {
+	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur)
 			if (zone instanceof GostKlausurraum)
 				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
 			else if (zone instanceof GostKlausurtermin)
 				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
 	};
+
+	function isDropZone() : boolean {
+		if ((dragData.value === undefined))
+			return false;
+		return true;
+	}
+
+	function checkDropZone(event: DragEvent) {
+		if (isDropZone())
+			event.preventDefault();
+	}
 
 	const klausuren = (termin: GostKlausurtermin) => props.kursklausurmanager().kursklausurGetMengeByTerminid(termin.id);
 
@@ -127,16 +139,6 @@
 		return [...klausuren(termin)].map(k => k.kursKurzbezeichnung).join(", ");
 	}
 
-	function isDropZone() : boolean {
-		if ((dragData.value === undefined))
-			return false;
-		return true;
-	}
-
-	function checkDropZone(event: DragEvent) {
-		if (isDropZone())
-			event.preventDefault();
-	}
 
 
 </script>

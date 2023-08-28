@@ -16,9 +16,6 @@ import type {
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
-export type GostKlausurplanungRaumzeitDragData = GostKursklausur | undefined;
-export type GostKlausurplanungRaumzeitDropZone = GostKlausurtermin | GostKlausurraum | undefined;
-
 export interface GostKlausurplanungRaumzeitProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	kursklausurmanager: () => GostKursklausurManager;

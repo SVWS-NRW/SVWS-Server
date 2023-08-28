@@ -8,9 +8,10 @@
 		<div class="flex gap-4 mt-4 h-screen">
 			<div class="flex flex-col w-1/4 h-full">
 				<div class="text-headline-md">Zu verplanen:</div>
-				<svws-ui-drop-data v-if="jahrgangsdaten?.abiturjahr !== -1"
+				<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 					:class="dropOverCssClasses()"
-					@drop="onDrop($event)"
+					@drop="onDrop(undefined)"
+					@dragover="checkDropZoneTerminAuswahl"
 					class="h-full">
 					<ul class="flex flex-col gap-y-1">
 						<li v-for="termin in termineOhne"
@@ -28,7 +29,7 @@
 								:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}" />
 						</li>
 					</ul>
-				</svws-ui-drop-data>
+				</div>
 			</div>
 			<div class="w-full">
 				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
@@ -39,46 +40,6 @@
 				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
 					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
 					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
-				<!--<calendar-view :display-period-uom="displayPeriodUom"
-					:display-period-count="displayPeriodUom === 'month' ? 1 : 2"
-					:starting-day-of-week="1"
-					:enable-drag-drop="false"
-					:disabled_items="termineMit"
-					:show-date="showDate"
-					disabled_drop-on-date="onDrop"
-					class="theme-default"
-					current-period-label="Aktuell"
-					:display-week-numbers="true">
-					<template #header="{ headerProps }">
-						<calendar-view-header :header-props="headerProps" @input="setShowDate" />
-					</template>
-					<template #dayContent="{day}">
-						<StundenplanTag :tag="day.getDay()" v-if="day.getDay() < 6 && day.getDay() > 0">
-							<StundenplanEntry v-for="stunde of stundenplanmanager.getListZeitrasterZuWochentag(Wochentag.fromIDorException(day.getDay()))"
-								:key="stunde.id"
-								:entry="stunde"
-								class="hover:bg-slate-400 select-none cursor-pointer">
-								<svws-ui-drop-data class="h-full w-full" @drop="onDrop($event, day, stunde.unterrichtstunde)">
-									<StundenplanStunde :stunde="stunde">
-										<span v-if="dragTermin !== null && sumSchreiber(day, stunde.unterrichtstunde) > 0">{{ sumSchreiber(day, stunde.unterrichtstunde) }}</span>
-										<span v-for="kurs in kurseGefiltert(day, stunde.unterrichtstunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-										<svws-ui-drag-data v-if="!kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).isEmpty()"
-											:data="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
-											@drag-start="dragTermin = kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
-											@drag-end="dragTermin = null">
-											<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
-												:termin="kursklausurmanager().getKlausurtermineByDatumUhrzeit(formatDate(day)!, stunde, stundenplanmanager).get(0)"
-												:faecher-manager="faecherManager"
-												:map-lehrer="mapLehrer"
-												:kursmanager="kursmanager"
-												:class="{'opacity-40': dragTermin !== null}" />
-										</svws-ui-drag-data>
-									</StundenplanStunde>
-								</svws-ui-drop-data>
-							</StundenplanEntry>
-						</StundenplanTag>
-					</template>
-				</calendar-view>-->
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -90,7 +51,7 @@
 	import { ArrayList} from "@core";
 	import type { Wochentag , GostKursklausur, StundenplanKalenderwochenzuordnung, List} from "@core";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
-	import type { KlausurplanungKalenderDragData, KlausurplanungKalenderDropZone } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
@@ -103,6 +64,11 @@
 	const dropOverCssClasses = () => ({
 		"bg-green-100": dragData.value !== null// && dragData.value.datum !== null,
 	});
+
+	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
+		if (dragData.value instanceof GostKlausurtermin && dragData.value?.datum !== null)
+			event.preventDefault();
+	}
 
 	function kurseGefiltert(day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
@@ -123,19 +89,21 @@
 		return summe;
 	}
 
-	const dragData = ref<KlausurplanungKalenderDragData>(undefined);
+	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	function isDraggable(object: any) : boolean {
 		return true;
 	}
 
-	const onDrag = (data: KlausurplanungKalenderDragData) => {
+	const onDrag = (data: GostKlausurplanungDragData) => {
 		dragData.value = data;
 	};
 
-	const onDrop = async (zone: KlausurplanungKalenderDropZone) => {
+	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKlausurtermin)
-			if (zone instanceof StundenplanZeitraster) {
+			if (zone === undefined)
+				await props.patchKlausurtermin(dragData.value.id, {datum: null, startzeit: null});
+			else if (zone instanceof StundenplanZeitraster) {
 				const date = props.stundenplanmanager.datumGetBy(kwAuswahl.value, zone);
 				await props.patchKlausurtermin(dragData.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
 			}

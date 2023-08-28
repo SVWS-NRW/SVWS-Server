@@ -34,10 +34,10 @@
 </template>
 
 <script setup lang="ts">
-	import { type StundenplanRaum, type StundenplanManager, type GostKlausurraumManager, type GostKursklausur, type GostKlausurenCollectionSkrsKrs, type GostSchuelerklausur, type List, type GostFaecherManager, type GostKursklausurManager, type KursManager, type LehrerListeEintrag, StundenplanKlassenunterricht, StundenplanKurs } from '@core';
+	import { type StundenplanRaum, type StundenplanManager, type GostKlausurraumManager, type GostKursklausur, type GostSchuelerklausur, type GostFaecherManager, type GostKursklausurManager, type KursManager, type LehrerListeEintrag, StundenplanKlassenunterricht, StundenplanKurs } from '@core';
 	import type { GostKlausurraum } from '@core';
-	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungRaumzeitDragData, GostKlausurplanungRaumzeitDropZone } from './SGostKlausurplanungRaumzeitProps';
+	import { computed } from 'vue';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
@@ -50,9 +50,9 @@
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<boolean>;
-		dragData: () => GostKlausurplanungRaumzeitDragData;
-		onDrag: (data: GostKlausurplanungRaumzeitDragData) => void;
-		onDrop: (zone: GostKlausurplanungRaumzeitDropZone) => void;
+		dragData: () => GostKlausurplanungDragData;
+		onDrag: (data: GostKlausurplanungDragData) => void;
+		onDrop: (zone: GostKlausurplanungDropZone) => void;
 	}>();
 
 	const klausurenImRaum = computed(() => props.raummanager.kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()));
