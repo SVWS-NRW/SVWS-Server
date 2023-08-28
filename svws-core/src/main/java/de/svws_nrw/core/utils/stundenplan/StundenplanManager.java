@@ -1275,8 +1275,20 @@ public class StundenplanManager {
 	 *
 	 * @return zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und einem {@link StundenplanZeitraster}-Objekt das zugehörige Datum.
 	 */
-	public @NotNull String datumGetBy(final @NotNull StundenplanKalenderwochenzuordnung kwz, final @NotNull StundenplanZeitraster zeit) {
+	public @NotNull String datumGetByKwzAndZeitraster(final @NotNull StundenplanKalenderwochenzuordnung kwz, final @NotNull StundenplanZeitraster zeit) {
 		return DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw, zeit.wochentag);
+	}
+
+	/**
+	 * Liefert zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und der Nummer des Wochentags das zugehörige Datum.
+	 *
+	 * @param kwz   Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches das Datum zum Teil definiert.
+	 * @param wochentag  Die Nummer des Wochentags, der das Datum zum Teil definiert.
+	 *
+	 * @return zu einem {@link StundenplanKalenderwochenzuordnung}-Objekt und der Nummer des Wochentags das zugehörige Datum.
+	 */
+	public @NotNull String datumGetByKwzAndWochentag(final @NotNull StundenplanKalenderwochenzuordnung kwz, final @NotNull Wochentag wochentag) {
+		return DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw, wochentag.id);
 	}
 
 	// #####################################################################
