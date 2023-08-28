@@ -68,12 +68,10 @@
 	function navKalenderwoche(by: number) {
 		if (by > 0) {
 			const nextKw = props.stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl.value);
-			console.log(nextKw);
 			if (nextKw !== null)
 				kwAuswahl.value = nextKw;
 		} else if (by < 0) {
 			const prevKw = props.stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl.value);
-			console.log(prevKw);
 			if (prevKw !== null)
 				kwAuswahl.value = prevKw;
 		}
