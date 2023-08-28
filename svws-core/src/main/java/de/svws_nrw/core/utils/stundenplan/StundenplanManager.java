@@ -1577,6 +1577,40 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das nächste {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
+	 */
+	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetNext(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		kalenderwochenzuordnungCheck(kwz);
+		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr);
+		return (kwz.kw < max) ? DeveloperNotificationException.ifMap2DGetIsNull(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw + 1)
+                              : DeveloperNotificationException.ifMap2DGetIsNull(_kwz_by_jahr_and_kw, kwz.jahr + 1, 1);
+	}
+
+	/**
+	 * Liefert das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
+	 * <br>Hinweis: Ein {@link StundenplanKalenderwochenzuordnung}-Objekt ist gültig, wenn es im Datumsbereich des Stundenplanes ist.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param kwz  Das aktuelle {@link StundenplanKalenderwochenzuordnung}-Objekt.
+	 *
+	 * @return das vorherige {@link StundenplanKalenderwochenzuordnung}-Objekt falls dieses gültig ist, sonst NULL.
+	 */
+	public @NotNull StundenplanKalenderwochenzuordnung kalenderwochenzuordnungGetPrev(final @NotNull StundenplanKalenderwochenzuordnung kwz) {
+		kalenderwochenzuordnungCheck(kwz);
+		final int max = DateUtils.gibKalenderwochenOfJahr(kwz.jahr - 1);
+		return (kwz.kw > 1) ? DeveloperNotificationException.ifMap2DGetIsNull(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw - 1)
+		                    : DeveloperNotificationException.ifMap2DGetIsNull(_kwz_by_jahr_and_kw, kwz.jahr - 1, max);
+	}
+
+	/**
 	 * Liefert eine String-Darstellung der Kalenderwoche des {@link StundenplanKalenderwochenzuordnung}-Objekts.
 	 * <br>Beispiel: Jahr 2023, KW  5 --> "KW 5 (30.01.2023–05.02.2023)"
 	 * <br>Beispiel: Jahr 2025, KW  1 --> "KW 1 (30.12.2024–05.01.2025)"
