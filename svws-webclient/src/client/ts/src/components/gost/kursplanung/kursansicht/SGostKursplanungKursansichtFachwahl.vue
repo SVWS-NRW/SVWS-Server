@@ -19,9 +19,9 @@
 			</div>
 			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
 				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="text-black">
-					<span class="inline-flex items-center">
-						<i-ri-presentation-line />
-						<i-ri-add-line class="-ml-1" />
+					<span class="inline-flex items-center text-button -mr-0.5">
+						<i-ri-book2-line />
+						<i-ri-add-line class="-ml-1 text-sm" />
 					</span>
 					Kurs anlegen
 				</svws-ui-button>
@@ -87,10 +87,9 @@
 				<template v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 					<div role="cell" v-if="!getDatenmanager().daten().istAktiv"
-						class="data-table__td data-table__td__no-padding data-table__td__align-center"
+						class="data-table__td data-table__td__no-padding data-table__td__align-center p-0.5"
 						:class="{
 							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
-							'p-0.5': !istDraggedKursInAndererSchiene(kurs, schiene).value,
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
 							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 						}"
@@ -122,7 +121,7 @@
 							:class="{ 'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							&NonBreakingSpace;
 							<template v-if="dragDataKursSchiene() !== undefined">
-								<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs.id === kurs.id) && isKursDropZone(kurs, schiene).value" class="absolute inset-1 border-2 border-dashed border-black/25" />
+								<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs.id === kurs.id) && isKursDropZone(kurs, schiene).value" class="absolute inset-0.5 border-2 border-dashed border-black/25" />
 							</template>
 							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-100" /> </div>
 							<div v-if="allowRegeln && (dragDataKursSchiene() === undefined) && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>

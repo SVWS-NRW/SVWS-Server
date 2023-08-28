@@ -429,10 +429,6 @@
 
 		&:hover:not(:focus) {
 			@apply underline decoration-dotted underline-offset-2;
-
-			&::placeholder {
-				@apply opacity-60;
-			}
 		}
 	}
 	.text-input--inline {

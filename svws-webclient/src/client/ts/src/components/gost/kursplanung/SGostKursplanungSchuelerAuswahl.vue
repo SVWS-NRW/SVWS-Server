@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card overflow-scroll class="-mt-0.5 s-gost-kursplanung-schueler-auswahl">
 		<svws-ui-data-table :model-value="schuelerFilter.filtered.value" v-model:clicked="selected" clickable :items="undefined"
-			:filter="true" :filter-reverse="true" :filter-hide="false" :filter-open="true" :columns="cols"
-			:no-data="schuelerFilter.filtered.value.length <= 0" :disable-footer="schuelerFilter.filtered.value.length <= 0" no-data-html="Keine Schüler zu diesem Filter gefunden.">
+			:filter-reverse="true" :filter-hide="false" :filter-open="true" :columns="cols"
+			:no-data="schuelerFilter.filtered.value.length <= 0" :disable-footer="schuelerFilter.filtered.value.length <= 0" no-data-html="Keine Ergebnisse.">
 			<template #search>
 				<svws-ui-text-input type="search" v-model="schuelerFilter.name" placeholder="Suche" />
 			</template>
@@ -90,7 +90,7 @@
 								{{ `${s.nachname}, ${s.vorname}` }}
 							</span>
 							<template v-if="s.status !== 2">
-								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung }})</span>
+								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }})</span>
 							</template>
 						</div>
 					</div>
@@ -141,6 +141,7 @@
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import { GostKursart, SchuelerStatus } from "@core";
 	import { computed } from "vue";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
@@ -183,7 +184,7 @@
 		return '';
 	}
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{key: 'schuelerAuswahl', label: 'Schüler', span: 1},
 		{key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center"},
 		{key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center"},

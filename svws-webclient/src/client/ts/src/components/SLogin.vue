@@ -5,8 +5,8 @@
 				<div class="login-container pt-5">
 					<div class="login-form modal modal--sm my-auto">
 						<div class="modal--content-wrapper pb-3">
-							<div class="modal--content">
-								<div class="mb-5">
+							<div class="modal--content px-5">
+								<div class="mb-6 mt-2">
 									<h1 class="font-bold text-headline-xl leading-none w-full py-2">
 										SVWS NRW
 									</h1>
@@ -39,29 +39,29 @@
 										</div>
 									</svws-ui-input-wrapper>
 								</Transition>
+								<div class="mt-16 text-sm font-medium">
+									<div class="flex gap-3 items-center opacity-50">
+										<img src="/images/Wappenzeichen_NRW_bw.svg" alt="" class="h-8">
+										<div class="text-left">
+											<p>
+												Powered by SVWS-NRW <span class="font-bold">Version {{ version }}</span>
+											</p>
+											<nav class="flex flex-row items-center gap-2 mt-0.5">
+												<a class="login-footer-link" href="#">Impressum</a>
+												<a class="login-footer-link" href="#">Datenschutz</a>
+											</nav>
+										</div>
+									</div>
+									<div class="mt-3 -mb-3 opacity-50">
+										<p class="text-sm text-left">
+											Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
+											geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
+											zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
+											Geschlechter gleichermaßen zu berücksichtigen.
+										</p>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-					<div class="mt-12 text-sm font-medium max-w-modal-sm relative z-10">
-						<div class="flex gap-3">
-							<img src="/images/Wappenzeichen_NRW_bw.svg" alt="" class="h-10">
-							<div>
-								<p class="mb-1 opacity-50">
-									Powered by SVWS-NRW Version {{ version }}
-								</p>
-								<nav class="flex flex-row items-center gap-2 relative z-20 mb-5">
-									<a class="login-footer-link" href="#">Impressum</a>
-									<a class="login-footer-link" href="#">Datenschutz</a>
-								</nav>
-							</div>
-						</div>
-						<div class="mt-5 pb-3">
-							<p class="text-sm text-left">
-								Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf
-								geschlechtsneutrale Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw.
-								zurückgegriffen. An Stellen, wo das nicht möglich ist, wird versucht alle
-								Geschlechter gleichermaßen zu berücksichtigen.
-							</p>
 						</div>
 					</div>
 				</div>
@@ -173,7 +173,11 @@
 
 .login-container {
 	@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-	background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 90%),
+	/*background-image: url('/images/noise.svg'), url('/images/placeholder-background.jpg');
+	background-size: 100px, cover;
+	background-blend-mode: overlay, normal;*/
+	background-image: url('/images/placeholder-background.jpg');
+	/*background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 90%),
 	linear-gradient(to top, #2285d5 0%, transparent 70%),
 	linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4) 70%),
 	#e3eefb;
@@ -191,7 +195,7 @@
     background-image:  linear-gradient(rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 0) 1px);
     background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
     background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-	}
+	}*/
 }
 
 @keyframes bg {
@@ -202,7 +206,7 @@
 }
 
 .modal {
-	@apply shadow-2xl shadow-black/25 rounded-2xl;
+	@apply shadow-2xl shadow-black/50 rounded-3xl;
 }
 
 .login-footer-link {

@@ -5,10 +5,16 @@
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
 			<template #cell(lehrerID)="{rowData}">
-				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
+				<div class="w-full">
+					<div class="-mx-1">
+						<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
+					</div>
+				</div>
 			</template>
 			<template #cell(note)="{rowData}">
-				<s-schueler-leistung-note :data="props.data!" :note="rowData.note ?? ''" :patch-leistung="patchLeistung" />
+				<div class="-mx-1">
+					<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
+				</div>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>

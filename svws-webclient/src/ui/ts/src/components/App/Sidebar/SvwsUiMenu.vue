@@ -224,7 +224,7 @@
 }
 
 .app--appearance-settings {
-	@apply my-5 pt-5;
+	@apply mb-3 mt-6;
 	@apply flex flex-col gap-1;
 
 	@media (orientation: portrait) {

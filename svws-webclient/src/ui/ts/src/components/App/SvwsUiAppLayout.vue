@@ -15,7 +15,7 @@
 								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
 							</template>
 						</svws-ui-menu-item>
 						<svws-ui-menu-item :active="false">
@@ -23,7 +23,7 @@
 								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
 							</template>
 						</svws-ui-menu-item>
 						<svws-ui-menu-item :active="false">
@@ -31,7 +31,7 @@
 								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
 							</template>
 						</svws-ui-menu-item>
 					</template>
@@ -41,7 +41,7 @@
 								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-7 rounded-full animate-pulse w-7 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
 							</template>
 						</svws-ui-menu-item>
 					</template>

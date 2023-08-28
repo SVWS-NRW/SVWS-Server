@@ -6,7 +6,7 @@
 	<i-ri-school-line v-else-if="props.routename === 'schule'" />
 	<i-ri-archive-line v-else-if="props.routename === 'kataloge'" />
 	<i-ri-briefcase-line v-else-if="props.routename === 'lehrer'" />
-	<i-ri-presentation-line v-else-if="props.routename === 'kurse'" />
+	<i-ri-book-2-line v-else-if="props.routename === 'kurse'" />
 	<i-ri-graduation-cap-line v-else-if="props.routename === 'gost'" />
 </template>
 

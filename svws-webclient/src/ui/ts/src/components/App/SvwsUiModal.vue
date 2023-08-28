@@ -115,7 +115,7 @@
 	@apply flex flex-col items-center;
 	@apply w-full mx-auto;
 	@apply relative z-50;
-	@apply rounded-lg;
+	@apply rounded-xl;
 	@apply shadow-xl shadow-black/10 dark:shadow-white/5;
 
 	&--sm {

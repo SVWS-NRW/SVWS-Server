@@ -83,9 +83,9 @@
 					<td><code>{{ '<' }}i-ri-team-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-presentation-line /></th>
+					<th><i-ri-book-2-line /></th>
 					<td>Kurse</td>
-					<td><code>{{ '<' }}i-ri-presentation-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-book-2-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-graduation-cap-line /></th>

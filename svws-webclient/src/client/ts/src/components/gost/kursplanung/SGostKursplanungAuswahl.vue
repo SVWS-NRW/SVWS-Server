@@ -6,9 +6,8 @@
 					{{ row.kuerzel }}
 					<div v-if="row === halbjahr" class="inline-flex gap-1 -my-0.5">
 						<svws-ui-button v-if="allow_add_blockung(row)" type="secondary" @click.stop="blockung_hinzufuegen">
-							<span class="inline-flex items-center">
-								<i-ri-table-2 />
-								<i-ri-add-line class="-ml-0.5" />
+							<span class="inline-flex items-center text-button">
+								<i-ri-add-line class="-mx-0.5" />
 							</span>
 							Blockung hinzufügen
 						</svws-ui-button>

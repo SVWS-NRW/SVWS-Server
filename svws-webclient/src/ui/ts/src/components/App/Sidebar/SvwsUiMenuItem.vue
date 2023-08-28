@@ -110,12 +110,11 @@
 	font-size: 1.2rem;
 
 	@media (min-width: 1280px) {
-		font-size: 1.4rem;
+		font-size: 1.3rem;
 	}
 
 	@media (min-width: 2000px) {
-		@apply mb-1;
-		font-size: 1.5rem;
+		font-size: 1.35rem;
 	}
 }
 

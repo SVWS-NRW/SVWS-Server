@@ -537,7 +537,6 @@
 		@apply p-0;
 
 		.icon {
-			@apply rounded-none;
 			font-size: 0.9em;
 		}
 	}
