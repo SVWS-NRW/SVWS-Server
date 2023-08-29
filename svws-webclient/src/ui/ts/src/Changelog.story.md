@@ -15,3 +15,4 @@ Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breakin
 * TextInput: Fix, wenn `type="number"` ist, dann wird beim Klicken der rauf/runter-Pfeile kein `emit` ausgelöst, weil `document.ativeElement` nicht das Input-Feld ist. Es muss erst durch ein `focus()` gesetzt werden.
 * Multiselect kann bei autocomplete nun auch per Tab das erste Element auswählen.
 * emits werden bei TextInput und TextArea nur noch bei `blur`-Events ausgegeben.
+* Drag und Drop wird entfernt

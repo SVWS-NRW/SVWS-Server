@@ -6,7 +6,10 @@
 
 <script setup lang="ts">
 	import { ref } from "vue";
-
+	/**
+	 *
+	 * @deprecated Die Drag&Drop-Komponenten sind *deprecated*
+ 	*/
 	const props = withDefaults(defineProps<{
 		tag?: string;
 		draggable?: boolean;

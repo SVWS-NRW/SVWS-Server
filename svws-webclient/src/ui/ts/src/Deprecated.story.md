@@ -10,6 +10,14 @@ icon: 'carbon:bookmark'
 
 Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfernt wurden.
 
+## ab 0.6.18-SNAPSHOT
+### **Drag/Drop**
+
+Drag und Drop wird direkt in den Komponenten mit JS-Boardmitteln umgesetzt. Ist sauberer und schneller.
+
+  * `<svws-ui-drag/>`
+  * `<svws-ui-drop/>`
+
 ## ab 0.6.12-SNAPSHOT
 
 ### **Icon**
