@@ -103,22 +103,11 @@ clean.dependsOn cleanCore
 clean.dependsOn cleanUi
 clean.dependsOn cleanClient
 
-
-task copyNexusNpmrc(type: Copy) {
-	dependsOn assemble
-	mustRunAfter publish
-	group "build"
-	from "$projectDir/.npmrc.nexus"
-	into "$projectDir/"
-	inputs.files "$projectDir/.npmrc.nexus"
-	outputs.files "$projectDir/.npmrc"
-	rename(".npmrc.nexus", ".npmrc")
-}
-
 task publishNexusCore(type: NpmPublish) {
-	dependsOn copyNexusNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/core/ts")
+	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
@@ -126,9 +115,10 @@ task publishNexusCore(type: NpmPublish) {
 }
 
 task publishNexusUi(type: NpmPublish) {
-	dependsOn copyNexusNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/ui/ts")
+	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
@@ -136,29 +126,21 @@ task publishNexusUi(type: NpmPublish) {
 }
 
 task publishNexusClient(type: NpmPublish) {
-	dependsOn copyNexusNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/client/ts")
+	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
 	token = project.ext.getNexusToken()
 	scopePublic = false
 }
 
-task copyNpmNpmrc(type: Copy) {
-	dependsOn publishNexusCore, publishNexusUi, publishNexusClient
-	group "build"
-	from "$projectDir/.npmrc.npm"
-	into "$projectDir/"
-	inputs.files "$projectDir/.npmrc.npm"
-	outputs.files "$projectDir/.npmrc"
-	rename(".npmrc.npm", ".npmrc")
-}
-
 task publishNpmCore(type: NpmPublish) {
-	dependsOn copyNpmNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/core/ts")
+	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
@@ -166,9 +148,10 @@ task publishNpmCore(type: NpmPublish) {
 }
 
 task publishNpmUi(type: NpmPublish) {
-	dependsOn copyNpmNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/ui/ts")
+	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
@@ -176,9 +159,10 @@ task publishNpmUi(type: NpmPublish) {
 }
 
 task publishNpmClient(type: NpmPublish) {
-	dependsOn copyNpmNpmrc
+	dependsOn assemble
 	group "publishing"
 	workingDir = file("$projectDir/src/client/ts")
+	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
 	scopePublic = true
@@ -193,11 +177,11 @@ publishReleaseAll.dependsOn publishNpmUi
 publishReleaseAll.dependsOn publishNpmClient
 
 project.tasks.withType(PublishToMavenRepository).configureEach {
-  dependsOn copyNexusNpmrc, copyNpmNpmrc
+  dependsOn publishNexusCore, publishNexusUi, publishNexusClient, publishNpmCore, publishNpmUi, publishNpmClient
 }
 
 project.tasks.withType(Sign).configureEach {
-  dependsOn copyNexusNpmrc, copyNpmNpmrc
+  dependsOn publishNexusCore, publishNexusUi, publishNexusClient, publishNpmCore, publishNpmUi, publishNpmClient
 }
 
 
