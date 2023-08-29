@@ -37,7 +37,8 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte WechselNr */
 	public SchemaTabelleSpalte col_WechselNr = add("WechselNr", SchemaDatentypen.SMALLINT, false)
-		.setJavaComment("Wird für Wiederholungen im Laufenden Abschnitt genutzt NULL=aktueller Abschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw");
+		.setDefault("0")
+		.setJavaComment("Wird für Wiederholungen im Laufenden Abschnitt genutzt 0=aktueller/neuester Abschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw");
 
 	/** Die Definition der Tabellenspalte Schulbesuchsjahre */
 	public SchemaTabelleSpalte col_Schulbesuchsjahre = add("Schulbesuchsjahre", SchemaDatentypen.SMALLINT, false)

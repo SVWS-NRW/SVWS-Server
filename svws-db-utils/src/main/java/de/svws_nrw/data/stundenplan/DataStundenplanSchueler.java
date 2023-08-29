@@ -86,14 +86,14 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final Set<Long> schuelerIDs = new HashSet<>();
 		final Map<Long, Long> mapSchuelerKlasse = new HashMap<>();
 		if (!klassenIDs.isEmpty()) {
-			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klassenIDs);
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, stundenplan.Schuljahresabschnitts_ID, klassenIDs);
 			mapSchuelerKlasse.putAll(lernabschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l.Klassen_ID)));
 			schuelerIDs.addAll(lernabschnitte.stream().map(l -> l.Schueler_ID).toList());
 		}
 		// Bestimme alle Kurs-IDs der Unterrichte
 		final List<Long> kursIDs = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class).stream().map(k -> k.ID).toList();
 		if (!kursIDs.isEmpty()) {
-			final List<Long> kursSchuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class)
+			final List<Long> kursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
 					.stream().map(ks -> ks.Schueler_ID).distinct().toList();
 			schuelerIDs.addAll(kursSchuelerIDs);
 		}
@@ -130,7 +130,7 @@ public final class DataStundenplanSchueler extends DataManager<Long> {
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Schüler mit der ID %d gefunden.".formatted(id));
-		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
+		final List<DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, id, stundenplan.Schuljahresabschnitts_ID);
 		if (abschnitte.size() != 1)
 			return OperationError.NOT_FOUND.getResponse("Der Schüler mit der ID %d hat keinen oder mehr als einen Lernabschnitt.".formatted(id));
 		final DTOSchuelerLernabschnittsdaten abschnitt = abschnitte.get(0);

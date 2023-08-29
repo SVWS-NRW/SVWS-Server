@@ -4,7 +4,7 @@
 			<span>
 				{{ row.schuljahr + "." + row.abschnitt }}
 			</span>
-			<svws-ui-tooltip v-if="row.wechselNr !== null">
+			<svws-ui-tooltip v-if="row.wechselNr !== 0">
 				<span class="opacity-50 ml-1 inline-block cursor-pointer">
 					(alt)
 				</span>

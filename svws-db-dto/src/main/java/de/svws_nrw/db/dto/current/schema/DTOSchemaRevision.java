@@ -20,22 +20,22 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Version.
+ * Diese Klasse dient als DTO für die Datenbanktabelle Schema_Revision.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "Schema_Version")
-@NamedQuery(name = "DTOSchemaVersion.all", query = "SELECT e FROM DTOSchemaVersion e")
-@NamedQuery(name = "DTOSchemaVersion.revision", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision = :value")
-@NamedQuery(name = "DTOSchemaVersion.revision.multiple", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision IN :value")
-@NamedQuery(name = "DTOSchemaVersion.istainted", query = "SELECT e FROM DTOSchemaVersion e WHERE e.IsTainted = :value")
-@NamedQuery(name = "DTOSchemaVersion.istainted.multiple", query = "SELECT e FROM DTOSchemaVersion e WHERE e.IsTainted IN :value")
-@NamedQuery(name = "DTOSchemaVersion.primaryKeyQuery", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision = ?1")
-@NamedQuery(name = "DTOSchemaVersion.all.migration", query = "SELECT e FROM DTOSchemaVersion e WHERE e.Revision IS NOT NULL")
+@Table(name = "Schema_Revision")
+@NamedQuery(name = "DTOSchemaRevision.all", query = "SELECT e FROM DTOSchemaRevision e")
+@NamedQuery(name = "DTOSchemaRevision.revision", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision = :value")
+@NamedQuery(name = "DTOSchemaRevision.revision.multiple", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision IN :value")
+@NamedQuery(name = "DTOSchemaRevision.istainted", query = "SELECT e FROM DTOSchemaRevision e WHERE e.IsTainted = :value")
+@NamedQuery(name = "DTOSchemaRevision.istainted.multiple", query = "SELECT e FROM DTOSchemaRevision e WHERE e.IsTainted IN :value")
+@NamedQuery(name = "DTOSchemaRevision.primaryKeyQuery", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision = ?1")
+@NamedQuery(name = "DTOSchemaRevision.all.migration", query = "SELECT e FROM DTOSchemaRevision e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
-public final class DTOSchemaVersion {
+public final class DTOSchemaRevision {
 
 	/** Die Revision des Datenbankschemas der SVWS-DB */
 	@Id
@@ -52,18 +52,18 @@ public final class DTOSchemaVersion {
 	public Boolean IsTainted;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchemaVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaRevision ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOSchemaVersion() {
+	private DTOSchemaRevision() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOSchemaVersion ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOSchemaRevision ohne eine Initialisierung der Attribute.
 	 * @param Revision   der Wert für das Attribut Revision
 	 * @param IsTainted   der Wert für das Attribut IsTainted
 	 */
-	public DTOSchemaVersion(final long Revision, final Boolean IsTainted) {
+	public DTOSchemaRevision(final long Revision, final Boolean IsTainted) {
 		this.Revision = Revision;
 		this.IsTainted = IsTainted;
 	}
@@ -77,7 +77,7 @@ public final class DTOSchemaVersion {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOSchemaVersion other = (DTOSchemaVersion) obj;
+		DTOSchemaRevision other = (DTOSchemaRevision) obj;
 		return Revision == other.Revision;
 	}
 
@@ -97,7 +97,7 @@ public final class DTOSchemaVersion {
 	 */
 	@Override
 	public String toString() {
-		return "DTOSchemaVersion(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
+		return "DTOSchemaRevision(Revision=" + this.Revision + ", IsTainted=" + this.IsTainted + ")";
 	}
 
 }

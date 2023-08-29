@@ -11,7 +11,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
 import de.svws_nrw.db.schema.DBSchemaViews;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -289,8 +289,8 @@ public final class DBSchemaManager {
 			final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 			if (rev == -1)
 				return false;
-			final DTOSchemaVersion oldObj = conn.querySingle(DTOSchemaVersion.class);
-			final DTOSchemaVersion newObj = new DTOSchemaVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
+			final DTOSchemaRevision oldObj = conn.querySingle(DTOSchemaRevision.class);
+			final DTOSchemaRevision newObj = new DTOSchemaRevision(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 			if (oldObj == null) {
 				conn.persist(newObj);
 			} else {
@@ -314,8 +314,8 @@ public final class DBSchemaManager {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		if (rev == -1)
 			return false;
-		final DTOSchemaVersion oldObj = conn.querySingle(DTOSchemaVersion.class);
-		final DTOSchemaVersion newObj = new DTOSchemaVersion(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
+		final DTOSchemaRevision oldObj = conn.querySingle(DTOSchemaRevision.class);
+		final DTOSchemaRevision newObj = new DTOSchemaRevision(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
 		if (oldObj == null) {
 			if (!conn.transactionPersist(newObj))
 				return false;

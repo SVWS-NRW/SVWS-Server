@@ -72,7 +72,8 @@ public final class DataKursliste extends DataManager<Long> {
     	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
     	// Ergänze die Liste der Schüler in den Kursen
     	final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
-    	final List<DTOKursSchueler> listKursSchueler = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class);
+    	final List<DTOKursSchueler> listKursSchueler =
+    			conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
     	final Map<Long, DTOSchueler> mapSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new HashMap<>()
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream().collect(Collectors.toMap(s -> s.ID, s -> s));

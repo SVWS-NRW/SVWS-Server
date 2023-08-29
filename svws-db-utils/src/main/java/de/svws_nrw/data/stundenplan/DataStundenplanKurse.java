@@ -73,7 +73,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class);
 		// Schüler bestimmen
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
-		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id.multiple", kursIDs, DTOKursSchueler.class)
+		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
 		// Lehrer bestimmten
 		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryNamed("DTOKursLehrer.kurs_id.multiple", kursIDs, DTOKursLehrer.class)
@@ -162,7 +162,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", stundenplan.ID, DTOStundenplanSchienen.class)
 				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Schüler bestimmen
-		final List<Long> schuelerIDs = conn.queryNamed("DTOKursSchueler.kurs_id", kurs.ID, DTOKursSchueler.class)
+		final List<Long> schuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kurs.ID)
 				.stream().map(ks -> ks.Schueler_ID).toList();
 		// DTO erstellen
 		final StundenplanKurs daten = dtoMapper.apply(kurs);

@@ -40,7 +40,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 			return routeSchuelerLeistungen.getRoute(id);
 		} else {
 			const abschnitt = parseInt(to_params.abschnitt);
-			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
+			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? 0 : parseInt(to_params.wechselNr);
 			const eintrag = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
 			await this.data.setEintrag(eintrag);
 		}

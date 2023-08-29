@@ -26,9 +26,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOKursSchueler.kurs_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN :value")
 @NamedQuery(name = "DTOKursSchueler.schueler_id", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID = :value")
 @NamedQuery(name = "DTOKursSchueler.schueler_id.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.Schueler_ID IN :value")
-@NamedQuery(name = "DTOKursSchueler.primaryKeyQuery", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2")
-@NamedQuery(name = "DTOKursSchueler.all.migration", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL")
-@JsonPropertyOrder({"Kurs_ID", "Schueler_ID"})
+@NamedQuery(name = "DTOKursSchueler.lernabschnittwechselnr", query = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr = :value")
+@NamedQuery(name = "DTOKursSchueler.lernabschnittwechselnr.multiple", query = "SELECT e FROM DTOKursSchueler e WHERE e.LernabschnittWechselNr IN :value")
+@NamedQuery(name = "DTOKursSchueler.primaryKeyQuery", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.Schueler_ID = ?2 AND e.LernabschnittWechselNr = ?3")
+@NamedQuery(name = "DTOKursSchueler.all.migration", query = "SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IS NOT NULL AND e.Schueler_ID IS NOT NULL AND e.LernabschnittWechselNr IS NOT NULL")
+@JsonPropertyOrder({"Kurs_ID", "Schueler_ID", "LernabschnittWechselNr"})
 public final class DTOKursSchueler {
 
 	/** Die eindeutige ID des Kurses – verweist auf den Kurs */
@@ -42,6 +44,12 @@ public final class DTOKursSchueler {
 	@Column(name = "Schueler_ID")
 	@JsonProperty
 	public long Schueler_ID;
+
+	/** Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw */
+	@Id
+	@Column(name = "LernabschnittWechselNr")
+	@JsonProperty
+	public Integer LernabschnittWechselNr;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchueler ohne eine Initialisierung der Attribute.
@@ -72,7 +80,14 @@ public final class DTOKursSchueler {
 		DTOKursSchueler other = (DTOKursSchueler) obj;
 		if (Kurs_ID != other.Kurs_ID)
 			return false;
-		return Schueler_ID == other.Schueler_ID;
+		if (Schueler_ID != other.Schueler_ID)
+			return false;
+		if (LernabschnittWechselNr == null) {
+			if (other.LernabschnittWechselNr != null)
+				return false;
+		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -82,6 +97,8 @@ public final class DTOKursSchueler {
 		result = prime * result + Long.hashCode(Kurs_ID);
 
 		result = prime * result + Long.hashCode(Schueler_ID);
+
+		result = prime * result + ((LernabschnittWechselNr == null) ? 0 : LernabschnittWechselNr.hashCode());
 		return result;
 	}
 
@@ -93,7 +110,7 @@ public final class DTOKursSchueler {
 	 */
 	@Override
 	public String toString() {
-		return "DTOKursSchueler(Kurs_ID=" + this.Kurs_ID + ", Schueler_ID=" + this.Schueler_ID + ")";
+		return "DTOKursSchueler(Kurs_ID=" + this.Kurs_ID + ", Schueler_ID=" + this.Schueler_ID + ", LernabschnittWechselNr=" + this.LernabschnittWechselNr + ")";
 	}
 
 }

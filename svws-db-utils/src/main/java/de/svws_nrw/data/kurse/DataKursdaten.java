@@ -72,7 +72,7 @@ public final class DataKursdaten extends DataManager<Long> {
     		return OperationError.NOT_FOUND.getResponse();
 		final KursDaten daten = dtoMapper.apply(kurs);
 		// Bestimme die Schüler des Kurses
-		final List<DTOKursSchueler> listKursSchueler = conn.queryNamed("DTOKursSchueler.kurs_id", daten.id, DTOKursSchueler.class);
+		final List<DTOKursSchueler> listKursSchueler = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, daten.id);
     	final List<Long> schuelerIDs = listKursSchueler.stream().map(ks -> ks.Schueler_ID).toList();
     	final List<DTOSchueler> listSchueler = ((schuelerIDs == null) || (schuelerIDs.isEmpty())) ? new ArrayList<>()
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);

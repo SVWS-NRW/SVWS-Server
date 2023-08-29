@@ -18,6 +18,9 @@ public final class DTOKursSchuelerPK implements Serializable {
 	/** Die eindeutige ID des Schülers – verweist auf den Schüler */
 	public long Schueler_ID;
 
+	/** Wird für Wiederholungen im Laufenden Schuljahresabschnitt genutzt 0=aktueller/neuester Lernabschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw */
+	public Integer LernabschnittWechselNr;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchuelerPK ohne eine Initialisierung der Attribute.
 	 */
@@ -29,10 +32,15 @@ public final class DTOKursSchuelerPK implements Serializable {
 	 * Erstellt ein neues Objekt der Klasse DTOKursSchuelerPK.
 	 * @param Kurs_ID   der Wert für das Attribut Kurs_ID
 	 * @param Schueler_ID   der Wert für das Attribut Schueler_ID
+	 * @param LernabschnittWechselNr   der Wert für das Attribut LernabschnittWechselNr
 	 */
-	public DTOKursSchuelerPK(final long Kurs_ID, final long Schueler_ID) {
+	public DTOKursSchuelerPK(final long Kurs_ID, final long Schueler_ID, final Integer LernabschnittWechselNr) {
 		this.Kurs_ID = Kurs_ID;
 		this.Schueler_ID = Schueler_ID;
+		if (LernabschnittWechselNr == null) {
+			throw new NullPointerException("LernabschnittWechselNr must not be null");
+		}
+		this.LernabschnittWechselNr = LernabschnittWechselNr;
 	}
 
 
@@ -47,7 +55,14 @@ public final class DTOKursSchuelerPK implements Serializable {
 		DTOKursSchuelerPK other = (DTOKursSchuelerPK) obj;
 		if (Kurs_ID != other.Kurs_ID)
 			return false;
-		return Schueler_ID == other.Schueler_ID;
+		if (Schueler_ID != other.Schueler_ID)
+			return false;
+		if (LernabschnittWechselNr == null) {
+			if (other.LernabschnittWechselNr != null)
+				return false;
+		} else if (!LernabschnittWechselNr.equals(other.LernabschnittWechselNr))
+			return false;
+		return true;
 	}
 
 	@Override
@@ -57,6 +72,8 @@ public final class DTOKursSchuelerPK implements Serializable {
 		result = prime * result + Long.hashCode(Kurs_ID);
 
 		result = prime * result + Long.hashCode(Schueler_ID);
+
+		result = prime * result + ((LernabschnittWechselNr == null) ? 0 : LernabschnittWechselNr.hashCode());
 		return result;
 	}
 }

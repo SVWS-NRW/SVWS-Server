@@ -1516,11 +1516,11 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_K_Lehrer
 		);
-		add("Ändere den Eintrag WechselNr von 999 auf NULL für den aktuellen Abschnitt (ggf. nach dem letzten Wechsel)",
+		add("Ändere den Eintrag WechselNr von 999 auf 0 für den aktuellen Abschnitt (ggf. nach dem letzten Wechsel)",
 			"""
 			UPDATE SchuelerLernabschnittsdaten
-			SET WechselNr = NULL
-			WHERE WechselNr=999
+			SET WechselNr = 0
+			WHERE WechselNr = 999
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten
 		);
@@ -2199,7 +2199,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			SELECT
 			    ID AS Schueler_ID,
 			    Schuljahresabschnitts_ID,
-			    NULL AS WechselNr,
+			    0 AS WechselNr,
 			    Jahrgang AS Schulbesuchsjahre,
 			    0 AS Hochrechnung,
 			    '+' AS SemesterWertung,

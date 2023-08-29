@@ -80,7 +80,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		final List<Long> klassenIDs = klassen.stream().map(k -> k.ID).toList();
 		final List<Long> jahrgaengsIDs = DataStundenplanJahrgaenge.getJahrgaenge(conn, idStundenplan).stream().map(j -> j.id).toList();
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klassenIDs);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klassenIDs);
 		final Map<Long, List<Long>> mapKlasseSchuelerIDs = lernabschnitte.stream()
 				.collect(Collectors.groupingBy(la -> la.Klassen_ID, Collectors.mapping(la -> la.Schueler_ID, Collectors.toList())));
 		// Erstelle die Core-DTOs
@@ -134,7 +134,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 			jahrgangsIDs.add(klasse.Jahrgang_ID);
 		}
 		// Bestimme die Schüler-Lernabschnitte für die Zuordnung der Schüler zu den Klassen
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klasse.ID);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, idStundenplan, klasse.ID);
 		final List<Long> schuelerIDs = lernabschnitte.stream().map(la -> la.Schueler_ID).distinct().toList();
 		// DTO erstellen
 		final StundenplanKlasse daten = dtoMapper.apply(klasse);

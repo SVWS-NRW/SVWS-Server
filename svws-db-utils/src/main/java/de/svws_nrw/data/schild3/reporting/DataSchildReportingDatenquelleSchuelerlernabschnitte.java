@@ -103,8 +103,8 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
 		if (la1.abschnitt != la2.abschnitt) {
 			return Integer.compare(la1.abschnitt, la2.abschnitt);
 		}
-		if ((la1.wechselNr != null && la2.wechselNr != null) || (la1.wechselNr == null && la2.wechselNr == null)) {
-			if ((la1.wechselNr != null) && !la1.wechselNr.equals(la2.wechselNr)) {
+		if ((la1.wechselNr != 0 && la2.wechselNr != 0) || (la1.wechselNr == 0 && la2.wechselNr == 0)) {
+			if ((la1.wechselNr != 0) && (la1.wechselNr != la2.wechselNr)) {
 				return Integer.compare(la1.wechselNr, la2.wechselNr);
 			}
 			// Dieser Fall darf bei korrekten Daten nicht auftreten, weil es dann zwei identische Lernabschnitte geben würde.
@@ -120,7 +120,7 @@ public final class DataSchildReportingDatenquelleSchuelerlernabschnitte extends 
 			if (la2.istWiederholung)
 				checkA2 += 2;
 			return Integer.compare(checkA1, checkA2);
-		} else if (la1.wechselNr == null) {
+		} else if (la1.wechselNr == 0) {
 			return -1;
 		} else {
 			return 1;

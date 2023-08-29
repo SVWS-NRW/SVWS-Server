@@ -36,20 +36,20 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 				return routeError.getRoute(new Error("Fehler: Lernabschnitt vorhanden."));
 			if (to_params.abschnitt !== undefined) {
 				const abschnitt = parseInt(to_params.abschnitt);
-				const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
+				const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? 0 : parseInt(to_params.wechselNr);
 				const lernabschnitt = this.data.getEntry(abschnitt, wechselNr);
 				if (lernabschnitt !== undefined)
-					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
-				if (wechselNr !== null) {
+					return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === 0 ? undefined : lernabschnitt.wechselNr);
+				if (wechselNr !== 0) {
 					const lernabschnitt = this.data.getEntry(abschnitt, null);
 					if (lernabschnitt !== undefined)
-						return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
+						return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === 0 ? undefined : lernabschnitt.wechselNr);
 				}
 			}
 			const lernabschnitt = this.data.getEntryDefault();
 			if (lernabschnitt === undefined)
 				return routeError.getRoute(new Error("Fehler: Lernabschnitt gefunden."));
-			return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === null ? undefined : lernabschnitt.wechselNr);
+			return routeSchuelerLeistungenDaten.getRoute(id, lernabschnitt.schuljahresabschnitt, lernabschnitt.wechselNr === 0 ? undefined : lernabschnitt.wechselNr);
 		}
 	}
 

@@ -61,7 +61,7 @@ public class SQLGenerator {
 		       		.filter(sql -> (sql != null) && (!"".equals(sql)))
 					.collect(Collectors.joining(newline + newline))
                 + newline + newline + newline
-				+ "INSERT INTO Schema_Version(Revision) VALUES (" + ((rev == -1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
+				+ "INSERT INTO " + Schema.tab_Schema_Revision.name() + "(Revision) VALUES (" + ((rev == -1) ? SchemaRevisionen.maxRevision.revision : rev) + ");" + newline
 		        + newline
 		        + getInserts(rev)
 		        + newline

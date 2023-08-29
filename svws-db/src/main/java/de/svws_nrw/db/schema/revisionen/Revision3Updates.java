@@ -209,12 +209,12 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				logger.logLn("- Schuljahres-Abschnitt " + abschnittID + " (Schuljahr " + schuljahr + "/" + (schuljahr + 1 - 2000) + ", " + halbjahr + ". Halbjahr, Quartal " + quartal + "):");
 				logger.modifyIndent(2);
 				// Bestimme die IDs aller Schüler-Lernabschnitte, die zu diesem Schuljahresabschnitt gehören
-				final List<Long> lernabschnittIDs = conn.queryNative("SELECT ID FROM SchuelerLernabschnittsdaten WHERE WechselNr IS NULL AND Schuljahresabschnitts_ID = " + abschnittID);
+				final List<Long> lernabschnittIDs = conn.queryNative("SELECT ID FROM SchuelerLernabschnittsdaten WHERE WechselNr = 0 AND Schuljahresabschnitts_ID = " + abschnittID);
 				logger.logLn("- Übertragen der Leistungsdaten und der Teilleistungen der zugehörigen Schüler-Lernabschnitte in den jeweiligen Folgeabschnitt (ID des Folge-Schuljahresabschnitts: " + folgeAbschnittID + ")...");
 				for (final long lernabschnittID : lernabschnittIDs) {
 					String sql = "SELECT q2.ID FROM SchuelerLernabschnittsdaten q1 JOIN SchuelerLernabschnittsdaten q2 ON q1.ID = "
 						+ lernabschnittID + " AND q1.Schueler_ID = q2.Schueler_ID AND q2.Schuljahresabschnitts_ID = "
-						+ folgeAbschnittID + " AND q2.WechselNr IS NULL";
+						+ folgeAbschnittID + " AND q2.WechselNr = 0";
 					final List<Long> tmpFolgeLernabschnitte = conn.queryNative(sql);
 					if (tmpFolgeLernabschnitte.size() == 1) {
 						final long folgeLernabschnittID = tmpFolgeLernabschnitte.get(0);

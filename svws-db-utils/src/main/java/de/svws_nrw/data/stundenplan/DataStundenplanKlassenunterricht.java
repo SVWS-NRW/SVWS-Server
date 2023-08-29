@@ -74,7 +74,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	private static List<StundenplanKlassenunterricht> getKlassenunterrichteFuerKlassen(final @NotNull DBEntityManager conn, final long idSchuljahresabschnitt, final Map<Long, DTOKlassen> mapKlassen) {
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		// Bestimme alle Schüler-Lernabschnitte, welche der Klasse zugeordnet sind
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, idSchuljahresabschnitt, mapKlassen.keySet());
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, idSchuljahresabschnitt, mapKlassen.keySet());
 		if (lernabschnitte.isEmpty())
 			return new ArrayList<>();
 		final Map<Long, List<Long>> mapKlassenLernabschnittIDs = lernabschnitte.stream()
@@ -168,7 +168,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			throw OperationError.NOT_FOUND.exception("Kein Fach mit der ID %d gefunden.".formatted(idFach));
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		// Bestimme die Daten anhand der Leistungsdaten, die einem Lernabschnitt der Klasse zugeordnet sind.
-		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID);
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, klasse.Schuljahresabschnitts_ID, klasse.ID);
 		final List<Long> lernabschnittIDs = lernabschnitte.stream().map(l -> l.ID).toList();
 		if (lernabschnittIDs.isEmpty())
 			throw OperationError.NOT_FOUND.exception("Kein Lernabschnitt für die Klasse mit der ID %d gefunden.".formatted(idKlasse));

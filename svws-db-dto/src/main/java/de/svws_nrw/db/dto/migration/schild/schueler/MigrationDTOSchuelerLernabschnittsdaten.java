@@ -201,7 +201,7 @@ public final class MigrationDTOSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public Long Schuljahresabschnitts_ID;
 
-	/** Wird für Wiederholungen im Laufenden Abschnitt genutzt NULL=aktueller Abschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw */
+	/** Wird für Wiederholungen im Laufenden Abschnitt genutzt 0=aktueller/neuester Abschnitt 1=vor dem ersten Wechsel 2=vor dem zweiten Wechsel usw */
 	@Column(name = "WechselNr")
 	@JsonProperty
 	public Integer WechselNr;

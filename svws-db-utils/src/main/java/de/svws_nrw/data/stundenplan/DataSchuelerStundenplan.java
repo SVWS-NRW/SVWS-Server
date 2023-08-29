@@ -81,7 +81,7 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 
 		// Bestime den Lernabschnitt des Schülers, um anschließend mithilfe de aktuellen Leistungsdaten den Stundenplan zu befüllen
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.query(
-				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr IS NULL",
+				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = :sja AND e.Schueler_ID = :sid AND e.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class).setParameter("sja", dtoStundenplan.Schuljahresabschnitts_ID)
 				.setParameter("sid", idSchueler).getResultList();
 		if ((lernabschnittsdaten == null) || (lernabschnittsdaten.size() != 1))

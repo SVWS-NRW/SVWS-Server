@@ -45,7 +45,7 @@ export class RouteSchuelerAbschnittDaten extends RouteNode<RouteDataSchuelerAbsc
 			return routeSchuelerAbschnitt.getRoute(id);
 		} else {
 			const abschnitt = parseInt(to_params.abschnitt);
-			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? null : parseInt(to_params.wechselNr);
+			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? 0 : parseInt(to_params.wechselNr);
 			const eintrag = routeSchuelerAbschnitt.data.getEntry(abschnitt, wechselNr);
 			if (eintrag === undefined)
 				return routeError.getRoute(new Error("Der Schüler mit der ID `id` hat keinen Lernabschnitt für den Schuljahresabschnitt mit der ID `abschnitt` vorhanden"), 404);

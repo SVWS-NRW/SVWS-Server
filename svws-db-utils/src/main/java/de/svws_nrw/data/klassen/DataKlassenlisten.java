@@ -55,7 +55,7 @@ public final class DataKlassenlisten extends DataManager<Long> {
     	final Map<Long, List<DTOKlassenLeitung>> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id.multiple", klassenIDs, DTOKlassenLeitung.class)
     			.stream().collect(Collectors.groupingBy(kll -> kll.Klassen_ID));
     	// Bestimme die Schüler der Klasse
-    	final List<DTOSchuelerLernabschnittsdaten> listSchuelerLernabschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr IS NULL", DTOSchuelerLernabschnittsdaten.class)
+    	final List<DTOSchuelerLernabschnittsdaten> listSchuelerLernabschnitte = conn.query("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Klassen_ID IN ?1 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class)
     			.setParameter(1, klassenIDs).getResultList();
     	final List<Long> schuelerIDs = listSchuelerLernabschnitte.stream().map(sla -> sla.Schueler_ID).toList();
     	final Map<Long, DTOSchueler> mapSchueler = schuelerIDs == null || schuelerIDs.isEmpty() ? new HashMap<>()

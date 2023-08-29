@@ -39,7 +39,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final DTOSchuljahresabschnitte schuljahresabschnitt,
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
 		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false);
-		lernabschnitt.WechselNr = null;
+		lernabschnitt.WechselNr = 0;
 		lernabschnitt.Schulbesuchsjahre = null;
 		lernabschnitt.Hochrechnung = null;
 		lernabschnitt.SemesterWertung = true;
@@ -118,7 +118,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	public static DTOSchuelerLernabschnittsdaten get(final DBEntityManager conn, final Long idSchueler, final Long idSchuljahresabschnitt) {
 		if ((idSchueler == null) || (idSchuljahresabschnitt == null))
 			return null;
-		return conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr IS NULL",
+		return conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
 			DTOSchuelerLernabschnittsdaten.class, idSchueler, idSchuljahresabschnitt).stream().findFirst().orElse(null);
 	}
 
@@ -137,7 +137,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	public static boolean pruefeWiederholung(final DBEntityManager conn, final DTOSchuljahresabschnitte schuljahresabschnitt, final Long idSchueler, final Long idJahrgang) {
 		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null))
 			return false;
-		final List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr IS NULL AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
+		final List<Long> schuljahresabschnitte = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr = 0 AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3", DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
 		if (schuljahresabschnitte.isEmpty())
 			return false;

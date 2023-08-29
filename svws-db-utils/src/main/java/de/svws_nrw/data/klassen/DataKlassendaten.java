@@ -52,7 +52,7 @@ public final class DataKlassendaten extends DataManager<Long> {
     	final List<DTOKlassenLeitung> klassenLeitungen = conn.queryNamed("DTOKlassenLeitung.klassen_id", klasse.ID, DTOKlassenLeitung.class);
     	// Bestimme die Schüler der Klasse
     	final List<Long> schuelerIDs = conn.queryNamed("DTOSchuelerLernabschnittsdaten.klassen_id", klasse.ID, DTOSchuelerLernabschnittsdaten.class)
-    			.stream().filter(sla -> sla.WechselNr == null).map(sla -> sla.Schueler_ID).toList();
+    			.stream().filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).toList();
     	final List<DTOSchueler> dtoSchueler = schuelerIDs == null || schuelerIDs.isEmpty() ? new ArrayList<>()
     			: conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class);
     	// Erstelle das Core-DTO-Objekt für die Klasse

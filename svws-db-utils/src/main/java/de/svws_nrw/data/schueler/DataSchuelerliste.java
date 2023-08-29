@@ -168,14 +168,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 			final List<Long> schuelerIDs = schuelerListe.stream().map(s -> s.id).toList();
 			Map<Long, List<DTOKursSchueler>> kursSchueler;
 			if (schuljahresabschnittsID == null) {
-				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids";
+				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
 		    	kursSchueler = conn.query(jpql, DTOKursSchueler.class)
 		    		.setParameter("ids", schuelerIDs)
 		    		.getResultList()
 		    		.stream()
 		    		.collect(Collectors.groupingBy(ks -> ks.Schueler_ID));
 			} else {
-				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND k.Schuljahresabschnitts_ID = :abschnitt AND ks.Schueler_ID IN :ids";
+				final String jpql = "SELECT ks FROM DTOKurs k, DTOKursSchueler ks WHERE k.ID = ks.Kurs_ID AND k.Schuljahresabschnitts_ID = :abschnitt AND ks.Schueler_ID IN :ids AND ks.LernabschnittWechselNr = 0";
 		    	kursSchueler = conn.query(jpql, DTOKursSchueler.class)
 		    		.setParameter("abschnitt", schuljahresabschnittsID)
 		    		.setParameter("ids", schuelerIDs)
@@ -221,7 +221,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
     	if (schuelerIDs.isEmpty())
     		return new ArrayList<>();
 		final List<DTOSchuelerLernabschnittsdaten> listAktAbschnitte =
-			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr IS NULL",
+			conn.queryList("SELECT l FROM DTOSchuelerLernabschnittsdaten l WHERE l.Schueler_ID IN ?1 AND l.Schuljahresabschnitts_ID = ?2 AND l.WechselNr = 0",
 				DTOSchuelerLernabschnittsdaten.class, schuelerIDs, abschnitt);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 		final List<Long> listSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();

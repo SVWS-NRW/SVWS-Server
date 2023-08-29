@@ -25,7 +25,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	/**
 	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 */
-	public wechselNr : number | null = null;
+	public wechselNr : number = 0;
 
 	/**
 	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
@@ -101,7 +101,9 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		if (typeof obj.abschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
-		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr === null ? null : obj.wechselNr;
+		if (typeof obj.wechselNr === "undefined")
+			 throw new Error('invalid json format, missing attribute wechselNr');
+		result.wechselNr = obj.wechselNr;
 		if (typeof obj.istGewertet === "undefined")
 			 throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
@@ -141,7 +143,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"schuljahr" : ' + obj.schuljahr + ',';
 		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
+		result += '"wechselNr" : ' + obj.wechselNr + ',';
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
@@ -172,7 +174,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 			result += '"abschnitt" : ' + obj.abschnitt + ',';
 		}
 		if (typeof obj.wechselNr !== "undefined") {
-			result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
+			result += '"wechselNr" : ' + obj.wechselNr + ',';
 		}
 		if (typeof obj.istGewertet !== "undefined") {
 			result += '"istGewertet" : ' + obj.istGewertet + ',';

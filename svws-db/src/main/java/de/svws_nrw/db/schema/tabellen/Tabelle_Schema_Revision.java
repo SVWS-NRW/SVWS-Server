@@ -7,9 +7,9 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Schema_Version.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Schema_Revision.
  */
-public class Tabelle_Schema_Version extends SchemaTabelle {
+public class Tabelle_Schema_Revision extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Revision */
 	public SchemaTabelleSpalte col_Revision = add("Revision", SchemaDatentypen.BIGINT, true)
@@ -26,15 +26,15 @@ public class Tabelle_Schema_Version extends SchemaTabelle {
 
 
 	/**
-	 * Erstellt die Schema-Defintion für die Tabelle Schema_Version.
+	 * Erstellt die Schema-Defintion für die Tabelle Schema_Revision.
 	 */
-	public Tabelle_Schema_Version() {
-		super("Schema_Version", SchemaRevisionen.REV_0);
+	public Tabelle_Schema_Revision() {
+		super("Schema_Revision", SchemaRevisionen.REV_0);
 		setMigrate(false);
 		setImportExport(false);
 		setJavaSubPackage("schema");
-		setJavaClassName("DTOSchemaVersion");
-		setJavaComment("Diese Tabelle enthält die Versionsinformationen zu der SVWS-DB");
+		setJavaClassName("DTOSchemaRevision");
+		setJavaComment("Diese Tabelle enthält die Informationen zur Revision der SVWS-DB");
 	}
 
 }

@@ -59,7 +59,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
     	if (schueler == null)
     		return OperationError.NOT_FOUND.getResponse();
     	// Bestimme den aktuellen Lernabschnitt
-    	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr IS NULL";
+    	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
     	final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
     	if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
     		return OperationError.NOT_FOUND.getResponse();

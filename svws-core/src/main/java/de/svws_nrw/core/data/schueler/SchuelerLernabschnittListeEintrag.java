@@ -33,8 +33,8 @@ public class SchuelerLernabschnittListeEintrag {
 	public int abschnitt;
 
 	/** Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). */
-	@Schema(description = "eine Nr, zur Unterscheidung von Lernabschnissdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)", example = "NULL")
-	public Integer wechselNr = null;
+	@Schema(description = "eine Nr, zur Unterscheidung von Lernabschnissdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, 0=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)", example = "NULL")
+	public int wechselNr = 0;
 
 	/** Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht */
 	@Schema(description = "gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht", example = "true")

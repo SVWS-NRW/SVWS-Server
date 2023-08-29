@@ -25,7 +25,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	/**
 	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
 	 */
-	public wechselNr : number | null = null;
+	public wechselNr : number = 0;
 
 	/**
 	 * Das Datum, wann der Lernabschnitt beginnt
@@ -258,7 +258,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.schuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
-		result.wechselNr = typeof obj.wechselNr === "undefined" ? null : obj.wechselNr === null ? null : obj.wechselNr;
+		if (typeof obj.wechselNr === "undefined")
+			 throw new Error('invalid json format, missing attribute wechselNr');
+		result.wechselNr = obj.wechselNr;
 		result.datumAnfang = typeof obj.datumAnfang === "undefined" ? null : obj.datumAnfang === null ? null : obj.datumAnfang;
 		result.datumEnde = typeof obj.datumEnde === "undefined" ? null : obj.datumEnde === null ? null : obj.datumEnde;
 		result.datumKonferenz = typeof obj.datumKonferenz === "undefined" ? null : obj.datumKonferenz === null ? null : obj.datumKonferenz;
@@ -341,7 +343,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
-		result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
+		result += '"wechselNr" : ' + obj.wechselNr + ',';
 		result += '"datumAnfang" : ' + ((!obj.datumAnfang) ? 'null' : JSON.stringify(obj.datumAnfang)) + ',';
 		result += '"datumEnde" : ' + ((!obj.datumEnde) ? 'null' : JSON.stringify(obj.datumEnde)) + ',';
 		result += '"datumKonferenz" : ' + ((!obj.datumKonferenz) ? 'null' : JSON.stringify(obj.datumKonferenz)) + ',';
@@ -412,7 +414,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
 		}
 		if (typeof obj.wechselNr !== "undefined") {
-			result += '"wechselNr" : ' + ((!obj.wechselNr) ? 'null' : obj.wechselNr) + ',';
+			result += '"wechselNr" : ' + obj.wechselNr + ',';
 		}
 		if (typeof obj.datumAnfang !== "undefined") {
 			result += '"datumAnfang" : ' + ((!obj.datumAnfang) ? 'null' : JSON.stringify(obj.datumAnfang)) + ',';

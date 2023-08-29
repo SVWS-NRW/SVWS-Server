@@ -108,9 +108,9 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     		tmp = Integer.compare(a.abschnitt, b.abschnitt);
     		if (tmp != 0)
     			return tmp;
-    		if (a.wechselNr == null)
+    		if (a.wechselNr == 0)
     			return 1;
-    		if (b.wechselNr == null)
+    		if (b.wechselNr == 0)
     			return -1;
     		return Integer.compare(a.wechselNr, b.wechselNr);
     	});

@@ -35,7 +35,7 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaVersion;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
 import de.svws_nrw.db.dto.current.schild.DTOSchildAuswahlFilter;
 import de.svws_nrw.db.dto.current.schild.DTOSchildVerwaltung;
 import de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe;
@@ -278,7 +278,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOGostBlockungZwischenergebnisKursSchueler.class.getSimpleName(), DTOGostBlockungZwischenergebnisKursSchueler.class);
              mapDTOName2DTOClass.put(DTOSchemaAutoInkremente.class.getSimpleName(), DTOSchemaAutoInkremente.class);
              mapDTOName2DTOClass.put(DTOSchemaCoreTypeVersion.class.getSimpleName(), DTOSchemaCoreTypeVersion.class);
-             mapDTOName2DTOClass.put(DTOSchemaVersion.class.getSimpleName(), DTOSchemaVersion.class);
+             mapDTOName2DTOClass.put(DTOSchemaRevision.class.getSimpleName(), DTOSchemaRevision.class);
              mapDTOName2DTOClass.put(DTOSchildAuswahlFilter.class.getSimpleName(), DTOSchildAuswahlFilter.class);
              mapDTOName2DTOClass.put(DTOSchildVerwaltung.class.getSimpleName(), DTOSchildVerwaltung.class);
              mapDTOName2DTOClass.put(DTOSchuelerIndividuelleGruppe.class.getSimpleName(), DTOSchuelerIndividuelleGruppe.class);
@@ -524,7 +524,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Gost_Blockung_Zwischenergebnisse_Kurs_Schueler", DTOGostBlockungZwischenergebnisKursSchueler.class);
              mapTablename2DTOClass.put("Schema_AutoInkremente", DTOSchemaAutoInkremente.class);
              mapTablename2DTOClass.put("Schema_Core_Type_Versionen", DTOSchemaCoreTypeVersion.class);
-             mapTablename2DTOClass.put("Schema_Version", DTOSchemaVersion.class);
+             mapTablename2DTOClass.put("Schema_Revision", DTOSchemaRevision.class);
              mapTablename2DTOClass.put("SchildFilter", DTOSchildAuswahlFilter.class);
              mapTablename2DTOClass.put("Schild_Verwaltung", DTOSchildVerwaltung.class);
              mapTablename2DTOClass.put("SchuelerListe", DTOSchuelerIndividuelleGruppe.class);

@@ -37,12 +37,19 @@ public final class Revision2Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_SchuelerLeistungsdaten
 		);
+        add("Entfernen fehlerhafter Kurs-Einträge in den Leistungsdaten (Kurs mit nicht passenden Fächern)",
+        	"UPDATE SchuelerLeistungsdaten JOIN Kurse ON SchuelerLeistungsdaten.Kurs_ID = Kurse.ID "
+        		+ "SET SchuelerLeistungsdaten.Kurs_ID = NULL "
+        		+ "WHERE SchuelerLeistungsdaten.Fach_ID != Kurse.Fach_ID;",
+        	Schema.tab_SchuelerLeistungsdaten, Schema.tab_Kurse
+        );
 		add("Initialisierung Kurs_Schueler: Befüllen mit Daten",
 			"""
 			INSERT INTO Kurs_Schueler
 			SELECT DISTINCT
 			    Kurse.ID AS Kurs_ID,
-			    Schueler.ID AS Schueler_ID
+			    Schueler.ID AS Schueler_ID,
+			    SchuelerLernabschnittsdaten.WechselNr AS LernabschnittWechselNr
 			FROM
 			    Kurse JOIN SchuelerLeistungsdaten ON Kurse.ID = SchuelerLeistungsdaten.Kurs_ID
 			        JOIN SchuelerLernabschnittsdaten ON SchuelerLeistungsdaten.Abschnitt_ID = SchuelerLernabschnittsdaten.ID
