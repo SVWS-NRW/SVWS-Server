@@ -61,7 +61,7 @@ task replacePlaceholder(type: Copy, dependsOn: linuxZipBuild) {
 	filter { String line -> line.replaceAll(placeholder_name, filename) }
 
 	def placeholder_dl = 'BASE_DOWNLOAD_URL'
-	def baseUrl = "https://www.svws.nrw.de/uploads/media/linux/"+project.ext.svwsArtifactVersion
+	def baseUrl = "https://github.com/SVWS-NRW/SVWS-Server/releases/download/v"+project.ext.svwsArtifactVersion
 	filter { String line -> line.replaceAll(placeholder_dl, baseUrl) }
 
 	into "$buildDir/distributions"
