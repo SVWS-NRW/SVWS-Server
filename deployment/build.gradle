@@ -6,6 +6,8 @@ plugins {
 def svwsArtifactVersion = project.ext.latestRelease
 def appArtifactsDir ="$projectDir/../download/svws"
 
+def githubToken = project.hasProperty('github_token') ? project.property('github_token') : "xxx"
+
 subprojects {
 	project.ext.appArtifactsDir = appArtifactsDir
 	project.ext.svwsArtifactVersion = svwsArtifactVersion
@@ -16,7 +18,7 @@ clean.doLast {
 }
 
 githubRelease {
-	token project.ext.github_token
+	token githubToken
 	owner "SVWS-NRW"
 	repo "SVWS-Server"
 	tagName "v${project.version}"
