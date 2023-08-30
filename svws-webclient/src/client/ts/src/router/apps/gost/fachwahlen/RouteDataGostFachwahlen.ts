@@ -1,8 +1,8 @@
 import { shallowRef } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
-import { ArrayList } from "@core";
-import type { GostHalbjahr, GostStatistikFachwahl, List } from "@core";
+import type { GostHalbjahr, GostStatistikFachwahl, List, SchuelerListeEintrag } from "@core";
+import { ArrayList, SchuelerStatus, GostJahrgangsFachwahlenManager, GostJahrgangFachwahlen } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,14 +17,18 @@ import { routeGostFachwahlenZusatzkurse } from "./RouteGostFachwahlenZusatzkurse
 
 interface RouteStateDataGostFachwahlen {
 	abiturjahr: number;
-	fachwahlen: List<GostStatistikFachwahl>;
+	fachwahlstatistik: List<GostStatistikFachwahl>;
+	fachwahlenManager: GostJahrgangsFachwahlenManager;
+	mapSchueler: Map<number, SchuelerListeEintrag>;
 }
 
 export class RouteDataGostFachwahlen  {
 
 	private static _defaultState: RouteStateDataGostFachwahlen = {
 		abiturjahr: -1,
-		fachwahlen: new ArrayList<GostStatistikFachwahl>(),
+		fachwahlstatistik: new ArrayList<GostStatistikFachwahl>(),
+		fachwahlenManager: new GostJahrgangsFachwahlenManager(new GostJahrgangFachwahlen()),
+		mapSchueler: new Map<number, SchuelerListeEintrag>(),
 	}
 
 	private _state = shallowRef(RouteDataGostFachwahlen._defaultState);
@@ -47,8 +51,16 @@ export class RouteDataGostFachwahlen  {
 		return this._state.value.abiturjahr;
 	}
 
-	public get fachwahlen(): List<GostStatistikFachwahl> {
-		return this._state.value.fachwahlen;
+	public get fachwahlstatistik(): List<GostStatistikFachwahl> {
+		return this._state.value.fachwahlstatistik;
+	}
+
+	public get fachwahlenManager(): GostJahrgangsFachwahlenManager {
+		return this._state.value.fachwahlenManager;
+	}
+
+	public get mapSchueler(): Map<number, SchuelerListeEintrag> {
+		return this._state.value.mapSchueler;
 	}
 
 	public async setEintrag(abiturjahr: number) {
@@ -56,8 +68,17 @@ export class RouteDataGostFachwahlen  {
 			this.setPatchedDefaultState({ abiturjahr });
 			return;
 		}
-		const fachwahlen = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
-		this.setPatchedDefaultState({ abiturjahr, fachwahlen });
+		const fachwahlstatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
+		const fachwahlen = await api.server.getGostAbiturjahrgangFachwahlen(api.schema, abiturjahr);
+		const fachwahlenManager = new GostJahrgangsFachwahlenManager(fachwahlen);
+		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
+		const mapSchueler = new Map<number, SchuelerListeEintrag>();
+		for (const s of listSchueler) {
+			const status = SchuelerStatus.fromID(s.status);
+			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
+				mapSchueler.set(s.id, s);
+		}
+		this.setPatchedDefaultState({ abiturjahr, fachwahlstatistik, fachwahlenManager, mapSchueler });
 	}
 
 	doSelect = async (idFach: number | undefined, bereich: string | undefined, halbjahr?: GostHalbjahr) : Promise<void> => {

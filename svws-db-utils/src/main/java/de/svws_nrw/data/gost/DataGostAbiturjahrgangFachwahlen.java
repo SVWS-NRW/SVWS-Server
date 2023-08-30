@@ -186,6 +186,8 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 
 
 	private static GostFachwahl getSchuelerFachwahl(final DTOSchueler schueler, final DTOGostSchuelerFachbelegungen fachbelegung, final DTOFach fach, final GostHalbjahr halbjahr) {
+		if ((halbjahr == null) && (fachbelegung.AbiturFach == null))
+			return null;
 		String strKursart = fachbelegung.Q22_Kursart;
 		if (halbjahr != null) {
 			strKursart = switch (halbjahr.id) {

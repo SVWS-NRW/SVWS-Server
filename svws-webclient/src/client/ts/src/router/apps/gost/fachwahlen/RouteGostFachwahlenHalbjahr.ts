@@ -46,7 +46,7 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenHalbjahrProps {
 		return {
-			fachwahlen: routeGostFachwahlen.data.fachwahlen,
+			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
 		};
 	}
 
