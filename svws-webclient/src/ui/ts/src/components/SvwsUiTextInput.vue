@@ -25,7 +25,7 @@
 		span?: 'full' | '2';
 	}>(), {
 		type: "text",
-		modelValue: "",
+		modelValue: null,
 		placeholder: "",
 		statistics: false,
 		valid: ()=>true,
@@ -41,7 +41,8 @@
 	});
 
 	const emit = defineEmits<{
-		"update:modelValue": [value: string | number];
+		"update:modelValue": [value: string];
+		"blur": [value: string];
 	}>();
 
 	const slots = useSlots();
@@ -74,10 +75,16 @@
 
 	const hasIcon = computed(() => !!slots.default);
 
-	function onBlur(event: Event) {
+	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
 		if (value !== props.modelValue)
 			emit("update:modelValue", value);
+	}
+
+	function onBlur(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (value !== props.modelValue)
+			emit("blur", value);
 	}
 
 	const isValid = ref<boolean>(true);
@@ -92,7 +99,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input--filled': `${modelValue}`.length > 0 && `${modelValue}` !== 'null',
+			'text-input--filled': `${modelValue}`.length > 0 && modelValue !== null,
 			'text-input--invalid': (isValid === false) || (emailValid === false) || (maxLenValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
@@ -120,6 +127,7 @@
 			:readonly="readonly"
 			:aria-labelledby="labelId"
 			:placeholder="headless || type === 'search' ? placeholder : ''"
+			@input="onInput"
 			@blur="onBlur">
 		<span v-if="placeholder && !headless && type !== 'search'"
 			:id="labelId"

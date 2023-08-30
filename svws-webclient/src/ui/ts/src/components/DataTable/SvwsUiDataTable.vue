@@ -1141,15 +1141,11 @@
 
 	&__filter {
 		@apply flex justify-between flex-wrap;
-		@apply pb-2 gap-2 mb-1 -mb-px;
+		@apply pb-2 gap-2 mb-1;
 		transition: box-shadow 0.15s ease-out;
 
 		.app--sidebar & {
 			@apply px-7 4xl:px-8;
-		}
-
-		&-open {
-			/*box-shadow: inset 0 4px 6px 2px theme("colors.light");*/
 		}
 
 		&-simple {
