@@ -23,8 +23,6 @@ export { default as SvwsUiTooltip } from "./SvwsUiTooltip.vue";
 export { default as SvwsUiRouterTabBar } from "./App/SvwsUiRouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./App/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./App/SvwsUiRouterVerticalTabBar.vue";
-export { default as SvwsUiDragData } from "./SvwsUiDragData.vue";
-export { default as SvwsUiDropData } from "./SvwsUiDropData.vue";
 export { default as SvwsUiDataTable } from "./DataTable/SvwsUiDataTable.vue";
 export { default as SvwsUiDataTableRow } from "./DataTable/SvwsUiTableRow.vue";
 export { default as SvwsUiDataTableCell } from "./DataTable/SvwsUiTableCell.vue";
@@ -33,6 +31,7 @@ export { default as SvwsUiSubNav } from "./App/SvwsUiSubNav.vue";
 export { default as SvwsUiInputWrapper } from "./SvwsUiInputWrapper.vue";
 export { default as SvwsUiSpacing } from "./SvwsUiSpacing.vue";
 export { default as SvwsUiDashboardTile } from "./SvwsUiDashboardTile.vue";
+// DEPRECATED
 export { default as SvwsUiIcon } from "./Deprecated/SvwsUiIcon.vue";
 export { default as SvwsUiDropdown } from "./Deprecated/SvwsUiDropdown.vue";
 export { default as SvwsUiDropdownItem } from "./Deprecated/SvwsUiDropdownItem.vue";
@@ -41,3 +40,5 @@ export { default as SvwsUiSelectInput } from "./Deprecated/SvwsUiSelectInput.vue
 export { default as SvwsUiTabBar } from "./Deprecated/SvwsUiTabBar.vue";
 export { default as SvwsUiTabButton } from "./Deprecated/SvwsUiTabButton.vue";
 export { default as SvwsUiTabPanel } from "./Deprecated/SvwsUiTabPanel.vue";
+export { default as SvwsUiDragData } from "./Deprecated/SvwsUiDragData.vue";
+export { default as SvwsUiDropData } from "./Deprecated/SvwsUiDropData.vue";

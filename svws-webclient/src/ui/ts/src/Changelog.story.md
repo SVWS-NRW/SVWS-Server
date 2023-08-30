@@ -10,6 +10,9 @@ icon: 'carbon:bookmark'
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
 
+## ab 0.7
+* DataTable ist nun auf generics umgestellt, die Items bestimmen den Typ.
+
 ## ab 0.6.18: 
 
 * TextInput: Fix, wenn `type="number"` ist, dann wird beim Klicken der rauf/runter-Pfeile kein `emit` ausgelöst, weil `document.ativeElement` nicht das Input-Feld ist. Es muss erst durch ein `focus()` gesetzt werden.

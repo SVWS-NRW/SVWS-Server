@@ -483,9 +483,6 @@
 			selectAllRows()
 	}
 
-
-
-
 	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));
 	function isRowClicked(row: DataTableRow) {
 		return row.source === clickedItemRaw.value;
@@ -528,7 +525,6 @@
 			else if(!isInView(clickedElementHtml)) clickedElementHtml.scrollIntoView(scrollOptions);
 		}
 	}
-
 
 	const showNoDataHtml = computed(() => (sortedRows.value.length === 0));
 

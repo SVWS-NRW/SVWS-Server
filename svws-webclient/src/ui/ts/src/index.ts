@@ -27,8 +27,6 @@ export {
 	SvwsUiRouterTabBar,
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
-	SvwsUiDragData, // deprecated
-	SvwsUiDropData, // deprecated
 	SvwsUiDataTable,
 	SvwsUiDataTableRow,
 	SvwsUiDataTableCell,
@@ -37,14 +35,17 @@ export {
 	SvwsUiInputWrapper,
 	SvwsUiSpacing,
 	SvwsUiDashboardTile,
-	SvwsUiIcon, // deprecated
-	SvwsUiDropdown, // deprecated
-	SvwsUiDropdownItem, // deprecated
-	SvwsUiDropdownWithAction, // deprecated
-	SvwsUiSelectInput, // deprecated
-	SvwsUiTabBar, // deprecated
-	SvwsUiTabButton, // deprecated
-	SvwsUiTabPanel // deprecated
+	// deprecated
+	SvwsUiIcon,
+	SvwsUiDropdown,
+	SvwsUiDropdownItem,
+	SvwsUiDropdownWithAction,
+	SvwsUiSelectInput,
+	SvwsUiTabBar,
+	SvwsUiTabButton,
+	SvwsUiTabPanel,
+	SvwsUiDragData,
+	SvwsUiDropData,
 } from './components'
 
 export type { DataTableColumn } from "./types";
