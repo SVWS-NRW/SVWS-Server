@@ -51,8 +51,8 @@
 
 	import { computed, ref, type ComputedRef } from "vue";
 	import { GostHalbjahr, ZulaessigesFach, type GostStatistikFachwahl } from "@core";
-	import { type DataTableColumn } from "@ui";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<GostFachwahlenProps>();
 
@@ -167,7 +167,7 @@
 		{ text: "Abiturfach", cols: [ { text : "3", center: true }, { text : "4", center: true } ] },
 	]
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "Kuerzel", label: "Kürzel", minWidth: 4 },
 		{ key: "Fach", label: "Fach", span: 3, minWidth: 12},
 		{ key: "GK", label: "GK", align: 'center', fixedWidth: 3 },

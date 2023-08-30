@@ -6,11 +6,10 @@
 
 <script setup lang="ts">
 
+	import type { KlassenDaten, LehrerListeEintrag} from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { KlassenDaten, LehrerListeEintrag} from "@core";
 	import { PersonalTyp } from "@core";
-	import type { DataTableColumn } from "@ui";
 
 	type Lehrer = {
 		kuerzel?: string;
@@ -40,7 +39,7 @@
 		});
 	});
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
 		{ key: "nachname", label: "Nachname", span: 2, sortable: false },
 		{ key: "vorname", label: "Vorname", span: 2, sortable: false },

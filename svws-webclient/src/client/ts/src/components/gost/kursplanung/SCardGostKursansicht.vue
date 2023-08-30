@@ -155,16 +155,16 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref } from "vue";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager,
 		GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostJahrgangsdaten,
 		GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import { type SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { Config } from "~/components/Config";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { DataTableColumn } from "@ui";
-	import { type SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import { computed, onMounted, ref } from "vue";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten;
@@ -197,7 +197,6 @@
 		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	}>();
 
-
 	const edit_schienenname: Ref<number|undefined> = ref()
 
 	const sort_by: WritableComputedRef<string> = computed({
@@ -228,9 +227,8 @@
 
 	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
 
-
-	function calculateColumns(): DataTableColumn[] {
-		const cols: Array<DataTableColumn> = [];
+	function calculateColumns() {
+		const cols: DataTableColumn[] = [];
 
 		if (allow_regeln.value) {
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
@@ -249,7 +247,7 @@
 		return cols;
 	}
 
-	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
+	const cols = computed(() => calculateColumns());
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;

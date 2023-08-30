@@ -20,12 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { FoerderschwerpunkteAuswahlProps } from "./SFoerderschwerpunkteAuswahlProps";
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	];

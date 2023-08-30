@@ -138,11 +138,11 @@
 <script setup lang="ts">
 
 	import type { GostKursart, GostBlockungsergebnisKurs, GostFachwahl, List } from "@core";
-	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
-	import type { ComputedRef, Ref} from "vue";
-	import { computed, ref } from "vue";
 	import type { GostUmwahlansichtProps } from "./SCardGostUmwahlansichtProps";
-	import type {DataTableColumn} from "@ui";
+	import type { ComputedRef, Ref} from "vue";
+	import type { DataTableColumn } from "@ui";
+	import { ArrayList, ZulaessigesFach, GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
+	import { computed, ref } from "vue";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
@@ -176,14 +176,14 @@
 		return props.getErgebnismanager().getOfSchieneMaxKursanzahl();
 	});
 
-	function calculateColumns(): DataTableColumn[] {
-		const cols: Array<DataTableColumn> = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1 }];
+	function calculateColumns() {
+		const cols: DataTableColumn[] = [{ key: "schiene", label: "Schiene", minWidth: 9, span: 0.1, align: 'left' }];
 		for (let i = 0; i < maxKurseInSchienen?.value; i++)
-			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6 });
+			cols.push({ key: "kurs_" + (i+1), label: "Kurs " + (i+1), align: 'center', minWidth: 6, span: 1 });
 		return cols;
 	}
 
-	const cols: ComputedRef<DataTableColumn[]> = computed(() => calculateColumns());
+	const cols = computed(() => calculateColumns());
 
 	const hatSchieneKollisionen = (idSchiene: number, idSchueler: number) : ComputedRef<boolean> => computed(() =>
 		props.getErgebnismanager().getOfSchuelerOfSchieneHatKollision(idSchueler, idSchiene)

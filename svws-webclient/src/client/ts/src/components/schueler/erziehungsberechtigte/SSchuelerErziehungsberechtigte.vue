@@ -54,15 +54,15 @@
 </template>
 
 <script setup lang="ts">
-	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	import type { DataTableColumn } from "@ui";
+	import type { SchuelerErziehungsberechtigteProps } from "./SSchuelerErziehungsberechtigteProps";
 	import { ref } from "vue";
 
 	const props = defineProps<SchuelerErziehungsberechtigteProps>();
 
 	const clickedErzieher = ref<number | undefined>(undefined);
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "erzieherart", label: "Art", span: 0.5},
 		{ key: "name", label: "Name"},
 		{ key: "email", label: "E-Mail"},

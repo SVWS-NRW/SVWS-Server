@@ -27,8 +27,8 @@ export {
 	SvwsUiRouterTabBar,
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
-	SvwsUiDragData,
-	SvwsUiDropData,
+	SvwsUiDragData, // deprecated
+	SvwsUiDropData, // deprecated
 	SvwsUiDataTable,
 	SvwsUiDataTableRow,
 	SvwsUiDataTableCell,
@@ -47,4 +47,4 @@ export {
 	SvwsUiTabPanel // deprecated
 } from './components'
 
-export type { DataTableColumn, DataTableItem } from './components/DataTable/types'
+export type { DataTableColumn } from "./types";

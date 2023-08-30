@@ -22,8 +22,8 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import { type JahrgangsListeEintrag, type List, type Stundenplan, type StundenplanManager } from "@core";
+	import type { DataTableColumn } from "@ui";
 	import { computed } from "vue";
 
 	const props = defineProps<{

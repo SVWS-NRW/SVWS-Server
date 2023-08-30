@@ -70,7 +70,6 @@
 	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@core";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
-	import type { DataTableColumn } from "@ui";
 	import { computed, ref, watch } from "vue";
 	import { SchuelerStatus } from "@core";
 
@@ -79,7 +78,7 @@
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },

@@ -65,10 +65,10 @@
 <script setup lang="ts">
 
 	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@core";
-	import type {DataTableColumn} from "@ui";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@core";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
@@ -102,7 +102,7 @@
 		void props.addFachkombination(props.typ);
 	}
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "Fach", label: "Fach", span: 1 },
 		{ key: "Kursart", label: "Kursart", span: 1},
 		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 2.5 },

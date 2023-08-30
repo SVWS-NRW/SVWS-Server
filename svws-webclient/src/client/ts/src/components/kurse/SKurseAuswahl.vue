@@ -23,10 +23,9 @@
 <script setup lang="ts">
 
 	import type { ArrayList } from "@core";
-	import type { DataTableColumn } from "@ui";
 	import type { Ref} from "vue";
-	import { ref, computed } from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
+	import { ref, computed } from "vue";
 
 	const props = defineProps<KurseAuswahlProps>();
 
@@ -41,7 +40,7 @@
 		return res;
 	})
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
 		{ key: "idJahrgaenge", label: "Jahrgang", sortable: true, span: 0.5 },

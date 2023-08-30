@@ -20,12 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { JahrgaengeAuswahlProps } from "./SJahrgaengeAuswahlProps";
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];

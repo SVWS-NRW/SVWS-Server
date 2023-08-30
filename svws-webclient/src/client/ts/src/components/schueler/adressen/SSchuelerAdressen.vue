@@ -35,12 +35,12 @@
 </template>
 
 <script setup lang="ts">
+	import type { DataTableColumn } from "@ui";
 	import type { SchuelerAdressenProps } from "./SSChuelerAdressenProps";
-	import type {DataTableColumn} from "@ui";
 
 	defineProps<SchuelerAdressenProps>();
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "Betrieb", label: "Betrieb"},
 		{ key: "Ausbilder", label: "Ausbilder"},
 		{ key: "Beschäftigungsart", label: "Beschäftigungsart"},

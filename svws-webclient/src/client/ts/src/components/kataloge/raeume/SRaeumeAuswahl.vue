@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { RaeumeAuswahlProps } from "./SRaeumeAuswahlProps";
 	import type { Raum } from "@core";
 	import { ref } from "vue";
@@ -40,7 +39,7 @@
 	const props = defineProps<RaeumeAuswahlProps>();
 	const selected = ref<Raum[]>([]);
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "beschreibung", label: "Beschreibung", sortable: true },
 		{ key: "groesse", label: "Größe", sortable: true },

@@ -96,10 +96,9 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
-	import type { DataTableItem } from "@ui";
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import { ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -141,19 +140,19 @@
 		await props.ergebnisZuNeueBlockung(props.auswahlErgebnis.id);
 	}
 
-	function color1(ergebnis: DataTableItem): string {
+	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color2(ergebnis: DataTableItem): string {
+	function color2(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color3(ergebnis: DataTableItem): string {
+	function color3(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function color4(ergebnis: DataTableItem): string {
+	function color4(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		return `hsl(${Math.round((1 - (props.getDatenmanager().ergebnisGetBewertung4Intervall(ergebnis.id)||0)) * 120)},100%,75%)`
 	}
-	function colorMix(ergebnis: DataTableItem): string {
+	function colorMix(ergebnis: GostBlockungsergebnisListeneintrag): string {
 		const combined = (props.getDatenmanager().ergebnisGetBewertung1Intervall(ergebnis.id))
 			+ (props.getDatenmanager().ergebnisGetBewertung2Intervall(ergebnis.id))
 			+ (props.getDatenmanager().ergebnisGetBewertung3Intervall(ergebnis.id))

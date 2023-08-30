@@ -20,12 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { FaecherAuswahlProps } from "./SFaecherAuswahlProps";
 
 	const props = defineProps<FaecherAuswahlProps>();
 
-	const cols: DataTableColumn[]= [
+	const cols= [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];

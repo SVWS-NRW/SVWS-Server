@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
+	<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="cols"
 		:items="GostHalbjahr.values()" />
 	<div class="">
 		<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable />
@@ -16,12 +16,11 @@
 <script setup lang="ts">
 
 	import { GostHalbjahr } from "@core";
-	import type { DataTableColumn } from '@ui';
 	import type { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "text", label: "Ansicht", sortable: false },
 	];
 

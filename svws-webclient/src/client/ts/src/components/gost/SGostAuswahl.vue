@@ -40,14 +40,13 @@
 <script setup lang="ts">
 
 	import type { GostJahrgang } from "@core";
-	import type { DataTableColumn } from "@ui";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
 
 	const props = defineProps<GostAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "bezeichnung", label: "Abiturjahrgang", sortable: true, span: 2 },
 		{ key: "abiturjahr", label: "Jahr", sortable: true },
 		{ key: "jahrgang", label: "Stufe", sortable: true }];

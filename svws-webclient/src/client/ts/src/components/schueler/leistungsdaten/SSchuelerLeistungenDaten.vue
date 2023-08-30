@@ -8,7 +8,7 @@
 				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell(note)="{rowData}">
-				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
+				<s-schueler-leistung-note :data="props.data!" :note="rowData.note ?? ''" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
@@ -16,15 +16,13 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
+	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
-	import {ZulaessigesFach} from "@core";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: true, minWidth: 14 },
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true, minWidth: 20 },
 		{ key: "note", label: "Note", span: 0.25, sortable: true },

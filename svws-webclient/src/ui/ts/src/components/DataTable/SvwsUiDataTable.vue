@@ -97,7 +97,7 @@
 					<div v-if="rowActions"
 						class="data-table__th data-table__thead__th text-black/25 data-table__th__row-actions"
 						role="none" title="Aktionen">
-						<i-ri-edit-2-line />
+						<i-ri-edit2-line />
 					</div>
 				</div>
 			</slot>
@@ -187,12 +187,53 @@
 	});
 </script>
 
-<script lang="ts" setup>
-	import type { DataTableCell, DataTableColumnInternal, DataTableColumnSource, DataTableItem, DataTableRow, DataTableSortingOrder, UseColumnProps } from "./types";
+<script lang="ts" setup generic="DataTableItem extends Record<string, any>">
+
+	import type { DataTableColumn, InputType } from "../../types";
 	import type { TableHTMLAttributes } from "vue";
 	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
-	import { DataTableSortingOptions } from "./types";
 	import { useDebounceFn } from "@vueuse/core";
+
+	type DataTableSortingOrder = 'asc' | 'desc' | null
+	const DataTableSortingOptions = ['asc', 'desc', null] as const
+
+	type DataTableColumnSource = DataTableColumn | string
+
+	type DataTableColumnInternal = {
+		[key: string]: unknown
+		source: DataTableColumnSource
+		initialIndex: number
+		key: string
+		name: string
+		label: string
+		sortable: boolean
+		span: number
+		fixedWidth: string | number
+		minWidth: string | number
+		align: 'left' | 'center' | 'right'
+		tooltip: string
+		disabled: boolean
+		type: InputType
+	}
+
+	type DataTableCell = {
+		rowIndex: number
+		rowData: DataTableItem
+		column: DataTableColumnInternal
+		value: any
+	}
+
+	type DataTableRow = {
+		initialIndex: number
+		source: DataTableItem
+		cells: DataTableCell[]
+		isEditing?: boolean
+	}
+
+	type UseColumnProps = {
+		columns: DataTableColumnSource[];
+		items: Iterable<DataTableItem>;
+	}
 
 	const props = withDefaults(
 		defineProps<{
@@ -327,7 +368,7 @@
 
 	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) => {
 		return { initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
-			return { rowIndex: index, rowData: toRaw(source), column, value: source?.[column.key] as string ?? '' } as DataTableCell;
+			return { rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' };
 		})}
 	}));
 
@@ -400,7 +441,6 @@
 	}
 
 	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))
-	const noRowsSelected = computed(() => (!sortedRows.value.some(isRowSelected)))
 	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.every(isRowSelected));
 	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
 

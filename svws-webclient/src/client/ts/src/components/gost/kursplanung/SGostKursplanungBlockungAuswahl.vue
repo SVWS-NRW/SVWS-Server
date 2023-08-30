@@ -48,10 +48,9 @@
 
 <script setup lang="ts">
 
-	import { ArrayList, BlockungsUtils, type GostBlockungListeneintrag, type GostBlockungsdaten, type GostBlockungsdatenManager, type GostBlockungsergebnisListeneintrag, type GostHalbjahr, type GostJahrgangsdaten, type List } from "@core";
-	import type { DataTableItem } from "@ui";
 	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
+	import { ArrayList, BlockungsUtils, type GostBlockungListeneintrag, type GostBlockungsdaten, type GostBlockungsdatenManager, type GostBlockungsergebnisListeneintrag, type GostHalbjahr, type GostJahrgangsdaten, type List } from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -97,10 +96,10 @@
 		return list;
 	})
 
-	async function select_blockungauswahl(blockung: DataTableItem | null) {
+	async function select_blockungauswahl(blockung: GostBlockungListeneintrag | null) {
 		if ((blockung === null) || props.apiStatus.pending)
 			return;
-		await props.setAuswahlBlockung(blockung as unknown as GostBlockungListeneintrag);
+		await props.setAuswahlBlockung(blockung);
 	}
 
 	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));

@@ -26,12 +26,13 @@
 
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
 	import type { StundenplanListeEintrag } from "@core";
+	import type { DataTableColumn } from "@ui";
 	import { ref } from "vue";
 
 	const props = defineProps<StundenplanAuswahlProps>();
 	const selected = ref<StundenplanListeEintrag[]>([]);
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
 		{ key: "gueltigAb", label: "von", span: 1, sortable: false, defaultSort: 'asc', type: 'date' },
 		{ key: "gueltigBis", label: "bis", span: 1, sortable: false, type: 'date' }

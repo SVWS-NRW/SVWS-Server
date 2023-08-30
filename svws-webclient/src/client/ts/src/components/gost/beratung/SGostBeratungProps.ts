@@ -1,4 +1,4 @@
-import type { AbiturdatenManager, GostBelegpruefungErgebnis, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag, Sprachbelegung } from "@core";
+import type { AbiturdatenManager, GostBelegpruefungErgebnis, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag } from "@core";
 
 export interface GostBeratungProps {
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;

@@ -68,11 +68,10 @@
 
 <script setup lang="ts">
 
+	import type { GostFach, GostFaecherManager, List } from "@core";
+	import type { DataTableColumn } from "@ui";
 	import type { ComputedRef } from "vue";
 	import {computed } from "vue";
-
-	import type { GostFach, GostFaecherManager, List } from "@core";
-	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
@@ -84,7 +83,7 @@
 		return props.faecherManager().faecher();
 	});
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
 		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
 		{ key: "Neu", label: "Neu", align: 'center', span: 0.1, minWidth: 2.5 },

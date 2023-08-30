@@ -184,11 +184,11 @@ export class RouteDataGost {
 		return this._state.value.mapJahrgaengeOhneAbiJahrgang;
 	}
 
-	patchJahrgangsdaten = (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
+	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		if (this.jahrgangsdaten === undefined)
 			return false;
-		void api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
-		void this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
+		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
+		this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
 		return true;
 	}
 

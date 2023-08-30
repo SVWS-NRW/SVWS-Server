@@ -9,7 +9,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered"
-				:columns="cols" clickable :footer="true" scroll-into-view selectable :model-value="selected"
+				:columns="cols" clickable scroll-into-view selectable :model-value="selected"
 				@update:model-value="selected=$event" :count="selected.length > 0">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Betrieb" />
@@ -32,17 +32,17 @@
 
 
 <script setup lang="ts">
-	import type { DataTableColumn } from "@ui";
+
 	import type { ComputedRef, Ref} from "vue";
-	import { computed, ref} from "vue";
 	import type { BetriebListeEintrag } from "@core";
 	import type { BetriebeAuswahlProps } from "./SBetriebeAuswahlProps";
+	import { computed, ref} from "vue";
 
 	const props = defineProps<BetriebeAuswahlProps>();
 	const search: Ref<string> = ref("");
 	const selected = ref<BetriebListeEintrag[]>([]);
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "id", label: "ID", sortable: true},
 		{ key: "name1", label: "Name", sortable: true, span: 2 },
 	]

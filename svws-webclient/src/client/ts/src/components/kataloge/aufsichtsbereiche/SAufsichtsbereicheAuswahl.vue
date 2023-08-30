@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { AufsichtsbereicheAuswahlProps } from "./SAufsichtsbereicheAuswahlProps";
 	import type { Aufsichtsbereich } from "@core";
 	import { ref } from "vue";
@@ -40,7 +39,7 @@
 	const props = defineProps<AufsichtsbereicheAuswahlProps>();
 	const selected = ref<Aufsichtsbereich[]>([]);
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc', span: 0.5 },
 		{ key: "beschreibung", label: "Beschreibung", sortable: true },
 	];

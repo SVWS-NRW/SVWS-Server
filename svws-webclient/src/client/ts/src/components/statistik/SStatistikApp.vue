@@ -166,10 +166,10 @@
 </template>
 
 <script setup lang="ts">
-	import type { ComputedRef, WritableComputedRef } from "vue";
+	import type { ComputedRef } from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
+	import type { DataTableColumn } from "@ui";
 	import {computed, h, ref} from "vue";
-	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<StatistikAppProps>();
 

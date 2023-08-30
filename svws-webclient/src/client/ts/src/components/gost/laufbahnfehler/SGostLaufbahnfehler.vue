@@ -48,16 +48,19 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef, WritableComputedRef} from 'vue';
-	import { computed, ref, toRaw, onMounted } from 'vue';
 	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
-	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
+	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
+	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
+	import { computed, ref, toRaw, onMounted } from 'vue';
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 
-	const cols: DataTableColumn[] = [{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true}, {key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}];
+	const cols: DataTableColumn[] = [
+		{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true},
+		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}
+	];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if ((!filterFehler.value) && (!filterExterne.value))

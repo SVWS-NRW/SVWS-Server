@@ -27,15 +27,14 @@
 <script setup lang="ts">
 
 	import type { LehrerListeEintrag} from "@core";
-	import { PersonalTyp } from "@core";
-	import type { DataTableColumn } from "@ui";
+	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
-	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+	import { PersonalTyp } from "@core";
 
 	const props = defineProps<LehrerAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 }

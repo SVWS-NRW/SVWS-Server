@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card :title="Wochentag.fromIDorException(item.id)">
+	<svws-ui-content-card :title="Wochentag.fromIDorException(item.id).beschreibung">
 		<div class="flex flex-wrap gap-1">
 			<svws-ui-button v-for="s of fehlendeZeitraster" :key="s" type="secondary" @click="addZeitraster(item, s)"> {{ s }}. Stunde einfügen </svws-ui-button>
 			<svws-ui-button v-if="!fehlendeZeitraster.includes(neueStunde)" type="secondary" @click="addZeitraster(item, neueStunde)"> {{ neueStunde }}. Stunde hinzufügen </svws-ui-button>

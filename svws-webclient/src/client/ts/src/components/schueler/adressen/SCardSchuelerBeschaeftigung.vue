@@ -38,7 +38,7 @@
 
 	const clickedBetrieb = ref<number | undefined>(undefined);
 
-	const cols: Array<DataTableColumn> = [
+	const cols: DataTableColumn[] = [
 		{ key: "Betrieb", label: "Betrieb"},
 		{ key: "Ausbilder", label: "Ausbilder"},
 		{ key: "Beschäftigungsart", label: "Beschäftigungsart"},

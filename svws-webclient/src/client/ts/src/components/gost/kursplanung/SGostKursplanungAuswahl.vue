@@ -1,7 +1,7 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
-			<template #cell(kuerzel)="{ rowData: row }: {rowData: DataTableItem}">
+			<template #cell(kuerzel)="{ rowData: row }">
 				<div class="flex justify-between w-full">
 					{{ row.kuerzel }}
 					<div v-if="row === halbjahr" class="inline-flex gap-1 -my-0.5">
@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-	import type { DataTableItem } from "@ui";
 	import type { ComputedRef } from 'vue';
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 	import { computed } from 'vue';
@@ -30,20 +29,20 @@
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
-	const allow_add_blockung = (row: DataTableItem): boolean => {
+	const allow_add_blockung = (row: GostHalbjahr): boolean => {
 		if (props.jahrgangsdaten === undefined)
 			return false;
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
 	}
 
-	const allow_restore_blockung = (row: DataTableItem): boolean => {
+	const allow_restore_blockung = (row: GostHalbjahr): boolean => {
 		const jahrgang = props.jahrgangsdaten?.jahrgang;
 		if (!jahrgang)
 			return false;
 		return (props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ? true : false;
 	}
 
-	async function select_hj(halbjahr: DataTableItem | null) {
+	async function select_hj(halbjahr: GostHalbjahr | null) {
 		if (halbjahr !== null)
 			await props.setHalbjahr(halbjahr as unknown as GostHalbjahr);
 	}

@@ -5,3 +5,18 @@ export type DropdownType = Exclude<Type, 'success' | 'highlight' | 'light'> | 'i
 export type InputType = "text" | "number" | "date" | "email" | "search" | "tel" | "password";
 export type Placement = "auto" | "auto-start" | "auto-end" | "top" | "top-start" | "top-end" | "bottom" | "bottom-start" | "bottom-end" | "right" | "right-start" | "right-end" | "left" | "left-start" | "left-end";
 export type AuswahlChildData = { name: string; text: string; image?: string; }
+
+export type DataTableColumn = {
+	[key: string]: unknown
+	key: string
+	name?: string
+	label?: string
+	sortable?: boolean
+	span?: number
+	fixedWidth?: string | number
+	minWidth?: string | number
+	align?: 'left' | 'center' | 'right'
+	tooltip?: string
+	disabled?: boolean
+	type?: InputType
+}

@@ -28,12 +28,11 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
 
 	const props = defineProps<ReligionenAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "text", label: "Bezeichnung", sortable: true, span: 2 }
 	];

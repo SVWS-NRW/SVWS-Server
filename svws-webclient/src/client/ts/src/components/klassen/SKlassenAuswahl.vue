@@ -25,7 +25,6 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@ui";
 	import type { ComputedRef } from "vue";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import type {LehrerListeEintrag} from "@core";
@@ -33,7 +32,7 @@
 
 	const props = defineProps<KlassenAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
 		{ key: "schueler", label: "Schüler", span: 0.5 },
 		{ key: "klassenLehrer", label: "Klassenleitung", sortable: true }
