@@ -554,6 +554,20 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer] ohne den potentiellen Suffix, beispielsweise D-GK1.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return den Namen des Kurses der Form [Fach]-[Kursart][Kursnummer] ohne den potentiellen Suffix, beispielsweise D-GK1.
+	 * @throws DeveloperNotificationException Falls der Kurs nicht in der Blockung existiert.
+	 */
+	public @NotNull String kursGetNameOhneSuffix(final long idKurs) throws DeveloperNotificationException {
+		final @NotNull GostBlockungKurs kurs = kursGet(idKurs);
+		final @NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer;
+	}
+
+	/**
 	 * Liefert das {@link GostBlockungKurs}-Objekt mit der übergebenen ID.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses
