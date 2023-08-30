@@ -54,6 +54,8 @@ publish:
         - ./deployment/setupVersion.sh
         - ./gradlew signJar publishReleaseAllAndCloseSonatype
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - ./gradlew :deployment:githubRelease
     when: on_success
 
 integration-tests:
