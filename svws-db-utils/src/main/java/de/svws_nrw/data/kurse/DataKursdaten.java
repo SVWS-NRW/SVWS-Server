@@ -48,7 +48,7 @@ public final class DataKursdaten extends DataManager<Long> {
 					daten.idJahrgaenge.add(Long.parseLong(jahrgang));
 		daten.idFach = kurs.Fach_ID;
 		daten.lehrer = kurs.Lehrer_ID;
-		daten.sortierung = kurs.Sortierung;
+		daten.sortierung = kurs.Sortierung == null ? 32000 : kurs.Sortierung;
 		daten.istSichtbar = kurs.Sichtbar;
 		return daten;
 	};
