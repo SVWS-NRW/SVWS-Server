@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
+import { GostJahrgangFachwahlenHalbjahr, cast_de_svws_nrw_core_data_gost_GostJahrgangFachwahlenHalbjahr } from '../../../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { List } from '../../../java/util/List';
-import { cast_java_util_List } from '../../../java/util/List';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashSet } from '../../../java/util/HashSet';
@@ -42,18 +42,18 @@ export class GostFachwahlManager extends JavaObject {
 	 *
 	 * @param fachwahlen   die Fachwahlen
 	 */
-	public constructor(fachwahlen : List<GostFachwahl>);
+	public constructor(fachwahlen : GostJahrgangFachwahlenHalbjahr | null);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : List<GostFachwahl>) {
+	public constructor(__param0? : GostJahrgangFachwahlenHalbjahr | null) {
 		super();
 		if ((typeof __param0 === "undefined")) {
 			// empty method body
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null))) {
-			const fachwahlen : List<GostFachwahl> = cast_java_util_List(__param0);
-			for (const fw of fachwahlen)
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'))) || (__param0 === null))) {
+			const fachwahlen : GostJahrgangFachwahlenHalbjahr | null = cast_de_svws_nrw_core_data_gost_GostJahrgangFachwahlenHalbjahr(__param0);
+			for (const fw of fachwahlen.fachwahlen)
 				this.add(fw);
 		} else throw new Error('invalid method overload');
 	}

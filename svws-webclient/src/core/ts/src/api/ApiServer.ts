@@ -44,9 +44,10 @@ import { GostBlockungSchiene } from '../core/data/gost/GostBlockungSchiene';
 import { GostBlockungsdaten } from '../core/data/gost/GostBlockungsdaten';
 import { GostBlockungsergebnis } from '../core/data/gost/GostBlockungsergebnis';
 import { GostFach } from '../core/data/gost/GostFach';
-import { GostFachwahl } from '../core/data/gost/GostFachwahl';
 import { GostJahrgang } from '../core/data/gost/GostJahrgang';
 import { GostJahrgangFachkombination } from '../core/data/gost/GostJahrgangFachkombination';
+import { GostJahrgangFachwahlen } from '../core/data/gost/GostJahrgangFachwahlen';
+import { GostJahrgangFachwahlenHalbjahr } from '../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { GostKlausurenKalenderinformation } from '../core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
@@ -2726,6 +2727,33 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlen
+	 *
+	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste der Fachwahlen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostJahrgangFachwahlen
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
+	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Eine Liste der Fachwahlen
+	 */
+	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number) : Promise<GostJahrgangFachwahlen> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostJahrgangFachwahlen.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlstatistik
 	 *
 	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
@@ -2784,14 +2812,14 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/fachwahlen
+	 * Implementierung der GET-Methode getGostAbiturjahrgangHalbjahrFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/fachwahlen
 	 *
 	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste der Fachwahlen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostFachwahl>
+	 *     - Rückgabe-Typ: GostJahrgangFachwahlenHalbjahr
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachwahlen anzusehen.
 	 *   Code 404: Keine Fachwahlen gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
 	 *
@@ -2801,16 +2829,14 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste der Fachwahlen
 	 */
-	public async getGostAbiturjahrgangFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostFachwahl>> {
+	public async getGostAbiturjahrgangHalbjahrFachwahlen(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostJahrgangFachwahlenHalbjahr> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostFachwahl>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostFachwahl.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(text);
 	}
 
 

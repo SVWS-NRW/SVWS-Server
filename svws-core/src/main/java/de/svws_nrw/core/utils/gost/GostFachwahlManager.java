@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostFachwahl;
+import de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import jakarta.validation.constraints.NotNull;
 
@@ -42,8 +43,8 @@ public class GostFachwahlManager {
 	 *
 	 * @param fachwahlen   die Fachwahlen
 	 */
-	public GostFachwahlManager(final @NotNull List<@NotNull GostFachwahl> fachwahlen) {
-		for (final @NotNull GostFachwahl fw : fachwahlen)
+	public GostFachwahlManager(final GostJahrgangFachwahlenHalbjahr fachwahlen) {
+		for (final @NotNull GostFachwahl fw : fachwahlen.fachwahlen)
 			add(fw);
 	}
 
