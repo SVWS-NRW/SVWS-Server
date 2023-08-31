@@ -17,4 +17,4 @@ git add svws-webclient/src/core/ts/package.json
 git add svws-webclient/src/ui/ts/package.json
 
 git commit -m "pushback - ${NEW_VERSION}"
-git push
+git push origin HEAD:1115-git-push-back
