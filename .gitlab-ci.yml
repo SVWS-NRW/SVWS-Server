@@ -39,6 +39,9 @@ stages:
     - pushback
 pushback:
     stage: pushback
+    rules:
+        -   if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+            when: manual
     needs:
         - job: publish
     script:
