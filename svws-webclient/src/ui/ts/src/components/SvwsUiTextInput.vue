@@ -77,13 +77,13 @@
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value !== props.modelValue)
+		if (value != props.modelValue)
 			emit("update:modelValue", value);
 	}
 
 	function onBlur(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value !== props.modelValue)
+		if (value != props.modelValue)
 			emit("blur", value);
 	}
 

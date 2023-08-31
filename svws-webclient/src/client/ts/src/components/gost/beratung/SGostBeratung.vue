@@ -24,9 +24,9 @@
 				<svws-ui-content-card title="Textvorlagen für die Laufbahnplanung">
 					<div class="flex flex-col gap-4">
 						<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen ?? ''"
-							@update:model-value="textBeratungsbogen => doPatch({ textBeratungsbogen })" resizeable="vertical" autoresize />
+							@blur="textBeratungsbogen => doPatch({ textBeratungsbogen })" resizeable="vertical" autoresize />
 						<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand ?? ''"
-							@update:model-value="textMailversand => doPatch({ textMailversand })" resizeable="vertical" autoresize />
+							@blur="textMailversand => doPatch({ textMailversand })" resizeable="vertical" autoresize />
 					</div>
 				</svws-ui-content-card>
 				<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="opacity-50">

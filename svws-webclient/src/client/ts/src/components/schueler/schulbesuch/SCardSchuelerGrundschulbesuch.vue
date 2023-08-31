@@ -1,14 +1,10 @@
 <template>
 	<svws-ui-content-card title="Grundschulbesuch">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Einschulung" :model-value="data.grundschuleEinschulungsjahr"
-				@update:model-value="doPatch({ grundschuleEinschulungsjahr: Number($event) })" type="text" />
-			<svws-ui-text-input placeholder="Einschulungsart" :model-value="data.grundschuleEinschulungsartID"
-				@update:model-value="doPatch({ grundschuleEinschulungsartID: Number($event) })" />
-			<svws-ui-text-input placeholder="EP-Jahre" :model-value="data.grundschuleJahreEingangsphase"
-				@update:model-value="doPatch({ grundschuleJahreEingangsphase: Number($event) })" />
-			<svws-ui-text-input placeholder="Übergangsempfehlung Jg. 5" :model-value="data.grundschuleUebergangsempfehlungID"
-				@update:model-value="doPatch({ grundschuleUebergangsempfehlungID: Number($event) })" type="text" />
+			<svws-ui-text-input placeholder="Einschulung" :model-value="data.grundschuleEinschulungsjahr" @blur="doPatch({ grundschuleEinschulungsjahr: Number($event) })" type="text" />
+			<svws-ui-text-input placeholder="Einschulungsart" :model-value="data.grundschuleEinschulungsartID" @blur="doPatch({ grundschuleEinschulungsartID: Number($event) })" />
+			<svws-ui-text-input placeholder="EP-Jahre" :model-value="data.grundschuleJahreEingangsphase" @blur="doPatch({ grundschuleJahreEingangsphase: Number($event) })" />
+			<svws-ui-text-input placeholder="Übergangsempfehlung Jg. 5" :model-value="data.grundschuleUebergangsempfehlungID" @blur="doPatch({ grundschuleUebergangsempfehlungID: Number($event) })" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

@@ -3,10 +3,8 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
-			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined"
-				@update:model-value="doPatch({ datumAnfang: String($event) })" type="date" />
-			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined"
-				@update:model-value="doPatch({ datumEnde: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined" @blur="datumAnfang=>doPatch({datumAnfang})" type="date" />
+			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined" @blur="datumEnde=>doPatch({datumEnde})" type="date" />
 			<svws-ui-spacing />
 			<div class="col-span-full flex flex-wrap gap-3" :class="{'opacity-50': !klassenlehrer.length}">
 				<span class="font-bold">Klassenlehrer:</span>
@@ -23,31 +21,25 @@
 				</div>
 			</div>
 			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
-			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer"
-				:item-text="getLehrerText" autocomplete />
+			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden</span>
-				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined"
-					@update:model-value="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
-				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined"
-					@update:model-value="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
-				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined"
-					@update:model-value="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined" @blur="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined" @blur="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined" @blur="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
 				<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="data.pruefungsOrdnung || undefined" />
-				<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => `${i.beschreibung}`" autocomplete />
-				<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => `${i.daten.bezeichnung}`" autocomplete />
+				<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete />
+				<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte"
-					:item-text="i => `${i.text}`" autocomplete />
-				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte"
-					:item-text="i => `${i.text}`" autocomplete />
+				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
+				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
 				<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />
@@ -78,11 +70,9 @@
 
 <script setup lang="ts">
 
-	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag,
-		SchuelerLernabschnittsdaten, SchuleStammdaten} from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag, SchuelerLernabschnittsdaten, SchuleStammdaten} from "@core";
 	import type { ComputedRef, WritableComputedRef } from 'vue';
-	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		Klassenart, Note, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
+	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Note, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
 	import { computed } from 'vue';
 
 	const props = defineProps<{
@@ -103,7 +93,7 @@
 	}
 
 	function getLehrerText(lehrer: LehrerListeEintrag) : string {
-		return lehrer.nachname + ", " + lehrer.vorname + " (" + lehrer.kuerzel + ")";
+		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
 	function getLehrerKuerzel(lehrer: LehrerListeEintrag) : string {

@@ -1,10 +1,8 @@
 <template>
 	<svws-ui-content-card title="Zeugnis und Abschluss">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="data.datumKonferenz || undefined"
-				@update:model-value="doPatch({ datumKonferenz: String($event) })" type="date" />
-			<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="data.datumZeugnis || undefined"
-				@update:model-value="doPatch({ datumZeugnis: String($event) })" type="date" />
+			<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="data.datumKonferenz" @blur="datumKonferenz=>doPatch({ datumKonferenz })" type="date" />
+			<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="data.datumZeugnis" @blur="datumZeugnis=>doPatch({ datumZeugnis })" type="date" />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2">
 				<div class="opacity-50"> TODO: istAbschlussPrognose </div>
@@ -18,21 +16,16 @@
 				<div> TODO: abschlussBerufsbildend </div>
 				<div> TODO: zeugnisart </div>
 			</svws-ui-input-wrapper>
-
 			<div class="col-span-full flex gap-4">
 				<svws-ui-button type="primary"> Versetzungs-/Abschluss-Berechnung </svws-ui-button>
 				<svws-ui-button type="secondary"> Nachprüfungen </svws-ui-button>
 			</div>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper>
-				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein || undefined"
-					@update:model-value="doPatchBemerkungen({ zeugnisAllgemein : String($event) })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV || undefined"
-					@update:model-value="doPatchBemerkungen({ zeugnisASV : String($event) })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE || undefined"
-					@update:model-value="doPatchBemerkungen({ zeugnisAUE : String($event) })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung || undefined"
-					@update:model-value="doPatchBemerkungen({ versetzungsentscheidung : String($event) })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein" @blur="zeugnisAllgemein=>doPatchBemerkungen({ zeugnisAllgemein })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV" @blur="zeugnisASV=>doPatchBemerkungen({ zeugnisASV })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE" @blur="zeugnisAUE=>doPatchBemerkungen({ zeugnisAUE })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung" @blur="versetzungsentscheidung=>doPatchBemerkungen({ versetzungsentscheidung })" resizeable="vertical" :autoresize="true" />
 			</svws-ui-input-wrapper>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
