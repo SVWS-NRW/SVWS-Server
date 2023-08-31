@@ -17,4 +17,4 @@ git add svws-webclient/src/ui/ts/package.json
 
 git commit -m "pushback - ${NEW_VERSION}"
 
-git push --tags http://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git HEAD:1115-git-push-back
+git push http://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git origin 1115-git-push-back
