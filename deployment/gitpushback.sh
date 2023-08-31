@@ -19,7 +19,8 @@ git add svws-webclient/src/components/ts/package.json
 git add svws-webclient/src/core-test/ts/package.json
 git add svws-webclient/src/core/ts/package.json
 git add svws-webclient/src/ui/ts/package.json
-
+git status
 git commit -m "pushback - ${NEW_VERSION}"
+git status
 git push http://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git --set-upstream origin ${NEW_VERSION}
 #git push http://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git
