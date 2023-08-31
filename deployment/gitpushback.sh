@@ -17,4 +17,10 @@ git add svws-webclient/src/core/ts/package.json
 git add svws-webclient/src/ui/ts/package.json
 
 git commit -m "pushback - ${NEW_VERSION}"
-git push origin HEAD:1115-git-push-back
+
+echo $CI_COMMIT_REF_NAME
+
+git remote show origin
+git remote set-url --push origin git@gitlab:$CI_PROJECT_PATH
+git remote show origin
+git push --follow-tags origin HEAD:1115-git-push-back
