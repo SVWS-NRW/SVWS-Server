@@ -10,6 +10,15 @@ icon: 'carbon:bookmark'
 
 Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfernt wurden.
 
+## ab 0.7.1-SNAPSHOT
+### **Checkbox**
+
+`circle`, `span` und `headless` wurden entfernt.
+
+### **Toggle**
+
+Verfügbar als `type="toggle"` in der [Checkbox](/story/svws-ui-checkbox) Komponente.
+
 ## ab 0.6.18-SNAPSHOT
 ### **Drag/Drop**
 

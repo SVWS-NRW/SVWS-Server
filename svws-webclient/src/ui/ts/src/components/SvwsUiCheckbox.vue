@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-	import { computed } from 'vue';
+	import { computed, ref, watch } from 'vue';
 
 	type CheckboxValue = string | number | boolean | null;
 	type ModelValue = boolean | Array<CheckboxValue> | undefined | 'indeterminate';
@@ -10,26 +10,32 @@
 		modelValue: ModelValue;
 		statistics?: boolean;
 		disabled?: boolean;
-		circle?: boolean;
-		headless?: boolean;
 		bw?: boolean;
-		span?: 'full';
 		title?: string;
+		type?: 'checkbox' | 'toggle';
 	}>(), {
 		value: '',
 		statistics: false,
 		disabled: false,
-		circle: false,
-		headless: false,
 		bw: false,
-		span: undefined,
-		title: undefined
+		title: undefined,
+		type: 'checkbox'
 	});
 
+	const loading = ref(false);
 
 	const value = computed({
 		get: () => props.modelValue,
-		set: (value) =>	emit("update:modelValue", value)
+		set: (value) =>	{
+			loading.value = true;
+			emit("update:modelValue", value);
+
+			if (value !== props.modelValue) {
+				watch(() => props.modelValue, () => {
+					loading.value = false;
+				});
+			}
+		}
 	})
 
 	const emit = defineEmits<{
@@ -39,193 +45,145 @@
 </script>
 
 <template>
-	<label role="none" class="checkbox"
-		:class="{
-			'checkbox--disabled': disabled,
-			'checkbox--statistics': statistics,
-			'checkbox--checked': value,
-			'checkbox--circle': circle,
-			'checkbox--headless': headless,
-			'checkbox--indeterminate': value === 'indeterminate' && value !== undefined,
-			'checkbox--bw': bw,
-			'col-span-full': span === 'full'
-		}">
-		<input class="checkbox--control" type="checkbox" v-model="value" :value="value" :disabled="disabled" :title="disabled ? 'Hinweis: Checkbox deaktiviert' : (title || '')">
-		<span v-if="value === 'indeterminate' && value !== undefined" role="checkbox" class="icon">
-			<i-ri-checkbox-indeterminate-fill />
-		</span>
-		<span v-else-if="value" role="checkbox" class="icon">
-			<i-ri-checkbox-fill v-if="!circle" />
-			<i-ri-checkbox-circle-line v-if="circle" />
-		</span>
-		<span v-else-if="!value" role="checkbox" class="icon">
-			<i-ri-checkbox-blank-line v-if="!circle" />
-			<i-ri-checkbox-blank-circle-line v-if="circle" />
-		</span>
-		<span class="checkbox--label" v-if="$slots.default || statistics || title">
-			<template v-if="$slots.default">
-				<slot />
-			</template>
-			<template v-else>
-				{{ title }}
-			</template>
-			<span class="cursor-pointer inline-block -my-4" v-if="statistics">
+	<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
+		<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'">
+		<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
+		<span class="svws-ui-checkbox--label" v-if="$slots.default">
+			<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1 pt-1 relative top-0.5" />
+					<i-ri-bar-chart-2-line class="pointer-events-auto" />
 					<template #content>
 						Relevant für die Statistik
 					</template>
 				</svws-ui-tooltip>
 			</span>
+			<slot />
 		</span>
 	</label>
 </template>
 
 <style lang="postcss">
-.checkbox {
-	@apply cursor-pointer;
-	@apply inline-flex;
-	@apply items-start justify-start;
-	@apply select-none;
-	@apply text-base font-normal leading-none;
-	@apply my-1;
+.svws-ui-checkbox {
+	@apply inline-flex items-start text-base leading-tight my-0.5;
 
-	.icon svg {
-		@apply -my-0.5;
-		width: 1.4em;
-		height: 1.4em;
+	.data-table__filter-simple & {
+		@apply my-auto;
 	}
 
-	&:hover,
-	&:focus {
-		.icon {
-			@apply text-svws/75;
-		}
-	}
-
-	&.checkbox--bw {
-		&:hover,
-		&:focus {
-			.icon {
-				@apply text-black dark:text-white;
-			}
-		}
-	}
-
-	.input-wrapper .text-input-component + &,
-	.input-wrapper .wrapper + & {
-		@apply items-center;
-	}
-}
-
-.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) {
-	.icon {
-		@apply opacity-25;
-	}
-
-	&:not(.checkbox--disabled) {
-		&:hover,
-		&:focus-visible {
-			.icon {
-				@apply opacity-100;
-				@apply text-svws;
-			}
-		}
-	}
-
-	&.checkbox--statistics:hover,
-	&.checkbox--statistics:focus-visible {
-		.icon {
-			@apply text-violet-500;
-		}
-	}
-
-	&.checkbox--bw {
-		&:hover,
-		&:focus {
-			.icon {
-				@apply text-black dark:text-white;
-			}
-		}
-	}
-}
-
-.checkbox--control {
-	@apply w-0 h-0 absolute opacity-0;
-
-	&:focus-visible ~ .icon {
-		@apply text-svws/75;
-
-		.checkbox:not(.checkbox--checked):not(.checkbox--indeterminate) & {
-			@apply opacity-100 !important;
-			@apply text-svws;
-		}
-
-		svg {
-			@apply rounded-sm ring-1 ring-svws ring-offset-0;
-		}
-	}
-}
-
-.checkbox--checked,
-.checkbox--indeterminate {
-	@apply font-medium;
-
-	&:not(.checkbox--bw) .icon {
-		@apply text-svws;
-	}
-
-	&.checkbox--statistics .icon {
+	&.svws-statistik {
 		@apply text-violet-500;
+
+		input[type="checkbox"] {
+			@apply accent-violet-500;
+		}
+	}
+
+	&.svws-bw {
+		input[type="checkbox"] {
+			@apply accent-black dark:accent-white;
+		}
+	}
+
+	&.svws-loading {
+		@apply animate-pulse;
+
+		input[type="checkbox"],
+		input[type="checkbox"] ~ .svws-ui-toggle--icon {
+			@apply opacity-25 grayscale filter;
+		}
+
+		input[type="checkbox"],
+		.svws-ui-checkbox--label {
+			@apply cursor-wait;
+		}
 	}
 }
 
+input[type="checkbox"] {
+	@apply h-4 w-4 cursor-pointer accent-svws;
 
-.checkbox--disabled {
-	@apply opacity-50;
-	@apply cursor-not-allowed;
+	& ~ .svws-ui-checkbox--label {
+		@apply cursor-pointer ml-1.5;
+		margin-top: -0.1rem;
+	}
 
-	&:not(.checkbox--bw) .icon {
-		@apply text-black dark:text-white;
+	&[disabled] {
+		@apply cursor-default opacity-50;
+
+		& ~ .svws-ui-checkbox--label,
+		& ~ .svws-ui-toggle--icon {
+			@apply cursor-default;
+			@apply text-black/50 dark:text-white/50;
+		}
 	}
 }
 
-.checkbox--label {
-	margin: 0.1rem 0 0 0.2rem;
-}
+.svws-ui-toggle {
+	.svws-ui-toggle--icon {
+		@apply flex h-4 w-8 cursor-pointer items-center justify-start overflow-hidden rounded-md bg-black/25 shadow-inner dark:bg-white/25 -ml-4;
+		padding: 2px;
 
-.checkbox--disabled .checkbox--label {
-	@apply text-black/50 dark:text-white/50;
-}
-
-.checkbox--statistics {
-	@apply text-violet-500;
-
-	.tooltip-trigger--triggered svg {
-		@apply text-violet-800;
+		&:before {
+			content: '';
+			@apply inline-block h-full w-4 bg-white shadow-md shadow-black/25 rounded-[0.275rem] dark:bg-black;
+		}
 	}
-}
 
-.checkbox--statistics .checkbox--label .icon {
-	@apply opacity-100 inline-block;
-	width: 0.8em;
-	height: 0.8em;
-
-	svg {
-		@apply w-full h-full;
+	&:hover {
+		.svws-ui-toggle--icon {
+			@apply bg-black/50 dark:bg-white/50;
+		}
 	}
-}
 
-.checkbox--wrapper {
-	margin-left: -1rem;
-}
+	input[type="checkbox"] {
+		@apply mr-0 opacity-0;
 
-.checkbox--wrapper .checkbox {
-	margin-left: 1rem;
-}
+		&:focus-visible ~ .svws-ui-toggle--icon {
+			@apply bg-black/50 ring-2 ring-offset-1 ring-svws dark:bg-white/50;
+		}
 
-.checkbox--headless,
-.data-table .checkbox {
-	margin: 0;
+		&:checked ~ .svws-ui-toggle--icon {
+			@apply justify-end bg-svws dark:bg-svws;
+		}
+
+		&:indeterminate ~ .svws-ui-toggle--icon {
+			@apply justify-center;
+		}
+
+		&[disabled] ~ .svws-ui-toggle--icon,
+		&[disabled] ~ .svws-ui-toggle--icon {
+			@apply opacity-10;
+		}
+	}
+
+	&.svws-statistik {
+		input[type="checkbox"] {
+			&:focus-visible ~ .svws-ui-toggle--icon {
+				@apply ring-violet-500;
+			}
+
+			&:checked ~ .svws-ui-toggle--icon {
+				@apply bg-violet-500 dark:bg-violet-500;
+			}
+		}
+	}
+
+	&.svws-bw {
+		input[type="checkbox"] {
+			&:focus-visible ~ .svws-ui-toggle--icon {
+				@apply ring-black;
+			}
+
+			&:checked ~ .svws-ui-toggle--icon {
+				@apply bg-black dark:bg-black;
+			}
+		}
+	}
+
+	&.svws-loading {
+		input[type="checkbox"] {
+			@apply invisible;
+		}
+	}
 }
 </style>
