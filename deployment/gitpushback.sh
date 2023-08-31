@@ -21,6 +21,6 @@ git commit -m "pushback - ${NEW_VERSION}"
 echo $CI_COMMIT_REF_NAME
 
 git remote show origin
-git remote set-url --push origin git@gitlab:$CI_PROJECT_PATH
+git remote set-url --push origin git@git.svws-nrw.de:$CI_PROJECT_PATH
 git remote show origin
 git push --follow-tags origin HEAD:1115-git-push-back
