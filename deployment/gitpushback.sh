@@ -1,4 +1,7 @@
 #!/bin/bash
+
+NEW_VERSION=v0.0.2
+
 git config --global user.name "${GITLAB_USER_NAME}"
 git config --global user.email "${GITLAB_USER_EMAIL}"
 
