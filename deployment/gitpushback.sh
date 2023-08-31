@@ -1,7 +1,6 @@
 #!/bin/bash
-
-git config --global user.email "info@schildnrw.de"
-git config --global user.name "Gitlab Pipeline"
+git config --global user.name "${GITLAB_USER_NAME}"
+git config --global user.email "${GITLAB_USER_EMAIL}"
 
 git add buildconfig.json
 git add package.json
@@ -18,9 +17,4 @@ git add svws-webclient/src/ui/ts/package.json
 
 git commit -m "pushback - ${NEW_VERSION}"
 
-echo $CI_COMMIT_REF_NAME
-
-git remote show origin
-git remote set-url --push origin git@git.svws-nrw.de:$CI_PROJECT_PATH
-git remote show origin
-git push --follow-tags origin HEAD:1115-git-push-back
+git push --tags http://root:$ACCESS_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git HEAD:1115-git-push-back
