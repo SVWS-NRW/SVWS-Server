@@ -1,5 +1,8 @@
 #!/bin/bash
 
+git config --global user.email "info@schildnrw.de"
+git config --global user.name "Gitlab Pipeline"
+
 git add buildconfig.json
 git add package.json
 git add svws-transpile/src/test/ts/package.json
