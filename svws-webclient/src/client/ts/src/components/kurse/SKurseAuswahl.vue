@@ -10,7 +10,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" />
 				</template>
 				<template #filterSimple>
-					<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
+					<svws-ui-checkbox type="toggle" v-model="sichtbar">Sichtbar</svws-ui-checkbox>
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ mapLehrer.get(value)?.kuerzel ?? "" }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>

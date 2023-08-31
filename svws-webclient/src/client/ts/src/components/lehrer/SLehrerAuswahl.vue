@@ -15,8 +15,8 @@
 				<template #filter>
 					<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable class="col-span-full" />
 					<div class="col-span-full flex gap-x-9 pl-2">
-						<svws-ui-toggle v-model="sichtbar">Sichtbar</svws-ui-toggle>
-						<svws-ui-toggle v-model="statistikrelevant">Statistikrelevant</svws-ui-toggle>
+						<svws-ui-checkbox type="toggle" v-model="sichtbar">Sichtbar</svws-ui-checkbox>
+						<svws-ui-checkbox type="toggle" v-model="statistikrelevant">Statistikrelevant</svws-ui-checkbox>
 					</div>
 				</template>
 			</svws-ui-data-table>

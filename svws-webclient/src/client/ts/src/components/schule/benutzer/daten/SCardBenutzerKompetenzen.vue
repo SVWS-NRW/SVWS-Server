@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card title="Einstellungen" class="col-span-full">
 		<template #actions>
-			<svws-ui-toggle class="mb-4" v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
+			<svws-ui-checkbox type="toggle" class="mb-4" v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
 				Admin-Rechte
-			</svws-ui-toggle>
+			</svws-ui-checkbox>
 		</template>
 		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>

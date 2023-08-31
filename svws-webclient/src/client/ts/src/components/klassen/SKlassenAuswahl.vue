@@ -16,7 +16,7 @@
 					<svws-ui-text-input :model-value="klassenFilter.search" @update:model-value="setKlassenFilter({search: String($event), sichtbar: klassenFilter.sichtbar})" type="search" placeholder="Suche nach Klasse" />
 				</template>
 				<template #filterSimple>
-					<svws-ui-toggle :model-value="klassenFilter.sichtbar" @update:model-value="setKlassenFilter({search: klassenFilter.search, sichtbar: Boolean($event)})">Sichtbar</svws-ui-toggle>
+					<svws-ui-checkbox type="toggle" :model-value="klassenFilter.sichtbar" @update:model-value="setKlassenFilter({search: klassenFilter.search, sichtbar: Boolean($event)})">Sichtbar</svws-ui-checkbox>
 				</template>
 			</svws-ui-data-table>
 		</template>
