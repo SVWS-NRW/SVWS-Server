@@ -2,10 +2,10 @@
 	<svws-ui-content-card title="Aufsichtsbereiche" class="h-full lg:col-start-2">
 		<svws-ui-data-table :columns="cols" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" clickable v-model:clicked="bereich" selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(kuerzel)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.kuerzel" @update:model-value="patchAufsichtsbereich({kuerzel: String($event)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="rowData.kuerzel" @blur="kuerzel=>patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
 			</template>
 			<template #cell(beschreibung)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.beschreibung" @update:model-value="patchAufsichtsbereich({beschreibung: String($event)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="rowData.beschreibung" @blur="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
 			</template>
 			<template #footerActions>
 				<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereiche" :import-aufsichtsbereiche="importAufsichtsbereiche">

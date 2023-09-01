@@ -12,6 +12,7 @@ Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breakin
 
 ## ab 0.7
 * DataTable ist nun auf generics umgestellt, die Items bestimmen den Typ.
+* TextInput und TextArea geben nun auch den Wert bei @blur raus.
 
 ## ab 0.6.18: 
 

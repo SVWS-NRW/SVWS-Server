@@ -43,12 +43,12 @@
 				</template>
 				<div role="cell" class="data-table__td">
 					<div class="flex flex-grow items-center">
-						<template v-if="kurs.id === edit_name">
-							<span class="flex-shrink-0">{{ kursbezeichnung(kurs).value }}<span class="opacity-50">–</span></span>
-							<svws-ui-text-input :model-value="tmp_name" @update:model-value="tmp_name=String($event)" focus headless @blur="edit_name=undefined" @keyup.enter="setSuffix(kurs)" />
+						<template v-if="kurs.id === editKursID">
+							<span class="flex-shrink-0">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
+							<svws-ui-text-input :model-value="kurs.suffix" @blur="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless />
 						</template>
 						<template v-else>
-							<span class="underline decoration-dotted decoration-black/50 hover:decoration-solid underline-offset-2 cursor-text" @click="editKursSuffix(kurs)">
+							<span class="underline decoration-dotted decoration-black/50 hover:decoration-solid underline-offset-2 cursor-text" @click="editKursID=kurs.id">
 								{{ kursbezeichnung(kurs).value }}
 							</span>
 						</template>
@@ -153,11 +153,11 @@
 
 <script setup lang="ts">
 
-	import { ref, type ComputedRef, computed } from "vue";
 	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
+	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
+	import { ref, type ComputedRef, computed } from "vue";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
 	import { lehrer_filter } from "~/helfer";
-	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 
 	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 
@@ -178,27 +178,20 @@
 		await props.addKurs(props.fachwahlen.id, art.id);
 	}
 
-	const edit_name = ref<number | undefined>(undefined);
-	const tmp_name = ref("");
+	const editKursID = ref<number | undefined>(undefined);
 	const kursdetail_anzeige = ref<boolean>(false);
 
 	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
 	});
 
-	function editKursSuffix(kurs: GostBlockungKurs) {
-		edit_name.value = kurs.id;
-		tmp_name.value = kurs.suffix;
-	}
-
 	async function setKoop(kurs: GostBlockungKurs, value: boolean) {
 		await props.patchKurs({ istKoopKurs: value }, kurs.id);
 	}
 
-	async function setSuffix(kurs: GostBlockungKurs) {
-		await props.patchKurs({ suffix: tmp_name.value }, kurs.id);
-		tmp_name.value = kurs.suffix;
-		edit_name.value = undefined;
+	async function onBlur(suffix: string, id: number) {
+		await props.patchKurs({ suffix }, id);
+		editKursID.value = undefined;
 	}
 
 	const kursbezeichnung = (kurs: GostBlockungKurs) : ComputedRef<string> => computed(() => {

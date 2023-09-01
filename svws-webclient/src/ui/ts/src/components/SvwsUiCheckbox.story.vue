@@ -1,72 +1,69 @@
 <script setup lang="ts">
-	import { logEvent } from 'histoire/client';
-	import { ref } from 'vue';
+	import { ref, reactive } from 'vue';
+	import SvwsUiTextInput
+		from "./SvwsUiTextInput.vue";
 
+	const state = reactive({
+		value: false,
+		label: 'Checkbox Label',
+		title: '',
+		bw: false,
+		statistics: false,
+		disabled: false,
+		toggle: false,
+	})
+
+	const modelValue = ref(true);
 	const modelValue1 = ref(true);
-	const modelValue1b = ref(true);
-	const modelValue2 = ref(false);
-	const modelValue3 = ref(false);
-	const modelValueC = ref(true);
-	const modelValue4 = ref([]);
+	const modelValue2 = ref(true);
+	const modelValue3 = ref(true);
+	const modelValue4 = ref(false);
+	const modelValue5 = ref(false);
+	const modelValue6 = ref('indeterminate');
+	const modelValue7 = ref(true);
+
+	const source = `<svws-ui-checkbox v-model="..." [title | bw | statistics | disabled | type="toggle"]>
+	Label
+</svws-ui-checkbox> `;
 </script>
 
 <template>
-	<Story title="Checkbox" id="svws-ui-checkbox" icon="ri:checkbox-line" :layout="{type: 'grid', width: '45%'}">
-		<Variant title="Checked" id="Checked">
-			<svws-ui-checkbox v-model="modelValue1" :value="true">Checkbox</svws-ui-checkbox>
-		</Variant>
+	<Story title="Checkbox" id="svws-ui-checkbox" icon="ri:checkbox-line" auto-props-disabled responsive-disabled>
+		<Variant title="Default" id="Default" :source="source">
+			<svws-ui-checkbox v-model="modelValue1" :bw="state.bw" :statistics="state.statistics" :disabled="state.disabled" :type="state.toggle ? 'toggle' : 'checkbox'">{{ state.label }}</svws-ui-checkbox>
 
-		<Variant title="Checked with highlight" id="Checked with highlight">
-			<div :class="{'text-primary': modelValue1b}">
-				<svws-ui-checkbox v-model="modelValue1b" :value="true">Example: Blue highlight in table</svws-ui-checkbox>
+			<div class="flex flex-col items-start gap-2 mt-10">
+				<div :class="{'text-primary': modelValue2}">
+					<svws-ui-checkbox v-model="modelValue2">Beispiel mit Label Farbe wenn aktiv</svws-ui-checkbox>
+				</div>
+				<div class="pointer-events-none leading-none">
+					<svws-ui-checkbox v-model="modelValue6">Indeterminate Status</svws-ui-checkbox>
+				</div>
+				<svws-ui-checkbox v-model="modelValue3" bw>BW (black and white)</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue4" statistics>Wichtige Checkbox für die Statistik</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue5" disabled>Deaktivierte Checkbox</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue7" class="svws-loading">Value wird gesetzt…</svws-ui-checkbox>
 			</div>
-		</Variant>
 
-		<Variant title="Unchecked" id="Unchecked">
-			<svws-ui-checkbox v-model="modelValue2" :value="false">Checkbox</svws-ui-checkbox>
-		</Variant>
-
-		<Variant title="Without Label" id="Without Label">
-			<svws-ui-checkbox v-model="modelValue2" :value="true" />
-		</Variant>
-
-		<Variant title="Circle Style" id="Circle Style">
-			<svws-ui-checkbox v-model="modelValueC" :value="true" circle>Same function, different appearance!</svws-ui-checkbox>
-		</Variant>
-
-		<Variant title="B/W" id="B/W">
-			<svws-ui-checkbox v-model="modelValueC" :value="true" circle bw>Same function, different appearance!</svws-ui-checkbox>
-		</Variant>
-
-		<Variant title="Statistics" id="Statistics">
-			<svws-ui-checkbox v-model="modelValue3" statistics :value="false">Checkbox</svws-ui-checkbox>
-		</Variant>
-
-		<Variant title="Disabled" id="Disabled">
-			<svws-ui-checkbox v-model="modelValue3" disabled :value="false">Checkbox</svws-ui-checkbox>
-		</Variant>
-
-		<Variant title="Headless" id="Headless">
-			<svws-ui-checkbox v-model="modelValue3" headless :value="false">Checkbox</svws-ui-checkbox>
-		</Variant>
-
-		<!--<Variant title="Multi selection">
-			<div class="checkbox&#45;&#45;wrapper">
-				<svws-ui-checkbox v-model="modelValue4" value="1">
-					Checkbox 1
-				</svws-ui-checkbox>
-				<svws-ui-checkbox v-model="modelValue4" value="2">
-					Checkbox 2 with long Title
-				</svws-ui-checkbox>
-				<svws-ui-checkbox v-model="modelValue4" value="3">
-					Checkbox 3
-				</svws-ui-checkbox>
-				<svws-ui-checkbox v-model="modelValue4" value="4">
-					Checkbox 4
-				</svws-ui-checkbox>
+			<div class="flex flex-col items-start gap-2 mt-10">
+				<svws-ui-checkbox v-model="modelValue2" type="toggle">Toggle</svws-ui-checkbox>
+				<div class="pointer-events-none leading-none">
+					<svws-ui-checkbox v-model="modelValue6" type="toggle">Indeterminate Status</svws-ui-checkbox>
+				</div>
+				<svws-ui-checkbox v-model="modelValue3" bw type="toggle">BW (black and white)</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue4" statistics type="toggle">Wichtige Checkbox für die Statistik</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue5" disabled type="toggle">Deaktivierte Checkbox</svws-ui-checkbox>
+				<svws-ui-checkbox v-model="modelValue7" class="svws-loading" type="toggle">Value wird gesetzt…</svws-ui-checkbox>
 			</div>
-			<br>
-			Result: {{ modelValue4 }}
-		</Variant>-->
+
+			<template #controls>
+				<HstText v-model="state.label" title="Checkbox Label" />
+				<HstCheckbox v-model="state.toggle" title="Alternative" />
+				<HstText v-model="state.title" title="title" />
+				<HstCheckbox v-model="state.bw" title="bw" />
+				<HstCheckbox v-model="state.statistics" title="statistics" />
+				<HstCheckbox v-model="state.disabled" title="disabled" />
+			</template>
+		</Variant>
 	</Story>
 </template>

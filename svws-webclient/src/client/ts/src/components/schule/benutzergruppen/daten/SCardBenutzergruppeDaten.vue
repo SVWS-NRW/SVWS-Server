@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<template #actions>
-			<svws-ui-toggle v-model="inputIstAdmin"> Admin-Rechte </svws-ui-toggle>
+			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper>
 			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />

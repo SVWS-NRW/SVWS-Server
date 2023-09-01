@@ -152,6 +152,8 @@ export { GostFach } from './core/data/gost/GostFach';
 export { GostFachwahl } from './core/data/gost/GostFachwahl';
 export { GostJahrgang } from './core/data/gost/GostJahrgang';
 export { GostJahrgangFachkombination } from './core/data/gost/GostJahrgangFachkombination';
+export { GostJahrgangFachwahlen } from './core/data/gost/GostJahrgangFachwahlen';
+export { GostJahrgangFachwahlenHalbjahr } from './core/data/gost/GostJahrgangFachwahlenHalbjahr';
 export { GostJahrgangsdaten } from './core/data/gost/GostJahrgangsdaten';
 export { GostLaufbahnplanungBeratungsdaten } from './core/data/gost/GostLaufbahnplanungBeratungsdaten';
 export { GostLaufbahnplanungDaten } from './core/data/gost/GostLaufbahnplanungDaten';
@@ -490,6 +492,7 @@ export { GostBlockungsergebnisManager } from './core/utils/gost/GostBlockungserg
 export { GostFachUtils } from './core/utils/gost/GostFachUtils';
 export { GostFachwahlManager } from './core/utils/gost/GostFachwahlManager';
 export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
+export { GostJahrgangsFachwahlenManager } from './core/utils/gost/GostJahrgangsFachwahlenManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
 export { GostKlausurraumManager } from './core/utils/klausurplanung/GostKlausurraumManager';

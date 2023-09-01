@@ -15,8 +15,8 @@
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			</template>
 			<div class="flex flex-wrap gap-10 mb-3 -mt-3">
-				<svws-ui-toggle v-model="filterFehler">Nur Fehler</svws-ui-toggle>
-				<svws-ui-toggle v-model="filterExterne">Keine Externe</svws-ui-toggle>
+				<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
+				<svws-ui-checkbox type="toggle" v-model="filterExterne">Keine Externe</svws-ui-checkbox>
 			</div>
 			<svws-ui-data-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler vorhanden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 				<template #cell(schueler)="{value: s}: {value: Schueler}">

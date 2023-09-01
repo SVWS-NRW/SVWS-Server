@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content page--content--full">
-		<s-gost-fachwahlen-uebersicht :fachwahlen="fachwahlen" :do-select="doSelect" />
+		<s-gost-fachwahlen-uebersicht :fachwahlstatistik="fachwahlstatistik" :do-select="doSelect" />
 		<router-view />
 	</div>
 </template>

@@ -52,10 +52,9 @@
 						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-auto">
 							<template v-if="s.id === edit_schienenname">
 								<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
-									@blur="edit_schienenname=undefined"
-									@keyup.enter="edit_schienenname=undefined"
-									@keyup.escape="edit_schienenname=undefined"
-									@update:model-value="patch_schiene(s, $event.toString())" />
+									@blur="name => patch_schiene(s, name)"
+									@keyup.enter="(e: any) => patch_schiene(s, e.target.value)"
+									@keyup.escape="edit_schienenname=undefined" />
 							</template>
 							<template v-else>
 								<span class="underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
@@ -281,7 +280,8 @@
 	}
 
 	async function patch_schiene(schiene: GostBlockungSchiene, bezeichnung: string) {
-		await props.patchSchiene({ bezeichnung: bezeichnung }, schiene.id);
+		await props.patchSchiene({ bezeichnung }, schiene.id);
+		edit_schienenname.value = undefined;
 	}
 
 	async function add_schiene() {

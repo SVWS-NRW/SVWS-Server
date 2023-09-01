@@ -120,13 +120,7 @@
 					<div role="cell" v-if="selectable"
 						class="data-table__td data-table__cell-select"
 						:key="`selectable__${row}_${index}`">
-						<label role="none" class="checkbox" :class="{'checkbox--checked': isRowSelected(row)}" @click.stop>
-							<input class="checkbox--control" type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)">
-							<span role="checkbox" class="icon">
-								<i-ri-checkbox-fill v-if="isRowSelected(row)" />
-								<i-ri-checkbox-blank-line v-else />
-							</span>
-						</label>
+						<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)">
 					</div>
 					<div role="cell" v-for="cell in row.cells"
 						:key="`table-cell_${cell.column.key + cell.rowIndex}`"
@@ -724,11 +718,6 @@
 		.data-table__tfoot & {
 			@apply relative;
 		}
-
-		.checkbox:before {
-			content: '';
-			@apply absolute inset-0;
-		}
 	}
 
 	&__cell-checkbox {
@@ -861,11 +850,11 @@
 				.data-table__td {
 					@apply border-b-0 bg-white dark:bg-black;
 
-					.checkbox {
+					input[type="checkbox"] {
 						@apply ml-5;
 					}
 
-					.button + .checkbox {
+					.button + input[type="checkbox"] {
 						@apply ml-0;
 					}
 
@@ -1141,15 +1130,11 @@
 
 	&__filter {
 		@apply flex justify-between flex-wrap;
-		@apply pb-2 gap-2 mb-1 -mb-px;
+		@apply pb-2 gap-2 mb-1;
 		transition: box-shadow 0.15s ease-out;
 
 		.app--sidebar & {
 			@apply px-7 4xl:px-8;
-		}
-
-		&-open {
-			/*box-shadow: inset 0 4px 6px 2px theme("colors.light");*/
 		}
 
 		&-simple {

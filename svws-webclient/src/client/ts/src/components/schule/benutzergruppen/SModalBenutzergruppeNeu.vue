@@ -7,7 +7,7 @@
 		<template #modalContent>
 			<svws-ui-input-wrapper center>
 				<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
-				<svws-ui-toggle v-model="inputbgIstAdmin"> Admin-Rechte </svws-ui-toggle>
+				<svws-ui-checkbox type="toggle" v-model="inputbgIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</template>
 

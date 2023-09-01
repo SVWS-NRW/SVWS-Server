@@ -3,19 +3,19 @@
 		<svws-ui-data-table :columns="cols" :items="mapAnsprechpartner.values()" clickable v-model:clicked="select"
 			selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(anrede)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.anrede" @update:model-value="patchBetriebAnpsrechpartner({anrede: String($event)}, rowData.id)" headless required />
+				<SvwsUiTextInput :model-value="rowData.anrede" @blur="anrede => patchBetriebAnpsrechpartner({anrede}, rowData.id)" headless required />
 			</template>
 			<template #cell(name)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.name" @update:model-value="patchBetriebAnpsrechpartner({name: String($event)}, rowData.id)" headless required />
+				<SvwsUiTextInput :model-value="rowData.name" @blur="name=>patchBetriebAnpsrechpartner({name}, rowData.id)" headless required />
 			</template>
 			<template #cell(vorname)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.vorname" @update:model-value="patchBetriebAnpsrechpartner({vorname: String($event)}, rowData.id)" headless required />
+				<SvwsUiTextInput :model-value="rowData.vorname" @blur="vorname=>patchBetriebAnpsrechpartner({vorname}, rowData.id)" headless required />
 			</template>
 			<template #cell(telefon)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.telefon" @update:model-value="patchBetriebAnpsrechpartner({telefon: String($event)}, rowData.id)" headless required />
+				<SvwsUiTextInput :model-value="rowData.telefon" @blur="telefon=>patchBetriebAnpsrechpartner({telefon}, rowData.id)" headless required />
 			</template>
 			<template #cell(email)="{ rowData }">
-				<SvwsUiTextInput :model-value="rowData.email" @update:model-value="patchBetriebAnpsrechpartner({email: String($event)}, rowData.id)" headless required />
+				<SvwsUiTextInput :model-value="rowData.email" @blur="email=>patchBetriebAnpsrechpartner({email}, rowData.id)" headless required />
 			</template>
 			<template #footerActions>
 				<s-card-betriebe-add-anprechpartner-modal v-slot="{ openModal }" :add-betrieb-ansprechpartner="addBetriebAnsprechpartner">

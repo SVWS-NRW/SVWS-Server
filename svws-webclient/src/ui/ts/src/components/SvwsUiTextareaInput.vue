@@ -5,7 +5,7 @@
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
 	const props = withDefaults(defineProps<{
-		modelValue?: string;
+		modelValue?: string|null;
 		placeholder?: string;
 		valid?: (value: string) => boolean;
 		statistics?: boolean;
@@ -31,57 +31,29 @@
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", value: string): void;
-		(e: "focus", event: Event): void;
-		(e: "blur", event: Event): void;
-		(e: "click", event: Event): void;
-		(e: "mousedown", event: Event): void;
-		(e: "keydown", event: Event): void;
+		"update:modelValue": [value: string];
+		"blur": [value: string];
 	}>();
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const { textarea, input } = useTextareaAutosize({ input: props.modelValue })
-	const focused = ref(false);
+	const { textarea, input } = useTextareaAutosize({ input: props.modelValue || undefined })
 	const bindings = computed(() => {
 		return {
 			required: props.required,
 			disabled: props.disabled,
-			onFocus,
 			onBlur,
-			onClick,
-			onMousedown,
-			onKeydown,
 		};
 	});
 
-	function onFocus(event: FocusEvent) {
-		focused.value = true;
-		emit("focus", event);
-	}
-
-	function onBlur(event: FocusEvent) {
-		focused.value = false;
-		emit("update:modelValue", input.value);
-		emit("blur", event);
-	}
-
-	function onClick(event: MouseEvent) {
-		emit("click", event);
-	}
-
-	function onMousedown(event: MouseEvent) {
-		emit("mousedown", event);
-	}
-
-	function onKeydown(event: KeyboardEvent) {
-		emit("keydown", event);
+	function onBlur() {
+		if (input.value != props.modelValue) // !== wegen Umwandlung von null zu undefined
+			emit("blur", input.value);
 	}
 </script>
 
 <template>
 	<label class="textarea-input"
 		:class="{
-			'textarea-input--focus': focused,
 			'textarea-input--filled': !!modelValue,
 			'textarea-input--invalid': valid(input) === false,
 			'textarea-input--disabled': disabled,

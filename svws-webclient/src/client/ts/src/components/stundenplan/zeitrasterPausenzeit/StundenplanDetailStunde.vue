@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card :title="`${item}. Stunde`">
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input :model-value="item" type="number" required placeholder="Bezeichnung" @update:model-value="patchStunde" />
+			<svws-ui-text-input :model-value="item" type="number" required placeholder="Bezeichnung" @blur="patchStunde" />
 			<svws-ui-button v-for="w of fehlendeZeitraster" :key="w.id" type="secondary" @click="addZeitraster(w, item)">{{ w.kuerzel }} {{ item }}. Stunde einfügen </svws-ui-button>
 			<svws-ui-spacing v-if="fehlendeZeitraster.length" />
 			<svws-ui-button type="danger" @click="removeZeitraster(stundenplanManager().getListZeitrasterZuStunde(item))"> <i-ri-delete-bin-line /> Stunde entfernen </svws-ui-button>

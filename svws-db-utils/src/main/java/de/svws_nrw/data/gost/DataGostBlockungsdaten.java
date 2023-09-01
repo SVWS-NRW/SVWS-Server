@@ -211,7 +211,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
         manager.schuelerAddListe(schueler);
 
         // Schüler-Fachwahl-Menge hinzufügen.
-        final List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlen(blockung.Halbjahr);
+        final List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlenHalbjahr(blockung.Halbjahr).fachwahlen;
         manager.fachwahlAddListe(fachwahlen);
 
 		return manager;
@@ -396,7 +396,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			for (final GostBlockungKurs kurs : manager.daten().kurse)
 				conn.transactionPersist(new DTOGostBlockungZwischenergebnisKursSchiene(ergebnisID, kurs.id, schienenID + 1));
             // Bestimme die Fachwahlen aus der DB
-            daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlen(gostHalbjahr));
+            daten.fachwahlen.addAll((new DataGostAbiturjahrgangFachwahlen(conn, daten.abijahrgang)).getSchuelerFachwahlenHalbjahr(gostHalbjahr).fachwahlen);
             // Ergänze Blockungsliste
             conn.transactionCommit();
             conn.transactionBegin();

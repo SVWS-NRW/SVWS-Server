@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Migrationshintergrund">
 		<template #actions>
-			<svws-ui-checkbox v-model="hatMigrationshintergrund">Migrationshintergrund vorhanden</svws-ui-checkbox>
+			<svws-ui-checkbox v-model="hatMigrationshintergrund" statistics>Migrationshintergrund vorhanden</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" statistics />

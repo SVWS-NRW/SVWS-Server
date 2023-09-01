@@ -43,7 +43,7 @@ export class RouteGostFachwahlenAllgemein extends RouteNode<unknown, RouteGost> 
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenAllgemeinProps {
 		return {
-			fachwahlen: routeGostFachwahlen.data.fachwahlen,
+			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
 		};
 	}
 

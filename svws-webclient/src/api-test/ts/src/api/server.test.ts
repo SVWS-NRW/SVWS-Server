@@ -241,8 +241,8 @@ describe("Server", () => {
 		expect(res).matchSnapshot();
 		expect(res).toBeInstanceOf(GostFach);
 	});
-	test.skip("getGostAbiturjahrgangFachwahlen", async () => {
-		const res = await server.getGostAbiturjahrgangFachwahlen(schema, 2021);
+	test.skip("getGostAbiturjahrgangHalbjahrFachwahlen", async () => {
+		const res = await server.getGostAbiturjahrgangHalbjahrFachwahlen(schema, 2021);
 		expect(res).matchSnapshot();
 	});
 	test.skip("getGostAbiturjahrgangFaecher", async () => {

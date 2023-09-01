@@ -10,8 +10,8 @@
 								{{ row.name }}
 							</span>
 							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
-								@keyup.enter="edit_blockungsname=false" @keyup.escape="edit_blockungsname=false"
-								@update:model-value="(value) => patch_blockung(String(value), row.id)" />
+								@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
+								@blur="name => patch_blockung(name, row.id)" />
 						</div>
 						<div v-else>
 							<span>{{ row.name }}</span>
@@ -115,6 +115,7 @@
 		const result = await props.patchBlockung({ name: value.toString() }, idBlockung);
 		if (result && props.auswahlBlockung)
 			props.auswahlBlockung.name = value.toString();
+		edit_blockungsname.value = false;
 	}
 
 	const visible: ComputedRef<boolean> = computed(() =>
