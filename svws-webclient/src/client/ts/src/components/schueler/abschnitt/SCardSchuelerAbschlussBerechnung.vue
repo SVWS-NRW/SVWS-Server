@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Abschluss Berechnung">
 		<svws-ui-input-wrapper>
-			<svws-ui-textarea-input placeholder="Text" v-model="abschlussBerechnung" resizeable="vertical" :autoresize="true" />
+			<svws-ui-textarea-input placeholder="Text" :model-value="data.textErgebnisPruefungsalgorithmus" @blur="textErgebnisPruefungsalgorithmus=>doPatch({textErgebnisPruefungsalgorithmus})" resizeable="vertical" :autoresize="true" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -9,17 +9,10 @@
 <script setup lang="ts">
 
 	import type { SchuelerLernabschnittsdaten } from "@core";
-	import type { WritableComputedRef } from 'vue';
-	import { computed } from 'vue';
 
 	const props = defineProps<{
 		data: SchuelerLernabschnittsdaten;
 	}>();
-
-	const abschlussBerechnung: WritableComputedRef<string> = computed({
-		get: () => props.data.textErgebnisPruefungsalgorithmus || "",
-		set: (value) => {}
-	});
 
 	const emit = defineEmits<{
 		(e: 'patch', data: Partial<SchuelerLernabschnittsdaten>) : void;

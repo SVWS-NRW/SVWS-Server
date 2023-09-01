@@ -3,16 +3,16 @@
 		<svws-ui-multi-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell>
-		<svws-ui-text-input v-model="ausbilder" type="text" placeholder="—" headless />
+		<svws-ui-text-input :model-value="betrieb.ausbilder" @blur="ausbilder=>patchSchuelerBetriebsdaten({ausbilder}, betrieb.id)" type="text" placeholder="—" headless />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
 		<svws-ui-multi-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input v-model="vertragsbeginn" type="date" />
+		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @blur="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input v-model="vertragsende" type="date" />
+		<svws-ui-text-input :model-value="betrieb.vertragsende" @blur="vertragsende=>patchSchuelerBetriebsdaten({vertragsende}, betrieb.id)" type="date" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell align="center">
 		<svws-ui-checkbox v-model="praktikum" />
@@ -30,9 +30,9 @@
 
 <script setup lang="ts">
 
+	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
@@ -46,11 +46,6 @@
 	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
 		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
-	});
-
-	const ausbilder: WritableComputedRef<string | undefined> = computed({
-		get: () => props.betrieb.ausbilder === null ? undefined : props.betrieb.ausbilder,
-		set: (value) => void props.patchSchuelerBetriebsdaten({ ausbilder: value === undefined ? null : value }, props.betrieb.id)
 	});
 
 	const inputBetrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
@@ -69,16 +64,6 @@
 	const praktikum: WritableComputedRef<boolean> = computed({
 		get: () => props.betrieb.praktikum === null ? false : props.betrieb.praktikum,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ praktikum: value }, props.betrieb.id)
-	});
-
-	const vertragsbeginn: WritableComputedRef<string | undefined> = computed({
-		get: () => props.betrieb.vertragsbeginn === null ? undefined : props.betrieb.vertragsbeginn,
-		set: (value) => void props.patchSchuelerBetriebsdaten({ vertragsbeginn: value === undefined ? null : value }, props.betrieb.id)
-	});
-
-	const vertragsende: WritableComputedRef<string | undefined> = computed({
-		get: () => props.betrieb.vertragsende === null ? undefined : props.betrieb.vertragsende,
-		set: (value) => void props.patchSchuelerBetriebsdaten({ vertragsende: value === undefined ? null : value }, props.betrieb.id)
 	});
 
 	const anschreiben: WritableComputedRef<boolean> = computed({

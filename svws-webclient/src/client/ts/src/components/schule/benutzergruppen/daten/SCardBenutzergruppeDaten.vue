@@ -4,7 +4,7 @@
 			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input v-model="bezeichnung" type="text" placeholder="Bezeichnung" />
+			<svws-ui-text-input :model-value="getBenutzergruppenManager().getBezeichnung()" @blur="setBezeichnung" type="text" placeholder="Bezeichnung" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -20,15 +20,6 @@
 		setBezeichnung : (anzeigename: string) => Promise<void>;
 		setIstAdmin : (istAdmin:boolean) => Promise<void>;
 	}>();
-
-	const bezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.getBenutzergruppenManager().getBezeichnung(),
-		set: (value) => {
-			if ((value === undefined) || (value === "") || (value === props.getBenutzergruppenManager().getBezeichnung()))
-				return;
-			void props.setBezeichnung(value);
-		}
-	});
 
 	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
 		get: () => props.getBenutzergruppenManager().istAdmin(),

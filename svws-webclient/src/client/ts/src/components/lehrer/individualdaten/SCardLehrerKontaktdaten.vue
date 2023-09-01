@@ -1,16 +1,14 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input v-model="inputStrasse" type="text" placeholder="Straße" required span="full" />
-			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort"
-				:item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort"
-				:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
+			<svws-ui-text-input placeholder="Straße" :model-value="inputStrasse" @blur="patchStrasse" type="text" span="full" />
+			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
 			<svws-ui-spacing />
-			<svws-ui-text-input v-model="inputTelefon" type="tel" placeholder="Telefon" />
-			<svws-ui-text-input v-model="inputTelefonMobil" type="tel" placeholder="Mobil oder Fax" />
-			<svws-ui-text-input v-model="inputEmailPrivat" type="email" placeholder="Private E-Mail-Adresse" verify-email />
-			<svws-ui-text-input v-model="inputEmailDienstlich" type="email" placeholder="Schulische E-Mail-Adresse" verify-email />
+			<svws-ui-text-input :model-value="data.telefon" @blur="telefon=>doPatch({telefon})" type="tel" placeholder="Telefon" />
+			<svws-ui-text-input :model-value="data.telefonMobil" @blur="telefonMobil=>doPatch({telefonMobil})" type="tel" placeholder="Mobil oder Fax" />
+			<svws-ui-text-input :model-value="data.emailPrivat" @blur="emailPrivat=>doPatch({emailPrivat})" type="email" placeholder="Private E-Mail-Adresse" verify-email />
+			<svws-ui-text-input :model-value="data.emailDienstlich" @blur="emailDienstlich=>doPatch({emailDienstlich})" type="email" placeholder="Schulische E-Mail-Adresse" verify-email />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -18,13 +16,12 @@
 <script setup lang="ts">
 
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
 	import { AdressenUtils } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		stammdaten: LehrerStammdaten;
+		data: LehrerStammdaten;
 		mapOrte: Map<number, OrtKatalogEintrag>;
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
@@ -36,61 +33,24 @@
 	function doPatch(data: Partial<LehrerStammdaten>) {
 		emit('patch', data);
 	}
+	const inputStrasse = computed(()=>
+		AdressenUtils.combineStrasse(props.data.strassenname || "", props.data.hausnummer || "", props.data.hausnummerZusatz || ""))
 
-	const inputStrasse = computed<string | undefined>({
-		get(): string {
-			const d = props.stammdaten;
-			const ret = AdressenUtils.combineStrasse(d.strassenname || "", d.hausnummer || "", d.hausnummerZusatz || "");
-			return ret ?? "";
-		},
-		set(val: string | undefined) {
-			if (val) {
-				const vals = AdressenUtils.splitStrasse(val);
-				doPatch({ strassenname: vals?.[0] || val, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
-			}
+	const patchStrasse = (value: string ) => {
+		if (value) {
+			const vals = AdressenUtils.splitStrasse(value);
+			doPatch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
 		}
-	});
+	}
 
 	const inputWohnortID = computed<OrtKatalogEintrag | undefined>({
-		get: () =>props.stammdaten.wohnortID ? props.mapOrte.get(props.stammdaten.wohnortID) : undefined,
+		get: () =>props.data.wohnortID ? props.mapOrte.get(props.data.wohnortID) : undefined,
 		set: (val) =>	doPatch({ wohnortID: val?.id })
 	});
 
 	const inputOrtsteilID = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => props.stammdaten.ortsteilID ? props.mapOrtsteile.get(props.stammdaten.ortsteilID) : undefined,
+		get: () => props.data.ortsteilID ? props.mapOrtsteile.get(props.data.ortsteilID) : undefined,
 		set: (val) =>	doPatch({ ortsteilID: val?.id })
-	});
-
-	const inputTelefon = computed<string | undefined>({
-		get: () => props.stammdaten.telefon ?? undefined,
-		set: (val) => doPatch({ telefon: val })
-	});
-
-	const inputTelefonMobil: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.stammdaten.telefonMobil ?? undefined;
-		},
-		set(val) {
-			doPatch({ telefonMobil: val });
-		}
-	});
-
-	const inputEmailPrivat = computed<string | undefined>({
-		get(): string | undefined {
-			return props.stammdaten.emailPrivat ?? undefined;
-		},
-		set(val) {
-			doPatch({ emailPrivat: val });
-		}
-	});
-
-	const inputEmailDienstlich = computed<string | undefined>({
-		get(): string | undefined {
-			return props.stammdaten.emailDienstlich ?? undefined;
-		},
-		set(val) {
-			doPatch({ emailDienstlich: val });
-		}
 	});
 
 </script>

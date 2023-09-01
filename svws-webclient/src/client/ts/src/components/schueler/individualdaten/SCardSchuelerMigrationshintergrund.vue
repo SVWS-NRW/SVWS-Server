@@ -4,17 +4,16 @@
 			<svws-ui-checkbox v-model="hatMigrationshintergrund" statistics>Migrationshintergrund vorhanden</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Zuzugsjahr" v-model="zuzugsjahr" type="text" :disabled="!hatMigrationshintergrund" statistics />
-			<svws-ui-multi-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`"
-				:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
+			<svws-ui-text-input placeholder="Zuzugsjahr" :model-value="data().zuzugsjahr" @blur="zuzugsjahr=>doPatch({zuzugsjahr})" type="text" :disabled="!hatMigrationshintergrund" statistics />
+			<svws-ui-multi-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 			<svws-ui-multi-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
-				:item-text="(i: Verkehrssprache) => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
+				:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
 				:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" span="full" statistics />
 			<svws-ui-multi-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
-				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+				:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
 				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 			<svws-ui-multi-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
-				:item-text="(i: Nationalitaeten) => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
+				:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
 				:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" autocomplete statistics />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -23,11 +22,10 @@
 <script setup lang="ts">
 
 	import type { SchuelerStammdaten } from "@core";
-	import { Nationalitaeten, Verkehrssprache } from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
-
 	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/helfer";
+	import { Nationalitaeten, Verkehrssprache } from "@core";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;
@@ -41,15 +39,9 @@
 		emit('patch', data);
 	}
 
-
 	const geburtsland: WritableComputedRef<Nationalitaeten> = computed({
 		get: () => Nationalitaeten.getByISO3(props.data().geburtsland) || Nationalitaeten.DEU,
 		set: (value) => doPatch({ geburtsland: value.daten.iso3 })
-	});
-
-	const zuzugsjahr: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data().zuzugsjahr ?? undefined,
-		set: (value) => doPatch({ zuzugsjahr: value })
 	});
 
 	const geburtslandMutter: WritableComputedRef<Nationalitaeten> = computed({

@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" span="full" />
-			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputText" type="text" />
-			<svws-ui-text-input placeholder="Zeugnisbezeichnung" v-model="inputTextzeugnis" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" span="full" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @blur="text=>doPatch({text})" type="text" />
+			<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data.textZeugnis" @blur="textZeugnis=>doPatch({textZeugnis})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
@@ -14,8 +14,7 @@
 			</div>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="inputKatalogReligionenStatistik"
-				:item-text="(i: Religion) => i.daten.kuerzel" required />
+			<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="(i: Religion) => i.daten.kuerzel" required />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -23,12 +22,11 @@
 <script setup lang="ts">
 
 	import type { ReligionEintrag } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { Religion } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		auswahl: ReligionEintrag;
+		data: ReligionEintrag;
 	}>();
 
 	const emit = defineEmits<{
@@ -39,25 +37,8 @@
 		emit('patch', data);
 	}
 
-	const inputKatalogReligionenStatistik: ComputedRef<Religion[]> = computed(() => Religion.values());
-
-	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.auswahl.kuerzel ?? undefined,
-		set: (value) => doPatch({ kuerzel: value })
-	});
-
-	const inputText: WritableComputedRef<string | undefined> = computed({
-		get: () => props.auswahl.text ?? undefined,
-		set: (value) => doPatch({ text: value })
-	});
-
-	const inputTextzeugnis: WritableComputedRef<string | undefined> = computed({
-		get: () => props.auswahl.textZeugnis ?? undefined,
-		set: (value) => doPatch({ textZeugnis: value })
-	});
-
-	const inputStatistikKuerzel: WritableComputedRef<Religion | undefined> = computed({
-		get: () => Religion.getByKuerzel(props.auswahl.kuerzel || null) || undefined,
+	const inputStatistikKuerzel = computed<Religion | undefined>({
+		get: () => Religion.getByKuerzel(props.data.kuerzel || null) || undefined,
 		set: (value) => doPatch({ kuerzel: value?.daten.kuerzel || null })
 	});
 

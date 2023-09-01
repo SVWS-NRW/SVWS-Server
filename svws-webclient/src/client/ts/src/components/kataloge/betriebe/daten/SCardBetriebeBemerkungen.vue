@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Bemerkungen">
 		<div class="entry-content">
 			<div class="col-span-2">
-				<svws-ui-textarea-input v-model="bemerkungen" placeholder="Bemerkungen" />
+				<svws-ui-textarea-input :model-value="daten.bemerkungen" @blur="bemerkungen=>doPatch({bemerkungen})" placeholder="Bemerkungen" />
 			</div>
 			<svws-ui-checkbox v-model="ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
 			<svws-ui-checkbox v-model="bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
@@ -14,11 +14,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { BetriebStammdaten, KatalogEintrag, OrtKatalogEintrag } from "@core";
+	import type { BetriebStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-
-
 
 	const props = defineProps<{
 		daten: BetriebStammdaten;
@@ -31,11 +29,6 @@
 	function doPatch(data: Partial<BetriebStammdaten>) {
 		emit('patch', data);
 	}
-
-	const bemerkungen : WritableComputedRef<string | undefined> = computed({
-		get: () => props.daten.bemerkungen ?? undefined,
-		set: (value) => void doPatch({ bemerkungen: value } )
-	})
 
 	const ausbildungsbetrieb: WritableComputedRef<boolean | undefined> = computed({
 		get: () => props.daten.ausbildungsbetrieb ?? undefined,

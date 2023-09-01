@@ -1,18 +1,16 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Identnummer" v-model="inputIdentNrTeil1" type="text" span="full" />
-			<svws-ui-text-input placeholder="Seriennummer" v-model="inputIdentNrTeil2SerNr" type="text" />
-			<svws-ui-text-input placeholder="Vergütungsschlüssel" v-model="inputLbvVerguetungsschluessel" type="text" />
-			<svws-ui-text-input placeholder="PA-Nummer" v-model="inputPersonalaktennummer" type="text" />
-			<svws-ui-text-input placeholder="LBV-Pers.Nummer" v-model="inputLbvPersonalnummer" type="text" />
+			<svws-ui-text-input placeholder="Identnummer" :model-value="data.identNrTeil1" @blur="identNrTeil1=>doPatch({identNrTeil1})" type="text" span="full" />
+			<svws-ui-text-input placeholder="Seriennummer" :model-value="data.identNrTeil2SerNr" @blur="identNrTeil2SerNr=>doPatch({identNrTeil2SerNr})" type="text" />
+			<svws-ui-text-input placeholder="Vergütungsschlüssel" :model-value="data.lbvVerguetungsschluessel" @blur="lbvVerguetungsschluessel=>doPatch({lbvVerguetungsschluessel})" type="text" />
+			<svws-ui-text-input placeholder="PA-Nummer" :model-value="data.personalaktennummer" @blur="personalaktennummer=>doPatch({personalaktennummer})" type="text" />
+			<svws-ui-text-input placeholder="LBV-Pers.Nummer" :model-value="data.lbvPersonalnummer" @blur="lbvPersonalnummer=>doPatch({lbvPersonalnummer})" type="text" />
 			<svws-ui-spacing />
-			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
-				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required span="full" />
-			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
-				:item-text="(i: LehrerFachrichtung) =>i.daten.text" required span="full" />
-			<svws-ui-text-input placeholder="Zugangsdatum" v-model="inputZugangsdatum" type="date" />
-			<svws-ui-text-input placeholder="Abgangsdatum" v-model="inputAbgangsdatum" type="date" />
+			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()" :item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required span="full" />
+			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()" :item-text="(i: LehrerFachrichtung) =>i.daten.text" required span="full" />
+			<svws-ui-text-input placeholder="Zugangsdatum" :model-value="data.zugangsdatum" @blur="zugangsdatum=>doPatch({zugangsdatum})" type="date" />
+			<svws-ui-text-input placeholder="Abgangsdatum" :model-value="data.abgangsdatum" @blur="abgangsdatum=>doPatch({abgangsdatum})" type="date" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -20,12 +18,12 @@
 <script setup lang="ts">
 
 	import type { LehrerPersonaldaten} from "@core";
-	import { LehrerAbgangsgrund, LehrerFachrichtung, LehrerLehrbefaehigung, LehrerZugangsgrund } from "@core";
 	import type { WritableComputedRef } from "vue";
+	import { LehrerFachrichtung, LehrerLehrbefaehigung } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten
+		data: LehrerPersonaldaten
 	}>();
 
 	const emit = defineEmits<{
@@ -35,26 +33,6 @@
 	function doPatch(data: Partial<LehrerPersonaldaten>) {
 		emit('patch', data);
 	}
-
-	const zugangsgrund: WritableComputedRef<LehrerZugangsgrund | undefined> =
-		computed({
-			get(): LehrerZugangsgrund | undefined {
-				return LehrerZugangsgrund.values().find(e => e.daten.kuerzel === props.personaldaten.zugangsgrund);
-			},
-			set(val: LehrerZugangsgrund | undefined) {
-				doPatch({ zugangsgrund: val?.daten.kuerzel });
-			}
-		});
-
-	const abgangsgrund: WritableComputedRef<LehrerAbgangsgrund | undefined> =
-		computed({
-			get(): LehrerAbgangsgrund | undefined {
-				return LehrerAbgangsgrund.values().find(e => e.daten.kuerzel === props.personaldaten.abgangsgrund );
-			},
-			set(val: LehrerAbgangsgrund | undefined) {
-				doPatch({ abgangsgrund: val?.daten.kuerzel });
-			}
-		});
 
 	const lehrbefaehigung: WritableComputedRef<LehrerLehrbefaehigung | undefined> = computed({
 		get(): LehrerLehrbefaehigung | undefined {
@@ -80,67 +58,5 @@
 		}
 	});
 
-	const inputZugangsdatum: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.zugangsdatum ?? undefined;
-		},
-		set(val) {
-			doPatch({ zugangsdatum: val });
-		}
-	});
-
-	const inputAbgangsdatum: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.abgangsdatum ?? undefined;
-		},
-		set(val: string | undefined) {
-			doPatch({ abgangsdatum: val });
-		}
-	});
-
-	const inputIdentNrTeil1: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.identNrTeil1 ?? undefined;
-		},
-		set(val: string | undefined) {
-			doPatch({ identNrTeil1: val });
-		}
-	});
-
-	const inputIdentNrTeil2SerNr: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.identNrTeil2SerNr ?? undefined;
-		},
-		set(val: string | undefined) {
-			doPatch({ identNrTeil2SerNr: val });
-		}
-	});
-
-	const inputLbvVerguetungsschluessel: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.lbvVerguetungsschluessel ?? undefined;
-		},
-		set(val: string | undefined) {
-			doPatch({ lbvVerguetungsschluessel: val });
-		}
-	});
-
-	const inputPersonalaktennummer: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.personalaktennummer ?? undefined;
-		},
-		set(val) {
-			doPatch({ personalaktennummer: val });
-		}
-	});
-
-	const inputLbvPersonalnummer: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.lbvPersonalnummer ?? undefined;
-		},
-		set(val) {
-			doPatch({ lbvPersonalnummer: val });
-		}
-	});
 
 </script>

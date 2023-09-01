@@ -8,7 +8,7 @@
 		</template>
 		<template #content>
 			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count filter :unique-key="String(auswahl()?.id)">
+				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
 				</template>
@@ -26,8 +26,8 @@
 
 	import type { BenutzerListeEintrag} from "@core";
 	import type { ComputedRef, Ref} from "vue";
-	import { computed, ref } from "vue";
 	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
+	import { computed, ref } from "vue";
 
 	const selectedItems: Ref<BenutzerListeEintrag[]> = ref([]);
 
@@ -42,7 +42,6 @@
 	const search: Ref<string> = ref("");
 
 	const rowsFiltered: ComputedRef<Map<number, BenutzerListeEintrag>> = computed(() => {
-		console.log("rowsFiltered--");
 		if (!search.value)
 			return props.mapBenutzer;
 		const result = new Map<number, BenutzerListeEintrag>();

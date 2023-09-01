@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
-			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @blur="bezeichnung=>doPatch({bezeichnung})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
@@ -13,7 +13,7 @@
 			</div>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputFachStatistik" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung in Statistik" :model-value="data.kuerzelStatistik" @blur="kuerzelStatistik=>doPatch({kuerzelStatistik})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -21,8 +21,6 @@
 <script setup lang="ts">
 
 	import type { FachDaten } from "@core";
-	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		data: FachDaten;
@@ -35,20 +33,5 @@
 	function doPatch(data: Partial<FachDaten>) {
 		emit('patch', data);
 	}
-
-	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzel ?? undefined,
-		set: (value) => doPatch({ kuerzel: value })
-	});
-
-	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.bezeichnung ?? undefined,
-		set: (value) => doPatch({ bezeichnung: value })
-	});
-
-	const inputFachStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzelStatistik ?? undefined,
-		set: (value) => doPatch({ kuerzelStatistik: value })
-	});
 
 </script>

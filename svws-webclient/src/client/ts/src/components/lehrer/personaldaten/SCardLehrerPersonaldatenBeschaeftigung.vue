@@ -5,10 +5,10 @@
 				:item-text="(i: LehrerRechtsverhaeltnis) =>i.daten.text" />
 			<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
 				:item-text="(i: LehrerBeschaeftigungsart) =>i.daten.text" />
-			<svws-ui-text-input placeholder="Pflichtstundensoll" v-model="pflichtstundensoll" type="text" />
+			<svws-ui-text-input placeholder="Pflichtstundensoll" :model-value="personaldaten.pflichtstundensoll" @blur="pflichtstundensoll=>doPatch({pflichtstundensoll: Number(pflichtstundensoll)})" type="text" />
 			<svws-ui-multi-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 				:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
-			<svws-ui-text-input placeholder="Stammschule" v-model="stammschulnummer" type="text" />
+			<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @blur="stammschulnummer=>doPatch({stammschulnummer})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -16,8 +16,8 @@
 <script setup lang="ts">
 
 	import type { LehrerPersonaldaten} from "@core";
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import type { WritableComputedRef } from "vue";
+	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -56,25 +56,6 @@
 		},
 		set(val: LehrerEinsatzstatus | undefined) {
 			doPatch({ einsatzstatus: val?.daten.kuerzel });
-		}
-	});
-
-	const pflichtstundensoll: WritableComputedRef<number | undefined> =
-		computed({
-			get(): number | undefined {
-				return props.personaldaten.pflichtstundensoll ?? undefined;
-			},
-			set(val: number | undefined) {
-				doPatch({ pflichtstundensoll: val });
-			}
-		});
-
-	const stammschulnummer: WritableComputedRef<string | undefined> = computed({
-		get(): string | undefined {
-			return props.personaldaten.stammschulnummer ?? undefined;
-		},
-		set(val: string | undefined) {
-			doPatch({ stammschulnummer: val });
 		}
 	});
 

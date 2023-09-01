@@ -4,19 +4,19 @@
 			<svws-ui-checkbox v-model="istSichtbar"> Ist sichtbar </svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" required />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" required />
 			<svws-ui-multi-select title="Personal-Typ" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="(i: PersonalTyp) => i.bezeichnung" required />
-			<svws-ui-text-input placeholder="Nachname" v-model="inputNachname" type="text" required />
-			<svws-ui-text-input placeholder="Rufname" v-model="inputVorname" type="text" required />
+			<svws-ui-text-input placeholder="Nachname" :model-value="data.nachname" @blur="nachname=>doPatch({nachname})" type="text" required />
+			<svws-ui-text-input placeholder="Rufname" :model-value="data.vorname" @blur="vorname=>doPatch({vorname})" type="text" required />
 			<svws-ui-spacing />
 			<svws-ui-multi-select title="Geschlecht" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
-			<svws-ui-text-input placeholder="Geburtsdatum" v-model="inputGeburtsdatum" type="date" required />
+			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data.geburtsdatum" @blur="geburtsdatum=>doPatch({geburtsdatum})" type="date" required />
 			<svws-ui-multi-select title="Staatsangehörigkeit" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 				:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
 			<svws-ui-spacing />
-			<svws-ui-text-input placeholder="Akad.Grad" v-model="inputTitel" type="text" />
-			<svws-ui-text-input placeholder="Amtsbezeichnung" v-model="inputAmtsbezeichnung" type="text" />
+			<svws-ui-text-input placeholder="Akad.Grad" :model-value="data.titel" @blur="titel=>doPatch({titel})" type="text" />
+			<svws-ui-text-input placeholder="Amtsbezeichnung" :model-value="data.amtsbezeichnung" @blur="amtsbezeichnung=>doPatch({amtsbezeichnung})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -30,7 +30,7 @@
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
 
 	const props = defineProps<{
-		stammdaten: LehrerStammdaten
+		data: LehrerStammdaten
 	}>();
 
 	const emit = defineEmits<{
@@ -41,49 +41,19 @@
 		emit('patch', data);
 	}
 
-	const inputKuerzel: WritableComputedRef<string> = computed({
-		get: () => props.stammdaten.kuerzel,
-		set: (value) => doPatch({ kuerzel: value })
-	});
-
-	const inputNachname: WritableComputedRef<string> = computed({
-		get: () => props.stammdaten.nachname,
-		set: (value) => doPatch({ nachname: value })
-	});
-
-	const inputVorname: WritableComputedRef<string> = computed({
-		get: () => props.stammdaten.vorname,
-		set: (value) => doPatch({ vorname: value })
-	});
-
 	const inputGeschlecht: WritableComputedRef<Geschlecht> = computed({
-		get: () => Geschlecht.fromValue(props.stammdaten.geschlecht) || Geschlecht.X,
+		get: () => Geschlecht.fromValue(props.data.geschlecht) || Geschlecht.X,
 		set: (value) => doPatch({ geschlecht: value.id })
 	});
 
-	const inputGeburtsdatum: WritableComputedRef<string> = computed({
-		get: () => props.stammdaten?.geburtsdatum ? props.stammdaten.geburtsdatum : '',
-		set: (value) => doPatch({ geburtsdatum: value })
-	});
-
 	const inputPersonalTyp: WritableComputedRef<PersonalTyp> = computed({
-		get: () => PersonalTyp.values().find(i => i.kuerzel === props.stammdaten.personalTyp) || PersonalTyp.SONSTIGE,
+		get: () => PersonalTyp.values().find(i => i.kuerzel === props.data.personalTyp) || PersonalTyp.SONSTIGE,
 		set: (value) => doPatch({ personalTyp: value.kuerzel })
 	});
 
 	const inputStaatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
-		get: () => Nationalitaeten.getByISO3(props.stammdaten.staatsangehoerigkeitID) || Nationalitaeten.DEU,
+		get: () => Nationalitaeten.getByISO3(props.data.staatsangehoerigkeitID) || Nationalitaeten.DEU,
 		set: (value) => doPatch({ staatsangehoerigkeitID: value.daten.iso3 })
-	});
-
-	const inputTitel: WritableComputedRef<string | undefined> = computed({
-		get: () => (props.stammdaten.titel) === null ? "" : props.stammdaten.titel,
-		set: (value) => doPatch({ titel: value })
-	});
-
-	const inputAmtsbezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => (props.stammdaten.amtsbezeichnung === null) ? "" : props.stammdaten.amtsbezeichnung,
-		set: (value) => doPatch({ amtsbezeichnung: value })
 	});
 
 	const istSichtbar: WritableComputedRef<boolean> = computed({

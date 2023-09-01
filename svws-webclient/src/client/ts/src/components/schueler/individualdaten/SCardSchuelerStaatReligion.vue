@@ -5,27 +5,25 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select v-model="staatsangehoerigkeit" title="1. Staatsangehörigkeit" autocomplete
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
-				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter"
-				required statistics />
+				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
+				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics />
 			<svws-ui-multi-select v-model="staatsangehoerigkeit2" title="2. Staatsangehörigkeit" autocomplete
-				:items="Nationalitaeten.values()" :item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit"
+				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required span="full" statistics />
-			<svws-ui-text-input v-model="religionAbmeldung" type="date"
-				placeholder="Abmeldung vom Religionsunterricht" />
-			<svws-ui-text-input v-model="religionAnmeldung" type="date" placeholder="Wiederanmeldung" />
+			<svws-ui-text-input :model-value="data().religionabmeldung" @blur="religionabmeldung=>doPatch({religionabmeldung})" type="date" placeholder="Abmeldung vom Religionsunterricht" />
+			<svws-ui-text-input :model-value="data().religionanmeldung" @blur="religionanmeldung=>doPatch({religionanmeldung})" type="date" placeholder="Wiederanmeldung" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
 	import type { ReligionEintrag, SchuelerStammdaten } from "@core";
-	import { Nationalitaeten } from "@core";
+	import type { WritableComputedRef } from "vue";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
+	import { computed } from "vue";
+	import { Nationalitaeten } from "@core";
 
 	const props = defineProps<{
 		data: () => SchuelerStammdaten;
@@ -56,16 +54,6 @@
 			return id === null ? undefined : props.mapReligionen.get(id)
 		},
 		set: (value) => doPatch({ religionID: value === undefined ? null : value.id })
-	});
-
-	const religionAbmeldung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data().religionabmeldung ?? undefined,
-		set: (value) => doPatch({ religionabmeldung: value })
-	});
-
-	const religionAnmeldung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data().religionanmeldung ?? undefined,
-		set: (value) => doPatch({ religionanmeldung: value })
 	});
 
 	const druckeKonfessionAufZeugnisse: WritableComputedRef<boolean> = computed({

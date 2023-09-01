@@ -4,8 +4,7 @@
 		<template #modalTitle>Religion Hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-multi-select v-model="religion" title="Statistikkürzel" :items="list"
-					:item-text="i => i.kuerzel || 'ohne Kürzel'" required />
+				<svws-ui-multi-select v-model="religion" title="Statistikkürzel" :items="list" :item-text="i => i.kuerzel || 'ohne Kürzel'" required />
 				<svws-ui-text-input v-model="religion.kuerzel" type="text" placeholder="Kürzel" />
 				<svws-ui-text-input v-model="religion.text" type="text" placeholder="Bezeichnung" />
 				<svws-ui-text-input v-model="religion.textZeugnis" type="text" placeholder="Zeugnisbezeichnung" />

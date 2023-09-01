@@ -5,9 +5,9 @@
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
 				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(item.wochentag)" @update:model-value="item.wochentag=$event.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
-				<SvwsUiTextInput type="number" v-model="item.unterrichtstunde" required placeholder="Stunde" />
-				<SvwsUiTextInput type="number" v-model="item.stundenbeginn" placeholder="Beginn" />
-				<SvwsUiTextInput type="number" v-model="item.stundenende" placeholder="Ende" />
+				<svws-ui-text-input type="number" v-model="item.unterrichtstunde" required placeholder="Stunde" />
+				<svws-ui-text-input type="number" v-model="item.stundenbeginn" placeholder="Beginn" />
+				<svws-ui-text-input type="number" v-model="item.stundenende" placeholder="Ende" />
 			</div>
 		</template>
 		<template #modalActions>

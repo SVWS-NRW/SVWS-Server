@@ -2,9 +2,9 @@
 	<svws-ui-content-card title="Allgemein">
 		<div class="input-wrapper">
 			<svws-ui-text-input placeholder="ID" v-model="id" type="text" readonly />
-			<svws-ui-text-input placeholder="Kürzel" v-model="kuerzel" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" />
 			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Beschreibung" v-model="beschreibung" type="text" />
+				<svws-ui-text-input placeholder="Beschreibung" :model-value="data.beschreibung" @blur="beschreibung=>doPatch({beschreibung})" type="text" />
 			</div>
 		</div>
 	</svws-ui-content-card>
@@ -12,7 +12,6 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import type { Aufsichtsbereich } from "@core";
 	import { computed } from "vue";
 
@@ -28,16 +27,6 @@
 		emit('patch', data);
 	}
 
-	const id: ComputedRef<number | undefined> = computed(() => props.data.id);
-
-	const kuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzel,
-		set: (value) => doPatch({ kuerzel: value })
-	});
-
-	const beschreibung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.beschreibung,
-		set: (value) => doPatch({ beschreibung: value })
-	});
+	const id = computed<number | undefined>(() => props.data.id);
 
 </script>

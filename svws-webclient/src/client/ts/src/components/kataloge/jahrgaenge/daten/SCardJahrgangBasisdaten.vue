@@ -1,11 +1,10 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" v-model="inputKuerzel" type="text" />
-			<svws-ui-text-input placeholder="Kürzel Schulgliederung" v-model="inputKuerzelSchulgliederung" type="text" />
-			<svws-ui-text-input placeholder="Bezeichnung" v-model="inputBezeichnung" type="text" />
-			<svws-ui-multi-select title="Folgejahrgang" v-model="inputIdFolgejahrgang"
-				:items="inputJahrgaenge" :item-text="(e: JahrgangsListeEintrag) => e.bezeichnung ?? ''" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" />
+			<svws-ui-text-input placeholder="Kürzel Schulgliederung" :model-value="data.kuerzelSchulgliederung" @blur="kuerzelSchulgliederung=>doPatch({kuerzelSchulgliederung})" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @blur="bezeichnung=>doPatch({bezeichnung})" type="text" />
+			<svws-ui-multi-select title="Folgejahrgang" v-model="inputIdFolgejahrgang" :items="inputJahrgaenge" :item-text="e => e.bezeichnung ?? ''" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
@@ -16,7 +15,7 @@
 			</div>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input placeholder="Bezeichnung in Statistik" v-model="inputKuerzelStatistik" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung in Statistik" :model-value="data.kuerzelStatistik" @blur="kuerzelStatistik=>doPatch({kuerzelStatistik})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -24,7 +23,6 @@
 <script setup lang="ts">
 
 	import type { JahrgangsDaten, JahrgangsListeEintrag} from "@core";
-	import { List } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
@@ -43,26 +41,6 @@
 
 	const id: ComputedRef<number | undefined> = computed(() => {
 		return props.data.id;
-	});
-
-	const inputKuerzel: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzel ?? undefined,
-		set: (value) => doPatch({ kuerzel: value })
-	});
-
-	const inputBezeichnung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.bezeichnung ?? undefined,
-		set: (value) => doPatch({ bezeichnung: value })
-	});
-
-	const inputKuerzelStatistik: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzelStatistik ?? undefined,
-		set: (value: string | undefined) => doPatch({ kuerzelStatistik: value })
-	});
-
-	const inputKuerzelSchulgliederung: WritableComputedRef<string | undefined> = computed({
-		get: () => props.data.kuerzelSchulgliederung ?? undefined,
-		set: (value) => doPatch({ kuerzelSchulgliederung: value })
 	});
 
 	const inputJahrgaenge: ComputedRef<Array<JahrgangsListeEintrag>> = computed(()=>
