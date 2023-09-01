@@ -13,13 +13,15 @@
 		bw?: boolean;
 		title?: string;
 		type?: 'checkbox' | 'toggle';
+		headless?: boolean;
 	}>(), {
 		value: '',
 		statistics: false,
 		disabled: false,
 		bw: false,
 		title: undefined,
-		type: 'checkbox'
+		type: 'checkbox',
+		headless: false
 	});
 
 	const loading = ref(false);
@@ -46,7 +48,7 @@
 
 <template>
 	<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
-		<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'">
+		<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-ui-checkbox--headless': headless && type !== 'toggle'}">
 		<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 		<span class="svws-ui-checkbox--label" v-if="$slots.default">
 			<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
@@ -68,6 +70,10 @@
 
 	.data-table__filter-simple & {
 		@apply my-auto;
+	}
+
+	.data-table__td & {
+		@apply flex h-full w-full items-center justify-center cursor-pointer;
 	}
 
 	&.svws-statistik {
@@ -108,7 +114,7 @@ input[type="checkbox"] {
 	}
 
 	&[disabled] {
-		@apply cursor-default opacity-50;
+		@apply pointer-events-none cursor-default opacity-50;
 
 		& ~ .svws-ui-checkbox--label,
 		& ~ .svws-ui-toggle--icon {
@@ -116,11 +122,64 @@ input[type="checkbox"] {
 			@apply text-black/50 dark:text-white/50;
 		}
 	}
+
+	&.svws-ui-checkbox--headless {
+		@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold opacity-50;
+
+		&:before {
+			content: '';
+		}
+
+		&:focus-visible {
+			@apply outline-none ring-2 ring-black ring-offset-1;
+		}
+
+		&:not(:checked),
+		&:hover,
+		&:focus-visible {
+			@apply border-black/25 bg-black/5 dark:border-white/25 dark:bg-white/5;
+
+			.table--with-background & {
+				@apply dark:border-black/25 dark:bg-black/5;
+			}
+		}
+
+		&:not(:checked)[disabled] {
+			@apply border-transparent bg-transparent opacity-25 dark:border-transparent dark:bg-transparent;
+
+			&:before {
+				content: '\2715';
+				font-size: 75%;
+			}
+		}
+
+		&:checked {
+			@apply opacity-100;
+			font-size: 95%;
+
+			&[disabled] {
+				@apply opacity-75;
+			}
+
+			&:before {
+				content: '\2713';
+			}
+		}
+
+		&:hover,
+		&:focus-visible {
+			@apply opacity-100;
+
+			&[disabled] {
+				@apply opacity-25;
+			}
+		}
+	}
 }
 
 .svws-ui-toggle {
 	.svws-ui-toggle--icon {
-		@apply flex h-4 w-8 cursor-pointer items-center justify-start overflow-hidden rounded-md bg-black/25 shadow-inner dark:bg-white/25 -ml-4;
+		@apply -ml-4 flex h-4 w-8 cursor-pointer items-center justify-start overflow-hidden rounded-md bg-black/25 shadow-inner dark:bg-white/25;
 		padding: 2px;
 
 		&:before {

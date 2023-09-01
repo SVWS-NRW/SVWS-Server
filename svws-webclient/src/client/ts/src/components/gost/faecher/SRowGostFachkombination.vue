@@ -11,23 +11,23 @@
 	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
 		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox circle v-model="gueltigEF1" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+		<svws-ui-checkbox v-model="gueltigEF1" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-		<svws-ui-checkbox circle v-model="gueltigEF2" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+		<svws-ui-checkbox v-model="gueltigEF2" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox circle v-model="gueltigQ11" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+		<svws-ui-checkbox v-model="gueltigQ11" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-		<svws-ui-checkbox circle v-model="gueltigQ12" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+		<svws-ui-checkbox v-model="gueltigQ12" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
-		<svws-ui-checkbox circle v-model="gueltigQ21" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+		<svws-ui-checkbox v-model="gueltigQ21" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-		<svws-ui-checkbox circle v-model="gueltigQ22" headless />
+	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+		<svws-ui-checkbox v-model="gueltigQ22" headless />
 	</div>
 	<div role="cell" class="data-table__td  data-table__td__align-center">
 		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">

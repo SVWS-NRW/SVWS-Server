@@ -9,8 +9,7 @@
 			<span class="hyphens-auto">{{ fach.bezeichnung }}</span>
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center">
-			<i-ri-check-line v-if="fach.istFremdSpracheNeuEinsetzend" />
-			<i-ri-close-line v-else class="opacity-25" />
+			<input type="checkbox" class="svws-ui-checkbox--headless" disabled v-model="fach.istFremdSpracheNeuEinsetzend">
 		</div>
 		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
 			<div v-if="istProjektkurs" class="flex items-center border border-black/25 rounded group w-full">
@@ -33,53 +32,53 @@
 			</div>
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
 			:class="{'data-table__td__disabled': !ef_moeglich}"
 			:style="{ 'background-color': bgColor }">
-			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
-				<svws-ui-checkbox v-model="ef1" circle bw />
-			</span>
+			<label class="svws-checkbox-label" v-if="ef_moeglich">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="ef1">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate"
 			:class="{'data-table__td__disabled': !ef_moeglich}"
 			:style="{ 'background-color': bgColor }">
-			<span class="faecher-toggle--checkbox" v-if="ef_moeglich">
-				<svws-ui-checkbox v-model="ef2" circle bw />
-			</span>
+			<label class="svws-checkbox-label" v-if="ef_moeglich">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="ef2">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center">
-			<span class="faecher-toggle--checkbox">
-				<svws-ui-checkbox v-model="q11" circle bw />
-			</span>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+			<label class="svws-checkbox-label">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q11">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-			<span class="faecher-toggle--checkbox">
-				<svws-ui-checkbox v-model="q12" circle bw />
-			</span>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+			<label class="svws-checkbox-label">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q12">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center">
-			<span class="faecher-toggle--checkbox">
-				<svws-ui-checkbox v-model="q21" circle bw />
-			</span>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+			<label class="svws-checkbox-label">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q21">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate">
-			<span class="faecher-toggle--checkbox">
-				<svws-ui-checkbox v-model="q22" circle bw />
-			</span>
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+			<label class="svws-checkbox-label">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q22">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
 			:class="{'data-table__td__disabled': !abi_gk_moeglich}"
 			:style="{ 'background-color': bgColor }">
-			<span class="faecher-toggle--checkbox" v-if="abi_gk_moeglich">
-				<svws-ui-checkbox v-model="abiGK" circle bw />
-			</span>
+			<label class="svws-checkbox-label" v-if="abi_gk_moeglich">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="abiGK">
+			</label>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center"
+		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
 			:class="{'data-table__td__disabled': !abi_lk_moeglich}"
 			:style="{ 'background-color': bgColor }">
-			<span class="faecher-toggle--checkbox" v-if="abi_lk_moeglich">
-				<svws-ui-checkbox v-model="abiLK" circle bw />
-			</span>
+			<label class="svws-checkbox-label" v-if="abi_lk_moeglich">
+				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="abiLK">
+			</label>
 		</div>
 	</div>
 </template>
@@ -230,20 +229,7 @@
 </script>
 
 <style lang="postcss" scoped>
-	.faecher-toggle--checkbox {
-		.checkbox {
-			@apply my-0.5;
-		}
-
-		svg {
-			@apply -my-0.5;
-			width: 1.4em;
-			height: 1.4em;
-
-			&:hover,
-			&:focus {
-				@apply opacity-75;
-			}
-		}
+	.svws-checkbox-label {
+		@apply w-full h-full inline-flex justify-center items-center cursor-pointer;
 	}
 </style>
