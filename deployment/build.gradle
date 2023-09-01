@@ -28,7 +28,7 @@ githubRelease {
 	body  "v${project.version}"
 	draft true
 	prerelease true
-	releaseAssets  "./linux-installer/build/distributions/install.sh", "./linux-installer/build/distributions/linux-installer-${project.version}.tar.gz"
+	releaseAssets  "./linux-installer/build/distributions/install-${project.version}.sh", "./linux-installer/build/distributions/linux-installer-${project.version}.tar.gz"
 	allowUploadToExisting.set true
 	overwrite true
 	dryRun false

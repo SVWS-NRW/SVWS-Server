@@ -77,8 +77,19 @@ task removeCR {
 	}
 }
 
-task buildLinuxInstaller() {
+task renameInstallScript(type: Copy){
 	dependsOn('removeCR')
+	def inputFile = file("$buildDir/distributions/install.sh")
+	from inputFile
+	into "$buildDir/distributions/"
+	rename { String fileName ->
+		fileName.replace("install.sh", "install-"+project.ext.svwsArtifactVersion+".sh")
+	}
+}
+
+
+task buildLinuxInstaller() {
+	dependsOn('renameInstallScript')
 	group "build"
 }
 
