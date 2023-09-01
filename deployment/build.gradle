@@ -22,7 +22,7 @@ githubRelease {
 	owner "SVWS-NRW"
 	repo "SVWS-Server"
 	tagName "v${project.version}"
-	targetCommitish "main"
+	targetCommitish "dev"
 	releaseName "v${project.version}"
 	generateReleaseNotes false
 	body  "v${project.version}"
