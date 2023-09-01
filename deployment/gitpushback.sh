@@ -21,7 +21,7 @@ git add /builds/svws/SVWS-Server/svws-webclient/src/client-test/ts/package.json
 git add /builds/svws/SVWS-Server/svws-webclient/src/client/ts/package.json
 git add /builds/svws/SVWS-Server/svws-webclient/src/client/ts/version.ts
 git add /builds/svws/SVWS-Server/svws-webclient/src/components/ts/package.json
-it add /builds/svws/SVWS-Server/svws-webclient/src/core-test/ts/package.json
+git add /builds/svws/SVWS-Server/svws-webclient/src/core-test/ts/package.json
 git add /builds/svws/SVWS-Server/svws-webclient/src/core/ts/package.json
 git add /builds/svws/SVWS-Server/svws-webclient/src/ui/ts/package.json
 git status
