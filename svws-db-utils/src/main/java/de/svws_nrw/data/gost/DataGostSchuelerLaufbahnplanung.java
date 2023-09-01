@@ -420,13 +420,14 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * Führt den Import der Laufbahndaten des angegebenen Schülers aus den übergebenenen Laufbahnplanungsdaten
 	 * durch. Dabei werde Fehler ggf. im logger protokolliert.
 	 *
-	 * @param dtoSchueler
-	 * @param laufbahnplanungsdaten
-	 * @param logger
+	 * @param conn                    die Datenbankverbindung
+	 * @param dtoSchueler             der Schüler
+	 * @param laufbahnplanungsdaten   die Laufbahnplanungsdaten
+	 * @param logger                  der Logger
 	 *
 	 * @return true im Erfolgsfall
 	 */
-	private boolean doImport(final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten, final Logger logger) {
+	private static boolean doImport(final DBEntityManager conn, final DTOSchueler dtoSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten, final Logger logger) {
 		// Lese zunächst die Informationen zur Schule ein und prüfe, ob die Schulnummer übereinstimmt.
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null) {
@@ -637,10 +638,10 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 				fachwahlenGeaendert.add(fachwahl);
 			}
 			if (!fachwahlenGeaendert.isEmpty())
-				conn.persistAll(fachwahlenGeaendert);
+				conn.transactionPersistAll(fachwahlenGeaendert);
 			for (final Long idFach : nurDB) {
 				final DTOGostSchuelerFachbelegungen fachwahl = mapFachwahlen.get(idFach);
-				conn.remove(fachwahl);
+				conn.transactionRemove(fachwahl);
 			}
 		} else {
 			logger.logLn("Keine Änderungen für den Schüler mit der ID " + dtoSchueler.ID + " gegenüber der Datenbank in der Datei enthalten.");
@@ -659,30 +660,41 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die HTTP-Response mit dem Log
 	 */
 	public Response importGZip(final long idSchueler, final byte[] data) {
-		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
-		// Erstelle den Logger
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
-		// Importiere die Daten...
-		GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
 		try {
-			laufbahnplanungsdaten = JSONMapper.toObjectGZip(data, GostLaufbahnplanungDaten.class);
-		} catch (final CompressionException e) {
-			logger.log("Fehler beim Öffnen der Datei.");
-			logger.log("Fehlernachricht: " + e.getMessage());
+			conn.transactionBegin();
+			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+			if (dtoSchueler == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Erstelle den Logger
+			final Logger logger = new Logger();
+			final LogConsumerList log = new LogConsumerList();
+			logger.addConsumer(log);
+			logger.addConsumer(new LogConsumerConsole());
+			// Importiere die Daten...
+			GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
+			try {
+				laufbahnplanungsdaten = JSONMapper.toObjectGZip(data, GostLaufbahnplanungDaten.class);
+			} catch (final CompressionException e) {
+				logger.log("Fehler beim Öffnen der Datei.");
+				logger.log("Fehlernachricht: " + e.getMessage());
+			}
+			// Führe den Import durch und erstelle die Response mit dem Log
+			final SimpleOperationResponse daten = new SimpleOperationResponse();
+			daten.success = doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger);
+			logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
+			daten.log = log.getStrings();
+			conn.transactionCommit();
+			return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
 		}
-		// Führe den Import durch und erstelle die Response mit dem Log
-		final SimpleOperationResponse daten = new SimpleOperationResponse();
-		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
-		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
-		daten.log = log.getStrings();
-		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
@@ -697,22 +709,32 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	 * @return die HTTP-Response mit dem Log
 	 */
 	public Response importJSON(final long idSchueler, final GostLaufbahnplanungDaten laufbahnplanungsdaten) {
-		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (dtoSchueler == null)
-			throw OperationError.NOT_FOUND.exception();
-		// Erstelle den Logger
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
-		// Führe den Import durch und erstelle die Response mit dem Log
-		final SimpleOperationResponse daten = new SimpleOperationResponse();
-		daten.success = doImport(dtoSchueler, laufbahnplanungsdaten, logger);
-		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
-		daten.log = log.getStrings();
-		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		try {
+			conn.transactionBegin();
+			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+			if (dtoSchueler == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Erstelle den Logger
+			final Logger logger = new Logger();
+			final LogConsumerList log = new LogConsumerList();
+			logger.addConsumer(log);
+			logger.addConsumer(new LogConsumerConsole());
+			// Führe den Import durch und erstelle die Response mit dem Log
+			final SimpleOperationResponse daten = new SimpleOperationResponse();
+			daten.success = doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger);
+			logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
+			daten.log = log.getStrings();
+			return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
 	}
 
 

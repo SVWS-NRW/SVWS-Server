@@ -47,7 +47,8 @@ public final class DBUtilsGostLaufbahn {
 
 	/**
 	 * Ermittelt die Daten für den Schüler der gymnasialen Oberstufe. Ist kein Schüler angelegt, so wird dieser mit den
-	 * Default-Daten des Jahrgangs angelegt.
+	 * Default-Daten des Jahrgangs angelegt. Es wird intern geprüft, ob eine neue Transaktion gestartet werden muss
+	 * oder ob die Handhabung von außerhalb erfolgt.
 	 *
 	 * @param conn         die zu nutzende Datenbank-Verbindung
 	 * @param idSchueler   die ID des Schülers
@@ -56,8 +57,10 @@ public final class DBUtilsGostLaufbahn {
 	 * @return die Daten des Schülers
 	 */
 	public static DTOGostSchueler getSchuelerOrInit(final DBEntityManager conn, final long idSchueler, final int abijahr) {
+		final boolean needTransaction = !conn.hasActiveTransaction();
 		try {
-			conn.transactionBegin();
+			if (needTransaction)
+				conn.transactionBegin();
     		// Prüfe, ob der Abiturjahrgang für den Schüler existiert
 			final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 			if (jahrgang == null)
@@ -71,7 +74,8 @@ public final class DBUtilsGostLaufbahn {
 	    		// Initialisiere die Laufbahnplanung mit Default-Einträgen
 	    		DataGostJahrgangLaufbahnplanung.transactionResetSchueler(conn, jahrgang, idSchueler);
 	    	}
-			conn.transactionCommit();
+	    	if (needTransaction)
+	    		conn.transactionCommit();
 			return dtoGostSchueler;
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webAppException)
@@ -79,7 +83,8 @@ public final class DBUtilsGostLaufbahn {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 		} finally {
 			// Perform a rollback if necessary
-			conn.transactionRollback();
+			if (needTransaction)
+				conn.transactionRollback();
 		}
 	}
 
