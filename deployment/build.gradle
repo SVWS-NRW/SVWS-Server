@@ -1,6 +1,12 @@
+plugins {
+	id "com.github.breadmoirai.github-release" version "2.4.1"
+}
+
 //TODO: Übergeordnete build.gradle darf nicht alle Plugins auf dieses Modul anwenden (z.B. kein JavaLibPlugin)
 def svwsArtifactVersion = project.ext.latestRelease
 def appArtifactsDir ="$projectDir/../download/svws"
+
+def githubToken = project.hasProperty('github_token') ? project.property('github_token') : "xxx"
 
 subprojects {
 	project.ext.appArtifactsDir = appArtifactsDir
@@ -9,4 +15,23 @@ subprojects {
 
 clean.doLast {
 	file("${appArtifactsDir}").deleteDir()
+}
+
+githubRelease {
+	token githubToken
+	owner "SVWS-NRW"
+	repo "SVWS-Server"
+	tagName "v${project.version}"
+	targetCommitish "dev"
+	releaseName "v${project.version}"
+	generateReleaseNotes false
+	body  "v${project.version}"
+	draft true
+	prerelease true
+	releaseAssets  "./linux-installer/build/distributions/install.sh", "./linux-installer/build/distributions/linux-installer-${project.version}.tar.gz"
+	allowUploadToExisting.set true
+	overwrite true
+	dryRun false
+	apiEndpoint "https://api.github.com"
+	client
 }

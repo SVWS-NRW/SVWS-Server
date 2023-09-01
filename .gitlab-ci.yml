@@ -54,6 +54,8 @@ publish:
         - ./deployment/setupVersion.sh
         - ./gradlew signJar publishReleaseAllAndCloseSonatype
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - ./gradlew :deployment:githubRelease
     when: on_success
 
 integration-tests:
@@ -76,7 +78,6 @@ build:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew --build-cache build -Penvironment=build
-        # - ./gradlew :deployment:linux-installer:buildLinuxInstaller
 
     cache:
         <<: *global_cache
