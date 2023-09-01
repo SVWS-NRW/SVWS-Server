@@ -47,13 +47,13 @@ publish:
     needs:
         - job: build
     script:
-        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        - cat gradle_secure.properties >> gradle.properties
-        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        - chmod +x ./deployment/setupVersion.sh
-        - ./deployment/setupVersion.sh
-        - ./gradlew signJar publishReleaseAllAndCloseSonatype
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+      # - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+      # - cat gradle_secure.properties >> gradle.properties
+      #  - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
+      #  - chmod +x ./deployment/setupVersion.sh
+      #  - ./deployment/setupVersion.sh
+      #  - ./gradlew signJar publishReleaseAllAndCloseSonatype
+      #  - ./gradlew :deployment:docker:dockerPushAllDockerhub
         - ./gradlew :deployment:linux-installer:buildLinuxInstaller
         - ./gradlew :deployment:githubRelease
     when: on_success
