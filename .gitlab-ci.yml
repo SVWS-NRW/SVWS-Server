@@ -105,6 +105,10 @@ build:
         paths:
             - "./build/**"
             - "./**/build/**"
+            - "./download/**"
+            - "./node/**"
+            - "./node_modules/**"
+            - "./.gradle/**"
         expire_in: "1 days"
 
 sonarqube_analysis:

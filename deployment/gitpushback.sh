@@ -5,6 +5,7 @@ NEW_VERSION=v0.0.3
 git status
 
 git switch dev
+git pull
 
 git config --global user.name "${GITLAB_USER_NAME}"
 git config --global user.email "${GITLAB_USER_EMAIL}"
