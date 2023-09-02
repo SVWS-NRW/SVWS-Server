@@ -620,7 +620,7 @@ public final class TranspilerUnit {
 				final Tree scope = current.getLeaf();
 				if (scopesLocalVariables.contains(scope)) {
 					final VariableTree variable = allLocalVariablesByScope.get(scope).get(nodeName);
-					return ExpressionType.getExpressionType(transpiler, variable.getType());
+					return ExpressionType.getExpressionType(transpiler, variable.getType() == null ? variable : variable.getType());
 				}
 			}
 		}

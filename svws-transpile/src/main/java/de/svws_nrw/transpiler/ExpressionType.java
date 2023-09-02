@@ -23,6 +23,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WildcardTree;
 
 
@@ -207,6 +208,19 @@ public abstract class ExpressionType implements Tree {
 				return ExpressionType.getExpressionType(transpiler, ve.asType());
 			}
 			throw new TranspilerException("Transpiler Error: Unexpected identifier expression type " + type.toString() + " for element kind " + e.getKind() + ".");
+		}
+		if (type instanceof final VariableTree variable) {
+			final Element e = transpiler.getElement(variable);
+			if (e instanceof final TypeElement te) {
+				return ExpressionClassType.getExpressionClassType(transpiler, te);
+			}
+			if (e instanceof final TypeParameterElement tpe) {
+				return ExpressionTypeVar.getExpressionTypeVariable(transpiler, tpe.asType());
+			}
+			if (e instanceof final VariableElement ve) {
+				return ExpressionType.getExpressionType(transpiler, ve.asType());
+			}
+			throw new TranspilerException("Transpiler Error: Unexpected variable expression type " + type.toString() + " for element kind " + e.getKind() + ".");
 		}
 		if (type instanceof final ArrayTypeTree arrayType)
 			return new ExpressionArrayType(getExpressionType(transpiler, arrayType.getType()), 1);

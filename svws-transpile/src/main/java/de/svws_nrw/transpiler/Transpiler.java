@@ -1233,6 +1233,11 @@ public final class Transpiler extends AbstractProcessor {
 			}
 			return found;
 		}
+		if (mit.getMethodSelect() instanceof final IdentifierTree identifier) {
+			final Element e = getElement(identifier);
+			if (e instanceof final ExecutableElement ee)
+				return ee;
+		}
 		throw new TranspilerException("Transpiler Error: Cannot find executable element for method invocation " + mit.toString());
 	}
 
