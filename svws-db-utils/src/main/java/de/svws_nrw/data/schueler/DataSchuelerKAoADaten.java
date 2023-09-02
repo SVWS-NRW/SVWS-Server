@@ -136,17 +136,12 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 * @param schuelerKAoAID ID der DTOSchuelerKAoADaten
 	 */
 	private void deleteBySchuelerKAoAID(final Long schuelerKAoAID) {
-		final DTOSchuelerKAoADaten result = this.getByID(schuelerKAoAID);
-
-		if (result == null) {
+		final DTOSchuelerKAoADaten result = this.conn.queryByKey(DTOSchuelerKAoADaten.class, schuelerKAoAID);
+		if (result == null)
 			throw OperationError.NOT_FOUND.exception("Datensatz mit der id: " + schuelerKAoAID + NICHT_GEFUNDEN);
-		}
-
-		final boolean success = this.conn.remove(result);
-
-		if (!success) {
+		final boolean success = this.conn.transactionRemove(result);
+		if (!success)
 			throw OperationError.INTERNAL_SERVER_ERROR.exception(SERVER_ERROR);
-		}
 	}
 
 	/**
@@ -172,14 +167,10 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 */
 	public SchuelerKAoADaten createBySchuelerID(final Long schuelerid, final SchuelerKAoADaten daten) {
 		this.validate(schuelerid, daten);
-		final boolean success = conn.persistNewWithAutoInkrement(DTOSchuelerKAoADaten.class, id -> {
-			daten.id = id;
-			return getDtoSchuelerKAoADaten(daten);
-		});
-
-		if (!success) {
+		daten.id = conn.transactionGetNextID(DTOSchuelerKAoADaten.class);
+		final boolean success = conn.transactionPersist(getDtoSchuelerKAoADaten(daten));
+		if (!success)
 			throw OperationError.INTERNAL_SERVER_ERROR.exception(SERVER_ERROR);
-		}
 		return daten;
 	}
 
@@ -219,34 +210,19 @@ public final class DataSchuelerKAoADaten extends DataManager<Long> {
 	 * @return SchuelerKAoADaten
 	 */
 	public SchuelerKAoADaten putBySchuelerID(final Long schuelerid, final SchuelerKAoADaten daten, final Long schuelerKAoAID) {
-		if (!Objects.equals(schuelerKAoAID, daten.id)) {
+		if (!Objects.equals(schuelerKAoAID, daten.id))
 			throw OperationError.BAD_REQUEST.exception("Payload id inkorrekt");
-		}
 		this.validate(schuelerid, daten);
 
-		final DTOSchuelerKAoADaten result = this.getByID(schuelerKAoAID);
-		if (result == null) {
+		final DTOSchuelerKAoADaten result = this.conn.queryByKey(DTOSchuelerKAoADaten.class, schuelerKAoAID);
+		if (result == null)
 			throw OperationError.NOT_FOUND.exception("Datensatz mit der id: " + schuelerKAoAID + NICHT_GEFUNDEN);
-		}
 
 		getDtoSchuelerKAoADaten(daten, result);
-		final boolean success = this.conn.persist(result);
-
-		if (!success) {
+		final boolean success = this.conn.transactionPersist(result);
+		if (!success)
 			throw OperationError.INTERNAL_SERVER_ERROR.exception(SERVER_ERROR);
-		}
 		return daten;
-	}
-
-	/**
-	 * Holt DTOSchuelerKAoADaten für eine gegebene ID
-	 *
-	 * @param id die ID
-	 *
-	 * @return die DTOSchuelerKAoADaten
-	 */
-	public DTOSchuelerKAoADaten getByID(final Long id) {
-		return this.conn.queryByKey(DTOSchuelerKAoADaten.class, id);
 	}
 
 	/**

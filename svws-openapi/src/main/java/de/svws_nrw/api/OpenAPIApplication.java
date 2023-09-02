@@ -3,6 +3,7 @@ package de.svws_nrw.api;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,6 +62,7 @@ import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -285,6 +287,40 @@ public final class OpenAPIApplication extends Application {
 	 */
 	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) throws WebApplicationException {
 		return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
+	}
+
+	/**
+	 * Führt die übergebene Aufgabe auf der Datenbank aus und gibt bei Erfolg die Response der Aufgabe zurück.
+	 * Hierfür wird der aktuelle SVWS-Benutzer anhand des HTTP-Requests ermittelt und überprüft, ob der
+	 * Benutzer entweder Admin-Rechte oder eine der übergebenen Kompetenzen besitzt. Die
+	 * dabei erstellte {@link DBEntityManager}-Instanz wird dabei für den Datenbankzugriff genutzt.
+	 *
+	 * Wichtig: Eine Transaktion für die Aufgabe wird erzeugt und von dieser Methode gehandhabt!
+	 *
+	 * @param task          die auszuführende Aufgabe
+	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
+	 * @param kompetenzen   die zu prüfenden Kompetenzen
+	 *
+	 * @return die Response zu der Aufgabe
+	 */
+	public static Response runWithTransaction(final Function<DBEntityManager, Response> task, final HttpServletRequest request,
+			final ServerMode mode, final BenutzerKompetenz... kompetenzen) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, mode, kompetenzen)) {
+			try {
+				conn.transactionBegin();
+				final Response response = task.apply(conn);
+				conn.transactionCommit();
+				return response;
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webAppException)
+					return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			} finally {
+				// Perform a rollback if necessary
+				conn.transactionRollback();
+			}
+		}
 	}
 
 }

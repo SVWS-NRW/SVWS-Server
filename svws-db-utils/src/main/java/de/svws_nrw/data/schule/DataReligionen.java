@@ -12,11 +12,10 @@ import de.svws_nrw.core.types.schule.Religion;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
+import de.svws_nrw.db.dto.current.schild.katalog.DTOKonfession;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -80,39 +79,28 @@ public final class DataReligionen extends DataManager<Long> {
             return OperationError.NOT_FOUND.getResponse("Die Id der zu ändernden Religion darf nicht null sein.");
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
-            try {
-                conn.transactionBegin();
-                final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
-                if (reli == null)
-                    return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
-                for (final Entry<String, Object> entry : map.entrySet()) {
-                    final String key = entry.getKey();
-                    final Object value = entry.getValue();
-                    switch (key) {
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
-						case "kuerzel" -> reli.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge()); // TODO Katalog prüfen
-                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
-                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
-						case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
-						case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
-						case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
-                       	default -> throw OperationError.BAD_REQUEST.exception();
-                    }
+            final DTOKonfession reli = conn.queryByKey(DTOKonfession.class, id);
+            if (reli == null)
+                return OperationError.NOT_FOUND.getResponse("Die Beschäftigungsart mit der ID" + id + " existiert nicht.");
+            for (final Entry<String, Object> entry : map.entrySet()) {
+                final String key = entry.getKey();
+                final Object value = entry.getValue();
+                switch (key) {
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "kuerzel" -> reli.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge()); // TODO Katalog prüfen
+                    case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+                    case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
+					case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
+					case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
+					case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
+                   	default -> throw OperationError.BAD_REQUEST.exception();
                 }
-                conn.transactionPersist(reli);
-                conn.transactionCommit();
-            } catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+            }
+            conn.transactionPersist(reli);
         }
         return Response.status(Status.OK).build();
 	}
@@ -127,48 +115,37 @@ public final class DataReligionen extends DataManager<Long> {
 		DTOKonfession reli = null;
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				// Bestimme die ID der neuen Religion
-				final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Religion");
-				final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-				// Religion anlegen
-				reli = new DTOKonfession(id, "");
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-						case "id" -> {
-							final Long create_id = JSONMapper.convertToLong(value, true);
-							if ((create_id != null) && (create_id >= 0))
-								throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
-						}
-						case "kuerzel" -> {
-							reli.StatistikKrz = JSONMapper.convertToString(value, true, true, null);
-							if (reli.StatistikKrz != null) {
-								final ReligionKatalogEintrag rke = Religion.getByKuerzel(reli.StatistikKrz).daten;
-								if (rke == null)
-									throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Küruel " + reli.StatistikKrz + " existiert in der amtlichen Statistik nicht.");
-							}
-						}
-                        case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
-                        case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
-						case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
-						case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
-						case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
-                       	default -> throw OperationError.BAD_REQUEST.exception();
+			// Bestimme die ID der neuen Religion
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "K_Religion");
+			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			// Religion anlegen
+			reli = new DTOKonfession(id, "");
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "id" -> {
+						final Long create_id = JSONMapper.convertToLong(value, true);
+						if ((create_id != null) && (create_id >= 0))
+							throw OperationError.BAD_REQUEST.exception("Die ID für die Religion darf bei der Erstellung nicht gültig gesetzt sein.");
 					}
+					case "kuerzel" -> {
+						reli.StatistikKrz = JSONMapper.convertToString(value, true, true, null);
+						if (reli.StatistikKrz != null) {
+							final ReligionKatalogEintrag rke = Religion.getByKuerzel(reli.StatistikKrz).daten;
+							if (rke == null)
+								throw OperationError.NOT_FOUND.exception("Eine Religion mit dem  Küruel " + reli.StatistikKrz + " existiert in der amtlichen Statistik nicht.");
+						}
+					}
+                    case "text" -> reli.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_Bezeichnung.datenlaenge());
+                    case "textZeugnis" -> reli.ZeugnisBezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_ZeugnisBezeichnung.datenlaenge());
+					case "istSichtbar" -> reli.Sichtbar = JSONMapper.convertToBoolean(value, true);
+					case "istAenderbar" -> reli.Aenderbar = JSONMapper.convertToBoolean(value, true);
+					case "sortierung" -> reli.Sortierung = JSONMapper.convertToInteger(value, true);
+                   	default -> throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(reli);
-				if (!conn.transactionCommit())
-					return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Religion");
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webApplicationException)
-					return webApplicationException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				conn.transactionRollback();
 			}
+			conn.transactionPersist(reli);
 		}
 		final ReligionEintrag daten = dtoMapper.apply(reli);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

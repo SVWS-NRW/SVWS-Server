@@ -128,7 +128,6 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	 */
 	public Response addEmpty(final long idSchuljahresabschnitt) {
 		try {
-			conn.transactionBegin();
 			// Bestimme den Schuljahresabschnitt
 			final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresabschnitt);
 			if (abschnitt == null)
@@ -150,13 +149,11 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	    	final DTOStundenplan stundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, "Neuer Stundenplan", 0);
 	    	stundenplan.Ende = ende;
 	    	conn.transactionPersist(stundenplan);
-			conn.transactionCommit();
 			final StundenplanListeEintrag daten = DataStundenplanListe.dtoMapper.apply(stundenplan);
 			daten.schuljahr = abschnitt.Jahr;
 			daten.abschnitt = abschnitt.Abschnitt;
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
-			conn.transactionRollback();
 			if (exception instanceof IllegalArgumentException)
 				return OperationError.NOT_FOUND.getResponse();
 			if (exception instanceof final WebApplicationException webex)
@@ -174,21 +171,12 @@ public final class DataStundenplanListe extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
 	 */
 	public Response delete(final long idStundenplan) {
-		try {
-			conn.transactionBegin();
-			// Bestimme den Stundenplan zu der ID und lösche ihn, falls er vorhanden ist
-			final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
-			if (stundenplan == null)
-				throw OperationError.NOT_FOUND.exception("Ein Stundenplan mit der ID %d konnte nicht gefunden werden.".formatted(idStundenplan));
-			conn.transactionRemove(stundenplan);
-    		conn.transactionCommit();
-			return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+		// Bestimme den Stundenplan zu der ID und lösche ihn, falls er vorhanden ist
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Ein Stundenplan mit der ID %d konnte nicht gefunden werden.".formatted(idStundenplan));
+		conn.transactionRemove(stundenplan);
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}
 
 

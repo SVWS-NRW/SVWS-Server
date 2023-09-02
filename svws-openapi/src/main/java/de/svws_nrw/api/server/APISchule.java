@@ -136,9 +136,8 @@ public class APISchule {
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde, dies ist z.B. der Fall, falls zuvor schon eine Schule angelegt wurde.")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response initSchule(@PathParam("schema") final String schema, @PathParam("schulnummer") final int schulnummer, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return (new DataSchuleStammdaten(conn)).init(schulnummer);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).init(schulnummer),
+    		request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
     /**
@@ -160,9 +159,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schule in der Datenbank vorhanden")
     public Response getSchuleNummer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
-    		return (new DataSchuleStammdaten(conn).getSchulnummerResponse());
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).getSchulnummerResponse(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
     }
 
 
@@ -187,9 +185,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit dem angegebenen Schema gefunden")
     public Response getSchuleStammdaten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
-    		return (new DataSchuleStammdaten(conn).get());
-    	}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).get(),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
     }
 
 
@@ -219,9 +216,8 @@ public class APISchule {
     		@RequestBody(description = "Der Patch für die Schul-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuleStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN)) {
-    		return (new DataSchuleStammdaten(conn).patch(is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).patch(null, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
     }
 
 
@@ -245,9 +241,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schuldaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit dem angegebenen Schema gefunden")
     public Response getSchullogo(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN)) {
-    		return (new DataSchuleStammdaten(conn).getSchullogo());
-    	}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).getSchullogo(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN);
     }
 
 
@@ -273,9 +268,8 @@ public class APISchule {
     public Response putSchullogo(@PathParam("schema") final String schema,
     		@RequestBody(description = "Das Logo der Schule", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN)) {
-    		return (new DataSchuleStammdaten(conn).putSchullogo(is));
-    	}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuleStammdaten(conn).putSchullogo(is),
+				request, ServerMode.STABLE, BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN);
     }
 
 
@@ -297,9 +291,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Abschlussart-Katalog-Einträge gefunden")
     public Response getSchulabschluesseAllgemeinbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchulabschluesseAllgemeinbildend(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchulabschluesseAllgemeinbildend(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -321,9 +314,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Abschlussart-Katalog-Einträge gefunden")
     public Response getSchulabschluesseBerufsbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchulabschluesseBerufsbildend(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchulabschluesseBerufsbildend(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -345,9 +337,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schulform-Katalog-Einträge gefunden")
     public Response getSchulformen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchulformen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchulformen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -369,9 +360,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schulform-Katalog-Einträge gefunden")
     public Response getSchulgliederungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchulgliederungen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchulgliederungen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -393,9 +383,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Berufskolleg-Anlagen-Katalog-Einträge gefunden")
     public Response getBerufskollegAnlagen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogBerufskollegAnlagen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBerufskollegAnlagen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -417,9 +406,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Berufskolleg-Berufsebenen-Katalog-Einträge gefunden")
     public Response getBerufskollegBerufsebenen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogBerufskollegBerufsebenen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBerufskollegBerufsebenen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -441,9 +429,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Berufskolleg-Fachklassen-Katalog gefunden")
     public Response getBerufskollegFachklassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogBerufskollegFachklassen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBerufskollegFachklassen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -465,9 +452,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getPruefungsordnungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogPruefungsordnungen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogPruefungsordnungen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -489,9 +475,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getVerkehrssprachen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogVerkehrssprachen(null)).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogVerkehrssprachen(null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -583,9 +568,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
     public Response getFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogFoerderschwerpunkte()).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogFoerderschwerpunkte().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -607,9 +591,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Förderschwerpunkt-Katalog-Einträge gefunden")
     public Response getSchuelerFoerderschwerpunkte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchuelerFoerderschwerpunkte(conn).getList());
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -635,9 +618,8 @@ public class APISchule {
     @ApiResponse(responseCode = "404", description = "Kein Förderschwerpunkt-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerFoerderschwerpunkt(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchuelerFoerderschwerpunkte(conn).get(id));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchuelerFoerderschwerpunkte(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -662,9 +644,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogReligionen()).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogReligionen().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -690,9 +671,8 @@ public class APISchule {
     @ApiResponse(responseCode = "404", description = "Keine Religion mit der angegebenen ID gefunden")
     public Response getReligion(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataReligionen(conn).get(id));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataReligionen(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -721,9 +701,8 @@ public class APISchule {
     		@RequestBody(description = "Der Post für die Religion-Daten", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataReligionen(conn)).create(is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataReligionen(conn).create(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
     /**
@@ -753,9 +732,8 @@ public class APISchule {
                                         @RequestBody(description = "Der Patch für die Religion-Stammdaten", required = true,
                                         content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ReligionEintrag.class))) final
                                         InputStream is, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataReligionen(conn)).patch(id, is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataReligionen(conn).patch(id, is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
     /**
      * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Religionen bzw. Konfessionen.
@@ -778,9 +756,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getReligionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-        	return (new DataReligionen(conn)).getAll();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataReligionen(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -804,9 +781,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Katalog nicht gefunden")
     public Response getKatalogAbgangsartenAllgemeinbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogAbgangsartenAllgemeinbildend()).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAbgangsartenAllgemeinbildend().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -830,9 +806,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Katalog nicht gefunden")
     public Response getKatalogAbgangsartenBerufsbildend(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogAbgangsartenBerufsbildend()).getList();
-		}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAbgangsartenBerufsbildend().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -994,9 +969,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
     public Response getKatalogReformpaedagogikAlle(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogReformpaedagogik(conn)).getAll();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
     /**
@@ -1017,9 +991,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Reformpädagogik-Einträge für die Schulform dieser Schule gefunden.")
     public Response getKatalogReformpaedagogik(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogReformpaedagogik(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
     /**
@@ -1041,9 +1014,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Kein Reformpädagogik-Katalog-Eintrag für die angegebene ID gefunden.")
     public Response getKatalogReformpaedagogikEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogReformpaedagogik(conn)).get(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogReformpaedagogik(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
     /**
@@ -1064,9 +1036,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKindergartenbesuchsdauer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogKindergartenbesuch()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogKindergartenbesuch().getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
     /**
@@ -1087,9 +1058,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Noten-Einträge gefunden.")
     public Response getKatalogNoten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogNoten()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogNoten().getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1112,9 +1082,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Raum-Einträge gefunden.")
     public Response getRaeume(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogRaeume(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogRaeume(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1140,9 +1109,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Raum bei der Schule gefunden")
     public Response getRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogRaeume(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogRaeume(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1172,9 +1140,8 @@ public class APISchule {
     		@RequestBody(description = "Der Patch für den Raum der Schule", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Raum.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogRaeume(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogRaeume(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1204,9 +1171,8 @@ public class APISchule {
     		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Raum.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogRaeume(conn)).add(is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogRaeume(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1232,9 +1198,8 @@ public class APISchule {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogRaeume(conn)).delete(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogRaeume(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1257,9 +1222,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Aufsichtsbereichs-Einträge gefunden.")
     public Response getAufsichtsbereiche(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogAufsichtsbereiche(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1285,9 +1249,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich bei der Schule gefunden")
     public Response getAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogAufsichtsbereiche(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1317,9 +1280,8 @@ public class APISchule {
     		@RequestBody(description = "Der Patch für den Aufsichtsbereich der Schule", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Aufsichtsbereich.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogAufsichtsbereiche(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1349,9 +1311,8 @@ public class APISchule {
     		@RequestBody(description = "Die Daten des zu erstellenden Aufsichtsbereichs ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Aufsichtsbereich.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogAufsichtsbereiche(conn)).add(is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1377,9 +1338,8 @@ public class APISchule {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogAufsichtsbereiche(conn)).delete(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
     /**
@@ -1400,9 +1360,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Pausenzeit-Einträge gefunden.")
     public Response getPausenzeiten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogPausenzeiten(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1428,9 +1387,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Pausenzeit mit der angegebenen ID bei der Schule gefunden")
     public Response getPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogPausenzeiten(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1460,9 +1418,8 @@ public class APISchule {
     		@RequestBody(description = "Der Patch für die Pausenzeit der Schule", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogPausenzeiten(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1520,9 +1477,8 @@ public class APISchule {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deletePausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogPausenzeiten(conn)).delete(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1544,9 +1500,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
     @ApiResponse(responseCode = "404", description = "Keine Zeitraster-Einträge gefunden.")
     public Response getZeitraster(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-            return (new DataKatalogZeitraster(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogZeitraster(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1572,9 +1527,8 @@ public class APISchule {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag bei der Schule gefunden")
     public Response getZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN)) {
-    		return (new DataKatalogZeitraster(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogZeitraster(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 
@@ -1604,9 +1558,8 @@ public class APISchule {
     		@RequestBody(description = "Der Patch für den Zeitraster-Eintrag der Schule", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogZeitraster(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogZeitraster(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1636,9 +1589,8 @@ public class APISchule {
     		@RequestBody(description = "Die Daten des zu erstellenden Zeitraster-Eintrags ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogZeitraster(conn)).add(is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogZeitraster(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1664,9 +1616,8 @@ public class APISchule {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogZeitraster(conn)).delete(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogZeitraster(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 }

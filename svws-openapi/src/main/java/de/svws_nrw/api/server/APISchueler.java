@@ -31,7 +31,6 @@ import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -85,9 +84,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
     public Response getSchuelerAktuell(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerliste(conn, null).getAll());
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerliste(conn, null).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -114,12 +112,9 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schüler-Einträge gefunden")
     public Response getSchuelerFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerliste(conn, abschnitt).getAll());
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerliste(conn, abschnitt).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
-
-
 
 
 
@@ -145,9 +140,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerStammdaten(conn).get(id));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -180,15 +174,9 @@ public class APISchueler {
     		@RequestBody(description = "Der Patch für die Schüler-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-    		return (new DataSchuelerStammdaten(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerStammdaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
-
-
-
-
-
 
 
 
@@ -214,9 +202,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerSchulbesuch(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                                      @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerSchulbesuchsdaten(conn).get(id));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -248,9 +235,8 @@ public class APISchueler {
     		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerSchulbesuchsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-    		return (new DataSchuelerSchulbesuchsdaten(conn).patch(id, is));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSchulbesuchsdaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
 
@@ -277,9 +263,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerLernabschnittsliste(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerLernabschnittsliste(conn).get(id));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsliste(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -307,10 +292,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("abschnitt") final long abschnitt,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return (new DataSchuelerLernabschnittsdaten(conn).get(id, abschnitt));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).get(id, abschnitt),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
 
@@ -337,9 +320,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "404", description = "Kein Eintrag mit Schüler-Lernabschnittsdaten mit der angegebenen ID gefunden")
     public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
     		                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return (new DataSchuelerLernabschnittsdaten(conn).get(abschnitt));
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).get(abschnitt),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
 
@@ -361,9 +343,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fahrschülerart-Katalog-Einträge gefunden")
     public Response getSchuelerFahrschuelerarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKatalogSchuelerFahrschuelerarten(conn).getList());
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogSchuelerFahrschuelerarten(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -388,9 +369,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
     public Response getSchuelerErzieher(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataErzieherStammdaten(conn)).getListFromSchueler(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> (new DataErzieherStammdaten(conn)).getListFromSchueler(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -415,9 +395,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
     public Response getSchuelerBetriebe(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataSchuelerBetriebsdaten(conn)).getListFromSchueler(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).getListFromSchueler(id),
+   			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -442,9 +421,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
     public Response getSchuelerBetriebsstammdaten(@PathParam("schema") final String schema,  @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-            return (new DataBetriebsStammdaten(conn)).getSchuelerBetriebe(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).getSchuelerBetriebe(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -467,9 +445,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogUebergangsempfehlung(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogUebergangsempfehlung()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogUebergangsempfehlung().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -490,9 +467,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogHerkuenfte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogHerkuenfte()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogHerkuenfte().getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -513,9 +489,8 @@ public class APISchueler {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogHerkunftsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogHerkunftsarten()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogHerkunftsarten().getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -540,10 +515,8 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
 	public Response getKAOAdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-			return (new DataSchuelerKAoADaten(conn).getBySchuelerIDAsResponse(id));
-		}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerKAoADaten(conn).getBySchuelerIDAsResponse(id),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
 	/**
@@ -570,15 +543,11 @@ public class APISchueler {
 	@ApiResponse(responseCode = "200", description = "Die KAOADaten des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerKAoADaten.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response createKAOAdaten(@PathParam("schema") final String schema,
-			@PathParam("id") final long schuelerid,
+	public Response createKAOAdaten(@PathParam("schema") final String schema, @PathParam("id") final long schuelerid,
 			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) final SchuelerKAoADaten daten,
-
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
-			return (new DataSchuelerKAoADaten(conn).createBySchuelerIDAsResponse(schuelerid, daten));
-		}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerKAoADaten(conn).createBySchuelerIDAsResponse(schuelerid, daten),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN);
 	}
 
 	/**
@@ -606,16 +575,11 @@ public class APISchueler {
 	@ApiResponse(responseCode = "400", description = "Fehler bei der Datenvalidierung")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response putKAOAdaten(@PathParam("schema") final String schema,
-			@PathParam("id") final long schuelerID,
-			@PathParam("skid") final long schuelerKAoAID,
+	public Response putKAOAdaten(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID, @PathParam("skid") final long schuelerKAoAID,
 			@RequestBody(description = "Die KAoa Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerKAoADaten.class))) final SchuelerKAoADaten daten,
-
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
-			return (new DataSchuelerKAoADaten(conn).putBySchuelerIDAsResponse(schuelerID, daten, schuelerKAoAID));
-		}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerKAoADaten(conn).putBySchuelerIDAsResponse(schuelerID, daten, schuelerKAoAID),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN);
 	}
 
 	/**
@@ -639,14 +603,10 @@ public class APISchueler {
 	@ApiResponse(responseCode = "204", description = "Die KAOADaten des Schülers wurden gelöscht")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden")
-	public Response deleteKAOAdaten(@PathParam("schema") final String schema,
-			@PathParam("id") final long schuelerID,
-			@PathParam("skid") final long schuelerKAoAID,
+	public Response deleteKAOAdaten(@PathParam("schema") final String schema, @PathParam("id") final long schuelerID, @PathParam("skid") final long schuelerKAoAID,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN)) {
-			return (new DataSchuelerKAoADaten(conn).deleteBySchuelerKAoAIDAsResponse(schuelerKAoAID));
-		}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerKAoADaten(conn).deleteBySchuelerKAoAIDAsResponse(schuelerKAoAID),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_KAOA_DATEN_AENDERN);
 	}
 
 }

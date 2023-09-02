@@ -138,25 +138,15 @@ public abstract class DataManager<ID> {
 	 */
 	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Patch mit der ID null ist nicht möglich.");
+			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.isEmpty())
 			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
-		try {
-			conn.transactionBegin();
-			final DTO dto = conn.queryByKey(dtoClass, id);
-			if (dto == null)
-				throw OperationError.NOT_FOUND.exception();
-			applyPatchMappings(dto, map, attributeMapper);
-			conn.transactionPersist(dto);
-			conn.transactionCommit();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
+		final DTO dto = conn.queryByKey(dtoClass, id);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		applyPatchMappings(dto, map, attributeMapper);
+		conn.transactionPersist(dto);
 		return Response.status(Status.OK).build();
 	}
 
@@ -185,7 +175,6 @@ public abstract class DataManager<ID> {
 			if (!map.containsKey(attr))
 				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		try {
-			conn.transactionBegin();
 			// Bestimme die nächste verfügbare ID für ein DTOStundenplanRaum
 			final long newID = conn.transactionGetNextID(dtoClass);
 			// Erstelle einen neuen DTOStundenplanRaum für die DB und wende die Initialisierung und das Mapping der Attribute an
@@ -197,16 +186,12 @@ public abstract class DataManager<ID> {
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(dto))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
-			if (!conn.transactionCommit())
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
 			final CoreData daten = dtoMapper.apply(dto);
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webAppException)
 				return webAppException.getResponse();
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
 		}
 	}
 
@@ -223,26 +208,17 @@ public abstract class DataManager<ID> {
 	 *
 	 * @return die Response - im Erfolgsfall mit dem gelöschen Core-DTO
 	 */
-	public <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
-		try {
-			conn.transactionBegin();
-			// Bestimme das DTO
-			if (id == null)
-	    		throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
-			final DTO raum = conn.queryByKey(dtoClass, id);
-			if (raum == null)
-	    		throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-			final CoreData daten = dtoMapper.apply(raum);
-			// Entferne das DTO
-			conn.transactionRemove(raum);
-			conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception exception) {
-			conn.transactionRollback();
-			if (exception instanceof final WebApplicationException webex)
-				return webex.getResponse();
-			throw exception;
-		}
+	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+		// Bestimme das DTO
+		if (id == null)
+    		throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+		final DTO raum = conn.queryByKey(dtoClass, id);
+		if (raum == null)
+    		throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+		final CoreData daten = dtoMapper.apply(raum);
+		// Entferne das DTO
+		conn.transactionRemove(raum);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 }

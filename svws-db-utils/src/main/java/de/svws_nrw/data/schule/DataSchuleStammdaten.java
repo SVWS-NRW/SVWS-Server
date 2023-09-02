@@ -47,7 +47,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -168,81 +167,70 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
-    		try {
-    			conn.transactionBegin();
-    			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		    	if (schule == null)
-		    		return OperationError.NOT_FOUND.getResponse();
-		    	for (final Entry<String, Object> entry : map.entrySet()) {
-		    		final String key = entry.getKey();
-		    		final Object value = entry.getValue();
-		    		switch (key) {
-		    			case "schulNr" -> throw OperationError.BAD_REQUEST.exception();
-		    			case "schulform" -> throw OperationError.BAD_REQUEST.exception();
-		    			case "bezeichnung1" -> schule.Bezeichnung1 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung1.datenlaenge());
-		    			case "bezeichnung2" -> schule.Bezeichnung2 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung2.datenlaenge());
-		    			case "bezeichnung3" -> schule.Bezeichnung3 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung3.datenlaenge());
-		    			case "strassenname" -> schule.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Strassenname.datenlaenge());
-		    			case "hausnummer" -> schule.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNr.datenlaenge());
-		    			case "hausnummerZusatz" -> schule.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNrZusatz.datenlaenge());
+			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+	    	if (schule == null)
+	    		return OperationError.NOT_FOUND.getResponse();
+	    	for (final Entry<String, Object> entry : map.entrySet()) {
+	    		final String key = entry.getKey();
+	    		final Object value = entry.getValue();
+	    		switch (key) {
+	    			case "schulNr" -> throw OperationError.BAD_REQUEST.exception();
+	    			case "schulform" -> throw OperationError.BAD_REQUEST.exception();
+	    			case "bezeichnung1" -> schule.Bezeichnung1 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung1.datenlaenge());
+	    			case "bezeichnung2" -> schule.Bezeichnung2 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung2.datenlaenge());
+	    			case "bezeichnung3" -> schule.Bezeichnung3 = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Bezeichnung3.datenlaenge());
+	    			case "strassenname" -> schule.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Strassenname.datenlaenge());
+	    			case "hausnummer" -> schule.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNr.datenlaenge());
+	    			case "hausnummerZusatz" -> schule.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_HausNrZusatz.datenlaenge());
 
-		    			case "plz" -> schule.PLZ = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_PLZ.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
-		    			case "ort" -> schule.Ort = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Ort.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
+	    			case "plz" -> schule.PLZ = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_PLZ.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
+	    			case "ort" -> schule.Ort = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Ort.datenlaenge()); // TODO Schema anpassen: Stakue-Ortskatalog nutzen -> Orts-ID
 
-		    			case "telefon" -> schule.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Telefon.datenlaenge());
-		    			case "fax" -> schule.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Fax.datenlaenge());
-		    			case "email" -> schule.Email = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Email.datenlaenge());
-		    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_WebAdresse.datenlaenge());
+	    			case "telefon" -> schule.Telefon = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Telefon.datenlaenge());
+	    			case "fax" -> schule.Fax = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Fax.datenlaenge());
+	    			case "email" -> schule.Email = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_Email.datenlaenge());
+	    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_WebAdresse.datenlaenge());
 
-		    			case "idSchuljahresabschnitt" -> schule.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false); // TODO ID des Schuljahresabschnittes überprüfen
-		    			case "anzJGS_Jahr" -> schule.AnzJGS_Jahr = JSONMapper.convertToInteger(value, false); // TODO Abschnitt überprüfen
+	    			case "idSchuljahresabschnitt" -> schule.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false); // TODO ID des Schuljahresabschnittes überprüfen
+	    			case "anzJGS_Jahr" -> schule.AnzJGS_Jahr = JSONMapper.convertToInteger(value, false); // TODO Abschnitt überprüfen
 
-		    			case "schuleAbschnitte" -> {
-		    				@SuppressWarnings("unchecked") // TODO check conversion
-							final Map<String, Object> mapAbschnitte = (Map<String, Object>) value;
-		    				if (mapAbschnitte.containsKey("anzahlAbschnitte")) {
-		    					final Integer anzahlAbschnitte = JSONMapper.convertToInteger(mapAbschnitte.get("anzahlAbschnitte"), false);
-		    					if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4))
-		    						throw OperationError.CONFLICT.exception();
-		    					schule.AnzahlAbschnitte = anzahlAbschnitte;
-		    				}
-		    				if (mapAbschnitte.containsKey("abschnittBez"))
-		    					schule.AbschnittBez = JSONMapper.convertToString(mapAbschnitte.get("abschnittBez"), true, true, Schema.tab_EigeneSchule.col_BezAbschnitt1.datenlaenge());
-		    				if (mapAbschnitte.containsKey("bezAbschnitte")) {
-		    					final List<?> bezAbschnitte = (List<?>) mapAbschnitte.get("bezAbschnitte");
-		    					if (bezAbschnitte.size() != schule.AnzahlAbschnitte)
-		    						throw OperationError.CONFLICT.exception();
-		    					for (int i = 0; i < bezAbschnitte.size(); i++) {
-		    						final Object objBezeichnung = bezAbschnitte.get(i);
-		    						if (!(objBezeichnung instanceof String))
-		    							throw OperationError.BAD_REQUEST.exception();
-		    						switch (i) {
-		    							case 0 -> schule.BezAbschnitt1 = (String) objBezeichnung;
-		    							case 1 -> schule.BezAbschnitt2 = (String) objBezeichnung;
-		    							case 2 -> schule.BezAbschnitt3 = (String) objBezeichnung;
-		    							case 3 -> schule.BezAbschnitt4 = (String) objBezeichnung;
-		    							default -> throw OperationError.BAD_REQUEST.exception();
-		    						}
-		    					}
-		    				}
-		    			}
+	    			case "schuleAbschnitte" -> {
+	    				@SuppressWarnings("unchecked") // TODO check conversion
+						final Map<String, Object> mapAbschnitte = (Map<String, Object>) value;
+	    				if (mapAbschnitte.containsKey("anzahlAbschnitte")) {
+	    					final Integer anzahlAbschnitte = JSONMapper.convertToInteger(mapAbschnitte.get("anzahlAbschnitte"), false);
+	    					if ((anzahlAbschnitte < 1) || (anzahlAbschnitte > 4))
+	    						throw OperationError.CONFLICT.exception();
+	    					schule.AnzahlAbschnitte = anzahlAbschnitte;
+	    				}
+	    				if (mapAbschnitte.containsKey("abschnittBez"))
+	    					schule.AbschnittBez = JSONMapper.convertToString(mapAbschnitte.get("abschnittBez"), true, true, Schema.tab_EigeneSchule.col_BezAbschnitt1.datenlaenge());
+	    				if (mapAbschnitte.containsKey("bezAbschnitte")) {
+	    					final List<?> bezAbschnitte = (List<?>) mapAbschnitte.get("bezAbschnitte");
+	    					if (bezAbschnitte.size() != schule.AnzahlAbschnitte)
+	    						throw OperationError.CONFLICT.exception();
+	    					for (int i = 0; i < bezAbschnitte.size(); i++) {
+	    						final Object objBezeichnung = bezAbschnitte.get(i);
+	    						if (!(objBezeichnung instanceof String))
+	    							throw OperationError.BAD_REQUEST.exception();
+	    						switch (i) {
+	    							case 0 -> schule.BezAbschnitt1 = (String) objBezeichnung;
+	    							case 1 -> schule.BezAbschnitt2 = (String) objBezeichnung;
+	    							case 2 -> schule.BezAbschnitt3 = (String) objBezeichnung;
+	    							case 3 -> schule.BezAbschnitt4 = (String) objBezeichnung;
+	    							default -> throw OperationError.BAD_REQUEST.exception();
+	    						}
+	    					}
+	    				}
+	    			}
 
-		    			case "dauerUnterrichtseinheit" -> schule.DauerUnterrichtseinheit = JSONMapper.convertToInteger(value, false); // TODO Dauer in Minuten prüfen, evtl. einschränken
-		    			case "abschnitte" -> throw OperationError.BAD_REQUEST.exception();
+	    			case "dauerUnterrichtseinheit" -> schule.DauerUnterrichtseinheit = JSONMapper.convertToInteger(value, false); // TODO Dauer in Minuten prüfen, evtl. einschränken
+	    			case "abschnitte" -> throw OperationError.BAD_REQUEST.exception();
 
-		    			default -> throw OperationError.BAD_REQUEST.exception();
-		    		}
-		    	}
-		    	conn.transactionPersist(schule);
-		    	conn.transactionCommit();
-    		} catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    		}
+	    	}
+	    	conn.transactionPersist(schule);
     	}
     	return Response.status(Status.OK).build();
 	}
@@ -274,7 +262,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
     	if (schule == null)
     		throw OperationError.NOT_FOUND.exception();
     	schule.SchulLogoBase64 = JSONMapper.toString(is);
-    	conn.persist(schule);
+    	conn.transactionPersist(schule);
 		return Response.ok().build();
 	}
 
@@ -310,7 +298,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		final int schuljahr = month > 7 ? year : year - 1;
 		final int abschnitt = month > 2 && month < 8 ? 2 : 1;
 		final DTOSchuljahresabschnitte schuljahresabschnitt = new DTOSchuljahresabschnitte(1L, schuljahr, abschnitt);
-		conn.persist(schuljahresabschnitt);
+		conn.transactionPersist(schuljahresabschnitt);
+		conn.transactionFlush();
 		// Initialisiere die Daten in der Tabelle EigeneSchule
 		eigeneSchule = new DTOEigeneSchule(1L);
 		eigeneSchule.Schulform = Schulform.getByNummer(schulEintrag.SF);
@@ -344,7 +333,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		eigeneSchule.BezAbschnitt3 = null;
 		eigeneSchule.BezAbschnitt4 = null;
 		eigeneSchule.IstHauptsitz = true;
-		conn.persist(eigeneSchule);
+		conn.transactionPersist(eigeneSchule);
+		conn.transactionFlush();
 
 		// Der Hauptstandort einrichten
 		final DTOTeilstandorte teilstandort = new DTOTeilstandorte("A");
@@ -355,7 +345,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         teilstandort.HausNrZusatz = strasse[2];
         teilstandort.Bemerkung = "Hauptstandort";
         teilstandort.Kuerzel = "";
-        conn.persist(teilstandort);
+        conn.transactionPersist(teilstandort);
+		conn.transactionFlush();
 
         // Einrichten der Schulgliederung in EigeneSchule_Schulformen - je nach Schulform
         final DTOSchulformen schulgliederung = new DTOSchulformen(1L);
@@ -372,7 +363,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         schulgliederung.Sortierung = 1;
         schulgliederung.BKIndex = sgl.daten.bkIndex;
         schulgliederung.Schulform2 = sgl.daten.kuerzel + ": " + sgl.daten.beschreibung;
-        conn.persist(schulgliederung);
+        conn.transactionPersist(schulgliederung);
+		conn.transactionFlush();
 
 		// Grundlegende Fächer - je nach Schulform - einrichten
         final List<ZulaessigesFach> faecher = switch (eigeneSchule.Schulform) {
@@ -453,7 +445,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
             dto.MaxBemZeichen = null;
             dtoFaecher.add(dto);
         }
-        conn.persistRange(dtoFaecher, 0, dtoFaecher.size() - 1);
+        conn.transactionPersistAll(dtoFaecher);
+        conn.transactionFlush();
 
 		// Kursarten - je nach Schulform - einrichten
         final ArrayList<DTOKursarten> dtoKursarten = new ArrayList<>();
@@ -470,7 +463,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
             dto.Aenderbar = true;
             dtoKursarten.add(dto);
         }
-        conn.persistRange(dtoKursarten, 0, dtoKursarten.size() - 1);
+        conn.transactionPersistAll(dtoKursarten);
+        conn.transactionFlush();
 
 		// Einrichten der Jahrgänge - je nach Schulform
         final ArrayList<DTOJahrgang> dtoJahrgaenge = new ArrayList<>();
@@ -493,12 +487,14 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         	dto.Folgejahrgang_ID = null;
         	dtoJahrgaenge.add(dto);
         }
-        conn.persistRange(dtoJahrgaenge, 0, dtoJahrgaenge.size() - 1);
+        conn.transactionPersistAll(dtoJahrgaenge);
+        conn.transactionFlush();
 
 		// K_Adressart mit Betrieb füllen
         final DTOKatalogAdressart addressart = new DTOKatalogAdressart(1L, "Betrieb");
         addressart.Sortierung = 1;
-        conn.persist(addressart);
+        conn.transactionPersist(addressart);
+        conn.transactionFlush();
 
 		// K_Beschaeftigungsart mit Ausbildung und Praktikum füllen
         final ArrayList<DTOBeschaeftigungsart> beschaeftigungsart = new ArrayList<>();
@@ -506,13 +502,15 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         beschaeftigungsart.add(new DTOBeschaeftigungsart(2L, "Praktikum"));
         for (int i = 0; i < beschaeftigungsart.size(); i++)
           	beschaeftigungsart.get(i).Sortierung = i + 1;
-        conn.persistRange(beschaeftigungsart, 0, 1);
+        conn.transactionPersistAll(beschaeftigungsart);
+        conn.transactionFlush();
 
 		// K_Datenschutz mit Verwendung Foto
         final DTOKatalogDatenschutz foto = new DTOKatalogDatenschutz(1L, "Verwendung Foto", true, 32000);
         foto.Schluessel = "FOTO";
         foto.PersonArt = "S";
-        conn.persist(foto);
+        conn.transactionPersist(foto);
+        conn.transactionFlush();
 
 
 		// K_EinschulgungsArt normal, vorzeitig und zurückgestellt
@@ -522,7 +520,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         einschulungsart.add(new DTOEinschulungsart(3L, "zurückgestellt"));
         for (int i = 0; i < einschulungsart.size(); i++)
             einschulungsart.get(i).Sortierung = i + 1;
-        conn.persistRange(einschulungsart, 0, 2);
+        conn.transactionPersistAll(einschulungsart);
+        conn.transactionFlush();
 
 		// K_Entlassgrund mit "Schulpflicht endet", "Normaler Abschluss", "Ohne Angabe" und "Wechsel zu anderer Schule"
         final ArrayList<DTOEntlassarten> entlassart = new ArrayList<>();
@@ -532,7 +531,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         entlassart.add(new DTOEntlassarten(4L, "Wechsel zu anderer Schule"));
         for (int i = 0; i < entlassart.size(); i++)
             entlassart.get(i).Sortierung = i + 1;
-        conn.persistRange(entlassart, 0, 3);
+        conn.transactionPersistAll(entlassart);
+        conn.transactionFlush();
 
         // K_Erzieherart mit den Vorgaben von Schild-NRW befüllen
 		final ArrayList<DTOErzieherart> erzieherarten = new ArrayList<>();
@@ -544,8 +544,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         erzieherarten.add(new DTOErzieherart(6L, "Sonstige"));
         for (int i = 0; i < erzieherarten.size(); i++)
             erzieherarten.get(i).Sortierung = i + 1;
-        conn.persistRange(erzieherarten, 0, 5);
-
+        conn.transactionPersistAll(erzieherarten);
+        conn.transactionFlush();
 
         // K-Ort aus der Default-Daten-Tabelle befüllen
         final ArrayList<DTOOrt> dtoOrt = new ArrayList<>();
@@ -555,8 +555,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
             final DTOOrt dto = new DTOOrt((long) i + 1, ort.PLZ, ort.Ort);
             dtoOrt.add(dto);
         }
-        conn.persistRange(dtoOrt, 0, dtoOrt.size() - 1);
-
+        conn.transactionPersistAll(dtoOrt);
+        conn.transactionFlush();
 
         // K_Religion aus dem Core-Type befüllen
         final ArrayList<DTOKonfession> dtoKonfession = new ArrayList<>();
@@ -568,7 +568,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
             dto.Sortierung = i + 1;
             dtoKonfession.add(dto);
         }
-        conn.persistRange(dtoKonfession, 0, dtoKonfession.size() - 1);
+        conn.transactionPersistAll(dtoKonfession);
+        conn.transactionFlush();
 
         // K_Schule mit Schulen aus dem sonstigen Ausland, den Bundesländern und Nachbarländern, Keine Schul und der eigenen Schule befüllen (Core-Type)
         final ArrayList<DTOSchuleNRW> dtoSchulen = new ArrayList<>();
@@ -584,7 +585,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
             dto.KurzBez = snr.daten.bezeichnung;
             dtoSchulen.add(dto);
         }
-        conn.persistRange(dtoSchulen, 0, dtoSchulen.size() - 1);
+        conn.transactionPersistAll(dtoSchulen);
+        conn.transactionFlush();
 
         // K_Schwerpunkte befüllen
         final ArrayList<DTOSchwerpunkt> schwerpunkte = new ArrayList<>();
@@ -594,12 +596,14 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         schwerpunkte.add(new DTOSchwerpunkt(4L, "fremdsprachlich"));
         for (int i = 0; i < schwerpunkte.size(); i++)
             schwerpunkte.get(i).Sortierung = i + 1;
-        conn.persistRange(schwerpunkte, 0, 3);
+        conn.transactionPersistAll(schwerpunkte);
+        conn.transactionFlush();
 
         //K_Sportbefreiung mit einem Beispiel befüllen
         final DTOSportbefreiung sportbefreiung = new DTOSportbefreiung(1L, "temporär - Schwimmen");
         sportbefreiung.Sortierung = 1;
-        conn.persist(sportbefreiung);
+        conn.transactionPersist(sportbefreiung);
+        conn.transactionFlush();
 
         // K_Telefonart mit den Schild-NRW-Vorgaben befüllen
         final ArrayList<DTOTelefonArt> telefonArten = new ArrayList<>();
@@ -614,12 +618,14 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
         telefonArten.add(new DTOTelefonArt(9L, "Fax-Nummer"));
         for (int i = 0; i < telefonArten.size(); i++)
             telefonArten.get(i).Sortierung = i + 1;
-        conn.persistRange(telefonArten, 0, 8);
+        conn.transactionPersistAll(telefonArten);
+        conn.transactionFlush();
 
         // K_Vermerkart mit einem Beispiel befüllen
         final DTOVermerkArt vermerkArt = new DTOVermerkArt(1L, "allgemeine Bemerkung");
         vermerkArt.Sortierung = 1;
-        conn.persist(vermerkArt);
+        conn.transactionPersist(vermerkArt);
+        conn.transactionFlush();
 
 		// Liefere die Schul-Stammdaten der neu angelegten Schule zurück.
 		return this.get(null);
