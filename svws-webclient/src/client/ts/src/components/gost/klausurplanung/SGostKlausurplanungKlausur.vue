@@ -6,7 +6,7 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKlausurUhrzeit" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) : 'Startzeit'" @update:model-value="patchKlausurbeginn($event, klausur.id)" />
+			<svws-ui-text-input v-if="patchKlausurUhrzeit" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @blur="zeit => patchKlausurbeginn(zeit, klausur.id)" />
 		</td>
 	</tr>
 </template>
@@ -15,7 +15,6 @@
 
 	import { DateUtils} from "@core";
 	import type { GostKursklausur, LehrerListeEintrag, GostKursklausurManager, KursManager, GostKlausurtermin, GostSchuelerklausur } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		kursklausurmanager: () => GostKursklausurManager;
@@ -38,12 +37,5 @@
 	}
 
 	const kurs = props.kursmanager.get(props.klausur.idKurs)!;
-
-	const startzeit = computed({
-		get: () : number | undefined => props.klausur.startzeit === null ? undefined : props.klausur.startzeit,
-		set: (value: number | undefined): void => {
-			props.klausur.startzeit = value === undefined ? null : value;
-		}
-	});
 
 </script>

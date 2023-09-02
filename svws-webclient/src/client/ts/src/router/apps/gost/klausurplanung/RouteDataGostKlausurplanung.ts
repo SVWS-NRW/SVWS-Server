@@ -1,6 +1,6 @@
 import { computed, shallowRef } from "vue";
 
-import type { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, Arrays, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
@@ -311,16 +311,6 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	// setTerminToKursklausur = async (idTermin: number | null, klausur: GostKursklausur): Promise<boolean> => {
-	// 	api.status.start();
-	// 	klausur.idTermin = idTermin;
-	// 	await api.server.patchGostKlausurenKursklausur({idTermin: idTermin}, api.schema, klausur.id);
-	// 	this.kursklausurmanager.kursklausurPatchAttributes(klausur);
-	// 	this.commit();
-	// 	api.status.stop();
-	// 	return true;
-	// }
-
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<boolean> => {
 		api.status.start();
 		await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id);
@@ -456,7 +446,11 @@ export class RouteDataGostKlausurplanung {
 
 	patchKlausurUhrzeit = async(klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<boolean> => {
 		api.status.start();
-		await api.server.patchGostKursklausurenStartzeit(klausur, api.schema, this._state.value.abschnitt!.id);
+		if ('id' in klausur) {
+			const oldKlausur = this.kursklausurmanager.kursklausurGetByIdOrException(klausur.id!);
+			await api.server.patchGostKursklausurenStartzeit(klausur, api.schema, this._state.value.abschnitt!.id);
+			Object.assign(oldKlausur, klausur);
+		}
 		this.commit();
 		api.status.stop();
 		return true;

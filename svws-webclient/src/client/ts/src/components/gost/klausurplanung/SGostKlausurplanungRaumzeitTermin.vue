@@ -3,7 +3,7 @@
 		<table class="border">
 			<tr>
 				<th>Datum</th>
-				<td>{{ termin.datum }}</td>
+				<td>{{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</td>
 			</tr>
 			<tr>
 				<th>Startzeit</th>
