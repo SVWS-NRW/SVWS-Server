@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
-		<s-card-lehrer-basisdaten :stammdaten="stammdaten" @patch="patch" />
-		<s-card-lehrer-kontaktdaten :stammdaten="stammdaten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" @patch="patch" />
+		<s-card-lehrer-basisdaten :data="stammdaten" @patch="patch" />
+		<s-card-lehrer-kontaktdaten :data="stammdaten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile" @patch="patch" />
 	</div>
 </template>
 

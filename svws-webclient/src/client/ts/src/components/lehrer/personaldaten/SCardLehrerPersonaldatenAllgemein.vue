@@ -1,16 +1,16 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Identnummer" :model-value="data.identNrTeil1" @blur="identNrTeil1=>doPatch({identNrTeil1})" type="text" span="full" />
-			<svws-ui-text-input placeholder="Seriennummer" :model-value="data.identNrTeil2SerNr" @blur="identNrTeil2SerNr=>doPatch({identNrTeil2SerNr})" type="text" />
-			<svws-ui-text-input placeholder="Vergütungsschlüssel" :model-value="data.lbvVerguetungsschluessel" @blur="lbvVerguetungsschluessel=>doPatch({lbvVerguetungsschluessel})" type="text" />
-			<svws-ui-text-input placeholder="PA-Nummer" :model-value="data.personalaktennummer" @blur="personalaktennummer=>doPatch({personalaktennummer})" type="text" />
-			<svws-ui-text-input placeholder="LBV-Pers.Nummer" :model-value="data.lbvPersonalnummer" @blur="lbvPersonalnummer=>doPatch({lbvPersonalnummer})" type="text" />
+			<svws-ui-text-input placeholder="Identnummer" :model-value="personaldaten.identNrTeil1" @blur="identNrTeil1=>doPatch({identNrTeil1})" type="text" span="full" />
+			<svws-ui-text-input placeholder="Seriennummer" :model-value="personaldaten.identNrTeil2SerNr" @blur="identNrTeil2SerNr=>doPatch({identNrTeil2SerNr})" type="text" />
+			<svws-ui-text-input placeholder="Vergütungsschlüssel" :model-value="personaldaten.lbvVerguetungsschluessel" @blur="lbvVerguetungsschluessel=>doPatch({lbvVerguetungsschluessel})" type="text" />
+			<svws-ui-text-input placeholder="PA-Nummer" :model-value="personaldaten.personalaktennummer" @blur="personalaktennummer=>doPatch({personalaktennummer})" type="text" />
+			<svws-ui-text-input placeholder="LBV-Pers.Nummer" :model-value="personaldaten.lbvPersonalnummer" @blur="lbvPersonalnummer=>doPatch({lbvPersonalnummer})" type="text" />
 			<svws-ui-spacing />
 			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()" :item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required span="full" />
 			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()" :item-text="(i: LehrerFachrichtung) =>i.daten.text" required span="full" />
-			<svws-ui-text-input placeholder="Zugangsdatum" :model-value="data.zugangsdatum" @blur="zugangsdatum=>doPatch({zugangsdatum})" type="date" />
-			<svws-ui-text-input placeholder="Abgangsdatum" :model-value="data.abgangsdatum" @blur="abgangsdatum=>doPatch({abgangsdatum})" type="date" />
+			<svws-ui-text-input placeholder="Zugangsdatum" :model-value="personaldaten.zugangsdatum" @blur="zugangsdatum=>doPatch({zugangsdatum})" type="date" />
+			<svws-ui-text-input placeholder="Abgangsdatum" :model-value="personaldaten.abgangsdatum" @blur="abgangsdatum=>doPatch({abgangsdatum})" type="date" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -23,7 +23,7 @@
 	import { computed } from "vue";
 
 	const props = defineProps<{
-		data: LehrerPersonaldaten
+		personaldaten: LehrerPersonaldaten
 	}>();
 
 	const emit = defineEmits<{
