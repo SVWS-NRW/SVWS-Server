@@ -275,7 +275,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 	public Tabelle_Kurs_Schueler() {
 		super("Kurs_Schueler", SchemaRevisionen.REV_1);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setJavaSubPackage("schild.kurse");
 		setJavaClassName("DTOKursSchueler");
 		setJavaComment("Tabelle mit KursSchueler-Zuordnungen für performanteren Zugriff, welcher über Trigger befüllt wird.");

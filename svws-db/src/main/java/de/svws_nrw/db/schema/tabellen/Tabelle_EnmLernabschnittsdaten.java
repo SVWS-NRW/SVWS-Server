@@ -127,7 +127,7 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 	public Tabelle_EnmLernabschnittsdaten() {
 		super("EnmLernabschnittsdaten", SchemaRevisionen.REV_6);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setJavaSubPackage("svws.enm");
 		setJavaClassName("DTOEnmLernabschnittsdaten");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "

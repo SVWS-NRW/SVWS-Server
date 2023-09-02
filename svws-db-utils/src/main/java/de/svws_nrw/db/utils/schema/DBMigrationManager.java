@@ -363,7 +363,7 @@ public final class DBMigrationManager {
 
 					logger.logLn("-> Erstelle für die Migration in die Ziel-DB ein SVWS-Schema der Revision 0");
 					logger.modifyIndent(2);
-					boolean result = tgtManager.createSVWSSchema(0, false);
+					boolean result = tgtManager.createSVWSSchema(0, false, true);
 					logger.modifyIndent(-2);
 					if (!result) {
 						logger.logLn(" " + strFehler);

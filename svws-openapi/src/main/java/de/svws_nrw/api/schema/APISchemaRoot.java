@@ -296,7 +296,7 @@ public class APISchemaRoot {
 
 			logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
 			logger.modifyIndent(2);
-			if (!manager.createSVWSSchema(0, true))
+			if (!manager.createSVWSSchema(0, true, true))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			logger.modifyIndent(-2);
 

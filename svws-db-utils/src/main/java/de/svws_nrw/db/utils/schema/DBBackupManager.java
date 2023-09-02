@@ -204,7 +204,7 @@ public class DBBackupManager {
 
 			logger.logLn("-> Erstelle für den Import in die Ziel-DB ein SVWS-Schema der Revision " + version.Revision);
 			logger.modifyIndent(2);
-			boolean result = tgtManager.createSVWSSchema(version.Revision, false);
+			boolean result = tgtManager.createSVWSSchema(version.Revision, false, false);
 			logger.modifyIndent(-2);
 			if (!result) {
 				logger.logLn(" [Fehler]");
@@ -216,6 +216,28 @@ public class DBBackupManager {
 			logger.modifyIndent(2);
 			expimpCopyFrom(tgtManager, version.Revision);
 			logger.modifyIndent(-2);
+			logger.logLn("[OK]");
+
+			logger.logLn("-> Erstelle die Trigger in der Ziel-DB bei der Revision " + version.Revision);
+			logger.modifyIndent(2);
+			String error = "";
+			try {
+				tgtConn.transactionBegin();
+				result = DBSchemaManager.transactionCreateAllTrigger(tgtConn, logger, version.Revision, true);
+				if (result)
+					tgtConn.transactionCommit();
+			} catch (final Exception e) {
+				error = "Fehler bei der Transaktion: " + e.getMessage();
+				result = false;
+			} finally {
+				tgtConn.transactionRollback();
+			}
+			logger.modifyIndent(-2);
+			if (!result) {
+				logger.logLn(" [Fehler]");
+				logger.logLn(error);
+				throw new DBException("Fehler beim Erstellen der Trigger bei der Revision " + version.Revision);
+			}
 			logger.logLn("[OK]");
 
 			if (maxUpdateRevision != 0) {
@@ -281,7 +303,7 @@ public class DBBackupManager {
 
 					logger.logLn("-> Erstelle für den Export ein SVWS-Schema in der SQLite-Datenbank");
 					logger.modifyIndent(2);
-					final boolean result = tgtManager.createSVWSSchema(version.Revision, false);
+					boolean result = tgtManager.createSVWSSchema(version.Revision, false, false);
 					logger.modifyIndent(-2);
 					if (!result) {
 						logger.logLn(" [Fehler]");
@@ -293,6 +315,28 @@ public class DBBackupManager {
 					logger.modifyIndent(2);
 					expimpCopyFrom(tgtManager, version.Revision);
 					logger.modifyIndent(-2);
+					logger.logLn("[OK]");
+
+					logger.logLn("-> Erstelle die Trigger in der Ziel-DB bei der Revision " + version.Revision);
+					logger.modifyIndent(2);
+					String error = "";
+					try {
+						tgtConn.transactionBegin();
+						result = DBSchemaManager.transactionCreateAllTrigger(tgtConn, logger, version.Revision, true);
+						if (result)
+							tgtConn.transactionCommit();
+					} catch (final Exception e) {
+						error = "Fehler bei der Transaktion: " + e.getMessage();
+						result = false;
+					} finally {
+						tgtConn.transactionRollback();
+					}
+					logger.modifyIndent(-2);
+					if (!result) {
+						logger.logLn(" [Fehler]");
+						logger.logLn(error);
+						throw new DBException("Fehler beim Erstellen der Trigger bei der Revision " + version.Revision);
+					}
 					logger.logLn("[OK]");
 
 					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");

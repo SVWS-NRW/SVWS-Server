@@ -106,7 +106,7 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 	public Tabelle_EnmLeistungsdaten() {
 		super("EnmLeistungsdaten", SchemaRevisionen.REV_6);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setJavaSubPackage("svws.enm");
 		setJavaClassName("DTOEnmLeistungsdaten");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "

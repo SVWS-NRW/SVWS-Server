@@ -515,7 +515,7 @@ public class Tabelle_DavSyncTokenLehrer extends SchemaTabelle {
 	public Tabelle_DavSyncTokenLehrer() {
 		super("DavSyncTokenLehrer", SchemaRevisionen.REV_8);
 		setMigrate(false);
-		setImportExport(false);
+		setImportExport(true);
 		setPKAutoIncrement();
 		setJavaSubPackage("svws.dav");
 		setJavaClassName("DTODavSyncTokenLehrer");

@@ -90,22 +90,26 @@ public enum SchemaRevisionen {
 	/**
      * Tabellen für Stundenplan ergänzt, Feld Namenszusatz entfernen
      */
-    REV_10(10, "2023-08-26");
-
+    REV_10(10, "2023-08-26"),
 
 	/**
-	 * Die die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
+     * Korrekturen bei den Datenbanktriggern
+     */
+    REV_11(11, "2023-09-01");
+
+	/**
+	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_10;
+	public static final SchemaRevisionen maxRevision = REV_11;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_10;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_11;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;

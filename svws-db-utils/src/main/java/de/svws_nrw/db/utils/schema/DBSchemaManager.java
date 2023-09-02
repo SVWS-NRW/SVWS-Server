@@ -191,42 +191,6 @@ public final class DBSchemaManager {
 	}
 
 
-
-	/**
-	 * Führt die SQL-Skripte zum Erstellen aller Datenbank-Trigger der angegebenen Schema-Revision
-	 * aus, welche nicht zu den Auto-Inkrementen bei Primärschlüsseln gehören.
-	 *
-	 * @param revision   die Revision des Datenbank-Schemas
-	 *
-	 * @return true, falls alle Trigger erfolgreich erstellt wurden
-	 */
-	private boolean createAllTrigger(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
-			final var dbms = conn.getDBDriver();
-			for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
-				for (final SchemaTabelleTrigger trig : tab.trigger()) {
-					if (!dbms.equals(trig.dbms()))
-						continue;
-					if (revision < trig.revision().revision)
-						continue;
-					if ((trig.veraltet().revision >= 0) && (revision > trig.veraltet().revision))
-						continue;
-					logger.logLn(trig.name());
-					final String script = trig.getSQL(conn.getDBDriver(), true);
-					if (conn.executeWithJDBCConnection(script) == Integer.MIN_VALUE) {
-						result = false;
-						if (returnOnError)
-							break;
-					}
-				}
-			}
-			return result;
-		}
-	}
-
-
-
 	/**
 	 * Erstellt die Views für das Schemas der angegebenen Schema-Revision.
 	 *
@@ -329,14 +293,63 @@ public final class DBSchemaManager {
 
 
 	/**
+	 * Führt die SQL-Skripte zum Erstellen aller Datenbank-Trigger der angegebenen Schema-Revision
+	 * aus, welche nicht zu den Auto-Inkrementen bei Primärschlüsseln gehören.
+	 *
+	 * Die Datenbank-Transaktion muss außerhalb dieser Methoden gehandhabt werden.
+	 *
+	 * @param conn            die Datenbank-Verbindung
+	 * @param logger          der Logger
+	 * @param revision        die Revision des Datenbank-Schemas
+	 * @param returnOnError   gibt an, ob die Funktion bei einem Fehler sofort zurückkehrt oder nicht
+	 *
+	 * @return true, falls alle Trigger erfolgreich erstellt wurden
+	 */
+	public static boolean transactionCreateAllTrigger(final DBEntityManager conn, final Logger logger, final long revision, final boolean returnOnError) {
+		logger.logLn("- Erstelle Trigger für die aktuelle DB-Revision... ");
+		logger.modifyIndent(2);
+		boolean result = true;
+		final var dbms = conn.getDBDriver();
+		for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
+			for (final SchemaTabelleTrigger trig : tab.trigger()) {
+				if (!dbms.equals(trig.dbms()))
+					continue;
+				if (revision < trig.revision().revision)
+					continue;
+				if ((trig.veraltet().revision >= 0) && (revision >= trig.veraltet().revision))
+					continue;
+				logger.logLn(trig.name());
+				final String script = trig.getSQL(conn.getDBDriver(), true);
+				if (conn.transactionNativeUpdate(script) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
+				}
+			}
+		}
+		conn.transactionFlush();
+		logger.modifyIndent(-2);
+		if (!result) {
+			logger.logLn(strError);
+			if (returnOnError)
+				return false;
+		}
+		logger.logLn(strOK);
+		return result;
+	}
+
+
+	/**
 	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision
 	 *
-	 * @param revision    die Revision für das SVWS-DB-Schema
-	 * @param createUser  gibt an, ob Default-SVWS-Benutzer angelegt werden sollen
+	 * @param revision        die Revision für das SVWS-DB-Schema
+	 * @param createUser      gibt an, ob Default-SVWS-Benutzer angelegt werden sollen
+	 * @param createTrigger   gibt an, ob auch die Trigger für die Datenbank-Revision erstellt werden sollen
+	 *                        (oder ob dies später seperat aufgerufen wird)
 	 *
 	 * @return true, wenn das Schema erfolgreich erstellt wurde, sonst false
 	 */
-	public boolean createSVWSSchema(final long revision, final boolean createUser) {
+	public boolean createSVWSSchema(final long revision, final boolean createUser, final boolean createTrigger) {
 		logger.logLn("- Erstelle Tabellen für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
 		boolean success = createAllTables(revision);
@@ -357,15 +370,31 @@ public final class DBSchemaManager {
 		}
 		logger.logLn(strOK);
 
-		logger.logLn("- Erstelle Trigger für die aktuelle DB-Revision... ");
-		logger.modifyIndent(2);
-		success = createAllTrigger(revision);
-		logger.modifyIndent(-2);
-		if (!success) {
-			logger.logLn(strError);
-			if (returnOnError) return false;
+		if (createTrigger) {
+			logger.logLn("- Erstelle Trigger für die aktuelle DB-Revision... ");
+			logger.modifyIndent(2);
+			String error = "";
+			try (DBEntityManager conn = user.getEntityManager()) {
+				try {
+					conn.transactionBegin();
+					success = transactionCreateAllTrigger(conn, logger, revision, returnOnError);
+					if (success || (!returnOnError))
+						conn.transactionCommit();
+				} catch (final Exception e) {
+					error = "Fehler bei der Transaktion: " + e.getMessage();
+					success = false;
+				} finally {
+					conn.transactionRollback();
+				}
+			}
+			logger.modifyIndent(-2);
+			if (!success) {
+				logger.logLn(strError);
+				logger.logLn(error);
+				if (returnOnError) return false;
+			}
+			logger.logLn(strOK);
 		}
-		logger.logLn(strOK);
 
 		logger.logLn("- Schreibe die Daten der Core-Types");
 		logger.modifyIndent(2);
@@ -545,7 +574,7 @@ public final class DBSchemaManager {
 
 		logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
 		logger.modifyIndent(2);
-		if (!manager.createSVWSSchema(0, true))
+		if (!manager.createSVWSSchema(0, true, true))
 			return false;
 		logger.modifyIndent(-2);
 
