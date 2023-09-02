@@ -26,7 +26,6 @@ import de.svws_nrw.data.schild3.DataSchildPruefungsordnungOptionen;
 import de.svws_nrw.data.schild3.DataSchildUnicodeUmwandlung;
 import de.svws_nrw.data.schild3.DataSchildVersetzungsvermerke;
 import de.svws_nrw.data.schild3.reporting.DataSchildReportingDatenquelle;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -304,9 +303,8 @@ public class APISchild {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf das Reporting zuzigreifen.")
     @ApiResponse(responseCode = "404", description = "Keine Datenquellen gefunden")
     public Response getSchild3ReportingDatenquellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
-            return DataSchildReportingDatenquelle.getDatenquellen(conn);
-        }
+    	return OpenAPIApplication.runWithTransaction(DataSchildReportingDatenquelle::getDatenquellen,
+        	request, ServerMode.STABLE, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN);
     }
 
 
@@ -337,9 +335,8 @@ public class APISchild {
             @RequestBody(description = "Eine Liste der Attribute der Masterdatenquelle. Wurde keine Masterdatenquelle angegeben, so muss die Liste leer sein.", required = true, content =
                     @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Object.class)))) final List<Object> params,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN)) {
-            return DataSchildReportingDatenquelle.getDaten(conn, datenquelle, params);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> DataSchildReportingDatenquelle.getDaten(conn, datenquelle, params),
+        	request, ServerMode.STABLE, BenutzerKompetenz.BERICHTE_STANDARDFORMULARE_DRUCKEN);
     }
 
 }

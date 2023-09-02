@@ -1,7 +1,5 @@
 package de.svws_nrw.api.server;
 
-import java.util.List;
-
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -9,7 +7,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
-import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
@@ -29,6 +26,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -60,7 +58,7 @@ public class APISchema {
     		     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
-    public List<String> updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
+    public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
     	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
     	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
@@ -84,20 +82,19 @@ public class APISchema {
 			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
 
 		// Prüfe, ob das Schema aktuell ist
-		if (manager.updater.isUptodate(rev, false))
-			return log.getStrings();
+		if (!manager.updater.isUptodate(rev, false)) {
+			// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
+			if (!manager.updater.isUpdatable(rev, false))
+				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
 
-		// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
-		if (!manager.updater.isUpdatable(rev, false))
-			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
-
-		// Führe die Aktualisierung durch
-		final boolean success = manager.updater.update(rev, false, true);
-		if (!success)
-			throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+			// Führe die Aktualisierung durch
+			final boolean success = manager.updater.update(rev, false, true);
+			if (!success)
+				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+		}
 
 		// return log from logger
-		return log.getStrings();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
     }
 
 
@@ -118,7 +115,7 @@ public class APISchema {
     			 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
     @ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
     @ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
-    public List<String> updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return updateSchema(schemaname, -1, request);
     }
 
@@ -140,13 +137,13 @@ public class APISchema {
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
-    public Long revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    public Response revision(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> {
 	    	final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-	    	return version.Revision;
-    	}
+	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.Revision).build();
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -171,13 +168,13 @@ public class APISchema {
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = Boolean.class)))
     @ApiResponse(responseCode = "404", description = "Es konnte keine Revision für das Schema ermittelt werden.")
-    public boolean isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    public Response isTainted(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> {
 	    	final DTOSchemaRevision version = conn.querySingle(DTOSchemaRevision.class);
 	    	if (version == null)
 	    		throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
-	    	return version.IsTainted;
-    	}
+	    	return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(version.IsTainted).build();
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 }

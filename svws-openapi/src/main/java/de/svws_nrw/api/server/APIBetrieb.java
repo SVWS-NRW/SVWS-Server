@@ -3,19 +3,6 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletRequest;
-
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.Context;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner;
 import de.svws_nrw.core.data.betrieb.BetriebListeEintrag;
@@ -30,14 +17,25 @@ import de.svws_nrw.data.betriebe.DataBetriebsliste;
 import de.svws_nrw.data.betriebe.DataKatalogBeschaeftigunsarten;
 import de.svws_nrw.data.betriebe.DataKatalogBetriebsarten;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.PATCH;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die grundlegenden Betriebsdaten aus der SVWS-Datenbank.
@@ -70,9 +68,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
     public Response getBetriebe(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataBetriebsliste(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsliste(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
    /**
@@ -97,9 +94,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Betrieb-Eintrag mit der angegebenen ID gefunden")
     public Response getBetriebStammdaten(@PathParam ("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-            return (new DataBetriebsStammdaten(conn)).get(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).get(id),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
     /**
@@ -129,9 +125,8 @@ public class APIBetrieb {
             @RequestBody(description = "Der Post für die Betrieb-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebStammdaten.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataBetriebsStammdaten(conn)).create(is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).create(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -163,9 +158,8 @@ public class APIBetrieb {
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
                                         content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebStammdaten.class))) final
                                         InputStream is, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-            return (new DataBetriebsStammdaten(conn)).patch(id, is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).patch(id, is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
     /**
@@ -186,13 +180,11 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Betrieb wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response removeBetrieb(
-            @PathParam("schema") final String schema,
+    public Response removeBetrieb(@PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Betriebe", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataBetriebsStammdaten(conn)).remove(bids);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebsStammdaten(conn).remove(bids),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
     /**
@@ -225,9 +217,8 @@ public class APIBetrieb {
     		@RequestBody(description = "Der Post für die Schülerbetrieb-Daten", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-    		return (new DataSchuelerBetriebsdaten(conn)).create(schueler_id, betrieb_id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).create(schueler_id, betrieb_id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
 
@@ -260,9 +251,8 @@ public class APIBetrieb {
     		@RequestBody(description = "Der Patch für die Schüler-Schulbesuchsdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerBetriebsdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-          return (new DataSchuelerBetriebsdaten(conn)).patch(id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
      /**
@@ -284,9 +274,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schülerbetrieb gefunden")
     public Response getSchuelerBetriebsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-	    	return (new DataSchuelerBetriebsdaten(conn)).get(id);
-	    }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerBetriebsdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -313,9 +302,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
     public Response getBetriebAnsprechpartner(@PathParam("schema") final String schema,  @PathParam("id") final long betrieb_id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-            return (new DataBetriebAnsprechpartner(conn).getBetriebansprechpartner(betrieb_id));
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).getBetriebansprechpartner(betrieb_id),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -340,9 +328,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Betrieb-Einträge gefunden")
     public Response getBetriebeAnsprechpartner(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-            return (new DataBetriebAnsprechpartner(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
     /**
@@ -364,9 +351,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Betriebanpsrechpartner anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Betriebanpsrechpartner gefunden")
     public Response getBetriebAnsprechpartnerdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-	    	return (new DataBetriebAnsprechpartner(conn)).get(id);
-	    }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
     /**
@@ -397,9 +383,8 @@ public class APIBetrieb {
     		@RequestBody(description = "Der Patch für die Betriebanpsrechpartner-Daten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-          return (new DataBetriebAnsprechpartner(conn)).patch(id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
     /**
@@ -429,9 +414,8 @@ public class APIBetrieb {
     		@RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BetriebAnsprechpartner.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataBetriebAnsprechpartner(conn)).create(betrieb_id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).create(betrieb_id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -457,9 +441,8 @@ public class APIBetrieb {
             @PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Betriebsansprechpartner", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataBetriebAnsprechpartner(conn)).remove(bids);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBetriebAnsprechpartner(conn).remove(bids),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -484,9 +467,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogBeschaeftigungsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogBeschaeftigunsarten(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -508,9 +490,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogBeschaeftigungsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogBeschaeftigunsarten(conn)).get(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).get(id),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -538,9 +519,8 @@ public class APIBetrieb {
             @RequestBody(description = "Der Post für die Beschäftigungsart-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataKatalogBeschaeftigunsarten(conn)).create(is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).create(is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -571,9 +551,8 @@ public class APIBetrieb {
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
                                         content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final
                                         InputStream is, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-            return (new DataKatalogBeschaeftigunsarten(conn)).patch(id, is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBeschaeftigunsarten(conn).patch(id, is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
     /**
@@ -597,9 +576,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogBetriebsart(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogBetriebsarten(conn)).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**
@@ -621,9 +599,8 @@ public class APIBetrieb {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogBetriebsartmitID(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogBetriebsarten(conn)).get(id);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).get(id),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -654,9 +631,8 @@ public class APIBetrieb {
             @RequestBody(description = "Der Post für die Betriebanpsrechpartner-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataKatalogBetriebsarten(conn)).create(is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).create(is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -687,9 +663,8 @@ public class APIBetrieb {
                                         @RequestBody(description = "Der Patch für die Betrieb-Stammdaten", required = true,
                                         content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KatalogEintrag.class))) final
                                         InputStream is, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-            return (new DataKatalogBetriebsarten(conn)).patch(id, is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogBetriebsarten(conn).patch(id, is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 }

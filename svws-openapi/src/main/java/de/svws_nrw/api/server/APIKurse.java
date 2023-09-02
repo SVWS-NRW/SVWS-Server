@@ -9,7 +9,6 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.kurse.DataKatalogKursarten;
 import de.svws_nrw.data.kurse.DataKursdaten;
 import de.svws_nrw.data.kurse.DataKursliste;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,9 +58,8 @@ public class APIKurse {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
     public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKursliste(conn, null)).getList();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKursliste(conn, null).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -87,9 +85,8 @@ public class APIKurse {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursdaten anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Kurs-Einträge gefunden")
     public Response getKurseFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKursliste(conn, abschnitt)).getList();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKursliste(conn, abschnitt).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -115,9 +112,8 @@ public class APIKurse {
     @ApiResponse(responseCode = "404", description = "Kein Kurs-Eintrag mit der angegebenen ID gefunden")
     public Response getKurs(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKursdaten(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKursdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 

@@ -140,105 +140,94 @@ public final class DataErzieherStammdaten extends DataManager<Long> {
             return OperationError.NOT_FOUND.getResponse();
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
-            try {
-                conn.transactionBegin();
-                final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
-                if (erzieher == null)
-                    return OperationError.NOT_FOUND.getResponse();
-                for (final Entry<String, Object> entry : map.entrySet()) {
-                    final String key = entry.getKey();
-                    final Object value = entry.getValue();
-                    switch (key) {
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != tmpid.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
-                        case "idSchueler" -> throw OperationError.BAD_REQUEST.exception();
-                        case "idErzieherArt" -> {
-		    		    	final Long artID = JSONMapper.convertToLong(value, true);
-		    		    	if (artID == null) {
-    						    erzieher.ErzieherArt_ID = null;
-	    					} else {
-                                final DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
-		    			    	if (art == null)
-		    			    		throw OperationError.NOT_FOUND.exception();
-	    					    erzieher.ErzieherArt_ID = artID;
-	    					}
-                        }
-                        case "titel" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Titel1.datenlaenge());
-                            if (nr == 1)
-                                erzieher.Titel1 = tmp;
-                            else
-                                erzieher.Titel2 = tmp;
-                        }
-                        case "anrede" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Anrede1.datenlaenge());
-                            if (nr == 1)
-                                erzieher.Anrede1 = tmp;
-                            else
-                                erzieher.Anrede2 = tmp;
-                        }
-                        case "nachname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Name1.datenlaenge());
-                            if (nr == 1)
-                                erzieher.Name1 = tmp;
-                            else
-                                erzieher.Name2 = tmp;
-                        }
-                        case "vorname" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Vorname1.datenlaenge());
-                            if (nr == 1)
-                                erzieher.Vorname1 = tmp;
-                            else
-                                erzieher.Vorname2 = tmp;
-                        }
-                        case "eMail" -> {
-                            final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzEmail.datenlaenge());
-                            if (nr == 1)
-                                erzieher.ErzEmail = tmp;
-                            else
-                                erzieher.ErzEmail2 = tmp;
-                        }
-                        case "strassenname" -> erzieher.ErzStrassenname = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzStrassenname.datenlaenge());
-		    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNr.datenlaenge());
-		    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNrZusatz.datenlaenge());
-		    			case "wohnortID" -> setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
-		    			case "ortsteilID" -> setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-
-		    			case "staatsangehoerigkeitID" -> {
-		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
-		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
-                                if (nr == 1)
-                                	erzieher.Erz1StaatKrz = null;
-                                else
-                                    erzieher.Erz2StaatKrz = null;
-	    					} else {
-	    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
-		    			    	if (nat == null)
-		    			    		throw OperationError.NOT_FOUND.exception();
-                                if (nr == 1)
-                                	erzieher.Erz1StaatKrz = nat;
-                                else
-                                    erzieher.Erz2StaatKrz = nat;
-	    					}
-		    			}
-                        case "erhaeltAnschreiben" -> erzieher.ErzAnschreiben = JSONMapper.convertToBoolean(value, true);
-                        case "bemerkungen" -> erzieher.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Bemerkungen.datenlaenge());
-                        default -> throw OperationError.BAD_REQUEST.exception();
+            final DTOSchuelerErzieherAdresse erzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, id);
+            if (erzieher == null)
+                return OperationError.NOT_FOUND.getResponse();
+            for (final Entry<String, Object> entry : map.entrySet()) {
+                final String key = entry.getKey();
+                final Object value = entry.getValue();
+                switch (key) {
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != tmpid.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+                    case "idSchueler" -> throw OperationError.BAD_REQUEST.exception();
+                    case "idErzieherArt" -> {
+	    		    	final Long artID = JSONMapper.convertToLong(value, true);
+	    		    	if (artID == null) {
+						    erzieher.ErzieherArt_ID = null;
+    					} else {
+                            final DTOErzieherart art = conn.queryByKey(DTOErzieherart.class, artID);
+	    			    	if (art == null)
+	    			    		throw OperationError.NOT_FOUND.exception();
+    					    erzieher.ErzieherArt_ID = artID;
+    					}
                     }
+                    case "titel" -> {
+                        final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Titel1.datenlaenge());
+                        if (nr == 1)
+                            erzieher.Titel1 = tmp;
+                        else
+                            erzieher.Titel2 = tmp;
+                    }
+                    case "anrede" -> {
+                        final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Anrede1.datenlaenge());
+                        if (nr == 1)
+                            erzieher.Anrede1 = tmp;
+                        else
+                            erzieher.Anrede2 = tmp;
+                    }
+                    case "nachname" -> {
+                        final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Name1.datenlaenge());
+                        if (nr == 1)
+                            erzieher.Name1 = tmp;
+                        else
+                            erzieher.Name2 = tmp;
+                    }
+                    case "vorname" -> {
+                        final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Vorname1.datenlaenge());
+                        if (nr == 1)
+                            erzieher.Vorname1 = tmp;
+                        else
+                            erzieher.Vorname2 = tmp;
+                    }
+                    case "eMail" -> {
+                        final String tmp = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzEmail.datenlaenge());
+                        if (nr == 1)
+                            erzieher.ErzEmail = tmp;
+                        else
+                            erzieher.ErzEmail2 = tmp;
+                    }
+                    case "strassenname" -> erzieher.ErzStrassenname = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzStrassenname.datenlaenge());
+	    			case "hausnummer" -> erzieher.ErzHausNr = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNr.datenlaenge());
+	    			case "hausnummerZusatz" -> erzieher.ErzHausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_ErzHausNrZusatz.datenlaenge());
+	    			case "wohnortID" -> setWohnort(conn, erzieher, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? erzieher.ErzOrtsteil_ID : ((Long) map.get("ortsteilID")));
+	    			case "ortsteilID" -> setWohnort(conn, erzieher, map.get("wohnortID") == null ? erzieher.ErzOrt_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
+
+	    			case "staatsangehoerigkeitID" -> {
+	    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
+	    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
+                            if (nr == 1)
+                            	erzieher.Erz1StaatKrz = null;
+                            else
+                                erzieher.Erz2StaatKrz = null;
+    					} else {
+    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
+	    			    	if (nat == null)
+	    			    		throw OperationError.NOT_FOUND.exception();
+                            if (nr == 1)
+                            	erzieher.Erz1StaatKrz = nat;
+                            else
+                                erzieher.Erz2StaatKrz = nat;
+    					}
+	    			}
+                    case "erhaeltAnschreiben" -> erzieher.ErzAnschreiben = JSONMapper.convertToBoolean(value, true);
+                    case "bemerkungen" -> erzieher.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_SchuelerErzAdr.col_Bemerkungen.datenlaenge());
+                    default -> throw OperationError.BAD_REQUEST.exception();
                 }
-                conn.transactionPersist(erzieher);
-                conn.transactionCommit();
-            } catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+            }
+            conn.transactionPersist(erzieher);
         }
         return Response.status(Status.OK).build();
 	}

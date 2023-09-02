@@ -163,22 +163,12 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @return die Response 204 bei Erfolg.
      */
     public Response setBezeichnung(final Long id, final String bezeichnung) {
-        try {
-            conn.transactionBegin();
-            if ((bezeichnung == null) || "".equals(bezeichnung))
-                return OperationError.CONFLICT
-                        .getResponse("Die Bezeichnung muss gültig sein und darf nicht null oder leer sein");
-            final DTOBenutzergruppe bg = getDTO(id);
-            bg.Bezeichnung = bezeichnung;
-            conn.transactionPersist(bg);
-            conn.transactionCommit();
-        } catch (final Exception e) {
-            if (e instanceof final WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
+        if ((bezeichnung == null) || "".equals(bezeichnung))
+            return OperationError.CONFLICT
+                    .getResponse("Die Bezeichnung muss gültig sein und darf nicht null oder leer sein");
+        final DTOBenutzergruppe bg = getDTO(id);
+        bg.Bezeichnung = bezeichnung;
+        conn.transactionPersist(bg);
         return Response.status(Status.NO_CONTENT).build();
     }
 
@@ -190,20 +180,10 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @return die Response 204 bei Erfolg.
      */
     public Response addAdmin(final Long id) {
-        try {
-            conn.transactionBegin();
-            final DTOBenutzergruppe bg = getDTO(id);
-            if (!bg.IstAdmin) {
-                bg.IstAdmin = true;
-                conn.transactionPersist(bg);
-            }
-            conn.transactionCommit();
-        } catch (final Exception e) {
-            if (e instanceof final WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
+        final DTOBenutzergruppe bg = getDTO(id);
+        if (!bg.IstAdmin) {
+            bg.IstAdmin = true;
+            conn.transactionPersist(bg);
         }
         return Response.status(Status.OK).build();
     }
@@ -216,113 +196,77 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      * @return bei Erfolg eine HTTP-Response 200
      */
     public Response removeAdmin(final Long id) {
-        try {
-            conn.transactionBegin();
-            final DTOBenutzergruppe bg = getDTO(id);
-            if (!bg.IstAdmin)
-                throw OperationError.BAD_REQUEST.exception("Die Gruppe mit der ID " + id + " ist nicht administrativ, "
-                        + "weshalb keine Admin-Berechtigung entfernt werden kann.");
-            pruefeAdminUeberGruppe(id);
-            bg.IstAdmin = false;
-            conn.transactionPersist(bg);
-            conn.transactionCommit();
-        } catch (final Exception e) {
-            if (e instanceof final WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
+        final DTOBenutzergruppe bg = getDTO(id);
+        if (!bg.IstAdmin)
+            throw OperationError.BAD_REQUEST.exception("Die Gruppe mit der ID " + id + " ist nicht administrativ, "
+                    + "weshalb keine Admin-Berechtigung entfernt werden kann.");
+        pruefeAdminUeberGruppe(id);
+        bg.IstAdmin = false;
+        conn.transactionPersist(bg);
         return Response.status(Status.OK).build();
     }
 
 
-    /**
-     * Fügt die übergebenen Kompetenzen bei der Benutzergruppe hinzu.
-     *
-     * @param id   die ID der Benutzergruppe
-     * @param kids die ID der Kompetenz
-     *
-     * @return die Response 204 bei Erfolg.
-     */
-    public Response addKompetenzen(final Long id, final List<Long> kids) {
+	/**
+	 * Fügt die übergebenen Kompetenzen bei der Benutzergruppe hinzu.
+	 *
+	 * @param id   die ID der Benutzergruppe
+	 * @param kids die ID der Kompetenz
+	 *
+	 * @return die Response 204 bei Erfolg.
+	 */
+	public Response addKompetenzen(final Long id, final List<Long> kids) {
 
-    	//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-    	this.istKompetenzZulaessig(kids);
+		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+		this.istKompetenzZulaessig(kids);
 
-    	if (id == null || kids == null)
-            throw OperationError.NOT_FOUND.exception(
-                    "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
-        getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
-        if (!kids.isEmpty()) {
-            // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-            for (final Long kid : kids) {
-                if (BenutzerKompetenz.getByID(kid) == null)
-                    throw OperationError.NOT_FOUND
-                            .exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-            }
-            try {
-                conn.transactionBegin();
-                for (final Long k_id : kids) {
-                    // Hat die Gruppe die Kompetenz?
-                    DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
-                    // Nein, also hinzufügen.
-                    if (bgkomp == null) {
-                        bgkomp = new DTOBenutzergruppenKompetenz(id, k_id);
-                        conn.transactionPersist(bgkomp);
-                    }
-                }
-                conn.transactionCommit();
-            } catch (final Exception e) {
-                if (e instanceof final WebApplicationException webApplicationException)
-                    return webApplicationException.getResponse();
-                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-            } finally {
-                conn.transactionRollback();
-            }
-        }
-        return Response.status(Status.OK).build();
-    }
+		if (id == null || kids == null)
+			throw OperationError.NOT_FOUND.exception("Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+		getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
+		if (!kids.isEmpty()) {
+			// Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
+			for (final Long kid : kids)
+				if (BenutzerKompetenz.getByID(kid) == null)
+					throw OperationError.NOT_FOUND.exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+			for (final Long k_id : kids) {
+				// Hat die Gruppe die Kompetenz?
+				DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
+				// Nein, also hinzufügen.
+				if (bgkomp == null) {
+					bgkomp = new DTOBenutzergruppenKompetenz(id, k_id);
+					conn.transactionPersist(bgkomp);
+				}
+			}
+		}
+		return Response.status(Status.OK).build();
+	}
 
 
-    /**
-     * Entfernt die übergebenen Kompetenzen bei der Benutzergruppe.
-     *
-     * @param id   die ID der Benutzergruppe
-     * @param kids die ID der Kompetenz
-     *
-     * @return die Response 204 bei Erfolg.
-     */
-    public Response removeKompetenzen(final Long id, final List<Long> kids) {
-      //Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
+	/**
+	 * Entfernt die übergebenen Kompetenzen bei der Benutzergruppe.
+	 *
+	 * @param id   die ID der Benutzergruppe
+	 * @param kids die ID der Kompetenz
+	 *
+	 * @return die Response 204 bei Erfolg.
+	 */
+	public Response removeKompetenzen(final Long id, final List<Long> kids) {
+		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
         this.istKompetenzZulaessig(kids);
         if (id == null || kids == null)
-            throw OperationError.NOT_FOUND.exception(
-                    "Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
+            throw OperationError.NOT_FOUND.exception("Die ID der zu ändernden Benutzergruppe bzw IDs der Kompetenzen darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!kids.isEmpty()) {
             // Prüfe, ob die Benutzerkompetenzen mit den Ids existieren.
-            for (final Long kid : kids) {
+            for (final Long kid : kids)
                 if (BenutzerKompetenz.getByID(kid) == null)
-                    throw OperationError.NOT_FOUND
-                            .exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
-            }
-            try {
-                conn.transactionBegin();
-                for (final Long k_id : kids) {
-                    // Hat die Gruppe die Kompetenz?
-                    final DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
-                    // Ja, also entfernen.
-                    if (bgkomp != null)
-                        conn.transactionRemove(bgkomp);
-                }
-                conn.transactionCommit();
-            } catch (final Exception e) {
-                if (e instanceof final WebApplicationException webApplicationException)
-                    return webApplicationException.getResponse();
-                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-            } finally {
-                conn.transactionRollback();
+                    throw OperationError.NOT_FOUND.exception("Die Benutzerkompetenz mit der ID " + kid + " existiert nicht!!");
+            for (final Long k_id : kids) {
+                // Hat die Gruppe die Kompetenz?
+                final DTOBenutzergruppenKompetenz bgkomp = conn.queryByKey(DTOBenutzergruppenKompetenz.class, id, k_id);
+                // Ja, also entfernen.
+                if (bgkomp != null)
+                    conn.transactionRemove(bgkomp);
             }
         }
         return Response.status(Status.OK).build();
@@ -339,8 +283,7 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      */
     public Response addBenutzer(final Long id, final List<Long> bids) {
         if ((id == null) || (bids == null))
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
-                    + "bzw. dürfen nicht null sein.");
+            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
         getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!bids.isEmpty()) {
             // Prüfe, ob die Benutzer mit den Ids existieren.
@@ -349,24 +292,14 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
                 if (benutzer == null)
                     return OperationError.NOT_FOUND.getResponse("Der Benutzermit der ID " + bid + " existiert nicht!");
             }
-            try {
-                conn.transactionBegin();
-                for (final Long bid : bids) {
-                    // Hat die Gruppe den Benutzer?
-                    DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
-                    // Nein, also hinzufügen.
-                    if (bgm == null) {
-                        bgm = new DTOBenutzergruppenMitglied(id, bid);
-                        conn.transactionPersist(bgm);
-                    }
+            for (final Long bid : bids) {
+                // Hat die Gruppe den Benutzer?
+                DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
+                // Nein, also hinzufügen.
+                if (bgm == null) {
+                    bgm = new DTOBenutzergruppenMitglied(id, bid);
+                    conn.transactionPersist(bgm);
                 }
-                conn.transactionCommit();
-            } catch (final Exception e) {
-                if (e instanceof final WebApplicationException webApplicationException)
-                    return webApplicationException.getResponse();
-                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-            } finally {
-                conn.transactionRollback();
             }
         }
         final BenutzergruppeDaten daten = dtoMapper.apply(getDTO(id));
@@ -383,34 +316,23 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
      */
     public Response removeBenutzer(final Long id, final List<Long> bids) {
         if (id == null || bids == null)
-            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf "
-                    + "bzw. dürfen nicht null sein.");
+            return OperationError.NOT_FOUND.getResponse("Die ID der zu ändernden Benutzergruppe bzw IDs der Benutzer darf bzw. dürfen nicht null sein.");
         final DTOBenutzergruppe dto = getDTO(id); // Prüfe, ob die Gruppe überhaupt in der DB definiert ist
         if (!bids.isEmpty()) {
         	// Prüfe, ob die Benutzer mit den Ids existieren.
         	final List<DTOBenutzer> benutzer = conn.queryNamed("DTOBenutzer.id.multiple", bids, DTOBenutzer.class);
         	if (benutzer.size() != bids.size())
         		return OperationError.NOT_FOUND.getResponse("Ein übergebener Benutzer existiert nicht!");
-            try {
-                conn.transactionBegin();
-                for (final Long bid : bids) {
-                    // Prüfe zunächst, ob der Benutzer überhaupt Mitglied der Gruppe ist...
-                    final DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
-                    if (bgm == null)
-                        throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
-                                + "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
-                    // Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
-                    if ((bid.equals(conn.getUser().getId())) && (dto.IstAdmin))
-                        pruefeAdminUeberGruppe(id);
-                    conn.transactionRemove(bgm);
-                }
-                conn.transactionCommit();
-            } catch (final Exception e) {
-            	if (e instanceof final WebApplicationException webApplicationException)
-            		return webApplicationException.getResponse();
-            	return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-            } finally {
-            	conn.transactionRollback();
+            for (final Long bid : bids) {
+                // Prüfe zunächst, ob der Benutzer überhaupt Mitglied der Gruppe ist...
+                final DTOBenutzergruppenMitglied bgm = conn.queryByKey(DTOBenutzergruppenMitglied.class, id, bid);
+                if (bgm == null)
+                    throw OperationError.NOT_FOUND.exception("Der Benutzer mit der ID " + bid + " kann nicht aus der Gruppe "
+                            + "mit der ID " + id + " entfernt werden, da dieser nicht Mitglied in der Gruppe ist.");
+                // Prüfe, ob der zu entfernende Benutzer der aktuelle Benutzer und die betroffene Gruppe administrativ ist...
+                if ((bid.equals(conn.getUser().getId())) && (dto.IstAdmin))
+                    pruefeAdminUeberGruppe(id);
+                conn.transactionRemove(bgm);
             }
         }
         final BenutzergruppeDaten daten = dtoMapper.apply(getDTO(id));
@@ -458,105 +380,78 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
     /**
      * Erstellt eine neue Benutzergruppe
      *
-     * @param is       Das JSON-Objekt mit den Daten
+     * @param is   das JSON-Objekt mit den Daten
      *
      * @return Eine Response mit dem neuen Benutzer
      */
     public Response create(final InputStream is) {
         DTOBenutzergruppe bg = null;
-
-
         final Map<String, Object> map = JSONMapper.toMap(is);
         if (map.size() > 0) {
-            try {
-                conn.transactionBegin();
+            // Bestimme die ID der neuen Benutzergruppe
+            final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzergruppen");
+            final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
-                // Bestimme die ID der neuen Benutzergruppe
-                final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzergruppen");
-                final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-
-                // TODO Konstruktor-Parameter überprüfen
-                bg = new DTOBenutzergruppe(id, "temp", false);
-                for (final Entry<String, Object> entry : map.entrySet()) {
-                    final String key = entry.getKey();
-                    final Object value = entry.getValue();
-                    switch (key) {
-                        case "id" -> {
-                            final Long create_id = JSONMapper.convertToLong(value, true);
-                            if (create_id != null && create_id != -1)
-                                throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
-                        }
-                        case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
-                        case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
-                        case "kompetenzen" -> throw OperationError.BAD_REQUEST.exception("Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
-                        default -> throw OperationError.BAD_REQUEST.exception();
+            // TODO Konstruktor-Parameter überprüfen
+            bg = new DTOBenutzergruppe(id, "temp", false);
+            for (final Entry<String, Object> entry : map.entrySet()) {
+                final String key = entry.getKey();
+                final Object value = entry.getValue();
+                switch (key) {
+                    case "id" -> {
+                        final Long create_id = JSONMapper.convertToLong(value, true);
+                        if (create_id != null && create_id != -1)
+                            throw OperationError.BAD_REQUEST.exception("ID muss leer sein.");
                     }
+                    case "bezeichnung" -> bg.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Benutzergruppen.col_Bezeichnung.datenlaenge());
+                    case "istAdmin" -> bg.IstAdmin = JSONMapper.convertToBoolean(value, true);
+                    case "kompetenzen" -> throw OperationError.BAD_REQUEST.exception("Das Setzen der Kompetenten bei dem Erstellen einer Benutzergruppe wird zur Zeit noch nicht unterstützt.");
+                    default -> throw OperationError.BAD_REQUEST.exception();
                 }
-                conn.transactionPersist(bg);
-                if (!conn.transactionCommit())
-                    return OperationError.CONFLICT
-                            .getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
-            } catch (final Exception e) {
-                if (e instanceof final WebApplicationException webApplicationException)
-                    return webApplicationException.getResponse();
-                return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-            } finally {
-                conn.transactionRollback();
             }
+            conn.transactionPersist(bg);
         }
         if (bg == null)
             throw OperationError.NOT_FOUND.exception();
         final BenutzergruppeDaten daten = dtoMapper.apply(getDTO(bg.ID));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-
     }
 
-    /**
-     * Entfernt  die Benutzergruppen mit den IDs
-     *
-     * @param bgids    die IDs der Bentuzergruppen
-     *
-     * @return bei Erfolg eine HTTP-Response 200
-     */
-    public Response remove(final List<Long> bgids) {
-        try {
-        	conn.transactionBegin();
-        	final DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
-        	if (user == null)
-        		throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
 
-            //In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
-            if (!user.IstAdmin) {
+	/**
+	 * Entfernt  die Benutzergruppen mit den IDs
+	 *
+	 * @param bgids    die IDs der Bentuzergruppen
+	 *
+	 * @return bei Erfolg eine HTTP-Response 200
+	 */
+	public Response remove(final List<Long> bgids) {
+		final DTOBenutzer user = conn.queryByKey(DTOBenutzer.class, conn.getUser().getId());
+		if (user == null)
+			throw OperationError.NOT_FOUND.exception("Der User-Benutzer existiert nicht !!!");
 
-              //Lese die Benutzergruppen_IDs des Users ein.
-                final List<Long> user_gruppen_ids = conn
-                        .queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(), DTOBenutzergruppenMitglied.class)
-                        .stream().map(g -> g.Gruppe_ID).sorted().toList();
+		// In diesem Fall wird der mögliche Verlust der Adminberechtigung des Benutzers über Gruppen überprüft und ggf. verhindert
+		if (!user.IstAdmin) {
+			// Lese die Benutzergruppen_IDs des Users ein.
+			final List<Long> user_gruppen_ids = conn.queryNamed("DTOBenutzergruppenMitglied.benutzer_id", conn.getUser().getId(), DTOBenutzergruppenMitglied.class)
+				.stream().map(g -> g.Gruppe_ID).sorted().toList();
 
-                //Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein
-                final List<Long> user_admingruppen_ids = new ArrayList<>();
-                for (final Long id : user_gruppen_ids)
-                    if (getDTO(id).IstAdmin)
-                        user_admingruppen_ids.add(id);
+			// Lese die IDs der administrativen Benutzergruppen aus user_gruppen_ids ein
+			final List<Long> user_admingruppen_ids = new ArrayList<>();
+			for (final Long id : user_gruppen_ids)
+				if (getDTO(id).IstAdmin)
+					user_admingruppen_ids.add(id);
 
-                //Lese aus den bgids die ids der administrativen Benutzergruppen vom User.
-                final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).toList();
+			// Lese aus den bgids die ids der administrativen Benutzergruppen vom User.
+			final List<Long> user_admingruppen_ids_request = bgids.stream().filter(item -> getDTO(item).IstAdmin && user_admingruppen_ids.contains(item)).toList();
 
-                if (user_admingruppen_ids_request.size() == user_admingruppen_ids.size())
-                    throw OperationError.BAD_REQUEST.exception("Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");
-            }
+			if (user_admingruppen_ids_request.size() == user_admingruppen_ids.size())
+				throw OperationError.BAD_REQUEST.exception("Der Löschvorgang ist nicht erlaubt, weil dadurch die Adminberechtigung des Benutzers entfernt wird.");
+		}
+		for (final Long id : bgids)
+			conn.transactionRemove(getDTO(id));
+		return Response.status(Status.OK).build();
+	}
 
-            for (final Long id : bgids)
-                 conn.transactionRemove(getDTO(id));
-            conn.transactionCommit();
-        } catch (final Exception e) {
-            if (e instanceof final WebApplicationException webApplicationException)
-                return webApplicationException.getResponse();
-            return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-        } finally {
-            conn.transactionRollback();
-        }
-        return Response.status(Status.OK).build();
-    }
 }
 

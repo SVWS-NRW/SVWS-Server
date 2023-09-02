@@ -15,7 +15,6 @@ import de.svws_nrw.data.kataloge.DataKatalogOrtsteile;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
 import de.svws_nrw.data.kataloge.DataStrassen;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -110,9 +109,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ort-Katalog-Einträge gefunden")
     public Response getOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-        	return (new DataOrte(conn)).getAll();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataOrte(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -160,9 +158,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-        	return (new DataOrtsteile(conn)).getAll();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataOrtsteile(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -187,9 +184,8 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataHaltestellen(conn)).getList();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataHaltestellen(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 }

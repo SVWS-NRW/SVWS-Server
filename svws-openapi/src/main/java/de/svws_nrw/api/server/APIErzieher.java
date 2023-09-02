@@ -2,6 +2,22 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
+import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
+import de.svws_nrw.core.data.erzieher.Erzieherart;
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
+import de.svws_nrw.data.erzieher.DataErzieherarten;
+import de.svws_nrw.data.erzieher.DataErzieherliste;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -12,23 +28,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import de.svws_nrw.api.OpenAPIApplication;
-import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
-import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
-import de.svws_nrw.core.data.erzieher.Erzieherart;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
-import de.svws_nrw.data.erzieher.DataErzieherarten;
-import de.svws_nrw.data.erzieher.DataErzieherliste;
-import de.svws_nrw.db.DBEntityManager;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 /**
@@ -62,9 +61,8 @@ public class APIErzieher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
     public Response getErzieher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataErzieherliste(conn)).getAll();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherliste(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
     /**
@@ -86,9 +84,8 @@ public class APIErzieher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
     public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataErzieherarten(conn)).getList();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherarten(conn).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -116,9 +113,8 @@ public class APIErzieher {
     @ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
     public Response getErzieherStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN)) {
-    		return (new DataErzieherStammdaten(conn)).get(tmpid);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherStammdaten(conn).get(tmpid),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
 
@@ -144,15 +140,12 @@ public class APIErzieher {
     @ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchErzieherStammdaten(
-    		@PathParam("schema") final String schema,
-    		@PathParam("id") final long tmpid,
+    public Response patchErzieherStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
     		@RequestBody(description = "Der Patch für die Erzieher-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN)) {
-        	return (new DataErzieherStammdaten(conn)).patch(tmpid, is);
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherStammdaten(conn).patch(tmpid, is),
+        	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 
 }

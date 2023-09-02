@@ -10,16 +10,15 @@ import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.berufskolleg.DTOBeschaeftigungsart;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOAnsprechpartnerAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogAllgemeineAdresse;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerAllgemeineAdresse;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -92,91 +91,80 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				final DTOSchuelerAllgemeineAdresse s_betrieb = conn.queryByKey(DTOSchuelerAllgemeineAdresse.class, id);
-				if (s_betrieb == null)
-					return OperationError.NOT_FOUND.getResponse();
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.intValue() != id.intValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
-						case "schueler_id" -> {
-							final Long schueler_id = JSONMapper.convertToLong(value, true);
-							if (schueler_id == null)	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
-								throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
-							final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-							if (schueler == null)
-								throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
-							s_betrieb.Schueler_ID = schueler_id;
-						}
-						case "betrieb_id" -> {
-
-							final Long betrieb_id = JSONMapper.convertToLong(value, true);
-							if (betrieb_id == null)
-								throw OperationError.BAD_REQUEST.exception("Es muss eine ID für den Betrieb angegeben werden.");
-							final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
-							if (betrieb == null)
-								throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
-							s_betrieb.Adresse_ID = betrieb_id;
-						}
-						case "beschaeftigungsart_id" -> {
-							final Long art_id = JSONMapper.convertToLong(value, true);
-							if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
-								s_betrieb.Vertragsart_ID = null;
-							} else {
-								final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
-								if (b_art == null)
-									throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
-								s_betrieb.Vertragsart_ID = art_id;
-							}
-						}
-						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
-						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
-						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
-						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
-						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
-						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
-						case "ansprechpartner_id" -> {
-							final Long a_id = JSONMapper.convertToLong(value, true);
-							if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
-								s_betrieb.Ansprechpartner_ID = null;
-							} else {
-								final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
-								if (ansprechpartner == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Ansprechpartner_ID = a_id;
-							}
-						}
-						case "betreuungslehrer_id" -> {
-							final Long lehrer_id = JSONMapper.convertToLong(value, true);
-							if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
-								s_betrieb.Betreuungslehrer_ID = null;
-							} else {
-								final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
-								if (lehrer == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Betreuungslehrer_ID = lehrer_id;
-							}
-						}
-						default -> throw OperationError.BAD_REQUEST.exception();
+			final DTOSchuelerAllgemeineAdresse s_betrieb = conn.queryByKey(DTOSchuelerAllgemeineAdresse.class, id);
+			if (s_betrieb == null)
+				return OperationError.NOT_FOUND.getResponse();
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.intValue() != id.intValue()))
+							throw OperationError.BAD_REQUEST.exception();
 					}
+					case "schueler_id" -> {
+						final Long schueler_id = JSONMapper.convertToLong(value, true);
+						if (schueler_id == null)	//TODO Darf eine Beschäftigung ohne Betrieb angeleget werden?
+							throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
+						final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+						if (schueler == null)
+							throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
+						s_betrieb.Schueler_ID = schueler_id;
+					}
+					case "betrieb_id" -> {
+
+						final Long betrieb_id = JSONMapper.convertToLong(value, true);
+						if (betrieb_id == null)
+							throw OperationError.BAD_REQUEST.exception("Es muss eine ID für den Betrieb angegeben werden.");
+						final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+						if (betrieb == null)
+							throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
+						s_betrieb.Adresse_ID = betrieb_id;
+					}
+					case "beschaeftigungsart_id" -> {
+						final Long art_id = JSONMapper.convertToLong(value, true);
+						if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
+							s_betrieb.Vertragsart_ID = null;
+						} else {
+							final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
+							if (b_art == null)
+								throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
+							s_betrieb.Vertragsart_ID = art_id;
+						}
+					}
+					case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
+					case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
+					case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
+					case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
+					case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
+					case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
+					case "ansprechpartner_id" -> {
+						final Long a_id = JSONMapper.convertToLong(value, true);
+						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
+							s_betrieb.Ansprechpartner_ID = null;
+						} else {
+							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							if (ansprechpartner == null)
+								throw OperationError.NOT_FOUND.exception();
+							s_betrieb.Ansprechpartner_ID = a_id;
+						}
+					}
+					case "betreuungslehrer_id" -> {
+						final Long lehrer_id = JSONMapper.convertToLong(value, true);
+						if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
+							s_betrieb.Betreuungslehrer_ID = null;
+						} else {
+							final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
+							if (lehrer == null)
+								throw OperationError.NOT_FOUND.exception();
+							s_betrieb.Betreuungslehrer_ID = lehrer_id;
+						}
+					}
+					default -> throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(s_betrieb);
-				conn.transactionCommit();
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
 			}
+			conn.transactionPersist(s_betrieb);
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -237,95 +225,83 @@ public final class DataSchuelerBetriebsdaten extends DataManager<Long> {
 		DTOSchuelerAllgemeineAdresse s_betrieb = null;
 		final Map<String, Object> map = JSONMapper.toMap(is);
 		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
+			final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+			if (schueler == null)
+				throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
 
-				final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-				if (schueler == null)
-					throw OperationError.NOT_FOUND.exception("Schüler mit der ID " + schueler_id + " wurde nicht gefunden.");
+			final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
+			if (betrieb == null)
+				throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
 
-				final DTOKatalogAllgemeineAdresse betrieb = conn.queryByKey(DTOKatalogAllgemeineAdresse.class, betrieb_id);
-				if (betrieb == null)
-					throw OperationError.NOT_FOUND.exception("Betrieb mit der ID " + betrieb_id + " wurde nicht gefunden.");
+			// Bestimme die ID des neuen Ansprechpartners
+			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Schueler_AllgAdr");
+			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
 
-				// Bestimme die ID des neuen Ansprechpartners
-				final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Schueler_AllgAdr");
-				final Long id = lastID == null ? 1 : lastID.MaxID + 1;
+			// Schülerbetrieb anlegen
+			s_betrieb = new DTOSchuelerAllgemeineAdresse(id, schueler_id, betrieb_id);
 
-				// Schülerbetrieb anlegen
-				s_betrieb = new DTOSchuelerAllgemeineAdresse(id, schueler_id, betrieb_id);
-
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-						case "id" -> {
-							// ignoriere eine angegebene ID
-						}
-						case "schueler_id" -> {
-							final Long sid = JSONMapper.convertToLong(value, true);
-							if (sid == null)
-								throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
-							if (sid != schueler_id)
-								throw OperationError.BAD_REQUEST.exception("SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
-						}
-						case "betrieb_id" -> {
-							final Long bid = JSONMapper.convertToLong(value, true);
-							if ((bid == null) || (bid != betrieb_id))
-								throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
-						}
-						case "beschaeftigungsart_id" -> {
-							final Long art_id = JSONMapper.convertToLong(value, true);
-							if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
-								s_betrieb.Vertragsart_ID = null;
-							} else {
-								final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
-								if (b_art == null)
-									throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
-								s_betrieb.Vertragsart_ID = art_id;
-							}
-						}
-						case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
-						case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
-						case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
-						case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
-						case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
-						case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
-						case "ansprechpartner_id" -> {
-							final Long a_id = JSONMapper.convertToLong(value, true);
-							if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
-								s_betrieb.Ansprechpartner_ID = null;
-							} else {
-								final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
-								if (ansprechpartner == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Ansprechpartner_ID = a_id;
-							}
-						}
-						case "betreuungslehrer_id" -> {
-							final Long lehrer_id = JSONMapper.convertToLong(value, true);
-							if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
-								s_betrieb.Betreuungslehrer_ID = null;
-							} else {
-								final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
-								if (lehrer == null)
-									throw OperationError.NOT_FOUND.exception();
-								s_betrieb.Betreuungslehrer_ID = lehrer_id;
-							}
-						}
-						default -> throw OperationError.BAD_REQUEST.exception();
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "id" -> {
+						// ignoriere eine angegebene ID
 					}
+					case "schueler_id" -> {
+						final Long sid = JSONMapper.convertToLong(value, true);
+						if (sid == null)
+							throw OperationError.BAD_REQUEST.exception("SchülerID darf nicht fehlen.");
+						if (sid != schueler_id)
+							throw OperationError.BAD_REQUEST.exception("SchülerID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+					}
+					case "betrieb_id" -> {
+						final Long bid = JSONMapper.convertToLong(value, true);
+						if ((bid == null) || (bid != betrieb_id))
+							throw OperationError.BAD_REQUEST.exception("Betrieb-ID aus dem JSON-Objekt stimmt mit dem übergebenen Argument nicht überein.");
+					}
+					case "beschaeftigungsart_id" -> {
+						final Long art_id = JSONMapper.convertToLong(value, true);
+						if (art_id == null) {	//TODO Darf eine Beschäftigung ohne Art angeleget werden?
+							s_betrieb.Vertragsart_ID = null;
+						} else {
+							final DTOBeschaeftigungsart b_art = conn.queryByKey(DTOBeschaeftigungsart.class, art_id);
+							if (b_art == null)
+								throw OperationError.NOT_FOUND.exception("Beschäftigungsart mit der ID " + art_id + " wurde nicht gefunden.");
+							s_betrieb.Vertragsart_ID = art_id;
+						}
+					}
+					case "vertragsbeginn" -> s_betrieb.Vertragsbeginn = JSONMapper.convertToString(value, true, true, null);
+					case "vertragsende" -> s_betrieb.Vertragsende = JSONMapper.convertToString(value, true, true, null);
+					case "ausbilder" -> s_betrieb.Ausbilder = JSONMapper.convertToString(value, true, true, Schema.tab_Schueler_AllgAdr.col_Ausbilder.datenlaenge());
+					case "allgadranschreiben" -> s_betrieb.AllgAdrAnschreiben = JSONMapper.convertToBoolean(value, true);
+					case "praktikum" -> s_betrieb.Praktikum = JSONMapper.convertToBoolean(value, true);
+					case "sortierung" -> s_betrieb.Sortierung = JSONMapper.convertToInteger(value, true);
+					case "ansprechpartner_id" -> {
+						final Long a_id = JSONMapper.convertToLong(value, true);
+						if (a_id == null) {	//TODO Darf eine Beschäftigung ohne Ansprechpartner angeleget werden?
+							s_betrieb.Ansprechpartner_ID = null;
+						} else {
+							final DTOAnsprechpartnerAllgemeineAdresse ansprechpartner = conn.queryByKey(DTOAnsprechpartnerAllgemeineAdresse.class, a_id);
+							if (ansprechpartner == null)
+								throw OperationError.NOT_FOUND.exception();
+							s_betrieb.Ansprechpartner_ID = a_id;
+						}
+					}
+					case "betreuungslehrer_id" -> {
+						final Long lehrer_id = JSONMapper.convertToLong(value, true);
+						if (lehrer_id == null) {	//TODO Darf eine Beschäftigung ohne Betreuungslehrer angeleget werden?
+							s_betrieb.Betreuungslehrer_ID = null;
+						} else {
+							final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, lehrer_id);
+							if (lehrer == null)
+								throw OperationError.NOT_FOUND.exception();
+							s_betrieb.Betreuungslehrer_ID = lehrer_id;
+						}
+					}
+					default -> throw OperationError.BAD_REQUEST.exception();
 				}
-				conn.transactionPersist(s_betrieb);
-				if (!conn.transactionCommit())
-					return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren des Betriebansprechpartners");
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webApplicationException)
-					return webApplicationException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				conn.transactionRollback();
 			}
+			conn.transactionPersist(s_betrieb);
 		}
 		final SchuelerBetriebsdaten daten = dtoMapper.apply(s_betrieb);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -323,4 +323,41 @@ public final class OpenAPIApplication extends Application {
 		}
 	}
 
+
+	/**
+	 * Führt die übergebene Aufgabe auf der Datenbank aus und gibt bei Erfolg die Response der Aufgabe zurück.
+	 * Hierfür wird der aktuelle SVWS-Benutzer anhand des HTTP-Requests ermittelt und überprüft, ob der
+	 * Benutzer entweder Admin-Rechte oder eine der übergebenen Kompetenzen besitzt.
+	 * Bei dieser Methode wird auch der Zugriff von dem Benutzer mit der übergebenen Benutzer-ID erlaubt.
+	 * Die dabei erstellte {@link DBEntityManager}-Instanz wird dabei für den Datenbankzugriff genutzt.
+	 *
+	 * Wichtig: Eine Transaktion für die Aufgabe wird erzeugt und von dieser Methode gehandhabt!
+	 *
+	 * @param task          die auszuführende Aufgabe
+	 * @param request       das HTTP-Request-Objekt
+	 * @param mode          der benötigte Server-Mode für den API-Zugriff
+	 * @param user_id       die zu prüfende Benutzer-ID (ist dies die ID des angemeldeten Benutzers?)
+	 * @param kompetenzen   die zu prüfenden Kompetenzen
+	 *
+	 * @return die Response zu der Aufgabe
+	 */
+	public static Response runWithTransactionAllowSelf(final Function<DBEntityManager, Response> task, final HttpServletRequest request,
+			final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnectionAllowSelf(request, mode, user_id, kompetenzen)) {
+			try {
+				conn.transactionBegin();
+				final Response response = task.apply(conn);
+				conn.transactionCommit();
+				return response;
+			} catch (final Exception e) {
+				if (e instanceof final WebApplicationException webAppException)
+					return webAppException.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			} finally {
+				// Perform a rollback if necessary
+				conn.transactionRollback();
+			}
+		}
+	}
+
 }

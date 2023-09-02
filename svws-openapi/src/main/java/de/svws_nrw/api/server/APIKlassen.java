@@ -9,7 +9,6 @@ import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.klassen.DataKlassenlisten;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,9 +57,8 @@ public class APIKlassen {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
     public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKlassenlisten(conn, abschnitt)).getList();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKlassenlisten(conn, abschnitt).getList(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 
@@ -86,9 +84,8 @@ public class APIKlassen {
     @ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
     public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-    		return (new DataKlassendaten(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKlassendaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 

@@ -1,5 +1,15 @@
 package de.svws_nrw.api.server;
 
+import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
+import de.svws_nrw.core.types.ServerMode;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.ge.DataGEAbschlussFaecher;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -9,17 +19,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import de.svws_nrw.api.OpenAPIApplication;
-import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
-import de.svws_nrw.core.types.ServerMode;
-import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.data.ge.DataGEAbschlussFaecher;
-import de.svws_nrw.db.DBEntityManager;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf Schülerdaten aus der SVWS-Datenbank in Bezug auf die SekI-Daten der Gesamtschule.
@@ -53,9 +52,8 @@ public class APIGesamtschule {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getGesamtschuleSchuelerPrognoseLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                               @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return (new DataGEAbschlussFaecher(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
 
@@ -84,9 +82,8 @@ public class APIGesamtschule {
     public Response getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("id") final long id,
     																@PathParam("abschnittID") final long abschnittID,
     		                                                        @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN)) {
-    		return (new DataGEAbschlussFaecher(conn)).getByAbschnitt(id, abschnittID);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).getByAbschnitt(id, abschnittID),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
 }

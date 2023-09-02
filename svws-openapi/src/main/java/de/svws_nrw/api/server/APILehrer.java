@@ -41,7 +41,6 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -92,9 +91,8 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
     public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
-    		return (new DataLehrerliste(conn)).getAll();
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
     }
 
 
@@ -120,9 +118,8 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN)) {
-    		return (new DataLehrerStammdaten(conn)).get(id);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
     }
 
 
@@ -149,15 +146,12 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchLehrerStammdaten(
-    		@PathParam("schema") final String schema,
-    		@PathParam("id") final long id,
+    public Response patchLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN)) {
-    		return (new DataLehrerStammdaten(conn)).patch(id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
     }
 
 
@@ -183,10 +177,9 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
-    		                                          @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN)) {
-    		return (new DataLehrerPersonaldaten(conn)).get(id);
-    	}
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
     }
 
 
@@ -212,15 +205,12 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response patchLehrerPersonaldaten(
-    		@PathParam("schema") final String schema,
-    		@PathParam("id") final long id,
+    public Response patchLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN)) {
-    		return (new DataLehrerPersonaldaten(conn)).patch(id, is);
-    	}
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
     }
 
 
@@ -243,9 +233,8 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
     public Response getLehrerLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
-            return (new DataKatalogLehrerLeitungsfunktionen()).getList();
-        }
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogLehrerLeitungsfunktionen().getList(),
+        	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
     /**

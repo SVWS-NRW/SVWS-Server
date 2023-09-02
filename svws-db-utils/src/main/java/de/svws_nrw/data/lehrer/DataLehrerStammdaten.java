@@ -96,87 +96,76 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
-    		try {
-    			conn.transactionBegin();
-	    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		    	if (lehrer == null)
-		    		throw OperationError.NOT_FOUND.exception();
-		    	for (final Entry<String, Object> entry : map.entrySet()) {
-		    		final String key = entry.getKey();
-		    		final Object value = entry.getValue();
-		    		switch (key) {
-		    			// Basisdaten
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
-		    			case "foto" -> {
-		    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
-    	        			DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
-    	        			if (lehrerFoto == null)
-    	        				lehrerFoto = new DTOLehrerFoto(id);
-    	        			final String oldFoto = lehrerFoto.FotoBase64;
-    	        	    	if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
-    	        	    		return Response.status(Status.OK).build();
-    	        	    	lehrerFoto.FotoBase64 = strData;
-    	        	    	conn.transactionPersist(lehrerFoto);
-		    			}
-		    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge());
-		    			case "personalTyp" -> {
-			        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false, null));
-			        		if (p == null)
-			        			throw OperationError.CONFLICT.exception();
-			            	lehrer.PersonTyp = p;
-		    			}
-		    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge());
-		    			case "titel" -> lehrer.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge());
-		    			case "amtsbezeichnung" -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Amtsbezeichnung.datenlaenge());
-		    			case "nachname" -> lehrer.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge());
-		    			case "vorname" -> lehrer.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge());
-		    			case "geschlecht" -> {
-		    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
-		    				if (geschlecht == null)
-		    					throw OperationError.CONFLICT.exception();
-		    				lehrer.Geschlecht = geschlecht;
-		    			}
-		    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
-		    			case "staatsangehoerigkeitID" -> {
-		    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
-		    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
-	    						lehrer.staatsangehoerigkeit = null;
-	    					} else {
-	    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
-		    			    	if (nat == null)
-		    			    		throw OperationError.NOT_FOUND.exception();
-		    			    	lehrer.staatsangehoerigkeit = nat;
-	    					}
-		    			}
+    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+	    	if (lehrer == null)
+	    		throw OperationError.NOT_FOUND.exception();
+	    	for (final Entry<String, Object> entry : map.entrySet()) {
+	    		final String key = entry.getKey();
+	    		final Object value = entry.getValue();
+	    		switch (key) {
+	    			// Basisdaten
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+	    			case "foto" -> {
+	    		    	final String strData = JSONMapper.convertToString(value, true, true, null);
+	        			DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
+	        			if (lehrerFoto == null)
+	        				lehrerFoto = new DTOLehrerFoto(id);
+	        			final String oldFoto = lehrerFoto.FotoBase64;
+	        	    	if (((strData == null) && (oldFoto == null)) || ((strData != null) && (strData.equals(oldFoto))))
+	        	    		return Response.status(Status.OK).build();
+	        	    	lehrerFoto.FotoBase64 = strData;
+	        	    	conn.transactionPersist(lehrerFoto);
+	    			}
+	    			case "kuerzel" -> lehrer.Kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Kuerzel.datenlaenge());
+	    			case "personalTyp" -> {
+		        		final PersonalTyp p = PersonalTyp.fromBezeichnung(JSONMapper.convertToString(value, false, false, null));
+		        		if (p == null)
+		        			throw OperationError.CONFLICT.exception();
+		            	lehrer.PersonTyp = p;
+	    			}
+	    			case "anrede" -> lehrer.Kuerzel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Anrede.datenlaenge());
+	    			case "titel" -> lehrer.Titel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Titel.datenlaenge());
+	    			case "amtsbezeichnung" -> lehrer.Amtsbezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Amtsbezeichnung.datenlaenge());
+	    			case "nachname" -> lehrer.Nachname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Nachname.datenlaenge());
+	    			case "vorname" -> lehrer.Vorname = JSONMapper.convertToString(value, false, false, Schema.tab_K_Lehrer.col_Vorname.datenlaenge());
+	    			case "geschlecht" -> {
+	    				final Geschlecht geschlecht = Geschlecht.fromValue(JSONMapper.convertToInteger(value, false));
+	    				if (geschlecht == null)
+	    					throw OperationError.CONFLICT.exception();
+	    				lehrer.Geschlecht = geschlecht;
+	    			}
+	    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
+	    			case "staatsangehoerigkeitID" -> {
+	    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
+	    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
+    						lehrer.staatsangehoerigkeit = null;
+    					} else {
+    						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);
+	    			    	if (nat == null)
+	    			    		throw OperationError.NOT_FOUND.exception();
+	    			    	lehrer.staatsangehoerigkeit = nat;
+    					}
+	    			}
 
-		    			// Wohnort und Kontaktdaten
-		    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge());
-		    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge());
-		    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge());
-		    			case "wohnortID" -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
-		    			case "ortsteilID" -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
-		    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge());
-		    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
-		    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
-		    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
+	    			// Wohnort und Kontaktdaten
+	    			case "strassenname" -> lehrer.Strassenname = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Strassenname.datenlaenge());
+	    			case "hausnummer" -> lehrer.HausNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNr.datenlaenge());
+	    			case "hausnummerZusatz" -> lehrer.HausNrZusatz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_HausNrZusatz.datenlaenge());
+	    			case "wohnortID" -> setWohnort(conn, lehrer, JSONMapper.convertToLong(value, true), map.get("ortsteilID") == null ? lehrer.Ortsteil_ID : ((Long) map.get("ortsteilID")));
+	    			case "ortsteilID" -> setWohnort(conn, lehrer, map.get("wohnortID") == null ? lehrer.Ort_ID : ((Long) map.get("wohnortID")), JSONMapper.convertToLong(value, true));
+	    			case "telefon" -> lehrer.telefon = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Tel.datenlaenge());
+	    			case "telefonMobil" -> lehrer.telefonMobil = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Handy.datenlaenge());
+	    			case "emailDienstlich" -> lehrer.eMailDienstlich = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_EmailDienstlich.datenlaenge());
+	    			case "emailPrivat" -> lehrer.eMailPrivat = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_Email.datenlaenge());
 
-		    			default -> throw OperationError.BAD_REQUEST.exception();
-		    		}
-		    	}
-		    	conn.transactionPersist(lehrer);
-		    	conn.transactionCommit();
-    		} catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    		}
+	    	}
+	    	conn.transactionPersist(lehrer);
     	}
     	return Response.status(Status.OK).build();
 	}

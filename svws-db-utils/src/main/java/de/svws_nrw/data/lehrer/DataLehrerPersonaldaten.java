@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -83,52 +82,41 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 	public Response patch(final Long id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
     	if (map.size() > 0) {
-    		try {
-    			conn.transactionBegin();
-	    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-		    	if (lehrer == null)
-		    		throw OperationError.NOT_FOUND.exception();
-		    	for (final Entry<String, Object> entry : map.entrySet()) {
-		    		final String key = entry.getKey();
-		    		final Object value = entry.getValue();
-		    		switch (key) {
-						case "id" -> {
-							final Long patch_id = JSONMapper.convertToLong(value, true);
-							if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-								throw OperationError.BAD_REQUEST.exception();
-						}
+    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+	    	if (lehrer == null)
+	    		throw OperationError.NOT_FOUND.exception();
+	    	for (final Entry<String, Object> entry : map.entrySet()) {
+	    		final String key = entry.getKey();
+	    		final Object value = entry.getValue();
+	    		switch (key) {
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
 
-		    			case "identNrTeil1" -> lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
-		    			case "identNrTeil2SerNr" -> lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_SerNr.datenlaenge());
-		    			case "personalaktennummer" -> lehrer.PANr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_PANr.datenlaenge());
-		    			case "lbvPersonalnummer" -> lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_LBVNr.datenlaenge());
-		    			case "lbvVerguetungsschluessel" -> lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_VSchluessel.datenlaenge());
+	    			case "identNrTeil1" -> lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
+	    			case "identNrTeil2SerNr" -> lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_SerNr.datenlaenge());
+	    			case "personalaktennummer" -> lehrer.PANr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_PANr.datenlaenge());
+	    			case "lbvPersonalnummer" -> lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_LBVNr.datenlaenge());
+	    			case "lbvVerguetungsschluessel" -> lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_VSchluessel.datenlaenge());
 
-		    			case "zugangsdatum" -> lehrer.DatumZugang = JSONMapper.convertToString(value, true, true, null);
-		    			case "zugangsgrund" -> lehrer.GrundZugang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-		    			case "abgangsdatum" -> lehrer.DatumAbgang = JSONMapper.convertToString(value, true, true, null);
-		    			case "abgangsgrund" -> lehrer.GrundAbgang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+	    			case "zugangsdatum" -> lehrer.DatumZugang = JSONMapper.convertToString(value, true, true, null);
+	    			case "zugangsgrund" -> lehrer.GrundZugang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+	    			case "abgangsdatum" -> lehrer.DatumAbgang = JSONMapper.convertToString(value, true, true, null);
+	    			case "abgangsgrund" -> lehrer.GrundAbgang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
 
-		    			case "pflichtstundensoll" -> lehrer.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
-		    			case "rechtsverhaeltnis" -> lehrer.Rechtsverhaeltnis = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-		    			case "beschaeftigungsart" -> lehrer.Beschaeftigungsart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-		    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+	    			case "pflichtstundensoll" -> lehrer.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
+	    			case "rechtsverhaeltnis" -> lehrer.Rechtsverhaeltnis = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+	    			case "beschaeftigungsart" -> lehrer.Beschaeftigungsart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
+	    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
 
-		    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_K_Lehrer.col_StammschulNr.datenlaenge());
+	    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_K_Lehrer.col_StammschulNr.datenlaenge());
 
-		    			default -> throw OperationError.BAD_REQUEST.exception();
-		    		}
-		    	}
-		    	conn.transactionPersist(lehrer);
-		    	conn.transactionCommit();
-    		} catch (final Exception e) {
-    			if (e instanceof final WebApplicationException webAppException)
-    				return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		} finally {
-    			// Perform a rollback if necessary
-    			conn.transactionRollback();
-    		}
+	    			default -> throw OperationError.BAD_REQUEST.exception();
+	    		}
+	    	}
+	    	conn.transactionPersist(lehrer);
     	}
     	return Response.status(Status.OK).build();
 	}
