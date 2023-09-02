@@ -37,5 +37,5 @@ services:
       - "8443:8443"
     mem_limit: '2g'
     volumes:
-      - ./volume/keystore:/etc/app/svws/keystore
+      - ./volume/keystore:/etc/app/svws/conf/keystore/
       - ./init-scripts:/etc/app/svws/init-scripts
