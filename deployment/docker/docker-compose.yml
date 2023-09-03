@@ -18,7 +18,9 @@ services:
       timeout: 5s
       retries: 10
     mem_limit: '512m'
-    volumes:
+    ports:
+      - "3306:3306"
+	volumes:
       - "./volume/mysql/data:${MARIADB_DATA_DIR}"
       - "./volume/mysql/logs:${MARIADB_LOG_DIR}"
 
