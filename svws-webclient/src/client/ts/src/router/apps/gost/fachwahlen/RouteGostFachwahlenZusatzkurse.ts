@@ -43,6 +43,7 @@ export class RouteGostFachwahlenZusatzkurse extends RouteNode<unknown, RouteGost
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenZusatzkurseProps {
 		return {
+			gotoLaufbahnplanung: routeGostFachwahlen.gotoLaufbahnplanung,
 			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
 			fachwahlenManager: routeGostFachwahlen.data.fachwahlenManager,
 			mapSchueler: routeGostFachwahlen.data.mapSchueler,

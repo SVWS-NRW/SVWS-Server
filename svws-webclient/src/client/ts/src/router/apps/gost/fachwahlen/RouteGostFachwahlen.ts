@@ -17,6 +17,8 @@ import { routeGostFachwahlenLeistungskurse } from "~/router/apps/gost/fachwahlen
 import { routeGostFachwahlenZusatzkurse } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlenZusatzkurse";
 
 import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFachwahlenProps";
+import { RouteManager } from "~/router/RouteManager";
+import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -64,6 +66,10 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 
 	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
 		await this.data.setEintrag(-1);
+	}
+
+	gotoLaufbahnplanung = async (idSchueler: number) => {
+		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {

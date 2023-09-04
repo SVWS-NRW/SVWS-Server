@@ -38,8 +38,8 @@
 				</div>
 				<div role="row" class="data-table__tr data-table__tbody__tr">
 					<div role="cell" class="data-table__td data-table__td__align-left select-none flex flex-col" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
-						<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="w-full">
-							{{ schueler.nachname + ", " + schueler.vorname }}
+						<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="w-full flex flex-row">
+							{{ schueler.nachname + ", " + schueler.vorname }} <i-ri-link class="ml-2 cursor-pointer" @click="gotoLaufbahnplanung(schueler.id)" />
 						</div>
 					</div>
 				</div>
