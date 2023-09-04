@@ -21,12 +21,12 @@
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="hatAbiFachwahl(fws)">
-					<div role="row" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': getBgColor(fws) }" @click="onClick(fws)">
+					<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" :style="{ 'background-color': getBgColor(fws) }" @click="onClick(fws)">
 						<div role="cell" class="data-table__td data-table__td__align-left select-none col-span-3 text-sm-bold">
 							{{ faecherManager.get(fws.id)?.bezeichnung }}
 						</div>
 					</div>
-					<div role="row" class="data-table__tr data-table__tbody__tr" @click="onClick(fws)">
+					<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" @click="onClick(fws)">
 						<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
 							{{ fws.fachwahlen[5].wahlenLK > 0 ? fws.fachwahlen[5].wahlenLK : "&ndash;" }}
 						</div>

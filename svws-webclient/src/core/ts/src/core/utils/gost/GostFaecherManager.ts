@@ -367,6 +367,34 @@ export class GostFaecherManager extends JavaObject {
 		return this._fachkombisVerboten;
 	}
 
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um ein Projektkursfach handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um ein Projektkurs-Fach handelt und ansonsten false.
+	 */
+	public fachIstProjektkurs(id : number) : boolean {
+		const fach : GostFach | null = this._map.get(id);
+		if (fach === null)
+			return false;
+		return JavaObject.equalsTranspiler("PX", (fach.kuerzel));
+	}
+
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um einen Vertiefungskurs handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um einen Vertiefungskurs handelt und ansonsten false.
+	 */
+	public fachIstVertiefungskurs(id : number) : boolean {
+		const fach : GostFach | null = this._map.get(id);
+		if (fach === null)
+			return false;
+		return JavaObject.equalsTranspiler("VX", (fach.kuerzel));
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFaecherManager'].includes(name);
 	}

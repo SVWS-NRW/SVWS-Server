@@ -355,4 +355,34 @@ public class GostFaecherManager {
 		return this._fachkombisVerboten;
 	}
 
+
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um ein Projektkursfach handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um ein Projektkurs-Fach handelt und ansonsten false.
+	 */
+	public boolean fachIstProjektkurs(final long id) {
+		final GostFach fach = _map.get(id);
+		if (fach == null)
+			return false;
+		return "PX".equals(fach.kuerzel);
+	}
+
+
+	/**
+	 * Gibt an, ob es sich bei dem Fach mit der übergebenen ID um einen Vertiefungskurs handelt oder nicht.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return true, wenn es sich um einen Vertiefungskurs handelt und ansonsten false.
+	 */
+	public boolean fachIstVertiefungskurs(final long id) {
+		final GostFach fach = _map.get(id);
+		if (fach == null)
+			return false;
+		return "VX".equals(fach.kuerzel);
+	}
+
 }
