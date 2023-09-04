@@ -11,12 +11,12 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -258,6 +258,41 @@ public final class ResourceUtils {
 					final String name = filename.substring(prefix.length(), filename.length() - (suffix + FILE_EXTENSION_JSON).length());
 					final String json = Files.readString(filePath, StandardCharsets.UTF_8);
 					classes.put(name, mapper.readValue(json, clazz));
+				}
+			} catch (final IOException e) {
+				throw new IOException("Fehler beim Lesen aus der Datei " + filename + "!", e);
+			}
+		}
+		return classes;
+	}
+
+	/**
+	 * Lädt alle JSON-Dateien aus dem angegebenen Package, welche das angegebene Präfix haben und
+	 * die angegebene Dateiendung. Die JSON-Objekt werden dann in Objekte der angebenenen
+	 * Klasse gemappt.
+	 *
+	 * @param <T>   			die Klasse, von welcher die neuen Objekte erzeugt werden
+	 * @param resourcePackage   das Package
+	 * @param prefix			das benötigte Präfix im Dateinamen
+	 * @param suffix            das benötigte Suffix im Dateinamen (vor dem .json)
+	 * @param clazz             das Klassenobjekt der Klasse, von welcher neue Objekte ereugt werden
+	 *
+	 * @return eine Map, welche dem Teil des Dateinamens ohne Präfix und Endung das neu erzeugte Objekt zuordnet
+	 *
+	 * @throws IOException bei einem Fehler beim Laden der JSON-Daten
+	 */
+	public static <T> Map<String, List<T>> json2Lists(final String resourcePackage, final String prefix, final String suffix, final Class<T> clazz) throws IOException {
+		final Map<String, List<T>> classes = new TreeMap<>();
+		final List<Path> paths = ResourceUtils.getFilesInPackage(resourcePackage, FILE_EXTENSION_JSON);
+		final ObjectMapper mapper = new ObjectMapper();
+		for (final Path filePath: paths) {
+			final String filename = filePath.getFileName().toString();
+			try {
+				if (filename.toLowerCase().startsWith(prefix.toLowerCase()) && filename.toLowerCase().endsWith((suffix + FILE_EXTENSION_JSON).toLowerCase())) {
+					final String name = filename.substring(prefix.length(), filename.length() - (suffix + FILE_EXTENSION_JSON).length());
+					final String json = Files.readString(filePath, StandardCharsets.UTF_8);
+					final List<T> list = mapper.readValue(json, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
+					classes.put(name, list);
 				}
 			} catch (final IOException e) {
 				throw new IOException("Fehler beim Lesen aus der Datei " + filename + "!", e);

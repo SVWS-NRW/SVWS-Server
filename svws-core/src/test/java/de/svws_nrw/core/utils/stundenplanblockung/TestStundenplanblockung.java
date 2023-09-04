@@ -1,4 +1,4 @@
-package de.svws_nrw.core.stundenplanblockung;
+package de.svws_nrw.core.utils.stundenplanblockung;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -10,19 +10,12 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManager;
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKlasse;
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplung;
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraft;
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppe;
-import de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaum;
-
 /**
  * Diese Klasse testet den {@link StundenplanblockungManager}.
  */
 @DisplayName("Diese Klasse testet den {@link StundenplanblockungManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class StundenplanblockungTests {
+class TestStundenplanblockung {
 
 	private static final long _SEED = 1L;
 	private static final int _ANZAHL_MANAGER_TESTS = 2;

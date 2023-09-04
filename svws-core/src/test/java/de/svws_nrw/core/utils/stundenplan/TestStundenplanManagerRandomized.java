@@ -1,4 +1,4 @@
-package de.svws_nrw.core.stundenplan;
+package de.svws_nrw.core.utils.stundenplan;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -11,14 +11,13 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
-import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 
 /**
  * Diese Klasse testet den {@link StundenplanManager}.
  */
 @DisplayName("Diese Klasse testet den {@link StundenplanManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
-class StundenplanManagerTest {
+class TestStundenplanManagerRandomized {
 
 	private static final long _SEED = 1L;
 	private static final int _ANZAHL_TESTS = 1000;
