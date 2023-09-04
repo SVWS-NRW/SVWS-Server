@@ -249,6 +249,24 @@ public final class DBEntityManager implements AutoCloseable {
 
 
 	/**
+	 * Beendet eine aktuelle Transaction mithilfe eines Commit.
+	 *
+	 * @throws RollbackException       wenn ein Fehler beim Commit auftritt
+	 * @throws IllegalStateException   wenn keine Transaktion aktiv ist
+	 */
+	public void transactionCommitOrThrow() {
+		try {
+			if (em.getTransaction().isActive()) {
+				em.getTransaction().commit();
+				em.clear();
+			}
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
 	 * Beendet eine aktuelle Transaction mithilfe eines Rollback.
 	 *
 	 * @return true, falls der Rollback erfolgreich war und ansonsten false
@@ -260,6 +278,21 @@ public final class DBEntityManager implements AutoCloseable {
 			return true;
 		} catch (@SuppressWarnings("unused") final PersistenceException e) {
 			return false;
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
+	 * Beendet eine aktuelle Transaction mithilfe eines Rollback.
+	 *
+	 * @throws PersistenceException wenn ein Fehler beim Rollback auftritt
+	 */
+	public void transactionRollbackOrThrow() {
+		try {
+			if (em.getTransaction().isActive())
+				em.getTransaction().rollback();
 		} finally {
 			this.unlock();
 		}

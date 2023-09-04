@@ -310,7 +310,7 @@ public final class OpenAPIApplication extends Application {
 			try {
 				conn.transactionBegin();
 				final Response response = task.apply(conn);
-				conn.transactionCommit();
+				conn.transactionCommitOrThrow();
 				return response;
 			} catch (final Exception e) {
 				if (e instanceof final WebApplicationException webAppException)
@@ -318,7 +318,7 @@ public final class OpenAPIApplication extends Application {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 			} finally {
 				// Perform a rollback if necessary
-				conn.transactionRollback();
+				conn.transactionRollbackOrThrow();
 			}
 		}
 	}
@@ -347,7 +347,7 @@ public final class OpenAPIApplication extends Application {
 			try {
 				conn.transactionBegin();
 				final Response response = task.apply(conn);
-				conn.transactionCommit();
+				conn.transactionCommitOrThrow();
 				return response;
 			} catch (final Exception e) {
 				if (e instanceof final WebApplicationException webAppException)
@@ -355,7 +355,7 @@ public final class OpenAPIApplication extends Application {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 			} finally {
 				// Perform a rollback if necessary
-				conn.transactionRollback();
+				conn.transactionRollbackOrThrow();
 			}
 		}
 	}
