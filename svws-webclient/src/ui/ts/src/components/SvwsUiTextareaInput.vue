@@ -1,11 +1,11 @@
 <script setup lang="ts">
-	import { useTextareaAutosize, useVModel } from '@vueuse/core'
-	import { computed } from 'vue';
+	import { useTextareaAutosize } from '@vueuse/core'
+	import { ref, computed } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
 
 	const props = withDefaults(defineProps<{
-		modelValue?: string;
+		modelValue?: string|null;
 		placeholder?: string;
 		valid?: (value: string) => boolean;
 		statistics?: boolean;
@@ -35,8 +35,8 @@
 		"blur": [value: string];
 	}>();
 
-	const value = useVModel(props, 'modelValue', emit);
-	const { textarea, input } = useTextareaAutosize({input: value})
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const { textarea, input } = useTextareaAutosize({ input: props.modelValue || undefined })
 	const bindings = computed(() => {
 		return {
 			required: props.required,
@@ -49,13 +49,12 @@
 		if (input.value != props.modelValue) // !== wegen Umwandlung von null zu undefined
 			emit("blur", input.value);
 	}
-
 </script>
 
 <template>
 	<label class="textarea-input"
 		:class="{
-			'textarea-input--filled': !!input,
+			'textarea-input--filled': !!modelValue,
 			'textarea-input--invalid': valid(input) === false,
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
@@ -66,7 +65,7 @@
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<textarea	ref="textarea" v-model="input" v-bind="bindings" class="textarea-input--control" @input="modelValue = $event.target?.value" />
+		<textarea	ref="textarea" v-model="input" v-bind="bindings" class="textarea-input--control" />
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
