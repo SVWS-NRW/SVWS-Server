@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { type RouteGost} from "~/router/apps/gost/RouteGost";
+import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
 
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 
@@ -44,6 +44,9 @@ export class RouteGostFachwahlenAllgemein extends RouteNode<unknown, RouteGost> 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenAllgemeinProps {
 		return {
 			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
+			fachwahlenManager: routeGostFachwahlen.data.fachwahlenManager,
+			mapSchueler: routeGostFachwahlen.data.mapSchueler,
+			faecherManager: routeGost.data.faecherManager,
 		};
 	}
 

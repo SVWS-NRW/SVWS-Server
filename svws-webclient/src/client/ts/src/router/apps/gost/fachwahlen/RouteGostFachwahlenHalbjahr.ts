@@ -3,16 +3,19 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { type RouteGost} from "~/router/apps/gost/RouteGost";
+import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
 
 import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFachwahlen";
 
 import type { GostFachwahlenHalbjahrProps } from "~/components/gost/fachwahlen/SGostFachwahlenHalbjahrProps";
+import { ref } from "vue";
 
 
 const SGostFachwahlenHalbjahr = () => import("~/components/gost/fachwahlen/SGostFachwahlenHalbjahr.vue");
 
 export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
+
+	private _halbjahr = ref<GostHalbjahr>(GostHalbjahr.EF1);
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen.halbjahr", "halbjahr/:idhalbjahr(\\d+)?", SGostFachwahlenHalbjahr);
@@ -38,6 +41,7 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
 		const halbjahr = GostHalbjahr.fromID(idHalbjahr);
 		if (halbjahr === null)
 			return new Error("Fehler: Das Halbjahr " + to_params.idhalbjahr + " ist ungültig");
+		this._halbjahr.value = halbjahr;
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: GostHalbjahr) : RouteLocationRaw {
@@ -47,6 +51,10 @@ export class RouteGostFachwahlenHalbjahr extends RouteNode<unknown, RouteGost> {
 	public getProps(to: RouteLocationNormalized): GostFachwahlenHalbjahrProps {
 		return {
 			fachwahlstatistik: routeGostFachwahlen.data.fachwahlstatistik,
+			fachwahlenManager: routeGostFachwahlen.data.fachwahlenManager,
+			mapSchueler: routeGostFachwahlen.data.mapSchueler,
+			faecherManager: routeGost.data.faecherManager,
+			halbjahr: this._halbjahr.value,
 		};
 	}
 

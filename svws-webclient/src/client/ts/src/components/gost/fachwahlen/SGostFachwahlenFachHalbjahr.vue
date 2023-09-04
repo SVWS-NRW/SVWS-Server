@@ -3,7 +3,7 @@
 		<template #header>
 			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
 				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none col-span-3">
-					Informationen zu den Fachwahlen in {{ fachBezeichnung }} in der {{ halbjahr.kuerzel }}
+					Informationen zu den Fachwahlen in {{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }} in der {{ halbjahr.kuerzel }}
 				</div>
 			</div>
 			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
@@ -54,11 +54,9 @@
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
-	import { GostAbiturFach, ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
+	import { ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenFachHalbjahrProps>();
-
-	const fachBezeichnung = computed<string>(() => props.faecherManager.get(props.fachID)?.bezeichnung || "&ndash;");
 
 	const fws: ComputedRef<GostStatistikFachwahl | undefined> = computed(() => {
 		for (const f of props.fachwahlstatistik)
@@ -68,9 +66,9 @@
 	});
 
 	const cols: DataTableColumn[] = [
-		{ key: "LK", label: "LK", span: 1, minWidth: 4 },
-		{ key: "AB3", label: "AB3", span: 1, minWidth: 4 },
-		{ key: "AB4", label: "Ab4", span: 1, minWidth: 4 },
+		{ key: "GK", label: "GK", span: 1, minWidth: 4 },
+		{ key: "GKS", label: "GKS", span: 1, minWidth: 4 },
+		{ key: "GKM", label: "GKM", span: 1, minWidth: 4 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
