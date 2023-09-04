@@ -2002,6 +2002,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			    SchuelerBKFaecher.Fachlehrer_ID
 			FROM SchuelerBKFaecher
 			    JOIN EigeneSchule ON EigeneSchule.SchulformKrz NOT IN ('BK','SB')
+			WHERE SchuelerBKFaecher.ID IN (SELECT max(ID) FROM SchuelerBKFaecher GROUP BY Schueler_ID, Schuljahresabschnitts_ID, Fach_ID)
 			""",
 			Schema.tab_SchuelerZP10, Schema.tab_SchuelerBKFaecher, Schema.tab_EigeneSchule
 		);
