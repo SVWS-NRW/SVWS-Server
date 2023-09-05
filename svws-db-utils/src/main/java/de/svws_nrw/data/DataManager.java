@@ -115,11 +115,14 @@ public abstract class DataManager<ID> {
 	 *                        Core-DTOs
 	 * @param attributeMapper eine Map mit den Mappingfunktionen zum mappen von
 	 *                        Core-DTO-Attributen auf Datenbank-DTO-Attributen
+	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 */
-	private static <DTO> void applyPatchMappings(final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	private static <DTO> void applyPatchMappings(final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
+			if (attributesForbidden != null && attributesForbidden.contains(key))
+				throw OperationError.FORBIDDEN.exception("Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
 			if (mapper == null)
 				throw OperationError.BAD_REQUEST.exception();
@@ -137,10 +140,11 @@ public abstract class DataManager<ID> {
 	 * @param is              der Input-Stream
 	 * @param dtoClass        die Klasse des DTOs
 	 * @param attributeMapper die Mapper für das Anpassen des DTOs
+	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 *
 	 * @return die Response
 	 */
-	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
 		if (id == null)
 			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
 		final Map<String, Object> map = JSONMapper.toMap(is);
@@ -149,9 +153,26 @@ public abstract class DataManager<ID> {
 		final DTO dto = conn.queryByKey(dtoClass, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		applyPatchMappings(dto, map, attributeMapper);
+		applyPatchMappings(dto, map, attributeMapper, attributesForbidden);
 		conn.transactionPersist(dto);
 		return Response.status(Status.OK).build();
+	}
+
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param <DTO>           der Typ des DTOs
+	 * @param id              die ID des zu patchenden DTOs
+	 * @param is              der Input-Stream
+	 * @param dtoClass        die Klasse des DTOs
+	 * @param attributeMapper die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response
+	 */
+	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		return patchBasicFiltered(id, is, dtoClass, attributeMapper, null);
 	}
 
 	/**
@@ -188,7 +209,7 @@ public abstract class DataManager<ID> {
 			constructor.setAccessible(true);
 			final DTO dto = constructor.newInstance();
 			initDTO.accept(dto, newID);
-			applyPatchMappings(dto, map, attributeMapper);
+			applyPatchMappings(dto, map, attributeMapper, null);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(dto))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
