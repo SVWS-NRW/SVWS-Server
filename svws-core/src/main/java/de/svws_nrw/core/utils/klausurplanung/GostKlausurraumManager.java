@@ -33,6 +33,7 @@ public class GostKlausurraumManager {
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraum> _raum_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostKlausurraum> _raummenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraum> _klausurraum_by_idStundenplanraum = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraum> _klausurraum_by_idSchuelerklausur = new HashMap<>();
 
 	// GostKlausurraumstunde
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurraumstunde> _raumstunde_by_id = new HashMap<>();
@@ -116,6 +117,7 @@ public class GostKlausurraumManager {
 		update_schuelerklausurmenge_by_idKursklausur();
 		update_schuelerklausurraumstundenmenge_by_idRaumstunde();
 		update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
+		update_klausurraum_by_idSchuelerklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausur,
 
 	}
 
@@ -176,6 +178,19 @@ public class GostKlausurraumManager {
 		_schuelerklausurraumstundenmenge_by_idSchuelerklausur.clear();
 		for (final @NotNull GostSchuelerklausurraumstunde skrs : _schuelerklausurraumstundenmenge)
 			MapUtils.getOrCreateArrayList(_schuelerklausurraumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur).add(skrs);
+	}
+
+	private void update_klausurraum_by_idSchuelerklausur() {
+		_klausurraum_by_idSchuelerklausur.clear();
+		for (final @NotNull GostSchuelerklausurraumstunde skrs : _schuelerklausurraumstundenmenge) {
+			@NotNull List<@NotNull GostKlausurraumstunde> krsList = DeveloperNotificationException.ifMapGetIsNull(_raumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur);
+			for (@NotNull GostKlausurraumstunde krs : krsList) {
+				@NotNull GostKlausurraum kr = DeveloperNotificationException.ifMapGetIsNull(_raum_by_id, krs.idRaum);
+				GostKlausurraum krAlt = _klausurraum_by_idSchuelerklausur.put(skrs.idSchuelerklausur, kr);
+				if (krAlt != null && krAlt != kr)
+					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausur + " ist zwei Klausurräumen zugeordnet.");
+			}
+		}
 	}
 
 	// #####################################################################
@@ -625,6 +640,10 @@ public class GostKlausurraumManager {
 		DeveloperNotificationException.ifMap2DRemoveFailes(_schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, idSchuelerklausur, idRaumstunde);
 	}
 
+	private void schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(final long idSchuelerklausur) {
+		_schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde.removeSubMap(idSchuelerklausur);
+	}
+
 	private void schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(final long idSchuelerklausur) {
 		List<@NotNull GostSchuelerklausurraumstunde> skrsList = _schuelerklausurraumstundenmenge_by_idSchuelerklausur.get(idSchuelerklausur);
 		if (skrsList != null)
@@ -640,6 +659,29 @@ public class GostKlausurraumManager {
 	 */
 	public void schuelerklausurraumstundeRemoveByIdSchuelerklausurAndIdRaumstunde(final long idSchuelerklausur, final long idRaumstunde) {
 		schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(idSchuelerklausur, idRaumstunde);
+
+		update_all();
+	}
+
+	/**
+	 * Entfernt ein existierendes {@link GostSchuelerklausurraumstunde}-Objekt.
+	 *
+	 * @param idSchuelerklausur Die ID des {@link GostSchuelerklausur}-Objekts.
+	 */
+	public void schuelerklausurraumstundeRemoveByIdSchuelerklausur(final long idSchuelerklausur) {
+		schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
+
+		update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link GostSchuelerklausurraumstunde}-Objekte, deren Schülerklausur-ID in den übergebenen GostSchuelerklausurraumstunde-Objekten enthalten ist.
+	 *
+	 * @param listSchuelerklausurRaumstunde die Liste der GostSchuelerklausurraumstunden.
+	 */
+	public void schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSchuelerklausurRaumstunde) {
+		for (final @NotNull GostSchuelerklausurraumstunde schuelerklausurraumstunde : listSchuelerklausurRaumstunde)
+			schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(schuelerklausurraumstunde.idSchuelerklausur);
 
 		update_all();
 	}
@@ -680,6 +722,7 @@ public class GostKlausurraumManager {
 	public void setzeRaumZuSchuelerklausuren(final @NotNull GostKlausurenCollectionSkrsKrs collectionSkrsKrs) {
 		raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
 		raumstundeAddAll(collectionSkrsKrs.raumstunden);
+		schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(collectionSkrsKrs.skRaumstunden);
 		schuelerklausurraumstundeAddAll(collectionSkrsKrs.skRaumstunden);
 	}
 
