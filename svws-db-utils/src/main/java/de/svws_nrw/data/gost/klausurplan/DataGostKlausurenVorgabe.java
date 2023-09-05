@@ -52,9 +52,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 */
 	public DataGostKlausurenVorgabe(final DBEntityManager conn, final int abiturjahr) {
 		super(conn);
+		_abiturjahr = abiturjahr;
 		if (abiturjahr != -1 && conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)
 			throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + abiturjahr);
-		_abiturjahr = abiturjahr;
 	}
 
 	@Override

@@ -3,10 +3,10 @@ package de.svws_nrw.data.gost.klausurplan;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -49,11 +49,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		listSchuelerklausuren.removeAll(listSchuelerklausuren.stream().filter(sk -> sk.Termin_ID != null && sk.Termin_ID != terminId).toList());
 		// Schuelerklausuren ohne zugehörige Kursklausur hinzufügen (z.B. Nachschreiber)
 		listSchuelerklausuren.addAll(conn.queryNamed("DTOGostKlausurenSchuelerklausuren.termin_id", terminId, DTOGostKlausurenSchuelerklausuren.class));
-
-//		final List<GostSchuelerklausur> daten = new ArrayList<>();
-//		for (final DTOGostKlausurenSchuelerklausuren s : listSchuelerklausuren)
-//			daten.add(dtoMapper.apply(s));
-
 		return listSchuelerklausuren.stream().map(dtoMapper::apply).toList();
 	}
 
@@ -72,45 +67,72 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		return daten;
 	};
 
+	private final Map<String, DataBasicMapper<DTOGostKlausurenSchuelerklausuren>> patchMappings =
+			Map.ofEntries(
+				Map.entry("idSchuelerklausur", (dto, value, map) -> {
+					final Long patch_id = JSONMapper.convertToLong(value, false);
+					if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+						throw OperationError.BAD_REQUEST.exception();
+				}),
+				Map.entry("idKursklausur", (dto, value, map) -> {
+					final Long patch_id = JSONMapper.convertToLong(value, false);
+					if ((patch_id == null) || (patch_id.longValue() != dto.Kursklausur_ID))
+						throw OperationError.BAD_REQUEST.exception();
+				}),
+				Map.entry("idSchueler", (dto, value, map) -> {
+					final Long patch_id = JSONMapper.convertToLong(value, false);
+					if ((patch_id == null) || (patch_id.longValue() != dto.Schueler_ID))
+						throw OperationError.BAD_REQUEST.exception();
+				}),
+				Map.entry("idTermin", (dto, value, map) -> {
+					dto.Termin_ID = JSONMapper.convertToLong(value, true);
+					if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
+						throw OperationError.BAD_REQUEST.exception("Klausurtermin nicht gefunden, ID: " + dto.Termin_ID);
+				}),
+				Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+			);
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.size() > 0) {
-			final DTOGostKlausurenSchuelerklausuren schuelerklausur = conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id);
-			if (schuelerklausur == null)
-				throw OperationError.NOT_FOUND.exception();
-			for (final Entry<String, Object> entry : map.entrySet()) {
-				final String key = entry.getKey();
-				final Object value = entry.getValue();
-				switch (key) {
-				case "idSchuelerklausur" -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
-				}
-				case "idKursklausur" -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
-				}
-				case "idSchueler" -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-						throw OperationError.BAD_REQUEST.exception();
-				}
-				case "idTermin" -> {
-					final Long newTermin = JSONMapper.convertToLong(value, true);
-					schuelerklausur.Termin_ID = newTermin;
-				}
-				case "startzeit" -> schuelerklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-				default -> throw OperationError.BAD_REQUEST.exception();
-				}
-			}
-			if (!conn.transactionPersist(schuelerklausur)) {
-				throw OperationError.CONFLICT.exception();
-			}
-		}
-		return Response.status(Status.OK).build();
+		return super.patchBasic(id, is, DTOGostKlausurenSchuelerklausuren.class, patchMappings);
+//
+//		final Map<String, Object> map = JSONMapper.toMap(is);
+//		if (map.size() > 0) {
+//			final DTOGostKlausurenSchuelerklausuren schuelerklausur = conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id);
+//			if (schuelerklausur == null)
+//				throw OperationError.NOT_FOUND.exception();
+//			for (final Entry<String, Object> entry : map.entrySet()) {
+//				final String key = entry.getKey();
+//				final Object value = entry.getValue();
+//				switch (key) {
+//				case "idSchuelerklausur" -> {
+//					final Long patch_id = JSONMapper.convertToLong(value, false);
+//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+//						throw OperationError.BAD_REQUEST.exception();
+//				}
+//				case "idKursklausur" -> {
+//					final Long patch_id = JSONMapper.convertToLong(value, false);
+//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+//						throw OperationError.BAD_REQUEST.exception();
+//				}
+//				case "idSchueler" -> {
+//					final Long patch_id = JSONMapper.convertToLong(value, false);
+//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+//						throw OperationError.BAD_REQUEST.exception();
+//				}
+//				case "idTermin" -> {
+//					final Long newTermin = JSONMapper.convertToLong(value, true);
+//					schuelerklausur.Termin_ID = newTermin;
+//				}
+//				case "startzeit" -> schuelerklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
+//				default -> throw OperationError.BAD_REQUEST.exception();
+//				}
+//			}
+//			if (!conn.transactionPersist(schuelerklausur)) {
+//				throw OperationError.CONFLICT.exception();
+//			}
+//		}
+//		return Response.status(Status.OK).build();
 	}
 
 	@Override

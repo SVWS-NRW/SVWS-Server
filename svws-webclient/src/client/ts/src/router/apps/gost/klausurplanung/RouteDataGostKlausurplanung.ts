@@ -1,6 +1,7 @@
 import { computed, shallowRef } from "vue";
 
-import { GostKlausurtermin, GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import * as Core from "@core";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, Arrays, StundenplanListUtils } from "@core";
 
 import { api } from "~/router/Api";
@@ -292,18 +293,23 @@ export class RouteDataGostKlausurplanung {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
 	}
 
-	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
+	erzeugeKlausurtermin = async (quartal: number): Promise<Core.GostKlausurtermin> => {
 		api.status.start();
-		const termin = await api.server.createGostKlausurenKlausurtermin(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+		const terminNeu : Partial<Core.GostKlausurtermin> = new Core.GostKlausurtermin();
+		terminNeu.abijahr = this.abiturjahr;
+		terminNeu.halbjahr = this.halbjahr.id;
+		terminNeu.quartal = quartal;
+		delete  terminNeu.id;
+		const termin = await api.server.createGostKlausurenKlausurtermin(terminNeu, api.schema);
 		this.kursklausurmanager.terminAdd(termin);
 		this.commit();
 		api.status.stop();
 		return termin;
 	}
 
-	loescheKlausurtermine = async (termine: List<GostKlausurtermin>): Promise<boolean> => {
+	loescheKlausurtermine = async (termine: List<Core.GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
-		const terminIds = Arrays.asList((termine.toArray() as GostKlausurtermin[]).map((termin) => termin.id));
+		const terminIds = Arrays.asList((termine.toArray() as Core.GostKlausurtermin[]).map((termin) => termin.id));
 		const result = await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
 		this.kursklausurmanager.terminRemoveAll(termine);
 		this.commit();
@@ -361,9 +367,9 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>): Promise<boolean> => {
+	patchKlausurtermin = async (id: number, termin: Partial<Core.GostKlausurtermin>): Promise<boolean> => {
 		api.status.start();
-		const oldTtermin: GostKlausurtermin = this.kursklausurmanager.terminGetByIdOrException(id);
+		const oldTtermin: Core.GostKlausurtermin = this.kursklausurmanager.terminGetByIdOrException(id);
 		Object.assign(oldTtermin, termin);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
 		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
@@ -410,7 +416,7 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
+	erzeugeKlausurraummanager = async (termin: Core.GostKlausurtermin): Promise<GostKlausurraumManager> => {
 		api.status.start();
 		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
