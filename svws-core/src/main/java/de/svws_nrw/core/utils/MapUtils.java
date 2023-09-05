@@ -60,6 +60,49 @@ public final class MapUtils {
 	}
 
     /**
+     * Fügt der dem Schlüssel K zugeordneten Liste den Wert V hinzu, falls dieser nicht bereits existiert.
+     * Erzeugt eine zugeordnete Liste, falls diese noch nicht existiert.
+     *
+     * @param <K>    Der Typ der Schlüssel.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     * @param map    Die Map, welche K auf "ArrayList of V" abbildet.
+     * @param key    Der Schlüssel.
+     * @param value  Der Wert, welcher der Liste der Liste hinzugefügt werden soll.
+     */
+	public static <@NotNull K, @NotNull V>  void addToListIfNotExists(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<@NotNull V> list = map.get(key);
+		if (list != null) {
+			if (!list.contains(value))
+				list.add(value);
+		} else {
+			final List<@NotNull V> listNeu = new ArrayList<>();
+			listNeu.add(value);
+			map.put(key, listNeu);
+		}
+	}
+
+    /**
+     * Fügt der dem Schlüssel K zugeordneten Liste den Wert V hinzu.
+     * Erzeugt eine zugeordnete Liste, falls diese noch nicht existiert.
+     *
+     * @param <K>    Der Typ der Schlüssel.
+     * @param <V>    Der Typ der Objekte in der ArrayList.
+     * @param map    Die Map, welche K auf "ArrayList of V" abbildet.
+     * @param key    Der Schlüssel.
+     * @param value  Der Wert, welcher der Liste der Liste hinzugefügt werden soll.
+     */
+	public static <@NotNull K, @NotNull V>  void addToList(final @NotNull Map<@NotNull K, @NotNull List<@NotNull V>> map, final @NotNull K key, final @NotNull V value) {
+		final List<@NotNull V> list = map.get(key);
+		if (list != null) {
+			list.add(value);
+		} else {
+			final List<@NotNull V> listNeu = new ArrayList<>();
+			listNeu.add(value);
+			map.put(key, listNeu);
+		}
+	}
+
+    /**
      * Liefert die "ArrayList of V" des Schlüssels. Erstellt eine leere "ArrayList of V", falls eine solche Zuordnung nicht existierte.
      *
      * @param <K>    Der Typ des 1. Schlüssels.

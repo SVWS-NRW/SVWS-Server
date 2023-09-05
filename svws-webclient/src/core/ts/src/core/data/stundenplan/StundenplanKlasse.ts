@@ -15,7 +15,7 @@ export class StundenplanKlasse extends JavaObject {
 	public kuerzel : string = "";
 
 	/**
-	 * Die Bezeichnung der Klasse. Darf "blank" sein.
+	 * Die Bezeichnung der Klasse, z.B. "Eichhörnchen". Darf "blank" sein.
 	 */
 	public bezeichnung : string = "";
 
