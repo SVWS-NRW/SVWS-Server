@@ -6,8 +6,8 @@
 			</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer" @blur="aufnehmdendSchulnummer=>doPatch({ aufnehmdendSchulnummer })" type="text" span="full" />
-			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum" @blur="aufnehmdendWechseldatum=>doPatch({ aufnehmdendWechseldatum })" type="date" />
+			<svws-ui-text-input placeholder="Name der Schule" :model-value="data.aufnehmdendSchulnummer" @change="aufnehmdendSchulnummer=>doPatch({ aufnehmdendSchulnummer })" type="text" span="full" />
+			<svws-ui-text-input placeholder="Wechseldatum" :model-value="data.aufnehmdendWechseldatum" @change="aufnehmdendWechseldatum=>doPatch({ aufnehmdendWechseldatum })" type="date" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

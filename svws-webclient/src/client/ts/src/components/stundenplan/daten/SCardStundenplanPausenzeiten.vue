@@ -5,10 +5,10 @@
 				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 			</template>
 			<template #cell(beginn)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.beginn" @blur="beginn => patchPausenzeit({beginn: Number(beginn)}, rowData.id)" headless />
+				<svws-ui-text-input type="number" :model-value="rowData.beginn" @change="beginn => patchPausenzeit({beginn: Number(beginn)}, rowData.id)" headless />
 			</template>
 			<template #cell(ende)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.ende" @blur="ende => patchPausenzeit({ende: Number(ende)}, rowData.id)" headless />
+				<svws-ui-text-input type="number" :model-value="rowData.ende" @change="ende => patchPausenzeit({ende: Number(ende)}, rowData.id)" headless />
 			</template>
 			<template #footerActions>
 				<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeiten">

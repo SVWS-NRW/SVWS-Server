@@ -3,16 +3,16 @@
 		<svws-ui-multi-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell>
-		<svws-ui-text-input :model-value="betrieb.ausbilder" @blur="ausbilder=>patchSchuelerBetriebsdaten({ausbilder}, betrieb.id)" type="text" placeholder="—" headless />
+		<svws-ui-text-input :model-value="betrieb.ausbilder" @change="ausbilder=>patchSchuelerBetriebsdaten({ausbilder}, betrieb.id)" type="text" placeholder="—" headless />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
 		<svws-ui-multi-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @blur="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
+		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input :model-value="betrieb.vertragsende" @blur="vertragsende=>patchSchuelerBetriebsdaten({vertragsende}, betrieb.id)" type="date" />
+		<svws-ui-text-input :model-value="betrieb.vertragsende" @change="vertragsende=>patchSchuelerBetriebsdaten({vertragsende}, betrieb.id)" type="date" />
 	</svws-ui-table-cell>
 	<svws-ui-table-cell align="center">
 		<svws-ui-checkbox v-model="praktikum" />

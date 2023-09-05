@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Zeugnis und Abschluss">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="data.datumKonferenz" @blur="datumKonferenz=>doPatch({ datumKonferenz })" type="date" />
-			<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="data.datumZeugnis" @blur="datumZeugnis=>doPatch({ datumZeugnis })" type="date" />
+			<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="data.datumKonferenz" @change="datumKonferenz=>doPatch({ datumKonferenz })" type="date" />
+			<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="data.datumZeugnis" @change="datumZeugnis=>doPatch({ datumZeugnis })" type="date" />
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2">
 				<div class="opacity-50"> TODO: istAbschlussPrognose </div>

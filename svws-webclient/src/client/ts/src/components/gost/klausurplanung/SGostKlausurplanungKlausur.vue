@@ -6,7 +6,7 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKlausur" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @blur="zeit => patchKlausurbeginn(zeit, klausur.id)" />
+			<svws-ui-text-input v-if="patchKlausur" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur.id)" />
 		</td>
 	</tr>
 </template>

@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card :title="`Pause am ${Wochentag.fromIDorException(item.wochentag)}`">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" required placeholder="Pausenbeginn" @blur="patchBeginn" />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @blur="patchEnde" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" required placeholder="Pausenbeginn" @change="patchBeginn" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @change="patchEnde" />
 			<div class="col-span-full">
 				<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
 			</div>

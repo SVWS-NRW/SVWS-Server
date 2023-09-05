@@ -132,13 +132,7 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<InputDataType>(props.modelValue);
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const isValid = ref<boolean>(validate(props.modelValue));
-
-	watch(() => props.modelValue, (value: InputDataType, prevValue: InputDataType) => {
-		if (value !== prevValue)
-			updateData(value);
-	});
+	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
 
 	function validatorEmail(value: string) {
 		return (
@@ -149,21 +143,20 @@
 		);
 	}
 
-	function validate(value: InputDataType) : boolean {
+	const isValid = computed(()=>{
 		let tmpIsValid = true;
 		if ((props.type === "email") && (typeof data.value === 'string'))
 			tmpIsValid = validatorEmail(data.value);
 		if (tmpIsValid && (props.maxLen !== undefined) && (data.value !== null) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
 			tmpIsValid = false;
-		if (tmpIsValid && (props.valid !== undefined))
-			tmpIsValid = props.valid(value);
-		return tmpIsValid;
-	}
+		return tmpIsValid ? props.valid(data.value) : false;
+	})
 
 	function updateData(value: InputDataType) {
-		data.value = value;
-		isValid.value = validate(value);
-		emit("update:modelValue", String(data.value));   // TODO do not use String()
+		if (data.value !== value) {
+			data.value = value;
+			emit("update:modelValue", String(data.value));   // TODO do not use String()
+		}
 	}
 
 	const maxLenValid = computed(() => {

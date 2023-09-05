@@ -11,16 +11,16 @@
 		</template>
 		<svws-ui-input-wrapper :grid="4">
 			<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
-			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @blur="nachname=>doPatch({ nachname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Rufname" :model-value="erzieher.vorname" @blur="vorname=>doPatch({ vorname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname" @blur="zusatzNachname=>doPatch({ zusatzNachname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @blur="eMail=>doPatch({ eMail }, erzieher.id)" type="email" verify-email />
+			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @change="nachname=>doPatch({ nachname }, erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="Rufname" :model-value="erzieher.vorname" @change="vorname=>doPatch({ vorname }, erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname" @change="zusatzNachname=>doPatch({ zusatzNachname }, erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @change="eMail=>doPatch({ eMail }, erzieher.id)" type="email" verify-email />
 			<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 				:item-filter="staatsangehoerigkeitKatalogEintragFilter" autocomplete />
 			<svws-ui-spacing />
-			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="erzieher.strassenname" @blur="strassenname=>doPatch({ strassenname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Adresszusatz" :model-value="erzieher.hausnummerZusatz" @blur="hausnummerZusatz=>doPatch({ hausnummerZusatz }, props.erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="erzieher.strassenname" @change="strassenname=>doPatch({ strassenname }, erzieher.id)" type="text" />
+			<svws-ui-text-input placeholder="Adresszusatz" :model-value="erzieher.hausnummerZusatz" @change="hausnummerZusatz=>doPatch({ hausnummerZusatz }, props.erzieher.id)" type="text" />
 			<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-spacing />

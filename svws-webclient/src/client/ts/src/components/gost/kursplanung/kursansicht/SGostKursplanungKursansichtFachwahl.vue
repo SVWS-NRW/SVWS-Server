@@ -45,7 +45,7 @@
 					<div class="flex flex-grow items-center">
 						<template v-if="kurs.id === editKursID">
 							<span class="flex-shrink-0">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
-							<svws-ui-text-input :model-value="kurs.suffix" @blur="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless />
+							<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless />
 						</template>
 						<template v-else>
 							<span class="underline decoration-dotted decoration-black/50 hover:decoration-solid underline-offset-2 cursor-text" @click="editKursID=kurs.id">

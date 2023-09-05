@@ -3,8 +3,8 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
-			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined" @blur="datumAnfang=>doPatch({datumAnfang})" type="date" />
-			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined" @blur="datumEnde=>doPatch({datumEnde})" type="date" />
+			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined" @change="datumAnfang=>doPatch({datumAnfang})" type="date" />
+			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined" @change="datumEnde=>doPatch({datumEnde})" type="date" />
 			<svws-ui-spacing />
 			<div class="col-span-full flex flex-wrap gap-3" :class="{'opacity-50': !klassenlehrer.length}">
 				<span class="font-bold">Klassenlehrer:</span>
@@ -25,9 +25,9 @@
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden</span>
-				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined" @blur="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
-				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined" @blur="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
-				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined" @blur="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Maximal" :model-value="data.fehlstundenGrenzwert || undefined" @change="doPatch({ fehlstundenGrenzwert: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Gesamt" :model-value="data.fehlstundenGesamt || undefined" @change="doPatch({ fehlstundenGesamt: Number($event) })" type="number" />
+				<svws-ui-text-input placeholder="Unendschuldigt" :model-value="data.fehlstundenUnentschuldigt || undefined" @change="doPatch({ fehlstundenUnentschuldigt: Number($event) })" type="number" />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">

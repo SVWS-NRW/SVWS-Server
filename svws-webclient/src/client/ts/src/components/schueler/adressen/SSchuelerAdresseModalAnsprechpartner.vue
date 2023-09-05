@@ -3,14 +3,14 @@
 		<template #modalTitle>Ansprechpartner bearbeiten</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Name" :model-value="ansprechpartner.name" @blur="name=>patchAnsprechpartner({name}, ansprechpartner.id)" type="text" span="full" />
-				<svws-ui-text-input placeholder="Vorname" :model-value="ansprechpartner.vorname" @blur="vorname=>patchAnsprechpartner({vorname}, ansprechpartner.id)" type="text" span="full" />
-				<svws-ui-text-input placeholder="Anrede" :model-value="ansprechpartner.anrede" @blur="anrede=>patchAnsprechpartner({anrede}, ansprechpartner.id)" type="text" />
-				<svws-ui-text-input placeholder="Titel" :model-value="ansprechpartner.titel" @blur="titel=>patchAnsprechpartner({titel}, ansprechpartner.id)" type="text" />
+				<svws-ui-text-input placeholder="Name" :model-value="ansprechpartner.name" @change="name=>patchAnsprechpartner({name}, ansprechpartner.id)" type="text" span="full" />
+				<svws-ui-text-input placeholder="Vorname" :model-value="ansprechpartner.vorname" @change="vorname=>patchAnsprechpartner({vorname}, ansprechpartner.id)" type="text" span="full" />
+				<svws-ui-text-input placeholder="Anrede" :model-value="ansprechpartner.anrede" @change="anrede=>patchAnsprechpartner({anrede}, ansprechpartner.id)" type="text" />
+				<svws-ui-text-input placeholder="Titel" :model-value="ansprechpartner.titel" @change="titel=>patchAnsprechpartner({titel}, ansprechpartner.id)" type="text" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Abteilung" :model-value="ansprechpartner.abteilung" @blur="abteilung=>patchAnsprechpartner({abteilung}, ansprechpartner.id)" type="text" span="full" />
-				<svws-ui-text-input placeholder="Telefon" :model-value="ansprechpartner.telefon" @blur="telefon=>patchAnsprechpartner({telefon}, ansprechpartner.id)" type="tel" span="full" />
-				<svws-ui-text-input placeholder="E-Mail" :model-value="ansprechpartner.email" @blur="email=>patchAnsprechpartner({email}, ansprechpartner.id)" type="email" verify-email span="full" />
+				<svws-ui-text-input placeholder="Abteilung" :model-value="ansprechpartner.abteilung" @change="abteilung=>patchAnsprechpartner({abteilung}, ansprechpartner.id)" type="text" span="full" />
+				<svws-ui-text-input placeholder="Telefon" :model-value="ansprechpartner.telefon" @change="telefon=>patchAnsprechpartner({telefon}, ansprechpartner.id)" type="tel" span="full" />
+				<svws-ui-text-input placeholder="E-Mail" :model-value="ansprechpartner.email" @change="email=>patchAnsprechpartner({email}, ansprechpartner.id)" type="email" verify-email span="full" />
 				<span class="opacity-50 col-span-full text-sm mt-3">Die Daten werden automatisch gespeichert.</span>
 			</svws-ui-input-wrapper>
 		</template>

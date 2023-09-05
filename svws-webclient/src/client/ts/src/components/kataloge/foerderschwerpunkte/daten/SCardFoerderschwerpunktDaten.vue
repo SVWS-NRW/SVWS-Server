@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input placeholder="ID" :model-value="data.id" @blur="id=>doPatch({id: Number(id)})" type="text" />
-			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" />
-			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @blur="text=>doPatch({text})" type="text" span="full" />
+			<svws-ui-text-input placeholder="ID" :model-value="data.id" @change="id=>doPatch({id: Number(id)})" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @change="text=>doPatch({text})" type="text" span="full" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>

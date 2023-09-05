@@ -11,8 +11,8 @@
 				:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 				:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
 			<svws-ui-multi-select v-model="religion" title="Konfession" :items="mapReligionen" :item-text="i=>i.text ?? ''" required span="full" statistics />
-			<svws-ui-text-input :model-value="data().religionabmeldung" @blur="religionabmeldung=>doPatch({religionabmeldung})" type="date" placeholder="Abmeldung vom Religionsunterricht" />
-			<svws-ui-text-input :model-value="data().religionanmeldung" @blur="religionanmeldung=>doPatch({religionanmeldung})" type="date" placeholder="Wiederanmeldung" />
+			<svws-ui-text-input :model-value="data().religionabmeldung" @change="religionabmeldung=>doPatch({religionabmeldung})" type="date" placeholder="Abmeldung vom Religionsunterricht" />
+			<svws-ui-text-input :model-value="data().religionanmeldung" @change="religionanmeldung=>doPatch({religionanmeldung})" type="date" placeholder="Wiederanmeldung" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

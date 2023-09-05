@@ -1,9 +1,9 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @blur="kuerzel=>doPatch({kuerzel})" type="text" span="full" />
-			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @blur="text=>doPatch({text})" type="text" />
-			<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data.textZeugnis" @blur="textZeugnis=>doPatch({textZeugnis})" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" span="full" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.text" @change="text=>doPatch({text})" type="text" />
+			<svws-ui-text-input placeholder="Zeugnisbezeichnung" :model-value="data.textZeugnis" @change="textZeugnis=>doPatch({textZeugnis})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>

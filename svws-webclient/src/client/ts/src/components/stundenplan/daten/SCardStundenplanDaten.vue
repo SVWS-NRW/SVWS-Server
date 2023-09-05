@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="Allgemein" class="lg:sticky lg:top-8 lg:col-start-1">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @blur="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
-			<svws-ui-text-input placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell()" @blur="patch({ wochenTypModell: Number($event) })" type="number" />
-			<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @blur="gueltigAb=>patch({ gueltigAb })" type="date" />
-			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @blur="gueltigBis=>patch({ gueltigBis })" type="date" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
+			<svws-ui-text-input placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell()" @change="patch({ wochenTypModell: Number($event) })" type="number" />
+			<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
+			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 			<div class="col-span-full">
 				<svws-ui-data-table :items="listJahrgaenge" :no-data="false" :columns="cols">
 					<template #cell(id)="{value}">

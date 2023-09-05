@@ -3,19 +3,19 @@
 		<svws-ui-data-table :columns="cols" :items="mapAnsprechpartner.values()" clickable v-model:clicked="select"
 			selectable :model-value="selected" @update:model-value="selected=$event" :count="selected.length > 0">
 			<template #cell(anrede)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.anrede" @blur="anrede => patchBetriebAnpsrechpartner({anrede}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.anrede" @change="anrede => patchBetriebAnpsrechpartner({anrede}, rowData.id)" headless required />
 			</template>
 			<template #cell(name)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.name" @blur="name=>patchBetriebAnpsrechpartner({name}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.name" @change="name=>patchBetriebAnpsrechpartner({name}, rowData.id)" headless required />
 			</template>
 			<template #cell(vorname)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.vorname" @blur="vorname=>patchBetriebAnpsrechpartner({vorname}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.vorname" @change="vorname=>patchBetriebAnpsrechpartner({vorname}, rowData.id)" headless required />
 			</template>
 			<template #cell(telefon)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.telefon" @blur="telefon=>patchBetriebAnpsrechpartner({telefon}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.telefon" @change="telefon=>patchBetriebAnpsrechpartner({telefon}, rowData.id)" headless required />
 			</template>
 			<template #cell(email)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.email" @blur="email=>patchBetriebAnpsrechpartner({email}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.email" @change="email=>patchBetriebAnpsrechpartner({email}, rowData.id)" headless required />
 			</template>
 			<template #footerActions>
 				<s-card-betriebe-add-anprechpartner-modal v-slot="{ openModal }" :add-betrieb-ansprechpartner="addBetriebAnsprechpartner">

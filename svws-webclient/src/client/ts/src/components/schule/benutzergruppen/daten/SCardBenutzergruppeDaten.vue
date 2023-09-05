@@ -4,7 +4,7 @@
 			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input :model-value="getBenutzergruppenManager().getBezeichnung()" @blur="setBezeichnung" type="text" placeholder="Bezeichnung" />
+			<svws-ui-text-input :model-value="getBenutzergruppenManager().getBezeichnung()" @change="setBezeichnung" type="text" placeholder="Bezeichnung" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

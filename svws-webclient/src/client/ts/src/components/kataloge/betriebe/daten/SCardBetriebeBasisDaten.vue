@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="Basisdaten">
 		<div class="input-wrapper">
-			<svws-ui-text-input placeholder="Name" :model-value="daten.name1" @blur="name1=>doPatch({name1})" type="text" />
+			<svws-ui-text-input placeholder="Name" :model-value="daten.name1" @change="name1=>doPatch({name1})" type="text" />
 			<svws-ui-multi-select title="Beschäftigungsart" :model-value="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
-			<svws-ui-text-input placeholder="Namensergänzung" :model-value="daten.name2" @blur="name2=>doPatch({name2})" type="text" />
-			<svws-ui-text-input placeholder="Branche" :model-value="daten.branche" @blur="branche=>doPatch({branche})" title="Branche" type="text" />
+			<svws-ui-text-input placeholder="Namensergänzung" :model-value="daten.name2" @change="name2=>doPatch({name2})" type="text" />
+			<svws-ui-text-input placeholder="Branche" :model-value="daten.branche" @change="branche=>doPatch({branche})" title="Branche" type="text" />
 		</div>
 	</svws-ui-content-card>
 </template>

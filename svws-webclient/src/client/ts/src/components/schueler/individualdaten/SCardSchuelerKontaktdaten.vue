@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Straße" :model-value="inputStrasse" @blur="patchStrasse" type="text" span="full" />
+			<svws-ui-text-input placeholder="Straße" :model-value="inputStrasse" @change="patchStrasse" type="text" span="full" />
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-spacing />
-			<svws-ui-text-input placeholder="Telefon" :model-value="data().telefon" @blur="telefon=>doPatch({ telefon })" type="tel" />
-			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data().telefonMobil" @blur="telefonMobil=>doPatch({ telefonMobil })" type="tel" />
-			<svws-ui-text-input placeholder="Private E-Mail-Adresse" :model-value="data().emailPrivat" @blur="emailPrivat=>doPatch({ emailPrivat })" type="email" verify-email />
-			<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :model-value="data().emailSchule" @blur="emailSchule=>doPatch({ emailSchule })" type="email" verify-email />
+			<svws-ui-text-input placeholder="Telefon" :model-value="data().telefon" @change="telefon=>doPatch({ telefon })" type="tel" />
+			<svws-ui-text-input placeholder="Mobil oder Fax" :model-value="data().telefonMobil" @change="telefonMobil=>doPatch({ telefonMobil })" type="tel" />
+			<svws-ui-text-input placeholder="Private E-Mail-Adresse" :model-value="data().emailPrivat" @change="emailPrivat=>doPatch({ emailPrivat })" type="email" verify-email />
+			<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :model-value="data().emailSchule" @change="emailSchule=>doPatch({ emailSchule })" type="email" verify-email />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

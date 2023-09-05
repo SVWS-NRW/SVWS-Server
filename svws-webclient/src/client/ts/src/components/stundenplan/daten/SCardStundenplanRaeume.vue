@@ -2,13 +2,13 @@
 	<svws-ui-content-card title="Räume" class="lg:col-start-2">
 		<svws-ui-data-table :columns="cols" :items="stundenplanManager().raumGetMengeAsList()" clickable v-model:clicked="raum" selectable :model-value="selected" @blur="selected=$event" :count="selected.length > 0">
 			<template #cell(kuerzel)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.kuerzel" @blur="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
+				<svws-ui-text-input :model-value="rowData.kuerzel" @change="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
 			</template>
 			<template #cell(groesse)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.groesse" @blur="patchRaum({groesse: Number($event)}, rowData.id)" headless required />
+				<svws-ui-text-input type="number" :model-value="rowData.groesse" @change="patchRaum({groesse: Number($event)}, rowData.id)" headless required />
 			</template>
 			<template #cell(beschreibung)="{ rowData }">
-				<svws-ui-text-input :model-value="rowData.beschreibung" @blur="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="rowData.beschreibung" @change="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
 			</template>
 			<template #footerActions>
 				<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="listRaeume">

@@ -8,13 +8,13 @@
 			</svws-ui-button>
 		</template>
 		<svws-ui-input-wrapper :grid="4">
-			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @blur="name1=>patchBetrieb({name1}, props.betriebsStammdaten.id)" type="text" span="2" />
-			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @blur="name2=>patchBetrieb({name2}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @blur="branche=>patchBetrieb({branche}, props.betriebsStammdaten.id)" title="Branche" type="text" />
-			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @blur="telefon1=>patchBetrieb({telefon1}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @blur="telefon2=>patchBetrieb({telefon2}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @blur="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @blur="email=>patchBetrieb({email}, props.betriebsStammdaten.id)" type="email" verify-email />
+			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1}, props.betriebsStammdaten.id)" type="text" span="2" />
+			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche}, props.betriebsStammdaten.id)" title="Branche" type="text" />
+			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email}, props.betriebsStammdaten.id)" type="email" verify-email />
 			<svws-ui-spacing />
 			<svws-ui-multi-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
 			<div class="flex gap-1 h-min items-center">
@@ -27,8 +27,8 @@
 				<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
 			</div>
 			<svws-ui-spacing :size="2" />
-			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @blur="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Zusatz" :model-value="betriebsStammdaten.hausnrzusatz" @blur="hausnrzusatz=>patchBetrieb({hausnrzusatz}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Zusatz" :model-value="betriebsStammdaten.hausnrzusatz" @change="hausnrzusatz=>patchBetrieb({hausnrzusatz}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
