@@ -147,7 +147,7 @@
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;
 		} else {
-			props.erzeugeKlausurvorgabe(activeVorgabe.value);
+			await props.erzeugeKlausurvorgabe(activeVorgabe.value);
 			activeVorgabe.value = new GostKlausurvorgabe();
 		}
 	};

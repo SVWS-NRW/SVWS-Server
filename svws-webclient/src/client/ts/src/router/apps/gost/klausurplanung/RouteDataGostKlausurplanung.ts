@@ -442,16 +442,4 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	// patchKlausurUhrzeit = async(klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<boolean> => {
-	// 	api.status.start();
-	// 	if ('id' in klausur) {
-	// 		const oldKlausur = this.kursklausurmanager.kursklausurGetByIdOrException(klausur.id!);
-	// 		await api.server.patchGostKursklausurenStartzeit(klausur, api.schema, this._state.value.abschnitt!.id);
-	// 		Object.assign(oldKlausur, klausur);
-	// 	}
-	// 	this.commit();
-	// 	api.status.stop();
-	// 	return true;
-	// }
-
 }

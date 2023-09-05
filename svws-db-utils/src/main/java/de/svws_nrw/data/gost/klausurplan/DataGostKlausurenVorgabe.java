@@ -194,7 +194,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	private static int checkQuartal(final int quartal) {
-		if (quartal < 1)
+		if (quartal < 0)
 			throw OperationError.BAD_REQUEST.exception("Quartal ungültig: " + quartal);
 		return quartal;
 	}
