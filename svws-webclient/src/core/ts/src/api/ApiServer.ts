@@ -4178,7 +4178,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}
+	 * Implementierung der PATCH-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abschnitt/{abschnittid : -?\d+}
 	 *
 	 * Patcht einen Gost-Kursklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
 	 *
@@ -4193,11 +4193,13 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}"
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
@@ -4214,6 +4216,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: List<GostKursklausur>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
 	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
@@ -4291,29 +4294,6 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<GostKursklausur>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
 		return ret;
-	}
-
-
-	/**
-	 * Implementierung der PATCH-Methode patchGostKursklausurenStartzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/startzeit/abschnitt/{abschnittid : -?\d+}
-	 *
-	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
-	 */
-	public async patchGostKursklausurenStartzeit(data : Partial<GostKursklausur>, schema : string, abschnittid : number) : Promise<void> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/startzeit/abschnitt/{abschnittid : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
-		const body : string = GostKursklausur.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
 	}
 
 
@@ -4745,8 +4725,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Die Liste der Klausurvorgaben.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
@@ -4773,9 +4754,8 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurvorgabe wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Boolean
+	 *   Code 200: Gost-Klausurvorgaben wurden erfolgreich angelegt.
+	 *   Code 400: Falsche Parameter
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4783,18 +4763,15 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 * @param {number} quartal - der Pfad-Parameter quartal
-	 *
-	 * @returns Gost-Klausurvorgabe wurde erfolgreich angelegt.
 	 */
-	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<boolean | null> {
+	public async copyGostKlausurenVorgaben(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString())
 			.replace(/{quartal\s*(:[^}]+)?}/g, quartal.toString());
-		const result : string = await super.postJSON(path, null);
-		const text = result;
-		return (text === "true");
+		await super.postJSON(path, null);
+		return;
 	}
 
 
@@ -4805,23 +4782,19 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Klausurvorgabe für die angegebene ID wurden erfolgreich gelöscht.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Long
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe zu löschen.
+	 *   Code 404: Die Gost-Klausurvorgabe wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Klausurvorgabe für die angegebene ID wurden erfolgreich gelöscht.
 	 */
-	public async deleteGostKlausurenVorgabe(schema : string, id : number) : Promise<number | null> {
+	public async deleteGostKlausurenVorgabe(schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/delete/{id : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return parseFloat(JSON.parse(text));
+		await super.deleteJSON(path, null);
+		return;
 	}
 
 
@@ -4831,21 +4804,23 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurvorgabe wurde erfolgreich angelegt.
+	 *   Code 201: Gost-Klausurvorgabe wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurvorgabe
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.
+	 *   Code 409: Die Gost-Klausurvorgabe ist schon in der Datenbank enthalten.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {GostKlausurvorgabe} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<GostKlausurvorgabe>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Gost-Klausurvorgabe wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenVorgabe(data : GostKlausurvorgabe, schema : string) : Promise<GostKlausurvorgabe> {
+	public async createGostKlausurenVorgabe(data : Partial<GostKlausurvorgabe>, schema : string) : Promise<GostKlausurvorgabe> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/new"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = GostKlausurvorgabe.transpilerToJSON(data);
+		const body : string = GostKlausurvorgabe.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurvorgabe.transpilerFromJSON(text);

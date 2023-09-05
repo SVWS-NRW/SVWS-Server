@@ -2,13 +2,13 @@
 	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="border">
 		<svws-ui-content-card title="Kausurraum">
 			<template #actions>
-				<svws-ui-button type="danger" size="small" @click="loescheKlausurraum(raum.id, raummanager)"><i-ri-delete-bin-line /></svws-ui-button>
+				<svws-ui-button type="danger" size="small" @click="loescheKlausurraum(raum.id, raummanager())"><i-ri-delete-bin-line /></svws-ui-button>
 			</template>
 			<svws-ui-multi-select title="Raum auswählen"
 				v-model="stundenplanRaumSelected"
-				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager)"
+				@update:model-value="patchKlausurraum(raum.id, { idStundenplanRaum: stundenplanRaumSelected?.id }, raummanager())"
 				:item-text="(item: StundenplanRaum) => item !== null ? (item.kuerzel + ' (' + item.groesse+ ' Plätze, ' + item.beschreibung + ')') : ''"
-				:items="raummanager.stundenplanraumVerfuegbarGetMenge(stundenplanmanager.raumGetMengeAsList())" />
+				:items="raummanager().stundenplanraumVerfuegbarGetMenge(stundenplanmanager.raumGetMengeAsList())" />
 			<div>
 				Belegung:
 				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
@@ -26,7 +26,7 @@
 						:kursklausurmanager="kursklausurmanager"
 						:kursmanager="kursmanager"
 						:map-lehrer="mapLehrer"
-						:patch-klausur-uhrzeit="patchKlausurUhrzeit" />
+						:patch-klausur="patchKlausur" />
 				</table>
 			</svws-ui-content-card>
 		</svws-ui-content-card>
@@ -46,17 +46,22 @@
 		faecherManager: GostFaecherManager;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
-		raummanager: GostKlausurraumManager;
+		raummanager: () => GostKlausurraumManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<boolean>;
+		patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 	}>();
 
-	const klausurenImRaum = computed(() => props.raummanager.kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()));
-	const anzahlSuS = computed(() => props.raummanager.kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
+	const klausurenImRaum = computed(() => {
+		console.log("gtrigger", props.raum.id);
+		console.log("Raum " + props.raum.id, props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()));
+		console.log("Raummanager " + props.raum.id, props.raummanager());
+		return props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager())
+	});
+	const anzahlSuS = computed(() => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
 
 	const stundenplanRaumSelected = computed({
 		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),

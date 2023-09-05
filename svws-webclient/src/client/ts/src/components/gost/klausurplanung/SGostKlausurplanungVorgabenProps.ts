@@ -15,9 +15,9 @@ export interface GostKlausurplanungVorgabenProps {
 	klausurvorgabenmanager: () => GostKlausurvorgabenManager;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	erzeugeKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<GostKlausurvorgabe>;
-	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<boolean>;
-	loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<boolean>;
-	erzeugeVorgabenAusVorlage: (quartal: number) => Promise<boolean>;
+	erzeugeKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>) => Promise<void>;
+	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<void>;
+	loescheKlausurvorgabe: (vorgabe: GostKlausurvorgabe) => Promise<void>;
+	erzeugeVorgabenAusVorlage: (quartal: number) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

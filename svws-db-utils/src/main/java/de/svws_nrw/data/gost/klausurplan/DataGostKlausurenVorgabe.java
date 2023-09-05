@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
@@ -16,19 +17,21 @@ import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -50,6 +53,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 */
 	public DataGostKlausurenVorgabe(final DBEntityManager conn, final int abiturjahr) {
 		super(conn);
+		if (abiturjahr != -1 && conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null)
+			throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + abiturjahr);
 		_abiturjahr = abiturjahr;
 	}
 
@@ -71,8 +76,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 		final List<GostKursklausur> retKlausuren = new ArrayList<>();
 
-		final List<GostKlausurvorgabe> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().map(dtoMapper::apply)
+		final List<GostKlausurvorgabe> vorgaben = conn
+				.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class).setParameter("jgid", _abiturjahr)
+				.setParameter("hj", halbjahr).getResultList().stream().map(dtoMapper::apply)
 //				.filter(v -> quartal > 0 ? v.quartal == quartal : true)
 				.toList();
 		if (vorgaben == null)
@@ -82,21 +88,24 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben, null);
 
-		final List<DTOGostKlausurenKursklausuren> existingKlausuren = conn.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple",
-				vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
-		final Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
-				.collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
+		final List<DTOGostKlausurenKursklausuren> existingKlausuren = conn
+				.queryNamed("DTOGostKlausurenKursklausuren.vorgabe_id.multiple", vorgaben.stream().map(v -> v.idVorgabe).toList(), DTOGostKlausurenKursklausuren.class);
+		final Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren
+				.stream().collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
 
 		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
 		// noch nicht angelegt.
-		final List<DTOSchuljahresabschnitte> sjaList = conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
+		final List<DTOSchuljahresabschnitte> sjaList = conn
+				.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
 				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr)).setParameter("abschnitt", halbjahr.id % 2 + 1).getResultList();
 		if (sjaList == null || sjaList.size() != 1)
 			return OperationError.NOT_FOUND.getResponse("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
 		final DTOSchuljahresabschnitte sja = sjaList.get(0);
 		// Kurse ermitteln
-		final List<DTOKurs> kurse = conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID) // TODO Quartalsmodus
+		final List<DTOKurs> kurse = conn
+				.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID) // TODO
+																																								// Quartalsmodus
 				.setParameter("jg", halbjahr.jahrgang).getResultList();
 
 		final List<DTOGostKlausurenKursklausuren> kursklausuren = new ArrayList<>();
@@ -109,8 +118,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		for (final DTOKurs kurs : kurse) {
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
-				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID)
-						&& mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {
+				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
 					kursklausuren.add(kursklausur);
 					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausuren(hj, kursklausur, kurs);
@@ -136,10 +144,10 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	}
 
 	private List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausuren(final int hj, final DTOGostKlausurenKursklausuren kursklausur, final DTOKurs kurs) {
-		final List<DTOSchuelerLernabschnittsdaten> lernDaten = conn.query(
-				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht",
-				DTOSchuelerLernabschnittsdaten.class).setParameter("kursid", kurs.ID)
-				.setParameter("kursart", Arrays.asList(hj == 5 ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
+		final List<DTOSchuelerLernabschnittsdaten> lernDaten = conn
+				.query("SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status = :sstatus AND s.Geloescht = :sgeloescht",
+						DTOSchuelerLernabschnittsdaten.class)
+				.setParameter("kursid", kurs.ID).setParameter("kursart", Arrays.asList(hj == 5 ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
 				.setParameter("sstatus", SchuelerStatus.AKTIV).setParameter("sgeloescht", false).getResultList();
 
 		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new ArrayList<>();
@@ -172,6 +180,33 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	};
 
 	/**
+	 * Liefert zu einer Halbjahres-ID das entsprechende Gost-Halbjahr.
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 *
+	 * @return das Gost-Halbjahr
+	 */
+	public static GostHalbjahr checkHalbjahr(final int halbjahr) {
+		final GostHalbjahr hj = GostHalbjahr.fromID(halbjahr);
+		if (hj == null)
+			throw OperationError.BAD_REQUEST.exception("Kein gültiges GostHalbjahr angegeben: " + halbjahr);
+		return hj;
+	}
+
+	private static int checkQuartal(final int quartal) {
+		if (quartal < 1)
+			throw OperationError.BAD_REQUEST.exception("Quartal ungültig: " + quartal);
+		return quartal;
+	}
+
+	private static GostKursart checkKursart(final String kursart) {
+		final GostKursart ka = GostKursart.fromKuerzel(kursart);
+		if (ka == null)
+			throw OperationError.BAD_REQUEST.exception("Keine gültige Kursart angegeben: " + kursart);
+		return ka;
+	}
+
+	/**
 	 * Gibt die Liste der Klausurvorgaben einer Jahrgangsstufe im übergebenen
 	 * Gost-Halbjahr zurück.
 	 *
@@ -180,8 +215,11 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return die Liste der Kursklausuren
 	 */
 	private List<GostKlausurvorgabe> getKlausurvorgaben(final int halbjahr) {
-		final List<DTOGostKlausurenVorgaben> vorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", GostHalbjahr.fromID(halbjahr)).getResultList();
+		final List<DTOGostKlausurenVorgaben> vorgaben = conn
+			.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
+			.setParameter("jgid", _abiturjahr)
+			.setParameter("hj", checkHalbjahr(halbjahr))
+			.getResultList();
 		final List<GostKlausurvorgabe> daten = new ArrayList<>();
 		for (final DTOGostKlausurenVorgaben v : vorgaben)
 			daten.add(dtoMapper.apply(v));
@@ -190,63 +228,12 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long halbjahr) {
-		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurvorgaben(halbjahr.intValue())).build();
 	}
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.size() > 0) {
-			try {
-				conn.transactionBegin();
-				final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-				if (vorgabe == null)
-					throw OperationError.NOT_FOUND.exception();
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-					case "idVorgabe" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "abiJahrgang" -> {
-						final int patch_abijahr = JSONMapper.convertToInteger(value, false);
-						if ((patch_abijahr != vorgabe.Abi_Jahrgang))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "halbjahr" -> {
-						final int patch_halbjahr = JSONMapper.convertToInteger(value, false);
-						if ((patch_halbjahr != vorgabe.Halbjahr.id))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-					case "quartal" -> vorgabe.Quartal = JSONMapper.convertToInteger(value, false);
-					case "idFach" -> vorgabe.Fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursart" -> vorgabe.Kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false, null)); // TODO check value -> error: BAD_REQUEST
-					case "dauer" -> vorgabe.Dauer = JSONMapper.convertToInteger(value, false);
-					case "auswahlzeit" -> vorgabe.Auswahlzeit = JSONMapper.convertToInteger(value, false);
-					case "istMdlPruefung" -> vorgabe.IstMdlPruefung = JSONMapper.convertToBoolean(value, false);
-					case "istAudioNotwendig" -> vorgabe.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "istVideoNotwendig" -> vorgabe.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "bemerkungVorgabe" -> vorgabe.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge());
-
-					default -> throw OperationError.BAD_REQUEST.exception();
-					}
-				}
-				conn.transactionPersist(vorgabe);
-				conn.transactionCommit();
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
-			}
-		}
-		return Response.status(Status.OK).build();
+		return super.patchBasic(id, is, DTOGostKlausurenVorgaben.class, patchMappings);
 	}
 
 	@Override
@@ -254,71 +241,47 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
+	private static final Set<String> requiredCreateAttributes = Set.of("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart", "dauer");
+
+	private final Map<String, DataBasicMapper<DTOGostKlausurenVorgaben>> patchMappings =
+		Map.ofEntries(
+			Map.entry("idVorgabe", (dto, value, map) -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw OperationError.BAD_REQUEST.exception();
+			}),
+			Map.entry("abiJahrgang", (dto, value, map) -> {
+				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
+				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null)
+					throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + dto.Abi_Jahrgang);
+			}),
+			Map.entry("halbjahr", (dto, value, map) -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+			Map.entry("quartal", (dto, value, map) -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false))),
+			Map.entry("idFach", (dto, value, map) -> {
+				dto.Fach_ID = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null)
+					throw OperationError.BAD_REQUEST.exception("Fach nicht gefunden, ID: " + dto.Fach_ID);
+			}),
+			Map.entry("kursart", (dto, value, map) -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null))),
+			Map.entry("dauer", (dto, value, map) -> dto.Dauer = JSONMapper.convertToInteger(value, false)),
+			Map.entry("auswahlzeit", (dto, value, map) -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false)),
+			Map.entry("istMdlPruefung", (dto, value, map) -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istAudioNotwendig", (dto, value, map) -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istVideoNotwendig", (dto, value, map) -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("bemerkungVorgabe", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge()))
+		);
+
+
 	/**
 	 * Erstellt eine neue Gost-Klausurvorgabe
 	 *
-	 * @param is Das JSON-Objekt mit den Daten
+	 * @param is   Das JSON-Objekt mit den Daten
 	 *
 	 * @return Eine Response mit der neuen Gost-Klausurvorgabe
 	 */
 	public Response create(final InputStream is) {
-		DTOGostKlausurenVorgaben vorgabe = null;
-		try {
-			conn.transactionBegin();
-			// Bestimme die ID des neuen Klausurtermins
-			final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Vorgaben");
-			final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-
-			int abi_Jahrgang = -1;
-			GostHalbjahr halbjahr = GostHalbjahr.EF1;
-			int quartal = -1;
-			long fach_ID = -1;
-			GostKursart kursart = GostKursart.GK;
-			int dauer = 0;
-			int auswahlzeit = 0;
-			boolean istMdlPruefung = false;
-			boolean istAudioNotwendig = false;
-			boolean istVideoNotwendig = false;
-			String bemerkungen = null;
-
-			final Map<String, Object> map = JSONMapper.toMap(is);
-			if (map.size() > 0) {
-				for (final Entry<String, Object> entry : map.entrySet()) {
-					final String key = entry.getKey();
-					final Object value = entry.getValue();
-					switch (key) {
-					case "abiJahrgang" -> abi_Jahrgang = JSONMapper.convertToInteger(value, false);
-					case "halbjahr" -> halbjahr = GostHalbjahr.fromID(JSONMapper.convertToInteger(value, false));
-					case "quartal" -> quartal = JSONMapper.convertToInteger(value, false);
-					case "idFach" -> fach_ID = JSONMapper.convertToLong(value, false);
-					case "kursart" -> kursart = GostKursart.fromKuerzel(JSONMapper.convertToString(value, false, false, null)); // TODO check value -> error: BAD_REQUEST
-					case "dauer" -> dauer = JSONMapper.convertToInteger(value, false);
-					case "auswahlzeit" -> auswahlzeit = JSONMapper.convertToInteger(value, false);
-					case "istMdlPruefung" -> istMdlPruefung = JSONMapper.convertToBoolean(value, false);
-					case "istAudioNotwendig" -> istAudioNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "istVideoNotwendig" -> istVideoNotwendig = JSONMapper.convertToBoolean(value, false);
-					case "bemerkungVorgabe" -> bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge());
-					case "idVorgabe" -> { /* do nothing */ }
-					default -> throw OperationError.BAD_REQUEST.exception();
-					}
-				}
-			}
-			vorgabe = new DTOGostKlausurenVorgaben(id, abi_Jahrgang, halbjahr, quartal, fach_ID, kursart, dauer, auswahlzeit, istMdlPruefung, istAudioNotwendig, istVideoNotwendig);
-			vorgabe.Bemerkungen = bemerkungen;
-			conn.transactionPersist(vorgabe);
-			if (!conn.transactionCommit())
-				return OperationError.CONFLICT.getResponse("Datenbankfehler beim Persistieren der Gost-Klausurvorgabe");
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webApplicationException)
-				return webApplicationException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		} finally {
-			conn.transactionRollback();
-		}
-
-		final GostKlausurvorgabe daten = dtoMapper.apply(vorgabe);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-
+		final ObjLongConsumer<DTOGostKlausurenVorgaben> initDTO = (dto, id) -> dto.ID = id;
+		return super.addBasic(is, DTOGostKlausurenVorgaben.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 	/**
@@ -329,49 +292,30 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * @return die Response
 	 */
 	public Response delete(final Long id) {
-		// TODO use transaction
-		// Bestimme den Termin
-		final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-		if (vorgabe == null)
-			return OperationError.NOT_FOUND.getResponse();
-		// Entferne den Termin
-		conn.remove(vorgabe);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(id).build();
+		return super.deleteBasic(id, DTOGostKlausurenVorgaben.class, dtoMapper);
 	}
-
 
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
 	 *
-	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
-	 * @param quartal      das Quartal, 0 für das gesamte Halbjahr
+	 * @param halbjahr das Halbjahr der gymnasialen Oberstufe
+	 * @param quartal  das Quartal, 0 für das gesamte Halbjahr
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
-	public Response copyVorgaben(final GostHalbjahr halbjahr, final int quartal) {
-		try {
-			conn.transactionBegin();
-			final boolean data = copyVorgabenToJahrgang(conn, _abiturjahr, halbjahr, quartal);
-	    	conn.transactionCommit();
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(data).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException wae)
-				return wae.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(e);
-		} finally {
-			// Perform a rollback if necessary
-			conn.transactionRollback();
-		}
+	public Response copyVorgaben(final int halbjahr, final int quartal) {
+		checkQuartal(quartal);
+		copyVorgabenToJahrgang(conn, _abiturjahr, checkHalbjahr(halbjahr), checkQuartal(quartal));
+		return Response.status(Status.OK).build();
 	}
-
 
 	/**
 	 * Kopiert die Klausurvorgaben in einen Abiturjahrgang
 	 *
-	 * @param conn         die Datenbankverbindung
-	 * @param abiturjahr   das Abiturjahr
-	 * @param halbjahr     das Halbjahr der gymnasialen Oberstufe
-	 * @param quartal      das Quartal, 0 für das gesamte Halbjahr
+	 * @param conn       die Datenbankverbindung
+	 * @param abiturjahr das Abiturjahr
+	 * @param halbjahr   das Halbjahr der gymnasialen Oberstufe
+	 * @param quartal    das Quartal, 0 für das gesamte Halbjahr
 	 *
 	 * @return erfolgreich / nicht erfolgreich
 	 */
@@ -380,50 +324,48 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<DTOGostKlausurenVorgaben> vorgabenJg = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", abiturjahr, DTOGostKlausurenVorgaben.class);
 		// Prüfe, ob die Vorlage eingelesen werden kann
 		if (vorgabenVorlage == null)
-			throw OperationError.NOT_FOUND.exception("Es wurden keine Vorlage-Daten gefunden.");
-		// Wenn keine Vorlage-Daten vorhanden sind, dann ist nichts zu tun und die Operation ist erfolgreich
-		if (vorgabenVorlage.isEmpty())
-			return true;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
+		final List<DTOGostKlausurenVorgaben> vorgabenNeu = new ArrayList<>();
 		for (final DTOGostKlausurenVorgaben vorgabe : vorgabenVorlage) {
 			if (halbjahr != null && vorgabe.Halbjahr != halbjahr || quartal > 0 && quartal != vorgabe.Quartal)
 				continue;
 			boolean exists = false;
 			for (final DTOGostKlausurenVorgaben v : vorgabenJg) {
-				if ((vorgabe.Halbjahr.id == v.Halbjahr.id) && (vorgabe.Quartal == v.Quartal) && (vorgabe.Fach_ID == v.Fach_ID)
-						&& vorgabe.Kursart.equals(v.Kursart)) {
+				if ((vorgabe.Halbjahr.id == v.Halbjahr.id) && (vorgabe.Quartal == v.Quartal) && (vorgabe.Fach_ID == v.Fach_ID) && vorgabe.Kursart.equals(v.Kursart)) {
 					exists = true;
 					break;
 				}
 			}
 			if (!exists) {
-				final DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal,
-						vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer, vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung,
-						vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
+				final DTOGostKlausurenVorgaben k = new DTOGostKlausurenVorgaben(idNMK++, abiturjahr, vorgabe.Halbjahr, vorgabe.Quartal, vorgabe.Fach_ID, vorgabe.Kursart, vorgabe.Dauer,
+						vorgabe.Auswahlzeit, vorgabe.IstMdlPruefung, vorgabe.IstAudioNotwendig, vorgabe.IstVideoNotwendig);
 				k.Bemerkungen = vorgabe.Bemerkungen;
-				if (!conn.transactionPersist(k))
-					throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Vorlage-Daten.");
+				vorgabenNeu.add(k);
 			}
 		}
+		if (!conn.transactionPersistAll(vorgabenNeu))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Gost-Klausurvorgaben.");
 		return true;
 	}
 
-	/**
-	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
-	 *
-	 * @param conn     Connection
-	 * @param id die ID der Kursklausur
-	 *
-	 * @return das Kursklausur-Objekt
-	 *
-	 */
-	public static GostKlausurvorgabe getVorgabeById(final DBEntityManager conn, final long id) {
-		final DTOGostKlausurenVorgaben data = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-		if (data != null)
-			return dtoMapper.apply(data);
-		return null;
-	}
+//	/**
+//	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
+//	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
+//	 *
+//	 * @param conn Connection
+//	 * @param id   die ID der Kursklausur
+//	 *
+//	 * @return das Kursklausur-Objekt
+//	 *
+//	 */
+//	public static GostKlausurvorgabe getVorgabeById(final DBEntityManager conn, final long id) {
+//		final DTOGostKlausurenVorgaben data = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
+//		if (data == null)
+//			return dtoMapper.apply(data);
+//		return null;
+//	}
 
 }

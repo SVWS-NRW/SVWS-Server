@@ -22,14 +22,14 @@
 			<svws-ui-button size="small" type="secondary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
 		<div class="flex flex-col flex-wrap gap-4 w-full">
-			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager?.raumGetMengeAsList()"
+			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager()?.raumGetMengeAsList()"
 				:key="raum.id"
 				:stundenplanmanager="stundenplanmanager"
 				:raum="raum"
-				:raummanager="(raummanager as GostKlausurraumManager)"
+				:raummanager="raummanager"
 				:patch-klausurraum="patchKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
-				:patch-klausur-uhrzeit="patchKlausurUhrzeit"
+				:patch-klausur="patchKlausur"
 				:faecher-manager="faecherManager"
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
@@ -53,11 +53,11 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
 		stundenplanmanager: StundenplanManager;
-		raummanager: GostKlausurraumManager;
+		raummanager: () => GostKlausurraumManager;
 		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
-		patchKlausurUhrzeit: (klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<boolean>;
+		patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<void>;
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
@@ -68,7 +68,7 @@
 		let nR = new GostKlausurraum();
 		nR.idTermin = props.termin.id;
 		nR = await props.erzeugeKlausurraum(nR);
-		props.raummanager.raumAdd(nR);
+		props.raummanager().raumAdd(nR);
 	}
 
 </script>

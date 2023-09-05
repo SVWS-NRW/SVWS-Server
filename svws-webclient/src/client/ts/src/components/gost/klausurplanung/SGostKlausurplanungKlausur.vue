@@ -6,7 +6,7 @@
 		<td class="text-center">{{ props.klausur.dauer }}</td>
 		<td>&nbsp;</td>
 		<td>
-			<svws-ui-text-input v-if="patchKlausurUhrzeit" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @blur="zeit => patchKlausurbeginn(zeit, klausur.id)" />
+			<svws-ui-text-input v-if="patchKlausur" :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @blur="zeit => patchKlausurbeginn(zeit, klausur.id)" />
 		</td>
 	</tr>
 </template>
@@ -22,7 +22,7 @@
 		termin: GostKlausurtermin;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		kursmanager: KursManager;
-		patchKlausurUhrzeit?: (klausur: Partial<GostKursklausur> | Partial<GostSchuelerklausur>) => Promise<boolean>;
+		patchKlausur?: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<void>;
 	}>();
 
 	async function patchKlausurbeginn(event: string | number, id: number) {
@@ -30,7 +30,7 @@
 			return;
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
-			await props.patchKlausurUhrzeit!({id, startzeit});
+			await props.patchKlausur!(id, {id, startzeit});
 		} catch(e) {
 			// Do nothing
 		}

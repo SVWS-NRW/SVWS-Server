@@ -135,7 +135,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		try {
 			conn.transactionBegin();
 
-			GostKlausurenCollectionSkrsKrs result = transactionSetzeRaumZuSchuelerklausuren(conn, _idRaum, idsSchuelerklausuren, idAbschnitt);
+			final GostKlausurenCollectionSkrsKrs result = transactionSetzeRaumZuSchuelerklausuren(conn, _idRaum, idsSchuelerklausuren, idAbschnitt);
 
 			if (!conn.transactionCommit())
 				throw OperationError.CONFLICT.exception("Datenbankfehler beim Persistieren der Gost-Klausurraumstunden");
@@ -203,25 +203,22 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		// Zeitraster_min und _max ermitteln
 		int minStart = 1440;
 		int maxEnd = -1;
-		for (final GostKursklausur kk : listKursklausuren) {
-			if (kk.startzeit != null && kk.startzeit < minStart)
-				minStart = kk.startzeit;
-			final int startzeit = kk.startzeit != null ? kk.startzeit : termin.Startzeit;
-			final int endzeit = startzeit + vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe).dauer;
+		for (final GostSchuelerklausur sk : listSchuelerklausuren) {
+			final GostKursklausur kk = kursklausurManager.kursklausurGetByIdOrException(sk.idKursklausur);
+			int skStartzeit = -1;
+			if (sk.startzeit != null)
+				skStartzeit = sk.startzeit;
+			else if (kk.startzeit != null)
+				skStartzeit = kk.startzeit;
+			else
+				skStartzeit = termin.Startzeit;
+			if (skStartzeit < minStart)
+				minStart = skStartzeit;
+			final int endzeit = skStartzeit + vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe).dauer;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
+
 		}
-		for (final GostSchuelerklausur sk : listSchuelerklausuren) {
-			if (sk.startzeit != null) {
-				if (sk.startzeit < minStart)
-					minStart = sk.startzeit;
-				final int endzeit = sk.startzeit + vorgabenManager.vorgabeGetByIdOrException(kursklausurManager.kursklausurGetByIdOrException(sk.idKursklausur).idVorgabe).dauer;
-				if (endzeit > maxEnd)
-					maxEnd = endzeit;
-			}
-		}
-		if (minStart == 1440)
-			minStart = termin.Startzeit;
 
 		final LocalDate klausurdatum = LocalDate.parse(termin.Datum);
 		final List<StundenplanZeitraster> zeitrasterRaum = stundenplanManager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()), minStart,
