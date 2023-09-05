@@ -129,17 +129,27 @@
 		}
 	};
 
-	const isValid = ref<boolean>(true);
-
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<InputDataType>(props.modelValue);
+
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const isValid = ref<boolean>(validate(props.modelValue));
 
 	watch(() => props.modelValue, (value: InputDataType, prevValue: InputDataType) => {
 		if (value !== prevValue)
 			updateData(value);
 	});
 
-	function updateData(value: InputDataType) {
+	function validatorEmail(value: string) {
+		return (
+			// eslint-disable-next-line no-useless-escape
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
+			// eslint-disable-next-line no-useless-escape
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
+		);
+	}
+
+	function validate(value: InputDataType) : boolean {
 		let tmpIsValid = true;
 		if ((props.type === "email") && (typeof data.value === 'string'))
 			tmpIsValid = validatorEmail(data.value);
@@ -147,8 +157,12 @@
 			tmpIsValid = false;
 		if (tmpIsValid && (props.valid !== undefined))
 			tmpIsValid = props.valid(value);
+		return tmpIsValid;
+	}
+
+	function updateData(value: InputDataType) {
 		data.value = value;
-		isValid.value = tmpIsValid;
+		isValid.value = validate(value);
 		emit("update:modelValue", String(data.value));   // TODO do not use String()
 	}
 
@@ -157,15 +171,6 @@
 			return true;
 		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
 	})
-
-	const validatorEmail = (value: string) => {
-		return (
-			// eslint-disable-next-line no-useless-escape
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
-			// eslint-disable-next-line no-useless-escape
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
-		);
-	};
 
 	const emailValid = computed(() => {
 		if ((props.type === "email") && (typeof data.value === 'string'))
@@ -292,6 +297,10 @@
 	}
 
 	.text-input--invalid.text-input--filled:not(:focus-within):hover .text-input--control {
+		@apply border-error/50 dark:border-error/50;
+	}
+
+	.text-input--invalid.text-input--filled:focus-within:hover .text-input--control {
 		@apply border-error/50 dark:border-error/50;
 	}
 
@@ -478,4 +487,5 @@
 	.text-input--inline {
 		@apply cursor-text underline decoration-dotted underline-offset-2;
 	}
+
 </style>
