@@ -25,7 +25,6 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -79,12 +78,9 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<GostKlausurvorgabe> vorgaben = conn
 				.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class).setParameter("jgid", _abiturjahr)
 				.setParameter("hj", halbjahr).getResultList().stream().map(dtoMapper::apply)
-//				.filter(v -> quartal > 0 ? v.quartal == quartal : true)
 				.toList();
-		if (vorgaben == null)
-			throw new NullPointerException();
 		if (vorgaben.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Noch keine Klausurvorgaben für dieses Halbjahr definiert.");
+			throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
 		final GostKlausurvorgabenManager manager = new GostKlausurvorgabenManager(vorgaben, null);
 
@@ -93,13 +89,11 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final Map<Long, Map<Long, DTOGostKlausurenKursklausuren>> mapKursidVorgabeIdKursklausur = existingKlausuren
 				.stream().collect(Collectors.groupingBy(k -> k.Kurs_ID, Collectors.toMap(k -> k.Vorgabe_ID, Function.identity())));
 
-		// TODO NoResultException fangen und Fehlermeldung, dass Schuljahresabschnitt
-		// noch nicht angelegt.
 		final List<DTOSchuljahresabschnitte> sjaList = conn
 				.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
 				.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr)).setParameter("abschnitt", halbjahr.id % 2 + 1).getResultList();
 		if (sjaList == null || sjaList.size() != 1)
-			return OperationError.NOT_FOUND.getResponse("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
+			throw OperationError.NOT_FOUND.exception("Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
 
 		final DTOSchuljahresabschnitte sja = sjaList.get(0);
 		// Kurse ermitteln
@@ -110,16 +104,12 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 		final List<DTOGostKlausurenKursklausuren> kursklausuren = new ArrayList<>();
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
-
-		// Bestimme die ID, für welche der Datensatz eingefügt wird
-		final DTOSchemaAutoInkremente dbNmkID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Kursklausuren");
-		long idNMK = dbNmkID == null ? 1 : dbNmkID.MaxID + 1;
-
+		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
 		for (final DTOKurs kurs : kurse) {
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, kurs.KursartAllg, kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {
-					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNMK++, vorgabe.idVorgabe, kurs.ID);
+					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur++, vorgabe.idVorgabe, kurs.ID);
 					kursklausuren.add(kursklausur);
 					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausuren(hj, kursklausur, kurs);
 					schuelerklausuren.addAll(listSk);
@@ -127,20 +117,13 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 				}
 			}
 		}
-
-		if (!conn.persistAll(kursklausuren))
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-
-		final DTOSchemaAutoInkremente dbNmkIDsKlausuren = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Schuelerklausuren");
-		Long idNmkIDsKlausuren = dbNmkIDsKlausuren == null ? 1 : dbNmkIDsKlausuren.MaxID + 1;
-
+		// ID in Schülerklausuren einfügen
+		long idNextSchuelerklausur = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausuren.class);
 		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
-			sk.ID = idNmkIDsKlausuren++;
-		if (!conn.persistAll(schuelerklausuren))
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-
+			sk.ID = idNextSchuelerklausur++;
+		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(retKlausuren).build();
-
 	}
 
 	private List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausuren(final int hj, final DTOGostKlausurenKursklausuren kursklausur, final DTOKurs kurs) {
