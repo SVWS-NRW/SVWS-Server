@@ -35,7 +35,7 @@
 
 	const istGeburtsdatumGueltig = (strDate: string | number | null) => {
 		if (strDate === null || typeof strDate === 'number')
-			return false;
+			return true;
 		try {
 			const date = DateUtils.extractFromDateISO8601(strDate);
 			const curDate = new Date();

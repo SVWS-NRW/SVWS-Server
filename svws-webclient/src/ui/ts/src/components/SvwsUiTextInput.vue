@@ -1,7 +1,7 @@
 <template>
 	<label class="text-input-component"
 		:class="{
-			'text-input--filled': `${data}`.length > 0 && data !== null,
+			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
@@ -46,7 +46,7 @@
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="`${input?.value}`.length === 0 || `${input?.value}` === 'null'" />
+						<i-ri-alert-fill v-if="data === '' || data === null || data === undefined" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -149,7 +149,9 @@
 			tmpIsValid = validatorEmail(data.value);
 		if (tmpIsValid && (props.maxLen !== undefined) && (data.value !== null) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
 			tmpIsValid = false;
-		return tmpIsValid ? props.valid(data.value) : false;
+		if (tmpIsValid && (data.value !== null || data.value !== '' || data.value !== undefined))
+			tmpIsValid = props.valid(data.value);
+		return tmpIsValid;
 	})
 
 	function updateData(value: InputDataType) {
