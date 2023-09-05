@@ -58,6 +58,11 @@
 				</template>
 			</div>
 		</div>
+		<div class="flex items-center gap-2 flex-wrap mt-5 justify-end">
+			<StundenplanZeitrasterImportModal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+				<svws-ui-button type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+			</StundenplanZeitrasterImportModal>
+		</div>
 	</div>
 	<aside>
 		<div class="sticky top-8 flex flex-col gap-5">
@@ -83,6 +88,7 @@
 		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
 		addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
 		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+		importZeitraster: () => Promise<void>;
 	}>();
 
 	const showZeitachse = true;
