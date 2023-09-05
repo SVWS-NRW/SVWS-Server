@@ -60,12 +60,12 @@
 			<div class="flex flex-col gap-4">
 				<svws-ui-input-wrapper>
 					<svws-ui-radio-group id="rbgKursart" :row="true">
-						<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.idVorgabe !== 0" />
 					</svws-ui-radio-group>
-					<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" :disabled="activeVorgabe.idVorgabe !== 0" />
 				</svws-ui-input-wrapper>
 				<svws-ui-radio-group id="rbgQuartal" :row="true">
-					<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe !== 0" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper>
 					<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" :disabled="activeVorgabe.idVorgabe < 0" />
@@ -91,7 +91,7 @@
 						</svws-ui-radio-group>
 					</div>
 				</div>
-				<svws-ui-textarea-input placeholder="Bemerkungen" v-model="activeVorgabe.bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -143,7 +143,14 @@
 			return;
 		}
 		if (activeVorgabe.value.idVorgabe > 0) {
-			result = await props.patchKlausurvorgabe({...activeVorgabe.value}, activeVorgabe.value.idVorgabe);
+			result = await props.patchKlausurvorgabe({
+				dauer: activeVorgabe.value.dauer,
+				auswahlzeit: activeVorgabe.value.auswahlzeit,
+				istMdlPruefung: activeVorgabe.value.istMdlPruefung,
+				istAudioNotwendig: activeVorgabe.value.istAudioNotwendig,
+				istVideoNotwendig: activeVorgabe.value.istVideoNotwendig,
+				bemerkungVorgabe: activeVorgabe.value.bemerkungVorgabe,
+			}, activeVorgabe.value.idVorgabe);
 			activeVorgabe.value = new GostKlausurvorgabe();
 			selectedVorgabeRow.value = undefined;
 		} else {

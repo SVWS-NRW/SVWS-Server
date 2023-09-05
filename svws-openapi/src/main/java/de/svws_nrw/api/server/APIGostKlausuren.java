@@ -413,9 +413,10 @@ public class APIGostKlausuren {
 			@RequestBody(description = "die IDs der Klausurtermine", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
             array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> terminIds,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN)) {
-			return (new DataGostKlausurenTermin(conn, -1)).delete(terminIds);
-		}
+		return OpenAPIApplication.runWithTransaction(conn -> new DataGostKlausurenTermin(conn, -1).delete(terminIds),
+			request,
+			ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
 
 	/**

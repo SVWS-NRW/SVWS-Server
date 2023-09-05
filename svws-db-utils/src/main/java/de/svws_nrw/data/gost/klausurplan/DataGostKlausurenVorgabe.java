@@ -176,7 +176,14 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return hj;
 	}
 
-	private static int checkQuartal(final int quartal) {
+	/**
+	 * Überprüft, ob der Wert für ein Quartal gültig ist.
+	 *
+	 * @param quartal das Quartal
+	 *
+	 * @return das das Quartal
+	 */
+	public static int checkQuartal(final int quartal) {
 		if (quartal < 0)
 			throw OperationError.BAD_REQUEST.exception("Quartal ungültig: " + quartal);
 		return quartal;
@@ -216,7 +223,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasic(id, is, DTOGostKlausurenVorgaben.class, patchMappings);
+		return super.patchBasicFiltered(id, is, DTOGostKlausurenVorgaben.class, patchMappings, requiredCreateAttributes);
 	}
 
 	@Override
@@ -224,7 +231,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	private static final Set<String> requiredCreateAttributes = Set.of("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart", "dauer");
+	private static final Set<String> requiredCreateAttributes = Set.of("abiJahrgang", "halbjahr", "quartal", "idFach", "kursart");
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenVorgaben>> patchMappings =
 		Map.ofEntries(
@@ -333,22 +340,5 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Gost-Klausurvorgaben.");
 		return true;
 	}
-
-//	/**
-//	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
-//	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
-//	 *
-//	 * @param conn Connection
-//	 * @param id   die ID der Kursklausur
-//	 *
-//	 * @return das Kursklausur-Objekt
-//	 *
-//	 */
-//	public static GostKlausurvorgabe getVorgabeById(final DBEntityManager conn, final long id) {
-//		final DTOGostKlausurenVorgaben data = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
-//		if (data == null)
-//			return dtoMapper.apply(data);
-//		return null;
-//	}
 
 }

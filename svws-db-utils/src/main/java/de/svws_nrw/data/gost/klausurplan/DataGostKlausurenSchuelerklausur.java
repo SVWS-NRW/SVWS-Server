@@ -3,6 +3,7 @@ package de.svws_nrw.data.gost.klausurplan;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
@@ -67,72 +68,24 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 		return daten;
 	};
 
+	private static final Set<String> forbiddenPatchAttributes = Set.of("idSchuelerklausur", "idKursklausur", "idSchueler");
+
 	private final Map<String, DataBasicMapper<DTOGostKlausurenSchuelerklausuren>> patchMappings =
 			Map.ofEntries(
-				Map.entry("idSchuelerklausur", (dto, value, map) -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
-				Map.entry("idKursklausur", (dto, value, map) -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != dto.Kursklausur_ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
-				Map.entry("idSchueler", (dto, value, map) -> {
-					final Long patch_id = JSONMapper.convertToLong(value, false);
-					if ((patch_id == null) || (patch_id.longValue() != dto.Schueler_ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
+				Map.entry("idSchuelerklausur", (dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idKursklausur", (dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idSchueler", (dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
 				Map.entry("idTermin", (dto, value, map) -> {
 					dto.Termin_ID = JSONMapper.convertToLong(value, true);
 					if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
-						throw OperationError.BAD_REQUEST.exception("Klausurtermin nicht gefunden, ID: " + dto.Termin_ID);
+						throw OperationError.NOT_FOUND.exception("Klausurtermin nicht gefunden, ID: " + dto.Termin_ID);
 				}),
 				Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 			);
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasic(id, is, DTOGostKlausurenSchuelerklausuren.class, patchMappings);
-//
-//		final Map<String, Object> map = JSONMapper.toMap(is);
-//		if (map.size() > 0) {
-//			final DTOGostKlausurenSchuelerklausuren schuelerklausur = conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id);
-//			if (schuelerklausur == null)
-//				throw OperationError.NOT_FOUND.exception();
-//			for (final Entry<String, Object> entry : map.entrySet()) {
-//				final String key = entry.getKey();
-//				final Object value = entry.getValue();
-//				switch (key) {
-//				case "idSchuelerklausur" -> {
-//					final Long patch_id = JSONMapper.convertToLong(value, false);
-//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idKursklausur" -> {
-//					final Long patch_id = JSONMapper.convertToLong(value, false);
-//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idSchueler" -> {
-//					final Long patch_id = JSONMapper.convertToLong(value, false);
-//					if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idTermin" -> {
-//					final Long newTermin = JSONMapper.convertToLong(value, true);
-//					schuelerklausur.Termin_ID = newTermin;
-//				}
-//				case "startzeit" -> schuelerklausur.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-//				default -> throw OperationError.BAD_REQUEST.exception();
-//				}
-//			}
-//			if (!conn.transactionPersist(schuelerklausur)) {
-//				throw OperationError.CONFLICT.exception();
-//			}
-//		}
-//		return Response.status(Status.OK).build();
+		return super.patchBasicFiltered(id, is, DTOGostKlausurenSchuelerklausuren.class, patchMappings, forbiddenPatchAttributes);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -151,25 +152,25 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	/**
-	 * TODO
+	 * Functional Interface
 	 *
-	 * @param <One>   TODO
-	 * @param <Two>   TODO
-	 * @param <Three> TODO
-	 * @param <Four>  TODO
-	 * @param <Five>  TODO
+	 * @param <One>   One
+	 * @param <Two>   Two
+	 * @param <Three> Three
+	 * @param <Four>  Four
+	 * @param <Five>  Five
 	 */
 	@FunctionalInterface
 	interface Function5<One, Two, Three, Four, Five> {
 		/**
-		 * TODO
+		 * Apply Method
 		 *
-		 * @param one   TODO
-		 * @param two   TODO
-		 * @param three TODO
-		 * @param four  TODO
+		 * @param one   one
+		 * @param two   two
+		 * @param three three
+		 * @param four  four
 		 *
-		 * @return TODO
+		 * @return ret
 		 */
 		Five apply(One one, Two two, Three three, Four four);
 	}
@@ -194,11 +195,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		kk.idLehrer = kurs.Lehrer_ID;
 		try {
 			kk.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
-//			String ss[] = kurs.Schienen.split(",");
-//			for (int i = 0; i < ss.length; i++)
-//				kk.kursSchiene[i] = Integer.parseInt(ss[i]);
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-			// TODO ExceptionHandling?
+			throw OperationError.BAD_REQUEST.exception("Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
 		}
 		kk.istAudioNotwendig = v.istAudioNotwendig;
 		kk.istMdlPruefung = v.istMdlPruefung;
@@ -246,24 +244,12 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return null;
 	}
 
+	private static final Set<String> forbiddenPatchAttributes = Set.of("id", "idVorgabe", "idKurs");
+
 	private final Map<String, DataBasicMapper<DTOGostKlausurenKursklausuren>> patchMappings =
 			Map.ofEntries(
-				Map.entry("id", (dto, value, map) -> {
-					final Long patch_id = JSONMapper.convertToLong(value, true);
-					if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
-				Map.entry("idVorgabe", (dto, value, map) -> {
-					final long patch_vorgabeid = JSONMapper.convertToLong(value, false);
-					if ((patch_vorgabeid != dto.Vorgabe_ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
-
-				Map.entry("idKurs", (dto, value, map) -> {
-					final long patch_kursid = JSONMapper.convertToLong(value, false);
-					if ((patch_kursid != dto.Kurs_ID))
-						throw OperationError.BAD_REQUEST.exception();
-				}),
+				Map.entry("idVorgabe", (dto, value, map) -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idKurs", (dto, value, map) -> dto.Kurs_ID = JSONMapper.convertToLong(value, false)),
 				Map.entry("idTermin", (dto, value, map) -> {
 					final Long newTermin = JSONMapper.convertToLong(value, true);
 					if (newTermin != null) {
@@ -291,6 +277,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
+			if (forbiddenPatchAttributes != null && forbiddenPatchAttributes.contains(key))
+				throw OperationError.FORBIDDEN.exception("Attribut %s darf nicht im Patch enthalten sein.".formatted(key));
 			final DataBasicMapper<DTOGostKlausurenKursklausuren> mapper = patchMappings.get(key);
 			if (mapper == null)
 				throw OperationError.BAD_REQUEST.exception();
@@ -310,78 +298,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, _idSchuljahresAbschnitt);
 		}
 		return Response.status(Status.OK).build();
-//		return patch(id, -1, is);
 	}
-
-//	/**
-//	 * Startet den KlausurterminblockungAlgorithmus mit den übergebenen
-//	 * GostKlausurterminblockungDaten und persistiert die Blockung in der Datenbank.
-//	 *
-//	 * @param is Connection
-//	 * @param id   die ID der Kursklausur
-//	 * @param idAbschnitt ds
-//	 *
-//	 * @return das Kursklausur-Objekt
-//	 *
-//	 */
-//	public Response patch(final Long id, final long idAbschnitt, final InputStream is) {
-//		final Map<String, Object> map = JSONMapper.toMap(is);
-//		if (map.size() > 0) {
-//			long idIs = -1;
-//			if (id == null)
-//				idIs = JSONMapper.convertToLong(map.get("id"), false);
-//			final DTOGostKlausurenKursklausuren kursklausur = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id != null ? id : idIs);
-//			if (kursklausur == null)
-//				throw OperationError.NOT_FOUND.exception();
-//			for (final Entry<String, Object> entry : map.entrySet()) {
-//				final String key = entry.getKey();
-//				final Object value = entry.getValue();
-//				switch (key) {
-//				case "id" -> {
-//					final Long patch_id = JSONMapper.convertToLong(value, true);
-//					if ((patch_id == null) || (patch_id.longValue() != kursklausur.ID))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idVorgabe" -> {
-//					final long patch_vorgabeid = JSONMapper.convertToLong(value, false);
-//					if ((patch_vorgabeid != kursklausur.Vorgabe_ID))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idKurs" -> {
-//					final long patch_kursid = JSONMapper.convertToLong(value, false);
-//					if ((patch_kursid != kursklausur.Kurs_ID))
-//						throw OperationError.BAD_REQUEST.exception();
-//				}
-//				case "idTermin" -> {
-//					final Long newTermin = JSONMapper.convertToLong(value, true);
-//					if (newTermin != null) {
-//						final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
-//						final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, kursklausur.Vorgabe_ID);
-//						if (!Objects.equals(termin.Quartal, vorgabe.Quartal))
-//							throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
-//					}
-//					kursklausur.Termin_ID = newTermin;
-//				}
-//				case "startzeit" -> {
-//					final int startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-//					if (startzeitNeu != kursklausur.Startzeit) {
-//						if (idAbschnitt == -1)
-//							throw OperationError.FORBIDDEN.exception("idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
-//						final List<Long> sks = conn
-//								.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", id, DTOGostKlausurenSchuelerklausuren.class).stream().map(sk -> sk.ID).toList();
-//						DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, idAbschnitt);
-//					}
-//					kursklausur.Startzeit = startzeitNeu;
-//				}
-//				default -> throw OperationError.BAD_REQUEST.exception();
-//				}
-//			}
-//			conn.transactionPersist(kursklausur);
-//			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper2.apply(kursklausur)).build();
-//		}
-//		return null;
-////		return Response.status(Status.OK).build();
-//	}
 
 	@Override
 	public Response getList() {

@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -52,24 +51,9 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 					throw OperationError.BAD_REQUEST.exception();
 			}),
-			Map.entry("abijahr", (dto, value, map) -> {
-				final int patch_value = JSONMapper.convertToInteger(value, false);
-//				if ((patch_value != dto.Abi_Jahrgang))
-//					throw OperationError.BAD_REQUEST.exception();
-				dto.Abi_Jahrgang = patch_value;
-			}),
-			Map.entry("halbjahr", (dto, value, map) -> {
-				final GostHalbjahr patch_value = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false));
-//				if ((patch_value != dto.Halbjahr))
-//					throw OperationError.BAD_REQUEST.exception();
-				dto.Halbjahr = patch_value;
-			}),
-			Map.entry("quartal", (dto, value, map) -> {
-				final int patch_value = JSONMapper.convertToInteger(value, false);
-//				if ((patch_value != dto.Quartal))
-//					throw OperationError.BAD_REQUEST.exception();
-				dto.Quartal = patch_value;
-			}),
+			Map.entry("abijahr", (dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
+			Map.entry("halbjahr", (dto, value, map) -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+			Map.entry("quartal", (dto, value, map) -> dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
 			Map.entry("bemerkung", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
 			Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
 			Map.entry("datum", (dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
@@ -125,63 +109,8 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasic(id, is, DTOGostKlausurenTermine.class, patchMappings);
+		return super.patchBasicFiltered(id, is, DTOGostKlausurenTermine.class, patchMappings, requiredCreateAttributes);
 	}
-
-//	@Override
-//	public Response patch(final Long id, final InputStream is) {
-//		final Map<String, Object> map = JSONMapper.toMap(is);
-//		if (map.size() > 0) {
-//			try {
-//				conn.transactionBegin();
-//				final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, id);
-//				if (termin == null)
-//					throw OperationError.NOT_FOUND.exception();
-//				for (final Entry<String, Object> entry : map.entrySet()) {
-//					final String key = entry.getKey();
-//					final Object value = entry.getValue();
-//					switch (key) {
-//					case "id" -> {
-//						final Long patch_id = JSONMapper.convertToLong(value, true);
-//						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "abijahr" -> {
-//						final int patch_abijahr = JSONMapper.convertToInteger(value, false);
-//						if ((patch_abijahr != termin.Abi_Jahrgang))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "halbjahr" -> {
-//						final int patch_halbjahr = JSONMapper.convertToInteger(value, false);
-//						if ((patch_halbjahr != termin.Halbjahr.id))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "quartal" -> {
-//						final int patch_quartal = JSONMapper.convertToInteger(value, false);
-//						if ((patch_quartal != termin.Quartal))
-//							throw OperationError.BAD_REQUEST.exception();
-//					}
-//					case "bemerkung" -> termin.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge());
-//					case "bezeichnung" -> termin.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge());
-//					case "datum" -> termin.Datum = JSONMapper.convertToString(value, true, false, null);
-//					case "startzeit" -> termin.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-//
-//					default -> throw OperationError.BAD_REQUEST.exception();
-//					}
-//				}
-//				conn.transactionPersist(termin);
-//				conn.transactionCommit();
-//			} catch (final Exception e) {
-//				if (e instanceof final WebApplicationException webAppException)
-//					return webAppException.getResponse();
-//				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-//			} finally {
-//				// Perform a rollback if necessary
-//				conn.transactionRollback();
-//			}
-//		}
-//		return Response.status(Status.OK).build();
-//	}
 
 	@Override
 	public Response getList() {
@@ -198,11 +127,6 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	public Response create(final InputStream is) {
 		final ObjLongConsumer<DTOGostKlausurenTermine> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOGostKlausurenTermine.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
-//		final DTOSchemaAutoInkremente lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Gost_Klausuren_Termine");
-//		final Long id = lastID == null ? 1 : lastID.MaxID + 1;
-//		final DTOGostKlausurenTermine termin = new DTOGostKlausurenTermine(id, _abiturjahr, GostHalbjahr.fromID(halbjahr), quartal);
-//		conn.persist(termin);
-//		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(dtoMapper.apply(termin)).build();
 	}
 
 
