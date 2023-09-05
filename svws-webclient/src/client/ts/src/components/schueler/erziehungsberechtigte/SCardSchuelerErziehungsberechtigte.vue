@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.zusatzNachname ? erzieher.zusatzNachname + ' ' : ''}${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
+	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
 		<template #actions>
 			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined" @update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
 				Erhält Anschreiben
@@ -13,7 +13,6 @@
 			<svws-ui-multi-select title="Erzieherart" v-model="idErzieherArt" :items="mapErzieherarten" :item-sort="erzieherArtSort" :item-text="(i: Erzieherart) => i.bezeichnung ?? ''" />
 			<svws-ui-text-input placeholder="Name" :model-value="erzieher.nachname" @change="nachname=>doPatch({ nachname }, erzieher.id)" type="text" />
 			<svws-ui-text-input placeholder="Rufname" :model-value="erzieher.vorname" @change="vorname=>doPatch({ vorname }, erzieher.id)" type="text" />
-			<svws-ui-text-input placeholder="Zusatz zum Nachnamen" :model-value="erzieher.zusatzNachname" @change="zusatzNachname=>doPatch({ zusatzNachname }, erzieher.id)" type="text" />
 			<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="erzieher.eMail" @change="eMail=>doPatch({ eMail }, erzieher.id)" type="email" verify-email />
 			<svws-ui-multi-select title="1. Staatsangehörigkeit" v-model="staatsangehoerigkeit" :items="Nationalitaeten.values()"
 				:item-text="(i: Nationalitaeten) => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
@@ -24,7 +23,8 @@
 			<svws-ui-multi-select title="Wohnort" v-model="wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-multi-select title="Ortsteil" v-model="ortsteil" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" />
 			<svws-ui-spacing />
-			<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher.bemerkungen" @blur="bemerkungen=>doPatch({ bemerkungen }, erzieher.id)" span="full" autoresize />
+			<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="erzieher.bemerkungen" span="full" autoresize
+				@change="bemerkungen => doPatch({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, erzieher.id)" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

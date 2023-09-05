@@ -1,7 +1,9 @@
 <template>
 	<svws-ui-content-card title="Abschluss Berechnung">
 		<svws-ui-input-wrapper>
-			<svws-ui-textarea-input placeholder="Text" :model-value="data.textErgebnisPruefungsalgorithmus" @blur="textErgebnisPruefungsalgorithmus=>doPatch({textErgebnisPruefungsalgorithmus})" resizeable="vertical" :autoresize="true" />
+			<svws-ui-textarea-input placeholder="Text" :model-value="data.textErgebnisPruefungsalgorithmus"
+				@change="textErgebnisPruefungsalgorithmus => doPatch({ textErgebnisPruefungsalgorithmus })"
+				resizeable="vertical" :autoresize="true" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

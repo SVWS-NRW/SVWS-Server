@@ -1,61 +1,8 @@
-<script setup lang="ts">
-	import { useTextareaAutosize } from '@vueuse/core'
-	import { ref, computed } from 'vue';
-
-	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
-
-	const props = withDefaults(defineProps<{
-		modelValue?: string|null;
-		placeholder?: string;
-		valid?: (value: string) => boolean;
-		statistics?: boolean;
-		required?: boolean;
-		disabled?: boolean;
-		resizeable?: ResizableOption;
-		autoresize?: boolean;
-		cols?: number;
-		rows?: number;
-		span?: 'full'|'grow';
-	}>(), {
-		modelValue: "",
-		placeholder: "",
-		valid: ()=>true,
-		statistics: false,
-		required: false,
-		disabled: false,
-		resizeable: "both",
-		autoresize: false,
-		cols: 80,
-		rows: 3,
-		span: undefined,
-	})
-
-	const emit = defineEmits<{
-		"update:modelValue": [value: string];
-		"blur": [value: string];
-	}>();
-
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const { textarea, input } = useTextareaAutosize({ input: props.modelValue || undefined })
-	const bindings = computed(() => {
-		return {
-			required: props.required,
-			disabled: props.disabled,
-			onBlur,
-		};
-	});
-
-	function onBlur() {
-		if (input.value != props.modelValue) // !== wegen Umwandlung von null zu undefined
-			emit("blur", input.value);
-	}
-</script>
-
 <template>
 	<label class="textarea-input"
 		:class="{
-			'textarea-input--filled': !!modelValue,
-			'textarea-input--invalid': valid(input) === false,
+			'textarea-input--filled': data !== null,
+			'textarea-input--invalid': (isValid === false),
 			'textarea-input--disabled': disabled,
 			'textarea-input--statistics': statistics,
 			'textarea-input--resize-none': resizeable === 'none',
@@ -65,16 +12,22 @@
 			'col-span-full': span === 'full',
 			'flex-grow': span === 'grow'
 		}">
-		<textarea	ref="textarea" v-model="input" v-bind="bindings" class="textarea-input--control" />
+		<textarea ref="textarea" v-model="dataOrEmpty" @input="onInput" @keyup.enter="onKeyEnter" @blur="onBlur"
+			:required="required" :disabled="disabled" class="textarea-input--control" />
 		<span v-if="placeholder"
 			class="textarea-input--placeholder"
 			:class="{
 				'textarea-input--placeholder--required': required
 			}">
 			<span>{{ placeholder }}</span>
+			<i-ri-alert-line v-if="(isValid === false)" class="ml-0.5" />
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-2-line class="pointer-events-auto ml-1" />
+					<span class="inline-flex items-center">
+						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
+						<i-ri-alert-fill v-if="data === '' || data === null" />
+					</span>
 					<template #content>
 						Relevant für die Statistik
 					</template>
@@ -83,6 +36,109 @@
 		</span>
 	</label>
 </template>
+
+
+<script setup lang="ts">
+
+	import { ref, computed, watch, nextTick, type WritableComputedRef } from 'vue';
+
+	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
+	type InputDataType = string | null;
+
+	const props = withDefaults(defineProps<{
+		modelValue?: InputDataType;
+		placeholder?: string;
+		valid?: (value: InputDataType) => boolean;
+		statistics?: boolean;
+		required?: boolean;
+		disabled?: boolean;
+		resizeable?: ResizableOption;
+		autoresize?: boolean;
+		cols?: number;
+		rows?: number;
+		maxLen?: number;
+		span?: 'full' | 'grow';
+	}>(), {
+		modelValue: "",
+		placeholder: "",
+		valid: () => true,
+		statistics: false,
+		required: false,
+		disabled: false,
+		resizeable: "both",
+		autoresize: false,
+		cols: 80,
+		rows: 3,
+		maxLen: undefined,
+		span: undefined,
+	})
+
+	const emit = defineEmits<{
+		"update:modelValue": [value: InputDataType];
+		"change": [value: InputDataType];
+		"blur": [value: InputDataType];
+	}>();
+
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const data = ref<InputDataType>(props.modelValue);
+
+	const dataOrEmpty: WritableComputedRef<string> = computed({
+		get: () => data.value === null ? '' : data.value,
+		set: (value) => data.value = (value === '') ? null : value
+	});
+
+	const textarea = ref<HTMLTextAreaElement | null>(null);
+	watch([data], () => nextTick(() => {
+		if (textarea.value !== null) {
+			textarea.value.style.height = '1px';
+			textarea.value.style.height = `${textarea.value.scrollHeight}px`;
+		}
+	}), { immediate: true })
+
+	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+
+	const isValid = computed(() => {
+		let tmpIsValid = true;
+		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+			tmpIsValid = false;
+		if (tmpIsValid && (((data.value !== null) || (data.value !== ''))))
+			tmpIsValid = props.valid(data.value);
+		return tmpIsValid;
+	})
+
+	function updateData(value: InputDataType) {
+		if (data.value !== value) {
+			data.value = value;
+			emit("update:modelValue", data.value);
+		}
+	}
+
+	const maxLenValid = computed(() => {
+		if ((props.maxLen === undefined) || (data.value === null))
+			return true;
+		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+	})
+
+	function onInput(event: Event) {
+		const value = (event.target as HTMLInputElement).value;
+		if (value != data.value)
+			updateData(value);
+	}
+
+	function onBlur(event: Event) {
+		if (props.modelValue !== data.value) {
+			emit("change", data.value);
+			emit("blur", data.value);
+		}
+	}
+
+	function onKeyEnter(event: Event) {
+		if (props.modelValue !== data.value)
+			emit("change", data.value);
+	}
+
+</script>
+
 
 <style lang="postcss">
 	.textarea-input {
@@ -232,4 +288,5 @@
 		@apply text-error;
 		content: " *";
 	}
+
 </style>

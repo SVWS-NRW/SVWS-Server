@@ -90,7 +90,4 @@
 		modal.value.closeModal();
 	}
 
-
-
-
 </script>

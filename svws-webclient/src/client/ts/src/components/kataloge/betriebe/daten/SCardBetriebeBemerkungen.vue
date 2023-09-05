@@ -2,7 +2,8 @@
 	<svws-ui-content-card title="Bemerkungen">
 		<div class="entry-content">
 			<div class="col-span-2">
-				<svws-ui-textarea-input :model-value="daten.bemerkungen" @blur="bemerkungen=>doPatch({bemerkungen})" placeholder="Bemerkungen" />
+				<svws-ui-textarea-input :model-value="daten.bemerkungen" @change="bemerkungen => doPatch({ bemerkungen: bemerkungen || '' })"
+					placeholder="Bemerkungen" />
 			</div>
 			<svws-ui-checkbox v-model="ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
 			<svws-ui-checkbox v-model="bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>

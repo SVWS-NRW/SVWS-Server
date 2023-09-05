@@ -37,7 +37,8 @@
 			-->
 			<!-- <svws-ui-multi-select title="Ortsteil" disabled :items="[]" :item-text="i=>i" /> -->
 			<svws-ui-spacing :size="2" />
-			<svws-ui-textarea-input :model-value="betriebsStammdaten.bemerkungen" @blur="bemerkungen=>patchBetrieb({bemerkungen}, betriebsStammdaten.id)" placeholder="Bemerkungen" autoresize span="full" />
+			<svws-ui-textarea-input :model-value="betriebsStammdaten.bemerkungen" placeholder="Bemerkungen" autoresize span="full"
+				@change="bemerkungen => patchBetrieb({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, betriebsStammdaten.id)" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

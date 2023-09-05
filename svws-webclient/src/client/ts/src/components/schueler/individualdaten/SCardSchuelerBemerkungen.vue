@@ -1,6 +1,7 @@
 <template>
 	<svws-ui-content-card class="col-span-full">
-		<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data().bemerkungen" @blur="bemerkungen=>doPatch({ bemerkungen })" resizeable="vertical" autoresize />
+		<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data().bemerkungen" resizeable="vertical" autoresize
+			@change="bemerkungen => doPatch({ bemerkungen: bemerkungen === null ? '' : bemerkungen })" />
 	</svws-ui-content-card>
 </template>
 

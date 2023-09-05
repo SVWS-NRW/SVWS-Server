@@ -22,10 +22,15 @@
 			</div>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper>
-				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein" @blur="zeugnisAllgemein=>doPatchBemerkungen({ zeugnisAllgemein })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV" @blur="zeugnisASV=>doPatchBemerkungen({ zeugnisASV })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE" @blur="zeugnisAUE=>doPatchBemerkungen({ zeugnisAUE })" resizeable="vertical" :autoresize="true" />
-				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung" @blur="versetzungsentscheidung=>doPatchBemerkungen({ versetzungsentscheidung })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="data.bemerkungen.zeugnisAllgemein"
+					@change="zeugnisAllgemein => doPatchBemerkungen({ zeugnisAllgemein: zeugnisAllgemein === null ? '' : zeugnisAllgemein })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="data.bemerkungen.zeugnisASV"
+					@change="zeugnisASV => doPatchBemerkungen({ zeugnisASV: zeugnisASV === null ? '' : zeugnisASV })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Außerunterrichtliches Engagement" :model-value="data.bemerkungen.zeugnisAUE"
+					@change="zeugnisAUE => doPatchBemerkungen({ zeugnisAUE: zeugnisAUE === null ? '' : zeugnisAUE })" resizeable="vertical" :autoresize="true" />
+				<svws-ui-textarea-input placeholder="Bemerkung Versetzung" :model-value="data.bemerkungen.versetzungsentscheidung"
+					@change="versetzungsentscheidung => doPatchBemerkungen({ versetzungsentscheidung: versetzungsentscheidung === null ? '' : versetzungsentscheidung })"
+					resizeable="vertical" :autoresize="true" />
 			</svws-ui-input-wrapper>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
