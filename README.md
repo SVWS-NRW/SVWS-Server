@@ -21,7 +21,7 @@ https://doku.svws-nrw.de/Entwicklungsumgebungen/
 Hier findet man den zu den Releases gehörigen Container:
 https://hub.docker.com/r/svwsnrw/svws-server
 
-Wir fruen uns sehr über das Interesse!
+Wir freuen uns sehr über das Interesse!
 
 
 
