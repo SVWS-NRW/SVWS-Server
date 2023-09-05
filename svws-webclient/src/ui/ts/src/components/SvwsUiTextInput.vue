@@ -1,19 +1,92 @@
-<script lang="ts">
-	export default {
-		inheritAttrs: false
-	};
-</script>
+<template>
+	<label class="text-input-component"
+		:class="{
+			'text-input--filled': `${data}`.length > 0 && data !== null,
+			'text-input--invalid': (isValid === false),
+			'text-input--disabled': disabled,
+			'text-input--readonly': readonly,
+			'text-input--icon': hasIcon,
+			'text-input--statistics': statistics,
+			'text-input--search': type === 'search',
+			'col-span-full': span === 'full',
+			'col-span-2': span === '2',
+		}">
+		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
+		<i-ri-search-line v-if="type === 'search'" class="text-input--search-icon" />
+		<input ref="input"
+			v-focus
+			:class="{
+				'text-input--control': !headless,
+				'text-input--headless': headless,
+				'text-input--rounded': rounded,
+				'text-input--prefix': url,
+			}"
+			v-bind="{ ...$attrs }"
+			:type="type"
+			:value="data"
+			:disabled="disabled"
+			:required="required"
+			:readonly="readonly"
+			:aria-labelledby="labelId"
+			:placeholder="headless || type === 'search' ? placeholder : ''"
+			@input="onInput"
+			@keyup.enter="onKeyEnter"
+			@blur="onBlur">
+		<span v-if="placeholder && !headless && type !== 'search'"
+			:id="labelId"
+			class="text-input--placeholder"
+			:class="{
+				'text-input--placeholder--required': required,
+				'text-input--placeholder--prefix': url
+			}">
+			<span>{{ placeholder }}</span>
+			<i-ri-alert-line v-if="(isValid === false)" class="ml-0.5" />
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span v-if="statistics" class="cursor-pointer">
+				<svws-ui-tooltip position="right">
+					<span class="inline-flex items-center">
+						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
+						<i-ri-alert-fill v-if="`${input?.value}`.length === 0 || `${input?.value}` === 'null'" />
+					</span>
+					<template #content>
+						Relevant für die Statistik
+					</template>
+				</svws-ui-tooltip>
+			</span>
+		</span>
+		<span v-if="type !== 'date' && hasIcon" class="icon">
+			<slot />
+		</span>
+		<span v-else-if="type === 'date'" class="icon text-input--calendar-icon">
+			<i-ri-calendar-line />
+		</span>
+	</label>
+</template>
+
+
 <script setup lang="ts">
+
 	import type { InputType } from "../types";
-	import { useSlots, ref, computed } from "vue";
+	import { useSlots, ref, computed, watch } from "vue";
 	import { genId } from "../utils";
+
+	type InputDataType = string | number | null;
+
+	defineOptions({
+		inheritAttrs: false,
+	});
+
+	const input = ref<null | HTMLInputElement>(null);
+	defineExpose({
+		input
+	});
 
 	const props = withDefaults(defineProps<{
 		type?: InputType;
-		modelValue?: string | number | null;
+		modelValue?: InputDataType;
 		placeholder?: string;
 		statistics?: boolean;
-		valid?: (value: string|number|null) => boolean;
+		valid?: (value: InputDataType) => boolean;
 		disabled?: boolean;
 		required?: boolean;
 		readonly?: boolean;
@@ -41,124 +114,87 @@
 	});
 
 	const emit = defineEmits<{
-		"update:modelValue": [value: string];
-		"blur": [value: string];
+		"update:modelValue": [value: string];   // TODO use InputDataType
+		"change": [value: string];              // TODO use InputDataType
+		"blur": [value: string];                // TODO use InputDataType
 	}>();
 
 	const slots = useSlots();
-	const input = ref<null | HTMLInputElement>(null);
+	const hasIcon = computed(() => !!slots.default);
+
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
-			if (props.focus) el.focus();
+			if (props.focus)
+				el.focus();
 		}
 	};
 
-	const maxLenValid = computed(()=>{
-		if (props.maxLen === undefined || input.value === null)
-			return true;
-		return typeof props.modelValue === 'string' && input.value.value.toLocaleString().length <= props.maxLen;
-	})
+	const isValid = ref<boolean>(true);
 
-	const emailValid = computed(() => {
-		if (props.type !== "email" || !props.modelValue || typeof props.modelValue === 'number' || input.value === null)
-			return true;
-		else
-			return (
-				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(input.value.value) ||
-				// eslint-disable-next-line no-useless-escape
-				/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-					input.value.value
-				)
-			);
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const data = ref<InputDataType>(props.modelValue);
+
+	watch(() => props.modelValue, (value: InputDataType, prevValue: InputDataType) => {
+		if (value !== prevValue)
+			updateData(value);
 	});
 
-	const hasIcon = computed(() => !!slots.default);
+	function updateData(value: InputDataType) {
+		let tmpIsValid = true;
+		if ((props.type === "email") && (typeof data.value === 'string'))
+			tmpIsValid = validatorEmail(data.value);
+		if (tmpIsValid && (props.maxLen !== undefined) && (data.value !== null) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+			tmpIsValid = false;
+		if (tmpIsValid && (props.valid !== undefined))
+			tmpIsValid = props.valid(value);
+		data.value = value;
+		isValid.value = tmpIsValid;
+		emit("update:modelValue", String(data.value));   // TODO do not use String()
+	}
+
+	const maxLenValid = computed(() => {
+		if ((props.maxLen === undefined) || (data.value === null))
+			return true;
+		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+	})
+
+	const validatorEmail = (value: string) => {
+		return (
+			// eslint-disable-next-line no-useless-escape
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
+			// eslint-disable-next-line no-useless-escape
+			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
+		);
+	};
+
+	const emailValid = computed(() => {
+		if ((props.type === "email") && (typeof data.value === 'string'))
+			return validatorEmail(data.value);
+		return true;
+	});
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
-		if (value != props.modelValue)
-			emit("update:modelValue", value);
+		if (value != data.value)
+			updateData(props.type === "number" ? Number(value) : value);
 	}
 
 	function onBlur(event: Event) {
-		const value = (event.target as HTMLInputElement).value;
-		if (value != props.modelValue)
-			emit("blur", value);
+		if (props.modelValue !== data.value) {
+			emit("change", String(data.value));   // TODO do not use String()
+			emit("blur", String(data.value));   // TODO do not use String()
+		}
 	}
 
-	const isValid = ref<boolean>(true);
-
-	defineExpose({
-		input
-	});
+	function onKeyEnter(event: Event) {
+		if (props.modelValue !== data.value)
+			emit("change", String(data.value));   // TODO do not use String()
+	}
 
 	const labelId = genId();
+
 </script>
 
-<template>
-	<label class="text-input-component"
-		:class="{
-			'text-input--filled': `${modelValue}`.length > 0 && modelValue !== null,
-			'text-input--invalid': (isValid === false) || (emailValid === false) || (maxLenValid === false),
-			'text-input--disabled': disabled,
-			'text-input--readonly': readonly,
-			'text-input--icon': hasIcon,
-			'text-input--statistics': statistics,
-			'text-input--search': type === 'search',
-			'col-span-full': span === 'full',
-			'col-span-2': span === '2',
-		}">
-		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
-		<i-ri-search-line v-if="type === 'search'" class="text-input--search-icon" />
-		<input ref="input"
-			v-focus
-			:class="{
-				'text-input--control': !headless,
-				'text-input--headless': headless,
-				'text-input--rounded': rounded,
-				'text-input--prefix': url,
-			}"
-			v-bind="{ ...$attrs }"
-			:type="type"
-			:value="modelValue"
-			:disabled="disabled"
-			:required="required"
-			:readonly="readonly"
-			:aria-labelledby="labelId"
-			:placeholder="headless || type === 'search' ? placeholder : ''"
-			@input="onInput"
-			@blur="onBlur">
-		<span v-if="placeholder && !headless && type !== 'search'"
-			:id="labelId"
-			class="text-input--placeholder"
-			:class="{
-				'text-input--placeholder--required': required,
-				'text-input--placeholder--prefix': url
-			}">
-			<span>{{ placeholder }}</span>
-			<i-ri-alert-line v-if="(isValid === false) || (emailValid === false) || (maxLenValid === false)" class="ml-0.5" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${modelValue?.toLocaleString() ? modelValue?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
-			<span v-if="statistics" class="cursor-pointer">
-				<svws-ui-tooltip position="right">
-					<span class="inline-flex items-center">
-						<i-ri-bar-chart-2-line class="pointer-events-auto ml-0.5" />
-						<i-ri-alert-fill v-if="`${input?.value}`.length === 0 || `${input?.value}` === 'null'" />
-					</span>
-					<template #content>
-						Relevant für die Statistik
-					</template>
-				</svws-ui-tooltip>
-			</span>
-		</span>
-		<span v-if="type !== 'date' && hasIcon" class="icon">
-			<slot />
-		</span>
-		<span v-else-if="type === 'date'" class="icon text-input--calendar-icon">
-			<i-ri-calendar-line />
-		</span>
-	</label>
-</template>
 
 <style lang="postcss" scoped>
 	.text-input-component {
