@@ -16,6 +16,6 @@ services:
             SVWS_TLS_KEYSTORE_PASSWORD: "${SVWS_TLS_KEYSTORE_PASSWORD}"
         volumes:
             - ~/SVWS/SVWS-Server/deployment/docker/init-scripts:/etc/app/svws/init-scripts
-            - ~/SVWS/svws-docker/keystore:"${SVWS_TLS_KEYSTORE_PATH}"
+            - ~/SVWS/svws-docker/keystore:${SVWS_TLS_KEYSTORE_PATH}
         env_file:
             - .env
