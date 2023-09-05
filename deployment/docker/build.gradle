@@ -113,7 +113,7 @@ task dockerPushAllDockerhub() {
 
 /*
  Task führt ein Docker-Build per docker compose durch.
- */
+
 task dockerComposeBuild(type: Exec) {
 	dependsOn copyArtifacts
 	workingDir "$projectDir"
@@ -126,7 +126,7 @@ task dockerComposeBuild(type: Exec) {
 
 /*
  Task startet eine lokale SVWS-Umgebung per docker compose.
- */
+
 task dockerComposeUp(type: Exec) {
 	workingDir "$projectDir"
 	def cmd = 'docker compose up'
@@ -139,7 +139,7 @@ task dockerComposeUp(type: Exec) {
 
 /*
  Task führt einen Image-Build des SVWS durch.
- */
+
 task dockerBuildSvws(type: Exec) {
 	dependsOn copyArtifacts
 	workingDir "$projectDir"
@@ -154,7 +154,7 @@ task dockerBuildSvws(type: Exec) {
 /*
  Task führt einen Image-Build des SVWS durch, setzt ein Tag
  und veröffentlicht das Image im Image-Repository (Nexus)
- */
+
 task dockerBuildTagAndPublish(type: Exec) {
 	dependsOn dockerBuildSvws
 	workingDir "$projectDir"
@@ -175,6 +175,8 @@ task dockerBuildTagAndPublish(type: Exec) {
 		commandLine 'sh', '-c', "${dockerLoginCmdLin} && ${dockerTagCmd} && ${dockerPushCmd}"
 	}
 }
+
+*/
 
 clean.doLast {
 	file("${dockerfileAppDir}").deleteDir()
