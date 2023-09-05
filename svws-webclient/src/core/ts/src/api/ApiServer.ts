@@ -52,7 +52,6 @@ import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionSkrsKrs } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { GostKlausurenKalenderinformation } from '../core/data/gost/klausurplanung/GostKlausurenKalenderinformation';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
-import { GostKlausurraumstunde } from '../core/data/gost/klausurplanung/GostKlausurraumstunde';
 import { GostKlausurtermin } from '../core/data/gost/klausurplanung/GostKlausurtermin';
 import { GostKlausurterminblockungDaten } from '../core/data/gost/klausurplanung/GostKlausurterminblockungDaten';
 import { GostKlausurvorgabe } from '../core/data/gost/klausurplanung/GostKlausurvorgabe';
@@ -4307,7 +4306,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich in den Klausurraum integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurräume zu ändern.
-	 *   Code 404: Kein Klausurraum-Eintrag mit der angegebenen ID gefunden
+	 *   Code 404: Kein Termin mit der übergebenen ID oder Stundenplanraum-Eintrag mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -4335,6 +4334,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: List<GostKlausurraum>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurräume auszulesen.
 	 *   Code 404: Die Id des Klausurtermins wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} termin - der Pfad-Parameter termin
@@ -4386,21 +4386,22 @@ export class ApiServer extends BaseApi {
 	 * Erstellt einen neue Gost-Klausurraum und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraum wurde erfolgreich angelegt.
+	 *   Code 201: Gost-Klausurraum wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurraum
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurraum anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {GostKlausurraum} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<GostKlausurraum>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Gost-Klausurraum wurde erfolgreich angelegt.
 	 */
-	public async createGostKlausurenRaum(data : GostKlausurraum, schema : string) : Promise<GostKlausurraum> {
+	public async createGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string) : Promise<GostKlausurraum> {
 		const path = "/db/{schema}/gost/klausuren/raeume/new"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = GostKlausurraum.transpilerToJSON(data);
+		const body : string = GostKlausurraum.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurraum.transpilerFromJSON(text);
@@ -4418,6 +4419,7 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
 	 *   Code 404: Der Termin-ID wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} termin - der Pfad-Parameter termin
@@ -4431,60 +4433,6 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der DELETE-Methode deleteGostKlausurenRaumStunde für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/delete/{id : \d+}
-	 *
-	 * Löscht eine Gost-Klausurraumstunde.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Gost-Klausurraumstunde besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Klausurraumstunde für die angegebene ID wurden erfolgreich gelöscht.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: Long
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurraumstunde zu löschen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die Klausurraumstunde für die angegebene ID wurden erfolgreich gelöscht.
-	 */
-	public async deleteGostKlausurenRaumStunde(schema : string, id : number) : Promise<number | null> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden/delete/{id : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const result : string = await super.deleteJSON(path, null);
-		const text = result;
-		return parseFloat(JSON.parse(text));
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode createGostKlausurenRaumStunde für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/new
-	 *
-	 * Erstellt eine neue Gost-Klausurraumstunde und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurraumstunde besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurraumstunde
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {GostKlausurraumstunde} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async createGostKlausurenRaumStunde(data : GostKlausurraumstunde, schema : string) : Promise<GostKlausurraumstunde> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden/new"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = GostKlausurraumstunde.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurraumstunde.transpilerFromJSON(text);
 	}
 
 
