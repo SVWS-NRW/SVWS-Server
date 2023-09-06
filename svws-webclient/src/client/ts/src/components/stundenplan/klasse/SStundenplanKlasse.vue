@@ -15,9 +15,9 @@
 				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku)" @dragend="onDrag(undefined)">
+							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)">
 							<div role="cell" class="select-none data-table__td">
-								{{ ku.bezeichnung }}
+								<span :id="`klasse-${ku.hashCode()}`">{{ ku.bezeichnung }}</span>
 							</div>
 							<div role="cell" class="select-none data-table__td">
 								{{ ku.wochenstunden }}
@@ -28,9 +28,9 @@
 				<svws-ui-data-table :items="kursliste" :columns="colsKursunterricht">
 					<template #body>
 						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(kurs)" @dragend="onDrag(undefined)">
+							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)">
 							<div role="cell" class="select-none data-table__td">
-								{{ kurs.bezeichnung }}
+								<span :id="`kurs-${kurs.id}`">{{ kurs.bezeichnung }}</span>
 							</div>
 							<div role="cell" class="select-none data-table__td">
 								{{ kurs.wochenstunden }}
@@ -85,8 +85,18 @@
 
 	const dragData = ref<StundenplanAnsichtDragData>(undefined);
 
-	const onDrag = (data: StundenplanAnsichtDragData) => {
+	const onDrag = (data: StundenplanAnsichtDragData, event?: DragEvent) => {
 		dragData.value = data;
+		let id;
+		if (data instanceof StundenplanKlassenunterricht)
+			id = `klasse-${data.hashCode()}`
+		else if (data instanceof StundenplanKurs)
+			id = `kurs-${data.id}`
+		if (id) {
+			const img = document.getElementById(id);
+			if (img && event?.dataTransfer)
+				event.dataTransfer.setDragImage(img,0,0)
+		}
 		// console.log("drag", data);
 	};
 
