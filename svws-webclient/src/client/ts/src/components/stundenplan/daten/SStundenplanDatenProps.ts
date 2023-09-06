@@ -1,4 +1,4 @@
-import type { JahrgangsListeEintrag, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum, StundenplanZeitraster } from "@core";
+import type { JahrgangsListeEintrag, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
 
 export interface StundenplanDatenProps {
 	stundenplanManager: () => StundenplanManager;

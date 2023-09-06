@@ -25,9 +25,9 @@
 						</div>
 					</template>
 				</svws-ui-data-table>
-				<svws-ui-data-table :items="stundenplanManager().kursGetMengeAsList()" :columns="colsKursunterricht">
+				<svws-ui-data-table :items="kursliste" :columns="colsKursunterricht">
 					<template #body>
-						<div v-for="kurs in stundenplanManager().kursGetMengeAsList()" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
+						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
 							:draggable="isDraggable()" @dragstart="onDrag(kurs)" @dragend="onDrag(undefined)">
 							<div role="cell" class="select-none data-table__td">
 								{{ kurs.bezeichnung }}
@@ -56,6 +56,11 @@
 	const props = defineProps<StundenplanKlasseProps>();
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
+
+	const kursliste = computed(()=>{
+		const list = props.stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.value.id);
+		return list;
+	})
 
 	const klasse: WritableComputedRef<StundenplanKlasse> = computed({
 		get: () : StundenplanKlasse => {
