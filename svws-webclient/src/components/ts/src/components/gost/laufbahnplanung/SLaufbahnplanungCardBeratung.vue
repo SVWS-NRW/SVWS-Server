@@ -29,6 +29,8 @@
 		id?: number;
 	}>();
 
+	const beratungslehrerID = ref<number | null>(null);
+
 	watch(() => props.gostLaufbahnBeratungsdaten, (func: () => GostLaufbahnplanungBeratungsdaten) => {
 		const tmpBeratungslehrer = getBeratungslehrer();
 		beratungslehrerID.value = tmpBeratungslehrer === undefined ? null : tmpBeratungslehrer.id;
@@ -37,8 +39,6 @@
 	const inputLehrer: Ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null> = ref(null);
 	const inputBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
 	const inputKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
-
-	const beratungslehrerID = ref<number | null>(null);
 
 	function getBeratungslehrer() : LehrerListeEintrag | undefined {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
