@@ -1,10 +1,10 @@
 #!/bin/bash
 
-NEW_VERSION=v0.0.3
+NEW_VERSION=v0.0.4
 
 git status
 
-git switch dev
+git switch 1115-git-push-back
 git pull
 
 git config --global user.name "${GITLAB_USER_NAME}"
