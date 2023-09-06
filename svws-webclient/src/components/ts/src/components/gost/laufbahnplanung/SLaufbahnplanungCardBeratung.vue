@@ -19,7 +19,7 @@
 	import type { LehrerListeEintrag } from "@core";
 	import { GostLaufbahnplanungBeratungsdaten } from "@core";
 	import { type SvwsUiMultiSelect, type SvwsUiTextInput, type SvwsUiTextareaInput } from "@svws-nrw/svws-ui";
-	import { ref, type Ref } from "vue";
+	import { ref, type Ref, watch } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 
 	const props = defineProps<{
@@ -28,6 +28,11 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		id?: number;
 	}>();
+
+	watch(() => props.gostLaufbahnBeratungsdaten, (func: () => GostLaufbahnplanungBeratungsdaten) => {
+		const tmpBeratungslehrer = getBeratungslehrer();
+		beratungslehrerID.value = tmpBeratungslehrer === undefined ? null : tmpBeratungslehrer.id;
+	}, { immediate: true });
 
 	const inputLehrer: Ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null> = ref(null);
 	const inputBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
@@ -43,13 +48,11 @@
 	}
 
 	async function speichern() {
-		if (beratungslehrerID.value !== null) {
-			const result = new GostLaufbahnplanungBeratungsdaten();
-			result.beratungslehrerID = beratungslehrerID.value;
-			result.beratungsdatum = inputBeratungsdatum.value === null ? null : String(inputBeratungsdatum.value.content);
-			result.kommentar = inputKommentar.value === null ? null : String(inputKommentar.value.content);
-			await props.patchBeratungsdaten(result);
-		}
+		const result = new GostLaufbahnplanungBeratungsdaten();
+		result.beratungslehrerID = beratungslehrerID.value;
+		result.beratungsdatum = ((inputBeratungsdatum.value === null) || (inputBeratungsdatum.value.content === null)) ? null : String(inputBeratungsdatum.value.content);
+		result.kommentar = ((inputKommentar.value === null) || (inputKommentar.value.content === null)) ? null : String(inputKommentar.value.content);
+		await props.patchBeratungsdaten(result);
 	}
 
 	const filter = (items: LehrerListeEintrag[], search: string) => {
