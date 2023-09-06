@@ -385,12 +385,12 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	erzeugeKlausurraum = async (raum: GostKlausurraum): Promise<GostKlausurraum> => {
+	createKlausurraum = async (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => {
 		api.status.start();
 		const neuerRaum = await api.server.createGostKlausurenRaum(raum, api.schema);
+		manager.raumAdd(neuerRaum);
 		this.commit();
 		api.status.stop();
-		return neuerRaum;
 	}
 
 	loescheKlausurraum = async (id: number, manager: GostKlausurraumManager): Promise<boolean> => {

@@ -49,7 +49,7 @@
 				:kursmanager="kursmanager"
 				:raummanager="() => raummanager as GostKlausurraumManager"
 				:stundenplanmanager="stundenplanmanager"
-				:erzeuge-klausurraum="erzeugeKlausurraum"
+				:create-klausurraum="createKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
 				:patch-klausurraum="patchKlausurraum"
 				:patch-klausur="patchKlausur"

@@ -19,7 +19,7 @@
 
 	<svws-ui-content-card class="f-full" title="Klausurräume">
 		<template #actions>
-			<svws-ui-button size="small" type="secondary" @click="erzeugeNeuenRaum()">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
+			<svws-ui-button size="small" type="secondary" @click="createKlausurraum({idTermin: termin.id}, raummanager())">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
 		</template>
 		<div class="flex flex-col flex-wrap gap-4 w-full">
 			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager()?.raumGetMengeAsList()"
@@ -54,7 +54,7 @@
 		kursmanager: KursManager;
 		stundenplanmanager: StundenplanManager;
 		raummanager: () => GostKlausurraumManager;
-		erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
+		createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 		loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 		patchKlausur: (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => Promise<void>;
@@ -63,12 +63,5 @@
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 
 	}>();
-
-	const erzeugeNeuenRaum = async () => {
-		let nR = new GostKlausurraum();
-		nR.idTermin = props.termin.id;
-		nR = await props.erzeugeKlausurraum(nR);
-		props.raummanager().raumAdd(nR);
-	}
 
 </script>

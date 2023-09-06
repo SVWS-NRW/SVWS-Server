@@ -23,7 +23,7 @@ export interface GostKlausurplanungRaumzeitProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	kursmanager: KursManager;
 	stundenplanmanager: StundenplanManager;
-	erzeugeKlausurraum: (raum: GostKlausurraum) => Promise<GostKlausurraum>;
+	createKlausurraum: (raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<void>;
 	loescheKlausurraum: (id: number, manager: GostKlausurraumManager) => Promise<boolean>;
 	patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager) => Promise<boolean>;
 	erzeugeKlausurraummanager: (termin: GostKlausurtermin) => Promise<GostKlausurraumManager>;
