@@ -1,1 +1,714 @@
-[{"id":1,"idPausenzeit":1,"idLehrer":28,"wochentyp":0,"bereiche":[1]},{"id":2,"idPausenzeit":1,"idLehrer":54,"wochentyp":0,"bereiche":[2]},{"id":3,"idPausenzeit":1,"idLehrer":14,"wochentyp":0,"bereiche":[3]},{"id":4,"idPausenzeit":1,"idLehrer":79,"wochentyp":0,"bereiche":[4]},{"id":5,"idPausenzeit":1,"idLehrer":7,"wochentyp":0,"bereiche":[5]},{"id":6,"idPausenzeit":1,"idLehrer":58,"wochentyp":0,"bereiche":[6]},{"id":7,"idPausenzeit":1,"idLehrer":11,"wochentyp":0,"bereiche":[2]},{"id":8,"idPausenzeit":1,"idLehrer":50,"wochentyp":0,"bereiche":[6]},{"id":9,"idPausenzeit":2,"idLehrer":44,"wochentyp":0,"bereiche":[1]},{"id":10,"idPausenzeit":2,"idLehrer":71,"wochentyp":0,"bereiche":[2]},{"id":11,"idPausenzeit":2,"idLehrer":50,"wochentyp":0,"bereiche":[3]},{"id":12,"idPausenzeit":2,"idLehrer":37,"wochentyp":0,"bereiche":[4]},{"id":13,"idPausenzeit":2,"idLehrer":32,"wochentyp":0,"bereiche":[5]},{"id":14,"idPausenzeit":2,"idLehrer":52,"wochentyp":0,"bereiche":[6]},{"id":15,"idPausenzeit":2,"idLehrer":76,"wochentyp":0,"bereiche":[2]},{"id":16,"idPausenzeit":2,"idLehrer":54,"wochentyp":0,"bereiche":[6]},{"id":17,"idPausenzeit":3,"idLehrer":38,"wochentyp":0,"bereiche":[1]},{"id":18,"idPausenzeit":3,"idLehrer":31,"wochentyp":0,"bereiche":[2]},{"id":19,"idPausenzeit":3,"idLehrer":37,"wochentyp":0,"bereiche":[3]},{"id":20,"idPausenzeit":3,"idLehrer":7,"wochentyp":0,"bereiche":[4]},{"id":21,"idPausenzeit":3,"idLehrer":8,"wochentyp":0,"bereiche":[5]},{"id":22,"idPausenzeit":3,"idLehrer":18,"wochentyp":0,"bereiche":[6]},{"id":23,"idPausenzeit":3,"idLehrer":68,"wochentyp":0,"bereiche":[2]},{"id":24,"idPausenzeit":3,"idLehrer":28,"wochentyp":0,"bereiche":[6]},{"id":25,"idPausenzeit":4,"idLehrer":21,"wochentyp":0,"bereiche":[1]},{"id":26,"idPausenzeit":4,"idLehrer":19,"wochentyp":0,"bereiche":[2]},{"id":27,"idPausenzeit":4,"idLehrer":33,"wochentyp":0,"bereiche":[3]},{"id":28,"idPausenzeit":4,"idLehrer":20,"wochentyp":0,"bereiche":[4]},{"id":29,"idPausenzeit":4,"idLehrer":85,"wochentyp":0,"bereiche":[5]},{"id":30,"idPausenzeit":4,"idLehrer":24,"wochentyp":0,"bereiche":[6]},{"id":31,"idPausenzeit":4,"idLehrer":34,"wochentyp":0,"bereiche":[2]},{"id":32,"idPausenzeit":4,"idLehrer":10,"wochentyp":0,"bereiche":[6]},{"id":33,"idPausenzeit":5,"idLehrer":37,"wochentyp":0,"bereiche":[1]},{"id":34,"idPausenzeit":5,"idLehrer":68,"wochentyp":0,"bereiche":[2]},{"id":35,"idPausenzeit":5,"idLehrer":56,"wochentyp":0,"bereiche":[3]},{"id":36,"idPausenzeit":5,"idLehrer":74,"wochentyp":0,"bereiche":[4]},{"id":37,"idPausenzeit":5,"idLehrer":31,"wochentyp":0,"bereiche":[5]},{"id":38,"idPausenzeit":5,"idLehrer":18,"wochentyp":0,"bereiche":[6]},{"id":39,"idPausenzeit":5,"idLehrer":84,"wochentyp":0,"bereiche":[2]},{"id":40,"idPausenzeit":5,"idLehrer":20,"wochentyp":0,"bereiche":[6]},{"id":41,"idPausenzeit":6,"idLehrer":22,"wochentyp":0,"bereiche":[1]},{"id":42,"idPausenzeit":6,"idLehrer":47,"wochentyp":0,"bereiche":[2]},{"id":43,"idPausenzeit":6,"idLehrer":85,"wochentyp":0,"bereiche":[3]},{"id":44,"idPausenzeit":6,"idLehrer":23,"wochentyp":0,"bereiche":[4]},{"id":45,"idPausenzeit":6,"idLehrer":33,"wochentyp":0,"bereiche":[5]},{"id":46,"idPausenzeit":6,"idLehrer":8,"wochentyp":0,"bereiche":[6]},{"id":47,"idPausenzeit":6,"idLehrer":27,"wochentyp":0,"bereiche":[2]},{"id":48,"idPausenzeit":6,"idLehrer":24,"wochentyp":0,"bereiche":[6]},{"id":49,"idPausenzeit":7,"idLehrer":38,"wochentyp":0,"bereiche":[1]},{"id":50,"idPausenzeit":7,"idLehrer":31,"wochentyp":0,"bereiche":[2]},{"id":51,"idPausenzeit":7,"idLehrer":41,"wochentyp":0,"bereiche":[3]},{"id":52,"idPausenzeit":7,"idLehrer":25,"wochentyp":0,"bereiche":[4]},{"id":53,"idPausenzeit":7,"idLehrer":2,"wochentyp":0,"bereiche":[5]},{"id":54,"idPausenzeit":7,"idLehrer":21,"wochentyp":0,"bereiche":[6]},{"id":55,"idPausenzeit":7,"idLehrer":12,"wochentyp":0,"bereiche":[2]},{"id":56,"idPausenzeit":7,"idLehrer":82,"wochentyp":0,"bereiche":[6]},{"id":57,"idPausenzeit":8,"idLehrer":30,"wochentyp":0,"bereiche":[1]},{"id":58,"idPausenzeit":8,"idLehrer":76,"wochentyp":0,"bereiche":[2]},{"id":59,"idPausenzeit":8,"idLehrer":33,"wochentyp":0,"bereiche":[3]},{"id":60,"idPausenzeit":8,"idLehrer":20,"wochentyp":0,"bereiche":[4]},{"id":61,"idPausenzeit":8,"idLehrer":1,"wochentyp":0,"bereiche":[5]},{"id":62,"idPausenzeit":8,"idLehrer":31,"wochentyp":0,"bereiche":[6]},{"id":63,"idPausenzeit":8,"idLehrer":66,"wochentyp":0,"bereiche":[2]},{"id":64,"idPausenzeit":8,"idLehrer":63,"wochentyp":0,"bereiche":[6]},{"id":65,"idPausenzeit":9,"idLehrer":30,"wochentyp":0,"bereiche":[1]},{"id":66,"idPausenzeit":9,"idLehrer":45,"wochentyp":0,"bereiche":[2]},{"id":67,"idPausenzeit":9,"idLehrer":52,"wochentyp":0,"bereiche":[3]},{"id":68,"idPausenzeit":9,"idLehrer":35,"wochentyp":0,"bereiche":[4]},{"id":69,"idPausenzeit":9,"idLehrer":22,"wochentyp":0,"bereiche":[5]},{"id":70,"idPausenzeit":9,"idLehrer":3,"wochentyp":0,"bereiche":[6]},{"id":71,"idPausenzeit":9,"idLehrer":33,"wochentyp":0,"bereiche":[2]},{"id":72,"idPausenzeit":9,"idLehrer":71,"wochentyp":0,"bereiche":[6]},{"id":73,"idPausenzeit":10,"idLehrer":83,"wochentyp":0,"bereiche":[1]},{"id":74,"idPausenzeit":10,"idLehrer":30,"wochentyp":0,"bereiche":[2]},{"id":75,"idPausenzeit":10,"idLehrer":71,"wochentyp":0,"bereiche":[3,4]},{"id":77,"idPausenzeit":10,"idLehrer":78,"wochentyp":0,"bereiche":[5]},{"id":78,"idPausenzeit":10,"idLehrer":24,"wochentyp":0,"bereiche":[6]},{"id":79,"idPausenzeit":10,"idLehrer":57,"wochentyp":0,"bereiche":[2]},{"id":80,"idPausenzeit":10,"idLehrer":42,"wochentyp":0,"bereiche":[6]}]
+[
+  {
+    "id": 1,
+    "idPausenzeit": 1,
+    "idLehrer": 28,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 2,
+    "idPausenzeit": 1,
+    "idLehrer": 54,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 3,
+    "idPausenzeit": 1,
+    "idLehrer": 14,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 4,
+    "idPausenzeit": 1,
+    "idLehrer": 79,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 5,
+    "idPausenzeit": 1,
+    "idLehrer": 7,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 6,
+    "idPausenzeit": 1,
+    "idLehrer": 58,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 7,
+    "idPausenzeit": 1,
+    "idLehrer": 11,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 8,
+    "idPausenzeit": 1,
+    "idLehrer": 50,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 9,
+    "idPausenzeit": 2,
+    "idLehrer": 44,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 10,
+    "idPausenzeit": 2,
+    "idLehrer": 71,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 11,
+    "idPausenzeit": 2,
+    "idLehrer": 50,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 12,
+    "idPausenzeit": 2,
+    "idLehrer": 37,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 13,
+    "idPausenzeit": 2,
+    "idLehrer": 32,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 14,
+    "idPausenzeit": 2,
+    "idLehrer": 52,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 15,
+    "idPausenzeit": 2,
+    "idLehrer": 76,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 16,
+    "idPausenzeit": 2,
+    "idLehrer": 54,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 17,
+    "idPausenzeit": 3,
+    "idLehrer": 38,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 18,
+    "idPausenzeit": 3,
+    "idLehrer": 31,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 19,
+    "idPausenzeit": 3,
+    "idLehrer": 37,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 20,
+    "idPausenzeit": 3,
+    "idLehrer": 7,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 21,
+    "idPausenzeit": 3,
+    "idLehrer": 8,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 22,
+    "idPausenzeit": 3,
+    "idLehrer": 18,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 23,
+    "idPausenzeit": 3,
+    "idLehrer": 68,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 24,
+    "idPausenzeit": 3,
+    "idLehrer": 28,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 25,
+    "idPausenzeit": 4,
+    "idLehrer": 21,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 26,
+    "idPausenzeit": 4,
+    "idLehrer": 19,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 27,
+    "idPausenzeit": 4,
+    "idLehrer": 33,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 28,
+    "idPausenzeit": 4,
+    "idLehrer": 20,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 29,
+    "idPausenzeit": 4,
+    "idLehrer": 85,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 30,
+    "idPausenzeit": 4,
+    "idLehrer": 24,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 31,
+    "idPausenzeit": 4,
+    "idLehrer": 34,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 32,
+    "idPausenzeit": 4,
+    "idLehrer": 10,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 33,
+    "idPausenzeit": 5,
+    "idLehrer": 37,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 34,
+    "idPausenzeit": 5,
+    "idLehrer": 68,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 35,
+    "idPausenzeit": 5,
+    "idLehrer": 56,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 36,
+    "idPausenzeit": 5,
+    "idLehrer": 74,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 37,
+    "idPausenzeit": 5,
+    "idLehrer": 31,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 38,
+    "idPausenzeit": 5,
+    "idLehrer": 18,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 39,
+    "idPausenzeit": 5,
+    "idLehrer": 84,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 40,
+    "idPausenzeit": 5,
+    "idLehrer": 20,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 41,
+    "idPausenzeit": 6,
+    "idLehrer": 22,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 42,
+    "idPausenzeit": 6,
+    "idLehrer": 47,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 43,
+    "idPausenzeit": 6,
+    "idLehrer": 85,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 44,
+    "idPausenzeit": 6,
+    "idLehrer": 23,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 45,
+    "idPausenzeit": 6,
+    "idLehrer": 33,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 46,
+    "idPausenzeit": 6,
+    "idLehrer": 8,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 47,
+    "idPausenzeit": 6,
+    "idLehrer": 27,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 48,
+    "idPausenzeit": 6,
+    "idLehrer": 24,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 49,
+    "idPausenzeit": 7,
+    "idLehrer": 38,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 50,
+    "idPausenzeit": 7,
+    "idLehrer": 31,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 51,
+    "idPausenzeit": 7,
+    "idLehrer": 41,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 52,
+    "idPausenzeit": 7,
+    "idLehrer": 25,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 53,
+    "idPausenzeit": 7,
+    "idLehrer": 2,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 54,
+    "idPausenzeit": 7,
+    "idLehrer": 21,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 55,
+    "idPausenzeit": 7,
+    "idLehrer": 12,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 56,
+    "idPausenzeit": 7,
+    "idLehrer": 82,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 57,
+    "idPausenzeit": 8,
+    "idLehrer": 30,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 58,
+    "idPausenzeit": 8,
+    "idLehrer": 76,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 59,
+    "idPausenzeit": 8,
+    "idLehrer": 33,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 60,
+    "idPausenzeit": 8,
+    "idLehrer": 20,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 61,
+    "idPausenzeit": 8,
+    "idLehrer": 1,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 62,
+    "idPausenzeit": 8,
+    "idLehrer": 31,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 63,
+    "idPausenzeit": 8,
+    "idLehrer": 66,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 64,
+    "idPausenzeit": 8,
+    "idLehrer": 63,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 65,
+    "idPausenzeit": 9,
+    "idLehrer": 30,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 66,
+    "idPausenzeit": 9,
+    "idLehrer": 45,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 67,
+    "idPausenzeit": 9,
+    "idLehrer": 52,
+    "wochentyp": 0,
+    "bereiche": [
+      3
+    ]
+  },
+  {
+    "id": 68,
+    "idPausenzeit": 9,
+    "idLehrer": 35,
+    "wochentyp": 0,
+    "bereiche": [
+      4
+    ]
+  },
+  {
+    "id": 69,
+    "idPausenzeit": 9,
+    "idLehrer": 22,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 70,
+    "idPausenzeit": 9,
+    "idLehrer": 3,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 71,
+    "idPausenzeit": 9,
+    "idLehrer": 33,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 72,
+    "idPausenzeit": 9,
+    "idLehrer": 71,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 73,
+    "idPausenzeit": 10,
+    "idLehrer": 83,
+    "wochentyp": 0,
+    "bereiche": [
+      1
+    ]
+  },
+  {
+    "id": 74,
+    "idPausenzeit": 10,
+    "idLehrer": 30,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 75,
+    "idPausenzeit": 10,
+    "idLehrer": 71,
+    "wochentyp": 0,
+    "bereiche": [
+      3,
+      4
+    ]
+  },
+  {
+    "id": 77,
+    "idPausenzeit": 10,
+    "idLehrer": 78,
+    "wochentyp": 0,
+    "bereiche": [
+      5
+    ]
+  },
+  {
+    "id": 78,
+    "idPausenzeit": 10,
+    "idLehrer": 24,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  },
+  {
+    "id": 79,
+    "idPausenzeit": 10,
+    "idLehrer": 57,
+    "wochentyp": 0,
+    "bereiche": [
+      2
+    ]
+  },
+  {
+    "id": 80,
+    "idPausenzeit": 10,
+    "idLehrer": 42,
+    "wochentyp": 0,
+    "bereiche": [
+      6
+    ]
+  }
+]
