@@ -2,8 +2,7 @@
 	<svws-ui-content-card title="Beratung" class="mt-9">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Letzte Beratung durchgeführt von" :items="mapLehrer.values()"
-				:model-value="mapLehrer.get(gostLaufbahnBeratungsdaten().beratungslehrerID || props.id || -1)"
-				@update:model-value="beratungslehrerID = $event === undefined ? null : $event.id"
+				:model-value="getBeratungslehrer()" @update:model-value="beratungslehrerID = $event === undefined ? null : $event.id"
 				:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 				:item-filter="filter" removable autocomplete ref="inputLehrer" />
 			<svws-ui-text-input :model-value="gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14)" type="date"
@@ -35,6 +34,13 @@
 	const inputKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
 
 	const beratungslehrerID = ref<number | null>(null);
+
+	function getBeratungslehrer() : LehrerListeEintrag | undefined {
+		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
+		if (id === null)
+			id = props.id === undefined ? -1 : props.id;
+		return props.mapLehrer.get(id);
+	}
 
 	async function speichern() {
 		if (beratungslehrerID.value !== null) {
