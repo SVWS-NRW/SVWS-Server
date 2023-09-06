@@ -52,7 +52,7 @@ public final class DataMigration {
 
 
 	/**
-	 * Migriert eine Access-MDB-Datenbank in das angegeben Schema der übergebenen Datenbank-
+	 * Migriert eine Access-MDB-Datenbank in das Schema der übergebenen Datenbank-
 	 * Verbindung
 	 *
 	 * @param conn            die Datenbank-Verbindung zum Ziel-Schema
@@ -119,19 +119,17 @@ public final class DataMigration {
 
 
 	/**
-	 * Migriert eine Access-MDB-Datenbank in das angegeben Schema der übergebenen Datenbank-
-	 * Verbindung
+	 * Migriert eine Datenbank aus dem angegebenen DBMS in das Schema der übergebenen Datenbank-Verbindung
 	 *
 	 * @param conn               die Datenbank-Verbindung zum Ziel-Schema
-     * @param schemaname         der Name des Ziel-Schemas, in welches migriert wird
-     * @param srcDBDriver        das DBMS der Quell-Datenbank
+     * @param srcDBDriver        das DBMS der Quell-Datenbank (nicht MDB oder SQLITE)
 	 * @param verbindungsdaten   die Verbindungsdaten für den Zugriff auf die Quell-Datenbank
      * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird oder null, falls keine Filterung bezüglich
      *                           der Schulnummer erfolgen soll
      *
 	 * @return die HTTP-Response mit dem LOG der Migration
 	 */
-    public static Response migrateDBMS(final DBEntityManager conn, final String schemaname, final DBDriver srcDBDriver, final DatenbankVerbindungsdaten verbindungsdaten, final Integer schulnummer) {
+    public static Response migrateDBMS(final DBEntityManager conn, final DBDriver srcDBDriver, final DatenbankVerbindungsdaten verbindungsdaten, final Integer schulnummer) {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -145,22 +143,21 @@ public final class DataMigration {
 
 		final DBConfig srcConfig = new DBConfig(srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false, verbindungsdaten.username,
 				verbindungsdaten.password, true, false, 0, 0);
-    	return migrateInto(conn, schemaname, srcConfig, schulnummer);
+    	return migrateInto(conn, srcConfig, schulnummer);
     }
 
 
     /**
-     * Führt eine Migration in das angegebene Ziel-Schema mit den übergebenen Migrations-Informtionen durch.
+     * Führt eine Migration in das Ziel-Schema der übergebenen Datenbank-Verbindung mit den übergebenen Migrations-Informationen durch.
      *
 	 * @param conn               die Datenbank-Verbindung zum Ziel-Schema
-     * @param schemaname         der Name des Ziel-Schemas, in welches migriert wird
      * @param srcConfig          die Konfiguration für die Quell-Datenbank
      * @param schulnummer        die Schulnummer, für die die Migration durchgeführt wird oder null, falls keine Filterung bezüglich
      *                           der Schulnummer erfolgen soll
      *
 	 * @return die HTTP-Response mit dem LOG der Migration
      */
-	private static Response migrateInto(final DBEntityManager conn, final String schemaname, final DBConfig srcConfig, final Integer schulnummer) {
+	private static Response migrateInto(final DBEntityManager conn, final DBConfig srcConfig, final Integer schulnummer) {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);

@@ -275,12 +275,12 @@ export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKo
 	public static readonly NOTENMODUL_NOTEN_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("NOTENMODUL_NOTEN_ANSEHEN_FUNKTION", 49, new BenutzerKompetenzKatalogEintrag(135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)", null));
 
 	/**
-	 * Es werden Rechte zur Administration der Datenbanken (Schema ertsellen/migrieren) benötigt. DB_Root-Rechte erforderlich.
+	 * Es werden Rechte zur Administration der Datenbank (Schema erstellen/migrieren) benötigt.
 	 */
 	public static readonly DATENBANK_SCHEMA_ERSTELLEN : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SCHEMA_ERSTELLEN", 50, new BenutzerKompetenzKatalogEintrag(141, BenutzerKompetenzGruppe.DATENBANK, "Schema erstellen und migrieren", null));
 
 	/**
-	 * Es werden Rechte zum Import von SQLite-Backups benötigt. DB_Root-Rechte erforderlich.
+	 * Es werden Rechte zum Import von SQLite-Backups benötigt.
 	 */
 	public static readonly DATENBANK_SQLITE_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("DATENBANK_SQLITE_IMPORT", 51, new BenutzerKompetenzKatalogEintrag(142, BenutzerKompetenzGruppe.DATENBANK, "SQLite importieren (Backup einspielen)", null));
 

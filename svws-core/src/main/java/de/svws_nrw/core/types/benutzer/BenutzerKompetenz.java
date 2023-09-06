@@ -263,12 +263,12 @@ public enum BenutzerKompetenz {
     	135, BenutzerKompetenzGruppe.NOTENMODUL, "Noten ansehen (funktionsbezogen)", null
     )),
 
-    /** Es werden Rechte zur Administration der Datenbanken (Schema ertsellen/migrieren) benötigt. DB_Root-Rechte erforderlich. */
+    /** Es werden Rechte zur Administration der Datenbank (Schema erstellen/migrieren) benötigt. */
     DATENBANK_SCHEMA_ERSTELLEN(new BenutzerKompetenzKatalogEintrag(
     	141, BenutzerKompetenzGruppe.DATENBANK, "Schema erstellen und migrieren", null
     )),
 
-    /** Es werden Rechte zum Import von SQLite-Backups benötigt. DB_Root-Rechte erforderlich.*/
+    /** Es werden Rechte zum Import von SQLite-Backups benötigt. */
     DATENBANK_SQLITE_IMPORT(new BenutzerKompetenzKatalogEintrag(
     	142, BenutzerKompetenzGruppe.DATENBANK, "SQLite importieren (Backup einspielen)", null
     )),

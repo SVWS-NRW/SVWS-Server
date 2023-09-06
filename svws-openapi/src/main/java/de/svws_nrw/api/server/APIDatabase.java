@@ -62,7 +62,7 @@ public class APIDatabase {
     			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_EXPORT)) {
     		return DataSQLite.exportSQLite(conn, schemaname);
     	}
     }
@@ -94,7 +94,7 @@ public class APIDatabase {
     		@RequestBody(description = "Die SQLite-Datenbank-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDataOnly multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_IMPORT)) {
     		return DataSQLite.importSQLite(conn, multipart.database);
     	}
     }
@@ -125,7 +125,7 @@ public class APIDatabase {
     		@RequestBody(description = "Die MDB-Datei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyDefaultSchema multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
     		return DataMigration.migrateMDB(conn, multipart.database, multipart.databasePassword);
     	}
     }
@@ -155,14 +155,14 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MARIA_DB, verbindungsdaten, null);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, null);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in ein Schema mit angegebenen Namen,
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MariaDB in das angebenene Schema,
      * wobei nur Daten für die angegebene Schulnummer übertragen werden.
      * Die existierenden Daten in diesem Schema werden dabei entfernt.
      *
@@ -188,14 +188,14 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MARIA_DB, verbindungsdaten, schulnummer);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MARIA_DB, verbindungsdaten, schulnummer);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in ein Schema mit angegebenen Namen.
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angebenene Schema.
      * Die existierenden Daten in diesem Schema werden dabei entfernt.
      *
      * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
@@ -218,14 +218,14 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MYSQL, verbindungsdaten, null);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, null);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in ein Schema mit angegebenen Namen,
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden MySQL-Datenbank in das angebene Schema,
      * wobei nur Daten für die angegebene Schulnummer übertragen werden.
      * Die existierenden Daten in diesem Schema werden dabei entfernt.
      *
@@ -251,14 +251,14 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MYSQL, verbindungsdaten, schulnummer);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MYSQL, verbindungsdaten, schulnummer);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für das Migrieren einer bestehenden SQL-Server-Datenbank in ein Schema mit angegebenen Namen.
+     * Die OpenAPI-Methode für das Migrieren einer bestehenden SQL-Server-Datenbank in das angegebene Schema.
      * Die existierenden Daten in diesem Schema werden dabei entfernt.
      *
      * @param schemaname         Name des Schemas, auf welches die Abfrage ausgeführt wird und in das hinein migriert werden soll
@@ -281,8 +281,8 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MSSQL, verbindungsdaten, null);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, null);
     	}
     }
 
@@ -314,8 +314,8 @@ public class APIDatabase {
     		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
         			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = DatenbankVerbindungsdaten.class))) final DatenbankVerbindungsdaten verbindungsdaten,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN)) {
-    		return DataMigration.migrateDBMS(conn, schemaname, DBDriver.MSSQL, verbindungsdaten, schulnummer);
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SCHEMA_ERSTELLEN)) {
+    		return DataMigration.migrateDBMS(conn, DBDriver.MSSQL, verbindungsdaten, schulnummer);
     	}
     }
 
