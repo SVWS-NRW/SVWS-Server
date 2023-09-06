@@ -67,7 +67,7 @@
 <script setup lang="ts">
 
 	import type { InputType } from "../types";
-	import { useSlots, ref, computed, watch } from "vue";
+	import { useSlots, ref, computed, watch, type ComputedRef, type Ref } from "vue";
 	import { genId } from "../utils";
 
 	type InputDataType = string | number | null;
@@ -77,9 +77,6 @@
 	});
 
 	const input = ref<null | HTMLInputElement>(null);
-	defineExpose({
-		input
-	});
 
 	const props = withDefaults(defineProps<{
 		type?: InputType;
@@ -192,6 +189,16 @@
 	}
 
 	const labelId = genId();
+
+	const content = computed<InputDataType>(() => data.value);
+
+	defineExpose<{
+		content: ComputedRef<InputDataType>,
+		input: Ref<HTMLInputElement | null>,
+	}>({
+		content,
+		input
+	});
 
 </script>
 

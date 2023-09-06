@@ -275,6 +275,21 @@
 
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
+
+
+	// const content = computed<Item | null>(() => {
+	// 	if (selectedItem.value === undefined)
+	// 		return null;
+	// 	return selectedItem.value;
+	// });
+
+	// defineExpose<{
+	// 	content: ComputedRef<Item | null>,
+	// }>({
+	// 	content
+	// });
+
+
 </script>
 
 <template>
