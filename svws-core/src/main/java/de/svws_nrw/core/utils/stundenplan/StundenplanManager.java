@@ -3914,6 +3914,33 @@ public class StundenplanManager {
 		return _unterrichtHatMultiWochen;
 	}
 
+	/**
+	 * Aktualisiert das vorhandene {@link StundenplanUnterricht}-Objekt durch das neue Objekt.
+	 * <br>Die folgenden Attribute werden nicht aktualisiert:
+	 * <br>{@link StundenplanUnterricht#id}
+	 * <br>
+	 * <br>Die folgenden Attribute werden kopiert:
+	 * <br>{@link StundenplanUnterricht#idZeitraster}
+	 * <br>{@link StundenplanUnterricht#wochentyp}
+	 * <br>{@link StundenplanUnterricht#idKurs}
+	 * <br>{@link StundenplanUnterricht#idFach}
+	 * <br>{@link StundenplanUnterricht#lehrer}
+	 * <br>{@link StundenplanUnterricht#klassen}
+	 * <br>{@link StundenplanUnterricht#raeume}
+	 * <br>{@link StundenplanUnterricht#schienen}
+	 *
+	 * @param u  Das neue {@link StundenplanUnterricht}-Objekt, dessen Attribute kopiert werden.
+	 */
+	public void unterrichtPatchAttributes(final @NotNull StundenplanUnterricht u) {
+		unterrichtCheck(u);
+
+		// Altes Objekt durch neues Objekt ersetzen
+		DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, u.id);
+		DeveloperNotificationException.ifMapPutOverwrites(_unterricht_by_id, u.id, u);
+
+		update_all();
+	}
+
 	private void unterrichtRemoveByIdOhneUpdate(final long idUnterricht) {
 		DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, idUnterricht);
 	}
