@@ -25,6 +25,9 @@ export class RouteStundenplanKlasse extends RouteNode<unknown, RouteStundenplan>
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
+			patchUnterricht: routeStundenplan.data.patchUnterricht,
+			addUnterrichtKlasse: routeStundenplan.data.addUnterrichtKlasse,
+			removeUnterrichtKlasse: routeStundenplan.data.removeUnterrichtKlasse,
 		};
 	}
 

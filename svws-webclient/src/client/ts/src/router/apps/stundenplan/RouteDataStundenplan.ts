@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag} from "@core";
+import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, StundenplanKlassenunterricht} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
@@ -153,6 +153,16 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
+	patchUnterricht = async (data: StundenplanUnterricht, zeitraster: StundenplanZeitraster) => {
+		if (data.idZeitraster === zeitraster.id)
+			return;
+		const unterricht = { idZeitraster: zeitraster.id };
+		await api.server.patchStundenplanUnterricht(unterricht, api.schema, data.id);
+		//TODO manager
+		//this.stundenplanManager
+		this.commit();
+	}
+
 	addRaum = async (raum: Partial<StundenplanRaum>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
@@ -233,6 +243,14 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
+	addUnterrichtKlasse = async (data: StundenplanKlassenunterricht, zeitraster: StundenplanZeitraster) => {
+		//TODO api und manager
+		//await api.server.patchStundenplanUnterricht(data, api.schema, data.id);
+		//const unterricht //= await api.server.
+		//this.stundenplanManager.unterrichtAdd(unterricht)
+	}
+
+
 	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
 		for (const raum of raeume) {
 			await api.server.deleteStundenplanRaum(api.schema, raum.id);
@@ -263,6 +281,18 @@ export class RouteDataStundenplan {
 			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);
 		}
 		this.commit();
+	}
+
+	removeUnterrichtKlasse = async (unterrichte: Iterable<StundenplanUnterricht>) => {
+		const list = new ArrayList<StundenplanUnterricht>()
+		for (const unterricht of unterrichte) {
+			//TODO ergänze ff
+			// await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
+			list.add(unterricht);
+		}
+		this.stundenplanManager.unterrichtRemoveAll(list);
+		this.commit();
+
 	}
 
 	importRaeume = async (raeume: StundenplanRaum[]) => {}
