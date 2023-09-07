@@ -6,11 +6,12 @@
 		<template v-else>
 			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined)" class="flex flex-col gap-y-8 justify-start mb-auto">
 				<svws-ui-input-wrapper>
-					<svws-ui-multi-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" />
+					<svws-ui-multi-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" autocomplete
+						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="()=>0" />
 					<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
 						class="print:hidden"
 						:disabled="wochentypen().size() <= 0"
-						:item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
+						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 				</svws-ui-input-wrapper>
 				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>

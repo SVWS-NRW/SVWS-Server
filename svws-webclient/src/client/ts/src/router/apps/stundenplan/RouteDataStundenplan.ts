@@ -156,10 +156,10 @@ export class RouteDataStundenplan {
 	patchUnterricht = async (data: StundenplanUnterricht, zeitraster: StundenplanZeitraster) => {
 		if (data.idZeitraster === zeitraster.id)
 			return;
-		const unterricht = { idZeitraster: zeitraster.id };
-		await api.server.patchStundenplanUnterricht(unterricht, api.schema, data.id);
-		//TODO manager
-		//this.stundenplanManager
+		data.idZeitraster = zeitraster.id;
+		//TODO api
+		//await api.server.patchStundenplanUnterricht(data, api.schema, data.id);
+		this.stundenplanManager.unterrichtPatchAttributes(data);
 		this.commit();
 	}
 
