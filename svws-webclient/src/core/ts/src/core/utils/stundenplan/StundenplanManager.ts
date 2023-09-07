@@ -985,7 +985,7 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idLehrer_and_idZeitraster() : void {
-		this._unterrichtmenge_by_idLehrer.clear();
+		this._unterrichtmenge_by_idLehrer_and_idZeitraster.clear();
 		for (const u of this._unterrichtmenge)
 			for (const idLehrer of u.lehrer)
 				Map2DUtils.addToList(this._unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, u.idZeitraster, u);
@@ -2958,6 +2958,16 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
 		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
 		DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", this._jahrgang_by_id, schiene.idJahrgang);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte.
+	 */
+	public schieneGetMengeAsList() : List<StundenplanSchiene> {
+		return this._schienenmenge;
 	}
 
 	/**

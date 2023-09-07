@@ -244,6 +244,18 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		return map2.size();
 	}
 
+	/**
+	 * Liefert die Anzahl an gespeicherten Mappings.
+	 *
+	 * @return die Anzahl an gespeicherten Mappings.
+	 */
+	public size() : number {
+		let size : number = 0;
+		for (const map2 of this._map.values())
+			size += map2.size();
+		return size;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}

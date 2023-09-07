@@ -930,7 +930,7 @@ public class StundenplanManager {
 	}
 
 	private void update_unterrichtmenge_by_idLehrer_and_idZeitraster() {
-		_unterrichtmenge_by_idLehrer.clear();
+		_unterrichtmenge_by_idLehrer_and_idZeitraster.clear();
 		for (final @NotNull StundenplanUnterricht u : _unterrichtmenge)
 			for (final @NotNull Long idLehrer : u.lehrer)
 				Map2DUtils.addToList(_unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, u.idZeitraster, u);
@@ -3104,6 +3104,16 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
 		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
 		DeveloperNotificationException.ifMapNotContains("_jahrgang_by_id", _jahrgang_by_id, schiene.idJahrgang);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchiene}-Objekte.
+	 */
+	public @NotNull List<@NotNull StundenplanSchiene> schieneGetMengeAsList() {
+		return _schienenmenge;
 	}
 
 	/**

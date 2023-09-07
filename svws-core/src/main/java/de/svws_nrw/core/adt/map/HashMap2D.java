@@ -258,4 +258,18 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		return map2.size();
 	}
 
+	/**
+	 * Liefert die Anzahl an gespeicherten Mappings.
+	 *
+	 * @return die Anzahl an gespeicherten Mappings.
+	 */
+	public int size() {
+		int size = 0;
+
+		for (final @NotNull Map<@NotNull K2, V> map2 : _map.values())
+			size += map2.size();
+
+		return size;
+	}
+
 }
