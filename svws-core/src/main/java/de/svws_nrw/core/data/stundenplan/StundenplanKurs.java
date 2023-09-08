@@ -29,6 +29,10 @@ public class StundenplanKurs {
 	@Schema(description = "die Wochenstunden, welche dem Kurs zugeordnet sind.", example = "3")
 	public int wochenstunden = 0;
 
+	/** Eine Nummer, welche die Sortierreihenfolge bei den Kursen angibt. */
+	@Schema(description = "Eine Nummer, welche die Sortierreihenfolge bei den Kursen angibt", example = "32000")
+	public int sortierung = 32000;
+
 	/** Die Liste der IDs der {@link StundenplanSchiene}-Objekte, denen der Kurs zugeordnet ist. */
 	@Schema(description = "die Liste der IDs der Schienen, denen der Kurs zugeordnet ist")
 	public @NotNull List<@NotNull Long> schienen = new ArrayList<>();

@@ -19,6 +19,11 @@ export class StundenplanFach extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
+	 * Eine Nummer, welche die Sortierreihenfolge bei den Fächern angibt.
+	 */
+	public sortierung : number = 32000;
+
+	/**
 	 * Die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll.
 	 */
 	public farbe : RGBFarbe | null = null;
@@ -44,6 +49,9 @@ export class StundenplanFach extends JavaObject {
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (typeof obj.sortierung === "undefined")
+			 throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
 		result.farbe = ((typeof obj.farbe === "undefined") || (obj.farbe === null)) ? null : RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
 		return result;
 	}
@@ -53,6 +61,7 @@ export class StundenplanFach extends JavaObject {
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -69,6 +78,9 @@ export class StundenplanFach extends JavaObject {
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		}
+		if (typeof obj.sortierung !== "undefined") {
+			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
 		if (typeof obj.farbe !== "undefined") {
 			result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';

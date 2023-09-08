@@ -27,6 +27,10 @@ public class StundenplanFach {
 	@Schema(description = "Die Bezeichnung des Faches", example = "Deutsch")
 	public @NotNull String bezeichnung = "";
 
+	/** Eine Nummer, welche die Sortierreihenfolge bei den Fächern angibt. */
+	@Schema(description = "Eine Nummer, welche die Sortierreihenfolge bei den Fächern angibt", example = "32000")
+	public int sortierung = 32000;
+
 	/** Die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll. */
 	@Schema(description = "die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll")
 	public RGBFarbe farbe = null;

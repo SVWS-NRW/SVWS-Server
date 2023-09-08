@@ -4,12 +4,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
@@ -44,11 +45,12 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link StundenplanKurs}.
 	 */
-	private static final Function<DTOKurs, StundenplanKurs> dtoMapper = (final DTOKurs k) -> {
+	private static final BiFunction<DTOKurs, DTOFach, StundenplanKurs> dtoMapper = (final DTOKurs k, final DTOFach f) -> {
 		final StundenplanKurs daten = new StundenplanKurs();
 		daten.id = k.ID;
 		daten.bezeichnung = k.KurzBez;
 		daten.wochenstunden = k.WochenStd;
+		daten.sortierung = (k.Sortierung == null) ? ((f.SortierungAllg == null) ? ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII) : f.SortierungAllg) : k.Sortierung;
 		return daten;
 	};
 
@@ -75,16 +77,23 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
-		// Lehrer bestimmten
+		// Lehrer bestimmen
 		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryNamed("DTOKursLehrer.kurs_id.multiple", kursIDs, DTOKursLehrer.class)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Lehrer_ID, Collectors.toList())));
+		// Fächer bestimmen
+		final List<Long> faecherIDs = kurse.stream().map(k -> k.Fach_ID).toList();
+		final Map<Long, DTOFach> mapFaecher = conn.queryNamed("DTOFach.id.multiple", faecherIDs, DTOFach.class).stream()
+				.collect(Collectors.toMap(f -> f.ID, f -> f));
 		// Map für Schienen-IDs bestimmen
 		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryNamed("DTOStundenplanSchienen.stundenplan_id", idStundenplan, DTOStundenplanSchienen.class)
 				.stream().collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
 		// Erstelle die Core-DTOs
 		final ArrayList<StundenplanKurs> daten = new ArrayList<>();
 		for (final DTOKurs k : kurse) {
-			final StundenplanKurs kurs = dtoMapper.apply(k);
+			final DTOFach f = mapFaecher.get(k.Fach_ID);
+			if (f == null)
+				throw OperationError.NOT_FOUND.exception("Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(k.Fach_ID, k.ID));
+			final StundenplanKurs kurs = dtoMapper.apply(k, f);
 			if (k.Jahrgang_ID == null) {
 				kurs.jahrgaenge.addAll(strLongToList(k.Jahrgaenge));
 			} else {
@@ -164,8 +173,12 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		// Schüler bestimmen
 		final List<Long> schuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kurs.ID)
 				.stream().map(ks -> ks.Schueler_ID).toList();
+		// Fachdefinition laden
+		final DTOFach fach = conn.queryByKey(DTOFach.class, kurs.Fach_ID);
+		if (fach == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(kurs.Fach_ID, kurs.ID));
 		// DTO erstellen
-		final StundenplanKurs daten = dtoMapper.apply(kurs);
+		final StundenplanKurs daten = dtoMapper.apply(kurs, fach);
 		daten.jahrgaenge.addAll(jahrgangsIDs);
 		if (kurs.Schienen != null) {
 			for (final Long schienenNummer : strLongToList(kurs.Schienen)) {

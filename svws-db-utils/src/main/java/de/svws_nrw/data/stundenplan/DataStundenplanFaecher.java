@@ -47,6 +47,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		daten.id = f.ID;
 		daten.kuerzel = f.Kuerzel;
 		daten.bezeichnung = f.Bezeichnung;
+		daten.sortierung = (f.SortierungAllg == null) ? ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII) : f.SortierungAllg;
 		return daten;
 	};
 
