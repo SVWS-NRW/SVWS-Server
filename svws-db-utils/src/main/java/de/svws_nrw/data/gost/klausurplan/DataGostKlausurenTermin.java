@@ -46,18 +46,18 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenTermine>> patchMappings =
 		Map.ofEntries(
-			Map.entry("id", (dto, value, map) -> {
+			Map.entry("id", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, false);
 				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 					throw OperationError.BAD_REQUEST.exception();
 			}),
-			Map.entry("abijahr", (dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
-			Map.entry("halbjahr", (dto, value, map) -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
-			Map.entry("quartal", (dto, value, map) -> dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
-			Map.entry("bemerkung", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
-			Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
-			Map.entry("datum", (dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
-			Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+			Map.entry("abijahr", (conn, dto, value, map) -> dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false)),
+			Map.entry("halbjahr", (conn, dto, value, map) -> dto.Halbjahr = DataGostKlausurenVorgabe.checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+			Map.entry("quartal", (conn, dto, value, map) -> dto.Quartal = DataGostKlausurenVorgabe.checkQuartal(JSONMapper.convertToInteger(value, false))),
+			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bemerkungen.datenlaenge())),
+			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Termine.col_Bezeichnung.datenlaenge())),
+			Map.entry("datum", (conn, dto, value, map) -> dto.Datum = JSONMapper.convertToString(value, true, false, null)),
+			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 		);
 
 	@Override

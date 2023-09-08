@@ -89,15 +89,15 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOKatalogPausenzeit>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value, map) -> {
+		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("wochentag", (dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
-		Map.entry("beginn", (dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-		Map.entry("ende", (dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-		Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 40))
+		Map.entry("wochentag", (conn, dto, value, map) -> dto.Tag = JSONMapper.convertToIntegerInRange(value, false, 1, 8)),
+		Map.entry("beginn", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+		Map.entry("ende", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 40))
 	);
 
 	@Override

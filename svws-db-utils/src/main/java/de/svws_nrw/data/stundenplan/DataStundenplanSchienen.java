@@ -121,14 +121,14 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanSchienen>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value, map) -> {
+		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("idJahrgang", (dto, value, map) -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false)),
-		Map.entry("nummer", (dto, value, map) -> dto.Nummer = JSONMapper.convertToInteger(value, false)),
-		Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 100))
+		Map.entry("idJahrgang", (conn, dto, value, map) -> dto.Jahrgang_ID = JSONMapper.convertToLong(value, false)),
+		Map.entry("nummer", (conn, dto, value, map) -> dto.Nummer = JSONMapper.convertToInteger(value, false)),
+		Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, false, 100))
 	);
 
 

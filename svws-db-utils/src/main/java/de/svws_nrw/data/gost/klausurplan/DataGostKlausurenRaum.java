@@ -60,17 +60,17 @@ public final class DataGostKlausurenRaum extends DataManager<Long> {
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenRaeume>> patchMappings =
 		Map.ofEntries(
-			Map.entry("idTermin", (dto, value, map) -> {
+			Map.entry("idTermin", (conn, dto, value, map) -> {
 				dto.Termin_ID = JSONMapper.convertToLong(value, false);
 				if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
 					throw OperationError.NOT_FOUND.exception("Klausurtermin mit ID %d existiert nicht.".formatted(dto.Termin_ID));
 			}),
-			Map.entry("idStundenplanRaum", (dto, value, map) -> {
+			Map.entry("idStundenplanRaum", (conn, dto, value, map) -> {
 				dto.Stundenplan_Raum_ID = JSONMapper.convertToLong(value, true);
 				if (conn.queryByKey(DTOStundenplanRaum.class, dto.Stundenplan_Raum_ID) == null)
 					throw OperationError.BAD_REQUEST.exception("Stundenplanraum nicht gefunden, ID: " + dto.Stundenplan_Raum_ID);
 			}),
-			Map.entry("bemerkung", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge()))
+			Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Raeume.col_Bemerkungen.datenlaenge()))
 		);
 
 	/**

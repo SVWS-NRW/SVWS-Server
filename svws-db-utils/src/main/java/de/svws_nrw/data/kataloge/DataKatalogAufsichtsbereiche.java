@@ -87,13 +87,13 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOKatalogAufsichtsbereich>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value, map) -> {
+		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("kuerzel", (dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
-		Map.entry("beschreibung", (dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
+		Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
+		Map.entry("beschreibung", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, true, 1000))
 	);
 
 	@Override

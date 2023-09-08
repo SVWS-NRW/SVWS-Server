@@ -235,30 +235,30 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenVorgaben>> patchMappings =
 		Map.ofEntries(
-			Map.entry("idVorgabe", (dto, value, map) -> {
+			Map.entry("idVorgabe", (conn, dto, value, map) -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
 				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 					throw OperationError.BAD_REQUEST.exception();
 			}),
-			Map.entry("abiJahrgang", (dto, value, map) -> {
+			Map.entry("abiJahrgang", (conn, dto, value, map) -> {
 				dto.Abi_Jahrgang = JSONMapper.convertToInteger(value, false);
 				if (conn.queryByKey(DTOGostJahrgangsdaten.class, dto.Abi_Jahrgang) == null)
 					throw OperationError.BAD_REQUEST.exception("Jahrgang nicht gefunden, ID: " + dto.Abi_Jahrgang);
 			}),
-			Map.entry("halbjahr", (dto, value, map) -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false))),
-			Map.entry("quartal", (dto, value, map) -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false))),
-			Map.entry("idFach", (dto, value, map) -> {
+			Map.entry("halbjahr", (conn, dto, value, map) -> dto.Halbjahr = checkHalbjahr(JSONMapper.convertToInteger(value, false))),
+			Map.entry("quartal", (conn, dto, value, map) -> dto.Quartal = checkQuartal(JSONMapper.convertToInteger(value, false))),
+			Map.entry("idFach", (conn, dto, value, map) -> {
 				dto.Fach_ID = JSONMapper.convertToLong(value, false);
 				if (conn.queryByKey(DTOFach.class, dto.Fach_ID) == null)
 					throw OperationError.BAD_REQUEST.exception("Fach nicht gefunden, ID: " + dto.Fach_ID);
 			}),
-			Map.entry("kursart", (dto, value, map) -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null))),
-			Map.entry("dauer", (dto, value, map) -> dto.Dauer = JSONMapper.convertToInteger(value, false)),
-			Map.entry("auswahlzeit", (dto, value, map) -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false)),
-			Map.entry("istMdlPruefung", (dto, value, map) -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istAudioNotwendig", (dto, value, map) -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istVideoNotwendig", (dto, value, map) -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("bemerkungVorgabe", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge()))
+			Map.entry("kursart", (conn, dto, value, map) -> dto.Kursart = checkKursart(JSONMapper.convertToString(value, false, false, null))),
+			Map.entry("dauer", (conn, dto, value, map) -> dto.Dauer = JSONMapper.convertToInteger(value, false)),
+			Map.entry("auswahlzeit", (conn, dto, value, map) -> dto.Auswahlzeit = JSONMapper.convertToInteger(value, false)),
+			Map.entry("istMdlPruefung", (conn, dto, value, map) -> dto.IstMdlPruefung = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istAudioNotwendig", (conn, dto, value, map) -> dto.IstAudioNotwendig = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("istVideoNotwendig", (conn, dto, value, map) -> dto.IstVideoNotwendig = JSONMapper.convertToBoolean(value, false)),
+			Map.entry("bemerkungVorgabe", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, true, Schema.tab_Gost_Klausuren_Vorgaben.col_Bemerkungen.datenlaenge()))
 		);
 
 

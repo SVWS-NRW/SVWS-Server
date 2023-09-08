@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
@@ -11,6 +14,8 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
@@ -111,14 +116,13 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
-	@Override
-	public Response get(final Long id) {
+
+	private StundenplanUnterricht getUnterricht(final Long id) {
 		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Eine Anfrage zu einem Unterricht mit der ID null ist unzulässig.");
+			throw OperationError.BAD_REQUEST.exception("Eine Anfrage zu einem Unterricht mit der ID null ist unzulässig.");
 		final DTOStundenplanUnterricht dtoUnterricht = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 		if (dtoUnterricht == null)
-			return OperationError.NOT_FOUND.getResponse("Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
-
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Unterricht mit der ID %d gefunden.".formatted(id));
 		final List<Long> raeume = conn.queryNamed("DTOStundenplanUnterrichtRaum.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtRaum.class)
 				.stream().map(b -> b.Raum_ID).toList();
 		final List<Long> schienen = conn.queryNamed("DTOStundenplanUnterrichtSchiene.unterricht_id", dtoUnterricht.ID, DTOStundenplanUnterrichtSchiene.class)
@@ -137,26 +141,79 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		daten.schienen.addAll(schienen);
 		daten.klassen.addAll(klassen);
 		daten.lehrer.addAll(lehrer);
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+		final StundenplanUnterricht daten = getUnterricht(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanUnterricht>> patchMappings = Map.ofEntries(
-			Map.entry("id", (dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw OperationError.BAD_REQUEST.exception();
-			}),
-			Map.entry("idZeitraster", (dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }), // TODO Implementierung und Validierung des Unterrichts (existiert er für den Stundenplan?)
-			Map.entry("wochentyp", (dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)),
-			Map.entry("idKurs", (dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }),  // TODO Implementierung und Validierung des Kurses (existiert er?)
-			Map.entry("idFach", (dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); })  // TODO Implementierung und Validierung des Faches (existiert es?)
-		);
+		Map.entry("id", (conn, dto, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				throw OperationError.BAD_REQUEST.exception();
+		}),
+		Map.entry("idZeitraster", (conn, dto, value, map) -> {
+			final DTOStundenplanZeitraster zeitraster = conn.queryByKey(DTOStundenplanZeitraster.class, value);
+			if (zeitraster == null)
+				throw OperationError.NOT_FOUND.exception("Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
+			dto.Zeitraster_ID = zeitraster.ID;
+		}),
+		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)),
+		Map.entry("idKurs", (conn, dto, value, map) -> {
+			final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
+			if (kurs == null)
+				throw OperationError.NOT_FOUND.exception("Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
+			dto.Kurs_ID = kurs.ID;
+		}),
+		Map.entry("idFach", (conn, dto, value, map) -> {
+			final DTOFach fach = conn.queryByKey(DTOFach.class, value);
+			if (fach == null)
+				throw OperationError.NOT_FOUND.exception("Fach mit der ID %d nicht gefunden.".formatted((Long) value));
+			dto.Fach_ID = fach.ID;
+		})
+	);
 
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		return super.patchBasic(id, is, DTOStundenplanUnterricht.class, patchMappings);
+	}
+
+
+	private static final Set<String> requiredCreateAttributes = Set.of("idZeitraster", "wochentyp", "idKurs", "idFach");
+
+
+	private final Function<DTOStundenplanUnterricht, StundenplanUnterricht> dtoMapper = (final DTOStundenplanUnterricht u) -> getUnterricht(u.ID);
+
+	/**
+	 * Fügt einen Unterricht mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige Core-DTO
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response add(final InputStream is) {
+		// Füge den Unterricht in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
+		final ObjLongConsumer<DTOStundenplanUnterricht> initDTO = (dto, id) -> dto.ID = id;
+		return super.addBasic(is, DTOStundenplanUnterricht.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Löscht einen Unterricht
+	 *
+	 * @param id   die ID des Unterrichts
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response delete(final Long id) {
+		return super.deleteBasic(id, DTOStundenplanUnterricht.class, dtoMapper);
 	}
 
 }

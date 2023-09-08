@@ -110,6 +110,7 @@ public abstract class DataManager<ID> {
 	 *
 	 * @param <DTO>           Der Typ des Datenbank-DTOs
 	 *
+	 * @param conn            die Datenbankverbindung
 	 * @param dto             das Datenbank-DTO
 	 * @param map             eine Map mit den Attributen und den Attributwerten des
 	 *                        Core-DTOs
@@ -117,7 +118,7 @@ public abstract class DataManager<ID> {
 	 *                        Core-DTO-Attributen auf Datenbank-DTO-Attributen
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 */
-	private static <DTO> void applyPatchMappings(final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+	private static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
@@ -126,7 +127,7 @@ public abstract class DataManager<ID> {
 			final DataBasicMapper<DTO> mapper = attributeMapper.get(key);
 			if (mapper == null)
 				throw OperationError.BAD_REQUEST.exception();
-			mapper.map(dto, value, map);
+			mapper.map(conn, dto, value, map);
 		}
 	}
 
@@ -153,8 +154,9 @@ public abstract class DataManager<ID> {
 		final DTO dto = conn.queryByKey(dtoClass, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		applyPatchMappings(dto, map, attributeMapper, attributesForbidden);
+		applyPatchMappings(conn, dto, map, attributeMapper, attributesForbidden);
 		conn.transactionPersist(dto);
+		conn.transactionFlush();
 		return Response.status(Status.OK).build();
 	}
 
@@ -209,10 +211,11 @@ public abstract class DataManager<ID> {
 			constructor.setAccessible(true);
 			final DTO dto = constructor.newInstance();
 			initDTO.accept(dto, newID);
-			applyPatchMappings(dto, map, attributeMapper, null);
+			applyPatchMappings(conn, dto, map, attributeMapper, null);
 			// Persistiere das DTO in der Datenbank
 			if (!conn.transactionPersist(dto))
 				throw OperationError.INTERNAL_SERVER_ERROR.exception();
+			conn.transactionFlush();
 			final CoreData daten = dtoMapper.apply(dto);
 			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
@@ -239,12 +242,13 @@ public abstract class DataManager<ID> {
 		// Bestimme das DTO
 		if (id == null)
 			throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
-		final DTO raum = conn.queryByKey(dtoClass, id);
-		if (raum == null)
+		final DTO dto = conn.queryByKey(dtoClass, id);
+		if (dto == null)
 			throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-		final CoreData daten = dtoMapper.apply(raum);
+		final CoreData daten = dtoMapper.apply(dto);
 		// Entferne das DTO
-		conn.transactionRemove(raum);
+		conn.transactionRemove(dto);
+		conn.transactionFlush();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -265,14 +269,15 @@ public abstract class DataManager<ID> {
 		if (ids == null)
 			throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
 		final List<CoreData> daten = new ArrayList<>();
-		for (Object id : ids) {
-			final DTO raum = conn.queryByKey(dtoClass, id);
-			if (raum == null)
+		for (final Object id : ids) {
+			final DTO dto = conn.queryByKey(dtoClass, id);
+			if (dto == null)
 				throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
-			daten.add(dtoMapper.apply(raum));
+			daten.add(dtoMapper.apply(dto));
 			// Entferne das DTO
-			conn.transactionRemove(raum);
+			conn.transactionRemove(dto);
 		}
+		conn.transactionFlush();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

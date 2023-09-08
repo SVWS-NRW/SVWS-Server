@@ -81,13 +81,13 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenKalenderinformationen>> patchMappings =
 			Map.ofEntries(
-				Map.entry("bemerkung", (dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge())),
-				Map.entry("bezeichnung", (dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge())),
-				Map.entry("startdatum", (dto, value, map) -> dto.Startdatum = JSONMapper.convertToString(value, false, false, null)),
-				Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-				Map.entry("enddatum", (dto, value, map) -> dto.Enddatum = JSONMapper.convertToString(value, true, false, null)),
-				Map.entry("endzeit", (dto, value, map) -> dto.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
-				Map.entry("istSperrtermin", (dto, value, map) -> dto.IstSperrtermin = JSONMapper.convertToBoolean(value, false))
+				Map.entry("bemerkung", (conn, dto, value, map) -> dto.Bemerkungen = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bemerkungen.datenlaenge())),
+				Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, true, false, Schema.tab_Gost_Klausuren_Kalenderinformationen.col_Bezeichnung.datenlaenge())),
+				Map.entry("startdatum", (conn, dto, value, map) -> dto.Startdatum = JSONMapper.convertToString(value, false, false, null)),
+				Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+				Map.entry("enddatum", (conn, dto, value, map) -> dto.Enddatum = JSONMapper.convertToString(value, true, false, null)),
+				Map.entry("endzeit", (conn, dto, value, map) -> dto.Endzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)),
+				Map.entry("istSperrtermin", (conn, dto, value, map) -> dto.IstSperrtermin = JSONMapper.convertToBoolean(value, false))
 			);
 
 	@Override

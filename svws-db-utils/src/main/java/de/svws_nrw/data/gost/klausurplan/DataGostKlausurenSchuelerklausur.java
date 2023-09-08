@@ -72,15 +72,15 @@ public final class DataGostKlausurenSchuelerklausur extends DataManager<Long> {
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenSchuelerklausuren>> patchMappings =
 			Map.ofEntries(
-				Map.entry("idSchuelerklausur", (dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
-				Map.entry("idKursklausur", (dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
-				Map.entry("idSchueler", (dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
-				Map.entry("idTermin", (dto, value, map) -> {
+				Map.entry("idSchuelerklausur", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idKursklausur", (conn, dto, value, map) -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idSchueler", (conn, dto, value, map) -> dto.Schueler_ID = JSONMapper.convertToLong(value, false)),
+				Map.entry("idTermin", (conn, dto, value, map) -> {
 					dto.Termin_ID = JSONMapper.convertToLong(value, true);
 					if (conn.queryByKey(DTOGostKlausurenTermine.class, dto.Termin_ID) == null)
 						throw OperationError.NOT_FOUND.exception("Klausurtermin nicht gefunden, ID: " + dto.Termin_ID);
 				}),
-				Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
+				Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440))
 			);
 
 	@Override

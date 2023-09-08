@@ -96,16 +96,16 @@ public final class DataStundenplan extends DataManager<Long> {
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplan>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value, map) -> {
+		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("idSchuljahresabschnitt", (dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }),
-		Map.entry("gueltigAb", (dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("gueltigBis", (dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
-		Map.entry("bezeichnungStundenplan", (dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-		Map.entry("wochenTypModell", (dto, value, map) -> dto.WochentypModell = JSONMapper.convertToInteger(value, false))
+		Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> { throw OperationError.BAD_REQUEST.exception(); }),
+		Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
+		Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
+		Map.entry("wochenTypModell", (conn, dto, value, map) -> dto.WochentypModell = JSONMapper.convertToInteger(value, false))
 	);
 
 	@Override

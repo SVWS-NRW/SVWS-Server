@@ -243,8 +243,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	private static final Set<String> forbiddenPatchAttributes = Set.of("id", "idVorgabe", "idKurs");
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenKursklausuren>> patchMappings = Map.ofEntries(
-			Map.entry("idVorgabe", (dto, value, map) -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false)),
-			Map.entry("idKurs", (dto, value, map) -> dto.Kurs_ID = JSONMapper.convertToLong(value, false)), Map.entry("idTermin", (dto, value, map) -> {
+			Map.entry("idVorgabe", (conn, dto, value, map) -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false)),
+			Map.entry("idKurs", (conn, dto, value, map) -> dto.Kurs_ID = JSONMapper.convertToLong(value, false)), Map.entry("idTermin", (conn, dto, value, map) -> {
 				final Long newTermin = JSONMapper.convertToLong(value, true);
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
@@ -253,7 +253,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 						throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
 				}
 				dto.Termin_ID = newTermin;
-			}), Map.entry("startzeit", (dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)));
+			}), Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
@@ -279,7 +279,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				if (startzeitNeu == null && dto.Startzeit != null || startzeitNeu != null && !startzeitNeu.equals(dto.Startzeit))
 					startzeitPatched = true;
 			}
-			mapper.map(dto, value, map);
+			mapper.map(conn, dto, value, map);
 		}
 		conn.transactionPersist(dto);
 		if (startzeitPatched) {

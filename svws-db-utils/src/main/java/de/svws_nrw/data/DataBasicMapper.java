@@ -2,6 +2,8 @@ package de.svws_nrw.data;
 
 import java.util.Map;
 
+import de.svws_nrw.db.DBEntityManager;
+
 /**
  * Dieses Interface definiert das Format für Mapping-Funktionen, die
  * einen JSON-Patch auf ein DTO anwenden.
@@ -17,10 +19,11 @@ public interface DataBasicMapper<DTO> {
 	 * auf weitere Attribute des JSON-Objektes wird die Map
 	 * mit den Attribute als dritter Parameter übergeben.
 	 *
+	 * @param conn    die aktuelle Datenbank-Verbindung
 	 * @param t       das DTO
 	 * @param value   der zu mappende Attributwert des JSON-Objektes
 	 * @param map     die Map mit den JSON-Attributwerten
 	 */
-    void map(DTO t, Object value, Map<String, Object> map);
+    void map(DBEntityManager conn, DTO t, Object value, Map<String, Object> map);
 
 }

@@ -92,18 +92,18 @@ public final class DataStundenplanKalenderwochenzuordnung extends DataManager<Lo
 
 
 	private static final Map<String, DataBasicMapper<DTOStundenplanKalenderwochenZuordnung>> patchMappings = Map.ofEntries(
-		Map.entry("id", (dto, value, map) -> {
+		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
 			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
-		Map.entry("jahr", (dto, value, map) -> {
+		Map.entry("jahr", (conn, dto, value, map) -> {
 			dto.Jahr = JSONMapper.convertToInteger(value, false);
 			if (DateUtils.gibIstJahrUngueltig(dto.Jahr))
 				throw OperationError.BAD_REQUEST.exception();
 			}),
-		Map.entry("kw", (dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
-		Map.entry("wochentyp", (dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
+		Map.entry("kw", (conn, dto, value, map) -> dto.KW = JSONMapper.convertToInteger(value, false)),
+		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
 	);
 
 
