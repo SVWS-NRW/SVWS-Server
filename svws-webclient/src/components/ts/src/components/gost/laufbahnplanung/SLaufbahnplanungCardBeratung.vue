@@ -42,7 +42,7 @@
 	async function speichern() {
 		const result = new GostLaufbahnplanungBeratungsdaten();
 		result.beratungslehrerID = ((refLehrer.value === null) || (refLehrer.value.content === null) || (refLehrer.value.content === undefined))
-			? null : refLehrer.value.content.id;
+			? null : (refLehrer.value.content as LehrerListeEintrag).id;
 		result.beratungsdatum = ((refBeratungsdatum.value === null) || (refBeratungsdatum.value.content === null)) ? null : String(refBeratungsdatum.value.content);
 		result.kommentar = ((refKommentar.value === null) || (refKommentar.value.content === null)) ? null : String(refKommentar.value.content);
 		await props.patchBeratungsdaten(result);
