@@ -4,10 +4,10 @@
 			<svws-ui-multi-select title="Letzte Beratung durchgeführt von" :items="mapLehrer.values()"
 				:model-value="getBeratungslehrer()" @update:model-value="beratungslehrerID = $event === undefined ? null : $event.id"
 				:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
-				:item-filter="filter" removable autocomplete ref="inputLehrer" />
+				:item-filter="filter" removable autocomplete ref="refLehrer" />
 			<svws-ui-text-input :model-value="gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14)" type="date"
-				placeholder="Beratungsdatum" ref="inputBeratungsdatum" />
-			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar" :autoresize="true" ref="inputKommentar"
+				placeholder="Beratungsdatum" ref="refBeratungsdatum" />
+			<svws-ui-textarea-input placeholder="Kommentar" :model-value="gostLaufbahnBeratungsdaten().kommentar" :autoresize="true" ref="refKommentar"
 				span="full" />
 			<svws-ui-button @click="speichern()">Beratungsdaten speichern</svws-ui-button>
 		</svws-ui-input-wrapper>
@@ -36,9 +36,9 @@
 		beratungslehrerID.value = tmpBeratungslehrer === undefined ? null : tmpBeratungslehrer.id;
 	}, { immediate: true });
 
-	const inputLehrer: Ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null> = ref(null);
-	const inputBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
-	const inputKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
+	const refLehrer: Ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null> = ref(null);
+	const refBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
+	const refKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
 
 	function getBeratungslehrer() : LehrerListeEintrag | undefined {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
@@ -50,8 +50,8 @@
 	async function speichern() {
 		const result = new GostLaufbahnplanungBeratungsdaten();
 		result.beratungslehrerID = beratungslehrerID.value;
-		result.beratungsdatum = ((inputBeratungsdatum.value === null) || (inputBeratungsdatum.value.content === null)) ? null : String(inputBeratungsdatum.value.content);
-		result.kommentar = ((inputKommentar.value === null) || (inputKommentar.value.content === null)) ? null : String(inputKommentar.value.content);
+		result.beratungsdatum = ((refBeratungsdatum.value === null) || (refBeratungsdatum.value.content === null)) ? null : String(refBeratungsdatum.value.content);
+		result.kommentar = ((refKommentar.value === null) || (refKommentar.value.content === null)) ? null : String(refKommentar.value.content);
 		await props.patchBeratungsdaten(result);
 	}
 
