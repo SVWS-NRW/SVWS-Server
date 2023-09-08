@@ -98,7 +98,16 @@ export class StundenplanManager extends JavaObject {
 		return JavaString.compareTo(a.bezeichnung, b.bezeichnung);
 	} };
 
-	private static readonly _compKurs : Comparator<StundenplanKurs> = { compare : (a: StundenplanKurs, b: StundenplanKurs) => JavaLong.compare(a.id, b.id) };
+	private static readonly _compKurs : Comparator<StundenplanKurs> = { compare : (a: StundenplanKurs, b: StundenplanKurs) => {
+		if (a.sortierung < b.sortierung)
+			return -1;
+		if (a.sortierung > b.sortierung)
+			return +1;
+		const result : number = JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		if (result !== 0)
+			return result;
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 	private static readonly _compLehrer : Comparator<StundenplanLehrer> = { compare : (a: StundenplanLehrer, b: StundenplanLehrer) => {
 		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);

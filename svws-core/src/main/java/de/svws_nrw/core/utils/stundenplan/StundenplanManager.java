@@ -82,7 +82,13 @@ public class StundenplanManager {
 		if (a.wochenstunden > b.wochenstunden) return +1;
 		return a.bezeichnung.compareTo(b.bezeichnung);
 	};
-	private static final @NotNull Comparator<@NotNull StundenplanKurs> _compKurs = (final @NotNull StundenplanKurs a, final @NotNull StundenplanKurs b) -> Long.compare(a.id, b.id);
+	private static final @NotNull Comparator<@NotNull StundenplanKurs> _compKurs = (final @NotNull StundenplanKurs a, final @NotNull StundenplanKurs b) -> {
+		if (a.sortierung < b.sortierung) return -1;
+		if (a.sortierung > b.sortierung) return +1;
+		final int result = a.bezeichnung.compareTo(b.bezeichnung);
+		if (result != 0) return result;
+		return Long.compare(a.id, b.id);
+	};
 	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer = (final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
