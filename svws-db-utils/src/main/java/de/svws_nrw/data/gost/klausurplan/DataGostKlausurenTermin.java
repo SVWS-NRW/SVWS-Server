@@ -43,6 +43,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	}
 
 	private static final Set<String> requiredCreateAttributes = Set.of("abijahr", "halbjahr", "quartal");
+	private static final Set<String> patchForbiddenAttributes = Set.of("abijahr", "halbjahr");
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenTermine>> patchMappings =
 		Map.ofEntries(
@@ -109,7 +110,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasicFiltered(id, is, DTOGostKlausurenTermine.class, patchMappings, requiredCreateAttributes);
+		return super.patchBasicFiltered(id, is, DTOGostKlausurenTermine.class, patchMappings, patchForbiddenAttributes);
 	}
 
 	@Override

@@ -249,7 +249,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
 					final DTOGostKlausurenVorgaben vorgabe = conn.queryByKey(DTOGostKlausurenVorgaben.class, dto.Vorgabe_ID);
-					if (!Objects.equals(termin.Quartal, vorgabe.Quartal))
+					if (termin.Quartal != 0 && !Objects.equals(termin.Quartal, vorgabe.Quartal))
 						throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
 				}
 				dto.Termin_ID = newTermin;
