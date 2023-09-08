@@ -1,9 +1,127 @@
+<template>
+	<div class="wrapper"
+		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': hasSelected() || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
+		<div class="multiselect-input-component"
+			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': hasSelected(), 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
+			<div :class="['input', !showInput ? 'sr-only' : '']">
+				<svws-ui-text-input ref="inputEl"
+					:model-value="dynModelValue"
+					:readonly="!autocomplete || !showInput"
+					:placeholder="title"
+					:statistics="statistics"
+					:headless="headless"
+					:disabled="disabled"
+					:removable="removable"
+					:class="{'text-input--control--multiselect-tags': tags}"
+					:debounce-ms="0"
+					role="combobox"
+					:aria-label="placeholder"
+					:aria-expanded="showList"
+					aria-haspopup="listbox"
+					aria-autocomplete="list"
+					:aria-controls="showList ? listIdPrefix : null"
+					:aria-activedescendant="activeItemIndex > -1 ? `${listIdPrefix}-${activeItemIndex}` : null"
+					@update:model-value="onInput"
+					@click="toggleListbox"
+					@focus="onFocus"
+					@blur="onBlur"
+					@keyup.down.prevent
+					@keyup.up.prevent
+					@keydown.down.prevent="onArrowDown"
+					@keydown.up.prevent="onArrowUp"
+					@keydown.right.prevent="onArrowDown"
+					@keydown.left.prevent="onArrowUp"
+					@keydown.enter.prevent="selectCurrentActiveItem"
+					@keydown.backspace="onBackspace"
+					@keydown.esc.prevent="onEscape"
+					@keydown.space="onSpace"
+					@keydown.tab.prevent="onTab" />
+			</div>
+			<div v-if="tags" class="tag-list-wrapper"
+				@click.self="toggleListbox" ref="inputElTags">
+				<div class="tag-list" @click.self="toggleListbox">
+					<slot v-if="(selectedItemList.size === 0) && !showList" name="no-content" />
+					<div class="opacity-50 pl-2 text-sm" v-if="(selectedItemList.size === 0) && showList">
+						Noch nichts ausgewählt.
+					</div>
+					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
+						<span class="tag-badge">
+							<span :class="{'pr-1': showList}">{{ itemText(item) }}</span>
+							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen" v-if="!showList">
+								<span class="icon">
+									<i-ri-close-line />
+								</span>
+							</span>
+						</span>
+					</div>
+				</div>
+				<span v-if="!showInput" class="multiselect-tags--placeholder">
+					<span>{{ title }}</span>
+					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
+				</span>
+			</div>
+			<div v-if="removable && hasSelected()" @click="removeItem" class="remove-icon">
+				<span class="icon">
+					<i-ri-close-line />
+				</span>
+			</div>
+			<div class="dropdown-icon" @click="toggleListbox">
+				<span class="icon">
+					<i-ri-expand-up-down-fill />
+				</span>
+			</div>
+		</div>
+		<Teleport to="body">
+			<div v-if="showList" class="multiselect--items-wrapper"
+				:class="{'multiselect--items-wrapper--statistics': statistics, 'multiselect--items-wrapper--tags': tags}"
+				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
+				ref="floating">
+				<ul :id="listIdPrefix"
+					class="multiselect--items-list"
+					:class="{'multiselect--items-list--tags' : tags}"
+					role="listbox"
+					@mouseenter="activeItemIndex = -1">
+					<li v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
+						Keine Ergebnisse
+					</li>
+					<li v-for="(item, index) in filteredList"
+						:id="`${listIdPrefix}-${index}`"
+						:key="index"
+						ref="itemRefs"
+						role="option"
+						class="multiselect--item"
+						:class="{
+							active: activeItemIndex === index,
+							selected: selectedItemList.has(item)
+						}"
+						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
+						@mousedown.prevent
+						@click="
+							() => {
+								selectItem(item);
+								!tags && closeListbox();
+							}
+						">
+						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
+						<span>{{ itemText(item) }}</span>
+						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
+					</li>
+				</ul>
+			</div>
+		</Teleport>
+	</div>
+</template>
+
+
 <script setup lang="ts" generic="Item">
-	import type { ComputedRef, ShallowRef } from "vue";
+
+	import type { ComputedRef, WritableComputedRef } from "vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
-	import { computed, nextTick, ref, shallowReactive, shallowRef, watch, Teleport, toRef } from "vue";
+	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRef } from "vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 	import { genId } from "../utils";
+
+	type InputDataType = Item[] | Item | null | undefined;
 
 	const props = withDefaults(defineProps<{
 		placeholder?: string;
@@ -17,7 +135,8 @@
 		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
 		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
-		modelValue: Item[] | Item | undefined;
+		modelValue: InputDataType;
+		useNull?: boolean;
 		headless?: boolean;
 		removable?: boolean;
 		required?: boolean;
@@ -32,13 +151,14 @@
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
 		itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
+		useNull: false,
 		headless: false,
 		removable: false,
 		span: undefined
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: Item[] | Item | null | undefined): void;
+		(e: "update:modelValue", items: InputDataType): void;
 		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 	}>();
@@ -83,37 +203,101 @@
 	});
 
 	function generateInputText() {
-		return props.tags
-			? [...selectedItemList].map(item => props.itemText(item)).join(", ")
-			: (selectedItem.value !== undefined)
-				? props.itemText(selectedItem.value)
-				: "";
+		// Fall 1: Multi-Select möglich
+		if (props.tags)
+			return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
+		// Fall 2: Kein Multi-Select möglich
+		if ((selectedItem.value === null) || (selectedItem.value === undefined))
+			return "";
+		return props.itemText(selectedItem.value);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	function onInput(value: string | number): any {
+	function onInput(value: string | number) {
 		searchText.value = "" + value;
 	}
 
-	const model = toRef(props, 'modelValue')
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const data = shallowRef<InputDataType>(props.modelValue);
 
-	const selectedItem: ShallowRef<Item | undefined> = shallowRef(Array.isArray(model.value) ? model.value[0] : model.value);
-	const selectedItemList = shallowReactive(
-		new Set<Item>(Array.isArray(model.value) ? model.value : model.value !== undefined ? [model.value] : [])
-	);
+	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
 
-	watch(
-		() => props.modelValue,
-		newVal => {
-			selectedItem.value = Array.isArray(newVal) ? newVal[0] : newVal;
-			selectedItemList.clear();
-			if (Array.isArray(newVal)) {
-				newVal.forEach(item => selectedItemList.add(item));
-			} else if (newVal !== undefined) {
-				selectedItemList.add(newVal);
-			}
+	function updateData(value: InputDataType) {
+		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
+			return;
+		// Fall 1: Multi-Select möglich
+		if (props.tags) {
+			const a = ((data.value === null) || (data.value === undefined)) ? [] : data.value as Item[];
+			const b = ((value === null) || (value === undefined)) ? [] : value as Item[];
+			if ((a.length === b.length) && (a.every((v, i) => v === b[i])))
+				return;
+			data.value = b;
+			emit("update:modelValue", data.value);
+			return;
 		}
-	);
+		// Fall 2: Kein Multi-Select möglich
+		if (data.value === value)
+			return;
+		data.value = value;
+		emit("update:modelValue", data.value);
+	}
+
+	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
+		get: () => {
+			// Fall 1: Multi-Select möglich
+			if (props.tags && Array.isArray(data.value))
+				return data.value[0];
+			// Fall 2: Kein Multi-Select möglich
+			return data.value as Item | null | undefined;
+		},
+		set: (item) => {
+			// Fall 0: null or undefined (kein Multi-Select möglich)
+			if ((item === null) || (item === undefined)) {
+				updateData(item);
+				return;
+			}
+			// Fall 1: Multi-Select möglich
+			if (props.tags) {
+				if (selectedItemList.value.has(item)) {
+					selectedItemList.value.delete(item);
+				} else {
+					selectedItemList.value.add(item);
+				}
+				updateData([...selectedItemList.value]);
+				return;
+			}
+			// Fall 2: Kein Multi-Select möglich
+			updateData(item);
+		}
+	});
+
+	const selectedItemList = computed<Set<Item>>(() => {
+		// Fall 1: Multi-Select möglich
+		if (props.tags && Array.isArray(data.value))
+			return new Set<Item>(data.value);
+		// Fall 2: Kein Multi-Select möglich
+		const set = new Set<Item>();
+		if ((data.value !== null) && (data.value !== undefined))
+			set.add(data.value as Item);
+		return set;
+	});
+
+	function hasSelected(): boolean {
+		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
+	}
+
+	function selectItem(item: Item | null | undefined) {
+		selectedItem.value = item;
+	}
+
+	function removeItem() {
+		selectedItem.value = props.useNull ? null : undefined;
+	}
+
+	function removeTag(item: Item) {
+		if (selectedItemList.value.has(item))
+			selectedItem.value = item;
+	}
+
 
 	const sortedList: ComputedRef<Item[]> = computed(() => {
 		let arr
@@ -141,7 +325,7 @@
 
 	function openListbox() {
 		showList.value = true;
-		if (selectedItem.value !== undefined) {
+		if ((selectedItem.value !== null) && (selectedItem.value !== undefined)) {
 			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
@@ -161,27 +345,6 @@
 		selectItem(filteredList.value[activeItemIndex.value]);
 		if (!props.tags)
 			closeListbox();
-	}
-
-	function selectItem(item: Item | undefined) {
-		selectedItem.value = item;
-		if (item !== undefined) {
-			if (props.tags) {
-				if (selectedItemList.has(item))
-					selectedItemList.delete(item);
-				else
-					selectedItemList.add(item);
-			} else {
-				selectedItemList.clear();
-				selectedItemList.add(item);
-			}
-		}
-		emit("update:modelValue", props.tags ? [...selectedItemList] : selectedItem.value);
-	}
-
-	function removeTag(item: Item) {
-		selectedItemList.delete(item);
-		emit("update:modelValue", [...selectedItemList]);
 	}
 
 	function toggleListbox() {
@@ -250,10 +413,6 @@
 		});
 	}
 
-	function removeItem() {
-		selectItem(undefined);
-	}
-
 	const floating = ref(null);
 	const tags = toRef(props, 'tags');
 
@@ -277,134 +436,19 @@
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
 
-	// const content = computed<Item | null>(() => {
-	// 	if (selectedItem.value === undefined)
-	// 		return null;
-	// 	return selectedItem.value;
-	// });
+	const content = computed<InputDataType>(() => {
+		return data.value;
+	});
 
-	// defineExpose<{
-	// 	content: ComputedRef<Item | null>,
-	// }>({
-	// 	content
-	// });
+	defineExpose<{
+		content: ComputedRef<InputDataType>,
+	}>({
+		content
+	});
 
 
 </script>
 
-<template>
-	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': (selectedItem !== undefined) || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
-		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': selectedItem !== undefined, 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
-			<div :class="['input', !showInput ? 'sr-only' : '']">
-				<svws-ui-text-input ref="inputEl"
-					:model-value="dynModelValue"
-					:readonly="!autocomplete || !showInput"
-					:placeholder="title"
-					:statistics="statistics"
-					:headless="headless"
-					:disabled="disabled"
-					:removable="removable"
-					:class="{'text-input--control--multiselect-tags': tags}"
-					:debounce-ms="0"
-					role="combobox"
-					:aria-label="placeholder"
-					:aria-expanded="showList"
-					aria-haspopup="listbox"
-					aria-autocomplete="list"
-					:aria-controls="showList ? listIdPrefix : null"
-					:aria-activedescendant="activeItemIndex > -1 ? `${listIdPrefix}-${activeItemIndex}` : null"
-					@update:model-value="onInput"
-					@click="toggleListbox"
-					@focus="onFocus"
-					@blur="onBlur"
-					@keyup.down.prevent
-					@keyup.up.prevent
-					@keydown.down.prevent="onArrowDown"
-					@keydown.up.prevent="onArrowUp"
-					@keydown.right.prevent="onArrowDown"
-					@keydown.left.prevent="onArrowUp"
-					@keydown.enter.prevent="selectCurrentActiveItem"
-					@keydown.backspace="onBackspace"
-					@keydown.esc.prevent="onEscape"
-					@keydown.space="onSpace"
-					@keydown.tab.prevent="onTab" />
-			</div>
-			<div v-if="tags" class="tag-list-wrapper"
-				@click.self="toggleListbox" ref="inputElTags">
-				<div class="tag-list" @click.self="toggleListbox">
-					<slot v-if="(selectedItemList.size === 0) && !showList" name="no-content" />
-					<div class="opacity-50 pl-2 text-sm" v-if="(selectedItemList.size === 0) && showList">
-						Noch nichts ausgewählt.
-					</div>
-					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
-						<span class="tag-badge">
-							<span :class="{'pr-1': showList}">{{ itemText(item) }}</span>
-							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen" v-if="!showList">
-								<span class="icon">
-									<i-ri-close-line />
-								</span>
-							</span>
-						</span>
-					</div>
-				</div>
-				<span v-if="!showInput" class="multiselect-tags--placeholder">
-					<span>{{ title }}</span>
-					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
-				</span>
-			</div>
-			<div v-if="removable && (modelValue !== undefined)" @click="removeItem" class="remove-icon">
-				<span class="icon">
-					<i-ri-close-line />
-				</span>
-			</div>
-			<div class="dropdown-icon" @click="toggleListbox">
-				<span class="icon">
-					<i-ri-expand-up-down-fill />
-				</span>
-			</div>
-		</div>
-		<Teleport to="body">
-			<div v-if="showList" class="multiselect--items-wrapper"
-				:class="{'multiselect--items-wrapper--statistics': statistics, 'multiselect--items-wrapper--tags': tags}"
-				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
-				ref="floating">
-				<ul :id="listIdPrefix"
-					class="multiselect--items-list"
-					:class="{'multiselect--items-list--tags' : tags}"
-					role="listbox"
-					@mouseenter="activeItemIndex = -1">
-					<li v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
-						Keine Ergebnisse
-					</li>
-					<li v-for="(item, index) in filteredList"
-						:id="`${listIdPrefix}-${index}`"
-						:key="index"
-						ref="itemRefs"
-						role="option"
-						class="multiselect--item"
-						:class="{
-							active: activeItemIndex === index,
-							selected: selectedItemList.has(item)
-						}"
-						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
-						@mousedown.prevent
-						@click="
-							() => {
-								selectItem(item);
-								!tags && closeListbox();
-							}
-						">
-						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
-						<span>{{ itemText(item) }}</span>
-						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
-					</li>
-				</ul>
-			</div>
-		</Teleport>
-	</div>
-</template>
 
 <style lang="postcss" scoped>
 .multiselect-input-component {

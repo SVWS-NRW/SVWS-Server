@@ -1,8 +1,7 @@
 <template>
 	<svws-ui-content-card title="Beratung" class="mt-9">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Letzte Beratung durchgeführt von" :items="mapLehrer.values()"
-				:model-value="getBeratungslehrer()" @update:model-value="beratungslehrerID = $event === undefined ? null : $event.id"
+			<svws-ui-multi-select title="Letzte Beratung durchgeführt von" :items="mapLehrer.values()" :model-value="getBeratungslehrer()"
 				:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 				:item-filter="filter" removable autocomplete ref="refLehrer" />
 			<svws-ui-text-input :model-value="gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14)" type="date"
@@ -19,7 +18,7 @@
 	import type { LehrerListeEintrag } from "@core";
 	import { GostLaufbahnplanungBeratungsdaten } from "@core";
 	import { type SvwsUiMultiSelect, type SvwsUiTextInput, type SvwsUiTextareaInput } from "@svws-nrw/svws-ui";
-	import { ref, type Ref, watch } from "vue";
+	import { ref, type Ref } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 
 	const props = defineProps<{
@@ -29,13 +28,6 @@
 		id?: number;
 	}>();
 
-	const beratungslehrerID = ref<number | null>(null);
-
-	watch(() => props.gostLaufbahnBeratungsdaten, (func: () => GostLaufbahnplanungBeratungsdaten) => {
-		const tmpBeratungslehrer = getBeratungslehrer();
-		beratungslehrerID.value = tmpBeratungslehrer === undefined ? null : tmpBeratungslehrer.id;
-	}, { immediate: true });
-
 	const refLehrer: Ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null> = ref(null);
 	const refBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
 	const refKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
@@ -43,13 +35,14 @@
 	function getBeratungslehrer() : LehrerListeEintrag | undefined {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
 		if (id === null)
-			id = props.id === undefined ? -1 : props.id;
+			id = (props.id === undefined) ? -1 : props.id;
 		return props.mapLehrer.get(id);
 	}
 
 	async function speichern() {
 		const result = new GostLaufbahnplanungBeratungsdaten();
-		result.beratungslehrerID = beratungslehrerID.value;
+		result.beratungslehrerID = ((refLehrer.value === null) || (refLehrer.value.content === null) || (refLehrer.value.content === undefined))
+			? null : refLehrer.value.content.id;
 		result.beratungsdatum = ((refBeratungsdatum.value === null) || (refBeratungsdatum.value.content === null)) ? null : String(refBeratungsdatum.value.content);
 		result.kommentar = ((refKommentar.value === null) || (refKommentar.value.content === null)) ? null : String(refKommentar.value.content);
 		await props.patchBeratungsdaten(result);
