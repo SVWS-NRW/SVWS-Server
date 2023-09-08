@@ -46,8 +46,13 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		final StundenplanFach daten = new StundenplanFach();
 		daten.id = f.ID;
 		daten.kuerzel = f.Kuerzel;
+		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
 		daten.bezeichnung = f.Bezeichnung;
-		daten.sortierung = (f.SortierungAllg == null) ? ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII) : f.SortierungAllg;
+		if (f.SortierungAllg != null)
+			daten.sortierung = f.SortierungAllg;
+		else
+			daten.sortierung = ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII);
+		daten.farbe = f.StatistikFach.getFarbe();
 		return daten;
 	};
 
@@ -88,7 +93,6 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		final ArrayList<StundenplanFach> daten = new ArrayList<>();
 		for (final DTOFach f : faecherListe) {
 			final StundenplanFach fach = dtoMapper.apply(f);
-			fach.farbe = null;   // TODO ggf. Unterstützung für Fachfarben
 			daten.add(fach);
 		}
 		return daten;
@@ -116,7 +120,6 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		if (fach == null)
 			return OperationError.NOT_FOUND.getResponse("Es wurde kein Fach mit der ID %d gefunden.".formatted(id));
 		final StundenplanFach daten = dtoMapper.apply(fach);
-		daten.farbe = null;   // TODO ggf. Unterstützung für Fachfarben
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

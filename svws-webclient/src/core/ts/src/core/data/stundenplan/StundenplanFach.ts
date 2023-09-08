@@ -14,6 +14,11 @@ export class StundenplanFach extends JavaObject {
 	public kuerzel : string = "";
 
 	/**
+	 * Das Statistik-Kürzel des Faches.
+	 */
+	public kuerzelStatistik : string = "";
+
+	/**
 	 * Die Bezeichnung des Faches.
 	 */
 	public bezeichnung : string = "";
@@ -46,6 +51,9 @@ export class StundenplanFach extends JavaObject {
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
+		if (typeof obj.kuerzelStatistik === "undefined")
+			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
+		result.kuerzelStatistik = obj.kuerzelStatistik;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
@@ -60,6 +68,7 @@ export class StundenplanFach extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
 		result += '"farbe" : ' + ((!obj.farbe) ? 'null' : RGBFarbe.transpilerToJSON(obj.farbe)) + ',';
@@ -75,6 +84,9 @@ export class StundenplanFach extends JavaObject {
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		}
+		if (typeof obj.kuerzelStatistik !== "undefined") {
+			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';

@@ -50,7 +50,12 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		daten.id = k.ID;
 		daten.bezeichnung = k.KurzBez;
 		daten.wochenstunden = k.WochenStd;
-		daten.sortierung = (k.Sortierung == null) ? ((f.SortierungAllg == null) ? ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII) : f.SortierungAllg) : k.Sortierung;
+		if (k.Sortierung != null)
+			daten.sortierung = k.Sortierung;
+		else if (f.SortierungAllg != null)
+			daten.sortierung = f.SortierungAllg;
+		else
+			daten.sortierung = (f.SortierungSekII == null) ? 32000 : f.SortierungSekII;
 		return daten;
 	};
 

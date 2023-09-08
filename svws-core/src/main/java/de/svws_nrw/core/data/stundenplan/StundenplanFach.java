@@ -23,6 +23,10 @@ public class StundenplanFach {
 	@Schema(description = "Das Kürzel des Faches", example = "D")
 	public @NotNull String kuerzel = "";
 
+	/** Das Statistik-Kürzel des Faches. */
+	@Schema(description = "Das Statistik-Kürzel des Faches", example = "D")
+	public @NotNull String kuerzelStatistik = "";
+
 	/** Die Bezeichnung des Faches. */
 	@Schema(description = "Die Bezeichnung des Faches", example = "Deutsch")
 	public @NotNull String bezeichnung = "";
