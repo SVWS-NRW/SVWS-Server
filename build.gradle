@@ -252,3 +252,13 @@ snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories
         }
     }
 }
+
+task allJavadoc(type: Javadoc) {
+    project.subprojects.each {
+        if (it.plugins.hasPlugin('java')) {
+            source += it.java.sourceSets.main.allJava
+            classpath += files(it.java.sourceSets.main.compileClasspath)
+        }
+    }
+    destinationDir = file("${buildDir}/docs/javadoc-all")
+}
