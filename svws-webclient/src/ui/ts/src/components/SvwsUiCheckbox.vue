@@ -47,21 +47,23 @@
 </script>
 
 <template>
-	<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
-		<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-ui-checkbox--headless': headless && type !== 'toggle'}">
-		<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
-		<span class="svws-ui-checkbox--label" v-if="$slots.default">
-			<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
-				<svws-ui-tooltip position="right">
-					<i-ri-bar-chart-2-line class="pointer-events-auto" />
-					<template #content>
-						Relevant für die Statistik
-					</template>
-				</svws-ui-tooltip>
+	<div>
+		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
+			<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-ui-checkbox--headless': headless && type !== 'toggle'}">
+			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
+			<span class="svws-ui-checkbox--label" v-if="$slots.default">
+				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
+					<svws-ui-tooltip position="right">
+						<i-ri-bar-chart-2-line class="pointer-events-auto" />
+						<template #content>
+							Relevant für die Statistik
+						</template>
+					</svws-ui-tooltip>
+				</span>
+				<slot />
 			</span>
-			<slot />
-		</span>
-	</label>
+		</label>
+	</div>
 </template>
 
 <style lang="postcss">
