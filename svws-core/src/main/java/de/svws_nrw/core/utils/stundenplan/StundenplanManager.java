@@ -50,6 +50,8 @@ public class StundenplanManager {
 		return Long.compare(a.id, b.id);
 	};
 	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
+		if (a.sortierung < b.sortierung) return -1;
+		if (a.sortierung > b.sortierung) return +1;
 		final int result = a.kuerzel.compareTo(b.kuerzel);
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);

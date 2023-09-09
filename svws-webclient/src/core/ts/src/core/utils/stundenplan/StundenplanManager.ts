@@ -46,6 +46,10 @@ export class StundenplanManager extends JavaObject {
 	} };
 
 	private static readonly _compFach : Comparator<StundenplanFach> = { compare : (a: StundenplanFach, b: StundenplanFach) => {
+		if (a.sortierung < b.sortierung)
+			return -1;
+		if (a.sortierung > b.sortierung)
+			return +1;
 		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		if (result !== 0)
 			return result;
