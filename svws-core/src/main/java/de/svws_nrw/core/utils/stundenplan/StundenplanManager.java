@@ -73,15 +73,7 @@ public class StundenplanManager {
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);
 	};
-	private static final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> _compKlassenunterricht = (final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
-		if (a.idKlasse < b.idKlasse) return -1;
-		if (a.idKlasse > b.idKlasse) return +1;
-		if (a.idFach < b.idFach) return -1;
-		if (a.idFach > b.idFach) return +1;
-		if (a.wochenstunden < b.wochenstunden) return -1;
-		if (a.wochenstunden > b.wochenstunden) return +1;
-		return a.bezeichnung.compareTo(b.bezeichnung);
-	};
+	private final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> _compKlassenunterricht;
 	private static final @NotNull Comparator<@NotNull StundenplanKurs> _compKurs = (final @NotNull StundenplanKurs a, final @NotNull StundenplanKurs b) -> {
 		if (a.sortierung < b.sortierung) return -1;
 		if (a.sortierung > b.sortierung) return +1;
@@ -125,7 +117,9 @@ public class StundenplanManager {
 		if (cmpVorname != 0) return cmpVorname;
 		return Long.compare(a.id, b.id);
 	};
+
 	private static final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> Long.compare(a.id, b.id);
+
 	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
 		if (a.wochentag < b.wochentag) return -1;
 		if (a.wochentag > b.wochentag) return +1;
@@ -292,6 +286,7 @@ public class StundenplanManager {
 	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
 	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
+		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_stundenplanID = daten.id;
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -335,6 +330,7 @@ public class StundenplanManager {
 	 * @param stundenplanKomplett  Beinhaltet alle relevanten Daten für einen Stundenplan.
 	 */
 	public StundenplanManager(final @NotNull StundenplanKomplett stundenplanKomplett) {
+		_compKlassenunterricht = klassenunterrichtCreateComparator();
 		_stundenplanID = stundenplanKomplett.daten.id;
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -392,7 +388,7 @@ public class StundenplanManager {
 		schuelerAddAllOhneUpdate(listSchueler);                    // ✔, referenziert Klasse
 		klasseAddAllOhneUpdate(listKlasse);                        // ✔, referenziert [Jahrgang], [Schueler]
 		schieneAddAllOhneUpdate(listSchiene);                      // ✔, referenziert Jahrgang
-		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);  // ✔, referenziert Klasse, [Jahrgang], [Schienen]
+		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);  // ✔, referenziert Klasse, Fach, [Schiene], [Schueler], [Lehrer]
 		pausenaufsichtAddAllOhneUpdate(listPausenaufsicht);        // ✔, referenziert Lehrer, Pausenzeit, [Aufsichtsbereich]
 		kursAddAllOhneUpdate(listKurs);                            // ✔, referenziert [Schienen], [Jahrgang], [Schüler]
 		unterrichtAddAllOhneUpdate(listUnterricht);                // ✔, referenziert Zeitraster, Kurs, Fach, [Lehrer], [Klasse], [Raum], [Schiene]
@@ -1913,6 +1909,38 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, klassenunterricht.idFach);
 		for (final @NotNull Long idSchiene : klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchiene);
+	}
+
+	private @NotNull Comparator<@NotNull StundenplanKlassenunterricht> klassenunterrichtCreateComparator() {
+
+		final @NotNull Comparator<@NotNull StundenplanKlassenunterricht> comp = (final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
+				final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, a.idKlasse);
+				final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, b.idKlasse);
+				final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
+				if (cmpKlasse != 0) return cmpKlasse;
+
+				final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
+				final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
+				final int cmpFach = _compFach.compare(aFach, bFach);
+				if (cmpFach != 0) return cmpFach;
+
+				if (a.lehrer.size() < b.lehrer.size()) return -1;
+				if (a.lehrer.size() > b.lehrer.size()) return +1;
+				for (int i = 0; i < a.lehrer.size(); i++) {
+					final @NotNull Long aIdLehrer = ListUtils.getNonNullElementAtOrException(a.lehrer, i);
+					final @NotNull Long bIdLehrer = ListUtils.getNonNullElementAtOrException(b.lehrer, i);
+					final @NotNull StundenplanLehrer aLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, aIdLehrer);
+					final @NotNull StundenplanLehrer bLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, bIdLehrer);
+					final int cmpLehrer = _compLehrer.compare(aLehrer, bLehrer);
+					if (cmpLehrer != 0) return cmpLehrer;
+				}
+
+				if (a.wochenstunden < b.wochenstunden) return -1;
+				if (a.wochenstunden > b.wochenstunden) return +1;
+				return a.bezeichnung.compareTo(b.bezeichnung);
+			};
+
+		return comp;
 	}
 
 	/**

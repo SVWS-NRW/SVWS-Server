@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -106,6 +107,22 @@ public final class ListUtils {
         for (final E e : listToAdd)
         	if (!list.contains(e))
         		list.add(e);
+    }
+
+    /**
+     * Liefert das NON NULL Element an Index i, oder eine Exception.
+     *
+     * @param <E>   Der Inhaltstyp der Liste.
+     * @param list  Die Liste.
+     * @param i     Der Index i.
+     *
+     * @return das NON NULL Element an Index i, oder eine Exception.
+     */
+    public static <@NotNull E> @NotNull E getNonNullElementAtOrException(final @NotNull List<@NotNull E> list, final int i) {
+    	final E element = list.get(i);
+    	if (element == null)
+    		throw new DeveloperNotificationException("Kein Element bei Index " + i + "!");
+    	return element;
     }
 
 }

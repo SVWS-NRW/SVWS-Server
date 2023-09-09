@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import type { Predicate } from '../../java/util/function/Predicate';
 
 export class ListUtils extends JavaObject {
@@ -94,6 +95,22 @@ export class ListUtils extends JavaObject {
 		for (const e of listToAdd)
 			if (!list.contains(e))
 				list.add(e);
+	}
+
+	/**
+	 * Liefert das NON NULL Element an Index i, oder eine Exception.
+	 *
+	 * @param <E>   Der Inhaltstyp der Liste.
+	 * @param list  Die Liste.
+	 * @param i     Der Index i.
+	 *
+	 * @return das NON NULL Element an Index i, oder eine Exception.
+	 */
+	public static getNonNullElementAtOrException<E>(list : List<E>, i : number) : E {
+		const element : E | null = list.get(i);
+		if (element === null)
+			throw new DeveloperNotificationException("Kein Element bei Index " + i + "!")
+		return element;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

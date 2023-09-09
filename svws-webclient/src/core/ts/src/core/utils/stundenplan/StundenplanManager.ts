@@ -82,21 +82,7 @@ export class StundenplanManager extends JavaObject {
 		return JavaLong.compare(a.id, b.id);
 	} };
 
-	private static readonly _compKlassenunterricht : Comparator<StundenplanKlassenunterricht> = { compare : (a: StundenplanKlassenunterricht, b: StundenplanKlassenunterricht) => {
-		if (a.idKlasse < b.idKlasse)
-			return -1;
-		if (a.idKlasse > b.idKlasse)
-			return +1;
-		if (a.idFach < b.idFach)
-			return -1;
-		if (a.idFach > b.idFach)
-			return +1;
-		if (a.wochenstunden < b.wochenstunden)
-			return -1;
-		if (a.wochenstunden > b.wochenstunden)
-			return +1;
-		return JavaString.compareTo(a.bezeichnung, b.bezeichnung);
-	} };
+	private readonly _compKlassenunterricht : Comparator<StundenplanKlassenunterricht>;
 
 	private static readonly _compKurs : Comparator<StundenplanKurs> = { compare : (a: StundenplanKurs, b: StundenplanKurs) => {
 		if (a.sortierung < b.sortierung)
@@ -435,6 +421,7 @@ export class StundenplanManager extends JavaObject {
 			const unterrichte : List<StundenplanUnterricht> = cast_java_util_List(__param1);
 			const pausenaufsichten : List<StundenplanPausenaufsicht> = cast_java_util_List(__param2);
 			const unterrichtsverteilung : StundenplanUnterrichtsverteilung | null = cast_de_svws_nrw_core_data_stundenplan_StundenplanUnterrichtsverteilung(__param3);
+			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._stundenplanID = daten.id;
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -450,6 +437,7 @@ export class StundenplanManager extends JavaObject {
 			this.initAll(daten.kalenderwochenZuordnung, uv.faecher, daten.jahrgaenge, daten.zeitraster, daten.raeume, daten.pausenzeiten, daten.aufsichtsbereiche, uv.lehrer, uv.schueler, daten.schienen, uv.klassen, uv.klassenunterricht, pausenaufsichten, uv.kurse, unterrichte);
 		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.stundenplan.StundenplanKomplett')))) && (typeof __param1 === "undefined") && (typeof __param2 === "undefined") && (typeof __param3 === "undefined")) {
 			const stundenplanKomplett : StundenplanKomplett = cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett(__param0);
+			this._compKlassenunterricht = this.klassenunterrichtCreateComparator();
 			this._stundenplanID = stundenplanKomplett.daten.id;
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -870,7 +858,7 @@ export class StundenplanManager extends JavaObject {
 	private update_klassenunterrichtmenge() : void {
 		this._klassenunterrichtmenge.clear();
 		this._klassenunterrichtmenge.addAll(this._klassenunterricht_by_idKlasse_and_idFach.getNonNullValuesAsList());
-		this._klassenunterrichtmenge.sort(StundenplanManager._compKlassenunterricht);
+		this._klassenunterrichtmenge.sort(this._compKlassenunterricht);
 	}
 
 	private update_klassenunterrichtmenge_by_idKlasse() : void {
@@ -1861,6 +1849,40 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", this._fach_by_id, klassenunterricht.idFach);
 		for (const idSchiene of klassenunterricht.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", this._schiene_by_id, idSchiene);
+	}
+
+	private klassenunterrichtCreateComparator() : Comparator<StundenplanKlassenunterricht> {
+		const comp : Comparator<StundenplanKlassenunterricht> = { compare : (a: StundenplanKlassenunterricht, b: StundenplanKlassenunterricht) => {
+			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, a.idKlasse);
+			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, b.idKlasse);
+			const cmpKlasse : number = StundenplanManager._compKlasse.compare(aKlasse, bKlasse);
+			if (cmpKlasse !== 0)
+				return cmpKlasse;
+			const aFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, a.idFach);
+			const bFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, b.idFach);
+			const cmpFach : number = StundenplanManager._compFach.compare(aFach, bFach);
+			if (cmpFach !== 0)
+				return cmpFach;
+			if (a.lehrer.size() < b.lehrer.size())
+				return -1;
+			if (a.lehrer.size() > b.lehrer.size())
+				return +1;
+			for (let i : number = 0; i < a.lehrer.size(); i++) {
+				const aIdLehrer : number = ListUtils.getNonNullElementAtOrException(a.lehrer, i);
+				const bIdLehrer : number = ListUtils.getNonNullElementAtOrException(b.lehrer, i);
+				const aLehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, aIdLehrer);
+				const bLehrer : StundenplanLehrer = DeveloperNotificationException.ifMapGetIsNull(this._lehrer_by_id, bIdLehrer);
+				const cmpLehrer : number = StundenplanManager._compLehrer.compare(aLehrer, bLehrer);
+				if (cmpLehrer !== 0)
+					return cmpLehrer;
+			}
+			if (a.wochenstunden < b.wochenstunden)
+				return -1;
+			if (a.wochenstunden > b.wochenstunden)
+				return +1;
+			return JavaString.compareTo(a.bezeichnung, b.bezeichnung);
+		} };
+		return comp;
 	}
 
 	/**
