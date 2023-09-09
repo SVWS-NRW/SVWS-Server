@@ -143,7 +143,7 @@
 			return;
 		}
 		if (activeVorgabe.value.idVorgabe > 0) {
-			result = await props.patchKlausurvorgabe({
+			await props.patchKlausurvorgabe({
 				dauer: activeVorgabe.value.dauer,
 				auswahlzeit: activeVorgabe.value.auswahlzeit,
 				istMdlPruefung: activeVorgabe.value.istMdlPruefung,

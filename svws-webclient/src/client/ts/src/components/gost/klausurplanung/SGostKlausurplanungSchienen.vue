@@ -146,7 +146,7 @@
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;
 		for (const oTermin of termine.value) {
-			if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal)
+			if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal || oTermin.quartal === 0)
 				konfliktfreiZuFremdtermin = props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(oTermin.id, klausur.id).isEmpty();
 			if (konfliktfreiZuFremdtermin)
 				break;
