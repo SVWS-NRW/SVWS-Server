@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.schema.DBSchemaViews;
@@ -136,7 +137,7 @@ public class DBUpdater {
 
 			// 17. Update-Schritt: Tabelle Schema_Revision aktualisieren
 			logger.logLn("- Setze die DB-Revision auf " + neue_revision);
-			if (!DBSchemaManager.transactionSetDBRevision(conn, neue_revision))
+			if (!DBSchemaManager.setDBRevision(conn, neue_revision))
 				throw new DBException("Fehler beim Setzen der SVWS-DB-Revision");
 		} catch (@SuppressWarnings("unused") final DBException e) {
 			success = false;
@@ -222,6 +223,7 @@ public class DBUpdater {
 	/**
 	 * Aktualisiert das Schema schrittweise auf die angegebene Revision
 	 *
+	 * @param user                der Benutzer für die Datenbank-Verbindung
 	 * @param maxUpdateRevision   die maximale Revision auf die aktualisiert wird, -1 für die neueste Revision
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param lockSchema          gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
@@ -229,7 +231,7 @@ public class DBUpdater {
 	 *
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(final long maxUpdateRevision, final boolean devMode, final boolean lockSchema) {
+	public boolean update(final Benutzer user, final long maxUpdateRevision, final boolean devMode, final boolean lockSchema) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
 			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
@@ -237,7 +239,7 @@ public class DBUpdater {
 		}
 
 		boolean success = true;
-		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
+		try (DBEntityManager conn = user.getEntityManager()) {
 			try {
 				conn.transactionBegin();
 				// Prüfe zunächst, ob ein Update möglich ist

@@ -88,7 +88,7 @@ public class APISchema {
 				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
 
 			// Führe die Aktualisierung durch
-			final boolean success = manager.updater.update(rev, false, true);
+			final boolean success = manager.updater.update(user, rev, false, true);
 			if (!success)
 				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}

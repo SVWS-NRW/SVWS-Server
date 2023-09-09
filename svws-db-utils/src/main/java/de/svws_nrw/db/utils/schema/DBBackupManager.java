@@ -202,16 +202,9 @@ public class DBBackupManager {
 			}
 			logger.logLn(0, " [OK]");
 
-			logger.logLn("-> Erstelle für den Import in die Ziel-DB ein SVWS-Schema der Revision " + version.Revision);
-			logger.modifyIndent(2);
-			boolean result = tgtManager.createSVWSSchema(version.Revision, false, false);
-			logger.modifyIndent(-2);
-			if (!result) {
-				logger.logLn(" [Fehler]");
-				throw new DBException("Fehler beim Erstellen des Schemas mit der Revision " + version.Revision);
-			}
-			logger.logLn("[OK]");
+			tgtManager.createSVWSSchema(tgtUser, version.Revision, false, false);
 
+			boolean result = true;
 			logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
 			logger.modifyIndent(2);
 			expimpCopyFrom(tgtManager, version.Revision);
@@ -223,7 +216,7 @@ public class DBBackupManager {
 			String error = "";
 			try {
 				tgtConn.transactionBegin();
-				result = DBSchemaManager.transactionCreateAllTrigger(tgtConn, logger, version.Revision, true);
+				result = DBSchemaManager.createAllTrigger(tgtConn, logger, version.Revision, true);
 				if (result)
 					tgtConn.transactionCommit();
 			} catch (final Exception e) {
@@ -243,7 +236,7 @@ public class DBBackupManager {
 			if (maxUpdateRevision != 0) {
 				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
-				result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+				result = tgtManager.updater.update(tgtUser, maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn("[Fehler]");
@@ -301,16 +294,9 @@ public class DBBackupManager {
 					logger.logLn(" - Revision " + version.Revision);
 					logger.modifyIndent(-2);
 
-					logger.logLn("-> Erstelle für den Export ein SVWS-Schema in der SQLite-Datenbank");
-					logger.modifyIndent(2);
-					boolean result = tgtManager.createSVWSSchema(version.Revision, false, false);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" [Fehler]");
-						throw new DBException("Fehler beim Erstelen des Schemas");
-					}
-					logger.logLn("[OK]");
+					tgtManager.createSVWSSchema(tgtUser, version.Revision, false, false);
 
+					boolean result = true;
 					logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
 					logger.modifyIndent(2);
 					expimpCopyFrom(tgtManager, version.Revision);
@@ -322,7 +308,7 @@ public class DBBackupManager {
 					String error = "";
 					try {
 						tgtConn.transactionBegin();
-						result = DBSchemaManager.transactionCreateAllTrigger(tgtConn, logger, version.Revision, true);
+						result = DBSchemaManager.createAllTrigger(tgtConn, logger, version.Revision, true);
 						if (result)
 							tgtConn.transactionCommit();
 					} catch (final Exception e) {

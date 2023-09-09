@@ -360,17 +360,9 @@ public final class DBMigrationManager {
 				final Benutzer tgtUser = Benutzer.create(tgtConfig);
 				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 					tgtManager = getSchemaManager(tgtConfig, tgtUser, false);
+					tgtManager.createSVWSSchema(tgtUser, 0, false, true);
 
-					logger.logLn("-> Erstelle für die Migration in die Ziel-DB ein SVWS-Schema der Revision 0");
-					logger.modifyIndent(2);
-					boolean result = tgtManager.createSVWSSchema(0, false, true);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" " + strFehler);
-						throw new DBException("Fehler beim Erstelen des Schemas mit der Revision 0");
-					}
-					logger.logLn(strOK);
-
+					boolean result = true;
 					try {
 						tgtConn.reconnect();
 					} catch (@SuppressWarnings("unused") final DBConnectionException e) {
@@ -418,7 +410,7 @@ public final class DBMigrationManager {
 					if (maxUpdateRevision != 0) {
 						logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 						logger.modifyIndent(2);
-						result = tgtManager.updater.update(maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+						result = tgtManager.updater.update(tgtManager.getUser(), maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
 						logger.modifyIndent(-2);
 						if (!result) {
 							logger.logLn(strFehler);

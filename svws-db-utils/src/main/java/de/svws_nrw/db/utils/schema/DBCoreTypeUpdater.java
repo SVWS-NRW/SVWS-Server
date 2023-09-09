@@ -35,6 +35,7 @@ import de.svws_nrw.core.types.schule.Religion;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
@@ -199,14 +200,15 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision.
 	 *
+	 * @param user         der Datenbank-Benutzer für den Verbindungsaufbau zur Datenbank
 	 * @param lockSchema   gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
 	 *                     notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.
 	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
 	 *
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(final boolean lockSchema, final long rev) {
-		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
+	public boolean update(final Benutzer user, final boolean lockSchema, final long rev) {
+		try (DBEntityManager conn = user.getEntityManager()) {
 			try {
 				conn.transactionBegin();
 				boolean result = update(conn, lockSchema, rev);

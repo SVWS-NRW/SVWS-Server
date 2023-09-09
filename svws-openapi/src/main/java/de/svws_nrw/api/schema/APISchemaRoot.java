@@ -260,7 +260,6 @@ public class APISchemaRoot {
 	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
-			// TODO move to DBSchemaManager, use DBException and extend logging...
 
 			final long max_revision = SchemaRevisionen.maxRevision.revision;
 			long rev = revision;
@@ -285,27 +284,9 @@ public class APISchemaRoot {
 			logger.logLn("ist noch nicht vorhanden");
 			logger.modifyIndent(-2);
 
-			if (!root_manager.createDBSchemaWithAdminUser(kennwort.user, kennwort.password, schemaname))
-				return simpleResponse(false, log);
-
 			final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
-			final Benutzer schemaUser = Benutzer.create(dbconfig);
-			final DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
-			if (manager == null)
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-
-			logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
-			logger.modifyIndent(2);
-			if (!manager.createSVWSSchema(0, true, true))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			logger.modifyIndent(-2);
-
-			logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");
-			logger.modifyIndent(2);
-			if (!manager.updater.update(rev, false, true))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			logger.modifyIndent(-2);
-
+			if (!DBSchemaManager.createNewSchema(dbconfig, conn.getUser().getUsername(), conn.getUser().getPassword(), revision, logger))
+				return simpleResponse(false, log);
 			return simpleResponse(true, log);
     	}
     }

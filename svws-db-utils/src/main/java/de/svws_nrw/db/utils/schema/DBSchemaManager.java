@@ -129,37 +129,39 @@ public final class DBSchemaManager {
 	 * Führt die SQL-Skripte zum Erstellen aller Datenbank-Tabellen der angegebenen Schema-Revision
 	 * aus.
 	 *
+	 * @param conn       die Datenbank-Verbindung mit aktiver Transaktion
 	 * @param revision   die Revision des Datenbank-Schemas
 	 *
 	 * @return true, falls alle Tabellen erfolgreich erstellt wurden
 	 */
-	private boolean createAllTables(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
-			final var dbms = conn.getDBDriver();
-			for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
-				logger.logLn(tab.name());
-				final String script = tab.getSQL(dbms, revision);
-				if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
-					result = false;
-					if (returnOnError)
-						break;
-				} else {
-					final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
-					if (!pkTrigger.isEmpty()) {
-						logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
-						for (final String scriptTrigger : pkTrigger) {
-							if (conn.executeNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
-								result = false;
-								if (returnOnError)
-									break;
-							}
+	private boolean createAllTables(final DBEntityManager conn, final long revision) {
+		boolean result = true;
+		final var dbms = conn.getDBDriver();
+		for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
+			logger.logLn(tab.name());
+			final String script = tab.getSQL(dbms, revision);
+			final boolean success = conn.transactionNativeUpdate(script) != Integer.MIN_VALUE;
+			conn.transactionFlush();
+			if (!success) {
+				result = false;
+				if (returnOnError)
+					break;
+			} else {
+				final List<String> pkTrigger = tab.getPrimaerschluesselTriggerSQLList(dbms, revision, true);
+				if (!pkTrigger.isEmpty()) {
+					logger.logLn("  -> Erstelle Trigger für Auto-Inkremente");
+					for (final String scriptTrigger : pkTrigger) {
+						if (conn.transactionNativeUpdate(scriptTrigger) == Integer.MIN_VALUE) {
+							result = false;
+							if (returnOnError)
+								break;
 						}
+						conn.transactionFlush();
 					}
 				}
 			}
-			return result;
 		}
+		return result;
 	}
 
 
@@ -168,50 +170,50 @@ public final class DBSchemaManager {
 	 * Führt die SQL-Skripte zum Erstellen aller Datenbank-Indizes der angegebenen Schema-Revision
 	 * aus.
 	 *
+	 * @param conn       die Datenbank-Verbindung mit aktiver Transaktion
 	 * @param revision   die Revision des Datenbank-Schemas
 	 *
 	 * @return true, falls alle Indizes erfolgreich erstellt wurden
 	 */
-	private boolean createAllIndizes(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
-			for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
-				for (final SchemaTabelleIndex idx : tab.indizes()) {
-					logger.logLn(idx.name());
-					final String script = idx.getSQL();
-					if (conn.executeNativeUpdate(script) == Integer.MIN_VALUE) {
-						result = false;
-						if (returnOnError)
-							break;
-					}
+	private boolean createAllIndizes(final DBEntityManager conn, final long revision) {
+		boolean result = true;
+		for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
+			for (final SchemaTabelleIndex idx : tab.indizes()) {
+				logger.logLn(idx.name());
+				final String script = idx.getSQL();
+				if (conn.transactionNativeUpdate(script) == Integer.MIN_VALUE) {
+					result = false;
+					if (returnOnError)
+						break;
 				}
+				conn.transactionFlush();
 			}
-			return result;
 		}
+		return result;
 	}
 
 
 	/**
 	 * Erstellt die Views für das Schemas der angegebenen Schema-Revision.
 	 *
+	 * @param conn       die Datenbank-Verbindung mit aktiver Transaktion
 	 * @param revision   die Revision des Datenbank-Schemas
 	 *
 	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
 	 */
-	private boolean executeSQLCreateViews(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
-			final List<View> views = DBSchemaViews.getInstance().getViewsActive(revision);
-			for (final View view : views) {
-				logger.logLn(view.name);
-				if (conn.executeNativeUpdate(view.getSQLCreate(conn.getDBDriver())) == Integer.MIN_VALUE) {
-					result = false;
-					if (returnOnError)
-						break;
-				}
+	private boolean executeSQLCreateViews(final DBEntityManager conn, final long revision) {
+		boolean result = true;
+		final List<View> views = DBSchemaViews.getInstance().getViewsActive(revision);
+		for (final View view : views) {
+			logger.logLn(view.name);
+			if (conn.transactionNativeUpdate(view.getSQLCreate(conn.getDBDriver())) == Integer.MIN_VALUE) {
+				result = false;
+				if (returnOnError)
+					break;
 			}
-			return result;
+			conn.transactionFlush();
 		}
+		return result;
 	}
 
 
@@ -220,48 +222,24 @@ public final class DBSchemaManager {
 	 * Führt die SQL-Finalisierungs-Skripte beim Erstellen eines Schemas der angegebenen Schema-Revision
 	 * aus.
 	 *
+	 * @param conn       die Datenbank-Verbindung mit aktiver Transaktion
 	 * @param revision   die Revision des Datenbank-Schemas
 	 *
 	 * @return true, falls alle Skripte erfolgreich ausgeführt wurden
 	 */
-	private boolean createDefaultSVWSBenutzer(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean result = true;
-			final List<String> sqlList = Schema.getCreateBenutzerSQL(revision);
-			for (final String sql : sqlList) {
-				logger.logLn(sql);
-				if (conn.executeNativeUpdate(sql) == Integer.MIN_VALUE) {
-					result = false;
-					if (returnOnError)
-						break;
-				}
+	private boolean createDefaultSVWSBenutzer(final DBEntityManager conn, final long revision) {
+		boolean result = true;
+		final List<String> sqlList = Schema.getCreateBenutzerSQL(revision);
+		for (final String sql : sqlList) {
+			logger.logLn(sql);
+			if (conn.transactionNativeUpdate(sql) == Integer.MIN_VALUE) {
+				result = false;
+				if (returnOnError)
+					break;
 			}
-			return result;
+			conn.transactionFlush();
 		}
-	}
-
-
-	/**
-	 * Setzt die Datenbank-Revision auf die angegebene Revision
-	 *
-	 * @param revision   die zu setzende Revision, bei -1 wird die neueste Revision gesetzt
-	 *
-	 * @return true, falls die Revision erfolgreich gesetzt wurde, sonst false
-	 */
-	public boolean setDBRevision(final long revision) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
-			if (rev == -1)
-				return false;
-			final DTOSchemaRevision oldObj = conn.querySingle(DTOSchemaRevision.class);
-			final DTOSchemaRevision newObj = new DTOSchemaRevision(rev, (rev > SchemaRevisionen.maxRevision.revision) || ((oldObj != null) && (oldObj.IsTainted)));
-			if (oldObj == null) {
-				conn.persist(newObj);
-			} else {
-				conn.replace(oldObj, newObj);
-			}
-			return true;
-		}
+		return result;
 	}
 
 
@@ -274,7 +252,7 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, falls die Revision erfolgreich gesetzt wurde, sonst false
 	 */
-	public static boolean transactionSetDBRevision(final DBEntityManager conn, final long revision) {
+	public static boolean setDBRevision(final DBEntityManager conn, final long revision) {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		if (rev == -1)
 			return false;
@@ -305,7 +283,7 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, falls alle Trigger erfolgreich erstellt wurden
 	 */
-	public static boolean transactionCreateAllTrigger(final DBEntityManager conn, final Logger logger, final long revision, final boolean returnOnError) {
+	public static boolean createAllTrigger(final DBEntityManager conn, final Logger logger, final long revision, final boolean returnOnError) {
 		logger.logLn("- Erstelle Trigger für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
 		boolean result = true;
@@ -342,6 +320,7 @@ public final class DBSchemaManager {
 	/**
 	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision
 	 *
+	 * @param conn            die Datenbank-Verbindung zum Erstellen des Schemas
 	 * @param revision        die Revision für das SVWS-DB-Schema
 	 * @param createUser      gibt an, ob Default-SVWS-Benutzer angelegt werden sollen
 	 * @param createTrigger   gibt an, ob auch die Trigger für die Datenbank-Revision erstellt werden sollen
@@ -349,95 +328,126 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, wenn das Schema erfolgreich erstellt wurde, sonst false
 	 */
-	public boolean createSVWSSchema(final long revision, final boolean createUser, final boolean createTrigger) {
+	private boolean createSVWSSchema(final DBEntityManager conn, final long revision, final boolean createUser, final boolean createTrigger) {
 		logger.logLn("- Erstelle Tabellen für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
-		boolean success = createAllTables(revision);
+		boolean success = createAllTables(conn, revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError) return false;
+			if (returnOnError)
+				return false;
 		}
 		logger.logLn(strOK);
 
 		logger.logLn("- Erstelle Indizes für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
-		success = createAllIndizes(revision);
+		success = createAllIndizes(conn, revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError) return false;
+			if (returnOnError)
+				return false;
 		}
 		logger.logLn(strOK);
 
 		if (createTrigger) {
 			logger.logLn("- Erstelle Trigger für die aktuelle DB-Revision... ");
 			logger.modifyIndent(2);
-			String error = "";
-			try (DBEntityManager conn = user.getEntityManager()) {
-				try {
-					conn.transactionBegin();
-					success = transactionCreateAllTrigger(conn, logger, revision, returnOnError);
-					if (success || (!returnOnError))
-						conn.transactionCommit();
-				} catch (final Exception e) {
-					error = "Fehler bei der Transaktion: " + e.getMessage();
-					success = false;
-				} finally {
-					conn.transactionRollback();
-				}
-			}
+			success = createAllTrigger(conn, logger, revision, returnOnError);
 			logger.modifyIndent(-2);
 			if (!success) {
 				logger.logLn(strError);
-				logger.logLn(error);
-				if (returnOnError) return false;
+				if (returnOnError)
+					return false;
 			}
 			logger.logLn(strOK);
 		}
 
 		logger.logLn("- Schreibe die Daten der Core-Types");
 		logger.modifyIndent(2);
-		success = updater.coreTypes.update(false, revision); // TODO use update(conn, false, revision)
+		success = updater.coreTypes.update(conn, false, revision);
+		conn.transactionFlush();
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError) return false;
+			if (returnOnError)
+				return false;
 		}
 		logger.logLn(strOK);
 
 		logger.logLn("- Erstelle Views: ");
 		logger.modifyIndent(2);
-		success = executeSQLCreateViews(revision);
+		success = executeSQLCreateViews(conn, revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError) return false;
+			if (returnOnError)
+				return false;
 		}
 		logger.logLn(strOK);
 
 		if (createUser) {
 			logger.logLn("- Lege Default-Benutzer an: ");
 			logger.modifyIndent(2);
-			success = createDefaultSVWSBenutzer(revision);
+			success = createDefaultSVWSBenutzer(conn, revision);
 			logger.modifyIndent(-2);
 			if (!success) {
 				logger.logLn(strError);
-				if (returnOnError) return false;
+				if (returnOnError)
+					return false;
 			}
 			logger.logLn(strOK);
 		}
 
 		logger.logLn("- Setze die DB-Revision in der neu erzeugten Datenbank: ");
 		logger.modifyIndent(2);
-		success = setDBRevision(revision);
+		success = setDBRevision(conn, revision);
 		logger.modifyIndent(-2);
 		if (!success) {
 			logger.logLn(strError);
-			if (returnOnError) return false;
+			if (returnOnError)
+				return false;
 		}
 		logger.logLn(strOK);
 		return true;
+	}
+
+
+	/**
+	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision
+	 *
+	 * @param user            der Datenbank-Benutzer über welchen eine Datenbank-Verbindung zum Erstellen des Schemas aufgebaut wird
+	 * @param revision        die Revision für das SVWS-DB-Schema
+	 * @param createUser      gibt an, ob Default-SVWS-Benutzer angelegt werden sollen
+	 * @param createTrigger   gibt an, ob auch die Trigger für die Datenbank-Revision erstellt werden sollen
+	 *                        (oder ob dies später seperat aufgerufen wird)
+	 *
+	 * @throws DBException falls das Erstellen des Schemas fehlschlägt
+	 */
+	public void createSVWSSchema(final Benutzer user, final long revision, final boolean createUser, final boolean createTrigger) throws DBException {
+		logger.logLn("-> Erstelle in der Ziel-DB ein SVWS-Schema der Revision " + revision);
+		logger.modifyIndent(2);
+		boolean result = true;
+		try (DBEntityManager conn = user.getEntityManager()) {
+			try {
+				conn.transactionBegin();
+				result = createSVWSSchema(conn, revision, createUser, createTrigger);
+				if (!result)
+					throw new DBException("Fehler beim Erstellen des Schemas");
+				if (!conn.transactionCommit())
+					throw new DBException("Fehler beim Erstellen des Schemas - Datenbank-Transaktion konnte nicht abgeschlossen werden.");
+			} catch (final Exception e) {
+				logger.logLn(" " + strError);
+				if (e instanceof DBException)
+					throw e;
+				throw new DBException("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
+			} finally {
+				logger.modifyIndent(-2);
+				conn.transactionRollback();
+			}
+		}
+		logger.logLn(strOK);
 	}
 
 
@@ -553,12 +563,11 @@ public final class DBSchemaManager {
 	 * @param tgtRootUser          der Benutzername eines Benutzers, der mit den Rechten zum Verwalten der Datenbankschemata ausgestattet ist.
 	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
 	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
-	 * @param devMode              gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param logger               ein Logger, welcher das Erstellen loggt.
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final int maxUpdateRevision, final boolean devMode, final Logger logger) {
+	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final Logger logger) {
 		final long max_revision = SchemaRevisionen.maxRevision.revision;
 		long rev = maxUpdateRevision;
 		if (rev < 0)
@@ -574,13 +583,28 @@ public final class DBSchemaManager {
 
 		logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
 		logger.modifyIndent(2);
-		if (!manager.createSVWSSchema(0, true, true))
-			return false;
-		logger.modifyIndent(-2);
+		try (DBEntityManager conn = schemaUser.getEntityManager()) {
+			try {
+				conn.transactionBegin();
+				if (!manager.createSVWSSchema(conn, 0, true, true))
+					throw new DBException("Fehler beim Erstellen des Schemas");
+				if (!conn.transactionCommit())
+					throw new DBException("Fehler beim Erstellen des Schemas - Transaktion konnte nicht abgeschlossen werden");
+			} catch (final DBException e) {
+				logger.logLn(e.getMessage());
+				return false;
+			} catch (final Exception e) {
+				logger.logLn("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
+				return false;
+			} finally {
+				logger.modifyIndent(-2);
+				conn.transactionRollback();
+			}
+		}
 
 		logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");
 		logger.modifyIndent(2);
-		if (!manager.updater.update(rev, false, true))
+		if (!manager.updater.update(schemaUser, rev, false, true))
 			return false;
 		logger.modifyIndent(-2);
 		return true;

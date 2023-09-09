@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -42,6 +43,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public static final boolean use_db_caching = false;
 
+
+	/** Formatiert eine Zeitangabe als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
+	private static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 	/** Formatiert ein Datum als String, in der Art, wie es für die Datumseingabe in einer SQL-Anfrage genutzt wird. */
 	private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -916,6 +920,8 @@ public final class DBEntityManager implements AutoCloseable {
 					sb.append(toSQLStringWitEscapeSequences(datetimeFormatter.format(timestamp.toLocalDateTime())));
 				else if (data[j] instanceof final Date date)
 					sb.append(toSQLStringWitEscapeSequences(dateFormatter.format(date.toLocalDate())));
+				else if (data[j] instanceof final Time time)
+					sb.append(toSQLStringWitEscapeSequences(timeFormatter.format(time.toLocalTime())));
 				else if (data[j] instanceof final String str)
 					sb.append(toSQLStringWitEscapeSequences(str));
 				else if (data[j] instanceof final Number number)

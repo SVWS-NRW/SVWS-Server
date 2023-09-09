@@ -72,7 +72,6 @@ public class CreateSchema {
 		try {
 			cmdLine.addOption(new CommandLineOption("r", "revision", true, "Gibt die maximale Revision an, bis zu der die migrierte DB maximal aktualsiert wird (Default: -1 für so weit wie möglich)"));
 			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet den Hinweise auf das notwendige Löschen der Ziel-DB automatisch mit \"Ja\""));
-			cmdLine.addOption(new CommandLineOption("d", "developerMode", false, "Führt den Import im Developer-Mode durch. Dies bedeutet, dass die Datenbank nur für Testzwecke geeignet ist und entsprechend gekennzeichnet wird."));
 			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
 			cmdLine.addOption(new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
 			cmdLine.addOption(new CommandLineOption("tl", "tgtLoc", true, "Der Ort, wo die Ziel-DB zu finden ist (Der Pfad einer Datei oder der Ort im Netzwerk, z.B. \"localhost\" )"));
@@ -97,7 +96,6 @@ public class CreateSchema {
 			SVWSKonfiguration.getFrom(cmdLine.getValue("cp", null));
 
 			final int maxUpdateRevision = NumberUtils.toInt(cmdLine.getValue("r", "-1"), -1);
-			final boolean devMode = cmdLine.isSet("d");
 
 		    // Lese die Optionen für die Ziel-Datenbank ein
 		    final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
@@ -112,7 +110,7 @@ public class CreateSchema {
 			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true, 0, 0);
 
 			// Führe das Erstellen mithilfe des Schema-Managers durch.
-			DBSchemaManager.createNewSchema(tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, logger);
+			DBSchemaManager.createNewSchema(tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, logger);
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		}

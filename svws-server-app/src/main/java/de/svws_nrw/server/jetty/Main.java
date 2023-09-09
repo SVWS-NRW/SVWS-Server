@@ -74,13 +74,13 @@ public class Main {
 					if (!dbManager.updater.isUptodate(-1, devMode)) {
 						logger.logLn("Revision veraltet - führe Update aus...");
 						logger.modifyIndent(2);
-						dbManager.updater.update(-1, devMode, true);
+						dbManager.updater.update(dbUser, -1, devMode, true);
 						logger.modifyIndent(-2);
 					}
 					if (!dbManager.updater.coreTypes.isUptodate()) {
 						logger.logLn("Core-Types veraltet - führe Update aus...");
 						logger.modifyIndent(2);
-						dbManager.updater.coreTypes.update(true, -1);
+						dbManager.updater.coreTypes.update(dbUser, true, -1);
 						logger.modifyIndent(-2);
 					}
 					logger.modifyIndent(-2);
