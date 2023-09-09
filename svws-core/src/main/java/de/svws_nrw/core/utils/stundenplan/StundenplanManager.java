@@ -118,7 +118,7 @@ public class StundenplanManager {
 		return Long.compare(a.id, b.id);
 	};
 
-	private static final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> Long.compare(a.id, b.id);
+	private final @NotNull Comparator<@NotNull StundenplanUnterricht> _compUnterricht;
 
 	private static final @NotNull Comparator<@NotNull StundenplanZeitraster> _compZeitraster = (final @NotNull StundenplanZeitraster a, final @NotNull StundenplanZeitraster b) -> {
 		if (a.wochentag < b.wochentag) return -1;
@@ -287,6 +287,7 @@ public class StundenplanManager {
 	 */
 	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<@NotNull StundenplanUnterricht> unterrichte, final @NotNull List<@NotNull StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
+		_compUnterricht = unterrichtCreateComparator();
 		_stundenplanID = daten.id;
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
@@ -331,6 +332,7 @@ public class StundenplanManager {
 	 */
 	public StundenplanManager(final @NotNull StundenplanKomplett stundenplanKomplett) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
+		_compUnterricht = unterrichtCreateComparator();
 		_stundenplanID = stundenplanKomplett.daten.id;
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
@@ -1406,6 +1408,21 @@ public class StundenplanManager {
 		return DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
 	}
 
+	private StundenplanJahrgang jahrgangGetMinimumByKlassenIDs(final @NotNull List<@NotNull Long> klassen) {
+		StundenplanJahrgang min = null;
+
+		for (final @NotNull Long idKlasse : klassen) {
+			final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
+			for (final @NotNull Long idJahrgang : klasse.jahrgaenge) {
+				final @NotNull StundenplanJahrgang jahrgang = DeveloperNotificationException.ifMapGetIsNull(_jahrgang_by_id, idJahrgang);
+				if ((min == null) || (_compJahrgang.compare(jahrgang, min) < 0))
+					min = jahrgang;
+			}
+		}
+
+		return min;
+	}
+
 	/**
 	 * Liefert eine Liste aller {@link StundenplanJahrgang}-Objekte.
 	 * <br>Laufzeit: O(1)
@@ -1788,6 +1805,20 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_schueler_by_id", _schueler_by_id, idSchueler);
 	}
 
+	private int klasseCompareByKlassenIDs(final @NotNull List<@NotNull Long> a, final @NotNull List<@NotNull Long> b) {
+		if (a.size() < b.size()) return -1;
+		if (a.size() > b.size()) return +1;
+		for (int i = 0; i < a.size(); i++) {
+			final @NotNull Long aIdKlasse = ListUtils.getNonNullElementAtOrException(a, i);
+			final @NotNull Long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
+			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
+			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
+			final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
+			if (cmpKlasse != 0) return cmpKlasse;
+		}
+		return 0;
+	}
+
 	/**
 	 * Liefert das {@link StundenplanKlasse}-Objekt mit der übergebenen ID.
 	 * <br>Laufzeit: O(1)
@@ -1889,7 +1920,7 @@ public class StundenplanManager {
 		update_all();
 	}
 
-	private void klassenunterrichtAddAllOhneUpdate(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+	private void klassenunterrichtAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
 		for (final @NotNull StundenplanKlassenunterricht klassenunterricht : listKlassenunterricht)
 			klassenunterrichtAddOhneUpdate(klassenunterricht);
 	}
@@ -1899,7 +1930,7 @@ public class StundenplanManager {
 	 *
 	 * @param listKlassenunterricht  Die Menge der {@link StundenplanKlassenunterricht}-Objekte, welche hinzugefügt werden soll.
 	 */
-	public void klassenunterrichtAddAll(@NotNull final List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
+	public void klassenunterrichtAddAll(final @NotNull List<@NotNull StundenplanKlassenunterricht> listKlassenunterricht) {
 		klassenunterrichtAddAllOhneUpdate(listKlassenunterricht);
 		update_all();
 	}
@@ -1924,16 +1955,8 @@ public class StundenplanManager {
 				final int cmpFach = _compFach.compare(aFach, bFach);
 				if (cmpFach != 0) return cmpFach;
 
-				if (a.lehrer.size() < b.lehrer.size()) return -1;
-				if (a.lehrer.size() > b.lehrer.size()) return +1;
-				for (int i = 0; i < a.lehrer.size(); i++) {
-					final @NotNull Long aIdLehrer = ListUtils.getNonNullElementAtOrException(a.lehrer, i);
-					final @NotNull Long bIdLehrer = ListUtils.getNonNullElementAtOrException(b.lehrer, i);
-					final @NotNull StundenplanLehrer aLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, aIdLehrer);
-					final @NotNull StundenplanLehrer bLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, bIdLehrer);
-					final int cmpLehrer = _compLehrer.compare(aLehrer, bLehrer);
-					if (cmpLehrer != 0) return cmpLehrer;
-				}
+				final int cmpLehrer = lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
+				if (cmpLehrer != 0) return cmpLehrer;
 
 				if (a.wochenstunden < b.wochenstunden) return -1;
 				if (a.wochenstunden > b.wochenstunden) return +1;
@@ -2342,6 +2365,20 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifStringIsBlank("lehrer.vorname", lehrer.vorname);
 		for (final @NotNull Long idFachDesLehrers : lehrer.faecher)
 			DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, idFachDesLehrers);
+	}
+
+	private int lehrerCompareByLehrerIDs(final @NotNull List<@NotNull Long> a, final @NotNull List<@NotNull Long> b) {
+		if (a.size() < b.size()) return -1;
+		if (a.size() > b.size()) return +1;
+		for (int i = 0; i < a.size(); i++) {
+			final @NotNull Long aIdLehrer = ListUtils.getNonNullElementAtOrException(a, i);
+			final @NotNull Long bIdLehrer = ListUtils.getNonNullElementAtOrException(b, i);
+			final @NotNull StundenplanLehrer aLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, aIdLehrer);
+			final @NotNull StundenplanLehrer bLehrer = DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, bIdLehrer);
+			final int cmpLehrer = _compLehrer.compare(aLehrer, bLehrer);
+			if (cmpLehrer != 0) return cmpLehrer;
+		}
+		return 0;
 	}
 
 	/**
@@ -3519,6 +3556,47 @@ public class StundenplanManager {
 			DeveloperNotificationException.ifMapNotContains("_raum_by_id", _raum_by_id, idRaumDesUnterrichts);
 		for (final @NotNull Long idSchieneDesUnterrichts : u.schienen)
 			DeveloperNotificationException.ifMapNotContains("_schiene_by_id", _schiene_by_id, idSchieneDesUnterrichts);
+	}
+
+	private @NotNull Comparator<@NotNull StundenplanUnterricht> unterrichtCreateComparator() {
+		final @NotNull Comparator<@NotNull StundenplanUnterricht> comp = (final @NotNull StundenplanUnterricht a, final @NotNull StundenplanUnterricht b) -> {
+			// Sortierung nach Jahrgang
+			final StundenplanJahrgang aJahrgang = jahrgangGetMinimumByKlassenIDs(a.klassen);
+			final StundenplanJahrgang bJahrgang = jahrgangGetMinimumByKlassenIDs(b.klassen);
+			if ((aJahrgang != null) || (bJahrgang != null)) {
+				if (aJahrgang == null) return -1;
+				if (bJahrgang == null) return +1;
+				final int cmpJahrgang = _compJahrgang.compare(aJahrgang, bJahrgang);
+				if (cmpJahrgang != 0) return cmpJahrgang;
+			}
+
+			// Sortierung nach Kurs
+			if ((a.idKurs != null) && (b.idKurs == null)) return -1;
+			if ((a.idKurs == null) && (b.idKurs != null)) return +1;
+
+			// Sortierung nach Klassen-Listen
+			final int cmpKlasse = klasseCompareByKlassenIDs(a.klassen, b.klassen);
+			if (cmpKlasse != 0) return cmpKlasse;
+
+			// Sortierung nach Fach
+			final @NotNull StundenplanFach aFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, a.idFach);
+			final @NotNull StundenplanFach bFach = DeveloperNotificationException.ifMapGetIsNull(_fach_by_id, b.idFach);
+			final int cmpFach = _compFach.compare(aFach, bFach);
+			if (cmpFach != 0) return cmpFach;
+
+			// Sortierung nach Lehrkraft-Listen
+			final int cmpLehrer = lehrerCompareByLehrerIDs(a.lehrer, b.lehrer);
+			if (cmpLehrer != 0) return cmpLehrer;
+
+			// Sortierung nach Wochentyp
+			if (a.wochentyp < b.wochentyp) return -1;
+			if (a.wochentyp > b.wochentyp) return +1;
+
+			// Sortierung nach ID
+			return Long.compare(a.id, b.id);
+		};
+
+		return comp;
 	}
 
 	/**
