@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
@@ -27,11 +28,27 @@ import jakarta.validation.constraints.NotNull;
 public class GostKursklausurManager {
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
-		if (a.datum == null)
+		if (a.datum == null && b.datum != null)
 			return +1;
-		if (b.datum == null)
+		if (b.datum == null && a.datum != null)
 			return -1;
-		return a.datum.compareTo(b.datum);
+		if (a.datum != null && b.datum != null)
+			return a.datum.compareTo(b.datum);
+		if (a.quartal != b.quartal)
+			return a.quartal - b.quartal;
+		return a.id > b.id ? +1 : -1;
+	};
+
+	private static final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+		if (a.halbjahr != b.halbjahr)
+			return a.halbjahr - b.halbjahr;
+		if (a.quartal != b.quartal)
+			return a.quartal - b.quartal;
+		if (a.idFach != b.idFach)
+			return a.idFach > b.idFach ? +1 : -1;
+		if (a.kursart != b.kursart)
+			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
+		return a.id > b.id ? +1 : -1;
 	};
 
 	// GostKursklausur
@@ -154,6 +171,7 @@ public class GostKursklausurManager {
 	private void update_kursklausurmenge() {
 		_kursklausurmenge.clear();
 		_kursklausurmenge.addAll(_kursklausur_by_id.values());
+		_kursklausurmenge.sort(_compKursklausur);
 	}
 
 	private void kursklausurAddOhneUpdate(final @NotNull GostKursklausur kursklausur) {
@@ -467,7 +485,7 @@ public class GostKursklausurManager {
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
@@ -476,32 +494,14 @@ public class GostKursklausurManager {
 			final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_quartal_and_idTermin.getOrNull(quartal, -1L);
 			return klausuren != null ? klausuren : new ArrayList<>();
 		}
-		final List<@NotNull GostKursklausur> klausuren = new ArrayList<>();
-		final List<@NotNull List<@NotNull GostKursklausur>> klausurListen = _kursklausurmenge_by_quartal_and_idTermin.getNonNullValuesAsList();
-		for (final @NotNull List<@NotNull GostKursklausur> kl : klausurListen) {
-			klausuren.addAll(kl);
-		}
-		return klausuren;
+//		final List<@NotNull GostKursklausur> klausuren = new ArrayList<>();
+//		final List<@NotNull List<@NotNull GostKursklausur>> klausurListen = _kursklausurmenge_by_quartal_and_idTermin.getNonNullValuesAsList();
+//		for (final @NotNull List<@NotNull GostKursklausur> kl : klausurListen) {
+//			klausuren.addAll(kl);
+//		}
+//		return klausuren;
+		return kursklausurOhneTerminGetMenge();
 	}
-
-//	/**
-//	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
-//	 * die noch kein Termin / Schiene gesetzt wurde
-//	 *
-//	 * @param quartal die Nummer des Quartals
-//	 *
-//	 * @return die Liste von GostKursklausur-Objekten
-//	 */
-//	public @NotNull List<@NotNull List<@NotNull GostKursklausur>> getKursklausurenKursartOhneTermin(final int quartal) {
-//		final List<@NotNull List<@NotNull GostKursklausur>> retList = new ArrayList<>();
-//		final Map<@NotNull String, @NotNull Map<@NotNull Long, List<@NotNull GostKursklausur>>> mapKursartTerminKursklausuren = _kursklausurmenge_by_quartal_and_kursart_and_idTermin
-//				.getMap2OrNull(quartal <= 0 ? -1 : quartal);
-//		if (mapKursartTerminKursklausuren != null)
-//			for (final Map<@NotNull Long, List<@NotNull GostKursklausur>> mapKursarten : mapKursartTerminKursklausuren.values())
-//				if (mapKursarten != null)
-//					retList.add(mapKursarten.get(-1L));
-//		return retList;
-//	}
 
 	/**
 	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
@@ -534,15 +534,22 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByQuartal(final int quartal) {
-		if (quartal == 0)
-			return terminGetMengeAsList();
-		final List<@NotNull GostKlausurtermin> termine = _terminmenge_by_quartal.get(quartal);
-		return termine != null ? termine : new ArrayList<>();
+	public @NotNull List<@NotNull GostKlausurtermin> terminGetMengeByQuartal(final int quartal, final boolean includeMultiquartal) {
+		final List<@NotNull GostKlausurtermin> termine = new ArrayList<>();
+		if (quartal > 0) {
+			if (_terminmenge_by_quartal.get(quartal) != null)
+				termine.addAll(_terminmenge_by_quartal.get(quartal));
+			if (includeMultiquartal && _terminmenge_by_quartal.get(0) != null)
+				termine.addAll(_terminmenge_by_quartal.get(0));
+			return termine;
+		}
+		return terminGetMengeAsList();
 	}
 
 	/**
@@ -564,13 +571,15 @@ public class GostKursklausurManager {
 	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein
 	 * Datum gesetzt ist
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal             die Nummer des Quartals
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurtermin> terminMitDatumGetMengeByQuartal(final int quartal) {
+	public @NotNull List<@NotNull GostKlausurtermin> terminMitDatumGetMengeByQuartal(final int quartal, final boolean includeMultiquartal) {
 		final List<@NotNull GostKlausurtermin> termineMitDatum = new ArrayList<>();
-		for (@NotNull final GostKlausurtermin termin : terminGetMengeByQuartal(quartal))
+		for (@NotNull final GostKlausurtermin termin : terminGetMengeByQuartal(quartal, includeMultiquartal))
 			if (termin.datum != null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(_compTermin);

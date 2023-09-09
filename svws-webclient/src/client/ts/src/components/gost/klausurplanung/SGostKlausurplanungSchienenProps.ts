@@ -23,7 +23,7 @@ export interface GostKlausurplanungSchienenProps {
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 	kursmanager: KursManager;
-	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
+	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

@@ -35,20 +35,27 @@
 
 		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 			<div class="flex flex-row gap-8 mt-4">
-				<div class="flex flex-col">
+				<div class="flex flex-col border" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 					<div class="text-headline-md">Zu verplanen:</div>
-					<s-gost-klausurplanung-schienen-termin :quartal="quartalsauswahl.value"
-						:jahrgangsdaten="jahrgangsdaten"
-						:kursklausurmanager="kursklausurmanager"
-						:termin="undefined"
-						:alle-termine="termine"
-						:faecher-manager="faecherManager"
-						:map-lehrer="mapLehrer"
-						:map-schueler="mapSchueler"
-						:drag-data="() => dragData"
-						:on-drag="onDrag"
-						:on-drop="onDrop"
-						:kursmanager="kursmanager" />
+					<table class="w-full">
+						<thead />
+						<tbody>
+							<tr v-for="klausur in klausurenOhneTermin()"
+								:key="klausur.id"
+								:data="klausur"
+								:draggable="true"
+								@dragstart="onDrag(klausur)"
+								@dragend="onDrag(undefined)"
+								:class="klausurCssClasses(klausur, undefined)">
+								<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
+								<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
+								<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
+								<td class="text-center">{{ klausur.dauer }}</td>
+								<td>&nbsp;</td>
+								<td />
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
@@ -56,8 +63,7 @@
 							:jahrgangsdaten="jahrgangsdaten"
 							:class="dropOverCssClasses(termin)"
 							:kursklausurmanager="kursklausurmanager"
-							:termin="termin"
-							:alle-termine="termine"
+							:termin="() => termin"
 							:faecher-manager="faecherManager"
 							:map-lehrer="mapLehrer"
 							:drag-data="() => dragData"
@@ -66,6 +72,7 @@
 							:map-schueler="mapSchueler"
 							:loesche-klausurtermine="loescheKlausurtermine"
 							:patch-klausurtermin="patchKlausurtermin"
+							:klausur-css-classes="klausurCssClasses"
 							:kursmanager="kursmanager" />
 					</div>
 				</div>
@@ -91,6 +98,8 @@
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
+	const klausurenOhneTermin = () => props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value);
+
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		dragData.value = data;
 	};
@@ -109,11 +118,11 @@
 	};
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
-		"bg-success": dragData.value !== undefined && dragData.value.quartal === termin.quartal,
-		"opacity-40": dragData.value !== undefined && dragData.value.quartal !== termin.quartal,
+		"bg-success": dragData.value !== undefined && (dragData.value.quartal === termin.quartal || termin.quartal === 0),
+		"opacity-40": dragData.value !== undefined && (dragData.value.quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
-	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().terminGetMengeAsList() : props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value));
+	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().terminGetMengeAsList() : props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true));
 
 	const algMode = ref<KlausurterminblockungAlgorithmen>(KlausurterminblockungAlgorithmen.NORMAL);
 	const lkgkMode = ref<KlausurterminblockungModusKursarten>(KlausurterminblockungModusKursarten.BEIDE);
@@ -133,5 +142,20 @@
 	};
 
 	const loescheTermine = async () => await props.loescheKlausurtermine(termine.value);
+
+	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
+		let konfliktfreiZuFremdtermin = false;
+		for (const oTermin of termine.value) {
+			if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal)
+				konfliktfreiZuFremdtermin = props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(oTermin.id, klausur.id).isEmpty();
+			if (konfliktfreiZuFremdtermin)
+				break;
+		}
+		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kursklausurmanager().konfliktTermininternSchueleridsGetMengeByTerminAndKursklausur(termin, klausur).size() > 0;
+		return {
+			"bg-success": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
+			"bg-error": konfliktZuEigenemTermin,
+		}
+	};
 
 </script>

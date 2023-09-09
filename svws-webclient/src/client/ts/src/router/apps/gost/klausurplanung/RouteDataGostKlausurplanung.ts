@@ -365,15 +365,14 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausurtermin = async (id: number, termin: Partial<Core.GostKlausurtermin>): Promise<boolean> => {
+	patchKlausurtermin = async (id: number, termin: Partial<Core.GostKlausurtermin>) => {
 		api.status.start();
-		const oldTtermin: Core.GostKlausurtermin = this.kursklausurmanager.terminGetByIdOrException(id);
-		Object.assign(oldTtermin, termin);
+		const oldTtermin = this.kursklausurmanager.terminGetByIdOrException(id);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
+		Object.assign(oldTtermin, termin);
 		this.kursklausurmanager.terminPatchAttributes(oldTtermin);
 		this.commit();
 		api.status.stop();
-		return true;
 	}
 
 	erzeugeVorgabenAusVorlage = async (quartal: number) => {

@@ -7,6 +7,7 @@ import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanM
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -21,11 +22,27 @@ import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 export class GostKursklausurManager extends JavaObject {
 
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
-		if (a.datum === null)
+		if (a.datum === null && b.datum !== null)
 			return +1;
-		if (b.datum === null)
+		if (b.datum === null && a.datum !== null)
 			return -1;
-		return JavaString.compareTo(a.datum, b.datum);
+		if (a.datum !== null && b.datum !== null)
+			return JavaString.compareTo(a.datum, b.datum);
+		if (a.quartal !== b.quartal)
+			return a.quartal - b.quartal;
+		return a.id > b.id ? +1 : -1;
+	} };
+
+	private static readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
+		if (a.halbjahr !== b.halbjahr)
+			return a.halbjahr - b.halbjahr;
+		if (a.quartal !== b.quartal)
+			return a.quartal - b.quartal;
+		if (a.idFach !== b.idFach)
+			return a.idFach > b.idFach ? +1 : -1;
+		if (a.kursart as unknown !== b.kursart as unknown)
+			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
+		return a.id > b.id ? +1 : -1;
 	} };
 
 	private readonly _kursklausur_by_id : JavaMap<number, GostKursklausur> = new HashMap();
@@ -155,6 +172,7 @@ export class GostKursklausurManager extends JavaObject {
 	private update_kursklausurmenge() : void {
 		this._kursklausurmenge.clear();
 		this._kursklausurmenge.addAll(this._kursklausur_by_id.values());
+		this._kursklausurmenge.sort(GostKursklausurManager._compKursklausur);
 	}
 
 	private kursklausurAddOhneUpdate(kursklausur : GostKursklausur) : void {
@@ -448,7 +466,7 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKursklausur-Objekten zum übergebenen Quartal für
 	 * die noch kein Termin / Schiene gesetzt wurde
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
 	 *
 	 * @return die Liste von GostKursklausur-Objekten
 	 */
@@ -457,12 +475,7 @@ export class GostKursklausurManager extends JavaObject {
 			const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_quartal_and_idTermin.getOrNull(quartal, -1);
 			return klausuren !== null ? klausuren : new ArrayList();
 		}
-		const klausuren : List<GostKursklausur> | null = new ArrayList();
-		const klausurListen : List<List<GostKursklausur>> | null = this._kursklausurmenge_by_quartal_and_idTermin.getNonNullValuesAsList();
-		for (const kl of klausurListen) {
-			klausuren.addAll(kl);
-		}
-		return klausuren;
+		return this.kursklausurOhneTerminGetMenge();
 	}
 
 	/**
@@ -496,15 +509,22 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Quartal
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal             die Nummer des Quartals, 0 für alle Quartale
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminGetMengeByQuartal(quartal : number) : List<GostKlausurtermin> {
-		if (quartal === 0)
-			return this.terminGetMengeAsList();
-		const termine : List<GostKlausurtermin> | null = this._terminmenge_by_quartal.get(quartal);
-		return termine !== null ? termine : new ArrayList();
+	public terminGetMengeByQuartal(quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
+		const termine : List<GostKlausurtermin> | null = new ArrayList();
+		if (quartal > 0) {
+			if (this._terminmenge_by_quartal.get(quartal) !== null)
+				termine.addAll(this._terminmenge_by_quartal.get(quartal));
+			if (includeMultiquartal && this._terminmenge_by_quartal.get(0) !== null)
+				termine.addAll(this._terminmenge_by_quartal.get(0));
+			return termine;
+		}
+		return this.terminGetMengeAsList();
 	}
 
 	/**
@@ -526,13 +546,15 @@ export class GostKursklausurManager extends JavaObject {
 	 * Liefert eine Liste von GostKlausurtermin-Objekten des Quartals, bei denen ein
 	 * Datum gesetzt ist
 	 *
-	 * @param quartal die Nummer des Quartals
+	 * @param quartal             die Nummer des Quartals
+	 * @param includeMultiquartal true, wenn auch für mehrere Quartale geöffnete
+	 *                            Termine geliefert werden sollen, sonst false
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
-	public terminMitDatumGetMengeByQuartal(quartal : number) : List<GostKlausurtermin> {
+	public terminMitDatumGetMengeByQuartal(quartal : number, includeMultiquartal : boolean) : List<GostKlausurtermin> {
 		const termineMitDatum : List<GostKlausurtermin> | null = new ArrayList();
-		for (const termin of this.terminGetMengeByQuartal(quartal))
+		for (const termin of this.terminGetMengeByQuartal(quartal, includeMultiquartal))
 			if (termin.datum !== null)
 				termineMitDatum.add(termin);
 		termineMitDatum.sort(GostKursklausurManager._compTermin);

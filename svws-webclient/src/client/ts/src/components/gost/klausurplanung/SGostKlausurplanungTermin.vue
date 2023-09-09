@@ -25,7 +25,7 @@
 						:draggable="true"
 						@dragstart="onDragTermin(klausur)"
 						@dragend="onDragTermin(undefined)"
-						:class="props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur)">
+						:class="props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin)">
 						<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
 						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
 						<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
@@ -43,7 +43,7 @@
 
 	import type { GostKursklausurManager, GostKursklausur, GostKlausurtermin, LehrerListeEintrag, KursManager, GostJahrgangsdaten} from "@core";
 	import { computed, ref } from 'vue';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 
 	const props = defineProps<{
 		jahrgangsdaten: GostJahrgangsdaten;
@@ -55,7 +55,7 @@
 		kursmanager: KursManager;
 		quartal?: number;
 		klausurDraggable: boolean;
-		klausurCssClasses?: (klausur: GostKursklausur) => void;
+		klausurCssClasses?: (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
 
 	}>();
