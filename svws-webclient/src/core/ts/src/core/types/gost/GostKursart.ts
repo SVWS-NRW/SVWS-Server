@@ -282,6 +282,20 @@ export class GostKursart extends JavaObject implements JavaEnum<GostKursart> {
 	}
 
 	/**
+	 * Gibt die Gost-Kursart aus dem Kürzel der Kursart zurück.
+	 *
+	 * @param kuerzel    das Kürzel der Kursart
+	 *
+	 * @return die Kursart oder null, falls das Kürzel ungültig ist
+	 */
+	public static fromKuerzelOrException(kuerzel : string | null) : GostKursart {
+		let gk : GostKursart | null = GostKursart.getMapByKuerzel().get(kuerzel);
+		if (gk === null)
+			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel!)
+		return gk;
+	}
+
+	/**
 	 * Bestimmt die Gost-Kursart anhand der übergebenen zulässigen Kursart
 	 *
 	 * @param kursart   die Kursart

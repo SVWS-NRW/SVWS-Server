@@ -221,6 +221,20 @@ public enum GostKursart {
 		return getMapByKuerzel().get(kuerzel);
 	}
 
+	/**
+	 * Gibt die Gost-Kursart aus dem Kürzel der Kursart zurück.
+	 *
+	 * @param kuerzel    das Kürzel der Kursart
+	 *
+	 * @return die Kursart oder null, falls das Kürzel ungültig ist
+	 */
+	public static @NotNull GostKursart fromKuerzelOrException(final String kuerzel) {
+		GostKursart gk = getMapByKuerzel().get(kuerzel);
+		if (gk == null)
+			throw new DeveloperNotificationException("Invalid value for kurzel: " + kuerzel);
+		return gk;
+	}
+
 
 	/**
 	 * Bestimmt die Gost-Kursart anhand der übergebenen zulässigen Kursart
