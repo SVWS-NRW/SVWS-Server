@@ -16,7 +16,7 @@
 				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(ku.idFach).split('-')[0])}`">
+							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
 							<div role="cell" class="select-none data-table__td">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`">{{ ku.bezeichnung }}</span>
 							</div>
