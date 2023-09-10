@@ -38,7 +38,7 @@ public class StupasSchulmanagerFormatReader {
 	private final HashMap2D<Integer, Integer, StundenplanZeitraster> zeiraster_by_wochentag_and_stunde = new HashMap2D<>();
 
 	/**
-	 *  Konstruktor.
+	 *  Der Konstruktor.
 	 */
 	public StupasSchulmanagerFormatReader() {
 		// leer
@@ -47,11 +47,13 @@ public class StupasSchulmanagerFormatReader {
 	/**
 	 * Liefert ein {@link StundenplanManager}-Objekt, welches die Daten der übergebenen CSV-Datei importiert enthält.
 	 *
-	 * @param location  Der Ort der CSV-Ressource, die eingelesen werden soll.
+	 * @param location    Der Ort der CSV-Ressource, die eingelesen werden soll.
+	 * @param gueltigAb   Das datum, ab dem der Stundenplan gilt. Format-Beispiel: "2022-03-15"
+	 * @param gueltigBis  Das datum, bis der Stundenplan gilt. Format-Beispiel: "2022-09-25"
 	 *
 	 * @return ein {@link StundenplanManager}-Objekt, welches die Daten der übergebenen CSV-Datei importiert enthält.
 	 */
-	public StundenplanManager toManager(final String location) {
+	public StundenplanManager toManager(final String location, final String gueltigAb, final String gueltigBis) {
 		fach_by_kuerzel.clear();
 		raum_by_kuerzel.clear();
 		lehrer_by_kuerzel.clear();
@@ -73,8 +75,8 @@ public class StupasSchulmanagerFormatReader {
 		final StundenplanKomplett komplett = new StundenplanKomplett();
 		komplett.daten.bezeichnungStundenplan = "Import aus " + location;
 		komplett.daten.wochenTypModell = getWochenTypModell(csvData);
-		komplett.daten.gueltigAb = "2022-03-15";
-		komplett.daten.gueltigBis = "2022-09-25";
+		komplett.daten.gueltigAb = gueltigAb;
+		komplett.daten.gueltigBis = gueltigBis;
 		final StundenplanManager m = new StundenplanManager(komplett);
 
 		// Daten importieren

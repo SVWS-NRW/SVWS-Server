@@ -1676,7 +1676,9 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifSmaller("kalenderwoche", kalenderwoche, 1);
 		DeveloperNotificationException.ifGreater("kalenderwoche", kalenderwoche, DateUtils.gibKalenderwochenOfJahr(jahr));
 		const z : StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
-		return (this._stundenplanWochenTypModell >= 2) && (z !== null);
+		if (z === null)
+			return false;
+		return (this._stundenplanWochenTypModell >= 2) && (z.id >= 0);
 	}
 
 	/**

@@ -1709,7 +1709,10 @@ public class StundenplanManager {
 
 		// Berechnen
 		final StundenplanKalenderwochenzuordnung z = _kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
-		return (_stundenplanWochenTypModell >= 2) && (z != null);
+		if (z == null)
+			return false;
+
+		return (_stundenplanWochenTypModell >= 2) && (z.id >= 0);
 	}
 
 	/**

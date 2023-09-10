@@ -1,6 +1,7 @@
 package de.svws_nrw.core.stundenplan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
+import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 
 /**
@@ -18,6 +20,8 @@ import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class StundenplanManagerTest {
 
+	// TODO Zwei Kalenderwochenzuordnungen via Definition drehen.
+
 	/**
 	 * Diese Klasse testet den {@link StundenplanManager} mit randomisierten Daten.
 	 */
@@ -26,16 +30,11 @@ class StundenplanManagerTest {
 	void testDatenstz_2023_08_31() {
 		final String location = "de/svws_nrw/core/utils/stundenplan/StupasSchulmanagerExport.txt";
 		final StupasSchulmanagerFormatReader reader = new StupasSchulmanagerFormatReader();
-		final StundenplanManager m = reader.toManager(location);
+		final StundenplanManager m = reader.toManager(location, "2022-03-15", "2022-09-25"); // 11 KW bis 38 KW
 
-		testFach(m);
-		testJahrgang(m);
-		// jahrgangRemoveOhneUpdateById, jahrgangRemoveOhneUpdateById, jahrgangRemoveAll
-
-
-
-
-
+		test_fach_getter(m);
+		test_jahrgang_getter(m);
+		test_kwz_getter(m);
 
 		// Datenkonsistenz überprüfen
 		assertEquals(43, m.raumGetMengeAsList().size());
@@ -44,7 +43,54 @@ class StundenplanManagerTest {
 		assertEquals(35, m.schieneGetMengeAsList().size());
 	}
 
-	private static void testJahrgang(final StundenplanManager m) {
+	private static void test_kwz_getter(final StundenplanManager m) {
+		assertEquals(28, m.kalenderwochenzuordnungGetMengeAsList().size());
+
+		final StundenplanKalenderwochenzuordnung kw11 = m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 11);
+		final StundenplanKalenderwochenzuordnung kw11b = m.kalenderwochenzuordnungGetByDatum("2022-03-15");
+		final StundenplanKalenderwochenzuordnung kw12 = m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 12);
+		final StundenplanKalenderwochenzuordnung kw12b = m.kalenderwochenzuordnungGetNextOrNull(kw11);
+		final StundenplanKalenderwochenzuordnung kw10 = m.kalenderwochenzuordnungGetPrevOrNull(kw11);
+		assertEquals(1, kw11.wochentyp);
+		assertEquals(kw11b, kw11);
+		assertEquals(kw12b, kw12);
+		assertEquals(null, kw10);
+
+		final StundenplanKalenderwochenzuordnung kw38 = m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 38);
+		final StundenplanKalenderwochenzuordnung kw38b = m.kalenderwochenzuordnungGetByDatum("2022-09-25");
+		final StundenplanKalenderwochenzuordnung kw39 = m.kalenderwochenzuordnungGetNextOrNull(kw38);
+		final StundenplanKalenderwochenzuordnung kw37 = m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 37);
+		final StundenplanKalenderwochenzuordnung kw37b = m.kalenderwochenzuordnungGetPrevOrNull(kw38);
+		assertEquals(2, kw38.wochentyp);
+		assertEquals(kw38, kw38b);
+		assertEquals(null, kw39);
+		assertEquals(kw37, kw37b);
+
+		try {
+			m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 10);
+			fail("KWZ 2022.10 sollte es nicht geben!");
+		} catch (@SuppressWarnings("unused") final Exception ex) {
+			// okay
+		}
+
+		try {
+			m.kalenderwochenzuordnungGetByJahrAndKWOrException(2022, 39);
+			fail("KWZ 2022.39 sollte es nicht geben!");
+		} catch (@SuppressWarnings("unused") final Exception ex) {
+			// okay
+		}
+
+		final String kw37wochenString = m.kalenderwochenzuordnungGetWocheAsString(kw37);
+		assertEquals("KW 37 (12.09.2022–18.09.2022)", kw37wochenString);
+
+		assertEquals(2, m.kalenderwochenzuordnungGetWochentypOrDefault(2022, 20));
+		assertEquals(1, m.kalenderwochenzuordnungGetWochentypOrDefault(2022, 21));
+
+		assertEquals(false, m.kalenderwochenzuordnungGetWochentypUsesMapping(2022, 20));
+		assertEquals(false, m.kalenderwochenzuordnungGetWochentypUsesMapping(2022, 21));
+	}
+
+	private static void test_jahrgang_getter(final StundenplanManager m) {
 		assertEquals(8, m.jahrgangGetMengeAsList().size());
 
 		final StundenplanJahrgang jahrgangAlt = m.jahrgangGetByIdOrException(0);
@@ -63,7 +109,7 @@ class StundenplanManagerTest {
 		assertEquals("05", jahrgangAlt.kuerzel);
 	}
 
-	private static void testFach(final StundenplanManager m) {
+	private static void test_fach_getter(final StundenplanManager m) {
 		final StundenplanFach fach = m.fachGetByIdOrException(2);
 		assertEquals("BI", fach.kuerzel);
 		assertEquals(42, m.fachGetMengeAsList().size());
