@@ -288,7 +288,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 					}
 				}
 				// Korrigiere die Kurszuordnung bei den Leistungsdaten, welche noch Kurse in diesem Schuljahresabschnitt haben
-				logger.logLn("- Korrigiere die Kurszuordnung bei den übertragenen Leistungsdaten, welche noch Kurszurodnungen zu Kursen in dem übertragenen Schuljahresabschnitt haben...");
+				logger.logLn("- Korrigiere die Kurszuordnung bei den übertragenen Leistungsdaten, welche noch Kurszuordnungen zu Kursen in dem übertragenen Schuljahresabschnitt haben...");
 				sql = "UPDATE SchuelerLeistungsdaten s JOIN Kurse k1 ON s.Kurs_ID = k1.ID AND k1.Schuljahresabschnitts_ID = "
 					+ abschnittID + " JOIN Kurse k2 ON k2.Schuljahresabschnitts_ID = "
 					+ folgeAbschnittID + " AND k1.KurzBez = k2.KurzBez AND k1.Jahrgang_ID = k2.Jahrgang_ID AND k1.ASDJahrgang = k2.ASDJahrgang "

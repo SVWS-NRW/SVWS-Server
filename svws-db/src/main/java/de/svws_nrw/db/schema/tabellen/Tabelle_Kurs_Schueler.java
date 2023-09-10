@@ -55,16 +55,48 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
 			BEGIN
-				DECLARE schuelerID BIGINT;
-				DECLARE wechselNr SMALLINT;
-				IF NEW.Kurs_ID IS NOT NULL THEN
-					SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO schuelerID, wechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, schuelerID, wechselNr);
-				END IF;
+			    DECLARE schuelerID BIGINT;
+			    DECLARE wechselNr SMALLINT;
+			    IF NEW.Kurs_ID IS NOT NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO schuelerID, wechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, schuelerID, wechselNr);
+			    END IF;
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
 			.setRevision(SchemaRevisionen.REV_2);
+
+	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER - Diese Definition ist notwendig, damit eine alte nicht korrekte Version entfernt wird.
+	 * Im Quellcode ist sie hier aber identisch zur späteren Version, damit Migrationsprozesse fehlerfrei durchlaufen können. */
+	public SchemaTabelleTrigger trigger_Deprecated_MariaDB_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
+			"t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER",
+			DBDriver.MARIA_DB,
+			"""
+			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
+			BEGIN
+			    DECLARE alteSchuelerID, neueSchuelerID BIGINT;
+			    DECLARE alteWechselNr, neueWechselNr SMALLINT;
+			    IF NEW.Kurs_ID IS NOT NULL AND OLD.Kurs_ID IS NOT NULL AND OLD.Kurs_ID <> NEW.Kurs_ID THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        IF OLD.Abschnitt_ID <> NEW.Abschnitt_ID THEN
+			            SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        ELSE
+			            SET neueSchuelerID := alteSchuelerID;
+			            SET neueWechselNr := alteWechselNr;
+			        END IF;
+			        UPDATE Kurs_Schueler SET Kurs_Schueler.Kurs_ID = NEW.Kurs_ID, Kurs_Schueler.Schueler_ID = neueSchuelerID, Kurs_Schueler.LernabschnittWechselNr = neueWechselNr WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF NEW.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF OLD.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, neueSchuelerID, neueWechselNr);
+			    END IF;
+			END
+			""",
+			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
+			.setRevision(SchemaRevisionen.REV_2)
+			.setVeraltet(SchemaRevisionen.REV_11);
 
 	/** Trigger t_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
 	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
@@ -73,27 +105,28 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			BEGIN
-				DECLARE alteSchuelerID, neueSchuelerID BIGINT;
-				DECLARE alteWechselNr, neueWechselNr SMALLINT;
-				IF NEW.Kurs_ID IS NOT NULL AND OLD.Kurs_ID IS NOT NULL AND OLD.Kurs_ID <> NEW.Kurs_ID THEN
-					SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					IF OLD.Abschnitt_ID <> NEW.Abschnitt_ID THEN
-						SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					ELSE
-						SET neueSchuelerID := alteSchuelerID;
-					END IF;
-					UPDATE Kurs_Schueler SET Kurs_Schueler.Kurs_ID = NEW.Kurs_ID, Kurs_Schueler.Schueler_ID = neueSchuelerID, Kurs_Schueler.LernabschnittWechselNr = neueWechselNr WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
-				ELSEIF NEW.Kurs_ID IS NULL THEN
-					SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
-				ELSEIF OLD.Kurs_ID IS NULL THEN
-					SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, neueSchuelerID, neueWechselNr);
-				END IF;
+			    DECLARE alteSchuelerID, neueSchuelerID BIGINT;
+			    DECLARE alteWechselNr, neueWechselNr SMALLINT;
+			    IF NEW.Kurs_ID IS NOT NULL AND OLD.Kurs_ID IS NOT NULL AND OLD.Kurs_ID <> NEW.Kurs_ID THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        IF OLD.Abschnitt_ID <> NEW.Abschnitt_ID THEN
+			            SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        ELSE
+			            SET neueSchuelerID := alteSchuelerID;
+			            SET neueWechselNr := alteWechselNr;
+			        END IF;
+			        UPDATE Kurs_Schueler SET Kurs_Schueler.Kurs_ID = NEW.Kurs_ID, Kurs_Schueler.Schueler_ID = neueSchuelerID, Kurs_Schueler.LernabschnittWechselNr = neueWechselNr WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF NEW.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO alteSchuelerID, alteWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = alteSchuelerID AND Kurs_Schueler.LernabschnittWechselNr = alteWechselNr;
+			    ELSEIF OLD.Kurs_ID IS NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO neueSchuelerID, neueWechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, neueSchuelerID, neueWechselNr);
+			    END IF;
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
-			.setRevision(SchemaRevisionen.REV_2);
+			.setRevision(SchemaRevisionen.REV_11);
 
 	/** Trigger t_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER */
 	public SchemaTabelleTrigger trigger_MariaDB_DELETE_SCHUELERLEISTUNGSDATEN_KURS_SCHUELER = addTrigger(
@@ -102,12 +135,12 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER DELETE ON SchuelerLeistungsdaten FOR EACH ROW
 			BEGIN
-				DECLARE schuelerID BIGINT;
-				DECLARE wechselNr SMALLINT;
-				IF OLD.Kurs_ID IS NOT NULL THEN
-					SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO schuelerID, wechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
-					DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = schuelerID AND Kurs_Schueler.LernabschnittWechselNr = wechselNr;
-				END IF;
+			    DECLARE schuelerID BIGINT;
+			    DECLARE wechselNr SMALLINT;
+			    IF OLD.Kurs_ID IS NOT NULL THEN
+			        SELECT Schueler.id, SchuelerLernabschnittsdaten.WechselNr INTO schuelerID, wechselNr FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID;
+			        DELETE FROM Kurs_Schueler WHERE Kurs_Schueler.Kurs_ID = OLD.Kurs_ID AND Kurs_Schueler.Schueler_ID = schuelerID AND Kurs_Schueler.LernabschnittWechselNr = wechselNr;
+			    END IF;
 			END
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -121,7 +154,7 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN NEW.Kurs_ID IS NOT NULL
 			BEGIN
-				INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, (SELECT Schueler.ID FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID), (SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID));
+			    INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr) VALUES (NEW.Kurs_ID, (SELECT Schueler.ID FROM SchuelerLernabschnittsdaten JOIN Schueler ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID), (SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID));
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -134,31 +167,31 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN NEW.Kurs_ID IS NOT NULL AND
-				OLD.Kurs_ID IS NOT NULL AND
-				OLD.Kurs_ID <> NEW.Kurs_ID AND
-				OLD.Abschnitt_ID <> NEW.Abschnitt_ID
+			    OLD.Kurs_ID IS NOT NULL AND
+			    OLD.Kurs_ID <> NEW.Kurs_ID AND
+			    OLD.Abschnitt_ID <> NEW.Abschnitt_ID
 			BEGIN
-				UPDATE Kurs_Schueler
-				SET
-					Kurs_ID = NEW.Kurs_ID,
-					Schueler_ID = (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-							ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					),
-					LernabschnittWechselNr = (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID
-					)
-				WHERE Kurs_ID = OLD.Kurs_ID
-					AND	Schueler_ID = (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					)
-					AND LernabschnittWechselNr = (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
-					)
-				;
+			    UPDATE Kurs_Schueler
+			    SET
+			        Kurs_ID = NEW.Kurs_ID,
+			        Schueler_ID = (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			                ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ),
+			        LernabschnittWechselNr = (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID
+			        )
+			    WHERE Kurs_ID = OLD.Kurs_ID
+			        AND Schueler_ID = (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			                ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        )
+			        AND LernabschnittWechselNr = (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
+			        )
+			    ;
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -171,23 +204,23 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN NEW.Kurs_ID IS NOT NULL AND
-				OLD.Kurs_ID IS NOT NULL AND
-				OLD.Kurs_ID <> NEW.Kurs_ID AND
-				OLD.Abschnitt_ID = NEW.Abschnitt_ID
+			    OLD.Kurs_ID IS NOT NULL AND
+			    OLD.Kurs_ID <> NEW.Kurs_ID AND
+			    OLD.Abschnitt_ID = NEW.Abschnitt_ID
 			BEGIN
-				UPDATE Kurs_Schueler
-				SET Kurs_ID = NEW.Kurs_ID
-				WHERE
-					Kurs_ID = OLD.Kurs_ID AND
-					Schueler_ID = (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					) AND
-					LernabschnittWechselNr = (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
-					)
-				;
+			    UPDATE Kurs_Schueler
+			    SET Kurs_ID = NEW.Kurs_ID
+			    WHERE
+			        Kurs_ID = OLD.Kurs_ID AND
+			        Schueler_ID = (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			                ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ) AND
+			        LernabschnittWechselNr = (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
+			        )
+			    ;
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -200,20 +233,20 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN NEW.Kurs_ID IS NULL AND
-				OLD.Kurs_ID IS NOT NULL
+			    OLD.Kurs_ID IS NOT NULL
 			BEGIN
-				DELETE FROM Kurs_Schueler
-				WHERE
-					Kurs_ID = OLD.Kurs_ID AND
-					Schueler_ID = (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-							ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					) AND
-					LernabschnittWechselNr = (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
-					)
-				;
+			    DELETE FROM Kurs_Schueler
+			    WHERE
+			        Kurs_ID = OLD.Kurs_ID AND
+			        Schueler_ID = (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			                ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ) AND
+			        LernabschnittWechselNr = (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
+			        )
+			    ;
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -226,18 +259,18 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN NEW.Kurs_ID IS NOT NULL AND
-				OLD.Kurs_ID IS NULL
+			    OLD.Kurs_ID IS NULL
 			BEGIN
-				INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr)
-				VALUES (
-					NEW.Kurs_ID, (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-						ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					), (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID
-					)
-				);
+			    INSERT INTO Kurs_Schueler(Kurs_ID, Schueler_ID, LernabschnittWechselNr)
+			    VALUES (
+			        NEW.Kurs_ID, (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			            ON SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ), (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = NEW.Abschnitt_ID
+			        )
+			    );
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
@@ -251,18 +284,18 @@ public class Tabelle_Kurs_Schueler extends SchemaTabelle {
 			AFTER DELETE ON SchuelerLeistungsdaten FOR EACH ROW
 			WHEN OLD.Kurs_ID IS NOT NULL
 			BEGIN
-				DELETE FROM Kurs_Schueler
-				WHERE
-					Kurs_ID = OLD.Kurs_ID AND
-					Schueler_ID = (
-						SELECT Schueler.id
-						FROM SchuelerLernabschnittsdaten JOIN Schueler
-						ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
-					) AND
-					LernabschnittWechselNr = (
-						SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
-					)
-				;
+			    DELETE FROM Kurs_Schueler
+			    WHERE
+			        Kurs_ID = OLD.Kurs_ID AND
+			        Schueler_ID = (
+			            SELECT Schueler.id
+			            FROM SchuelerLernabschnittsdaten JOIN Schueler
+			            ON SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID AND SchuelerLernabschnittsdaten.Schueler_ID = Schueler.ID
+			        ) AND
+			        LernabschnittWechselNr = (
+			            SELECT SchuelerLernabschnittsdaten.WechselNr FROM SchuelerLernabschnittsdaten WHERE SchuelerLernabschnittsdaten.ID = OLD.Abschnitt_ID
+			        )
+			    ;
 			END;
 			""",
 			Schema.tab_Schueler, Schema.tab_SchuelerLernabschnittsdaten)
