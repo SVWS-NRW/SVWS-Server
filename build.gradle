@@ -30,7 +30,7 @@ println "*** Memory (max): %.0fM".formatted(memMax)
 
 wrapper {
     description "Regenerates the Gradle Wrapper files"
-    gradleVersion = '7.4.2'
+    gradleVersion = '8.3'
     distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 

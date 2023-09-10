@@ -39,4 +39,32 @@ public class CoreTranspilerTest {
 		}
 	}
 
+
+// Der untere Code transpiliert die normalen SVWS-Klassen und sollte normalerweise bei den Tests nicht berücksichtigt werden.
+//	/**
+//	 * Teste den Core-Transpiler mit den SVWS-Klassen
+//	 *
+//	 * @throws Exception   eine Exception, die beim Aufruf des Transpilers aufgetreten ist.
+//	 */
+//	@Test
+//	@DisplayName("Teste den Core-Transpiler mit Test-Klassen...")
+//    void testSVWSKlassen() throws Exception  {
+//		try {
+//			// Prüfe, ob das Ausgabe-Verzeichnis für die Tests existiert
+//			Files.createDirectories(Paths.get("build/tests"));
+//			// Führe den Transpiler aus
+//			final String[] params = {
+//				"--output", "build/tests/ts",
+//				"--ignore", "de.svws_nrw",
+//				"--javafiles", "build/transpiler-java-files.txt",
+//				"--apifiles", "build/transpiler-api-files.txt"
+//			};
+//			CoreTranspiler.main(params);
+//		} catch (final Exception e) {
+//			e.printStackTrace();
+//			fail(e);
+//			throw e;
+//		}
+//	}
+
 }

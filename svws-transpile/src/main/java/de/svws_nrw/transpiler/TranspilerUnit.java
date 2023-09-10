@@ -715,6 +715,18 @@ public final class TranspilerUnit {
 
 
 	/**
+	 * Returns the type tree node that is associated with the method invocation node
+	 *
+	 * @param node   the member involcation node
+	 *
+	 * @return the type tree node.
+	 */
+	private ExpressionType getMethodInvocationType(final MethodInvocationTree node) {
+		return allExpressionTypes.get(node.getMethodSelect());
+	}
+
+
+	/**
 	 * Returns the type tree node that is associated with the member select node
 	 *
 	 * @param node   the member select node
@@ -722,6 +734,11 @@ public final class TranspilerUnit {
 	 * @return the type tree node.
 	 */
 	private ExpressionType getMemberSelectType(final MemberSelectTree node) {
+		// TODO use this code to determine the Expression-Type of the return type of the executable element, but take generic types into account
+//		final Element element = transpiler.getElement(node);
+//		if ((element != null) && (element instanceof final ExecutableElement ee))
+//		 	return ExpressionType.getExpressionType(transpiler, ee.getReturnType());
+
 		final MethodInvocationTree miTree = getMethodInvocationTree(node);
 		final String name = node.getExpression().toString();
 		ExpressionType type = "this".equals(name) ? ExpressionClassType.getExpressionClassType(transpiler, classElement) : allExpressionTypes.get(node.getExpression());
@@ -879,7 +896,7 @@ public final class TranspilerUnit {
 			} else if (expr instanceof final MemberSelectTree memberSelect) {
 				allExpressionTypes.put(memberSelect, getMemberSelectType(memberSelect));
 			} else if (expr instanceof final MethodInvocationTree methodInvocation) {
-				allExpressionTypes.put(methodInvocation, allExpressionTypes.get(methodInvocation.getMethodSelect()));
+				allExpressionTypes.put(methodInvocation, getMethodInvocationType(methodInvocation));
 			} else if (expr instanceof final NewArrayTree newArray) {
 				allExpressionTypes.put(newArray, ExpressionType.getExpressionType(transpiler, newArray));
 			} else if (expr instanceof final NewClassTree newClass) {
