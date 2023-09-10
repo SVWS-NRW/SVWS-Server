@@ -39,7 +39,7 @@ public final class CsvReader {
 	 *
 	 * @return das Zip-Dateisystem
 	 *
-	 * @throws IOException   wenn die Zip-Datei noicht geöffnet werden konnte
+	 * @throws IOException   wenn die Zip-Datei nicht geöffnet werden konnte
 	 * @throws IllegalArgumentException   wenn der Pfad nicht dem RFC 2396 entspricht
 	 */
 	private static @NotNull FileSystem getZipFileSystem(@NotNull final String zipLocation) throws IOException, IllegalArgumentException {
@@ -54,7 +54,7 @@ public final class CsvReader {
 	}
 
 	/**
-	 * Diese Methode ermittelt für den angebenen String location ein
+	 * Diese Methode ermittelt für den angegebenen String location ein
 	 * zugehöriges Path-Objekt aus dem zugehörigen Resource-Ordner.
 	 * Dabei wird auch der Zugriff auf ein ZIP-Dateisystem genutzt,
 	 * falls sich die Resource in einem JAR-File befindet.

@@ -3963,6 +3963,48 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine String-Repräsentation der Schienenmenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "EFB01" bei einem Raum und "EFB01, Q1B07"
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Schienenmenge des {@link StundenplanUnterricht}.
+	 */
+	public @NotNull String unterrichtGetByIDStringOfSchienen(final long idUnterricht) {
+		final @NotNull StundenplanUnterricht unterricht =  DeveloperNotificationException.ifMapGetIsNull(_unterricht_by_id, idUnterricht);
+
+		// Klassenkürzel sammeln und sortieren.
+		final @NotNull AVLSet<@NotNull String> kuerzel = new AVLSet<>();
+		for (final @NotNull Long idSchiene : unterricht.schienen) {
+			final @NotNull StundenplanSchiene schiene =  DeveloperNotificationException.ifMapGetIsNull(_schiene_by_id, idSchiene);
+			kuerzel.add(schiene.bezeichnung);
+		}
+
+		return StringUtils.collectionToCommaSeparatedString(kuerzel);
+	}
+
+	/**
+	 * Liefert einen String aller Daten des Unterrichts (für Debug-Zwecke).
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return einen String aller Daten des Unterrichts (für Debug-Zwecke).
+	 */
+	public @NotNull String unterrichtGetByIDStringOfAll(final long idUnterricht) {
+		String sLe = unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
+		String sFa = unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht);
+		String sKl = unterrichtGetByIDStringOfKlassen(idUnterricht);
+		String sRa = unterrichtGetByIDStringOfRaeume(idUnterricht);
+		String sSc = unterrichtGetByIDStringOfSchienen(idUnterricht);
+		sLe = sLe.isEmpty() ? "" : ", " + sLe;
+		sFa = sFa.isEmpty() ? "" : ", " + sFa;
+		sKl = sKl.isEmpty() ? "" : ", " + sKl;
+		sRa = sRa.isEmpty() ? "" : ", " + sRa;
+		sSc = sSc.isEmpty() ? "" : ", " + sSc;
+		return idUnterricht + sLe + sFa + sKl + sRa + sSc;
+	}
+
+	/**
 	 * Liefert die Menge aller {@link StundenplanLehrer}-Objekte des {@link StundenplanUnterricht}.
 	 * <br>Laufzeit: O(1)
 	 *

@@ -3754,6 +3754,45 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine String-Repräsentation der Schienenmenge des {@link StundenplanUnterricht}.
+	 * <br>Beispiel: "EFB01" bei einem Raum und "EFB01, Q1B07"
+	 * <br>Laufzeit: O(1)
+	 * @param idUnterricht  Die Datenbank-ID des {@link StundenplanUnterricht}.
+	 *
+	 * @return eine String-Repräsentation der Schienenmenge des {@link StundenplanUnterricht}.
+	 */
+	public unterrichtGetByIDStringOfSchienen(idUnterricht : number) : string {
+		const unterricht : StundenplanUnterricht = DeveloperNotificationException.ifMapGetIsNull(this._unterricht_by_id, idUnterricht);
+		const kuerzel : AVLSet<string> = new AVLSet();
+		for (const idSchiene of unterricht.schienen) {
+			const schiene : StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
+			kuerzel.add(schiene.bezeichnung);
+		}
+		return StringUtils.collectionToCommaSeparatedString(kuerzel);
+	}
+
+	/**
+	 * Liefert einen String aller Daten des Unterrichts (für Debug-Zwecke).
+	 *
+	 * @param idUnterricht  Die Datenbank-ID des Unterrichts.
+	 *
+	 * @return einen String aller Daten des Unterrichts (für Debug-Zwecke).
+	 */
+	public unterrichtGetByIDStringOfAll(idUnterricht : number) : string {
+		let sLe : string | null = this.unterrichtGetByIDLehrerFirstAsStringOrEmpty(idUnterricht);
+		let sFa : string | null = this.unterrichtGetByIDStringOfFachOderKursKuerzel(idUnterricht);
+		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
+		let sRa : string | null = this.unterrichtGetByIDStringOfRaeume(idUnterricht);
+		let sSc : string | null = this.unterrichtGetByIDStringOfSchienen(idUnterricht);
+		sLe = JavaString.isEmpty(sLe) ? "" : ", " + sLe!;
+		sFa = JavaString.isEmpty(sFa) ? "" : ", " + sFa!;
+		sKl = JavaString.isEmpty(sKl) ? "" : ", " + sKl!;
+		sRa = JavaString.isEmpty(sRa) ? "" : ", " + sRa!;
+		sSc = JavaString.isEmpty(sSc) ? "" : ", " + sSc!;
+		return idUnterricht + sLe! + sFa! + sKl! + sRa! + sSc!;
+	}
+
+	/**
 	 * Liefert die Menge aller {@link StundenplanLehrer}-Objekte des {@link StundenplanUnterricht}.
 	 * <br>Laufzeit: O(1)
 	 *
