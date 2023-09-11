@@ -46,7 +46,8 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahninfoProps {
 		return {
-			sprachendaten: () => this.data.sprachendaten,
+			sprachbelegungen: () => this.data.sprachbelegungen,
+			sprachpruefungen: () => this.data.sprachpruefungen,
 		};
 	}
 

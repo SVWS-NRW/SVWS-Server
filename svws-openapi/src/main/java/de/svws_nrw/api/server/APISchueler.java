@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.data.schueler.UebergangsempfehlungKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag;
@@ -31,6 +32,7 @@ import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerSprachbelegung;
+import de.svws_nrw.data.schueler.DataSchuelerSprachpruefung;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
 import io.swagger.v3.oas.annotations.Operation;
@@ -637,5 +639,29 @@ public class APISchueler {
 			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Sprachprüfungen eines Schülers.
+	 *
+	 * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id      die Datenbank-ID zur Identifikation des Schülers
+	 * @param request die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Spachprüfungen des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/sprachen/pruefungen")
+	@Operation(summary = "Liefert zu der ID des Schülers die zugehörigen Sprachprüfungen.", description
+			= "Liest die Sprachprüfungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Sprachprüfungen des Schülers", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Sprachpruefung.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfungen anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getSchuelerSprachpruefungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getList(),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
 
 }

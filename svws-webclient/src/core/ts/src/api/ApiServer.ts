@@ -142,6 +142,7 @@ import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogE
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
+import { Sprachpruefung } from '../core/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
@@ -7159,6 +7160,35 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Sprachbelegung>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachbelegung.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerSprachpruefungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/pruefungen
+	 *
+	 * Liest die Sprachprüfungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfungen des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Sprachpruefung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfungen anzusehen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Sprachprüfungen des Schülers
+	 */
+	public async getSchuelerSprachpruefungen(schema : string, id : number) : Promise<List<Sprachpruefung>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Sprachpruefung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachpruefung.transpilerFromJSON(text)); });
 		return ret;
 	}
 

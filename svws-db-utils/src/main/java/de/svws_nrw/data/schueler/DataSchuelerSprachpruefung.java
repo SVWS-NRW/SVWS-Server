@@ -52,7 +52,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		final Sprachpruefung daten = new Sprachpruefung();
 		daten.sprache = dto.Sprache;
 		daten.jahrgang = dto.ASDJahrgang;
-		daten.anspruchsniveauId = dto.Anspruchsniveau.daten.id;
+		daten.anspruchsniveauId = (dto.Anspruchsniveau == null) ? null : dto.Anspruchsniveau.daten.id;
 		daten.pruefungsdatum = dto.Pruefungsdatum;
 		daten.ersetzteSprache = dto.ErsetzteSprache;
 		daten.istHSUPruefung = (dto.IstHSUPruefung != null) && dto.IstHSUPruefung;
@@ -61,7 +61,7 @@ public final class DataSchuelerSprachpruefung extends DataManager<String> {
 		daten.kannZweitePflichtfremdspracheErsetzen = (dto.KannZweitePflichtfremdspracheErsetzen != null) && dto.KannZweitePflichtfremdspracheErsetzen;
 		daten.kannWahlpflichtfremdspracheErsetzen = (dto.KannWahlpflichtfremdspracheErsetzen != null) && dto.KannWahlpflichtfremdspracheErsetzen;
 		daten.kannBelegungAlsFortgefuehrteSpracheErlauben = (dto.KannBelegungAlsFortgefuehrteSpracheErlauben != null) && dto.KannBelegungAlsFortgefuehrteSpracheErlauben;
-		daten.referenzniveau = dto.Referenzniveau.daten.kuerzel;
+		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
 		daten.note = (dto.NotePruefung == null) ? null : dto.NotePruefung.getNoteSekI();
 		return daten;
 	};

@@ -55,7 +55,7 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 		daten.belegungVonAbschnitt = dto.AbschnittVon;
 		daten.belegungBisJahrgang = dto.ASDJahrgangBis;
 		daten.belegungBisAbschnitt = dto.AbschnittBis;
-		daten.referenzniveau = dto.Referenzniveau.daten.kuerzel;
+		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
 		return daten;
 	};
 

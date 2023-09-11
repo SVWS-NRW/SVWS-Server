@@ -1,21 +1,23 @@
 import { shallowRef } from "vue";
 
-import type { SchuelerListeEintrag} from "@core";
-import { Sprachendaten } from "@core";
+import type { List, SchuelerListeEintrag, Sprachbelegung, Sprachpruefung} from "@core";
+import { ArrayList, Sprachendaten } from "@core";
 
 import { api } from "~/router/Api";
 
 
 interface RouteStateSchuelerLaufbahninfo {
 	auswahl: SchuelerListeEintrag | undefined;
-	sprachendaten: Sprachendaten | undefined;
+	sprachbelegungen: List<Sprachbelegung>;
+	sprachpruefungen: List<Sprachpruefung>;
 }
 
 export class RouteDataSchuelerLaufbahninfo {
 
 	private static _defaultState : RouteStateSchuelerLaufbahninfo = {
 		auswahl: undefined,
-		sprachendaten: undefined,
+		sprachbelegungen: new ArrayList<Sprachbelegung>(),
+		sprachpruefungen: new ArrayList<Sprachpruefung>(),
 	}
 
 	private _state = shallowRef<RouteStateSchuelerLaufbahninfo>(RouteDataSchuelerLaufbahninfo._defaultState);
@@ -42,10 +44,12 @@ export class RouteDataSchuelerLaufbahninfo {
 		return this._state.value.auswahl;
 	}
 
-	get sprachendaten(): Sprachendaten {
-		if (this._state.value.sprachendaten === undefined)
-			throw new Error("Unerwarteter Fehler: Sprachendaten wurden noch nicht geladen, es können keine Informationen zu der Sprachenfolge und den Sprachprüfungen abgerufen oder eingegeben werden.");
-		return this._state.value.sprachendaten;
+	get sprachbelegungen(): List<Sprachbelegung> {
+		return this._state.value.sprachbelegungen;
+	}
+
+	get sprachpruefungen(): List<Sprachpruefung> {
+		return this._state.value.sprachpruefungen;
 	}
 
 	public async auswahlSchueler(auswahl?: SchuelerListeEintrag) {
@@ -56,9 +60,9 @@ export class RouteDataSchuelerLaufbahninfo {
 			return;
 		}
 		try {
-			// TODO const sprachendaten = await api.server.getSchuelerSprachendaten(api.schema, auswahl.id);
-			const sprachendaten = new Sprachendaten();
-			this.setPatchedState({ auswahl, sprachendaten })
+			const sprachbelegungen = await api.server.getSchuelerSprachbelegungen(api.schema, auswahl.id);
+			const sprachpruefungen = await api.server.getSchuelerSprachpruefungen(api.schema, auswahl.id);
+			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen })
 		} catch(error) {
 			throw new Error("Die Laufbahninformationen konnten nicht eingeholt werden.")
 		}

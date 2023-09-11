@@ -1,5 +1,6 @@
-import type { Sprachendaten } from "@core";
+import type { List, Sprachbelegung, Sprachpruefung } from "@core";
 
 export interface SchuelerLaufbahninfoProps {
-	sprachendaten: () => Sprachendaten;
+	sprachbelegungen: () => List<Sprachbelegung>;
+	sprachpruefungen: () => List<Sprachpruefung>;
 }
