@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, StundenplanKlassenunterricht} from "@core";
+import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, StundenplanKlassenunterricht, LehrerListeEintrag} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
@@ -21,6 +21,7 @@ interface RouteStateStundenplan {
 	listPausenzeiten: List<StundenplanPausenzeit>;
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	listJahrgaenge: List<JahrgangsListeEintrag>;
+	listLehrer: List<LehrerListeEintrag>;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
@@ -34,6 +35,7 @@ export class RouteDataStundenplan {
 		listPausenzeiten: new ArrayList(),
 		listAufsichtsbereiche: new ArrayList(),
 		listJahrgaenge: new ArrayList(),
+		listLehrer: new ArrayList(),
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -95,6 +97,10 @@ export class RouteDataStundenplan {
 
 	get listJahrgaenge(): List<JahrgangsListeEintrag> {
 		return this._state.value.listJahrgaenge;
+	}
+
+	get listLehrer(): List<LehrerListeEintrag> {
+		return this._state.value.listLehrer;
 	}
 
 	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
@@ -250,6 +256,10 @@ export class RouteDataStundenplan {
 		//this.stundenplanManager.unterrichtAdd(unterricht)
 	}
 
+	addAufsichtUndBereich = async (pausenzeit: StundenplanPausenzeit, aufsicht: LehrerListeEintrag, bereich?: StundenplanAufsichtsbereich) => {
+		// TODO ergänze Aufsicht
+	}
+
 
 	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
 		for (const raum of raeume) {
@@ -332,7 +342,8 @@ export class RouteDataStundenplan {
 		const listPausenzeiten = await api.server.getPausenzeiten(api.schema);
 		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge })
+		const listLehrer = await api.server.getLehrer(api.schema);
+		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge, listLehrer })
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {

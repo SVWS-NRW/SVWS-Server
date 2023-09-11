@@ -8,26 +8,41 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols">
+		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols" selectable v-model="selected">
 			<template #cell(id)="{ rowData }">
 				<div>
 					{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 				</div>
+			</template>
+			<template #footerActions>
+				<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
+					<svws-ui-button @click="remove" type="trash" class="cursor-pointer"
+						:disabled="selected.length === 0" />
+				</div>
+				<stundenplan-detail-pausenzeit-modal v-slot="{ openModal }" :pausenzeit="item" :list-lehrer="listLehrer" :list-aufsichtsbereiche="listAufsichtsbereiche" :add-aufsicht-und-bereich="addAufsichtUndBereich">
+					<svws-ui-button @click="openModal()" type="icon" title="Pausenaufsicht hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+				</stundenplan-detail-pausenzeit-modal>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanManager, StundenplanPausenzeit } from "@core";
+	import type { LehrerListeEintrag, List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit } from "@core";
 	import { DateUtils, Wochentag } from "@core";
+	import { ref } from "vue";
 
 	const props = defineProps<{
 		item: StundenplanPausenzeit;
 		stundenplanManager: () => StundenplanManager;
 		patchPausenzeit: (data: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 		removePausenzeiten: (multi: Iterable<StundenplanPausenzeit>) => Promise<void>;
+		listLehrer: List<LehrerListeEintrag>;
+		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
+		addAufsichtUndBereich: (pausenzeit: StundenplanPausenzeit, aufsicht: LehrerListeEintrag, bereich?: StundenplanAufsichtsbereich) => Promise<void>;
 	}>();
+
+	const selected = ref<StundenplanPausenaufsicht[]>([]);
 
 	const cols = [
 		{ key: "id", label: "Aufsicht", span: 2, sortable: false },
@@ -47,5 +62,9 @@
 		await props.patchPausenzeit({ende}, props.item.id);
 	}
 
+	async function remove() {
+		// TODO remove
+		console.log("entferne Pausenaufsichten: ", selected.value);
+	}
 
 </script>
