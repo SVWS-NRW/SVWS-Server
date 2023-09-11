@@ -349,10 +349,10 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	loescheKlausurvorgabe = async (vorgabe: GostKlausurvorgabe) => {
+	loescheKlausurvorgabe = async (idVorgabe: number) => {
 		api.status.start();
-		await api.server.deleteGostKlausurenVorgabe(api.schema, vorgabe.idVorgabe);
-		this.klausurvorgabenmanager.vorgabeRemoveById(vorgabe.idVorgabe);
+		await api.server.deleteGostKlausurenVorgabe(api.schema, idVorgabe);
+		this.klausurvorgabenmanager.vorgabeRemoveById(idVorgabe);
 		this.commit();
 		api.status.stop();
 	}

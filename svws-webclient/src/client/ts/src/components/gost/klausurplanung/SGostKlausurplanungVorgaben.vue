@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-sub-nav>
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-		<svws-ui-button type="primary" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined">Neue Vorgabe</svws-ui-button>
+		<svws-ui-button type="primary" @click="neueVorgabe">Neue Vorgabe</svws-ui-button>
 		<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben kopieren</svws-ui-button>
 		<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0" class="ml-auto">Vorgabe speichern</svws-ui-button>
 		<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0"><i-ri-delete-bin-line />Vorgabe löschen</svws-ui-button>
@@ -91,7 +91,7 @@
 						</svws-ui-radio-group>
 					</div>
 				</div>
-				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => activeVorgabe.bemerkungVorgabe = bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -137,7 +137,6 @@
 	};
 
 	const saveKlausurvorgabe = async () => {
-		let result;
 		if (activeVorgabe.value.idFach === -1 || activeVorgabe.value.kursart === "" || activeVorgabe.value.quartal === -1) {
 			console.log("Eingabefehler");
 			return;
@@ -160,10 +159,7 @@
 	};
 
 	const loescheKlausurvorgabe = async () => {
-		const vorgabe = props.klausurvorgabenmanager().vorgabeGetByIdOrException(activeVorgabe.value.idVorgabe);
-		if (vorgabe === null)
-			return;
-		const result = await props.loescheKlausurvorgabe(vorgabe);
+		await props.loescheKlausurvorgabe(activeVorgabe.value.idVorgabe);
 		selectedVorgabeRow.value = undefined;
 		activeVorgabe.value = new GostKlausurvorgabe();
 	};
