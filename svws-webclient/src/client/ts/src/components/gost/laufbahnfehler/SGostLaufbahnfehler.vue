@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
@@ -79,7 +79,7 @@
 	const schueler: WritableComputedRef<GostBelegpruefungsErgebnisse> = computed({
 		get: () => schueler_state.value && filtered.value.contains(toRaw(schueler_state.value))
 			? schueler_state.value
-			: filtered.value.get(0),
+			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
 		set: (value) => schueler_state.value = value
 	})
 
