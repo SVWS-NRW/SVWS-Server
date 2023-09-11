@@ -118,7 +118,7 @@ public abstract class DataManager<ID> {
 	 *                        Core-DTO-Attributen auf Datenbank-DTO-Attributen
 	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
 	 */
-	private static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+	protected static <DTO> void applyPatchMappings(final DBEntityManager conn, final DTO dto, final Map<String, Object> map, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
@@ -203,10 +203,9 @@ public abstract class DataManager<ID> {
 			if (!map.containsKey(attr))
 				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		try {
-			// Bestimme die nächste verfügbare ID für ein DTOStundenplanRaum
+			// Bestimme die nächste verfügbare ID für das DTO
 			final long newID = conn.transactionGetNextID(dtoClass);
-			// Erstelle einen neuen DTOStundenplanRaum für die DB und wende die
-			// Initialisierung und das Mapping der Attribute an
+			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			final DTO dto = constructor.newInstance();

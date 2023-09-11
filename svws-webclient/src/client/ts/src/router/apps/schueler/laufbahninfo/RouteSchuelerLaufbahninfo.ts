@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerLaufbahninfo } from "~/router/apps/schueler/laufbahninfo/RouteDataSchuelerLaufbahninfo";
-import { type SchuelerLaufbahninfoProps } from "~/components/schueler/laufbahninfo/SchuelerLaufbahnInfoProps";
+import { type SchuelerLaufbahninfoProps } from "~/components/schueler/laufbahninfo/SchuelerLaufbahninfoProps";
 
 const SSchuelerLaufbahninfo = () => import("~/components/schueler/laufbahninfo/SSchuelerLaufbahninfo.vue");
 
