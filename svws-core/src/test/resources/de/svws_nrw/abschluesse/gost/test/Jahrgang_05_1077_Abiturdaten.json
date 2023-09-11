@@ -1008,7 +1008,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "E",
       "reihenfolge" : 1,
@@ -1016,7 +1020,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "F",
       "reihenfolge" : 3,
@@ -1024,7 +1032,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "L",
       "reihenfolge" : 2,
@@ -1032,7 +1044,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }

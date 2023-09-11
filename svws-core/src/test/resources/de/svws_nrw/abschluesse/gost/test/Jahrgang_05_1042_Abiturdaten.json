@@ -1021,6 +1021,10 @@
       "kannWahlpflichtfremdspracheErsetzen" : false,
       "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
       "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false,
       "note" : 2
     }, {
       "sprache" : "N",
@@ -1034,6 +1038,10 @@
       "kannWahlpflichtfremdspracheErsetzen" : false,
       "kannBelegungAlsFortgefuehrteSpracheErlauben" : false,
       "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false,
       "note" : 3
     } ]
   }

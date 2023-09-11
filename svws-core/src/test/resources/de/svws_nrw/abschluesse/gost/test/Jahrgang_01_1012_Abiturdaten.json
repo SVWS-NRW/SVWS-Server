@@ -1078,7 +1078,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "EF",
       "belegungBisAbschnitt" : 1,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }

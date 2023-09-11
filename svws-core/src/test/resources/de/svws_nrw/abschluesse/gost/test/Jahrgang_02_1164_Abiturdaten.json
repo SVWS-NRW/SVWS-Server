@@ -1102,7 +1102,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "09",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }

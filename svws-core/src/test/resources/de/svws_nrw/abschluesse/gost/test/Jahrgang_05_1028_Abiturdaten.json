@@ -998,7 +998,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "F",
       "reihenfolge" : 2,
@@ -1006,7 +1010,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : null,
       "belegungBisAbschnitt" : null,
-      "referenzniveau" : null
+      "referenzniveau" : null,
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }
