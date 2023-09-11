@@ -56,6 +56,10 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 		daten.belegungBisJahrgang = dto.ASDJahrgangBis;
 		daten.belegungBisAbschnitt = dto.AbschnittBis;
 		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
+		daten.hatKleinesLatinum = (dto.KleinesLatinumErreicht != null) && dto.KleinesLatinumErreicht;
+		daten.hatLatinum = (dto.LatinumErreicht != null) && dto.LatinumErreicht;
+		daten.hatGraecum = (dto.GraecumErreicht != null) && dto.GraecumErreicht;
+		daten.hatHebraicum = (dto.HebraicumErreicht != null) && dto.HebraicumErreicht;
 		return daten;
 	};
 

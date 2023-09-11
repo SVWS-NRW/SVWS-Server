@@ -37,6 +37,26 @@ export class Sprachbelegung extends JavaObject {
 	 */
 	public referenzniveau : string | null = null;
 
+	/**
+	 * Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
+	 */
+	public hatKleinesLatinum : boolean = false;
+
+	/**
+	 * Gibt an, ob das Latinum erreicht wurde oder nicht.
+	 */
+	public hatLatinum : boolean = false;
+
+	/**
+	 * Gibt an, ob das Graecum erreicht wurde oder nicht.
+	 */
+	public hatGraecum : boolean = false;
+
+	/**
+	 * Gibt an, ob das Hebraicum erreicht wurde oder nicht.
+	 */
+	public hatHebraicum : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -58,6 +78,18 @@ export class Sprachbelegung extends JavaObject {
 		result.belegungBisJahrgang = typeof obj.belegungBisJahrgang === "undefined" ? null : obj.belegungBisJahrgang === null ? null : obj.belegungBisJahrgang;
 		result.belegungBisAbschnitt = typeof obj.belegungBisAbschnitt === "undefined" ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
 		result.referenzniveau = typeof obj.referenzniveau === "undefined" ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
+		if (typeof obj.hatKleinesLatinum === "undefined")
+			 throw new Error('invalid json format, missing attribute hatKleinesLatinum');
+		result.hatKleinesLatinum = obj.hatKleinesLatinum;
+		if (typeof obj.hatLatinum === "undefined")
+			 throw new Error('invalid json format, missing attribute hatLatinum');
+		result.hatLatinum = obj.hatLatinum;
+		if (typeof obj.hatGraecum === "undefined")
+			 throw new Error('invalid json format, missing attribute hatGraecum');
+		result.hatGraecum = obj.hatGraecum;
+		if (typeof obj.hatHebraicum === "undefined")
+			 throw new Error('invalid json format, missing attribute hatHebraicum');
+		result.hatHebraicum = obj.hatHebraicum;
 		return result;
 	}
 
@@ -70,6 +102,10 @@ export class Sprachbelegung extends JavaObject {
 		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
 		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
 		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum + ',';
+		result += '"hatLatinum" : ' + obj.hatLatinum + ',';
+		result += '"hatGraecum" : ' + obj.hatGraecum + ',';
+		result += '"hatHebraicum" : ' + obj.hatHebraicum + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,6 +133,18 @@ export class Sprachbelegung extends JavaObject {
 		}
 		if (typeof obj.referenzniveau !== "undefined") {
 			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		}
+		if (typeof obj.hatKleinesLatinum !== "undefined") {
+			result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum + ',';
+		}
+		if (typeof obj.hatLatinum !== "undefined") {
+			result += '"hatLatinum" : ' + obj.hatLatinum + ',';
+		}
+		if (typeof obj.hatGraecum !== "undefined") {
+			result += '"hatGraecum" : ' + obj.hatGraecum + ',';
+		}
+		if (typeof obj.hatHebraicum !== "undefined") {
+			result += '"hatHebraicum" : ' + obj.hatHebraicum + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

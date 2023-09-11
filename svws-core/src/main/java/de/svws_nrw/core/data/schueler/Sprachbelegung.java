@@ -33,4 +33,16 @@ public class Sprachbelegung {
 	/** Das Referenzniveau, welches bisher erreicht wurde */
 	public String referenzniveau;
 
+	/** Gibt an, ob das kleine Latinum erreicht wurde oder nicht. */
+	public boolean hatKleinesLatinum;
+
+	/** Gibt an, ob das Latinum erreicht wurde oder nicht. */
+	public boolean hatLatinum;
+
+	/** Gibt an, ob das Graecum erreicht wurde oder nicht. */
+	public boolean hatGraecum;
+
+	/** Gibt an, ob das Hebraicum erreicht wurde oder nicht. */
+	public boolean hatHebraicum;
+
 }

@@ -37,6 +37,10 @@
 		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang", align: 'center', fixedWidth: 4 },
 		{ key: "belegungBisAbschnitt", label: "bis Hj", tooltip: "belegt bis Abschnitt", align: 'center', fixedWidth: 4 },
 		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center', fixedWidth: 6 },
+		{ key: "hatKleinesLatinum", label: "kl. Lat.", tooltip: " Kleines Latinum erreicht?", align: 'center', fixedWidth: 4 },
+		{ key: "hatLatinum", label: "Lat.", tooltip: "Latinum  erreicht?", align: 'center', fixedWidth: 4 },
+		{ key: "hatGraecum", label: "Grae.", tooltip: "Graecum erreicht?", align: 'center', fixedWidth: 4 },
+		{ key: "hatHebraicum", label: "Hebr.", tooltip: "Hebraicum erreicht?", align: 'center', fixedWidth: 4 },
 	];
 
 	const colsSprachpruefungen: Array<DataTableColumn> = [
