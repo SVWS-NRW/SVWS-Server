@@ -141,6 +141,7 @@ import { SchulgliederungKatalogEintrag } from '../core/data/schule/Schulgliederu
 import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
+import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
@@ -7130,6 +7131,35 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = SchuelerSchulbesuchsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerSprachbelegungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/belegungen
+	 *
+	 * Liest die Spachbelegungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Spachbelegungen des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Sprachbelegung>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Spachbelegungen anzusehen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Spachbelegungen des Schülers
+	 */
+	public async getSchuelerSprachbelegungen(schema : string, id : number) : Promise<List<Sprachbelegung>> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Sprachbelegung>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachbelegung.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

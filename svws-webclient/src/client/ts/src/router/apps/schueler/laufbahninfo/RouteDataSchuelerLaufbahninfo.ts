@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 
-import { SchuelerListeEintrag, Sprachendaten } from "@core";
+import type { SchuelerListeEintrag} from "@core";
+import { Sprachendaten } from "@core";
 
 import { api } from "~/router/Api";
 
