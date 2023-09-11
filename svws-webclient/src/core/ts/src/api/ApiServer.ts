@@ -9871,9 +9871,66 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanPausenaufsicht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenaufsicht/{id : \d+}
+	 *
+	 * Entfernt eine Pausenaufsicht eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Pausenaufsicht wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenaufsicht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Keine Pausenaufsicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenaufsicht wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanPausenaufsicht(schema : string, id : number) : Promise<StundenplanPausenaufsicht> {
+		const path = "/db/{schema}/stundenplan/pausenaufsicht/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanPausenaufsicht.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanPausenaufsicht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenaufsicht/create
+	 *
+	 * Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenaufsicht wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanPausenaufsicht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Pausenaufsicht für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanPausenaufsicht>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Pausenaufsicht wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanPausenaufsicht(data : Partial<StundenplanPausenaufsicht>, schema : string) : Promise<StundenplanPausenaufsicht> {
+		const path = "/db/{schema}/stundenplan/pausenaufsicht/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = StundenplanPausenaufsicht.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanPausenaufsicht.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanPausenzeit für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenzeiten/{id : \d+}
 	 *
-	 * Gibt die Pausenzeit eines Stundeplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
+	 * Gibt die Pausenzeit eines Stundenplans zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Pausenzeit
@@ -10224,6 +10281,63 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteStundenplanUnterricht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/unterricht/{id : \d+}
+	 *
+	 * Entfernt einen Unterricht eines Stundenplans.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Unterricht wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanUnterricht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.
+	 *   Code 404: Kein Unterricht mit der ID vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Unterricht wurde erfolgreich entfernt.
+	 */
+	public async deleteStundenplanUnterricht(schema : string, id : number) : Promise<StundenplanUnterricht> {
+		const path = "/db/{schema}/stundenplan/unterricht/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return StundenplanUnterricht.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanUnterricht für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/unterricht/create
+	 *
+	 * Erstellt einen neue Unterricht für einen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Unterricht wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: StundenplanUnterricht
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Unterricht für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<StundenplanUnterricht>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Unterricht wurde erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanUnterricht(data : Partial<StundenplanUnterricht>, schema : string) : Promise<StundenplanUnterricht> {
+		const path = "/db/{schema}/stundenplan/unterricht/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = StundenplanUnterricht.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return StundenplanUnterricht.transpilerFromJSON(text);
 	}
 
 

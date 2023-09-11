@@ -663,8 +663,8 @@ public class APIStundenplan {
      */
     @GET
     @Path("/pausenzeiten/{id : \\d+}")
-    @Operation(summary = "Gibt die Pausenzeit eines Stundeplans zurück.",
-               description = "Gibt die Pausenzeit eines Stundeplans zurück. "
+    @Operation(summary = "Gibt die Pausenzeit eines Stundenplans zurück.",
+               description = "Gibt die Pausenzeit eines Stundenplans zurück. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Die Pausenzeit",
@@ -907,6 +907,64 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen einer neuen Pausenaufsicht zu einer Pausenzeit bei
+     * einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Pausenaufsicht
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der neuen Pausenaufsicht
+     */
+    @POST
+    @Path("/pausenaufsicht/create")
+    @Operation(summary = "Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt eine neue Pausenaufsicht für die angebene Pausenzeit eines Stundenplans und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenaufsicht wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanPausenaufsicht.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Pausenaufsicht für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanPausenaufsicht(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenaufsicht ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen einer Pausenaufsicht eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID der Pausenaufsicht
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Pausenaufsicht
+     */
+    @DELETE
+    @Path("/pausenaufsicht/{id : \\d+}")
+    @Operation(summary = "Entfernt eine Pausenaufsicht eines Stundenplans.",
+    description = "Entfernt eine Pausenaufsicht eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenaufsicht wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanPausenaufsicht.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Keine Pausenaufsicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage aller Unterrichte zu einem Stundenplan.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -987,6 +1045,62 @@ public class APIStundenplan {
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines neuen Unterrichts zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten des Unterrichts
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Unterricht
+     */
+    @POST
+    @Path("/unterricht/create")
+    @Operation(summary = "Erstellt einen neue Unterricht für einen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neue Unterricht für einen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Unterricht wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = StundenplanUnterricht.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Unterricht für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanUnterricht(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten des zu erstellenden Unterrichts ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanUnterricht.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Unterrichts eines Stundenplans.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Unterrichts
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Unterricht
+     */
+    @DELETE
+    @Path("/unterricht/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Unterricht eines Stundenplans.",
+    description = "Entfernt einen Unterricht eines Stundenplans."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
+    @ApiResponse(responseCode = "200", description = "Der Unterricht wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StundenplanUnterricht.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Stundenplan zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Unterricht mit der ID vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteStundenplanUnterricht(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
 
 
     /**
