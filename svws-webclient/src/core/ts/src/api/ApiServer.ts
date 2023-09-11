@@ -7165,6 +7165,65 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/belegung
+	 *
+	 * Passt die Sprachbelegung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Sprachbelegung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachbelegungen zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachbelegung für die Sprache gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Sprachbelegung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 */
+	public async patchSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number, sprache : string) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/belegung
+	 *
+	 * Entfernt eine Sprachbelegung eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachbelegung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachbelegung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 *
+	 * @returns Die Sprachbelegung wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return Sprachbelegung.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
 	 *
 	 * Liest die Sprachprüfung zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -7188,6 +7247,65 @@ export class ApiServer extends BaseApi {
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
 			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
 		const result : string = await super.getJSON(path);
+		const text = result;
+		return Sprachpruefung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
+	 *
+	 * Passt die Sprachprüfung zu der angegebenen Schüler-ID und dem angegebenen Sprachkürzel an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Sprachprüfung integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Sprachprüfungen zu ändern.
+	 *   Code 404: Kein Schüler-Eintrag mit der angegebenen ID gefunden oder keine Sprachprüfung für die Sprache gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<Sprachpruefung>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 */
+	public async patchSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number, sprache : string) : Promise<void> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
+	 *
+	 * Entfernt eine Sprachprüfung eines Schülers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfung wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachpruefung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 *
+	 * @returns Die Sprachprüfung wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const result : string = await super.deleteJSON(path, null);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
 	}
@@ -7223,6 +7341,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/belegungen
+	 *
+	 * Erstellt eine neuen Sprachbelegung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachbelegung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachbelegung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Sprachbelegung} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Sprachbelegung des Schülers
+	 */
+	public async addSchuelerSprachbelegung(data : Sprachbelegung, schema : string, id : number) : Promise<Sprachbelegung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = Sprachbelegung.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Sprachbelegung.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerSprachpruefungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/pruefungen
 	 *
 	 * Liest die Sprachprüfungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
@@ -7248,6 +7396,36 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<Sprachpruefung>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Sprachpruefung.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/pruefungen
+	 *
+	 * Erstellt eine neuen Sprachprüfung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachpruefung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzulegen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Sprachpruefung} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Sprachprüfung des Schülers
+	 */
+	public async addSchuelerSprachpruefung(data : Sprachpruefung, schema : string, id : number) : Promise<Sprachpruefung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = Sprachpruefung.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return Sprachpruefung.transpilerFromJSON(text);
 	}
 
 
