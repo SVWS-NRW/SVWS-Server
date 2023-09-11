@@ -1,4 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -11,11 +13,10 @@ import { routeSchule, type RouteSchule } from "~/router/apps/schule/RouteSchule"
 import { routeSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschKurs42";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschLupo";
 import { routeSchuleDatenaustauschENM } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschENM";
+import { routeSchuleDatenaustauschWenom } from "./RouteDatenaustauschWenom";
 
 import { RouteDataSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteDataSchuleDatenaustausch";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { SchuleDatenaustauschAuswahlProps } from "~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahlProps";
 
 const SSchuleDatenaustauschApp = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschApp.vue")
 const SSchuleDatenaustauschAuswahl = () => import("~/components/schule/datenaustausch/SSchuleDatenaustauschAuswahl.vue")
@@ -32,6 +33,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschENM,
+			routeSchuleDatenaustauschWenom,
 		];
 		super.defaultChild = routeSchuleDatenaustauschLaufbahnplanung;
 	}
