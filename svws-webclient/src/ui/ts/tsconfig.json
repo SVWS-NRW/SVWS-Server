@@ -6,8 +6,7 @@
 		"baseUrl": ".",
 		"paths": {},
 		"types": [
-			"vite/client",
-			"vue/ref-macros"
+			"vite/client"
 		]
 	},
 	"include": [

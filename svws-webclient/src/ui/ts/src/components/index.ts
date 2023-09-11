@@ -1,7 +1,6 @@
 export { default as SvwsUiButton } from "./SvwsUiButton.vue";
 export { default as SvwsUiCheckbox } from "./SvwsUiCheckbox.vue";
 export { default as SvwsUiMultiSelect } from "./SvwsUiMultiSelect.vue";
-export { default as SvwsUiProgressBar } from "./Deprecated/SvwsUiProgressBar.vue";
 export { default as SvwsUiRadioGroup } from "./SvwsUiRadioGroup.vue";
 export { default as SvwsUiRadioOption } from "./SvwsUiRadioOption.vue";
 export { default as SvwsUiTextareaInput } from "./SvwsUiTextareaInput.vue";
@@ -32,6 +31,7 @@ export { default as SvwsUiInputWrapper } from "./SvwsUiInputWrapper.vue";
 export { default as SvwsUiSpacing } from "./SvwsUiSpacing.vue";
 export { default as SvwsUiDashboardTile } from "./SvwsUiDashboardTile.vue";
 // DEPRECATED
+export { default as SvwsUiProgressBar } from "./Deprecated/SvwsUiProgressBar.vue";
 export { default as SvwsUiIcon } from "./Deprecated/SvwsUiIcon.vue";
 export { default as SvwsUiDropdown } from "./Deprecated/SvwsUiDropdown.vue";
 export { default as SvwsUiDropdownItem } from "./Deprecated/SvwsUiDropdownItem.vue";
