@@ -43,6 +43,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -640,6 +641,30 @@ public class APISchueler {
 	}
 
 
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Sprachbelegung eines Schülers in einer Sprache.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param sprache   das Sprachkürzel der Sprache
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Spachbelegungen des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung")
+	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachbelegung.", description
+			= "Liest die Spachbelegungen zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Spachbelegung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Spachbelegung anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getSchuelerSprachbelegung(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("sprache") final @NotNull String sprache,
+			@Context final HttpServletRequest request) {
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).get(sprache),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage der Sprachprüfungen eines Schülers.
@@ -661,6 +686,31 @@ public class APISchueler {
 	public Response getSchuelerSprachpruefungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
 		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getList(),
+			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Sprachprüfung eines Schülers in einer Sprache.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die Datenbank-ID zur Identifikation des Schülers
+	 * @param sprache   das Sprachkürzel der Sprache
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die Spachprüfung des Schülers
+	 */
+	@GET
+	@Path("/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung")
+	@Operation(summary = "Liefert zu der ID des Schülers und dem Sprachkürzel die zugehörige Sprachprüfung.", description
+			= "Liest die Sprachprüfung zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Sprachprüfung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzusehen.")
+	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
+	public Response getSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("sprache") final @NotNull String sprache,
+			@Context final HttpServletRequest request) {
+		return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).get(sprache),
 			request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
 	}
 

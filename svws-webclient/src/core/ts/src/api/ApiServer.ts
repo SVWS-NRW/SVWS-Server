@@ -7136,6 +7136,64 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchuelerSprachbelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/belegung
+	 *
+	 * Liest die Spachbelegungen zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Spachbelegung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachbelegung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Spachbelegung anzusehen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 *
+	 * @returns Die Spachbelegung des Schülers
+	 */
+	public async getSchuelerSprachbelegung(schema : string, id : number, sprache : string) : Promise<Sprachbelegung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/belegung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Sprachbelegung.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuelerSprachpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprache/{sprache : [A-Z]+}/pruefung
+	 *
+	 * Liest die Sprachprüfung zu der Sprache mit dem angegebenen Sprachkürzel des Schülers mit der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Sprachprüfung des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Sprachpruefung
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzusehen.
+	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 * @param {string} sprache - der Pfad-Parameter sprache
+	 *
+	 * @returns Die Sprachprüfung des Schülers
+	 */
+	public async getSchuelerSprachpruefung(schema : string, id : number, sprache : string) : Promise<Sprachpruefung> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/sprache/{sprache : [A-Z]+}/pruefung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
+			.replace(/{sprache\s*(:[^}]+)?}/g, sprache);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return Sprachpruefung.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerSprachbelegungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/sprachen/belegungen
 	 *
 	 * Liest die Spachbelegungen des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
