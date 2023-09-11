@@ -179,8 +179,11 @@
 	})
 
 	function istSchriftlich(id: number) {
-		if (fach.value !== undefined)
-			return props.getErgebnismanager().getParent()?.schuelerGetOfFachFachwahl(id, fach.value.id).istSchriftlich ? 's':'m';
+		if (fach.value !== undefined || props.schuelerFilter.kurs !== undefined) {
+			const fachId = fach.value?.id || props.schuelerFilter.kurs?.fach_id
+			if (fachId !== undefined)
+				return props.getErgebnismanager().getParent()?.schuelerGetOfFachFachwahl(id, fachId).istSchriftlich ? 's':'m';
+		}
 		return '';
 	}
 
