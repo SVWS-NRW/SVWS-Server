@@ -8,11 +8,11 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-data-table :items="stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :columns="cols" no-data-html="Kein Unterricht zu diesem Eintrag gefunden.">
-			<template #cell(idFach)="{ rowData }">
-				<div class="rounded -m-1 px-1.5 py-0.5" :style="`background-color: ${getBgColor(stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id).split('-')[0])}`">
-					{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}
-				</div>
+		<svws-ui-data-table :items="[]" :columns="cols" :no-data="false">
+			<template #body>
+				<svws-ui-table-row v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :key="rowData.id" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
+					<svws-ui-table-cell> {{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }} </svws-ui-table-cell>
+				</svws-ui-table-row>
 			</template>
 		</svws-ui-data-table>
 	</svws-ui-content-card>
