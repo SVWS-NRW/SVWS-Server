@@ -335,10 +335,13 @@ export class RouteDataGostKlausurplanung {
 		delete vorgabe.idVorgabe;
 		vorgabe.abiJahrgang = this.abiturjahr;
 		vorgabe.halbjahr = this.halbjahr.id;
-		const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
-		this.klausurvorgabenmanager.vorgabeAdd(neueVorgabe);
-		this.commit();
-		api.status.stop();
+		try {
+			const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
+			this.klausurvorgabenmanager.vorgabeAdd(neueVorgabe);
+		} finally {
+			this.commit();
+			api.status.stop();
+		}
 	}
 
 	patchKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>, id: number) => {

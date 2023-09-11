@@ -3,8 +3,8 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 		<svws-ui-button type="primary" @click="neueVorgabe">Neue Vorgabe</svws-ui-button>
 		<svws-ui-button type="secondary" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1">Fehlende Klausurvorgaben kopieren</svws-ui-button>
-		<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0" class="ml-auto">Vorgabe speichern</svws-ui-button>
-		<svws-ui-button type="danger" size="small" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0"><i-ri-delete-bin-line />Vorgabe löschen</svws-ui-button>
+		<svws-ui-button @click="saveKlausurvorgabe" v-if="activeVorgabe.idVorgabe === 0" class="ml-auto">Vorgabe speichern</svws-ui-button>
+		<svws-ui-button type="danger" size="small" class="ml-auto" @click="loescheKlausurvorgabe" v-if="activeVorgabe.idVorgabe !== 0"><i-ri-delete-bin-line />Vorgabe löschen</svws-ui-button>
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 
@@ -53,7 +53,7 @@
 				</svws-ui-data-table>
 			</svws-ui-content-card>
 		</div>
-		<svws-ui-content-card title="Vorgabe bearbeiten" class="w-1/4">
+		<svws-ui-content-card :title=" activeVorgabe.idVorgabe !== 0 ? 'Vorgabe bearbeiten' : 'Neue Vorgabe'" class="w-1/4">
 			<template #actions>
 				<svws-ui-button type="secondary" @click="cancelEdit" :disabled="activeVorgabe.idVorgabe < 0">Abbrechen</svws-ui-button>
 			</template>
@@ -68,30 +68,30 @@
 					<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe !== 0" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper>
-					<svws-ui-text-input placeholder="Dauer" type="number" v-model:modelValue="activeVorgabe.dauer" :disabled="activeVorgabe.idVorgabe < 0" />
-					<svws-ui-text-input placeholder="Auswahlzeit" type="number" v-model:modelValue="activeVorgabe.auswahlzeit" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-text-input placeholder="Dauer" type="number" :model-value="activeVorgabe.dauer" @blur="dauer => patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-text-input placeholder="Auswahlzeit" type="number" :model-value="activeVorgabe.auswahlzeit" @blur="auswahlzeit => patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
 				</svws-ui-input-wrapper>
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row items-center">
 						<label for="rbgMdlPruefung">Mündliche Prüfung: </label>
 						<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
-							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
 						</svws-ui-radio-group>
 					</div>
 					<div class="flex flex-row items-center">
 						<label for="rbgAudioNotwendig">Audio notwendig: </label>
 						<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
-							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
 						</svws-ui-radio-group>
 					</div>
 					<div class="flex flex-row items-center">
 						<label for="rbgVideoNotwendig">Video notwendig: </label>
 						<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
-							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0" />
+							<svws-ui-radio-option v-for="value in formJaNein" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
 						</svws-ui-radio-group>
 					</div>
 				</div>
-				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => activeVorgabe.bemerkungVorgabe = bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @blur="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -141,20 +141,13 @@
 			console.log("Eingabefehler");
 			return;
 		}
-		if (activeVorgabe.value.idVorgabe > 0) {
-			await props.patchKlausurvorgabe({
-				dauer: activeVorgabe.value.dauer,
-				auswahlzeit: activeVorgabe.value.auswahlzeit,
-				istMdlPruefung: activeVorgabe.value.istMdlPruefung,
-				istAudioNotwendig: activeVorgabe.value.istAudioNotwendig,
-				istVideoNotwendig: activeVorgabe.value.istVideoNotwendig,
-				bemerkungVorgabe: activeVorgabe.value.bemerkungVorgabe,
-			}, activeVorgabe.value.idVorgabe);
-			activeVorgabe.value = new GostKlausurvorgabe();
-			selectedVorgabeRow.value = undefined;
-		} else {
-			await props.erzeugeKlausurvorgabe(activeVorgabe.value);
-			activeVorgabe.value = new GostKlausurvorgabe();
+		if (activeVorgabe.value.idVorgabe === 0) {
+			try {
+				await props.erzeugeKlausurvorgabe(activeVorgabe.value);
+				activeVorgabe.value = new GostKlausurvorgabe();
+			} catch (error) {
+				console.log("Vorgabe konnte nicht erzeugt werden, wahrscheinlich existiert sie schon.", activeVorgabe.value); // TODO
+			}
 		}
 	};
 
@@ -170,7 +163,7 @@
 	};
 
 	const startEdit = () => {
-		if (selectedVorgabeRow.value !== null && selectedVorgabeRow.value !== undefined) {
+		if (selectedVorgabeRow.value !== undefined) {
 			const v = props.klausurvorgabenmanager().vorgabeGetByIdOrException(selectedVorgabeRow.value.idVorgabe);
 			activeVorgabe.value = v !== null ? v : new GostKlausurvorgabe();
 		}

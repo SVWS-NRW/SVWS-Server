@@ -2,7 +2,6 @@
 	<slot name="header">
 		<header class="border-b">
 			<div class="text-headline-md">
-				<span>{{ jahrgangsdaten.jahrgang }} - {{ termin.halbjahr % 2 }}. Hj - {{ termin?.quartal }}. Quartal</span>
 				<SvwsUiToggle v-if="toggleDetails" class="float-right" v-model="showDetails" @click="$event.stopPropagation()">
 					Details zeigen
 				</SvwsUiToggle>
