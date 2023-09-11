@@ -1056,7 +1056,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "EF",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "B1/B2"
+      "referenzniveau" : "B1/B2",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "L",
       "reihenfolge" : 2,
@@ -1072,7 +1076,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "EF",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "B1+"
+      "referenzniveau" : "B1+",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }

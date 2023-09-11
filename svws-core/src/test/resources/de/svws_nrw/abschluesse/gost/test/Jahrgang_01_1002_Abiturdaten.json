@@ -1044,7 +1044,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "Q2",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "B2/C1"
+      "referenzniveau" : "B2/C1",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "L",
       "reihenfolge" : 2,

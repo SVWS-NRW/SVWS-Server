@@ -1015,7 +1015,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "EF",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "B1/B2"
+      "referenzniveau" : "B1/B2",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "F",
       "reihenfolge" : 2,
@@ -1023,7 +1027,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "09",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "B1"
+      "referenzniveau" : "B1",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     }, {
       "sprache" : "S",
       "reihenfolge" : 3,
@@ -1031,7 +1039,11 @@
       "belegungVonAbschnitt" : 1,
       "belegungBisJahrgang" : "EF",
       "belegungBisAbschnitt" : 2,
-      "referenzniveau" : "A2"
+      "referenzniveau" : "A2",
+      "hatKleinesLatinum" : false,
+      "hatLatinum" : false,
+      "hatGraecum" : false,
+      "hatHebraicum" : false
     } ],
     "pruefungen" : [ ]
   }
