@@ -713,7 +713,7 @@ public class APISchueler {
 	@Operation(summary = "Erstellt einen neuen Sprachbelegung für einen Schüler", description = "Erstellt eine neuen Sprachbelegung "
 			+ "für den Schüler mit der angebenen ID. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Sprachbelegung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
+	@ApiResponse(responseCode = "201", description = "Die Sprachbelegung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachbelegung.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
@@ -849,7 +849,7 @@ public class APISchueler {
 	@Operation(summary = "Erstellt eine neuen Sprachprüfung für einen Schüler", description = "Erstellt eine neuen Sprachprüfung "
 			+ "für den Schüler mit der angebenen ID. "
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die Sprachprüfung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
+	@ApiResponse(responseCode = "201", description = "Die Sprachprüfung des Schülers", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Sprachpruefung.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzulegen.")
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden.")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")

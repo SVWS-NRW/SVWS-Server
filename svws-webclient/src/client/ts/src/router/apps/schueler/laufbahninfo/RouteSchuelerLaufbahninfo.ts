@@ -48,6 +48,12 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 		return {
 			sprachbelegungen: () => this.data.sprachbelegungen,
 			sprachpruefungen: () => this.data.sprachpruefungen,
+			patchSprachbelegung: this.data.patchSprachbelegung,
+			addSprachbelegung: this.data.addSprachbelegung,
+			removeSprachbelegung: this.data.removeSprachbelegung,
+			patchSprachpruefung: this.data.patchSprachpruefung,
+			addSprachpruefung: this.data.addSprachpruefung,
+			removeSprachpruefung: this.data.removeSprachpruefung,
 		};
 	}
 

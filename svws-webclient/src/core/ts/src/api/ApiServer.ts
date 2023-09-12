@@ -7346,24 +7346,24 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neuen Sprachbelegung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachbelegungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Sprachbelegung des Schülers
+	 *   Code 201: Die Sprachbelegung des Schülers
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Sprachbelegung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachbelegung anzulegen.
 	 *   Code 404: Kein Schüler mit der angegebenen ID oder keine Sprache mit dem Kürzel gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Sprachbelegung} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Sprachbelegung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Die Sprachbelegung des Schülers
 	 */
-	public async addSchuelerSprachbelegung(data : Sprachbelegung, schema : string, id : number) : Promise<Sprachbelegung> {
+	public async addSchuelerSprachbelegung(data : Partial<Sprachbelegung>, schema : string, id : number) : Promise<Sprachbelegung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/belegungen"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = Sprachbelegung.transpilerToJSON(data);
+		const body : string = Sprachbelegung.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Sprachbelegung.transpilerFromJSON(text);
@@ -7405,24 +7405,24 @@ export class ApiServer extends BaseApi {
 	 * Erstellt eine neuen Sprachprüfung für den Schüler mit der angebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Sprachprüfungen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Sprachprüfung des Schülers
+	 *   Code 201: Die Sprachprüfung des Schülers
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Sprachpruefung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Sprachprüfung anzulegen.
 	 *   Code 404: Kein Schüler mit der angegebenen ID gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Sprachpruefung} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<Sprachpruefung>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
 	 * @returns Die Sprachprüfung des Schülers
 	 */
-	public async addSchuelerSprachpruefung(data : Sprachpruefung, schema : string, id : number) : Promise<Sprachpruefung> {
+	public async addSchuelerSprachpruefung(data : Partial<Sprachpruefung>, schema : string, id : number) : Promise<Sprachpruefung> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/sprachen/pruefungen"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = Sprachpruefung.transpilerToJSON(data);
+		const body : string = Sprachpruefung.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Sprachpruefung.transpilerFromJSON(text);
