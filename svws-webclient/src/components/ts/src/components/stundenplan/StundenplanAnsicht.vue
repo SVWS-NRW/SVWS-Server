@@ -80,7 +80,7 @@
 								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 							</div>
 							<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
-							<div v-if="manager().zeitrasterHatUnterrichtMitWochentyp1BisNByWochentagAndStunde(wochentag, stunde)"
+							<div v-if="zeitrasterHatUnterricht(wochentag.id, stunde)"
 								class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
 								<template v-for="wt in manager().getWochenTypModell()" :key="wt">
 									<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
@@ -92,9 +92,8 @@
 											:class="{'flex-grow': getUnterrichtWochentypAllgemein(wochentag, stunde, wt).size() === 1}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
-											<div class="font-bold" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+											<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 											<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
-											<div />
 											<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 										</div>
 									</div>
@@ -191,6 +190,19 @@
 			return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
 		throw new DeveloperNotificationException("const pausenzeiten: Unbekannter Mode " + props.mode);
 	});
+
+	function zeitrasterHatUnterricht(wochentag: number, stunde: number): boolean {
+		switch (props.mode) {
+			case 'klasse':
+				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByKlasseIdWochentagAndStunde(props.id, wochentag, stunde);
+			case 'schueler':
+				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNBySchuelerIdWochentagAndStunde(props.id, wochentag, stunde);
+			case 'lehrer':
+				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByLehrerIdWochentagAndStunde(props.id, wochentag, stunde);
+			default:
+				return false;
+		}
+	}
 
 	const gesamtzeit = computed(() => {
 		const tmp = ende.value - beginn.value;
