@@ -13,14 +13,24 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 	public abiturjahr : number = 0;
 
 	/**
-	 * Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt
+	 * Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt
 	 */
-	public aktuellesGOSthalbjahr : string = "";
+	public aktuellesGOStHalbjahr : string = "";
+
+	/**
+	 * Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn
+	 */
+	public aktuelleKlasse : string = "";
+
+	/**
+	 * Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt
+	 */
+	public pruefungsordnung : string = "";
 
 	/**
 	 * Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt
 	 */
-	public beratungsGOSthalbjahr : string = "";
+	public beratungsGOStHalbjahr : string = "";
 
 	/**
 	 * Der Text der Schule für den Beratungsbogen
@@ -75,12 +85,18 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		if (typeof obj.abiturjahr === "undefined")
 			 throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
-		if (typeof obj.aktuellesGOSthalbjahr === "undefined")
-			 throw new Error('invalid json format, missing attribute aktuellesGOSthalbjahr');
-		result.aktuellesGOSthalbjahr = obj.aktuellesGOSthalbjahr;
-		if (typeof obj.beratungsGOSthalbjahr === "undefined")
-			 throw new Error('invalid json format, missing attribute beratungsGOSthalbjahr');
-		result.beratungsGOSthalbjahr = obj.beratungsGOSthalbjahr;
+		if (typeof obj.aktuellesGOStHalbjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute aktuellesGOStHalbjahr');
+		result.aktuellesGOStHalbjahr = obj.aktuellesGOStHalbjahr;
+		if (typeof obj.aktuelleKlasse === "undefined")
+			 throw new Error('invalid json format, missing attribute aktuelleKlasse');
+		result.aktuelleKlasse = obj.aktuelleKlasse;
+		if (typeof obj.pruefungsordnung === "undefined")
+			 throw new Error('invalid json format, missing attribute pruefungsordnung');
+		result.pruefungsordnung = obj.pruefungsordnung;
+		if (typeof obj.beratungsGOStHalbjahr === "undefined")
+			 throw new Error('invalid json format, missing attribute beratungsGOStHalbjahr');
+		result.beratungsGOStHalbjahr = obj.beratungsGOStHalbjahr;
 		if (typeof obj.beratungsbogentext === "undefined")
 			 throw new Error('invalid json format, missing attribute beratungsbogentext');
 		result.beratungsbogentext = obj.beratungsbogentext;
@@ -109,8 +125,10 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"aktuellesGOSthalbjahr" : ' + JSON.stringify(obj.aktuellesGOSthalbjahr!) + ',';
-		result += '"beratungsGOSthalbjahr" : ' + JSON.stringify(obj.beratungsGOSthalbjahr!) + ',';
+		result += '"aktuellesGOStHalbjahr" : ' + JSON.stringify(obj.aktuellesGOStHalbjahr!) + ',';
+		result += '"aktuelleKlasse" : ' + JSON.stringify(obj.aktuelleKlasse!) + ',';
+		result += '"pruefungsordnung" : ' + JSON.stringify(obj.pruefungsordnung!) + ',';
+		result += '"beratungsGOStHalbjahr" : ' + JSON.stringify(obj.beratungsGOStHalbjahr!) + ',';
 		result += '"beratungsbogentext" : ' + JSON.stringify(obj.beratungsbogentext!) + ',';
 		result += '"emailtext" : ' + JSON.stringify(obj.emailtext!) + ',';
 		result += '"beratungslehrkraefte" : ' + JSON.stringify(obj.beratungslehrkraefte!) + ',';
@@ -131,11 +149,17 @@ export class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten extends JavaOb
 		if (typeof obj.abiturjahr !== "undefined") {
 			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
 		}
-		if (typeof obj.aktuellesGOSthalbjahr !== "undefined") {
-			result += '"aktuellesGOSthalbjahr" : ' + JSON.stringify(obj.aktuellesGOSthalbjahr!) + ',';
+		if (typeof obj.aktuellesGOStHalbjahr !== "undefined") {
+			result += '"aktuellesGOStHalbjahr" : ' + JSON.stringify(obj.aktuellesGOStHalbjahr!) + ',';
 		}
-		if (typeof obj.beratungsGOSthalbjahr !== "undefined") {
-			result += '"beratungsGOSthalbjahr" : ' + JSON.stringify(obj.beratungsGOSthalbjahr!) + ',';
+		if (typeof obj.aktuelleKlasse !== "undefined") {
+			result += '"aktuelleKlasse" : ' + JSON.stringify(obj.aktuelleKlasse!) + ',';
+		}
+		if (typeof obj.pruefungsordnung !== "undefined") {
+			result += '"pruefungsordnung" : ' + JSON.stringify(obj.pruefungsordnung!) + ',';
+		}
+		if (typeof obj.beratungsGOStHalbjahr !== "undefined") {
+			result += '"beratungsGOStHalbjahr" : ' + JSON.stringify(obj.beratungsGOStHalbjahr!) + ',';
 		}
 		if (typeof obj.beratungsbogentext !== "undefined") {
 			result += '"beratungsbogentext" : ' + JSON.stringify(obj.beratungsbogentext!) + ',';

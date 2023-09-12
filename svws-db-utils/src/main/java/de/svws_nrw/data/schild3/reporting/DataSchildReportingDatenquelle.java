@@ -316,6 +316,14 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
     }
 
 
+	/**
+	 * Ermöglicht das initialisieren der Map mit den Datenquellen außerhalb eines API-Calls
+	 */
+	public static void initMapDatenquellen() {
+		getMapDatenquellen();
+	}
+
+
     /**
      * Erstellt die Liste der im SVWS-Server verfügbaren Datenquellen. An dieser Stelle
      * müssen einzelnen Data-Objekte des svws-openapi- Projektes erzeugt werden.

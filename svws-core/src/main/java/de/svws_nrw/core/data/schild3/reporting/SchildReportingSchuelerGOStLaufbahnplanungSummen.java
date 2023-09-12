@@ -74,6 +74,14 @@ public class SchildReportingSchuelerGOStLaufbahnplanungSummen {
 	@Schema(description = "Wochenstundendurchschnitt in der EF", example = "34.5")
 	public double wochenstundenDurchschnittEF;
 
+	/** Wochenstundendurchschnitt in der EF */
+	@Schema(description = "Wochenstundendurchschnitt in der Q1", example = "37")
+	public double wochenstundenDurchschnittQ1;
+
+	/** Wochenstundendurchschnitt in der EF */
+	@Schema(description = "Wochenstundendurchschnitt in der Q2", example = "34")
+	public double wochenstundenDurchschnittQ2;
+
 	/** Wochenstundendurchschnitt in der Qualifikationsphase */
 	@Schema(description = "Wochenstundendurchschnitt in der Qualifikationsphase", example = "34")
 	public double wochenstundenDurchschnittQPh;

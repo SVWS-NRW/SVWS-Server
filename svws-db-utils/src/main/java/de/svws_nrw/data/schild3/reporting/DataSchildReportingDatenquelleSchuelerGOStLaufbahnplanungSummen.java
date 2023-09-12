@@ -30,14 +30,14 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungSummen
      */
-    DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen() {
+	public DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen() {
         super(SchildReportingSchuelerGOStLaufbahnplanungSummen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-    List<SchildReportingSchuelerGOStLaufbahnplanungSummen> getDaten(final DBEntityManager conn, final List<Long> params) {
+	public List<SchildReportingSchuelerGOStLaufbahnplanungSummen> getDaten(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
@@ -80,6 +80,8 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 				laufbahnplanungSummen.wochenstundenQ22 = 0;
 
 				laufbahnplanungSummen.wochenstundenDurchschnittEF = 0;
+				laufbahnplanungSummen.wochenstundenDurchschnittQ1 = 0;
+				laufbahnplanungSummen.wochenstundenDurchschnittQ2 = 0;
 				laufbahnplanungSummen.wochenstundenDurchschnittQPh = 0;
 				laufbahnplanungSummen.wochenstundenGesamt = 0;
 			} else {
@@ -112,6 +114,8 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 					laufbahnplanungSummen.wochenstundenQ22 = wstd[5];
 
 					laufbahnplanungSummen.wochenstundenDurchschnittEF = (laufbahnplanungSummen.wochenstundenEF1 + laufbahnplanungSummen.wochenstundenEF2) / 2.0;
+					laufbahnplanungSummen.wochenstundenDurchschnittQ1 = (laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12) / 2.0;
+					laufbahnplanungSummen.wochenstundenDurchschnittQ2 = (laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 2.0;
 					laufbahnplanungSummen.wochenstundenDurchschnittQPh = (laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12 + laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 4.00;
 					laufbahnplanungSummen.wochenstundenGesamt = (laufbahnplanungSummen.wochenstundenEF1 + laufbahnplanungSummen.wochenstundenEF2 + laufbahnplanungSummen.wochenstundenQ11 + laufbahnplanungSummen.wochenstundenQ12 + laufbahnplanungSummen.wochenstundenQ21 + laufbahnplanungSummen.wochenstundenQ22) / 2.0;
 				} catch (final Exception ex) {

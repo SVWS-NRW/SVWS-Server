@@ -78,6 +78,16 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 	public wochenstundenDurchschnittEF : number = 0;
 
 	/**
+	 * Wochenstundendurchschnitt in der EF
+	 */
+	public wochenstundenDurchschnittQ1 : number = 0;
+
+	/**
+	 * Wochenstundendurchschnitt in der EF
+	 */
+	public wochenstundenDurchschnittQ2 : number = 0;
+
+	/**
 	 * Wochenstundendurchschnitt in der Qualifikationsphase
 	 */
 	public wochenstundenDurchschnittQPh : number = 0;
@@ -144,6 +154,12 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 		if (typeof obj.wochenstundenDurchschnittEF === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstundenDurchschnittEF');
 		result.wochenstundenDurchschnittEF = obj.wochenstundenDurchschnittEF;
+		if (typeof obj.wochenstundenDurchschnittQ1 === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstundenDurchschnittQ1');
+		result.wochenstundenDurchschnittQ1 = obj.wochenstundenDurchschnittQ1;
+		if (typeof obj.wochenstundenDurchschnittQ2 === "undefined")
+			 throw new Error('invalid json format, missing attribute wochenstundenDurchschnittQ2');
+		result.wochenstundenDurchschnittQ2 = obj.wochenstundenDurchschnittQ2;
 		if (typeof obj.wochenstundenDurchschnittQPh === "undefined")
 			 throw new Error('invalid json format, missing attribute wochenstundenDurchschnittQPh');
 		result.wochenstundenDurchschnittQPh = obj.wochenstundenDurchschnittQPh;
@@ -170,6 +186,8 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 		result += '"wochenstundenQ21" : ' + obj.wochenstundenQ21 + ',';
 		result += '"wochenstundenQ22" : ' + obj.wochenstundenQ22 + ',';
 		result += '"wochenstundenDurchschnittEF" : ' + obj.wochenstundenDurchschnittEF + ',';
+		result += '"wochenstundenDurchschnittQ1" : ' + obj.wochenstundenDurchschnittQ1 + ',';
+		result += '"wochenstundenDurchschnittQ2" : ' + obj.wochenstundenDurchschnittQ2 + ',';
 		result += '"wochenstundenDurchschnittQPh" : ' + obj.wochenstundenDurchschnittQPh + ',';
 		result += '"wochenstundenGesamt" : ' + obj.wochenstundenGesamt + ',';
 		result = result.slice(0, -1);
@@ -223,6 +241,12 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 		}
 		if (typeof obj.wochenstundenDurchschnittEF !== "undefined") {
 			result += '"wochenstundenDurchschnittEF" : ' + obj.wochenstundenDurchschnittEF + ',';
+		}
+		if (typeof obj.wochenstundenDurchschnittQ1 !== "undefined") {
+			result += '"wochenstundenDurchschnittQ1" : ' + obj.wochenstundenDurchschnittQ1 + ',';
+		}
+		if (typeof obj.wochenstundenDurchschnittQ2 !== "undefined") {
+			result += '"wochenstundenDurchschnittQ2" : ' + obj.wochenstundenDurchschnittQ2 + ',';
 		}
 		if (typeof obj.wochenstundenDurchschnittQPh !== "undefined") {
 			result += '"wochenstundenDurchschnittQPh" : ' + obj.wochenstundenDurchschnittQPh + ',';

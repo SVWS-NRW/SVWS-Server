@@ -33,8 +33,11 @@ public class PDFCreator {
 	protected String pageCSS =
 		"""
 		@Page {
-			size : A4;
-			margin: 1cm;
+			size: A4;
+			margin-top: 10mm;
+			margin-bottom: 20mm;
+			margin-left: 20mm;
+			margin-right: 10mm;
 			@bottom-left {
 				content: element(footer);
 			}
@@ -60,12 +63,12 @@ public class PDFCreator {
 	protected String h4CSS = "h4 { font-size: 1em; font-weight: bold; }";
 
 	/** Default CSS-Class für eine type font */
-	protected String css_class_tinyfont = ".tinyfont { font-size: 0.6em; }";
+	protected String css_class_tinyfont = ".tinyfont { font-size: 0.8em; }";
 
 	/** Der Titel des PDF-Dokuments */
 	private final String title;
 
-	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolge haben. */
+	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolger haben. */
 	private PDFCreator next = null;
 
 

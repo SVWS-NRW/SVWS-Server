@@ -23,13 +23,21 @@ public class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten {
     @Schema(description = "Das Jahr, in welchem die Abiturprüfung stattfindet", example = "2024")
     public int abiturjahr;
 
-	/** Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt */
+	/** Das Halbjahr der Oberstufenlaufbahn, in dem die Beratung erfolgt */
 	@Schema(description = "Das Halbjahr der Oberstufenlaufbahn, in dem sich der Schüler befindet", example = "Q1.1")
-	public @NotNull String aktuellesGOSthalbjahr = "";
+	public @NotNull String aktuellesGOStHalbjahr = "";
+
+	/** Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn */
+	@Schema(description = "Die aktuelle Klasse zum aktuellen Halbjahr der Oberstufenlaufbahn", example = "Q1")
+	public @NotNull String aktuelleKlasse = "";
+
+	/** Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt */
+	@Schema(description = "Die Prüfungsordnung des Schülers aus dem aktuellen Lernabschnitt", example = "APO-GOSt")
+	public @NotNull String pruefungsordnung = "";
 
 	/** Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt */
 	@Schema(description = "Das Halbjahr der Oberstufenlaufbahn, für das die Beratung erfolgt", example = "Q1.2")
-	public @NotNull String beratungsGOSthalbjahr = "";
+	public @NotNull String beratungsGOStHalbjahr = "";
 
 	/** Der Text der Schule für den Beratungsbogen */
 	@SchildReportingMemo

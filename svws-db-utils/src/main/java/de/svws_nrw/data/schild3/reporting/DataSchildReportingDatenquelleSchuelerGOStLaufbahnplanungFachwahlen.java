@@ -34,14 +34,14 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungFachwahlen
      */
-    DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen() {
+	public DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen() {
         super(SchildReportingSchuelerGOStLaufbahnplanungFachwahlen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-    List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> getDaten(final DBEntityManager conn, final List<Long> params) {
+	public List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> getDaten(final DBEntityManager conn, final List<Long> params) {
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
