@@ -117,11 +117,9 @@
 								</div>
 							</template>
 							<template v-if="modePausenaufsichten === 'kurz'">
-								<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
-									<div>
-										<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
-										<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ getStringAufsichten(pause) }} </span> </div>
-									</div>
+								<div class="flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}">
+									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ getStringAufsichten(pause) }} </span> </div>
 								</div>
 							</template>
 							<template v-if="modePausenaufsichten === 'tooltip'">
