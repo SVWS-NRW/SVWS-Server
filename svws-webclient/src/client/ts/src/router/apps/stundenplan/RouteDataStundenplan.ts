@@ -4,7 +4,6 @@ import type { RouteNode } from "~/router/RouteNode";
 import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
 
 import { shallowRef } from "vue";
-import { useDebounceFn } from "@vueuse/core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";

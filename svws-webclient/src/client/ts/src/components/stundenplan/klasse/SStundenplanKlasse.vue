@@ -57,7 +57,7 @@
 				</svws-ui-data-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="aus" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="kurz" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
 				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>

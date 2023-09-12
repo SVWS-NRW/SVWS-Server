@@ -108,8 +108,24 @@
 					<!-- TODO Modi 'normal', 'kurz, 'tooltip' -->
 					<template v-for="pause in getPausenzeitenWochentag(wochentag)" :key="pause">
 						<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
-							<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
-								<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+							<template v-if="modePausenaufsichten === 'normal'">
+								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+									:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
+									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
+									<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
+								</div>
+							</template>
+							<template v-if="modePausenaufsichten === 'kurz'">
+								<div class="svws-ui-stundenplan--pausen-aufsicht" :class="{'svws-lehrkraft': mode === 'lehrer'}">
+									<div>
+										<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+										<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ getStringAufsichten(pause) }} </span> </div>
+									</div>
+								</div>
+							</template>
+							<template v-if="modePausenaufsichten === 'tooltip'">
+								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
 									:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
 									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
 									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
@@ -280,6 +296,17 @@
 			rowEnd = (pzeit.ende - beginn.value) / props.zeitrasterSteps;
 		}
 		return "grid-row-start: " + (Math.round(rowStart) + 1) + "; grid-row-end: " + (Math.round(rowEnd) + 1) + "; grid-column: 1;";
+	}
+
+	function getStringAufsichten(pause: StundenplanPausenzeit) {
+		const pausenaufsichten = getPausenaufsichtenPausenzeit(pause);
+		let text = "";
+		for (const pausenaufsicht of pausenaufsichten) {
+			if (text !== '')
+				text += ', ';
+			text += props.manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel;
+		}
+		return text;
 	}
 
 	function getBgColor(fach: string): string {
