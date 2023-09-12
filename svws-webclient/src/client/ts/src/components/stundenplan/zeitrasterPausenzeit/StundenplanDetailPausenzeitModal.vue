@@ -7,7 +7,7 @@
 				<svws-ui-multi-select title="Aufsichtführende Lehrkraft" :items="listLehrer"
 					:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 					:item-filter="filter" removable autocomplete :model-value="undefined" ref="refLehrer" />
-				<svws-ui-multi-select title="Aufsichtsbereiche" :items="listAufsichtsbereiche"
+				<svws-ui-multi-select title="Aufsichtsbereiche" :items="listAufsichtsbereiche" tags
 					:item-text="(i: StundenplanAufsichtsbereich)=>i.beschreibung" ref="refAufsichtsbereich"
 					:item-filter="filterAufsichtsbereiche" removable autocomplete :model-value="undefined" />
 				<svws-ui-multi-select v-if="wochentypen > 0" title="Wochentyp" :items="wochentypenArray" :model-value="wochentypenArray[0]" :item-text="(i: WT)=>i?.text || 'leer'" ref="refWochentyp" />
@@ -21,9 +21,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanPausenzeit, StundenplanPausenaufsicht, List } from "@core";
+	import type { StundenplanPausenzeit, StundenplanPausenaufsicht, List , StundenplanAufsichtsbereich} from "@core";
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import { StundenplanAufsichtsbereich, LehrerListeEintrag, ArrayList } from "@core";
+	import { LehrerListeEintrag, ArrayList } from "@core";
 	import { SvwsUiMultiSelect } from "@ui";
 	import { computed, ref } from "vue";
 
@@ -67,8 +67,9 @@
 		if (!(refLehrer.value?.content instanceof LehrerListeEintrag))
 			return;
 		const bereiche = new ArrayList<number>();
-		if (refAufsichtsbereich.value?.content instanceof StundenplanAufsichtsbereich)
-			bereiche.add(refAufsichtsbereich.value.content.id);
+		if (refAufsichtsbereich.value?.content && Array.isArray(refAufsichtsbereich.value.content))
+			for (const aufsichtsbereich of refAufsichtsbereich.value.content)
+				bereiche.add(aufsichtsbereich.id);
 		const wochentyp = refWochentyp.value?.content && 'typ' in refWochentyp.value.content ? refWochentyp.value.content.typ : 0;
 		await props.addAufsichtUndBereich({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
 		modal.value.closeModal();
