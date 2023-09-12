@@ -46,7 +46,7 @@
 					</div>
 					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
 						<span class="tag-badge">
-							<span :class="{'pr-1': showList}">{{ itemText(item, index) }}</span>
+							<span :class="{'pr-1': showList}">{{ itemText(item) }}</span>
 							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen" v-if="!showList">
 								<span class="icon">
 									<i-ri-close-line />
@@ -102,8 +102,8 @@
 								!tags && closeListbox();
 							}
 						">
-						<span v-if="itemText?.(item, index).length === 0" class="opacity-25">—</span>
-						<span>{{ itemText(item, index) }}</span>
+						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
+						<span>{{ itemText(item) }}</span>
 						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
 					</li>
 				</ul>
@@ -132,7 +132,7 @@
 		statistics?: boolean;
 		danger?: boolean;
 		items: Iterable<Item> | Map<number, Item>;
-		itemText: (item: Item, index: number) => string;
+		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
 		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
 		modelValue: InputDataType;
@@ -205,11 +205,11 @@
 	function generateInputText() {
 		// Fall 1: Multi-Select möglich
 		if (props.tags)
-			return [...selectedItemList.value].map((item, index) => props.itemText(item, index)).join(", ");
+			return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
 		// Fall 2: Kein Multi-Select möglich
 		if ((selectedItem.value === null) || (selectedItem.value === undefined))
 			return "";
-		return props.itemText(selectedItem.value, activeItemIndex.value);
+		return props.itemText(selectedItem.value);
 	}
 
 	function onInput(value: string | number) {
@@ -317,7 +317,7 @@
 			if (props.itemFilter)
 				return props.itemFilter(sortedList.value, searchText.value);
 			else
-				return sortedList.value.filter((i, index) => props.itemText(i, index).startsWith(searchText.value ?? ""));
+				return sortedList.value.filter(i => props.itemText(i).startsWith(searchText.value ?? ""));
 		} else {
 			return sortedList.value;
 		}

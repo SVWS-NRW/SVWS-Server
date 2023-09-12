@@ -10,7 +10,7 @@
 				<svws-ui-multi-select title="Aufsichtsbereiche" :items="listAufsichtsbereiche"
 					:item-text="(i: StundenplanAufsichtsbereich)=>i.beschreibung" ref="refAufsichtsbereich"
 					:item-filter="filterAufsichtsbereiche" removable autocomplete :model-value="undefined" />
-				<svws-ui-multi-select v-if="wochentypen > 0" title="Wochentyp" :items="new Array(wochentypen)" :item-text="(i, ii)=> ii === 0 ? 'Allgemein' : String.fromCharCode(64 + ii) + ' Woche'" :model-value="0" ref="refWochentyp" />
+				<svws-ui-multi-select v-if="wochentypen > 0" title="Wochentyp" :items="wochentypenArray" :model-value="wochentypenArray[0]" :item-text="(i: WT)=>i?.text || 'leer'" ref="refWochentyp" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -25,7 +25,9 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { StundenplanAufsichtsbereich, LehrerListeEintrag, ArrayList } from "@core";
 	import { SvwsUiMultiSelect } from "@ui";
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
+
+	type WT = { typ: number; text: string }
 
 	const props = defineProps<{
 		pausenzeit: StundenplanPausenzeit;
@@ -38,7 +40,16 @@
 	const modal = ref();
 	const refLehrer = ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null>(null);
 	const refAufsichtsbereich = ref<ComponentExposed<typeof SvwsUiMultiSelect<StundenplanAufsichtsbereich>> | null>(null);
-	const refWochentyp = ref<ComponentExposed<typeof SvwsUiMultiSelect<number>> | null>(null);
+	const refWochentyp = ref<ComponentExposed<typeof SvwsUiMultiSelect<WT>> | null>(null);
+
+	const wochentypenArray = computed<WT[]>(() => {
+		if (props.wochentypen < 1)
+			return [];
+		const a = new Array<WT>();
+		for (let i = 0; i < props.wochentypen+1; i++)
+			a.push({ typ: i, text: i === 0 ? 'Allgemein' : String.fromCharCode(64 + i) + ' Woche'});
+		return a
+	})
 
 	const filter = (items: LehrerListeEintrag[], search: string) => {
 		return items.filter(i => (i.istSichtbar === true) && (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
@@ -58,7 +69,7 @@
 		const bereiche = new ArrayList<number>();
 		if (refAufsichtsbereich.value?.content instanceof StundenplanAufsichtsbereich)
 			bereiche.add(refAufsichtsbereich.value.content.id);
-		const wochentyp = typeof refWochentyp.value?.content === 'number' ? refWochentyp.value?.content : 0;
+		const wochentyp = refWochentyp.value?.content && 'typ' in refWochentyp.value.content ? refWochentyp.value.content.typ : 0;
 		await props.addAufsichtUndBereich({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
 		modal.value.closeModal();
 	}
