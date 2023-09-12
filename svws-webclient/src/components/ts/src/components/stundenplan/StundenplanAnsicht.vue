@@ -92,8 +92,9 @@
 											:class="{'flex-grow': getUnterrichtWochentypAllgemein(wochentag, stunde, wt).size() === 1}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
-											<div class="font-bold col-span-full" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+											<div class="font-bold" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 											<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+											<div />
 											<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 										</div>
 									</div>
@@ -454,10 +455,10 @@
 
 	.svws-ui-stundenplan--unterricht,
 	.svws-ui-stundenplan--pausen-aufsicht {
-		@apply rounded grid grid-cols-4 gap-x-2 w-full border border-black/10 px-2 py-2 content-center leading-none dark:text-black;
+		@apply rounded grid grid-cols-4 gap-x-2 w-full border border-black/10 px-2 py-1 content-center leading-none dark:text-black;
 
 		&.svws-compact {
-			@apply grid-cols-1 py-1;
+			@apply grid-cols-2 py-1;
 		}
 
     .svws-ui-stundenplan--mode-planung & {

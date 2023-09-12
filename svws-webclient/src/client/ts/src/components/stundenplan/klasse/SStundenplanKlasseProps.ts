@@ -3,6 +3,6 @@ import type { StundenplanUnterricht, StundenplanZeitraster, StundenplanManager }
 export interface StundenplanKlasseProps {
 	stundenplanManager: () => StundenplanManager;
 	patchUnterricht: (unterricht: StundenplanUnterricht, zeitraster: StundenplanZeitraster) => Promise<void>;
-	addUnterrichtKlasse: (data: Partial<StundenplanUnterricht>, zeitraster: StundenplanZeitraster, wochentyp: number) => Promise<void>;
+	addUnterrichtKlasse: (data: Partial<StundenplanUnterricht>) => Promise<void>;
 	removeUnterrichtKlasse: (unterrichte: Iterable<StundenplanUnterricht>) => Promise<void>;
 }

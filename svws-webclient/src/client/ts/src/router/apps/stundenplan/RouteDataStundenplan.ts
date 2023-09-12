@@ -244,17 +244,16 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	addUnterrichtKlasse = async (data: Partial<StundenplanUnterricht>, zeitraster: StundenplanZeitraster, wochentyp: number) => {
-		data.idZeitraster = zeitraster.id;
-		data.wochentyp = wochentyp;
-		delete data.id;
+	addUnterrichtKlasse = async (data: Partial<StundenplanUnterricht>) => {
 		const unterricht = await api.server.addStundenplanUnterricht(data, api.schema);
 		this.stundenplanManager.unterrichtAdd(unterricht);
 		this.commit();
 	}
 
-	addAufsichtUndBereich = async (pausenzeit: StundenplanPausenzeit, aufsicht: LehrerListeEintrag, bereich?: StundenplanAufsichtsbereich) => {
-		// TODO ergänze Aufsicht
+	addAufsichtUndBereich = async (data: Partial<StundenplanPausenaufsicht>) => {
+		const pausenaufsicht = await api.server.addStundenplanPausenaufsicht(data, api.schema);
+		this.stundenplanManager.pausenaufsichtAdd(pausenaufsicht);
+		this.commit();
 	}
 
 

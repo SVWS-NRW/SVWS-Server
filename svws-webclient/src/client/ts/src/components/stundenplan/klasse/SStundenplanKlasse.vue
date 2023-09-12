@@ -18,7 +18,7 @@
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr"
 							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
 							<div role="cell" class="select-none data-table__td">
-								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`">{{ ku.bezeichnung }}</span>
+								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
 							<div role="cell" class="select-none data-table__td">
 								{{ ku.wochenstunden }}
@@ -57,7 +57,7 @@
 				</svws-ui-data-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="kurz" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="aus" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
 				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>
@@ -123,21 +123,17 @@
 	};
 
 	const onDrop = async (zone: StundenplanAnsichtDropZone) => {
-		console.log("drop", zone, dragData.value);
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster)) {
 			await props.patchUnterricht(dragData.value, zone);
-			console.log("Manager fehlt noch, neu laden")
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
-			await props.addUnterrichtKlasse(dragData.value, zone, wochentyp.value);
-			console.log("API, Manager fehlt noch, neu laden")
+			await props.addUnterrichtKlasse({ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach });
 		}
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
 			await props.removeUnterrichtKlasse([dragData.value]);
-			console.log("API fehlt noch")
 		}
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		// TODO Fall StundenplanZeitraster -> undefined

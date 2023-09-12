@@ -6,10 +6,11 @@
 			<svws-ui-input-wrapper>
 				<svws-ui-multi-select title="Aufsichtführende Lehrkraft" :items="listLehrer"
 					:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
-					:item-filter="filter" removable autocomplete ref="refLehrer" v-model="aufsicht" />
+					:item-filter="filter" removable autocomplete :model-value="undefined" ref="refLehrer" />
 				<svws-ui-multi-select title="Aufsichtsbereiche" :items="listAufsichtsbereiche"
-					:item-text="(i: StundenplanAufsichtsbereich)=>i.beschreibung"
-					:item-filter="filterAufsichtsbereiche" removable autocomplete ref="refAufsichtsbereiche" v-model="aufsichtsbereich" />
+					:item-text="(i: StundenplanAufsichtsbereich)=>i.beschreibung" ref="refAufsichtsbereich"
+					:item-filter="filterAufsichtsbereiche" removable autocomplete :model-value="undefined" />
+				<svws-ui-multi-select v-if="wochentypen > 0" title="Wochentyp" :items="new Array(wochentypen)" :item-text="(i, ii)=> ii === 0 ? 'Allgemein' : String.fromCharCode(64 + ii) + ' Woche'" :model-value="0" ref="refWochentyp" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -20,8 +21,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { LehrerListeEintrag, List, StundenplanAufsichtsbereich} from "@core";
-	import type { StundenplanPausenzeit} from "@core";
+	import type { StundenplanPausenzeit, StundenplanPausenaufsicht, List } from "@core";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+	import { StundenplanAufsichtsbereich, LehrerListeEintrag, ArrayList } from "@core";
 	import { SvwsUiMultiSelect } from "@ui";
 	import { ref } from "vue";
 
@@ -29,12 +31,14 @@
 		pausenzeit: StundenplanPausenzeit;
 		listLehrer: List<LehrerListeEintrag>;
 		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
-		addAufsichtUndBereich: (pausenzeit: StundenplanPausenzeit, aufsicht: LehrerListeEintrag, bereich?: StundenplanAufsichtsbereich) => Promise<void>;
+		wochentypen: number;
+		addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	}>();
 
 	const modal = ref();
-	const aufsicht = ref<LehrerListeEintrag|undefined>();
-	const aufsichtsbereich = ref<StundenplanAufsichtsbereich|undefined>();
+	const refLehrer = ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null>(null);
+	const refAufsichtsbereich = ref<ComponentExposed<typeof SvwsUiMultiSelect<StundenplanAufsichtsbereich>> | null>(null);
+	const refWochentyp = ref<ComponentExposed<typeof SvwsUiMultiSelect<number>> | null>(null);
 
 	const filter = (items: LehrerListeEintrag[], search: string) => {
 		return items.filter(i => (i.istSichtbar === true) && (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
@@ -49,9 +53,13 @@
 	}
 
 	async function add() {
-		if (aufsicht.value === undefined)
+		if (!(refLehrer.value?.content instanceof LehrerListeEintrag))
 			return;
-		await props.addAufsichtUndBereich(props.pausenzeit, aufsicht.value, aufsichtsbereich.value);
+		const bereiche = new ArrayList<number>();
+		if (refAufsichtsbereich.value?.content instanceof StundenplanAufsichtsbereich)
+			bereiche.add(refAufsichtsbereich.value.content.id);
+		const wochentyp = typeof refWochentyp.value?.content === 'number' ? refWochentyp.value?.content : 0;
+		await props.addAufsichtUndBereich({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
 		modal.value.closeModal();
 	}
 </script>
