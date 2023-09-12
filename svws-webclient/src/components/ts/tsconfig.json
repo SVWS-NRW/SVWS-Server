@@ -4,7 +4,8 @@
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"@core": ["../../core/ts/src/index.ts"]
+			"@core": ["../../core/ts/src/index.ts"],
+			"@ui": ["../../ui/ts/src/index.ts"]
 		},
 		"types": [
 			"vite/client"

@@ -6,7 +6,8 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["src/*"],
-			"@core": ["../../core/ts/src/index.ts"]
+			"@core": ["../../core/ts/src/index.ts"],
+			"@ui": ["../../ui/ts/src/index.ts"]
 		},
 		"types": [
 			"vite/client"

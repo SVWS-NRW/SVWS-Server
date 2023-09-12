@@ -15,9 +15,8 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@core";
-	import { GostLaufbahnplanungBeratungsdaten } from "@core";
-	import { type SvwsUiMultiSelect, type SvwsUiTextInput, type SvwsUiTextareaInput } from "@svws-nrw/svws-ui";
+	import { GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag } from "@core";
+	import { type SvwsUiMultiSelect, type SvwsUiTextInput, type SvwsUiTextareaInput } from "@ui";
 	import { ref, type Ref } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 
@@ -41,8 +40,8 @@
 
 	async function speichern() {
 		const result = new GostLaufbahnplanungBeratungsdaten();
-		result.beratungslehrerID = ((refLehrer.value === null) || (refLehrer.value.content === null) || (refLehrer.value.content === undefined))
-			? null : (refLehrer.value.content as LehrerListeEintrag).id;
+		result.beratungslehrerID = (refLehrer.value?.content instanceof LehrerListeEintrag)
+			? refLehrer.value.content.id : null;
 		result.beratungsdatum = ((refBeratungsdatum.value === null) || (refBeratungsdatum.value.content === null)) ? null : String(refBeratungsdatum.value.content);
 		result.kommentar = ((refKommentar.value === null) || (refKommentar.value.content === null)) ? null : String(refKommentar.value.content);
 		await props.patchBeratungsdaten(result);

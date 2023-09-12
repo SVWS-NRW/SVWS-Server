@@ -217,7 +217,7 @@
 	import {computed } from "vue";
 
 	import type { AbiturdatenManager, GostSchuelerFachwahl, GostJahrgangsdaten } from "@core";
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 
 	const props = withDefaults(defineProps<{
 		abiturdatenManager: () => AbiturdatenManager;
