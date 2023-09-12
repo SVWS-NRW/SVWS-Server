@@ -84,19 +84,36 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		bodyData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
 		bodyData.put("SCHUELER_NAME", schueler.Nachname + ", " + schueler.Vorname);
 		bodyData.put("UNTERSCHRIFT_SCHUELER", schueler.Vorname + " " + schueler.Nachname);
-		bodyData.put("UNTERSCHRIFT_LEHRER", laufbahnGrunddaten.beratungslehrkraefte);
+
+		if (laufbahnGrunddaten.beratungslehrkraefte != null && !laufbahnGrunddaten.beratungslehrkraefte.isBlank() && !laufbahnGrunddaten.beratungslehrkraefte.isEmpty())
+			bodyData.put("UNTERSCHRIFT_LEHRER", laufbahnGrunddaten.beratungslehrkraefte);
+		else
+			bodyData.put("UNTERSCHRIFT_LEHRER", "Beratungslehrkraft");
+
 		bodyData.put("KLASSE", laufbahnGrunddaten.aktuelleKlasse);
 		bodyData.put("ABITURJAHR", String.valueOf(laufbahnGrunddaten.abiturjahr));
 		bodyData.put("AKTUELLESHALBJAHR", laufbahnGrunddaten.aktuellesGOStHalbjahr);
 		bodyData.put("BERATUNGSHALBJAHR",  laufbahnGrunddaten.beratungsGOStHalbjahr);
-		bodyData.put("BERATUNGSBOGENTEXT", laufbahnGrunddaten.beratungsbogentext == null ? "" : "<p>" + laufbahnGrunddaten.beratungsbogentext + "</p>");
-		bodyData.put("BERATUNGSLEHRER", laufbahnGrunddaten.beratungslehrkraft == null ? "---" : laufbahnGrunddaten.beratungslehrkraft);
-		if (laufbahnGrunddaten.beratungsdatum == null || laufbahnGrunddaten.beratungsdatum.isEmpty())
-			bodyData.put("BERATUNGSDATUM", "");
-		else {
+
+		if (laufbahnGrunddaten.beratungsbogentext != null && !laufbahnGrunddaten.beratungsbogentext.isBlank() && !laufbahnGrunddaten.beratungsbogentext.isEmpty())
+			bodyData.put("BERATUNGSBOGENTEXT", "<p>" + laufbahnGrunddaten.beratungsbogentext + "</p>");
+		else
+			bodyData.put("BERATUNGSBOGENTEXT", "");
+
+		String letzteBeratung = "<p>Die letzte Beratung wurde durchgeführt";
+		boolean hatLetzteBeratung = false;
+		if (laufbahnGrunddaten.beratungsdatum != null && !laufbahnGrunddaten.beratungsdatum.isBlank() && !laufbahnGrunddaten.beratungsdatum.isEmpty()) {
 			LocalDate beratungsdatum = LocalDate.parse(laufbahnGrunddaten.beratungsdatum, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-			bodyData.put("BERATUNGSDATUM", laufbahnGrunddaten.beratungsdatum == null ? "---" : beratungsdatum.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+			letzteBeratung = letzteBeratung + " am " + beratungsdatum.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			hatLetzteBeratung = true;
 		}
+		if (laufbahnGrunddaten.beratungslehrkraft != null && !laufbahnGrunddaten.beratungslehrkraft.isBlank() && !laufbahnGrunddaten.beratungslehrkraft.isEmpty()) {
+			letzteBeratung = letzteBeratung + " von " + laufbahnGrunddaten.beratungslehrkraft;
+			hatLetzteBeratung = true;
+		}
+		letzteBeratung = Boolean.TRUE.equals(hatLetzteBeratung) ? letzteBeratung + ".</p>" : "";
+		bodyData.put("LETZTEBERATUNG", letzteBeratung);
+
 		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 		bodyData.put("SCHULNUMMER", schulnummer);
 		bodyData.put("LFDNR", String.format("%03d", lfdNr));
@@ -165,31 +182,47 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	private static String getFachwahlzeilen(final List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> listFachwahlen) {
 
 		final StringBuilder sbFachwahlen = new StringBuilder();
+		String sprachbelegung;
 
 		for (SchildReportingSchuelerGOStLaufbahnplanungFachwahlen fachwahl : listFachwahlen) {
-			sbFachwahlen.append("<tr style=\"background-color: rgb(").append(fachwahl.farbeClientRGB).append(");\">");
-
-			sbFachwahlen.append("<th>").append(fachwahl.kuerzel).append("</th>");
-			sbFachwahlen.append("<th>").append(fachwahl.bezeichnung).append("</th>");
+			sprachbelegung = "";
 			if (Boolean.TRUE.equals(fachwahl.fachIstFortfuehrbareFremdspracheInGOSt)) {
 				if (fachwahl.jahrgangFremdsprachenbeginn.equals("HSU"))
-					sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">HSU-Prüfung</td>");
+					sprachbelegung = "HSU-Prüfung";
 				else if (fachwahl.jahrgangFremdsprachenbeginn.equals("SFP"))
-					sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">Feststel.-Prf.</td>");
+					sprachbelegung = "Festst.prüf.";
 				else
-					sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">").append(fachwahl.positionFremdsprachenfolge).append(" (ab Jg. ").append(fachwahl.jahrgangFremdsprachenbeginn).append(")</td>");
-			} else {
-				sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\"></td>");
+				    sprachbelegung = fachwahl.positionFremdsprachenfolge + " (ab Jg. " + fachwahl.jahrgangFremdsprachenbeginn + ")";
 			}
-			sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">").append(fachwahl.belegungEF1).append("</td>");
-			sbFachwahlen.append("<td>").append(fachwahl.belegungEF2).append("</td>");
-			sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">").append(fachwahl.belegungQ11).append("</td>");
-			sbFachwahlen.append("<td>").append(fachwahl.belegungQ12).append("</td>");
-			sbFachwahlen.append("<td>").append(fachwahl.belegungQ21).append("</td>");
-			sbFachwahlen.append("<td>").append(fachwahl.belegungQ22).append("</td>");
-			sbFachwahlen.append("<td style=\"border-left: 1px gray solid;\">").append(fachwahl.abiturfach).append("</td>");
+			String zeileFachwahl =  """
+									<tr style="background-color: rgb(%s);">
+										<th>%s</th>
+										<th>%s</th>
+										<td style="border-left: 1px gray solid;">%s</td>
+										<td style="border-left: 1px gray solid;">%s</td>
+										<td>%s</td>
+										<td style="border-left: 1px gray solid;">%s</td>
+										<td>%s</td>
+										<td>%s</td>
+										<td>%s</td>
+										<td style="border-left: 1px gray solid;">%s</td>
+									</tr>
+									"""
+									.formatted(
+									fachwahl.farbeClientRGB,
+									fachwahl.kuerzel,
+									fachwahl.bezeichnung,
+									sprachbelegung,
+									fachwahl.belegungEF1,
+									fachwahl.belegungEF2,
+									fachwahl.belegungQ11,
+									fachwahl.belegungQ12,
+									fachwahl.belegungQ21,
+									fachwahl.belegungQ22,
+									fachwahl.abiturfach
+									);
 
-			sbFachwahlen.append("</tr>");
+			sbFachwahlen.append(zeileFachwahl);
 		}
 
 		return sbFachwahlen.toString();
@@ -269,14 +302,14 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (mapSchueler.size() == 1) {
 			dateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
 				mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
-				mapGrunddaten.get(schuelerIDs.get(0)).aktuellesGOStHalbjahr.replace(".", ""),
+				mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace(".", ""),
 				mapSchueler.get(schuelerIDs.get(0)).Nachname.replace(' ', '_').replace('.', '_'),
 				mapSchueler.get(schuelerIDs.get(0)).Vorname.replace(' ', '_').replace('.', '_'),
 				mapSchueler.get(schuelerIDs.get(0)).ID);
 		} else {
 			dateiname = "Laufbahnplanung_%d_%s.pdf".formatted(
 				mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
-				mapGrunddaten.get(schuelerIDs.get(0)).aktuellesGOStHalbjahr.replace('.', '_'));
+				mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace('.', '_'));
 		}
 
 		// Erstelle die PDF-Datei, die entweder den Wahlbogen eines Schülers beinhaltet oder alle Wahlbögen eines Abiturjahrgangs.
@@ -331,15 +364,11 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		Response queryResponse;
-
-		queryResponse = Response.status(Status.OK)
-								.type("application/pdf")
-								.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-								.entity(data)
-								.build();
-
-		return queryResponse;
+		return Response.status(Status.OK)
+			.type("application/pdf")
+			.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
+			.entity(data)
+			.build();
 	}
 
 
@@ -369,15 +398,11 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		Response queryResponse;
-
-		queryResponse = Response.status(Status.OK)
+		return Response.status(Status.OK)
 			.type("application/pdf")
 			.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
 			.entity(data)
 			.build();
-
-		return queryResponse;
 	}
 
 }

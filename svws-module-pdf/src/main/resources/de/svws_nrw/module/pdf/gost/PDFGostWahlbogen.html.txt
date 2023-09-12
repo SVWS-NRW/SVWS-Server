@@ -96,7 +96,7 @@
 	Korrekturwünsche können vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrkräften durchgeführt werden.
 	Schulorganisatorische Gründe können zu einer Änderung der Fachwahlen und der Laufbahn führen.</p>
 
-<p>Die letzte Beratung wurde durchgeführt am @@BERATUNGSDATUM@@ von @@BERATUNGSLEHRER@@.</p>
+@@LETZTEBERATUNG@@
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;">
 	<tr style="height: 3em;">
