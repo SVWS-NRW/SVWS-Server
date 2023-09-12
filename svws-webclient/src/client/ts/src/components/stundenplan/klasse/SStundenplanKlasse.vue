@@ -45,7 +45,7 @@
 				<svws-ui-data-table :items="kursliste" :columns="colsKursunterricht">
 					<template #body>
 						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(kurs.bezeichnung.split('-')[1])}`">
+							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
 							<div role="cell" class="select-none data-table__td">
 								<span :id="`kurs-${kurs.id}`">{{ kurs.bezeichnung }}</span>
 							</div>
