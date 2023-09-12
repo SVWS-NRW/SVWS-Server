@@ -23,6 +23,22 @@
 							<div role="cell" class="select-none data-table__td">
 								{{ ku.wochenstunden }}
 							</div>
+							<div role="cell" class="select-none data-table__td">
+								<div class="select-none w-full h-full rounded-sm flex items-center justify-center relative group cursor-grab"
+									:class="{ 'cursor-grabbing': dragData !== undefined }">
+									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
+									</span><span>Allgemein</span>
+								</div>
+								<template v-if="stundenplanManager().getWochenTypModell() > 0">
+									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" @dragend="wochentyp = -1" class="select-none w-16 h-full rounded-sm flex items-center justify-center relative group cursor-grab"
+										:class="{ 'cursor-grabbing': dragData !== undefined }">
+										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
+										</span><span>{{ String.fromCharCode(64 + i) }}</span>
+									</div>
+								</template>
+							</div>
 						</div>
 					</template>
 				</svws-ui-data-table>
@@ -41,7 +57,7 @@
 				</svws-ui-data-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="aus" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
 				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>
@@ -57,6 +73,7 @@
 	const props = defineProps<StundenplanKlasseProps>();
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
+	const wochentyp = ref<number>(-1);
 
 	const kursliste = computed(()=>{
 		const list = props.stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.value.id);
@@ -114,7 +131,7 @@
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
-			await props.addUnterrichtKlasse(dragData.value, zone);
+			await props.addUnterrichtKlasse(dragData.value, zone, wochentyp.value);
 			console.log("API, Manager fehlt noch, neu laden")
 		}
 		// Fall StundenplanUnterricht -> undefined
@@ -153,7 +170,8 @@
 
 	const colsKlassenunterricht = [
 		{ key: "bezeichnung", label: "Klassenunterricht", span: 2, sortable: false },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false }
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false },
+		{ key: "irgendwas", label: "Wochentyp", span: 3, sortable: false }
 	];
 
 	const colsKursunterricht = [

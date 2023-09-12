@@ -59,7 +59,7 @@
 							<div v-for="unterricht in getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp())" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:class="{'flex-grow': getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp()).size() === 1}"
-								:style="`background-color: ${getBgColor(manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id).split('-')[0])}`"
+								:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 								:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }} </div>
 								<div class="font-bold" :class="`${mode === 'lehrer' ? 'col-span-3' : 'col-span-2'}`" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
@@ -103,8 +103,9 @@
 					</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
-				<template v-if="showZeitachse">
+				<template v-if="showZeitachse && (modePausenaufsichten !== 'aus')">
 					<!--TODO: Pausenzeiten, wenn Zeitachse deaktiviert ist-->
+					<!-- TODO Modi 'normal', 'kurz, 'tooltip' -->
 					<template v-for="pause in getPausenzeitenWochentag(wochentag)" :key="pause">
 						<div class="svws-ui-stundenplan--pause" :style="posPause(pause)" @dragover="checkDropZonePausenzeit($event, pause)" @drop="onDrop(pause)">
 							<template v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id">
@@ -126,7 +127,7 @@
 <script setup lang="ts">
 
 	import type { Wochentag} from "@core";
-	import { ArrayList, type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
+	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
@@ -134,6 +135,7 @@
 
 	const props = withDefaults(defineProps<StundenplanAnsichtProps>(), {
 		mode: 'schueler',
+		modePausenaufsichten: 'normal',
 		showZeitachse: true,
 		zeitrasterSteps: 5,
 		ignoreEmpty: false,

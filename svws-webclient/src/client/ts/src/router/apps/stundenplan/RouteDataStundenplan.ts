@@ -1,4 +1,4 @@
-import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, StundenplanKlassenunterricht, LehrerListeEintrag} from "@core";
+import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, LehrerListeEintrag} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
 import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
@@ -103,24 +103,21 @@ export class RouteDataStundenplan {
 		return this._state.value.listLehrer;
 	}
 
-	patch = useDebounceFn((data: Partial<Stundenplan>)=> this.patchit(data), 100)
-
-	patchit = (data : Partial<Stundenplan>) => {
+	patch = async (data : Partial<Stundenplan>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		api.server.patchStundenplan(data, api.schema, this.auswahl.id).then(()=>{
-			const daten = this.daten;
-			if (this.auswahl) {
-				if (data.bezeichnungStundenplan)
-					this.auswahl.bezeichnung = data.bezeichnungStundenplan;
-				if (data.gueltigAb)
-					this.auswahl.gueltigAb = data.gueltigAb;
-				if (data.gueltigBis)
-					this.auswahl.gueltigBis = data.gueltigBis;
-				this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
-			}
-			this.setPatchedState({daten: Object.assign(daten, data), auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege});
-		}).catch((e) => console.log(e))
+		await api.server.patchStundenplan(data, api.schema, this.auswahl.id);
+		const daten = this.daten;
+		if (this.auswahl) {
+			if (data.bezeichnungStundenplan)
+				this.auswahl.bezeichnung = data.bezeichnungStundenplan;
+			if (data.gueltigAb)
+				this.auswahl.gueltigAb = data.gueltigAb;
+			if (data.gueltigBis)
+				this.auswahl.gueltigBis = data.gueltigBis;
+			this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
+		}
+		this.setPatchedState({daten: Object.assign(daten, data), auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege});
 	}
 
 	patchRaum = async (data : Partial<StundenplanRaum>, id: number) => {
@@ -162,9 +159,8 @@ export class RouteDataStundenplan {
 	patchUnterricht = async (data: StundenplanUnterricht, zeitraster: StundenplanZeitraster) => {
 		if (data.idZeitraster === zeitraster.id)
 			return;
+		await api.server.patchStundenplanUnterricht({ idZeitraster: zeitraster.id }, api.schema, data.id);
 		data.idZeitraster = zeitraster.id;
-		//TODO api
-		//await api.server.patchStundenplanUnterricht(data, api.schema, data.id);
 		this.stundenplanManager.unterrichtPatchAttributes(data);
 		this.commit();
 	}
@@ -249,11 +245,13 @@ export class RouteDataStundenplan {
 		this.commit();
 	}
 
-	addUnterrichtKlasse = async (data: StundenplanKlassenunterricht, zeitraster: StundenplanZeitraster) => {
-		//TODO api und manager
-		//await api.server.patchStundenplanUnterricht(data, api.schema, data.id);
-		//const unterricht //= await api.server.
-		//this.stundenplanManager.unterrichtAdd(unterricht)
+	addUnterrichtKlasse = async (data: Partial<StundenplanUnterricht>, zeitraster: StundenplanZeitraster, wochentyp: number) => {
+		data.idZeitraster = zeitraster.id;
+		data.wochentyp = wochentyp;
+		delete data.id;
+		const unterricht = await api.server.addStundenplanUnterricht(data, api.schema);
+		this.stundenplanManager.unterrichtAdd(unterricht);
+		this.commit();
 	}
 
 	addAufsichtUndBereich = async (pausenzeit: StundenplanPausenzeit, aufsicht: LehrerListeEintrag, bereich?: StundenplanAufsichtsbereich) => {
@@ -262,47 +260,53 @@ export class RouteDataStundenplan {
 
 
 	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
+		const list = new ArrayList<StundenplanRaum>()
 		for (const raum of raeume) {
 			await api.server.deleteStundenplanRaum(api.schema, raum.id);
-			this.stundenplanManager.raumRemoveById(raum.id);
+			list.add(raum);
 		}
+		this.stundenplanManager.raumRemoveAll(list);
 		this.commit();
 	}
 
 	removePausenzeiten = async (pausenzeiten: Iterable<StundenplanPausenzeit>) => {
+		const list = new ArrayList<StundenplanPausenzeit>()
 		for (const pausenzeit of pausenzeiten) {
 			await api.server.deleteStundenplanPausenzeit(api.schema, pausenzeit.id);
-			this.stundenplanManager.pausenzeitRemoveById(pausenzeit.id);
+			list.add(pausenzeit);
 		}
+		this.stundenplanManager.pausenzeitRemoveAll(list);
 		this.commit();
 	}
 
 	removeAufsichtsbereiche = async (aufsichtsbereiche: Iterable<StundenplanAufsichtsbereich>) => {
+		const list = new ArrayList<StundenplanAufsichtsbereich>()
 		for (const aufsichtsbereich of aufsichtsbereiche) {
 			await api.server.deleteStundenplanAufsichtsbereich(api.schema, aufsichtsbereich.id);
-			this.stundenplanManager.aufsichtsbereichRemoveById(aufsichtsbereich.id);
+			list.add(aufsichtsbereich);
 		}
+		this.stundenplanManager.aufsichtsbereichRemoveAll(list);
 		this.commit();
 	}
 
 	removeZeitraster = async (multi: Iterable<StundenplanZeitraster>) => {
+		const list = new ArrayList<StundenplanZeitraster>()
 		for (const zeitraster of multi) {
 			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
-			this.stundenplanManager.zeitrasterRemoveById(zeitraster.id);
+			list.add(zeitraster);
 		}
+		this.stundenplanManager.zeitrasterRemoveAll(list);
 		this.commit();
 	}
 
 	removeUnterrichtKlasse = async (unterrichte: Iterable<StundenplanUnterricht>) => {
 		const list = new ArrayList<StundenplanUnterricht>()
 		for (const unterricht of unterrichte) {
-			//TODO ergänze ff
-			// await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
+			await api.server.deleteStundenplanUnterricht(api.schema, unterricht.id);
 			list.add(unterricht);
 		}
 		this.stundenplanManager.unterrichtRemoveAll(list);
 		this.commit();
-
 	}
 
 	importRaeume = async (raeume: StundenplanRaum[]) => {}

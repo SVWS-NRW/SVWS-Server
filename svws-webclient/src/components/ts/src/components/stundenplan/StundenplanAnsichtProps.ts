@@ -7,6 +7,7 @@ export type StundenplanAnsichtDropZone = StundenplanZeitraster | StundenplanPaus
 
 export interface StundenplanAnsichtProps {
 	mode?: 'schueler' | 'lehrer' | 'klasse' | 'planung';
+	modePausenaufsichten?: 'normal' | 'kurz' | 'tooltip' | 'aus';
 	showZeitachse?: boolean;
 	zeitrasterSteps?: 1 | 5 | 10 | 15;
 	ignoreEmpty?: boolean;
