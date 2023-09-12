@@ -3070,206 +3070,410 @@
     {
       "id": 8,
       "kuerzel": "CH",
+      "kuerzelStatistik": "CH",
       "bezeichnung": "Chemie",
-      "farbe": null
+      "sortierung": 210,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 16,
       "kuerzel": "D",
+      "kuerzelStatistik": "D",
       "bezeichnung": "Deutsch",
-      "farbe": null
+      "sortierung": 10,
+      "farbe": {
+        "red": 253,
+        "green": 233,
+        "blue": 217
+      }
     },
     {
       "id": 17,
       "kuerzel": "E",
+      "kuerzelStatistik": "E",
       "bezeichnung": "Englisch",
-      "farbe": null
+      "sortierung": 50,
+      "farbe": {
+        "red": 253,
+        "green": 221,
+        "blue": 195
+      }
     },
     {
       "id": 24,
       "kuerzel": "EK",
+      "kuerzelStatistik": "EK",
       "bezeichnung": "Erdkunde",
-      "farbe": null
+      "sortierung": 120,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 26,
       "kuerzel": "PA",
+      "kuerzelStatistik": "PA",
       "bezeichnung": "Erziehungswissenschaft",
-      "farbe": null
+      "sortierung": 180,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 27,
       "kuerzel": "ER",
+      "kuerzelStatistik": "ER",
       "bezeichnung": "Ev. Religionslehre",
-      "farbe": null
+      "sortierung": 185,
+      "farbe": {
+        "red": 215,
+        "green": 228,
+        "blue": 188
+      }
     },
     {
       "id": 30,
       "kuerzel": "F",
+      "kuerzelStatistik": "F6",
       "bezeichnung": "Französisch ab Klasse 6",
-      "farbe": null
+      "sortierung": 30,
+      "farbe": {
+        "red": 253,
+        "green": 221,
+        "blue": 195
+      }
     },
     {
       "id": 37,
       "kuerzel": "GE",
+      "kuerzelStatistik": "GE",
       "bezeichnung": "Geschichte",
-      "farbe": null
+      "sortierung": 130,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 70,
       "kuerzel": "KR",
+      "kuerzelStatistik": "KR",
       "bezeichnung": "Kath. Religionslehre",
-      "farbe": null
+      "sortierung": 186,
+      "farbe": {
+        "red": 215,
+        "green": 228,
+        "blue": 188
+      }
     },
     {
       "id": 71,
       "kuerzel": "KU",
+      "kuerzelStatistik": "KU",
       "bezeichnung": "Kunsterziehung",
-      "farbe": null
+      "sortierung": 70,
+      "farbe": {
+        "red": 252,
+        "green": 204,
+        "blue": 165
+      }
     },
     {
       "id": 72,
       "kuerzel": "L",
+      "kuerzelStatistik": "L6",
       "bezeichnung": "Lateinisch ab Klasse 6",
-      "farbe": null
+      "sortierung": 60,
+      "farbe": {
+        "red": 253,
+        "green": 221,
+        "blue": 195
+      }
     },
     {
       "id": 79,
       "kuerzel": "M",
+      "kuerzelStatistik": "M",
       "bezeichnung": "Mathematik",
-      "farbe": null
+      "sortierung": 190,
+      "farbe": {
+        "red": 197,
+        "green": 217,
+        "blue": 241
+      }
     },
     {
       "id": 81,
       "kuerzel": "MU",
+      "kuerzelStatistik": "MU",
       "bezeichnung": "Musik",
-      "farbe": null
+      "sortierung": 80,
+      "farbe": {
+        "red": 252,
+        "green": 204,
+        "blue": 165
+      }
     },
     {
       "id": 127,
       "kuerzel": "PL",
+      "kuerzelStatistik": "PL",
       "bezeichnung": "Philosophie",
-      "farbe": null
+      "sortierung": 170,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 128,
       "kuerzel": "PH",
+      "kuerzelStatistik": "PH",
       "bezeichnung": "Physik",
-      "farbe": null
+      "sortierung": 220,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 129,
       "kuerzel": "PK",
+      "kuerzelStatistik": "PK",
       "bezeichnung": "Politik",
-      "farbe": null
+      "sortierung": 160,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 144,
       "kuerzel": "PP",
+      "kuerzelStatistik": "PP",
       "bezeichnung": "Praktische Philosophie",
-      "farbe": null
+      "sortierung": 171,
+      "farbe": {
+        "red": 220,
+        "green": 220,
+        "blue": 220
+      }
     },
     {
       "id": 164,
       "kuerzel": "SW",
+      "kuerzelStatistik": "SW",
       "bezeichnung": "Sozialwissenschaften",
-      "farbe": null
+      "sortierung": 150,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 165,
       "kuerzel": "S",
+      "kuerzelStatistik": "S8",
       "bezeichnung": "Spanisch ab Klasse 8",
-      "farbe": null
+      "sortierung": 40,
+      "farbe": {
+        "red": 253,
+        "green": 221,
+        "blue": 195
+      }
     },
     {
       "id": 172,
       "kuerzel": "SP",
+      "kuerzelStatistik": "SP",
       "bezeichnung": "Sport",
-      "farbe": null
+      "sortierung": 260,
+      "farbe": {
+        "red": 224,
+        "green": 211,
+        "blue": 229
+      }
     },
     {
       "id": 191,
       "kuerzel": "NW",
+      "kuerzelStatistik": "BI",
       "bezeichnung": "Naturwissenschaften",
-      "farbe": null
+      "sortierung": 195,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 192,
       "kuerzel": "BI",
+      "kuerzelStatistik": "BI",
       "bezeichnung": "Biologie",
-      "farbe": null
+      "sortierung": 200,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 193,
       "kuerzel": "IF",
+      "kuerzelStatistik": "IF",
       "bezeichnung": "Informatik",
-      "farbe": null
+      "sortierung": 230,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 210,
       "kuerzel": "VFD",
+      "kuerzelStatistik": "VX",
       "bezeichnung": "Vertiefungsfach Deutsch",
-      "farbe": null
+      "sortierung": 280,
+      "farbe": {
+        "red": 216,
+        "green": 216,
+        "blue": 216
+      }
     },
     {
       "id": 212,
       "kuerzel": "VFE",
+      "kuerzelStatistik": "VX",
       "bezeichnung": "Vertiefungsfach Englisch",
-      "farbe": null
+      "sortierung": 290,
+      "farbe": {
+        "red": 216,
+        "green": 216,
+        "blue": 216
+      }
     },
     {
       "id": 213,
       "kuerzel": "VFM",
+      "kuerzelStatistik": "VX",
       "bezeichnung": "Vertiefungsfach Mathematik",
-      "farbe": null
+      "sortierung": 300,
+      "farbe": {
+        "red": 216,
+        "green": 216,
+        "blue": 216
+      }
     },
     {
       "id": 223,
       "kuerzel": "S0",
+      "kuerzelStatistik": "S0",
       "bezeichnung": "Spanisch ab EF",
-      "farbe": null
+      "sortierung": 40,
+      "farbe": {
+        "red": 253,
+        "green": 221,
+        "blue": 195
+      }
     },
     {
       "id": 224,
       "kuerzel": "BIEBI",
+      "kuerzelStatistik": "BI",
       "bezeichnung": "Biologie bilingual",
-      "farbe": null
+      "sortierung": 201,
+      "farbe": {
+        "red": 141,
+        "green": 180,
+        "blue": 227
+      }
     },
     {
       "id": 225,
       "kuerzel": "GEEBI",
+      "kuerzelStatistik": "GE",
       "bezeichnung": "Geschichte bilingual",
-      "farbe": null
+      "sortierung": 131,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 228,
       "kuerzel": "EKEBI",
+      "kuerzelStatistik": "EK",
       "bezeichnung": "Erdkunde bilingual",
-      "farbe": null
+      "sortierung": 121,
+      "farbe": {
+        "red": 234,
+        "green": 241,
+        "blue": 222
+      }
     },
     {
       "id": 233,
       "kuerzel": "PK-E",
+      "kuerzelStatistik": "PX",
       "bezeichnung": "Projektkurs Englisch",
-      "farbe": null
+      "sortierung": 2001,
+      "farbe": {
+        "red": 191,
+        "green": 191,
+        "blue": 191
+      }
     },
     {
       "id": 236,
       "kuerzel": "PK-Tanz",
+      "kuerzelStatistik": "PX",
       "bezeichnung": "Projektkurs Tanz",
-      "farbe": null
+      "sortierung": 2020,
+      "farbe": {
+        "red": 191,
+        "green": 191,
+        "blue": 191
+      }
     },
     {
       "id": 237,
       "kuerzel": "PK-Sp",
+      "kuerzelStatistik": "PX",
       "bezeichnung": "Projektkurs Sport",
-      "farbe": null
+      "sortierung": 2030,
+      "farbe": {
+        "red": 191,
+        "green": 191,
+        "blue": 191
+      }
     },
     {
       "id": 244,
       "kuerzel": "LI",
+      "kuerzelStatistik": "LI",
       "bezeichnung": "Literatur",
-      "farbe": null
+      "sortierung": 111,
+      "farbe": {
+        "red": 252,
+        "green": 204,
+        "blue": 165
+      }
     }
   ],
   "klassen": [
@@ -3902,8 +4106,10 @@
   "kurse": [
     {
       "id": 8715,
+      "idFach": 192,
       "bezeichnung": "BI-GK1",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         6
       ],
@@ -3942,8 +4148,10 @@
     },
     {
       "id": 8854,
+      "idFach": 192,
       "bezeichnung": "BI-GK1",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         16
       ],
@@ -3981,8 +4189,10 @@
     },
     {
       "id": 8783,
+      "idFach": 192,
       "bezeichnung": "BI-GK1",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         30
       ],
@@ -4017,8 +4227,10 @@
     },
     {
       "id": 8716,
+      "idFach": 192,
       "bezeichnung": "BI-GK2",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         7
       ],
@@ -4054,8 +4266,10 @@
     },
     {
       "id": 8855,
+      "idFach": 192,
       "bezeichnung": "BI-GK2",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         19
       ],
@@ -4087,8 +4301,10 @@
     },
     {
       "id": 8784,
+      "idFach": 192,
       "bezeichnung": "BI-GK2",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         32
       ],
@@ -4125,8 +4341,10 @@
     },
     {
       "id": 8717,
+      "idFach": 192,
       "bezeichnung": "BI-GK3",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         6
       ],
@@ -4164,8 +4382,10 @@
     },
     {
       "id": 8856,
+      "idFach": 192,
       "bezeichnung": "BI-GK3",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         19
       ],
@@ -4196,8 +4416,10 @@
     },
     {
       "id": 8785,
+      "idFach": 192,
       "bezeichnung": "BI-GK3",
       "wochenstunden": 3,
+      "sortierung": 200,
       "schienen": [
         29
       ],
@@ -4227,8 +4449,10 @@
     },
     {
       "id": 8811,
+      "idFach": 192,
       "bezeichnung": "BI-LK1",
       "wochenstunden": 5,
+      "sortierung": 200,
       "schienen": [
         15
       ],
@@ -4260,8 +4484,10 @@
     },
     {
       "id": 8747,
+      "idFach": 192,
       "bezeichnung": "BI-LK1",
       "wochenstunden": 5,
+      "sortierung": 200,
       "schienen": [
         25
       ],
@@ -4286,8 +4512,10 @@
     },
     {
       "id": 8812,
+      "idFach": 192,
       "bezeichnung": "BI-LK2",
       "wochenstunden": 5,
+      "sortierung": 200,
       "schienen": [
         14
       ],
@@ -4308,8 +4536,10 @@
     },
     {
       "id": 8748,
+      "idFach": 192,
       "bezeichnung": "BI-LK2",
       "wochenstunden": 5,
+      "sortierung": 200,
       "schienen": [
         26
       ],
@@ -4331,8 +4561,10 @@
     },
     {
       "id": 8718,
+      "idFach": 224,
       "bezeichnung": "BIE-GK1",
       "wochenstunden": 3,
+      "sortierung": 201,
       "schienen": [
         6
       ],
@@ -4367,8 +4599,10 @@
     },
     {
       "id": 8857,
+      "idFach": 224,
       "bezeichnung": "BIE-GK1",
       "wochenstunden": 3,
+      "sortierung": 201,
       "schienen": [
         19
       ],
@@ -4397,8 +4631,10 @@
     },
     {
       "id": 8786,
+      "idFach": 224,
       "bezeichnung": "BIE-GK1",
       "wochenstunden": 3,
+      "sortierung": 201,
       "schienen": [
         30
       ],
@@ -4427,8 +4663,10 @@
     },
     {
       "id": 8719,
+      "idFach": 8,
       "bezeichnung": "CH-GK1",
       "wochenstunden": 3,
+      "sortierung": 210,
       "schienen": [
         2
       ],
@@ -4453,8 +4691,10 @@
     },
     {
       "id": 8858,
+      "idFach": 8,
       "bezeichnung": "CH-GK1",
       "wochenstunden": 3,
+      "sortierung": 210,
       "schienen": [
         17
       ],
@@ -4485,8 +4725,10 @@
     },
     {
       "id": 8787,
+      "idFach": 8,
       "bezeichnung": "CH-GK1",
       "wochenstunden": 3,
+      "sortierung": 210,
       "schienen": [
         33
       ],
@@ -4519,8 +4761,10 @@
     },
     {
       "id": 8720,
+      "idFach": 8,
       "bezeichnung": "CH-GK2",
       "wochenstunden": 3,
+      "sortierung": 210,
       "schienen": [
         11
       ],
@@ -4550,8 +4794,10 @@
     },
     {
       "id": 8859,
+      "idFach": 8,
       "bezeichnung": "CH-GK2",
       "wochenstunden": 3,
+      "sortierung": 210,
       "schienen": [
         20
       ],
@@ -4582,8 +4828,10 @@
     },
     {
       "id": 8813,
+      "idFach": 8,
       "bezeichnung": "CH-LK1",
       "wochenstunden": 5,
+      "sortierung": 210,
       "schienen": [
         14
       ],
@@ -4605,8 +4853,10 @@
     },
     {
       "id": 8749,
+      "idFach": 8,
       "bezeichnung": "CH-LK1",
       "wochenstunden": 5,
+      "sortierung": 210,
       "schienen": [
         25
       ],
@@ -4622,8 +4872,10 @@
     },
     {
       "id": 8672,
+      "idFach": 16,
       "bezeichnung": "D-GK1",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         3
       ],
@@ -4656,8 +4908,10 @@
     },
     {
       "id": 8818,
+      "idFach": 16,
       "bezeichnung": "D-GK1",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         19
       ],
@@ -4691,8 +4945,10 @@
     },
     {
       "id": 8753,
+      "idFach": 16,
       "bezeichnung": "D-GK1",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         32
       ],
@@ -4725,8 +4981,10 @@
     },
     {
       "id": 8673,
+      "idFach": 16,
       "bezeichnung": "D-GK2",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         10
       ],
@@ -4762,8 +5020,10 @@
     },
     {
       "id": 8819,
+      "idFach": 16,
       "bezeichnung": "D-GK2",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         20
       ],
@@ -4795,8 +5055,10 @@
     },
     {
       "id": 8754,
+      "idFach": 16,
       "bezeichnung": "D-GK2",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         30
       ],
@@ -4836,8 +5098,10 @@
     },
     {
       "id": 8674,
+      "idFach": 16,
       "bezeichnung": "D-GK3",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         4
       ],
@@ -4871,8 +5135,10 @@
     },
     {
       "id": 8820,
+      "idFach": 16,
       "bezeichnung": "D-GK3",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         22
       ],
@@ -4907,8 +5173,10 @@
     },
     {
       "id": 8755,
+      "idFach": 16,
       "bezeichnung": "D-GK3",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         33
       ],
@@ -4941,8 +5209,10 @@
     },
     {
       "id": 8675,
+      "idFach": 16,
       "bezeichnung": "D-GK4",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         4
       ],
@@ -4975,8 +5245,10 @@
     },
     {
       "id": 8821,
+      "idFach": 16,
       "bezeichnung": "D-GK4",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         16
       ],
@@ -5012,8 +5284,10 @@
     },
     {
       "id": 8756,
+      "idFach": 16,
       "bezeichnung": "D-GK4",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         28
       ],
@@ -5037,8 +5311,10 @@
     },
     {
       "id": 8676,
+      "idFach": 16,
       "bezeichnung": "D-GK5",
       "wochenstunden": 3,
+      "sortierung": 10,
       "schienen": [
         9
       ],
@@ -5076,8 +5352,10 @@
     },
     {
       "id": 8798,
+      "idFach": 16,
       "bezeichnung": "D-LK1",
       "wochenstunden": 5,
+      "sortierung": 10,
       "schienen": [
         14
       ],
@@ -5110,8 +5388,10 @@
     },
     {
       "id": 8734,
+      "idFach": 16,
       "bezeichnung": "D-LK1",
       "wochenstunden": 5,
+      "sortierung": 10,
       "schienen": [
         25
       ],
@@ -5143,8 +5423,10 @@
     },
     {
       "id": 8799,
+      "idFach": 16,
       "bezeichnung": "D-LK2",
       "wochenstunden": 5,
+      "sortierung": 10,
       "schienen": [
         15
       ],
@@ -5172,8 +5454,10 @@
     },
     {
       "id": 8735,
+      "idFach": 16,
       "bezeichnung": "D-LK2",
       "wochenstunden": 5,
+      "sortierung": 10,
       "schienen": [
         26
       ],
@@ -5202,8 +5486,10 @@
     },
     {
       "id": 8681,
+      "idFach": 17,
       "bezeichnung": "E-GK1",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         3
       ],
@@ -5238,8 +5524,10 @@
     },
     {
       "id": 8826,
+      "idFach": 17,
       "bezeichnung": "E-GK1",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         19
       ],
@@ -5274,8 +5562,10 @@
     },
     {
       "id": 8761,
+      "idFach": 17,
       "bezeichnung": "E-GK1",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         30
       ],
@@ -5312,8 +5602,10 @@
     },
     {
       "id": 8682,
+      "idFach": 17,
       "bezeichnung": "E-GK2",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         2
       ],
@@ -5347,8 +5639,10 @@
     },
     {
       "id": 8827,
+      "idFach": 17,
       "bezeichnung": "E-GK2",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         20
       ],
@@ -5385,8 +5679,10 @@
     },
     {
       "id": 8762,
+      "idFach": 17,
       "bezeichnung": "E-GK2",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         33
       ],
@@ -5420,8 +5716,10 @@
     },
     {
       "id": 8683,
+      "idFach": 17,
       "bezeichnung": "E-GK3",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         12
       ],
@@ -5458,8 +5756,10 @@
     },
     {
       "id": 8828,
+      "idFach": 17,
       "bezeichnung": "E-GK3",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         19
       ],
@@ -5496,8 +5796,10 @@
     },
     {
       "id": 8763,
+      "idFach": 17,
       "bezeichnung": "E-GK3",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         34
       ],
@@ -5533,8 +5835,10 @@
     },
     {
       "id": 8684,
+      "idFach": 17,
       "bezeichnung": "E-GK4",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         7
       ],
@@ -5568,8 +5872,10 @@
     },
     {
       "id": 8685,
+      "idFach": 17,
       "bezeichnung": "E-GK5",
       "wochenstunden": 3,
+      "sortierung": 50,
       "schienen": [
         11
       ],
@@ -5603,8 +5909,10 @@
     },
     {
       "id": 8800,
+      "idFach": 17,
       "bezeichnung": "E-LK1",
       "wochenstunden": 5,
+      "sortierung": 50,
       "schienen": [
         15
       ],
@@ -5636,8 +5944,10 @@
     },
     {
       "id": 8736,
+      "idFach": 17,
       "bezeichnung": "E-LK1",
       "wochenstunden": 5,
+      "sortierung": 50,
       "schienen": [
         25
       ],
@@ -5673,8 +5983,10 @@
     },
     {
       "id": 8801,
+      "idFach": 17,
       "bezeichnung": "E-LK2",
       "wochenstunden": 5,
+      "sortierung": 50,
       "schienen": [
         14
       ],
@@ -5711,8 +6023,10 @@
     },
     {
       "id": 8737,
+      "idFach": 17,
       "bezeichnung": "E-LK2",
       "wochenstunden": 5,
+      "sortierung": 50,
       "schienen": [
         26
       ],
@@ -5742,8 +6056,10 @@
     },
     {
       "id": 8802,
+      "idFach": 17,
       "bezeichnung": "E-LK3",
       "wochenstunden": 5,
+      "sortierung": 50,
       "schienen": [
         15
       ],
@@ -5762,8 +6078,10 @@
     },
     {
       "id": 8692,
+      "idFach": 24,
       "bezeichnung": "EK-GK1",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         12
       ],
@@ -5794,8 +6112,10 @@
     },
     {
       "id": 8834,
+      "idFach": 24,
       "bezeichnung": "EK-GK1",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         22
       ],
@@ -5818,8 +6138,10 @@
     },
     {
       "id": 8768,
+      "idFach": 24,
       "bezeichnung": "EK-GK1",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         31
       ],
@@ -5853,8 +6175,10 @@
     },
     {
       "id": 8693,
+      "idFach": 24,
       "bezeichnung": "EK-GK2",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         12
       ],
@@ -5885,8 +6209,10 @@
     },
     {
       "id": 8835,
+      "idFach": 24,
       "bezeichnung": "EK-GK2",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         17
       ],
@@ -5917,8 +6243,10 @@
     },
     {
       "id": 8694,
+      "idFach": 24,
       "bezeichnung": "EK-GK3",
       "wochenstunden": 3,
+      "sortierung": 120,
       "schienen": [
         10
       ],
@@ -5960,8 +6288,10 @@
     },
     {
       "id": 8804,
+      "idFach": 24,
       "bezeichnung": "EK-LK1",
       "wochenstunden": 5,
+      "sortierung": 120,
       "schienen": [
         15
       ],
@@ -5987,8 +6317,10 @@
     },
     {
       "id": 8739,
+      "idFach": 24,
       "bezeichnung": "EK-LK1",
       "wochenstunden": 5,
+      "sortierung": 120,
       "schienen": [
         26
       ],
@@ -6016,8 +6348,10 @@
     },
     {
       "id": 8805,
+      "idFach": 24,
       "bezeichnung": "EK-LK2",
       "wochenstunden": 5,
+      "sortierung": 120,
       "schienen": [
         14
       ],
@@ -6040,8 +6374,10 @@
     },
     {
       "id": 8707,
+      "idFach": 27,
       "bezeichnung": "ER-GK1",
       "wochenstunden": 3,
+      "sortierung": 185,
       "schienen": [
         8
       ],
@@ -6074,8 +6410,10 @@
     },
     {
       "id": 8845,
+      "idFach": 27,
       "bezeichnung": "ER-GK1",
       "wochenstunden": 3,
+      "sortierung": 185,
       "schienen": [
         21
       ],
@@ -6104,8 +6442,10 @@
     },
     {
       "id": 8777,
+      "idFach": 27,
       "bezeichnung": "ER-GK1",
       "wochenstunden": 3,
+      "sortierung": 185,
       "schienen": [
         27
       ],
@@ -6141,8 +6481,10 @@
     },
     {
       "id": 8708,
+      "idFach": 27,
       "bezeichnung": "ER-GK2",
       "wochenstunden": 3,
+      "sortierung": 185,
       "schienen": [
         8
       ],
@@ -6173,8 +6515,10 @@
     },
     {
       "id": 8846,
+      "idFach": 27,
       "bezeichnung": "ER-GK2",
       "wochenstunden": 3,
+      "sortierung": 185,
       "schienen": [
         21
       ],
@@ -6201,8 +6545,10 @@
     },
     {
       "id": 8677,
+      "idFach": 30,
       "bezeichnung": "F-GK1",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [
         10
       ],
@@ -6225,8 +6571,10 @@
     },
     {
       "id": 8822,
+      "idFach": 30,
       "bezeichnung": "F-GK1",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [
         20
       ],
@@ -6251,8 +6599,10 @@
     },
     {
       "id": 8757,
+      "idFach": 30,
       "bezeichnung": "F-GK1",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [
         31
       ],
@@ -6284,8 +6634,10 @@
     },
     {
       "id": 8695,
+      "idFach": 37,
       "bezeichnung": "GE-GK1",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         3
       ],
@@ -6319,8 +6671,10 @@
     },
     {
       "id": 8836,
+      "idFach": 37,
       "bezeichnung": "GE-GK1",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         23
       ],
@@ -6355,8 +6709,10 @@
     },
     {
       "id": 8769,
+      "idFach": 37,
       "bezeichnung": "GE-GK1",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         28
       ],
@@ -6388,8 +6744,10 @@
     },
     {
       "id": 8696,
+      "idFach": 37,
       "bezeichnung": "GE-GK2",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         3
       ],
@@ -6421,8 +6779,10 @@
     },
     {
       "id": 8837,
+      "idFach": 37,
       "bezeichnung": "GE-GK2",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         16
       ],
@@ -6460,8 +6820,10 @@
     },
     {
       "id": 8770,
+      "idFach": 37,
       "bezeichnung": "GE-GK2",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         29
       ],
@@ -6495,8 +6857,10 @@
     },
     {
       "id": 8697,
+      "idFach": 37,
       "bezeichnung": "GE-GK3",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         4
       ],
@@ -6535,8 +6899,10 @@
     },
     {
       "id": 8806,
+      "idFach": 37,
       "bezeichnung": "GE-LK1",
       "wochenstunden": 5,
+      "sortierung": 130,
       "schienen": [
         15
       ],
@@ -6564,8 +6930,10 @@
     },
     {
       "id": 8740,
+      "idFach": 37,
       "bezeichnung": "GE-LK1",
       "wochenstunden": 5,
+      "sortierung": 130,
       "schienen": [
         26
       ],
@@ -6593,8 +6961,10 @@
     },
     {
       "id": 8741,
+      "idFach": 37,
       "bezeichnung": "GE-LK2",
       "wochenstunden": 5,
+      "sortierung": 130,
       "schienen": [
         25
       ],
@@ -6611,8 +6981,10 @@
     },
     {
       "id": 8729,
+      "idFach": 37,
       "bezeichnung": "GE-ZK1",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         28
       ],
@@ -6651,8 +7023,10 @@
     },
     {
       "id": 8730,
+      "idFach": 37,
       "bezeichnung": "GE-ZK2",
       "wochenstunden": 3,
+      "sortierung": 130,
       "schienen": [
         27
       ],
@@ -6679,8 +7053,10 @@
     },
     {
       "id": 8698,
+      "idFach": 225,
       "bezeichnung": "GEE-GK1",
       "wochenstunden": 3,
+      "sortierung": 131,
       "schienen": [
         3
       ],
@@ -6718,8 +7094,10 @@
     },
     {
       "id": 8838,
+      "idFach": 225,
       "bezeichnung": "GEE-GK1",
       "wochenstunden": 3,
+      "sortierung": 131,
       "schienen": [
         16
       ],
@@ -6741,8 +7119,10 @@
     },
     {
       "id": 8771,
+      "idFach": 225,
       "bezeichnung": "GEE-GK1",
       "wochenstunden": 3,
+      "sortierung": 131,
       "schienen": [
         29
       ],
@@ -6766,8 +7146,10 @@
     },
     {
       "id": 8724,
+      "idFach": 193,
       "bezeichnung": "IF-GK1",
       "wochenstunden": 3,
+      "sortierung": 230,
       "schienen": [
         5
       ],
@@ -6799,8 +7181,10 @@
     },
     {
       "id": 8862,
+      "idFach": 193,
       "bezeichnung": "IF-GK1",
       "wochenstunden": 3,
+      "sortierung": 230,
       "schienen": [
         17
       ],
@@ -6824,8 +7208,10 @@
     },
     {
       "id": 8790,
+      "idFach": 193,
       "bezeichnung": "IF-GK1",
       "wochenstunden": 3,
+      "sortierung": 230,
       "schienen": [
         32
       ],
@@ -6849,8 +7235,10 @@
     },
     {
       "id": 8815,
+      "idFach": 193,
       "bezeichnung": "IF-LK1",
       "wochenstunden": 5,
+      "sortierung": 230,
       "schienen": [
         14
       ],
@@ -6867,8 +7255,10 @@
     },
     {
       "id": 8751,
+      "idFach": 193,
       "bezeichnung": "IF-LK1",
       "wochenstunden": 5,
+      "sortierung": 230,
       "schienen": [
         26
       ],
@@ -6886,8 +7276,10 @@
     },
     {
       "id": 8709,
+      "idFach": 70,
       "bezeichnung": "KR-GK1",
       "wochenstunden": 3,
+      "sortierung": 186,
       "schienen": [
         8
       ],
@@ -6915,8 +7307,10 @@
     },
     {
       "id": 8847,
+      "idFach": 70,
       "bezeichnung": "KR-GK1",
       "wochenstunden": 3,
+      "sortierung": 186,
       "schienen": [
         21
       ],
@@ -6952,8 +7346,10 @@
     },
     {
       "id": 8778,
+      "idFach": 70,
       "bezeichnung": "KR-GK1",
       "wochenstunden": 3,
+      "sortierung": 186,
       "schienen": [
         27
       ],
@@ -6999,8 +7395,10 @@
     },
     {
       "id": 8848,
+      "idFach": 70,
       "bezeichnung": "KR-GK2",
       "wochenstunden": 3,
+      "sortierung": 186,
       "schienen": [
         21
       ],
@@ -7034,8 +7432,10 @@
     },
     {
       "id": 8687,
+      "idFach": 71,
       "bezeichnung": "KU-GK1",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         12
       ],
@@ -7073,8 +7473,10 @@
     },
     {
       "id": 8829,
+      "idFach": 71,
       "bezeichnung": "KU-GK1",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         18
       ],
@@ -7114,8 +7516,10 @@
     },
     {
       "id": 8764,
+      "idFach": 71,
       "bezeichnung": "KU-GK1",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         31
       ],
@@ -7148,8 +7552,10 @@
     },
     {
       "id": 8688,
+      "idFach": 71,
       "bezeichnung": "KU-GK2",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         1
       ],
@@ -7184,8 +7590,10 @@
     },
     {
       "id": 8830,
+      "idFach": 71,
       "bezeichnung": "KU-GK2",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         18
       ],
@@ -7223,8 +7631,10 @@
     },
     {
       "id": 8765,
+      "idFach": 71,
       "bezeichnung": "KU-GK2",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         35
       ],
@@ -7247,8 +7657,10 @@
     },
     {
       "id": 8689,
+      "idFach": 71,
       "bezeichnung": "KU-GK3",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         1
       ],
@@ -7284,8 +7696,10 @@
     },
     {
       "id": 8831,
+      "idFach": 71,
       "bezeichnung": "KU-GK3",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         17
       ],
@@ -7321,8 +7735,10 @@
     },
     {
       "id": 8766,
+      "idFach": 71,
       "bezeichnung": "KU-GK3",
       "wochenstunden": 3,
+      "sortierung": 70,
       "schienen": [
         28
       ],
@@ -7351,8 +7767,10 @@
     },
     {
       "id": 8803,
+      "idFach": 71,
       "bezeichnung": "KU-LK1",
       "wochenstunden": 5,
+      "sortierung": 70,
       "schienen": [
         15
       ],
@@ -7370,8 +7788,10 @@
     },
     {
       "id": 8738,
+      "idFach": 71,
       "bezeichnung": "KU-LK1",
       "wochenstunden": 5,
+      "sortierung": 70,
       "schienen": [
         26
       ],
@@ -7391,8 +7811,10 @@
     },
     {
       "id": 8686,
+      "idFach": 72,
       "bezeichnung": "L-GK1",
       "wochenstunden": 3,
+      "sortierung": 60,
       "schienen": [
         1
       ],
@@ -7417,8 +7839,10 @@
     },
     {
       "id": 8833,
+      "idFach": 244,
       "bezeichnung": "LI-GK1",
       "wochenstunden": 3,
+      "sortierung": 111,
       "schienen": [
         18
       ],
@@ -7452,8 +7876,10 @@
     },
     {
       "id": 8710,
+      "idFach": 79,
       "bezeichnung": "M-GK1",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         1
       ],
@@ -7493,8 +7919,10 @@
     },
     {
       "id": 8849,
+      "idFach": 79,
       "bezeichnung": "M-GK1",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         23
       ],
@@ -7523,8 +7951,10 @@
     },
     {
       "id": 8779,
+      "idFach": 79,
       "bezeichnung": "M-GK1",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         31
       ],
@@ -7557,8 +7987,10 @@
     },
     {
       "id": 8711,
+      "idFach": 79,
       "bezeichnung": "M-GK2",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         7
       ],
@@ -7594,8 +8026,10 @@
     },
     {
       "id": 8850,
+      "idFach": 79,
       "bezeichnung": "M-GK2",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         23
       ],
@@ -7626,8 +8060,10 @@
     },
     {
       "id": 8780,
+      "idFach": 79,
       "bezeichnung": "M-GK2",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         34
       ],
@@ -7660,8 +8096,10 @@
     },
     {
       "id": 8712,
+      "idFach": 79,
       "bezeichnung": "M-GK3",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         6
       ],
@@ -7691,8 +8129,10 @@
     },
     {
       "id": 8851,
+      "idFach": 79,
       "bezeichnung": "M-GK3",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         16
       ],
@@ -7721,8 +8161,10 @@
     },
     {
       "id": 8781,
+      "idFach": 79,
       "bezeichnung": "M-GK3",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         29
       ],
@@ -7755,8 +8197,10 @@
     },
     {
       "id": 8713,
+      "idFach": 79,
       "bezeichnung": "M-GK4",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         5
       ],
@@ -7793,8 +8237,10 @@
     },
     {
       "id": 8852,
+      "idFach": 79,
       "bezeichnung": "M-GK4",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         22
       ],
@@ -7829,8 +8275,10 @@
     },
     {
       "id": 8782,
+      "idFach": 79,
       "bezeichnung": "M-GK4",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         33
       ],
@@ -7864,8 +8312,10 @@
     },
     {
       "id": 8714,
+      "idFach": 79,
       "bezeichnung": "M-GK5",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         6
       ],
@@ -7896,8 +8346,10 @@
     },
     {
       "id": 8853,
+      "idFach": 79,
       "bezeichnung": "M-GK5",
       "wochenstunden": 3,
+      "sortierung": 190,
       "schienen": [
         17
       ],
@@ -7929,8 +8381,10 @@
     },
     {
       "id": 8809,
+      "idFach": 79,
       "bezeichnung": "M-LK1",
       "wochenstunden": 5,
+      "sortierung": 190,
       "schienen": [
         15
       ],
@@ -7964,8 +8418,10 @@
     },
     {
       "id": 8745,
+      "idFach": 79,
       "bezeichnung": "M-LK1",
       "wochenstunden": 5,
+      "sortierung": 190,
       "schienen": [
         25
       ],
@@ -7993,8 +8449,10 @@
     },
     {
       "id": 8810,
+      "idFach": 79,
       "bezeichnung": "M-LK2",
       "wochenstunden": 5,
+      "sortierung": 190,
       "schienen": [
         14
       ],
@@ -8017,8 +8475,10 @@
     },
     {
       "id": 8746,
+      "idFach": 79,
       "bezeichnung": "M-LK3",
       "wochenstunden": 5,
+      "sortierung": 190,
       "schienen": [
         26
       ],
@@ -8048,8 +8508,10 @@
     },
     {
       "id": 8690,
+      "idFach": 81,
       "bezeichnung": "MU-GK1",
       "wochenstunden": 3,
+      "sortierung": 80,
       "schienen": [
         1
       ],
@@ -8086,8 +8548,10 @@
     },
     {
       "id": 8832,
+      "idFach": 81,
       "bezeichnung": "MU-GK1",
       "wochenstunden": 3,
+      "sortierung": 80,
       "schienen": [
         18
       ],
@@ -8122,8 +8586,10 @@
     },
     {
       "id": 8767,
+      "idFach": 81,
       "bezeichnung": "MU-GK1",
       "wochenstunden": 3,
+      "sortierung": 80,
       "schienen": [
         28
       ],
@@ -8143,8 +8609,10 @@
     },
     {
       "id": 8691,
+      "idFach": 81,
       "bezeichnung": "MU-GK2",
       "wochenstunden": 3,
+      "sortierung": 80,
       "schienen": [
         2
       ],
@@ -8174,8 +8642,10 @@
     },
     {
       "id": 18039,
+      "idFach": 27,
       "bezeichnung": "N-ER-1",
       "wochenstunden": 2,
+      "sortierung": 185,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8204,8 +8674,10 @@
     },
     {
       "id": 18052,
+      "idFach": 27,
       "bezeichnung": "N-ER-2",
       "wochenstunden": 2,
+      "sortierung": 185,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8239,8 +8711,10 @@
     },
     {
       "id": 17216,
+      "idFach": 30,
       "bezeichnung": "N-F-1",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8277,8 +8751,10 @@
     },
     {
       "id": 18048,
+      "idFach": 30,
       "bezeichnung": "N-F-2",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8311,8 +8787,10 @@
     },
     {
       "id": 18040,
+      "idFach": 30,
       "bezeichnung": "N-F-3",
       "wochenstunden": 3,
+      "sortierung": 30,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8344,8 +8822,10 @@
     },
     {
       "id": 18044,
+      "idFach": 193,
       "bezeichnung": "N-IF-1",
       "wochenstunden": 3,
+      "sortierung": 230,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8372,8 +8852,10 @@
     },
     {
       "id": 18041,
+      "idFach": 70,
       "bezeichnung": "N-KR-1",
       "wochenstunden": 2,
+      "sortierung": 186,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8398,8 +8880,10 @@
     },
     {
       "id": 18050,
+      "idFach": 70,
       "bezeichnung": "N-KR-2",
       "wochenstunden": 2,
+      "sortierung": 186,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8423,8 +8907,10 @@
     },
     {
       "id": 18043,
+      "idFach": 72,
       "bezeichnung": "N-L-1",
       "wochenstunden": 3,
+      "sortierung": 60,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8455,8 +8941,10 @@
     },
     {
       "id": 18047,
+      "idFach": 191,
       "bezeichnung": "N-NW-1",
       "wochenstunden": 3,
+      "sortierung": 195,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8485,8 +8973,10 @@
     },
     {
       "id": 17218,
+      "idFach": 191,
       "bezeichnung": "N-NW-SP-1",
       "wochenstunden": 3,
+      "sortierung": 195,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8520,8 +9010,10 @@
     },
     {
       "id": 17217,
+      "idFach": 144,
       "bezeichnung": "N-PP-1",
       "wochenstunden": 2,
+      "sortierung": 171,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8555,8 +9047,10 @@
     },
     {
       "id": 18046,
+      "idFach": 165,
       "bezeichnung": "N-S-1",
       "wochenstunden": 3,
+      "sortierung": 40,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8583,8 +9077,10 @@
     },
     {
       "id": 18042,
+      "idFach": 191,
       "bezeichnung": "N-TC-1",
       "wochenstunden": 3,
+      "sortierung": 195,
       "schienen": [],
       "jahrgaenge": [
         5
@@ -8613,8 +9109,10 @@
     },
     {
       "id": 8705,
+      "idFach": 26,
       "bezeichnung": "PA-GK1",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         9
       ],
@@ -8649,8 +9147,10 @@
     },
     {
       "id": 8843,
+      "idFach": 26,
       "bezeichnung": "PA-GK1",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         23
       ],
@@ -8678,8 +9178,10 @@
     },
     {
       "id": 8775,
+      "idFach": 26,
       "bezeichnung": "PA-GK1",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         34
       ],
@@ -8704,8 +9206,10 @@
     },
     {
       "id": 8706,
+      "idFach": 26,
       "bezeichnung": "PA-GK2",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         9
       ],
@@ -8745,8 +9249,10 @@
     },
     {
       "id": 8844,
+      "idFach": 26,
       "bezeichnung": "PA-GK2",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         22
       ],
@@ -8775,8 +9281,10 @@
     },
     {
       "id": 8776,
+      "idFach": 26,
       "bezeichnung": "PA-GK2",
       "wochenstunden": 3,
+      "sortierung": 180,
       "schienen": [
         31
       ],
@@ -8807,8 +9315,10 @@
     },
     {
       "id": 8807,
+      "idFach": 26,
       "bezeichnung": "PA-LK1",
       "wochenstunden": 5,
+      "sortierung": 180,
       "schienen": [
         14
       ],
@@ -8843,8 +9353,10 @@
     },
     {
       "id": 8743,
+      "idFach": 26,
       "bezeichnung": "PA-LK1",
       "wochenstunden": 5,
+      "sortierung": 180,
       "schienen": [
         25
       ],
@@ -8878,8 +9390,10 @@
     },
     {
       "id": 8808,
+      "idFach": 26,
       "bezeichnung": "PA-LK1R",
       "wochenstunden": 5,
+      "sortierung": 180,
       "schienen": [
         15
       ],
@@ -8897,8 +9411,10 @@
     },
     {
       "id": 8744,
+      "idFach": 26,
       "bezeichnung": "PA-LK2",
       "wochenstunden": 5,
+      "sortierung": 180,
       "schienen": [
         26
       ],
@@ -8921,8 +9437,10 @@
     },
     {
       "id": 8721,
+      "idFach": 128,
       "bezeichnung": "PH-GK1",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         2
       ],
@@ -8962,8 +9480,10 @@
     },
     {
       "id": 8860,
+      "idFach": 128,
       "bezeichnung": "PH-GK1",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         20
       ],
@@ -8989,8 +9509,10 @@
     },
     {
       "id": 8788,
+      "idFach": 128,
       "bezeichnung": "PH-GK1",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         32
       ],
@@ -9026,8 +9548,10 @@
     },
     {
       "id": 8722,
+      "idFach": 128,
       "bezeichnung": "PH-GK2",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         10
       ],
@@ -9064,8 +9588,10 @@
     },
     {
       "id": 8861,
+      "idFach": 128,
       "bezeichnung": "PH-GK2",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         22
       ],
@@ -9101,8 +9627,10 @@
     },
     {
       "id": 8789,
+      "idFach": 128,
       "bezeichnung": "PH-GK2",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         33
       ],
@@ -9133,8 +9661,10 @@
     },
     {
       "id": 8723,
+      "idFach": 128,
       "bezeichnung": "PH-GK3",
       "wochenstunden": 3,
+      "sortierung": 220,
       "schienen": [
         2
       ],
@@ -9174,8 +9704,10 @@
     },
     {
       "id": 8814,
+      "idFach": 128,
       "bezeichnung": "PH-LK1",
       "wochenstunden": 5,
+      "sortierung": 220,
       "schienen": [
         15
       ],
@@ -9196,8 +9728,10 @@
     },
     {
       "id": 8750,
+      "idFach": 128,
       "bezeichnung": "PH-LK1",
       "wochenstunden": 5,
+      "sortierung": 220,
       "schienen": [
         25
       ],
@@ -9218,8 +9752,10 @@
     },
     {
       "id": 8795,
+      "idFach": 233,
       "bezeichnung": "PK-E1",
       "wochenstunden": 2,
+      "sortierung": 2001,
       "schienen": [
         24
       ],
@@ -9241,8 +9777,10 @@
     },
     {
       "id": 8797,
+      "idFach": 237,
       "bezeichnung": "PK-Sp1",
       "wochenstunden": 2,
+      "sortierung": 2030,
       "schienen": [
         24
       ],
@@ -9286,8 +9824,10 @@
     },
     {
       "id": 8796,
+      "idFach": 236,
       "bezeichnung": "PK-Tanz1",
       "wochenstunden": 2,
+      "sortierung": 2020,
       "schienen": [
         24
       ],
@@ -9329,8 +9869,10 @@
     },
     {
       "id": 8702,
+      "idFach": 127,
       "bezeichnung": "PL-GK1",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         7
       ],
@@ -9363,8 +9905,10 @@
     },
     {
       "id": 8841,
+      "idFach": 127,
       "bezeichnung": "PL-GK1",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         22
       ],
@@ -9403,8 +9947,10 @@
     },
     {
       "id": 8774,
+      "idFach": 127,
       "bezeichnung": "PL-GK1",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         27
       ],
@@ -9435,8 +9981,10 @@
     },
     {
       "id": 8703,
+      "idFach": 127,
       "bezeichnung": "PL-GK2",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         7
       ],
@@ -9466,8 +10014,10 @@
     },
     {
       "id": 8842,
+      "idFach": 127,
       "bezeichnung": "PL-GK2",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         21
       ],
@@ -9502,8 +10052,10 @@
     },
     {
       "id": 8704,
+      "idFach": 127,
       "bezeichnung": "PL-GK3",
       "wochenstunden": 3,
+      "sortierung": 170,
       "schienen": [
         8
       ],
@@ -9540,8 +10092,10 @@
     },
     {
       "id": 8679,
+      "idFach": 165,
       "bezeichnung": "S-GK1",
       "wochenstunden": 3,
+      "sortierung": 40,
       "schienen": [
         4
       ],
@@ -9572,8 +10126,10 @@
     },
     {
       "id": 8824,
+      "idFach": 165,
       "bezeichnung": "S-GK1",
       "wochenstunden": 3,
+      "sortierung": 40,
       "schienen": [
         17
       ],
@@ -9600,8 +10156,10 @@
     },
     {
       "id": 8759,
+      "idFach": 165,
       "bezeichnung": "S-GK1",
       "wochenstunden": 3,
+      "sortierung": 40,
       "schienen": [
         32
       ],
@@ -9628,8 +10186,10 @@
     },
     {
       "id": 8678,
+      "idFach": 223,
       "bezeichnung": "S0-GK1",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         11
       ],
@@ -9658,8 +10218,10 @@
     },
     {
       "id": 8823,
+      "idFach": 223,
       "bezeichnung": "S0-GK1",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         17
       ],
@@ -9691,8 +10253,10 @@
     },
     {
       "id": 8758,
+      "idFach": 223,
       "bezeichnung": "S0-GK1",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         32
       ],
@@ -9723,8 +10287,10 @@
     },
     {
       "id": 8680,
+      "idFach": 223,
       "bezeichnung": "S0-GK2",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         10
       ],
@@ -9760,8 +10326,10 @@
     },
     {
       "id": 8825,
+      "idFach": 223,
       "bezeichnung": "S0-GK2",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         20
       ],
@@ -9787,8 +10355,10 @@
     },
     {
       "id": 8760,
+      "idFach": 223,
       "bezeichnung": "S0-GK2",
       "wochenstunden": 4,
+      "sortierung": 40,
       "schienen": [
         33
       ],
@@ -9811,8 +10381,10 @@
     },
     {
       "id": 8725,
+      "idFach": 172,
       "bezeichnung": "SP-GK1",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         11
       ],
@@ -9849,8 +10421,10 @@
     },
     {
       "id": 8863,
+      "idFach": 172,
       "bezeichnung": "SP-GK1",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         23
       ],
@@ -9890,8 +10464,10 @@
     },
     {
       "id": 8791,
+      "idFach": 172,
       "bezeichnung": "SP-GK1",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         30
       ],
@@ -9928,8 +10504,10 @@
     },
     {
       "id": 8726,
+      "idFach": 172,
       "bezeichnung": "SP-GK2",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         5
       ],
@@ -9970,8 +10548,10 @@
     },
     {
       "id": 8864,
+      "idFach": 172,
       "bezeichnung": "SP-GK2",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         20
       ],
@@ -10007,8 +10587,10 @@
     },
     {
       "id": 8792,
+      "idFach": 172,
       "bezeichnung": "SP-GK2",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         29
       ],
@@ -10049,8 +10631,10 @@
     },
     {
       "id": 8727,
+      "idFach": 172,
       "bezeichnung": "SP-GK3",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         8
       ],
@@ -10092,8 +10676,10 @@
     },
     {
       "id": 8865,
+      "idFach": 172,
       "bezeichnung": "SP-GK3",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         18
       ],
@@ -10129,8 +10715,10 @@
     },
     {
       "id": 8793,
+      "idFach": 172,
       "bezeichnung": "SP-GK3",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         34
       ],
@@ -10163,8 +10751,10 @@
     },
     {
       "id": 8728,
+      "idFach": 172,
       "bezeichnung": "SP-GK4",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         9
       ],
@@ -10203,8 +10793,10 @@
     },
     {
       "id": 8866,
+      "idFach": 172,
       "bezeichnung": "SP-GK4",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         21
       ],
@@ -10241,8 +10833,10 @@
     },
     {
       "id": 8794,
+      "idFach": 172,
       "bezeichnung": "SP-GK4",
       "wochenstunden": 3,
+      "sortierung": 260,
       "schienen": [
         28
       ],
@@ -10279,8 +10873,10 @@
     },
     {
       "id": 8816,
+      "idFach": 172,
       "bezeichnung": "SP-LK1",
       "wochenstunden": 5,
+      "sortierung": 260,
       "schienen": [
         14
       ],
@@ -10312,8 +10908,10 @@
     },
     {
       "id": 8752,
+      "idFach": 172,
       "bezeichnung": "SP-LK1",
       "wochenstunden": 5,
+      "sortierung": 260,
       "schienen": [
         25
       ],
@@ -10341,8 +10939,10 @@
     },
     {
       "id": 8817,
+      "idFach": 172,
       "bezeichnung": "SP-LK2",
       "wochenstunden": 5,
+      "sortierung": 260,
       "schienen": [
         15
       ],
@@ -10359,8 +10959,10 @@
     },
     {
       "id": 8699,
+      "idFach": 164,
       "bezeichnung": "SW-GK1",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         12
       ],
@@ -10395,8 +10997,10 @@
     },
     {
       "id": 8839,
+      "idFach": 164,
       "bezeichnung": "SW-GK1",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         16
       ],
@@ -10430,8 +11034,10 @@
     },
     {
       "id": 8772,
+      "idFach": 164,
       "bezeichnung": "SW-GK1",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         35
       ],
@@ -10456,8 +11062,10 @@
     },
     {
       "id": 8700,
+      "idFach": 164,
       "bezeichnung": "SW-GK2",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         5
       ],
@@ -10498,8 +11106,10 @@
     },
     {
       "id": 8840,
+      "idFach": 164,
       "bezeichnung": "SW-GK2",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         23
       ],
@@ -10534,8 +11144,10 @@
     },
     {
       "id": 8773,
+      "idFach": 164,
       "bezeichnung": "SW-GK2",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         29
       ],
@@ -10557,8 +11169,10 @@
     },
     {
       "id": 8701,
+      "idFach": 164,
       "bezeichnung": "SW-GK3",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         4
       ],
@@ -10595,8 +11209,10 @@
     },
     {
       "id": 8742,
+      "idFach": 164,
       "bezeichnung": "SW-LK1",
       "wochenstunden": 5,
+      "sortierung": 150,
       "schienen": [
         26
       ],
@@ -10618,8 +11234,10 @@
     },
     {
       "id": 8731,
+      "idFach": 164,
       "bezeichnung": "SW-ZK1",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         27
       ],
@@ -10652,8 +11270,10 @@
     },
     {
       "id": 8732,
+      "idFach": 164,
       "bezeichnung": "SW-ZK2",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         34
       ],
@@ -10693,8 +11313,10 @@
     },
     {
       "id": 8733,
+      "idFach": 164,
       "bezeichnung": "SW-ZK3",
       "wochenstunden": 3,
+      "sortierung": 150,
       "schienen": [
         35
       ],
@@ -10737,8 +11359,10 @@
     },
     {
       "id": 8669,
+      "idFach": 210,
       "bezeichnung": "VF_D1",
       "wochenstunden": 2,
+      "sortierung": 280,
       "schienen": [
         13
       ],
@@ -10760,8 +11384,10 @@
     },
     {
       "id": 8670,
+      "idFach": 212,
       "bezeichnung": "VF_E1",
       "wochenstunden": 2,
+      "sortierung": 290,
       "schienen": [
         11
       ],
@@ -10787,8 +11413,10 @@
     },
     {
       "id": 8671,
+      "idFach": 213,
       "bezeichnung": "VF_M1",
       "wochenstunden": 2,
+      "sortierung": 300,
       "schienen": [
         11
       ],

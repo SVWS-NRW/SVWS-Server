@@ -10,6 +10,11 @@ export class StundenplanKurs extends JavaObject {
 	public id : number = -1;
 
 	/**
+	 * Die ID des Faches
+	 */
+	public idFach : number = -1;
+
+	/**
 	 * Die Bezeichnung des Kurses.
 	 */
 	public bezeichnung : string = "";
@@ -59,6 +64,9 @@ export class StundenplanKurs extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (typeof obj.idFach === "undefined")
+			 throw new Error('invalid json format, missing attribute idFach');
+		result.idFach = obj.idFach;
 		if (typeof obj.bezeichnung === "undefined")
 			 throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
@@ -94,6 +102,7 @@ export class StundenplanKurs extends JavaObject {
 	public static transpilerToJSON(obj : StundenplanKurs) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"idFach" : ' + obj.idFach + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
 		result += '"sortierung" : ' + obj.sortierung + ',';
@@ -154,6 +163,9 @@ export class StundenplanKurs extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.idFach !== "undefined") {
+			result += '"idFach" : ' + obj.idFach + ',';
 		}
 		if (typeof obj.bezeichnung !== "undefined") {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';

@@ -681,12 +681,6 @@
       "kuerzel": "SLZ",
       "beschreibung": "Selbstlernzentrum",
       "groesse": 80
-    },
-    {
-      "id": 55,
-      "kuerzel": "T5",
-      "beschreibung": "Turnhalle 5",
-      "groesse": 90
     }
   ],
   "schienen": [

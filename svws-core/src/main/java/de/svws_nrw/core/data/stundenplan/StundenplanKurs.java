@@ -21,6 +21,10 @@ public class StundenplanKurs {
 	@Schema(description = "die ID des Kurses", example = "4711")
 	public long id = -1;
 
+	/** Die ID des Faches */
+	@Schema(description = "die ID des Faches", example = "89")
+	public long idFach = -1;
+
 	/** Die Bezeichnung des Kurses. */
 	@Schema(description = "Die Bezeichnung des Kurses", example = "M-GK1")
 	public @NotNull String bezeichnung = "";

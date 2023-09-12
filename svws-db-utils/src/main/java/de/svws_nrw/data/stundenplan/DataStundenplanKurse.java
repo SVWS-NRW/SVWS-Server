@@ -48,6 +48,7 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	private static final BiFunction<DTOKurs, DTOFach, StundenplanKurs> dtoMapper = (final DTOKurs k, final DTOFach f) -> {
 		final StundenplanKurs daten = new StundenplanKurs();
 		daten.id = k.ID;
+		daten.idFach = k.Fach_ID;
 		daten.bezeichnung = k.KurzBez;
 		daten.wochenstunden = k.WochenStd;
 		if (k.Sortierung != null)
