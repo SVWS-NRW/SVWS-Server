@@ -683,9 +683,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Führe den Import durch und erstelle die Response mit dem Log
 			final SimpleOperationResponse daten = new SimpleOperationResponse();
 			daten.success = doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger);
+			conn.transactionCommitOrThrow();
 			logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
 			daten.log = log.getStrings();
-			conn.transactionCommit();
 			return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
 			if (e instanceof final WebApplicationException webAppException)
@@ -724,6 +724,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			// Führe den Import durch und erstelle die Response mit dem Log
 			final SimpleOperationResponse daten = new SimpleOperationResponse();
 			daten.success = doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger);
+			conn.transactionCommitOrThrow();
 			logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
 			daten.log = log.getStrings();
 			return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
