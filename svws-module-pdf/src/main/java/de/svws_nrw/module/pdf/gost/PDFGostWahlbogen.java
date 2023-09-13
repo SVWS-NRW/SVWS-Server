@@ -103,7 +103,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		String letzteBeratung = "<p>Die letzte Beratung wurde durchgeführt";
 		boolean hatLetzteBeratung = false;
 		if (laufbahnGrunddaten.beratungsdatum != null && !laufbahnGrunddaten.beratungsdatum.isBlank() && !laufbahnGrunddaten.beratungsdatum.isEmpty()) {
-			LocalDate beratungsdatum = LocalDate.parse(laufbahnGrunddaten.beratungsdatum, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			final LocalDate beratungsdatum = LocalDate.parse(laufbahnGrunddaten.beratungsdatum, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			letzteBeratung = letzteBeratung + " am " + beratungsdatum.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			hatLetzteBeratung = true;
 		}
@@ -147,15 +147,15 @@ public final class PDFGostWahlbogen extends PDFCreator {
 			 if (laufbahnGrunddaten.kommentar == null || laufbahnGrunddaten.kommentar.isEmpty()) {
                  bodyData.put("BELEGUNGSFEHLER_KOMMENTAR", "- keine -");
              } else {
-				 StringBuilder sb = new StringBuilder();
-				 List<String> kommentar = new ArrayList<>();
+				 final StringBuilder sb = new StringBuilder();
+				 final List<String> kommentar = new ArrayList<>();
 				 kommentar.add(laufbahnGrunddaten.kommentar);
 				 ul(sb, kommentar);
 				 bodyData.put("BELEGUNGSFEHLER_KOMMENTAR", sb.toString());
 			 }
 		 } else {
-			 StringBuilder sb = new StringBuilder();
-             List<String> fehler_kommentar = new ArrayList<>(listFehler.stream().map(f -> f.belegungsfehler).toList());
+			 final StringBuilder sb = new StringBuilder();
+             final List<String> fehler_kommentar = new ArrayList<>(listFehler.stream().map(f -> f.belegungsfehler).toList());
 			 if (laufbahnGrunddaten.kommentar != null && !laufbahnGrunddaten.kommentar.isEmpty()) {
 				 fehler_kommentar.add(laufbahnGrunddaten.kommentar);
 			 }
@@ -167,8 +167,8 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (listHinweise == null || listHinweise.isEmpty())
 			bodyData.put("BELEGUNGSHINWEISE", "- keine -");
 		else {
-			StringBuilder sb = new StringBuilder();
-			List<String> hinweise = listHinweise.stream().map(f -> f.belegungshinweis).toList();
+			final StringBuilder sb = new StringBuilder();
+			final List<String> hinweise = listHinweise.stream().map(f -> f.belegungshinweis).toList();
 			ul(sb, hinweise);
 			bodyData.put("BELEGUNGSHINWEISE", sb.toString());
 		}
@@ -184,7 +184,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		final StringBuilder sbFachwahlen = new StringBuilder();
 		String sprachbelegung;
 
-		for (SchildReportingSchuelerGOStLaufbahnplanungFachwahlen fachwahl : listFachwahlen) {
+		for (final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen fachwahl : listFachwahlen) {
 			sprachbelegung = "";
 			if (Boolean.TRUE.equals(fachwahl.fachIstFortfuehrbareFremdspracheInGOSt)) {
 				if (fachwahl.jahrgangFremdsprachenbeginn.equals("HSU"))
@@ -194,34 +194,33 @@ public final class PDFGostWahlbogen extends PDFCreator {
 				else
 				    sprachbelegung = fachwahl.positionFremdsprachenfolge + " (ab Jg. " + fachwahl.jahrgangFremdsprachenbeginn + ")";
 			}
-			String zeileFachwahl =  """
-									<tr style="background-color: rgb(%s);">
-										<th>%s</th>
-										<th>%s</th>
-										<td style="border-left: 1px gray solid;">%s</td>
-										<td style="border-left: 1px gray solid;">%s</td>
-										<td>%s</td>
-										<td style="border-left: 1px gray solid;">%s</td>
-										<td>%s</td>
-										<td>%s</td>
-										<td>%s</td>
-										<td style="border-left: 1px gray solid;">%s</td>
-									</tr>
-									"""
-									.formatted(
-									fachwahl.farbeClientRGB,
-									fachwahl.kuerzel,
-									fachwahl.bezeichnung,
-									sprachbelegung,
-									fachwahl.belegungEF1,
-									fachwahl.belegungEF2,
-									fachwahl.belegungQ11,
-									fachwahl.belegungQ12,
-									fachwahl.belegungQ21,
-									fachwahl.belegungQ22,
-									fachwahl.abiturfach
-									);
-
+			final String zeileFachwahl =
+					"""
+					<tr style="background-color: rgb(%s);">
+					    <th>%s</th>
+					    <th>%s</th>
+					    <td style="border-left: 1px gray solid;">%s</td>
+					    <td style="border-left: 1px gray solid;">%s</td>
+					    <td>%s</td>
+					    <td style="border-left: 1px gray solid;">%s</td>
+					    <td>%s</td>
+					    <td>%s</td>
+					    <td>%s</td>
+					    <td style="border-left: 1px gray solid; border-right: 1px gray solid;">%s</td>
+					</tr>
+					""".formatted(
+						fachwahl.farbeClientRGB,
+						fachwahl.kuerzel,
+						fachwahl.bezeichnung,
+						sprachbelegung,
+						fachwahl.belegungEF1,
+						fachwahl.belegungEF2,
+						fachwahl.belegungQ11,
+						fachwahl.belegungQ12,
+						fachwahl.belegungQ21,
+						fachwahl.belegungQ22,
+						fachwahl.abiturfach
+					);
 			sbFachwahlen.append(zeileFachwahl);
 		}
 
@@ -243,8 +242,8 @@ public final class PDFGostWahlbogen extends PDFCreator {
 
 		// Schuldaten sammeln
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		String schulnummer = schule.SchulNr.toString();
-		String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
+		final String schulnummer = schule.SchulNr.toString();
+		final String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
 
 		// Daten auf Validität prüfen und DTO-Objekte in Maps ablegen
 		if (schuelerIDs == null || schuelerIDs.isEmpty())
@@ -266,16 +265,16 @@ public final class PDFGostWahlbogen extends PDFCreator {
 
 		// Datenquellen und zugehörige Objekte initialisieren
 		DataSchildReportingDatenquelle.initMapDatenquellen();
-		DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten objDsGD = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten();
-		List<SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> listGrunddaten = objDsGD.getDaten(conn, schuelerIDs);
-		DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen objDsFW = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen();
-		List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> listFachwahlen = objDsFW.getDaten(conn, schuelerIDs);
-		DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen objDsSUM = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen();
-		List<SchildReportingSchuelerGOStLaufbahnplanungSummen> listSummen = objDsSUM.getDaten(conn, schuelerIDs);
-		DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler objDsFEH = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
-		List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler = objDsFEH.getDaten(conn, schuelerIDs);
-		DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise objDsHIN = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
-		List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise = objDsHIN.getDaten(conn, schuelerIDs);
+		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten objDsGD = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten();
+		final List<SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> listGrunddaten = objDsGD.getDaten(conn, schuelerIDs);
+		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen objDsFW = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen();
+		final List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> listFachwahlen = objDsFW.getDaten(conn, schuelerIDs);
+		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen objDsSUM = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen();
+		final List<SchildReportingSchuelerGOStLaufbahnplanungSummen> listSummen = objDsSUM.getDaten(conn, schuelerIDs);
+		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler objDsFEH = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
+		final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler = objDsFEH.getDaten(conn, schuelerIDs);
+		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise objDsHIN = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
+		final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise = objDsHIN.getDaten(conn, schuelerIDs);
 
 		// Überführung der Ergebnisse der Datenquellen von Listen in Maps für besseren Zugriff auf die Daten.
 		final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten = listGrunddaten.stream().collect(Collectors.toMap(d -> d.schuelerID, d -> d));
@@ -288,17 +287,16 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		// Erzeuge daher eine Liste mit Schüler-IDs, die in der alphabetischen Reihenfolge der Schüler sortiert ist
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 
-		List<Long> sortedSchuelerIDs = mapSchueler.values().stream()
-															.sorted(Comparator
-																.comparing((DTOSchueler s) -> s.Nachname, colGerman)
-																.thenComparing((DTOSchueler s) -> s.Vorname, colGerman)
-																.thenComparing((DTOSchueler s) -> s.ID))
-															.map(s -> s.ID)
-															.toList();
+		final List<Long> sortedSchuelerIDs = mapSchueler.values().stream()
+				.sorted(Comparator.comparing((final DTOSchueler s) -> s.Nachname, colGerman)
+						.thenComparing((final DTOSchueler s) -> s.Vorname, colGerman)
+						.thenComparing((final DTOSchueler s) -> s.ID))
+				.map(s -> s.ID)
+				.toList();
 
 		// Dateinamen erzeugen und übergeben. Dabei gilt:
 		// Wird nur ein Schüler übergeben, so wird eine persönliche PDF-Datei erstellt. Werden mehrere Schüler übergeben, so wurde über die API ein ganzer Jahrgang angefordert, für den eine PDF-Gesamtdatei erzeugt wird.
-		String dateiname = "";
+		String dateiname;
 		if (mapSchueler.size() == 1) {
 			dateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
 				mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
@@ -319,14 +317,14 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		for (final Long schuelerID : sortedSchuelerIDs) {
 			lfdNr++;
 			final PDFGostWahlbogen pdfNeueSeite = new PDFGostWahlbogen(dateiname,
-																		schulnummer, schulbezeichnung,
-																		lfdNr,
-																		mapSchueler.get(schuelerID),
-																		mapGrunddaten.get(schuelerID),
-																		mapFachwahlen.get(schuelerID),
-																		mapSummen.get(schuelerID),
-																		mapFehler.get(schuelerID),
-																		mapHinweise.get(schuelerID));
+					schulnummer, schulbezeichnung,
+					lfdNr,
+					mapSchueler.get(schuelerID),
+					mapGrunddaten.get(schuelerID),
+					mapFachwahlen.get(schuelerID),
+					mapSummen.get(schuelerID),
+					mapFehler.get(schuelerID),
+					mapHinweise.get(schuelerID));
 			if (pdfAktuelleSeite == null) {
 				pdf = pdfNeueSeite;
 			} else {
@@ -352,7 +350,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (schueler_id == null)
 			throw OperationError.NOT_FOUND.exception();
 
-		List<Long> schuelerIDs = new ArrayList<>();
+		final List<Long> schuelerIDs = new ArrayList<>();
 		schuelerIDs.add(schueler_id);
 
 		final PDFGostWahlbogen pdf = getPDFmitWahlboegen(conn, schuelerIDs);

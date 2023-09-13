@@ -21,7 +21,7 @@
 
 @@BERATUNGSBOGENTEXT@@
 
-<table class="faecher" style="border-collapse:collapse; page-break-inside: avoid;" width="100%" cellspacing="0" cellpadding="1px">
+<table class="faecher" style="border-collapse:collapse; page-break-inside: avoid;" width="100%" cellspacing="0" cellpadding="0.5px">
 	<thead>
 		<tr style="height: 0em" cellspacing="0" cellpadding="0">
 			<td style="width: 8%; border-width: 0em;"></td>
@@ -44,7 +44,7 @@
 			<th style="border-bottom: 1px black solid;">Q1.2</th>
 			<th style="border-bottom: 1px black solid;">Q2.1</th>
 			<th style="border-bottom: 1px black solid;">Q2.2</th>
-			<th style="border-bottom: 1px black solid; border-left: 1px gray solid;">Abitur</th>
+			<th style="border-bottom: 1px black solid; border-left: 1px gray solid; border-right: 1px gray solid;">Abitur</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -92,7 +92,7 @@
 <p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 @@BELEGUNGSHINWEISE@@
 
-<p>Die oben aufgeführten Fachwahlen gelten für die weitere Schulaufbahn als verbindlich gewählt, solange keine Korrekturwünsche den Beratungslehrkräften mitgeteilt werden.
+<p>Die oben aufgeführten Fachwahlen gelten für die weitere Schullaufbahn als verbindlich gewählt, solange keine Korrekturwünsche den Beratungslehrkräften mitgeteilt werden.
 	Korrekturwünsche können vor jedem Halbjahreswechsel nach Rücksprache mit den Beratungslehrkräften durchgeführt werden.
 	Schulorganisatorische Gründe können zu einer Änderung der Fachwahlen und der Laufbahn führen.</p>
 
@@ -119,7 +119,7 @@
 	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="page-break-inside: avoid;">
 		<tr>
 			<td style="text-align: left; width: 50%; border: 0.5px solid black; border-style: solid none none none;"><p class="tinyfont" style="margin: 2px">Gedruckt am: @@ZEIT@@ - Schulnummer: @@SCHULNUMMER@@</p></td>
-			<td style="text-align: right; width: 50%; border: 0.5px solid black; border-style: solid none none none;"><p class="tinyfont" style="margin: 2px">Lfd. Nr: @@LFDNR@@</p></td>
+			<td style="text-align: right; width: 50%; border: 0.5px solid black; border-style: solid none none none;"><p class="tinyfont" style="margin: 2px">Ausdruck lfd. Nr: @@LFDNR@@</p></td>
 		</tr>
 	</table>
 </div>

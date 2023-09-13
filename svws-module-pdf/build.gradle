@@ -12,6 +12,45 @@ dependencies {
     implementation project(':svws-db-utils')
 }
 
+def fontDir = "$projectDir/src/main/resources/de/svws_nrw/module/pdf/fonts"
+
+def fontLiberationVersion = "2.1.5"
+def fontLiberationFileId = "7261482"
+def fontLiberationDestDir = "liberation"
+def fontLiberationFileBaseName = "liberation-fonts-ttf-${fontLiberationVersion}"  
+def fontLiberationURL = "https://github.com/liberationfonts/liberation-fonts/files/${fontLiberationFileId}/${fontLiberationFileBaseName}.tar.gz"
+def fontLiberationDownloadLocation = "${rootDir}/download/${fontLiberationFileBaseName}.tar.gz"
+
+task prepareDownloadDir {
+	mkdir "${rootDir}/download"
+}
+
+task fontDownload {
+	group "svws"
+	dependsOn prepareDownloadDir
+	ant.get(src: fontLiberationURL, dest: file(fontLiberationDownloadLocation))
+}
+
+task fontExtract(type: Copy) {
+	group "svws"
+	dependsOn fontDownload
+	from tarTree(resources.gzip(fontLiberationDownloadLocation))
+	into fontDir
+	doLast {
+		ant.move(file: "${fontDir}/${fontLiberationFileBaseName}", toFile: "${fontDir}/${fontLiberationDestDir}")
+	}
+}
+
+task fontRemove(type: Delete) {
+	group "svws"
+	delete "${fontDir}/${fontLiberationDestDir}"  
+}
+
+processResources.dependsOn fontExtract
+sourcesJar.dependsOn fontExtract
+clean.dependsOn fontRemove
+
+
 apply from: "$rootDir/publish-helper.gradle"
 publishing {
   publications {

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 
@@ -30,25 +31,22 @@ public class PDFCreator {
 	protected HashMap<String, String> bodyData = new HashMap<>();
 
 	/** Default CSS-Definition für die Gestaltung der Seiten */
-	protected String pageCSS =
-		"""
-		@Page {
-			size: A4;
-			margin-top: 10mm;
-			margin-bottom: 20mm;
-			margin-left: 20mm;
-			margin-right: 10mm;
-			@bottom-left {
-				content: element(footer);
-			}
-		}
-		.footer {
-			position: running(footer);
-		}
-		""";
+	protected String pageCSS = 	"""
+								@Page {
+								    size: A4;
+								    margin-top: 10mm;
+								    margin-bottom: 20mm;
+								    margin-left: 20mm;
+								    margin-right: 10mm;
+								    @bottom-left { content: element(footer); }
+								}
+								.footer {
+								    position: running(footer);
+								}
+								""";
 
 	/** Default CSS-Definition für die Gestaltung des Body */
-	protected String bodyCSS = "body { font-family: Helvetica, sans-serif; font-weight: normal; font-size: 11px; }";
+	protected String bodyCSS = "body { font-family: 'liberation'; font-weight: normal; font-size: 11px; }";
 
 	/** Default CSS-Definition für die Gestaltung von Überschriften h1 */
 	protected String h1CSS = "h1 { font-size: 2em; font-weight: bold; }";
@@ -76,7 +74,7 @@ public class PDFCreator {
 	 * Erstellt einen neuen Manager für PDF-Dokumente.
 	 * Das Default-Layout wird auf DIN A4 und Hochformat gesetzt.
 	 *
-	 * @param title   der Titel des Dokuements
+	 * @param title   der Titel des Dokuments
 	 * @param body    der Body des HTML-Dokuments - ohne Ersetzungen
 	 * @param css     weitere CSS-Style-Sheets zum Ergänzen der Default-CSS-Style-Sheets
 	 */
@@ -134,28 +132,25 @@ public class PDFCreator {
 	 * @throws IOException wenn das HTML-Dokument nicht erzeugt werden kann
 	 */
 	private String getHtml() throws IOException {
-		final StringBuilder html = new StringBuilder();
-		html.append("<html lang=\"de\">");
-		html.append("<head>");
-		html.append("<title>").append(title).append("</title>");
-		html.append("<style>");
-		html.append(pageCSS)
-			.append(bodyCSS)
-			.append(h1CSS)
-			.append(h2CSS)
-			.append(h3CSS)
-			.append(h4CSS)
-			.append(css_class_tinyfont)
-			.append(css);
-		html.append("</style>");
-		html.append("</head>");
-		html.append("<body>");
-		html.append(getBody());
-		html.append("</body>");
-		html.append("</html>");
-		return html.toString();
+		return  "<html lang=\"de\">"
+				+ "<head>"
+				+ "<title>" + title + "</title>"
+				+ "<style>"
+				+ pageCSS
+				+ bodyCSS
+				+ h1CSS
+				+ h2CSS
+				+ h3CSS
+				+ h4CSS
+				+ css_class_tinyfont
+				+ css
+				+ "</style>"
+				+ "</head>"
+				+ "<body>"
+				+ getBody()
+				+ "</body>"
+				+ "</html>";
 	}
-
 
 
 	/**
@@ -177,6 +172,10 @@ public class PDFCreator {
 			info.setModificationDate(now);
 			info.setProducer("SVWSServer");
 			final PdfRendererBuilder builder = new PdfRendererBuilder();
+			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/pdf/fonts/liberation/LiberationSans-Regular.ttf"), "liberation");
+			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/pdf/fonts/liberation/LiberationSans-Bold.ttf"), "liberation", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
+			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/pdf/fonts/liberation/LiberationSans-Italic.ttf"), "liberation", 400, BaseRendererBuilder.FontStyle.ITALIC, true);
+			builder.useFont(() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/pdf/fonts/liberation/LiberationSans-BoldItalic.ttf"), "liberation", 700, BaseRendererBuilder.FontStyle.ITALIC, true);
 			builder.useFastMode();
 			builder.usePDDocument(doc);
 			builder.withHtmlContent(html, null);
