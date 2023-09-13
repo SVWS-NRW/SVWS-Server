@@ -19,6 +19,11 @@ services:
 
   svws-server:
     image: svwsnrw/svws-server:0.7.1
+    depends_on:
+        mariadb:
+            condition: service_healthy
+    links:
+        - mariadb
     ports:
       - "8443:8443"
     environment:
