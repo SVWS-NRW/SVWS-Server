@@ -123,11 +123,18 @@
 								</div>
 							</template>
 							<template v-if="modePausenaufsichten === 'tooltip'">
-								<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
-									:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
-									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
-									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
-									<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
+								<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow">
+									<svws-ui-tooltip position="top">
+										{{ pause.bezeichnung ? pause.bezeichnung : 'Pause' }}
+										<template #content>
+											<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+												:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
+												<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+												<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
+												<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
+											</div>
+										</template>
+									</svws-ui-tooltip>
 								</div>
 							</template>
 						</div>
