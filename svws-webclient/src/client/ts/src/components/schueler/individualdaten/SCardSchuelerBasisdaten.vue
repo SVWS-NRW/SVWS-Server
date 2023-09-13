@@ -6,7 +6,7 @@
 			<svws-ui-text-input placeholder="Rufname" :model-value="data().vorname" @change="vorname => doPatch({ vorname })" type="text" />
 			<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data().alleVornamen" @change="alleVornamen => doPatch({ alleVornamen })" type="text" />
 			<svws-ui-spacing />
-			<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="i=>i.text" />
+			<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="(i: Geschlecht)=>i.text" />
 			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data().geburtsdatum" @change="geburtsdatum => doPatch({geburtsdatum})" type="date" :valid="istGeburtsdatumGueltig" required statistics />
 			<svws-ui-text-input placeholder="Geburtsort" :model-value="data().geburtsort" @change="geburtsort => doPatch({ geburtsort })" type="text" />
 			<svws-ui-text-input placeholder="Geburtsname" :model-value="data().geburtsname" @change="geburtsname => doPatch({ geburtsname })" type="text" />
@@ -18,6 +18,7 @@
 
 	import type { SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
+	import type { InputDataType } from "@ui";
 	import { computed } from "vue";
 	import { DateUtils, Geschlecht } from "@core";
 
@@ -33,7 +34,7 @@
 		emit('patch', data);
 	}
 
-	const istGeburtsdatumGueltig = (strDate: string | number | null) => {
+	const istGeburtsdatumGueltig = (strDate: InputDataType) => {
 		if (strDate === null || typeof strDate === 'number')
 			return true;
 		try {

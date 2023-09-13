@@ -7,9 +7,21 @@
 				</div>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Sprachenfolge" class="opacity-50">
-			<svws-ui-data-table :items="sprachbelegungen()" :columns="colsSprachenfolge">
-				<!-- -->
+		<svws-ui-content-card title="Sprachenfolge" class="">
+			<svws-ui-data-table :items="sprachbelegungen()" :columns="colsSprachenfolge" class="mb-4">
+				<template #cell(belegungVonAbschnitt)="{ rowData }">
+					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungVonAbschnitt" @change="belegungVonAbschnitt => patchSprachbelegung({belegungVonAbschnitt: Number(belegungVonAbschnitt), sprache: rowData.sprache})" headless />
+				</template>
+				<template #cell(belegungVonJahrgang)="{ rowData }">
+					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungVonJahrgang" @change="belegungVonJahrgang => patchSprachbelegung({belegungVonJahrgang, sprache: rowData.sprache})" headless />
+				</template>
+				<template #cell(belegungBisAbschnitt)="{ rowData }">
+					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungBisAbschnitt" @change="belegungBisAbschnitt => patchSprachbelegung({belegungBisAbschnitt: Number(belegungBisAbschnitt), sprache: rowData.sprache})" headless />
+				</template>
+				<template #cell(belegungBisJahrgang)="{ rowData }">
+					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungBisJahrgang" @change="belegungBisJahrgang => patchSprachbelegung({belegungBisJahrgang, sprache: rowData.sprache})" headless />
+				</template>
+				<!--  -->
 			</svws-ui-data-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="opacity-50">
@@ -25,22 +37,22 @@
 <script setup lang="ts">
 
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
-	import type { DataTableColumn } from "@ui";
+	import type { DataTableColumn, InputDataType } from "@ui";
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
-		{ key: "sprache", label: "Sp", tooltip: "Kürzel der Sprache", align: 'center', fixedWidth: 4 },
-		{ key: "reihenfolge", label: "RF", tooltip: "Reihenfolge", align: 'center', fixedWidth: 4 },
-		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang", align: 'center', fixedWidth: 4 },
-		{ key: "belegungVonAbschnitt", label: "ab Hj", tooltip: "belegt ab Abschnitt", align: 'center', fixedWidth: 4 },
-		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang", align: 'center', fixedWidth: 4 },
-		{ key: "belegungBisAbschnitt", label: "bis Hj", tooltip: "belegt bis Abschnitt", align: 'center', fixedWidth: 4 },
-		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center', fixedWidth: 6 },
-		{ key: "hatKleinesLatinum", label: "kl. Lat.", tooltip: " Kleines Latinum erreicht?", align: 'center', fixedWidth: 4 },
-		{ key: "hatLatinum", label: "Lat.", tooltip: "Latinum  erreicht?", align: 'center', fixedWidth: 4 },
-		{ key: "hatGraecum", label: "Grae.", tooltip: "Graecum erreicht?", align: 'center', fixedWidth: 4 },
-		{ key: "hatHebraicum", label: "Hebr.", tooltip: "Hebraicum erreicht?", align: 'center', fixedWidth: 4 },
+		{ key: "sprache", label: "Sp", tooltip: "Kürzel der Sprache", align: 'center' },
+		{ key: "reihenfolge", label: "RF", tooltip: "Reihenfolge", align: 'center' },
+		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang", align: 'center' },
+		{ key: "belegungVonAbschnitt", label: "ab Hj", tooltip: "belegt ab Abschnitt", align: 'center' },
+		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang", align: 'center' },
+		{ key: "belegungBisAbschnitt", label: "bis Hj", tooltip: "belegt bis Abschnitt", align: 'center' },
+		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center' },
+		{ key: "hatKleinesLatinum", label: "kl. Lat.", tooltip: " Kleines Latinum erreicht?", align: 'center' },
+		{ key: "hatLatinum", label: "Lat.", tooltip: "Latinum  erreicht?", align: 'center' },
+		{ key: "hatGraecum", label: "Grae.", tooltip: "Graecum erreicht?", align: 'center' },
+		{ key: "hatHebraicum", label: "Hebr.", tooltip: "Hebraicum erreicht?", align: 'center' },
 	];
 
 	const colsSprachpruefungen: Array<DataTableColumn> = [
@@ -58,5 +70,17 @@
 		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center', fixedWidth: 6 },
 		{ key: "note", label: "Note", tooltip: "die Prüfungsnote", align: 'center', fixedWidth: 6 },
 	];
+
+	function abschnitt(item: InputDataType) {
+		if (typeof item !== 'number')
+			return false;
+		return (item < 1 || item > 2)
+	}
+
+	function jahrgang(item: InputDataType) {
+		if (typeof item !== 'string')
+			return false;
+		return (Number(item) < 0 || Number(item) > 13)
+	}
 
 </script>

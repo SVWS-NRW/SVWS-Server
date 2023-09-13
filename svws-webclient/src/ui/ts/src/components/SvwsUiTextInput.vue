@@ -66,11 +66,9 @@
 
 <script setup lang="ts">
 
-	import type { InputType } from "../types";
+	import type { InputType, InputDataType } from "../types";
 	import { useSlots, ref, computed, watch, type ComputedRef, type Ref } from "vue";
 	import { genId } from "../utils";
-
-	type InputDataType = string | number | null;
 
 	defineOptions({
 		inheritAttrs: false,

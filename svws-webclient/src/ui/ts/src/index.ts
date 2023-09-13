@@ -48,4 +48,4 @@ export {
 	SvwsUiDropData,
 } from './components'
 
-export type { DataTableColumn } from "./types";
+export type { DataTableColumn, InputDataType } from "./types";
