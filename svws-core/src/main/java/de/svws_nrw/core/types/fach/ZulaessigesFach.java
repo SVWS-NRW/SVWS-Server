@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 import de.svws_nrw.core.adt.Pair;
@@ -4984,10 +4985,16 @@ public enum ZulaessigesFach {
 	public final @NotNull FachKatalogEintrag@NotNull[] historie;
 
 	/** Eine HashMap mit allen zulässigen Fächern. Der Zugriff erfolgt dabei über die ID */
-	private static final @NotNull HashMap<@NotNull Long, ZulaessigesFach> _mapID = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull Long, @NotNull ZulaessigesFach> _mapID = new HashMap<>();
 
 	/** Eine HashMap mit zulässigen Fächern. Der Zugriff erfolgt dabei das Statistik-Kürzel */
-	private static final @NotNull HashMap<@NotNull String, ZulaessigesFach> _mapKuerzelASD = new HashMap<>();
+	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapKuerzelASD = new HashMap<>();
+
+	/** Eine Liste mit allen atomaren Kürzeln von Fremdsprachen */
+	private static final @NotNull List<@NotNull String> _listFremdsprachenKuerzel = new ArrayList<>();
+
+	/** Eine HashMap mit den zulässigen Fremdsprachen-Fächern. Der Zugriff erfolgt dabei über das atomare Kürzel des Faches. Sie enthält nur das Fach, wo das atomare Kürzel mit dem Statistik-Kürzel übereinstimmt. */
+	private static final @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> _mapFremdsprachenKuerzelAtomar = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo das Fach zulässig ist */
 	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
@@ -5023,11 +5030,47 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die Map von den ASD-Kürzeln der Fächer auf die zugehörigen Fächer
 	 */
-	private static @NotNull HashMap<@NotNull String, ZulaessigesFach> getMapByASDKuerzel() {
-		if (_mapKuerzelASD.size() == 0)
-			for (final ZulaessigesFach s : ZulaessigesFach.values())
+	private static @NotNull HashMap<@NotNull String, @NotNull ZulaessigesFach> getMapByASDKuerzel() {
+		if (_mapKuerzelASD.isEmpty())
+			for (final @NotNull ZulaessigesFach s : ZulaessigesFach.values())
 				_mapKuerzelASD.put(s.daten.kuerzelASD, s);
 		return _mapKuerzelASD;
+	}
+
+
+	/**
+	 * Gibt eine Map von den atomaren Kürzeln der Fremdsprachen auf eine Liste der zugehörigen
+	 * Sprach-Fächer zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den atomaren Kürzeln der Fremdsprachen auf eine Liste der zugehörigen Sprach-Fächer
+	 */
+	private static @NotNull Map<@NotNull String, @NotNull ZulaessigesFach> getMapFremdsprachenByKuerzelAtomar() {
+		if (_mapFremdsprachenKuerzelAtomar.isEmpty()) {
+			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
+				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
+					continue;
+				_mapFremdsprachenKuerzelAtomar.put(s.daten.kuerzel, s);
+			}
+		}
+		return _mapFremdsprachenKuerzelAtomar;
+	}
+
+
+	/**
+	 * Gibt die Liste aller atomaren Kürzeln von Fremdsprachen-Fächern zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Liste aller atomaren Kürzeln von Fremdsprachen-Fächern
+	 */
+	public static @NotNull List<@NotNull String> getListFremdsprachenKuerzelAtomar() {
+		if (_listFremdsprachenKuerzel.isEmpty()) {
+			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
+				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
+					continue;
+				_listFremdsprachenKuerzel.add(s.daten.kuerzel);
+			}
+		}
+		return _listFremdsprachenKuerzel;
 	}
 
 
@@ -5058,8 +5101,8 @@ public enum ZulaessigesFach {
 	 *
 	 * @return die zulässigen Fächer in der angegebenen Schulform
 	 */
-	public static @NotNull List<ZulaessigesFach> get(final Schulform schulform) {
-		final @NotNull ArrayList<ZulaessigesFach> faecher = new ArrayList<>();
+	public static @NotNull List<@NotNull ZulaessigesFach> get(final Schulform schulform) {
+		final @NotNull ArrayList<@NotNull ZulaessigesFach> faecher = new ArrayList<>();
 		if (schulform == null)
 			return faecher;
 		for (final @NotNull ZulaessigesFach fach : ZulaessigesFach.values())
@@ -5104,6 +5147,21 @@ public enum ZulaessigesFach {
 	 */
 	public static @NotNull ZulaessigesFach getByKuerzelASD(final String kuerzel) {
 		final ZulaessigesFach result = getMapByASDKuerzel().get(kuerzel);
+		return (result == null) ? ZulaessigesFach.DEFAULT : result;
+	}
+
+
+	/**
+	 * Gibt das Fremdsprachen-Fach zurück, welches dem übergebenen Kürzel zugeordnet ist.
+	 * Ist der übergebene Wert ungültig, so wird {@link ZulaessigesFach#DEFAULT}
+	 * zurückgeben.
+	 *
+	 * @param kuerzel   das atomare Kürzel des Faches
+	 *
+	 * @return das zugehörige Fach oder {@link ZulaessigesFach#DEFAULT}
+	 */
+	public static @NotNull ZulaessigesFach getFremdspracheByKuerzelAtomar(final String kuerzel) {
+		final ZulaessigesFach result = getMapFremdsprachenByKuerzelAtomar().get(kuerzel);
 		return (result == null) ? ZulaessigesFach.DEFAULT : result;
 	}
 
