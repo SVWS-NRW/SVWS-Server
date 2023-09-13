@@ -1,24 +1,22 @@
+import type { KlassenListeEintrag, List, SchuelerListeEintrag } from "@core";
 import type { Locator, Page} from "@playwright/test";
 import { expect } from "@playwright/test";
 import { api } from "../../api/Api";
-import type { SchuelerListeEintrag } from "@core";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
 
 export class SchuelerAuswahlPage {
 
 	// Element
-	rg_tabellenkopf : any;
-	rg_tabelleninhalt : any;
-	rg_tabellenfoot : any;
-	tabelle : any;
-	listeSchueler : any;
-	listeKlassen : any;
+	rg_tabellenkopf : Locator;
+	rg_tabelleninhalt : Locator;
+	rg_tabellenfoot : Locator;
+	tabelle : Locator;
+	listeSchueler? : List<SchuelerListeEintrag>;
+	listeKlassen? : Map<number, KlassenListeEintrag>;
 
-	constructor(public page: Page) { }
+	constructor(public page: Page) {
 
-	async init () {
 		this.tabelle = this.page.getByRole('table').nth(0);
 		this.rg_tabellenkopf = this.tabelle.getByRole('rowgroup').nth(0);
 		this.rg_tabelleninhalt = this.tabelle.getByRole('rowgroup').nth(1);
@@ -44,6 +42,8 @@ export class SchuelerAuswahlPage {
 	}
 
 	async clickSchueler(eintrag : SchuelerListeEintrag) {
+		if (this.listeSchueler === undefined || this.listeKlassen === undefined)
+			return;
 		const klassen_kuerzel = this.listeKlassen.get(eintrag.idKlasse)?.kuerzel;
 		const idjahrgang = this.listeKlassen.get(eintrag.idKlasse)?.idJahrgang;
 		const role_name = klassen_kuerzel+' '+eintrag.nachname+' '+eintrag.vorname;
@@ -53,6 +53,8 @@ export class SchuelerAuswahlPage {
 	}
 
 	public getSchuelermitJahrgang(id : number) : SchuelerListeEintrag[] {
+		if (this.listeSchueler === undefined || this.listeKlassen === undefined)
+			return [];
 		const liste : SchuelerListeEintrag[] = [];
 		for (const eintrag of this.listeSchueler) {
 			if ((id === -1) && (eintrag.status === 2))

@@ -5,9 +5,12 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"install": "npx playwright install",
-		"test" : "npx playwright test",
-		"show": "npx playwright show-report"
+		"install": "playwright install",
+		"test" : "playwright test",
+		"show": "playwright show-report",
+		"lint": "eslint 'src/**/*.ts' --cache",
+		"lint-fix": "eslint 'src/**/*.ts' --fix --cache",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"keywords": [],
 	"author": "",
