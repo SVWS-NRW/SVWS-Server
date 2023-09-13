@@ -9,7 +9,9 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
+import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
@@ -179,6 +181,7 @@ public class StupasSchulmanagerFormatReader {
 			if ((lehrer == null) && (klassen.size() == 0))
 				continue;
 
+			// Unterricht erzeugen und hinzufügen.
 			final StundenplanUnterricht u = new StundenplanUnterricht();
 			u.id = unterricht_by_id.size();
 			u.idZeitraster = zeitraster.id;
@@ -194,6 +197,21 @@ public class StupasSchulmanagerFormatReader {
 				u.klassen.add(klasse.id);
 			unterricht_by_id.put(u.id, u);
 			m.unterrichtAdd(u);
+
+			// Kurs- oder Klassenunterricht?
+			// Mit "line.KursId" hat man die Objektreferenz.
+
+			if ((klassen.size() == 1) && getIstOberstufe(klassen.get(0).kuerzel)) {
+				// Klassenunterricht
+				final StundenplanKlassenunterricht klassenunterricht = new StundenplanKlassenunterricht();
+				klassenunterricht.idFach = u.idFach;
+				//klassenunterricht.idKlasse
+			} else {
+				// Kursunterricht
+				final StundenplanKurs kurs = new StundenplanKurs();
+				kurs.id = line.KursId;
+				kurs.wochenstunden = 1;
+			}
 		}
 
 	}
@@ -345,7 +363,7 @@ public class StupasSchulmanagerFormatReader {
 
 		String jahrgangKuerzel = null;
 
-		if (klassenKuerzel.equals("EF") || klassenKuerzel.equals("Q1") || klassenKuerzel.equals("Q2")) {
+		if (getIstOberstufe(klassenKuerzel)) {
 			// Oberstufe
 			jahrgangKuerzel = klassenKuerzel;
 		} else {
@@ -371,6 +389,10 @@ public class StupasSchulmanagerFormatReader {
 		}
 
 		return jahrgang_by_kuerzel.get(jahrgangKuerzel);
+	}
+
+	private static boolean getIstOberstufe(final String klassenKuerzel) {
+		return klassenKuerzel.equals("EF") || klassenKuerzel.equals("Q1") || klassenKuerzel.equals("Q2");
 	}
 
 }

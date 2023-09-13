@@ -3,6 +3,8 @@ package de.svws_nrw.core.stundenplan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 
 /**
@@ -21,6 +24,7 @@ import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 class StundenplanManagerTest {
 
 	// TODO Zwei Kalenderwochenzuordnungen via Definition drehen.
+	// TODO Alle "private" Mengen des Managers testen.
 
 	/**
 	 * Diese Klasse testet den {@link StundenplanManager} mit randomisierten Daten.
@@ -35,12 +39,40 @@ class StundenplanManagerTest {
 		test_fach_getter(m);
 		test_jahrgang_getter(m);
 		test_kwz_getter(m);
+		test_klasse_getter(m);
+		test_klassenunterricht_getter(m);
 
 		// Datenkonsistenz überprüfen
 		assertEquals(43, m.raumGetMengeAsList().size());
 		assertEquals(60, m.lehrerGetMengeAsList().size());
-		assertEquals(32, m.klasseGetMengeAsList().size());
 		assertEquals(35, m.schieneGetMengeAsList().size());
+	}
+
+	private static void test_klassenunterricht_getter(final StundenplanManager m) {
+		// ...
+	}
+
+	private static void test_klasse_getter(final StundenplanManager m) {
+		assertEquals(32, m.klasseGetMengeAsList().size());
+
+		final StundenplanKlasse klasseAlt = m.klasseGetByIdOrException(7);
+		assertEquals(7, klasseAlt.id);
+		assertEquals("06d", klasseAlt.kuerzel);
+		assertEquals(1, klasseAlt.jahrgaenge.size());
+
+		final StundenplanJahrgang jg06 = m.jahrgangGetByIdOrException(klasseAlt.jahrgaenge.get(0));
+		assertEquals("06", jg06.kuerzel);
+
+		final StundenplanKlasse klasseNeu = new StundenplanKlasse();
+		klasseNeu.id = klasseAlt.id;
+		klasseNeu.kuerzel = "06x";
+		klasseNeu.bezeichnung = klasseAlt.bezeichnung;
+		klasseNeu.jahrgaenge = new ArrayList<>(klasseAlt.jahrgaenge);
+		klasseNeu.schueler = new ArrayList<>(klasseAlt.schueler);
+		m.klassePatchAttributes(klasseNeu);
+		assertEquals("06x", m.klasseGetByIdOrException(7).kuerzel);
+		m.klassePatchAttributes(klasseAlt);
+		assertEquals("06d", m.klasseGetByIdOrException(7).kuerzel);
 	}
 
 	private static void test_kwz_getter(final StundenplanManager m) {
@@ -94,6 +126,7 @@ class StundenplanManagerTest {
 		assertEquals(8, m.jahrgangGetMengeAsList().size());
 
 		final StundenplanJahrgang jahrgangAlt = m.jahrgangGetByIdOrException(0);
+		assertEquals(0, jahrgangAlt.id);
 		assertEquals("05", jahrgangAlt.kuerzel);
 
 		final StundenplanJahrgang jahrgangNeu = new StundenplanJahrgang();
@@ -103,6 +136,7 @@ class StundenplanManagerTest {
 		m.jahrgangPatchAttributes(jahrgangNeu);
 
 		final StundenplanJahrgang jahrgangCheck = m.jahrgangGetByIdOrException(0);
+		assertEquals(0, jahrgangCheck.id);
 		assertEquals("Stufe 05", jahrgangCheck.kuerzel);
 
 		m.jahrgangPatchAttributes(jahrgangAlt);
