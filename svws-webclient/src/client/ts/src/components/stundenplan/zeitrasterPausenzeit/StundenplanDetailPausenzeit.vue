@@ -10,9 +10,13 @@
 		<svws-ui-spacing :size="2" />
 		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols" selectable v-model="selected">
 			<template #cell(id)="{ rowData }">
-				<div>
-					{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
-				</div>
+				{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
+			</template>
+			<template #cell(bereiche)="{ value }">
+				<template v-for="bereich in value">{{ stundenplanManager().aufsichtsbereichGetByIdOrException(bereich).kuerzel }} &nbsp;</template>
+			</template>
+			<template #cell(wochentyp)="{ value }">
+				{{ value === 0 ? '': String.fromCharCode(64 + value) }}
 			</template>
 			<template #footerActions>
 				<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
@@ -45,7 +49,9 @@
 	const selected = ref<StundenplanPausenaufsicht[]>([]);
 
 	const cols = [
-		{ key: "id", label: "Aufsicht", span: 2, sortable: false },
+		{ key: "id", label: "Aufsicht", sortable: false },
+		{ key: 'bereiche', label: "Bereiche", span: 2 },
+		{ key: 'wochentyp', label: "Typ", span: 0.5 }
 	];
 
 	async function patchBeginn(event: string | number) {
