@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 
-	import { Schuljahresabschnitt } from "@core";
+	import type { Schuljahresabschnitt } from "@core";
 
 	const props = defineProps<{
 		abschnitte: Map<number, Schuljahresabschnitt>;
@@ -29,6 +29,7 @@
 		aktSchulabschnitt: number;
 	}>();
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
 	const abschnitt = props.abschnitte.get(props.aktSchulabschnitt);
 	const aktBezeichnung = `${abschnitt?.schuljahr}.${abschnitt?.abschnitt}`;
 

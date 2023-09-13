@@ -7,7 +7,6 @@ import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz } from "@core";
 
 import { api } from "~/router/Api";
-import { routeError } from "~/router/error/RouteError";
 import { routerManager } from "./RouteManager";
 
 /**

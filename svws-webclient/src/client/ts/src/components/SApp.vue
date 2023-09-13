@@ -83,7 +83,7 @@
 	import type { AuswahlChildData } from './AuswahlChildData';
 	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
-	import {computed, onMounted, ref} from "vue";
+	import {computed, ref} from "vue";
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
