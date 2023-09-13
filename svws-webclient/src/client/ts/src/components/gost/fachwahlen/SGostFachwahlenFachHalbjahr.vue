@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";

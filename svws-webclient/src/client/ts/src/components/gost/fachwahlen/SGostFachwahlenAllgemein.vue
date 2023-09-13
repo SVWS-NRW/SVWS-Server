@@ -63,7 +63,7 @@
 
 <script setup lang="ts">
 
-	import type { DataTableColumn } from "@svws-nrw/svws-ui";
+	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenAllgemeinProps } from "./SGostFachwahlenAllgemeinProps";
 	import type { ComputedRef} from "vue";
 	import { computed, ref } from "vue";
