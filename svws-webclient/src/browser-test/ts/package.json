@@ -4,7 +4,11 @@
 	"description": "",
 	"main": "index.js",
 	"type": "module",
-	"scripts": {},
+	"scripts": {
+		"install": "npx playwright install",
+		"test" : "npx playwright test",
+		"show": "npx playwright show-report"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",

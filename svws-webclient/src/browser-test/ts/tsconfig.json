@@ -4,12 +4,13 @@
     	"types": ["node"],
 		"baseUrl": ".",
 		"paths": {
-			"@core": ["../core/ts/src/index.ts"]
+			"~/*": ["./src/*"],
+			"@core": ["../../core/ts/src/index.ts"]
 		}
   },
   "include": [
-    "*.ts",
+	"*.ts",
     "./src/**/*.ts",
-	"../core/ts/src/**/*"
   ]
 }
+

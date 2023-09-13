@@ -10,7 +10,8 @@
 		"svws-webclient/src/ui/ts",
 		"svws-webclient/src/components/ts",
 		"svws-webclient/src/client/ts",
-		"svws-webclient/src/client-test/ts"
+		"svws-webclient/src/client-test/ts",
+		"svws-webclient/src/browser-test/ts"
 	],
 	"devDependencies": {
 		"@histoire/plugin-vue": "^0.17.1",

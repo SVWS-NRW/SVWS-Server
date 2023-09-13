@@ -19,7 +19,6 @@ test.describe("navigation", () => {
 		await page.locator('text=Berg').nth(1).click();
 		const b = await page.getByLabel('private E-Mail-Adresse').inputValue();
 		expect(b).toContain("Berg");
-
 	});
-});
 
+});

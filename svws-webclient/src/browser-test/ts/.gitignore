@@ -1,6 +1,7 @@
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/tests-examples/
 
 
 # Logs
@@ -64,3 +65,6 @@ jspm_packages/
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/test-results/
+/playwright-report/
+/playwright/.cache/

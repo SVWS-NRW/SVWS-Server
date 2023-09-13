@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe("navigation", () => {
+
 	test("main navigation", async ({ page }) => {
 		await page.goto('/');
 		await Promise.all([
@@ -30,5 +31,5 @@ test.describe("navigation", () => {
 		await page.getByRole('button', { name: 'Individualdaten' }).click();
 		await page.waitForURL('#/schueler/9311/daten');
 	});
-});
 
+});

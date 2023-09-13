@@ -1,4 +1,4 @@
-import {  test, expect  } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 const testdata = [
 	{  field: 'Rufname', data: 'TestRufname'  },
@@ -18,7 +18,6 @@ const testdata = [
 	{ field: 'Geburtsdatum', data: '2005-12-31' },
 	{ field: 'Anmeldedatum', data: '2015-12-31' },
 	{ field: 'Aufnahmedatum', data: '2015-12-31' },
-
 ]
 
 test('test', async ({  page  }) => {

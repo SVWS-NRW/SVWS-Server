@@ -8,5 +8,4 @@ test('test', async ({ page }) => {
 	await page.getByLabel('Alle Vornamen').fill('Test');
 	await page.locator('div:nth-child(3) > .mt-4 > .input-wrapper > div > .multiselect-input-component > .dropdown-icon > .icon > .pt-0\\.5').first().click();
 	await page.getByRole('option', { name: 'der Demokratischen Volksrepublik Korea' }).click();
-
 });

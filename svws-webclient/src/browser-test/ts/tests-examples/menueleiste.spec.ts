@@ -1,4 +1,5 @@
 import { Page, expect, test } from "@playwright/test";
+
 const schueler_id = 9299;
 
 test.beforeEach( async ( { page }) => {
@@ -20,4 +21,4 @@ test.describe('Schüler -> Tab Laufbahnplanung',() => {
 		const buttons = menueleiste.getByRole('button');
 		await expect(buttons).toHaveCount(7);
 	})
-})
+});

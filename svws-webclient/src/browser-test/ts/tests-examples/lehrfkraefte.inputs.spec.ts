@@ -19,11 +19,9 @@ test('test', async ({ page }) => {
 	await page.getByRole('button', { name: 'Anmelden' }).click();
 	await page.getByRole('link', { name: 'Lehrkräfte' }).click();
 
-
-	for (let i = 0; i<testdata.length; i++) {
+	for (let i = 0; i < testdata.length; i++) {
 		await page.getByLabel(testdata[i].field).click();
 		await page.getByLabel(testdata[i].field).fill(testdata[i].data);
 		await page.waitForTimeout(1000);
 	}
-
 });
