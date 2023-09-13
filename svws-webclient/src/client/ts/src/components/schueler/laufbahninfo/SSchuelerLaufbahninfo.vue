@@ -21,6 +21,17 @@
 				<template #cell(belegungBisJahrgang)="{ rowData }">
 					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungBisJahrgang" @change="belegungBisJahrgang => patchSprachbelegung({belegungBisJahrgang, sprache: rowData.sprache})" headless />
 				</template>
+				<template #cell(referenzniveau)="{ rowData }">
+					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
+					<svws-ui-checkbox v-else-if="rowData.sprache === 'H'" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
+					<template v-else-if="rowData.sprache === 'L'">
+						<svws-ui-checkbox v-model="hatKleinesLatinum" headless title="Kleines Latinum">Kleines Latinum</svws-ui-checkbox>
+						<svws-ui-checkbox v-model="hatLatinum" headless title="Latinum">Latinum</svws-ui-checkbox>
+					</template>
+					<template v-else>
+						<svws-ui-multi-select title="Referenzniveau" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @change="(referenzniveau: Sprachreferenzniveau) => patchSprachbelegung({referenzniveau: referenzniveau.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="(i: Sprachreferenzniveau)=>i.name()" />
+					</template>
+				</template>
 				<!--  -->
 			</svws-ui-data-table>
 		</svws-ui-content-card>
@@ -38,6 +49,8 @@
 
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn, InputDataType } from "@ui";
+	import { computed } from 'vue';
+	import { Sprachreferenzniveau } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
@@ -48,11 +61,7 @@
 		{ key: "belegungVonAbschnitt", label: "ab Hj", tooltip: "belegt ab Abschnitt", align: 'center' },
 		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang", align: 'center' },
 		{ key: "belegungBisAbschnitt", label: "bis Hj", tooltip: "belegt bis Abschnitt", align: 'center' },
-		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center' },
-		{ key: "hatKleinesLatinum", label: "kl. Lat.", tooltip: " Kleines Latinum erreicht?", align: 'center' },
-		{ key: "hatLatinum", label: "Lat.", tooltip: "Latinum  erreicht?", align: 'center' },
-		{ key: "hatGraecum", label: "Grae.", tooltip: "Graecum erreicht?", align: 'center' },
-		{ key: "hatHebraicum", label: "Hebr.", tooltip: "Hebraicum erreicht?", align: 'center' },
+		{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", align: 'center' },
 	];
 
 	const colsSprachpruefungen: Array<DataTableColumn> = [
@@ -82,5 +91,45 @@
 			return false;
 		return (Number(item) < 0 || Number(item) > 13)
 	}
+
+	const hatKleinesLatinum = computed<boolean>({
+		get: () => {
+			for (const sprache of props.sprachbelegungen())
+				if (sprache.sprache === 'L')
+					return sprache.hatKleinesLatinum;
+			return false;
+		},
+		set: (hatKleinesLatinum) => void props.patchSprachbelegung({hatKleinesLatinum, sprache: 'L'})
+	});
+
+	const hatLatinum = computed<boolean>({
+		get: () => {
+			for (const sprache of props.sprachbelegungen())
+				if (sprache.sprache === 'L')
+					return sprache.hatLatinum;
+			return false;
+		},
+		set: (hatLatinum) => void props.patchSprachbelegung({hatLatinum, sprache: 'L'})
+	});
+
+	const hatGraecum = computed<boolean>({
+		get: () => {
+			for (const sprache of props.sprachbelegungen())
+				if (sprache.sprache === 'G')
+					return sprache.hatGraecum;
+			return false;
+		},
+		set: (hatGraecum) => void props.patchSprachbelegung({hatGraecum, sprache: 'G'})
+	});
+
+	const hatHebraicum = computed<boolean>({
+		get: () => {
+			for (const sprache of props.sprachbelegungen())
+				if (sprache.sprache === 'H')
+					return sprache.hatHebraicum;
+			return false;
+		},
+		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum, sprache: 'H'})
+	});
 
 </script>
