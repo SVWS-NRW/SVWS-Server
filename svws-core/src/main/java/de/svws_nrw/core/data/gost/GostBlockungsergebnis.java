@@ -34,10 +34,7 @@ public class GostBlockungsergebnis {
 	/** Gibt an, ob dieses Ergebnis markiert wurde. Dies kann verwendet werden, um besonders geeignete Blockungsergebnisse hervorzuheben. */
 	public boolean istMarkiert = false;
 
-	/** Gibt an, ob dieses Ergebnis als Vorlage für eine Blockungsdefinition dient. Eine Vorlage wird
-	 * mit der Definition automatisch angepasst in Bezug auf die Kurs- und Schienenanzahl mit angepasst,
-	 * obwohl dies bei berechneten Ergebnissen nicht vorgesehen ist. Jede Blockungsdefinition hat
-	 * genau eine Vorlage zugeordnet. */
+	/** Gibt an, ob dieses Ergebnis bei einer aktivieren einen Blockung verwendet wurde. */
 	public boolean istVorlage = false;
 
 	/** Eine Liste der Schienen, welche zugeordnete Kurse beinhalten. */

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DBUtilsSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
@@ -183,7 +185,41 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.size() <= 0)
+			return Response.status(Status.OK).build();
+		try {
+			conn.transactionBegin();
+			DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			// Bestimme die Blockung
+			final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
+			if (ergebnis == null)
+				return OperationError.NOT_FOUND.getResponse();
+			for (final Entry<String, Object> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				final Object value = entry.getValue();
+				switch (key) {
+					case "id" -> {
+						final Long patch_id = JSONMapper.convertToLong(value, true);
+						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
+							throw OperationError.BAD_REQUEST.exception();
+					}
+					case "istMarkiert" -> ergebnis.IstMarkiert = JSONMapper.convertToBoolean(value, false);
+					case "istVorlage" -> ergebnis.IstVorlage = JSONMapper.convertToBoolean(value, false);
+					default -> throw OperationError.BAD_REQUEST.exception();
+				}
+			}
+			conn.transactionPersist(ergebnis);
+			conn.transactionCommit();
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+		}
+		return Response.status(Status.OK).build();
 	}
 
 

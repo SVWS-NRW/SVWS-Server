@@ -34,7 +34,7 @@ public class GostBlockungsdaten {
 	/** Das Halbjahr, welchem die Kursblockung zugeordnet ist (0=EF.1, 1=EF.2, 2=Q1.1, 3=Q1.2, 4=Q2.1, 5=Q2.2) */
 	public int gostHalbjahr = GostHalbjahr.EF1.id;
 
-	/** Gibt an, ob diese Blockung aktiviert wurde, d.h. bereits in die Leistungsdaten übertragen wurde. */
+	/** Gibt an, ob diese Blockung aktiviert wurde, d.h. in die Leistungsdaten übertragen wurde. Dort können ggf. in der Zwischenzeit Anpassungen erfolgt sein. */
 	public boolean istAktiv = false;
 
 	/** Die Definition der Schienen */

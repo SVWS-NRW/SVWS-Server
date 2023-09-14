@@ -264,6 +264,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					}
 					case "name" -> blockung.Name = JSONMapper.convertToString(value, false, false, Schema.tab_Gost_Blockung.col_Name.datenlaenge());
 					case "gostHalbjahr" -> throw OperationError.BAD_REQUEST.exception();
+					case "istAktiv" -> blockung.IstAktiv = JSONMapper.convertToBoolean(value, false);
 					// TODO: ggf. Unterstützung für das Setzen von "schienen", "regeln" und "kurse
 					default -> throw OperationError.BAD_REQUEST.exception();
 				}
@@ -313,11 +314,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final Long blockungID = lastID == null ? 1 : lastID.MaxID + 1;
 			// Lese zunächst die bestehenden Blockungen mit dem Abiturjahr und dem Halbjahr ein (für weitere Prüfungen)
 			final List<DTOGostBlockung> blockungen = conn.queryList("SELECT e FROM DTOGostBlockung e WHERE e.Abi_Jahrgang = ?1 and e.Halbjahr = ?2", DTOGostBlockung.class, abijahrgang.Abi_Jahrgang, gostHalbjahr);
-			// Prüfe, ob es bereits eine aktivierte Blockung gibt. In diesem Fall sollte der Aufruf fehlschlagen... (ggf. muss die aktivierte Blockung deaktiviert werden)
-			// TODO evtl. weitere Prüfungen: Prüfe abiturjahr + gostHalbjahr in Bezug auf den aktuellen Abschnitt (GUI-Warnung sinnvoll)
-			// TODO evtl. weitere Prüfungen: Fehler: alte Blockung -> nicht erstellen...
-			if (blockungen.stream().filter(b -> b.IstAktiv).count() > 0)
-				throw OperationError.CONFLICT.exception("Es gibt bereits eine aktivierte Blockung, so dass die Daten der aktivierten Blockung bereits in die Leistungsdaten der Schüler übertragen wurden.");
 			// Bestimme den Namen der neuen Blockung
 			final Set<String> namen = blockungen.stream().map(b -> b.Name).collect(Collectors.toUnmodifiableSet());
 			int nameIndex = 1;
@@ -842,8 +838,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (listJahrgaenge.isEmpty())
 				throw OperationError.NOT_FOUND.exception();
 			final List<Long> jahrgangIDs = listJahrgaenge.stream().map(j -> j.ID).toList();
-
-			// TODO prüfe, ob bereits eine aktive Blockung vorhanden ist - wenn ja, dann restauriere die Blockung nicht, da es nicht zwei aktive Blockungen geben kann
 
 			// Lese die Kurse für den Schuljahresabschnitt und dem zugehörigen Jahrgang ein
 			final List<DTOKurs> listKurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Jahrgang_ID IN ?2",
