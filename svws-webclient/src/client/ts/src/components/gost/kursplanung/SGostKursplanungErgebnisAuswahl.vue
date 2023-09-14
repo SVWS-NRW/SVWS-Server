@@ -75,7 +75,7 @@
 						</template>
 					</svws-ui-tooltip>
 				</span>
-				<div v-if="(row.id === auswahlErgebnis?.id && !istAktiveBlockung())" class="flex gap-1">
+				<div v-if="(row.id === auswahlErgebnis?.id)" class="flex gap-1">
 					<svws-ui-button size="small" type="secondary" class="cursor-pointer" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen."> Ableiten </svws-ui-button>
 					<svws-ui-button v-if="getErgebnisse().size() > 1" type="trash" class="cursor-pointer" @click.stop="remove_ergebnis" :disabled="apiStatus.pending || selected_ergebnisse.length > 0" title="Ergebnis löschen" />
 				</div>
@@ -115,10 +115,6 @@
 
 	function getErgebnisse() : List<GostBlockungsergebnisListeneintrag> {
 		return props.getDatenmanager().ergebnisGetListeSortiertNachBewertung();
-	}
-
-	function istAktiveBlockung() : boolean {
-		return props.getDatenmanager().daten().istAktiv;
 	}
 
 	async function remove_ergebnisse() {

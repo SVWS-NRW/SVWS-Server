@@ -20,10 +20,7 @@
 							<i-ri-pushpin-line /> <template #content> Aktivierte Blockung </template>
 						</svws-ui-tooltip>
 					</div>
-					<div v-if="allow_add_blockung(props.halbjahr) && row === auswahlBlockung" class="inline-flex gap-1 h-5">
-						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
-							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
-						</s-gost-kursplanung-remove-blockung-modal>
+					<div v-if="row === auswahlBlockung" class="inline-flex gap-1 h-5">
 						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung"> Berechnen </svws-ui-button>
 						<svws-ui-tooltip position="top" v-else>
 							<svws-ui-button size="small" type="secondary" disabled> Berechnen </svws-ui-button>
@@ -33,6 +30,9 @@
 								</div>
 							</template>
 						</svws-ui-tooltip>
+						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
+							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
+						</s-gost-kursplanung-remove-blockung-modal>
 					</div>
 				</div>
 			</template>
@@ -74,13 +74,6 @@
 	}>();
 
 	const edit_blockungsname: Ref<boolean> = ref(false);
-
-	const allow_add_blockung = (row: GostHalbjahr): boolean => {
-		const curr_hj = (row.id === props.halbjahr.id);
-		if (!curr_hj || props.jahrgangsdaten === undefined)
-			return false;
-		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
-	}
 
 	const allow_berechne_blockung = computed(()=>
 		props.getDatenmanager().fachwahlGetAnzahl() > 0

@@ -19,9 +19,6 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 	}>();
 
-
-		console.log(props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse())
-
 	const modal = ref();
 
 	async function remove_blockung() {
@@ -31,4 +28,5 @@
 	const openModal = () => {
 		modal.value.openModal();
 	}
+
 </script>

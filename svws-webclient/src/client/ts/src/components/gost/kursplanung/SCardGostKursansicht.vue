@@ -235,11 +235,7 @@
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
-
-	const blockungsergebnis_aktiv: ComputedRef<boolean> = computed(() => props.hatErgebnis ? props.getErgebnismanager().getErgebnis().istVorlage : false);
-
-	const bereits_aktiv: ComputedRef<boolean> = computed(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id] || blockungsergebnis_aktiv.value || blockung_aktiv.value);
+	const bereits_aktiv: ComputedRef<boolean> = computed(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
 
 	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
 

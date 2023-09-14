@@ -86,8 +86,7 @@
 				<!-- Es folgen die einzelnen Tabellenzellen für die Schienen der Blockung -->
 				<template v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
-					<div role="cell" v-if="!getDatenmanager().daten().istAktiv"
-						class="data-table__td data-table__td__no-padding data-table__td__align-center p-0.5"
+					<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__align-center p-0.5"
 						:class="{
 							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
@@ -128,7 +127,7 @@
 						</div>
 					</div>
 					<!-- ... oder das Element in der Zelle ist nicht für Drag & Drop gedacht -->
-					<div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
+					<!-- <div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" @click="toggleKursAusgewaehlt(kurs)"
 							class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
 							:class="{
@@ -139,7 +138,7 @@
 							<div class="icon absolute right-1" v-if="istKursFixiertInSchiene(kurs, schiene).value"> <i-ri-pushpin-fill class="inline-block" /> </div>
 							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block" /> </div>
 						</div>
-					</div>
+					</div> -->
 				</template>
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->

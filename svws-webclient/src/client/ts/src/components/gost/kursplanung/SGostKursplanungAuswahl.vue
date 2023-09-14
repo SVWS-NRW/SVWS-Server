@@ -10,13 +10,13 @@
 						</svws-ui-tooltip>
 					</div>
 					<div v-if="row === halbjahr" class="inline-flex gap-1 -my-0.5">
-						<svws-ui-button v-if="!istBlockungPersistiert(row)" type="secondary" @click.stop="blockung_hinzufuegen">
+						<svws-ui-button type="secondary" @click.stop="blockung_hinzufuegen">
 							<span class="inline-flex items-center text-button">
 								<i-ri-add-line class="-mx-0.5" />
 							</span>
 							Blockung hinzufügen
 						</svws-ui-button>
-						<s-gost-kursplanung-modal-blockung-recover v-if="allow_restore_blockung(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
+						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
 							<svws-ui-button type="secondary" @click="openModal()">Wiederherstellen</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
 					</div>
@@ -43,13 +43,6 @@
 		if (props.jahrgangsdaten === undefined)
 			return true;
 		return props.jahrgangsdaten.istBlockungFestgelegt[row.id];
-	}
-
-	const allow_restore_blockung = (row: GostHalbjahr): boolean => {
-		const jahrgang = props.jahrgangsdaten?.jahrgang;
-		if (!jahrgang)
-			return false;
-		return (props.jahrgangsdaten.istBlockungFestgelegt[row.id] && props.mapBlockungen.length === 0) ? true : false;
 	}
 
 	async function select_hj(halbjahr: GostHalbjahr | null) {

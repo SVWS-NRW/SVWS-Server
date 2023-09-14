@@ -12,19 +12,19 @@
 							<template #body>
 								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="data-table__tr data-table__thead__tr" :class="{ 'font-medium': (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) }">
 									<div role="cell" :key="fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id"
-										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)"
+										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
 										@dragend="drag_ended()"
 										class="select-none data-table__td group"
 										:class="{
 											'bg-white text-black/50 dark:text-white/50' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined),
-											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)
+											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)
 										}"
 										:style="{ 'background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
 										<div class="flex items-center justify-between gap-1 w-full">
 											<div class="inline-flex items-center gap-1">
 												<span class="group-hover:bg-light rounded-sm w-3 -ml-1.5">
-													<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" v-if="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined) && (!blockung_aktiv)" />
+													<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" v-if="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)" />
 												</span>
 												<span>{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
 											</div>
@@ -38,7 +38,7 @@
 						</svws-ui-data-table>
 
 						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
-						<template v-if="!blockung_aktiv">
+						<template>
 							<div class="flex items-center mt-2" :class="{'text-error': dragAndDropData !== undefined, 'border-2 border-dashed border-black/10 dark:border-white/10': dragAndDropData === undefined}">
 								<div v-if="dragAndDropData !== undefined" class="py-2 px-3 flex flex-col text-center gap-2 items-center w-full h-full text-sm border-2 border-dashed">
 									<i-ri-delete-bin-line class="w-6 h-6" :class="{ 'bg-error': is_dragging }" />
@@ -55,7 +55,7 @@
 
 				<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
 				<div class="flex flex-col gap-1">
-					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen" v-if="!blockung_aktiv"><i-ri-sparkling-line />Verteilen</svws-ui-button>
+					<svws-ui-button class="w-full justify-center" type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen"><i-ri-sparkling-line />Verteilen</svws-ui-button>
 					<svws-ui-button class="w-full justify-center" type="secondary" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`"><i-ri-link />Zur Laufbahn</svws-ui-button>
 				</div>
 			</div>
@@ -101,7 +101,7 @@
 									</span>
 									<span class="py-0.5 font-medium">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
 									<span class="inline-flex items-center gap-1">
-										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value && !getDatenmanager().daten().istAktiv)">
+										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
 											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
 												<i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" />
 												<i-ri-forbid-line v-if="!verbieten_regel(kurs.id, schueler.id).value && !fixier_regel(kurs.id, schueler.id).value && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" class="inline-block" />
@@ -154,8 +154,6 @@
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 
-	const blockung_aktiv: ComputedRef<boolean> = computed(() => props.getDatenmanager().daten().istAktiv);
-
 	async function auto_verteilen() {
 		if (props.schueler !== undefined)
 			await props.autoKursSchuelerZuordnung(props.schueler.id);
@@ -191,14 +189,10 @@
 
 
 	const is_draggable = (idKurs: number, idSchueler: number) : ComputedRef<boolean> => computed(() => {
-		if (props.apiStatus.pending || props.getDatenmanager().daten().istAktiv)
+		if (props.apiStatus.pending)
 			return false;
 		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs);
 	});
-
-	function dropAllowTrash(e: DragEvent) {
-		e.preventDefault();
-	}
 
 	const is_drop_zone = (kurs: GostBlockungsergebnisKurs) : ComputedRef<boolean> => computed(() => {
 		if (dragAndDropData.value === undefined)

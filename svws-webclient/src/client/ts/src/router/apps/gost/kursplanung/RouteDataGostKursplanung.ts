@@ -262,7 +262,7 @@ export class RouteDataGostKursplanung {
 	public setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if ((this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
+		if ((this._state.value.auswahlErgebnis?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
 		if (value === undefined) {
 			this.setPatchedState({
