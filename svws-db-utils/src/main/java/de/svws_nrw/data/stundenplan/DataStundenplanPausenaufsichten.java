@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -159,12 +158,37 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 				throw OperationError.NOT_FOUND.exception("Lehrer mit der ID %d nicht gefunden.".formatted((Long) value));
 			dto.Lehrer_ID = lehrer.ID;
 		}),
-		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false))
+		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)),
+		Map.entry("bereiche", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	})
 	);
+
+	private void patchBereiche(final long id, final List<Long> bereiche) {
+		// Entferne ggf. die alten Bereiche
+		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = " + id);
+		conn.transactionFlush();
+		// Schreibe die neuen Bereiche
+		long nextID = conn.transactionGetNextID(DTOStundenplanPausenaufsichtenBereiche.class);
+		for (final Long bereich : bereiche)
+			conn.transactionPersist(new DTOStundenplanPausenaufsichtenBereiche(nextID++, id, bereich));
+		conn.transactionFlush();
+	}
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasic(id, is, DTOStundenplanPausenaufsichten.class, patchMappings);
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+		final DTOStundenplanPausenaufsichten dto = conn.queryByKey(DTOStundenplanPausenaufsichten.class, id);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		conn.transactionPersist(dto);
+		conn.transactionFlush();
+		// Passe die Bereiche an
+		patchBereiche(dto.ID, JSONMapper.convertToListOfLong(map.get("bereiche"), false));
+		return Response.status(Status.OK).build();
 	}
 
 
@@ -183,9 +207,21 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// Füge die Pausenaufsicht in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOStundenplanPausenaufsichten> initDTO = (dto, id) -> dto.ID = id;
-		return super.addBasic(is, DTOStundenplanPausenaufsichten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		for (final String attr : requiredCreateAttributes)
+			if (!map.containsKey(attr))
+				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+		// Erstelle das DTO und initialisiere es mit den übergeben Daten
+		final DTOStundenplanPausenaufsichten dto = newDTO(DTOStundenplanPausenaufsichten.class, (obj, id) -> obj.ID = id);
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		// Passe die Bereiche an
+		patchBereiche(dto.ID, JSONMapper.convertToListOfLong(map.get("bereiche"), false));
+		final StundenplanPausenaufsicht daten = dtoMapper.apply(dto);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

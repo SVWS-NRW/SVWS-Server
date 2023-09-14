@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -375,6 +376,43 @@ public final class JSONMapper {
 				throw new WebApplicationException("Der Wert null ist in diesem Array nicht erlaubt.", Response.Status.BAD_REQUEST);
 			result[i] = pvalue;
 		}
+		return result;
+	}
+
+
+	/**
+	 * Konvertiert das übergeben Objekt in eine Liste von Long-Werten, sofern es sich beim Inhalt um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 *
+	 * @param listObj    das zu konvertierende ListenObjekt
+	 * @param nullable   falls null für das Listen-Objekt gültig ist
+	 *
+	 * @return das konvertierte Listen-Objekt
+	 */
+	public static List<Long> convertToListOfLong(final Object listObj, final boolean nullable) {
+		if (listObj == null) {
+			if (nullable)
+				return null;
+			throw new WebApplicationException("Der Wert null ist nicht erlaubt.", Response.Status.BAD_REQUEST);
+		}
+		final List<Long> result = new ArrayList<>();
+		if (listObj instanceof final List<?> liste) {
+			for (final Object obj : liste) {
+				if (obj == null)
+					throw new WebApplicationException("Der Wert null ist innerhalb der Liste nicht erlaubt.", Response.Status.BAD_REQUEST);
+				if (obj instanceof final Byte b)
+					result.add(b.longValue());
+				else if (obj instanceof final Short s)
+					result.add(s.longValue());
+				else if (obj instanceof final Integer i)
+					result.add(i.longValue());
+				else if (obj instanceof final Long l)
+					result.add(l.longValue());
+				else
+					throw new WebApplicationException("Fehler beim Konvertieren zu Long", Response.Status.BAD_REQUEST);
+			}
+		} else
+			throw new WebApplicationException("Es wird eine Array von Long-Werten erwartet.", Response.Status.BAD_REQUEST);
 		return result;
 	}
 

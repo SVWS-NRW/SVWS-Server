@@ -177,9 +177,36 @@ public abstract class DataManager<ID> {
 		return patchBasicFiltered(id, is, dtoClass, attributeMapper, null);
 	}
 
+
 	/**
-	 * Erstellt ein neues DTO des übergebenen Typ, indem in der Datenbank eine neue
-	 * ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Erstellt und initialisiert eine neues DTO.
+	 *
+	 * @param <DTO>      der Type des DTO
+	 * @param dtoClass   die Klasse des DTO
+	 * @param initDTO    der Consumer zum Initialisieren des DTO
+	 *
+	 * @return das neue DTO
+	 */
+	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO) {
+		try {
+			// Bestimme die nächste verfügbare ID für das DTO
+			final long newID = conn.transactionGetNextID(dtoClass);
+			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
+			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			final DTO dto = constructor.newInstance();
+			initDTO.accept(dto, newID);
+			return dto;
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				throw webAppException;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+		}
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
 	 * Attribut-Mapper integriert werden
 	 *
 	 * @param <DTO>              der Typ des Datenbank-DTOs
@@ -202,26 +229,15 @@ public abstract class DataManager<ID> {
 		for (final String attr : attributesRequired)
 			if (!map.containsKey(attr))
 				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
-		try {
-			// Bestimme die nächste verfügbare ID für das DTO
-			final long newID = conn.transactionGetNextID(dtoClass);
-			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
-			constructor.setAccessible(true);
-			final DTO dto = constructor.newInstance();
-			initDTO.accept(dto, newID);
-			applyPatchMappings(conn, dto, map, attributeMapper, null);
-			// Persistiere das DTO in der Datenbank
-			if (!conn.transactionPersist(dto))
-				throw OperationError.INTERNAL_SERVER_ERROR.exception();
-			conn.transactionFlush();
-			final CoreData daten = dtoMapper.apply(dto);
-			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception e) {
-			if (e instanceof final WebApplicationException webAppException)
-				return webAppException.getResponse();
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-		}
+		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
+		final DTO dto = newDTO(dtoClass, initDTO);
+		applyPatchMappings(conn, dto, map, attributeMapper, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		final CoreData daten = dtoMapper.apply(dto);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**
