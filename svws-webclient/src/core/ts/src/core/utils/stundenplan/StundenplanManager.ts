@@ -1967,8 +1967,7 @@ export class StundenplanManager extends JavaObject {
 	private klassenunterrichtGetWochenminutenISTungerundet(idKlasse : number, idFach : number) : number {
 		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
 		let summe_minuten : number = 0;
-		const listU : List<StundenplanUnterricht> = DeveloperNotificationException.ifMap2DGetIsNull(this._unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach);
-		for (const u of listU) {
+		for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKlasse_and_idFach, idKlasse, idFach)) {
 			const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
 			const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 			const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
