@@ -3,9 +3,14 @@
 		<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()" class="mb-10">
 			<template #cell(kuerzel)="{ rowData: row }">
 				<div class="flex justify-between w-full">
-					{{ row.kuerzel }}
+					<div class="inline-flex gap-3">
+						{{ row.kuerzel }}
+						<svws-ui-tooltip v-if="istBlockungPersistiert(row)" position="right">
+							<i-ri-forbid2-line /> <template #content> Es liegt bereits eine persistierte Blockung vor. </template>
+						</svws-ui-tooltip>
+					</div>
 					<div v-if="row === halbjahr" class="inline-flex gap-1 -my-0.5">
-						<svws-ui-button v-if="allow_add_blockung(row)" type="secondary" @click.stop="blockung_hinzufuegen">
+						<svws-ui-button v-if="!istBlockungPersistiert(row)" type="secondary" @click.stop="blockung_hinzufuegen">
 							<span class="inline-flex items-center text-button">
 								<i-ri-add-line class="-mx-0.5" />
 							</span>
@@ -34,10 +39,10 @@
 
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
-	const allow_add_blockung = (row: GostHalbjahr): boolean => {
+	const istBlockungPersistiert = (row: GostHalbjahr): boolean => {
 		if (props.jahrgangsdaten === undefined)
-			return false;
-		return props.jahrgangsdaten.istBlockungFestgelegt[row.id] ? false : true
+			return true;
+		return props.jahrgangsdaten.istBlockungFestgelegt[row.id];
 	}
 
 	const allow_restore_blockung = (row: GostHalbjahr): boolean => {
