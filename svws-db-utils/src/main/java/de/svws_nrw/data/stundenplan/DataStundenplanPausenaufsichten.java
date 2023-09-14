@@ -162,7 +162,10 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		Map.entry("bereiche", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	})
 	);
 
-	private void patchBereiche(final long id, final List<Long> bereiche) {
+	private void patchBereiche(final long id, final Map<String, Object> map) {
+		if (!map.containsKey("bereiche"))
+			return;
+		final List<Long> bereiche = JSONMapper.convertToListOfLong(map.get("bereiche"), false);
 		// Entferne ggf. die alten Bereiche
 		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanPausenaufsichtenBereiche e WHERE e.Pausenaufsicht_ID = " + id);
 		conn.transactionFlush();
@@ -187,7 +190,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		conn.transactionPersist(dto);
 		conn.transactionFlush();
 		// Passe die Bereiche an
-		patchBereiche(dto.ID, JSONMapper.convertToListOfLong(map.get("bereiche"), false));
+		patchBereiche(dto.ID, map);
 		return Response.status(Status.OK).build();
 	}
 
@@ -219,7 +222,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception();
 		conn.transactionFlush();
 		// Passe die Bereiche an
-		patchBereiche(dto.ID, JSONMapper.convertToListOfLong(map.get("bereiche"), false));
+		patchBereiche(dto.ID, map);
 		final StundenplanPausenaufsicht daten = dtoMapper.apply(dto);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
@@ -235,6 +238,5 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOStundenplanPausenaufsichten.class, dtoMapper);
 	}
-
 
 }

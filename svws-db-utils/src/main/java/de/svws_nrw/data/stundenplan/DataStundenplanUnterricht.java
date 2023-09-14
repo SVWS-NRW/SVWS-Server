@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
@@ -175,13 +174,93 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 			if (fach == null)
 				throw OperationError.NOT_FOUND.exception("Fach mit der ID %d nicht gefunden.".formatted((Long) value));
 			dto.Fach_ID = fach.ID;
-		})
+		}),
+		Map.entry("lehrer", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
+		Map.entry("klassen", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
+		Map.entry("raeume", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	}),
+		Map.entry("schienen", (conn, dto, value, map) -> { /* Dies wird an anderer Stelle gehandhabt */	})
 	);
+
+
+	private void patchLehrer(final long idUnterricht, final Map<String, Object> map) {
+		if (!map.containsKey("lehrer"))
+			return;
+		final List<Long> lehrer = JSONMapper.convertToListOfLong(map.get("lehrer"), false);
+		// Entferne ggf. die alten Lehrer
+		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtLehrer e WHERE e.Unterricht_ID = " + idUnterricht);
+		conn.transactionFlush();
+		// Schreibe die neuen Lehrer
+		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtLehrer.class);
+		for (final Long idLehrer : lehrer)
+			conn.transactionPersist(new DTOStundenplanUnterrichtLehrer(nextID++, idUnterricht, idLehrer));
+		conn.transactionFlush();
+	}
+
+
+	private void patchKlassen(final long idUnterricht, final Map<String, Object> map) {
+		if (!map.containsKey("klassen"))
+			return;
+		final List<Long> klassen = JSONMapper.convertToListOfLong(map.get("klassen"), false);
+		// Entferne ggf. die alten Klassen
+		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtKlasse e WHERE e.Unterricht_ID = " + idUnterricht);
+		conn.transactionFlush();
+		// Schreibe die neuen Klassen
+		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
+		for (final Long idKlasse : klassen)
+			conn.transactionPersist(new DTOStundenplanUnterrichtKlasse(nextID++, idUnterricht, idKlasse));
+		conn.transactionFlush();
+	}
+
+
+	private void patchRaeume(final long idUnterricht, final Map<String, Object> map) {
+		if (!map.containsKey("raeume"))
+			return;
+		final List<Long> raeume = JSONMapper.convertToListOfLong(map.get("raeume"), false);
+		// Entferne ggf. die alten Räume
+		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtRaum e WHERE e.Unterricht_ID = " + idUnterricht);
+		conn.transactionFlush();
+		// Schreibe die neuen Räume
+		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
+		for (final Long idRaum : raeume)
+			conn.transactionPersist(new DTOStundenplanUnterrichtRaum(nextID++, idUnterricht, idRaum));
+		conn.transactionFlush();
+	}
+
+
+	private void patchSchienen(final long idUnterricht, final Map<String, Object> map) {
+		if (!map.containsKey("schienen"))
+			return;
+		final List<Long> schienen = JSONMapper.convertToListOfLong(map.get("schienen"), false);
+		// Entferne ggf. die alten Schienen
+		conn.transactionExecuteDelete("DELETE FROM DTOStundenplanUnterrichtSchiene e WHERE e.Unterricht_ID = " + idUnterricht);
+		conn.transactionFlush();
+		// Schreibe die neuen Schienen
+		long nextID = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
+		for (final Long idSchiene : schienen)
+			conn.transactionPersist(new DTOStundenplanUnterrichtSchiene(nextID++, idUnterricht, idSchiene));
+		conn.transactionFlush();
+	}
 
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		return super.patchBasic(id, is, DTOStundenplanUnterricht.class, patchMappings);
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+		final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		conn.transactionPersist(dto);
+		conn.transactionFlush();
+		// Passe ggf. die Listen an
+		patchLehrer(dto.ID, map);
+		patchKlassen(dto.ID, map);
+		patchRaeume(dto.ID, map);
+		patchSchienen(dto.ID, map);
+		return Response.status(Status.OK).build();
 	}
 
 
@@ -199,9 +278,24 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// Füge den Unterricht in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOStundenplanUnterricht> initDTO = (dto, id) -> dto.ID = id;
-		return super.addBasic(is, DTOStundenplanUnterricht.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		for (final String attr : requiredCreateAttributes)
+			if (!map.containsKey(attr))
+				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+		// Erstelle das DTO und initialisiere es mit den übergeben Daten
+		final DTOStundenplanUnterricht dto = newDTO(DTOStundenplanUnterricht.class, (obj, id) -> obj.ID = id);
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		// Passe ggf. die Listen an
+		patchLehrer(dto.ID, map);
+		patchKlassen(dto.ID, map);
+		patchRaeume(dto.ID, map);
+		patchSchienen(dto.ID, map);
+		final StundenplanUnterricht daten = dtoMapper.apply(dto);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
