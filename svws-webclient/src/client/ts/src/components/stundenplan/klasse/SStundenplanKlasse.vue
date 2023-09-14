@@ -21,7 +21,7 @@
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
 							<div role="cell" class="select-none data-table__td">
-								{{ ku.wochenstunden }}
+								{{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
 							</div>
 							<div role="cell" class="select-none data-table__td">
 								<div class="select-none w-full h-full rounded-sm flex items-center justify-center relative group cursor-grab"
