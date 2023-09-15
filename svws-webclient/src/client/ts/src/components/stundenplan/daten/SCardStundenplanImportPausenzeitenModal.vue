@@ -4,7 +4,7 @@
 		<template #modalTitle>Pausenzeiten aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-data-table v-if="listPausenzeiten.size()" :items="listPausenzeiten" clickable :clicked="pausenzeit" selectable v-bind="selected" />
+				<svws-ui-table v-if="listPausenzeiten.size()" :items="listPausenzeiten" clickable :clicked="pausenzeit" selectable v-bind="selected" />
 				<div v-else>Keine Einträge im Pausenzeiten-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Pausenzeiten-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->

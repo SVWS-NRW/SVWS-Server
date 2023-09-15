@@ -1,16 +1,17 @@
 <template>
-	<svws-ui-content-card title="Allgemein" class="lg:sticky lg:top-8 lg:col-start-1">
+	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
 			<svws-ui-text-input placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell()" @change="patch({ wochenTypModell: Number($event) })" type="number" />
 			<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
 			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
+			<svws-ui-spacing />
 			<div class="col-span-full">
-				<svws-ui-data-table :items="listJahrgaenge" :no-data="false" :columns="cols">
+				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols" class="overflow-visible">
 					<template #cell(id)="{value}">
-						<svws-ui-checkbox circle :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
+						<svws-ui-checkbox type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
 					</template>
-				</svws-ui-data-table>
+				</svws-ui-table>
 			</div>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -31,9 +32,9 @@
 	}>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.25 },
+		{ key: "kuerzel", label: "Jahrgang", sortable: true, defaultSort: "asc", span: 0.25 },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true },
-		{ key: "id", label: "Gültig", sortable: true, fixedWidth: 8, align: "center" }
+		{ key: "id", label: "Gültig", fixedWidth: 5, align: "center" },
 	];
 
 	const jahrgaenge = computed(()=> {

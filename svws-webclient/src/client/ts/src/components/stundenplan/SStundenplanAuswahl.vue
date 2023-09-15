@@ -5,19 +5,14 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<div class="flex flex-col gap-12">
-				<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
-					<template #footerActions>
-						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
-							<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer"
-								:disabled="selected.length === 0" />
-						</div>
-						<svws-ui-button type="icon" @click="addEintrag">
-							<i-ri-add-line />
-						</svws-ui-button>
-					</template>
-				</svws-ui-data-table>
-			</div>
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
+				<template #actions>
+					<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer" :disabled="selected.length === 0" />
+					<svws-ui-button type="icon" @click="addEintrag">
+						<i-ri-add-line />
+					</svws-ui-button>
+				</template>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>

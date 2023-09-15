@@ -4,8 +4,8 @@
 			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
 		<template v-else>
-			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined)" class="flex flex-col gap-y-8 justify-start mb-auto">
-				<svws-ui-input-wrapper>
+			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined)" class="flex flex-col justify-start mb-auto svws-table-offset">
+				<svws-ui-input-wrapper class="mb-10">
 					<svws-ui-multi-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" autocomplete
 						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="()=>0" />
 					<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
@@ -13,52 +13,59 @@
 						:disabled="wochentypen().size() <= 0"
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 				</svws-ui-input-wrapper>
-				<svws-ui-data-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
+				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht" class="overflow-visible">
 					<template #body>
-						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
-							<div role="cell" class="select-none data-table__td">
-								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
+            <div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
+                 :draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
+							<div role="cell" class="select-none svws-ui-td">
+								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
-							<div role="cell" class="select-none data-table__td">
-								{{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
-							</div>
-							<div role="cell" class="select-none data-table__td">
-								<div class="select-none w-full h-full rounded-sm flex items-center justify-center relative group cursor-grab"
-									:class="{ 'cursor-grabbing': dragData !== undefined }">
+							<div role="cell" class="select-none svws-ui-td">
+								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+                     :class="{ 'cursor-grabbing': dragData !== undefined }">
 									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
-									</span><span>Allgemein</span>
+										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+									</span>
+									<span class="pl-2">Allgemein</span>
 								</div>
 								<template v-if="stundenplanManager().getWochenTypModell() > 0">
-									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" @dragend="wochentyp = -1" class="select-none w-16 h-full rounded-sm flex items-center justify-center relative group cursor-grab"
+									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" @dragend="wochentyp = -1" class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
 										:class="{ 'cursor-grabbing': dragData !== undefined }">
 										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
-											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
-										</span><span>{{ String.fromCharCode(64 + i) }}</span>
+											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+										</span>
+										<span class="px-3">{{ String.fromCharCode(64 + i) }}</span>
 									</div>
 								</template>
 							</div>
+							<div role="cell" class="select-none svws-ui-td svws-align-center">
+                {{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
+							</div>
 						</div>
 					</template>
-				</svws-ui-data-table>
-				<svws-ui-data-table :items="kursliste" :columns="colsKursunterricht">
+				</svws-ui-table>
+				<svws-ui-table :items="kursliste" :columns="colsKursunterricht" class="overflow-visible">
 					<template #body>
-						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="data-table__tr data-table__tbody__tr"
-							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
-							<div role="cell" class="select-none data-table__td">
-								<span :id="`kurs-${kurs.id}`">{{ kurs.bezeichnung }}</span>
+						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="svws-ui-tr"
+							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
+							<div role="cell" class="select-none svws-ui-td">
+								<span :id="`kurs-${kurs.id}`" class="svws-ui-badge cursor-grab group relative" :class="{ 'cursor-grabbing': dragData !== undefined }">
+									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+									</span>
+									<span class="pl-2">{{ kurs.bezeichnung }}</span>
+								</span>
 							</div>
-							<div role="cell" class="select-none data-table__td">
+							<div role="cell" class="select-none svws-ui-td svws-align-center">
 								{{ kurs.wochenstunden }}
 							</div>
 						</div>
 					</template>
-				</svws-ui-data-table>
+				</svws-ui-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
-				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
+      <stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+                           use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>
 </template>
@@ -165,14 +172,14 @@
 	});
 
 	const colsKlassenunterricht = [
-		{ key: "bezeichnung", label: "Klassenunterricht", span: 2, sortable: false },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false },
-		{ key: "irgendwas", label: "Wochentyp", span: 3, sortable: false }
+		{ key: "bezeichnung", label: "Klassenunterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "irgendwas", label: "Wochentyp", span: 2 },
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
 	const colsKursunterricht = [
-		{ key: "bezeichnung", label: "Kursunterricht", span: 2, sortable: false },
-		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", span: 1, sortable: false }
+		{ key: "bezeichnung", label: "Kursunterricht", span: 2 },
+		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
 </script>

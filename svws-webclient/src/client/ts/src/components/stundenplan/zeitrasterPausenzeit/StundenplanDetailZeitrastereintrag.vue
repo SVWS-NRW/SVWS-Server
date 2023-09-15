@@ -8,13 +8,18 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-data-table :items="[]" :columns="cols" :no-data="false">
+		<svws-ui-table :items="[]" :columns="[{ key: 'idFach', label: 'Unterricht', span: 0.5 }, { key: 'bezeichnung', label: ' ' }]" :no-data="false">
 			<template #body>
-				<svws-ui-table-row v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :key="rowData.id" :style="`background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
-					<svws-ui-table-cell> {{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }} </svws-ui-table-cell>
-				</svws-ui-table-row>
+				<div class="svws-ui-tr" role="row" v-for="rowData in stundenplanManager().unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(item.id, 0)" :key="rowData.id" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(rowData.idFach).kuerzelStatistik)}`">
+					<div class="svws-ui-td" role="cell">
+						<span class="svws-ui-badge">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(rowData.id) }}</span>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ stundenplanManager().fachGetByIdOrException(rowData.idFach).bezeichnung }}</span>
+					</div>
+				</div>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -32,10 +37,6 @@
 	function getBgColor(fach: string): string {
 		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
 	}
-
-	const cols = [
-		{ key: "idFach", label: "Unterricht", sortable: false },
-	];
 
 	async function patchBeginn(event: string | number) {
 		if (typeof event === 'number')

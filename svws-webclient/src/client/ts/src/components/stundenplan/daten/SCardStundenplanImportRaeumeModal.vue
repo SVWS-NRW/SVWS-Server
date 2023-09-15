@@ -4,7 +4,7 @@
 		<template #modalTitle>Räume aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-data-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-bind="selected" />
+				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-bind="selected" />
 				<div v-else>Keine Einträge im Raum-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Raum-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->

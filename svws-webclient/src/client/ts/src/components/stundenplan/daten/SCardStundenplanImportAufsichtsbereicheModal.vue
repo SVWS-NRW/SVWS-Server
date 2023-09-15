@@ -4,7 +4,7 @@
 		<template #modalTitle>Aufsichtsbereiche aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-data-table v-if="listAufsichtsbereiche.size()" :items="listAufsichtsbereiche" clickable :clicked="aufsichtsbereich" selectable v-bind="selected" />
+				<svws-ui-table v-if="listAufsichtsbereiche.size()" :items="listAufsichtsbereiche" clickable :clicked="aufsichtsbereich" selectable v-bind="selected" />
 				<div v-else>Keine Einträge im Aufsichtsbereiche-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Aufsichtsbereiche-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->

@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-content-card title="Räume" class="lg:col-start-2">
-		<svws-ui-data-table :columns="cols" :items="stundenplanManager().raumGetMengeAsList()" clickable v-model:clicked="raum" selectable :model-value="selected" @blur="selected=$event" :count="selected.length > 0">
+	<svws-ui-content-card title="Räume">
+		<svws-ui-table :columns="cols" :items="stundenplanManager().raumGetMengeAsList()" v-model:clicked="raum" selectable :model-value="selected" @blur="selected=$event" count class="overflow-visible">
 			<template #cell(kuerzel)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.kuerzel" @change="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
 			</template>
@@ -10,16 +10,16 @@
 			<template #cell(beschreibung)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.beschreibung" @change="patchRaum({beschreibung: String($event)}, rowData.id)" headless />
 			</template>
-			<template #footerActions>
+			<template #actions>
 				<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="listRaeume">
 					<svws-ui-button @click="openModal()" type="transparent" title="Räume importieren"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
 				</s-card-stundenplan-import-raeume-modal>
-				<svws-ui-button v-if="selected.length > 0" @click="removeRaeume(selected)" type="trash" class="cursor-pointer" :disabled="!selected.length" />
+				<svws-ui-button @click="removeRaeume(selected)" type="trash" :disabled="!selected.length" />
 				<s-card-stundenplan-add-raum-modal v-slot="{ openModal }" :add-raum="addRaum">
 					<svws-ui-button @click="openModal()" type="icon" title="Raum hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 				</s-card-stundenplan-add-raum-modal>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 

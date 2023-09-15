@@ -117,19 +117,22 @@
 								</div>
 							</template>
 							<template v-if="modePausenaufsichten === 'kurz'">
-								<div class="flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}">
+								<div class="flex flex-col justify-center content-center h-full text-center pt-1 pb-2" :class="{'svws-lehrkraft': mode === 'lehrer'}">
 									<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
-									<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ getStringAufsichten(pause) }} </span> </div>
+									<span v-if="mode !== 'lehrer'" title="Lehrkraft" class="max-w-[24ch] leading-none mx-auto">{{ getStringAufsichten(pause) }}</span>
 								</div>
 							</template>
 							<template v-if="modePausenaufsichten === 'tooltip'">
-								<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow">
-									<svws-ui-tooltip position="top">
-										{{ pause.bezeichnung ? pause.bezeichnung : 'Pause' }}
+								<div class="svws-ui-stundenplan--pausen-aufsicht flex-grow flex items-center justify-center">
+									<svws-ui-tooltip>
+										<span class="inline-flex flex-col items-center leading-tight">
+											<span>{{ pause.bezeichnung ? pause.bezeichnung : 'Pause' }}</span>
+											<span class="text-sm">{{ getPausenaufsichtenPausenzeit(pause).size() }} Aufsichten</span>
+										</span>
 										<template #content>
-											<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow" :class="{'svws-lehrkraft': mode === 'lehrer'}"
+											<div v-for="pausenaufsicht in getPausenaufsichtenPausenzeit(pause)" :key="pausenaufsicht.id" class="grid grid-cols-3 gap-2 items-center" :class="{'svws-lehrkraft': mode === 'lehrer'}"
 												:draggable="isDraggable()" @dragstart="onDrag(pausenaufsicht)" @dragend="onDrag(undefined)">
-												<div class="font-bold"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
+												<div class="text-sm"> {{ pause.bezeichnung === 'Pause' && mode === 'lehrer' ? 'Aufsicht' : pause.bezeichnung }} </div>
 												<div> <span v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().lehrerGetByIdOrException(pausenaufsicht.idLehrer).kuerzel }} </span> </div>
 												<div title="Aufsichtsbereiche"> {{ aufsichtsbereiche(pausenaufsicht) }}</div>
 											</div>

@@ -8,7 +8,7 @@
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-data-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols" selectable v-model="selected">
+		<svws-ui-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="cols" selectable v-model="selected" count>
 			<template #cell(id)="{ rowData }">
 				{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 			</template>
@@ -16,18 +16,16 @@
 				<template v-for="bereich in value">{{ stundenplanManager().aufsichtsbereichGetByIdOrException(bereich).kuerzel }} &nbsp;</template>
 			</template>
 			<template #cell(wochentyp)="{ value }">
-				{{ value === 0 ? '': String.fromCharCode(64 + value) }}
+				<span v-if="value === 0" class="opacity-25">—</span>
+				<template v-else>String.fromCharCode(64 + value)</template>
 			</template>
-			<template #footerActions>
-				<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
-					<svws-ui-button @click="remove" type="trash" class="cursor-pointer"
-						:disabled="selected.length === 0" />
-				</div>
+			<template #actions>
+				<svws-ui-button @click="remove" type="trash" :disabled="selected.length === 0" />
 				<stundenplan-detail-pausenzeit-modal v-slot="{ openModal }" :pausenzeit="item" :list-lehrer="listLehrer" :list-aufsichtsbereiche="listAufsichtsbereiche" :add-aufsicht-und-bereich="addAufsichtUndBereich" :wochentypen="stundenplanManager().getWochenTypModell()">
 					<svws-ui-button @click="openModal()" type="icon" title="Pausenaufsicht hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 				</stundenplan-detail-pausenzeit-modal>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -49,9 +47,9 @@
 	const selected = ref<StundenplanPausenaufsicht[]>([]);
 
 	const cols = [
-		{ key: "id", label: "Aufsicht", sortable: false },
-		{ key: 'bereiche', label: "Bereiche", span: 2 },
-		{ key: 'wochentyp', label: "Typ", span: 0.5 }
+		{ key: "id", label: "Aufsicht" },
+		{ key: 'bereiche', label: "Bereich", span: 1 },
+		{ key: 'wochentyp', label: "Typ", tooltip: "Wochentyp", span: 0.5 }
 	];
 
 	async function patchBeginn(event: string | number) {
