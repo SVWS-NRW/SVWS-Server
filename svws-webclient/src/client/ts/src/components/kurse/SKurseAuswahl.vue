@@ -5,17 +5,17 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable>
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable count>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" />
 				</template>
-				<template #filterSimple>
+				<template #filter>
 					<svws-ui-checkbox type="toggle" v-model="sichtbar">Sichtbar</svws-ui-checkbox>
 				</template>
 				<template #cell(lehrer)="{ value }"> {{ mapLehrer.get(value)?.kuerzel ?? "" }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -26,6 +26,7 @@
 	import type { Ref} from "vue";
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ref, computed } from "vue";
+	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<KurseAuswahlProps>();
 
@@ -40,7 +41,7 @@
 		return res;
 	})
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
 		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
