@@ -1,27 +1,25 @@
 <template>
 	<template v-if="listeDerKurse.isEmpty() && fachwahlenAnzahl !== 0 && allowRegeln">
-		<div role="row" class="data-table__tr data-table__tbody__tr data-table__tr__disabled-light" :style="{ 'background-color': bgColor }" :key="kursart.id">
-			<div role="cell" class="data-table__td" />
-			<div role="cell" class="data-table__td text-black/50">
-				<span title="Fach">{{ fachwahlen.kuerzel }}</span><span class="opacity-50">-</span><span title="Kursart">{{ kursart.kuerzel }}</span>
+		<div role="row" class="svws-ui-tr svws-disabled-soft" :style="{ '--background-color': bgColor }" :key="kursart.id">
+			<div role="cell" class="svws-ui-td" />
+			<div role="cell" class="svws-ui-td text-black/50">{{ fachwahlen.kuerzel }}-{{ kursart.kuerzel }}</div>
+			<div role="cell" class="svws-ui-td">
+				<span />
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-left">
-				<span class="opacity-25">—</span>
+			<div role="cell" class="svws-ui-td svws-align-center">
+				<span />
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center">
-				<span class="opacity-25">—</span>
-			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer group relative text-black/50" @click="toggleSchuelerFilterFachwahl(fachwahlen.id, kursart)">
+			<div role="cell" class="svws-ui-td svws-align-center text-black/50" @click="toggleSchuelerFilterFachwahl(fachwahlen.id, kursart)">
 				{{ fachwahlenAnzahl }}
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center">
-				<span class="opacity-25">—</span>
+			<div role="cell" class="svws-ui-td svws-align-center">
+				<span />
 			</div>
-			<div role="cell" class="data-table__td data-table__td__align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
-				<svws-ui-button type="transparent" size="small" @click="add_kurs(kursart)" title="Kurs anlegen" class="text-black">
+			<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
+				<svws-ui-button type="transparent" @click="add_kurs(kursart)" title="Kurs anlegen">
 					<span class="inline-flex items-center text-button -mr-0.5">
 						<i-ri-book2-line />
-						<i-ri-add-line class="-ml-1 text-sm" />
+						<i-ri-add-line class="-ml-0.5 text-sm" />
 					</span>
 					Kurs anlegen
 				</svws-ui-button>
@@ -30,67 +28,68 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="data-table__tr" :style="{ 'background-color': bgColor }">
+			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
 				<template v-if="allowRegeln">
-					<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black"
-						:class="{'text-black' : kursdetail_anzeige === kurs.id, 'text-black/50' : kursdetail_anzeige !== kurs.id}" @click="toggle_kursdetail_anzeige(kurs.id)"
+					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="toggle_kursdetail_anzeige(kurs.id)"
+						:class="{'text-black/50' : kursdetail_anzeige !== kurs.id}"
 						title="Kursdetails anzeigen">
-						<div class="inline-block">
-							<i-ri-arrow-up-s-line v-if="kursdetail_anzeige === kurs.id" class="relative top-0.5" />
-							<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
+						<div class="inline-block -my-0.5">
+							<i-ri-arrow-up-s-line v-if="kursdetail_anzeige === kurs.id" class="relative top-0.5 -left-0.5" />
+							<i-ri-arrow-down-s-line v-else class="relative top-0.5 -left-0.5" />
 						</div>
 					</div>
 				</template>
-				<div role="cell" class="data-table__td">
-					<div class="flex flex-grow items-center">
+				<div role="cell" class="svws-ui-td py-0">
+					<div class="flex flex-grow items-center -my-auto h-full">
 						<template v-if="kurs.id === editKursID">
-							<span class="flex-shrink-0">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
-							<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless />
+							<span class="flex-shrink-0 -my-0.5">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
+							<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => onBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless class="-my-1" />
 						</template>
 						<template v-else>
-							<span class="underline decoration-dotted decoration-black/50 hover:decoration-solid underline-offset-2 cursor-text" @click="editKursID=kurs.id">
+							<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
 								{{ kursbezeichnung(kurs).value }}
 							</span>
 						</template>
 					</div>
 				</div>
-				<div role="cell" class="data-table__td" :no-padding="allowRegeln">
+				<div role="cell" class="svws-ui-td">
 					<template v-if="allowRegeln">
 						<svws-ui-select :model-value="kurslehrer(kurs).value" @update:model-value="(lehrer: LehrerListeEintrag | undefined) => setKurslehrer(kurs, lehrer)" autocomplete :item-filter="lehrer_filter" removable headless
-							:items="mapLehrer" :item-text="l=> l.kuerzel" />
+							:items="mapLehrer" :item-text="l=> l.kuerzel" title="Lehrer" />
 					</template>
 					<template v-else>
-						<span :class="{'opacity-50': !kurslehrer(kurs).value?.kuerzel}">{{ kurslehrer(kurs).value?.kuerzel || '—' }}</span>
+						<span :class="{'opacity-25': !kurslehrer(kurs).value?.kuerzel}">{{ kurslehrer(kurs).value?.kuerzel || '—' }}</span>
 					</template>
 				</div>
-				<div role="cell" class="data-table__td data-table__td__align-center">
-					<svws-ui-checkbox v-if="allowRegeln" headless circle bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, Boolean($event))" />
-					<span v-else class="icon inline-block">
-						<i-ri-check-fill v-if="kurs.istKoopKurs" />
-						<i-ri-close-line v-else class="opacity-25" />
-					</span>
+				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
+					<svws-ui-checkbox :disabled="!allowRegeln" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, Boolean($event))" class="my-auto" />
 				</div>
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
-					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
+					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-line class="absolute right-0" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
-					<div role="cell" class="data-table__td data-table__td__align-center blockung--kursdifferenz" :class="{'border-b-transparent': kursOhneBorder(kurs).value}">
-						{{ kursdifferenz(kurs).value[1] }}
+					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] === 0}">{{ kursdifferenz(kurs).value[1] }}</span>
 					</div>
 				</template>
 				<template v-else>
-					<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer" :class="{'border-b-transparent': kursOhneBorder(kurs).value}" @click="toggle_active_fachwahl(kurs)" />
-					<div role="cell" class="data-table__td data-table__td__align-center" :class="{'border-b-transparent': kursOhneBorder(kurs).value}" />
+					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer" @click="toggle_active_fachwahl(kurs)">
+						<span class="opacity-25">{{ kursdifferenz(kurs).value[2] }}</span>
+					</div>
+					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+						<span class="opacity-25">{{ kursdifferenz(kurs).value[1] }}</span>
+					</div>
 				</template>
 				<!-- Es folgen die einzelnen Tabellenzellen für die Schienen der Blockung -->
-				<template v-for="(schiene) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
+				<template v-for="(schiene, index) in getErgebnismanager().getMengeAllerSchienen()" :key="schiene.id">
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
-					<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__align-center p-0.5"
+					<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 						:class="{
 							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
-							'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value,
+							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
+							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
 						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
@@ -99,10 +98,10 @@
 							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black cursor-grab"
 							:class="{
 								'cursor-grabbing': dragDataKursSchiene() !== undefined,
-								'bg-light text-primary font-bold': istKursAusgewaehlt(kurs).value,
-								'bg-light/75': !istKursAusgewaehlt(kurs).value,
-								'p-0.5': dragDataKursSchiene() === undefined && !isKursDropZone(kurs, schiene).value,
-								'p-0': dragDataKursSchiene() !== undefined || isKursDropZone(kurs, schiene).value,
+								'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
+								'bg-white/50': !istKursAusgewaehlt(kurs).value,
+								'p-px': dragDataKursSchiene() === undefined && !isKursDropZone(kurs, schiene).value,
+								'p-px': dragDataKursSchiene() !== undefined || isKursDropZone(kurs, schiene).value,
 							}"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
@@ -116,8 +115,7 @@
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
 						<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
-							:style="{'background-color': istKursVerbotenInSchiene(kurs, schiene).value ? bgColor : ''}"
-							:class="{ 'data-table__td__disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
+							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 							&NonBreakingSpace;
 							<template v-if="dragDataKursSchiene() !== undefined">
 								<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs.id === kurs.id) && isKursDropZone(kurs, schiene).value" class="absolute inset-0.5 border-2 border-dashed border-black/25" />
@@ -361,3 +359,9 @@
 	}
 
 </script>
+
+<style lang="postcss" scoped>
+.svws-expanded + .svws-ui-tr:not(.svws-expanded) {
+	@apply border-t border-black/50;
+}
+</style>

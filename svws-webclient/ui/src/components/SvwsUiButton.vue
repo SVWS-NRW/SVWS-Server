@@ -313,18 +313,16 @@
 	@apply bg-error rounded-full shadow;
 	@apply flex items-center justify-center;
 	@apply pointer-events-none;
-	@apply -mt-2 -ml-3;
+	@apply -mt-3 -ml-3;
 	@apply px-1.5;
 	@apply h-5;
 	font-size: 0.8rem;
 
-	.data-table__tbody .button &,
 	.svws-ui-tfoot .button &,
 	.content-card--header .button &,
-	.router-tab-bar--subnav .button &,
-	.cv-wrapper .cv-header button & {
+	.router-tab-bar--subnav .button & {
 		@apply -mt-1 h-4 -ml-1.5;
-		font-size: 0.7rem;
+		font-size: 0.75rem;
 	}
 
 	.router-tab-bar--subnav .button & {
