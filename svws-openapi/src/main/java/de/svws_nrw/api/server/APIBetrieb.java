@@ -270,7 +270,7 @@ public class APIBetrieb {
                             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen vom Schülerbetrieb"
                             + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Stammdaten des Schülerbetriebs.",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerBetriebsdaten.class))))
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuelerBetriebsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Schülerbetrieb gefunden")
     public Response getSchuelerBetriebsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {

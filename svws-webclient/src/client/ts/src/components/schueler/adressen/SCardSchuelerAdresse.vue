@@ -11,6 +11,9 @@
 			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1}, props.betriebsStammdaten.id)" type="text" span="2" />
 			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche}, props.betriebsStammdaten.id)" title="Branche" type="text" />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
+				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
@@ -20,24 +23,23 @@
 			<div class="flex gap-1 h-min items-center">
 				<div class="flex-grow">
 					<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
-						:items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
+						:items="getAnsprechpartnervonBetrieb()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
 					<span v-else class="opacity-50">Kein Ansprechpartner</span>
 				</div>
 				<s-schueler-adresse-modal-ansprechpartner v-if="ansprechpartner !== undefined" :ansprechpartner="ansprechpartner" :patch-ansprechpartner="patchAnsprechpartner" />
 				<s-schueler-adresse-modal-ansprechpartner-add :betriebs-stammdaten="betriebsStammdaten" :create-ansprechpartner="createAnsprechpartner" />
 			</div>
-			<svws-ui-spacing :size="2" />
-			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Zusatz" :model-value="betriebsStammdaten.hausnrzusatz" @change="hausnrzusatz=>patchBetrieb({hausnrzusatz}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
-				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+			<svws-ui-spacing :size="1" />
+
+			<!-- <svws-ui-text-input placeholder="Zusatz" :model-value="betriebsStammdaten.hausnrzusatz" @change="hausnrzusatz=>patchBetrieb({hausnrzusatz}, props.betriebsStammdaten.id)" type="text" /> -->
+
 			<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
 			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
 				:item-sort="ortsteilSort" :item-text="i => i.ortsteil" />
 			-->
 			<!-- <svws-ui-multi-select title="Ortsteil" disabled :items="[]" :item-text="i=>i" /> -->
-			<svws-ui-spacing :size="2" />
-			<svws-ui-textarea-input :model-value="betriebsStammdaten.bemerkungen" placeholder="Bemerkungen" autoresize span="full"
+			<svws-ui-spacing :size="1" />
+			<svws-ui-textarea-input :model-value="betriebsStammdaten?.bemerkungen" placeholder="Bemerkungen" autoresize span="full"
 				@change="bemerkungen => patchBetrieb({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, betriebsStammdaten.id)" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
@@ -55,8 +57,8 @@
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
 		patchAnsprechpartner: (data : Partial<BetriebAnsprechpartner>, id : number) => Promise<void>;
 		createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
-		betrieb: SchuelerBetriebsdaten;
-		betriebsStammdaten: BetriebStammdaten;
+		betrieb:  SchuelerBetriebsdaten;
+		betriebsStammdaten: BetriebStammdaten ;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 		mapOrte: Map<number, OrtKatalogEintrag>;
@@ -85,6 +87,17 @@
 		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
+
+	function getAnsprechpartnervonBetrieb ( ): Map<number, BetriebAnsprechpartner>{
+		const t = new Map<number, BetriebAnsprechpartner>();
+		for (let entry of props.mapAnsprechpartner.entries()) {
+			let mapKey = entry[0];
+			let mapValue = entry[1];
+			if( mapValue.betrieb_id === props.betriebsStammdaten.id)
+				t.set(mapKey,mapValue)
+		}
+		return t;
+	}
 
 </script>
 

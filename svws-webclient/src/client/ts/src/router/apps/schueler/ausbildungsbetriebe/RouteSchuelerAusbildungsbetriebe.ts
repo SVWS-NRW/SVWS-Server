@@ -48,7 +48,7 @@ export class RouteSchuelerAusbildungsbetriebe extends RouteNode<RouteDataSchuele
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
 			idSchueler: routeSchueler.data.stammdaten.id,
-			listSchuelerbetriebe: this.data.listSchuelerbetriebe,
+			listSchuelerbetriebe: () => this.data.listSchuelerbetriebe,
 			betrieb: this.data.betrieb,
 			betriebsStammdaten: this.data.daten,
 			mapBeschaeftigungsarten: this.data.mapBeschaeftigungsarten,

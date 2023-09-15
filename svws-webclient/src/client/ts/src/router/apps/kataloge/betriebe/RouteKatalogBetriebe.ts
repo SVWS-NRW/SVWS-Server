@@ -182,7 +182,6 @@ export class RouteDataKatalogBetriebe {
 
 	addBetriebAnsprechpartner = async (data : BetriebAnsprechpartner) => {
 		const id = this._state.value.auswahl?.id;
-		console.log(id);
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Betrieb ausgewählt');
 		data.betrieb_id = id;
@@ -228,12 +227,10 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		console.log("ente_routekatalogtest")
 		await this.data.ladeListe();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		console.log("update_routekatalogtest");
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		if (this.data.mapKatalogeintraege.size < 1)

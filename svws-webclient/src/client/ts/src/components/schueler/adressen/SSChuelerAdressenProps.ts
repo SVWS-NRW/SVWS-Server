@@ -10,7 +10,7 @@ export interface SchuelerAdressenProps {
 	mapOrte: Map<number, OrtKatalogEintrag>;
 	mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	idSchueler: number;
-	listSchuelerbetriebe: List<SchuelerBetriebsdaten>;
+	listSchuelerbetriebe:() => List<SchuelerBetriebsdaten>;
 	betrieb: SchuelerBetriebsdaten | undefined;
 	betriebsStammdaten: BetriebStammdaten | undefined;
 	mapBeschaeftigungsarten: Map<number, KatalogEintrag>;

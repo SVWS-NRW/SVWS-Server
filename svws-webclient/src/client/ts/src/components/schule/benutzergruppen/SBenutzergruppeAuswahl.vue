@@ -41,7 +41,6 @@
 	const search: Ref<string> = ref("");
 
 	const rowsFiltered: ComputedRef<Map<number, BenutzergruppeListeEintrag>> = computed(() => {
-		console.log("rowsFiltered--");
 		if (!search.value)
 			return props.mapBenutzergruppe;
 		const result = new Map<number, BenutzergruppeListeEintrag>();

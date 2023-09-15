@@ -72,9 +72,6 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	public async setBenutzer(benutzer: BenutzerListeEintrag | undefined ) {
-		//await this.ladeListe();
-		console.log("setBenutzer:"+benutzer)
-		console.log("auswahl_id"+this._state.value.auswahl?.id)
 		if (benutzer?.id === this._state.value.auswahl?.id)
 		 	return;
 		if ((benutzer === undefined) || (this.mapBenutzer.size === 0)) {
@@ -89,7 +86,6 @@ export class RouteDataSchuleBenutzer {
 			})
 			await this.ladeListe();
 		}
-		console.log("in Bneutzer");
 		const neueAuswahl = benutzer === undefined ? this.firstBenutzer(this.mapBenutzer) : benutzer;
 		const daten = await this.ladeBenutzerDaten(neueAuswahl);
 		const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
@@ -103,13 +99,11 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	gotoBenutzer = async (value: BenutzerListeEintrag | undefined) => {
-		console.log("gotoBentuzer"+ value);
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchuleBenutzer.name, params: { } });
 			return;
 		}
 		const redirect_name: string = (routeSchuleBenutzer.selectedChild === undefined) ? routeSchuleBenutzerDaten.name : routeSchuleBenutzer.selectedChild.name;
-		console.log("redirect--"+redirect_name)
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
 
@@ -218,10 +212,8 @@ export class RouteDataSchuleBenutzer {
 		if (!this.benutzerManager)
 			return;
 		await api.server.setAnmeldename(anmeldename, api.schema, this.benutzerManager.getID());
-		console.log("Eingabe:"+anmeldename)
 		this.benutzerManager.setAnmeldename(anmeldename);
 		const neueAuswahl = this.mapBenutzer.get(this.daten.id);
-		console.log("Benutzermanager:"+this.benutzerManager.getAnmeldename());
 		this.mapBenutzer.set(this.daten.id,this.daten);
 		this.setPatchedState({
 			auswahl: neueAuswahl,

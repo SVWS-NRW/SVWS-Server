@@ -14,7 +14,7 @@
 				<svws-ui-text-input placeholder="Vertragsbeginn" v-model="schuelerBetriebsdaten.vertragsbeginn" type="date" />
 				<svws-ui-text-input placeholder="Vertragsende" v-model="schuelerBetriebsdaten.vertragsende" type="date" />
 				<svws-ui-multi-select title="Betreuungslehrer" v-model="betreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" />
-				<svws-ui-multi-select title="Ansprechpartner" v-model="ansprechpartner" :items="mapAnsprechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
+				<svws-ui-multi-select title="Ansprechpartner" removable :disabled="betrieb === undefined" v-model="ansprechpartner" :items="listAnpsrechpartner" :item-text="(i: BetriebAnsprechpartner) => i.name ?? ''" />
 				<svws-ui-checkbox v-model="schuelerBetriebsdaten.allgadranschreiben"> Erhält Anschreiben </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 		</template>
@@ -29,7 +29,7 @@
 
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
 	import { SchuelerBetriebsdaten } from "@core";
-	import type { Ref, WritableComputedRef } from "vue";
+	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{
@@ -91,4 +91,15 @@
 	const openModal = () => {
 		modal.value.openModal();
 	}
+
+	const listAnpsrechpartner : ComputedRef<Map<number, BetriebAnsprechpartner>> =computed(() => {
+		const t = new Map();
+		console.log(props.mapAnsprechpartner)
+		for( const a of props.mapAnsprechpartner.entries()){
+			console.log(a)
+			if(betrieb.value?.id=== a[1].betrieb_id)
+				t.set(a[0],a[1])
+		}
+		return t;
+	});
 </script>

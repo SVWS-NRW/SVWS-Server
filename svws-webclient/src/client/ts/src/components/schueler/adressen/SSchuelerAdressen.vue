@@ -3,7 +3,7 @@
 		<div class="col-span-full">
 			<template v-if="(betriebsStammdaten !== undefined) && (betrieb !== undefined)">
 				<s-card-schueler-beschaeftigung :list-schuelerbetriebe="listSchuelerbetriebe" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
-					:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"
+					:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner" 
 					:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" :set-schueler-betrieb="setSchuelerBetrieb" />
 			</template>
 			<template v-else>
@@ -26,7 +26,7 @@
 				<svws-ui-button @click="openModal()" class="mt-4">Betrieb hinzufügen</svws-ui-button>
 			</s-card-schueler-add-adresse-modal>
 			<template v-if="(betriebsStammdaten !== undefined) && (betrieb !== undefined)">
-				<s-card-schueler-adresse :list-schuelerbetriebe="listSchuelerbetriebe" :betriebs-stammdaten="betriebsStammdaten" :betrieb="betrieb" :map-orte="mapOrte"
+				<s-card-schueler-adresse :betriebs-stammdaten="betriebsStammdaten" :betrieb="betrieb" :map-orte="mapOrte"
 					:map-lehrer="mapLehrer" :map-ansprechpartner="mapAnsprechpartner" :create-ansprechpartner="createAnsprechpartner"
 					:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" :patch-betrieb="patchBetrieb" :patch-ansprechpartner="patchAnsprechpartner" />
 			</template>

@@ -5,7 +5,6 @@ import { ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 
-
 interface RouteStateDataSchuelerAusbildungsbetriebe {
 	daten: BetriebStammdaten | undefined;
 	idSchueler: number | undefined;
@@ -46,6 +45,9 @@ export class RouteDataSchuelerAusbildungsbetriebe {
 		this._state.value = { ... this._state.value };
 	}
 
+	get idSchueler(): number | undefined {
+		return this._state.value.idSchueler;
+	}
 	get daten(): BetriebStammdaten | undefined {
 		return this._state.value.daten;
 	}
@@ -92,10 +94,14 @@ export class RouteDataSchuelerAusbildungsbetriebe {
 		for (const b of listBetriebe)
 			mapBetriebe.set(b.id, b);
 		const listAnsprechpartner = await api.server.getBetriebeAnsprechpartner(api.schema);
-		this.setPatchedDefaultState({mapBeschaeftigungsarten, mapLehrer, mapBetriebe, listAnsprechpartner});
+		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
+		for (const a of listAnsprechpartner)
+			mapAnsprechpartner.set(a.id, a);
+		this.setPatchedDefaultState({mapBeschaeftigungsarten, mapLehrer, mapBetriebe, listAnsprechpartner, mapAnsprechpartner});
 	}
 
 	public async setSchueler(idSchueler?: number) {
+
 		if (idSchueler === undefined || idSchueler === this._state.value.idSchueler)
 			return;
 		const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, idSchueler);
@@ -104,16 +110,11 @@ export class RouteDataSchuelerAusbildungsbetriebe {
 
 	public setSchuelerBetrieb = async (betriebsdaten?: SchuelerBetriebsdaten) => {
 		let betrieb, daten;
-		const mapAnsprechpartner = new Map();
 		if (this.listSchuelerbetriebe.size() > 0) {
 			betrieb = betriebsdaten || this.listSchuelerbetriebe.get(0);
 			daten = await api.server.getBetriebStammdaten(api.schema, betrieb.betrieb_id);
-			console.log(betrieb, this.listAnsprechpartner)
-			for (const a of this.listAnsprechpartner)
-				if (a.betrieb_id === betrieb.betrieb_id)
-					mapAnsprechpartner.set(a.id, a);
 		}
-		this.setPatchedState({daten, betrieb, mapAnsprechpartner});
+		this.setPatchedState({daten, betrieb});
 	}
 
 	patchBetrieb = async (data : Partial<BetriebStammdaten>, id : number) => {
@@ -121,7 +122,33 @@ export class RouteDataSchuelerAusbildungsbetriebe {
 	}
 
 	patchSchuelerBetriebsdaten = async (data : Partial<SchuelerBetriebsdaten>, id : number) => {
+		let daten;
+		// TODO  Beim Klicken der anderen Zellen wir bei der Patch-Methode anpsrechpartner_wert übergeben.
 		await api.server.patchSchuelerBetriebsdaten(data, api.schema, id);
+		if(data.betrieb_id && this.idSchueler ){
+			daten = await api.server.getBetriebStammdaten(api.schema, data.betrieb_id);
+			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
+			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
+			this.setPatchedState( {daten,listSchuelerbetriebe, betrieb} );
+		}
+
+		if( data.ansprechpartner_id !== undefined && this.idSchueler ){
+			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
+			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
+			this.setPatchedState( {listSchuelerbetriebe, betrieb} );
+		}
+
+		if( data.allgadranschreiben !== undefined && this.idSchueler ){
+			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
+			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
+			this.setPatchedState( {listSchuelerbetriebe, betrieb} );
+		}
+
+		if( data.betreuungslehrer_id !== undefined && this.idSchueler ){
+			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
+			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
+			this.setPatchedState( {listSchuelerbetriebe, betrieb} );
+		}
 	}
 
 	patchAnsprechpartner = async (data : Partial<BetriebAnsprechpartner>, id : number) => {
@@ -132,19 +159,23 @@ export class RouteDataSchuelerAusbildungsbetriebe {
 		if (this.daten === undefined)
 			throw new Error("Es ist kein gültiger Betrieb für das Anlegen eines Ansprechpartners ausgewählt.")
 		const ansprechpartner = await api.server.createBetriebansprechpartner(data, api.schema, this.daten.id);
-		const listAnsprechpartner = this.listAnsprechpartner;
+		const listAnsprechpartner = new ArrayList<BetriebAnsprechpartner>();
+		for(const value of this.listAnsprechpartner){
+			listAnsprechpartner.add(value)
+		}
 		listAnsprechpartner.add(ansprechpartner);
-		const mapAnsprechpartner = this.mapAnsprechpartner;
+		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
+		this.mapAnsprechpartner.forEach((value) => mapAnsprechpartner.set(value.id, value));
 		mapAnsprechpartner.set(ansprechpartner.id, ansprechpartner);
 		this.setPatchedState({listAnsprechpartner, mapAnsprechpartner})
 	}
 
 	createSchuelerBetriebsdaten = async (data: SchuelerBetriebsdaten) => {
 		const betrieb = await api.server.createSchuelerbetrieb(data, api.schema, data.schueler_id, data.betrieb_id);
-		const listSchuelerbetriebe = this.listSchuelerbetriebe;
-		listSchuelerbetriebe.add(betrieb);
-		const mapAnsprechpartner = new Map();
-		this.setPatchedState({listSchuelerbetriebe, mapAnsprechpartner})
+		this.listSchuelerbetriebe.add(betrieb);
+		console.log(this.listSchuelerbetriebe)
+		this.setPatchedState( {listSchuelerbetriebe: this.listSchuelerbetriebe})
+		void this.setSchuelerBetrieb(betrieb);
 	}
 }
 

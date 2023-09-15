@@ -67,9 +67,7 @@ export class RouteDataSchuleBenutzergruppe {
 		const mapBenutzergruppe = new Map<number, BenutzergruppeListeEintrag>();
 		for (const l of listBenutzergruppe)
 			mapBenutzergruppe.set(l.id, l);
-		//const auswahl = mapBenutzergruppe.size > 0 ? this.firstBenutzer(mapBenutzergruppe) : undefined;
 		const listBenutzerAlle = await api.server.getBenutzerliste(api.schema);
-		//console.log(api.schema,"--",auswahl?.id)
 		this.setPatchedState({
 			listBenutzergruppe: listBenutzergruppe,
 			mapBenutzergruppe : mapBenutzergruppe,
@@ -77,8 +75,6 @@ export class RouteDataSchuleBenutzergruppe {
 		})
 	}
 	public async setBenutzergruppe(benutzerGruppe: BenutzergruppeListeEintrag | undefined ) {
-		console.log("setBenutzerGruppe:"+benutzerGruppe)
-		console.log("auswahl_id"+this._state.value.auswahl?.id)
 		if (benutzerGruppe?.id === this._state.value.auswahl?.id && this.hatDaten)
 			return;
 		if ((benutzerGruppe === undefined) || (this.mapBenutzergruppe.size === 0)) {
@@ -93,12 +89,9 @@ export class RouteDataSchuleBenutzergruppe {
 			})
 			await this.ladeListe();
 		}
-		console.log("in Bneutzer");
 		const neueAuswahl = benutzerGruppe === undefined ? this.firstBenutzer(this.mapBenutzergruppe) : benutzerGruppe;
 		const daten = await this.ladeBenutzergruppenDaten(neueAuswahl);
-		//const listBenutzergruppen = await api.server.getBenutzergruppenliste(api.schema);
 		const benutzergruppenManager = daten=== undefined ? undefined : new BenutzergruppenManager(daten);
-		//const listBenutzerAlle = await api.server.getBenutzerliste(api.schema);
 		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl?.id);
 		this.setPatchedState({
 			auswahl: neueAuswahl,
@@ -109,13 +102,11 @@ export class RouteDataSchuleBenutzergruppe {
 	}
 
 	gotoBenutzergruppe = async (value: BenutzergruppeListeEintrag | undefined) => {
-		console.log("gotoBentuzer"+ value);
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchuleBenutzergruppe.name, params: { } });
 			return;
 		}
 		const redirect_name: string = (routeSchuleBenutzergruppe.selectedChild === undefined) ? routeSchuleBenutzergruppe.name : routeSchuleBenutzergruppe.selectedChild.name;
-		console.log("redirect--"+redirect_name)
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
 

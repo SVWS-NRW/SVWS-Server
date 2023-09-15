@@ -1142,7 +1142,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Stammdaten des Schülerbetriebs.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerBetriebsdaten>
+	 *     - Rückgabe-Typ: SchuelerBetriebsdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schülerbetreibe anzusehen.
 	 *   Code 404: Kein Schülerbetrieb gefunden
 	 *
@@ -1151,15 +1151,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Stammdaten des Schülerbetriebs.
 	 */
-	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<List<SchuelerBetriebsdaten>> {
+	public async getSchuelerBetriebsdaten(schema : string, id : number) : Promise<SchuelerBetriebsdaten> {
 		const path = "/db/{schema}/betriebe/{id : \\d+}/betrieb"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerBetriebsdaten>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerBetriebsdaten.transpilerFromJSON(text)); });
-		return ret;
+		const text = result;
+		return SchuelerBetriebsdaten.transpilerFromJSON(text);
 	}
 
 
