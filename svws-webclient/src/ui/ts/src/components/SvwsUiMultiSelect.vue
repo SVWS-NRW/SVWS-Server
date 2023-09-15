@@ -592,7 +592,8 @@
 		@apply opacity-10 !important;
 	}
 
-	.data-table & {
+	.data-table &,
+	.svws-ui-table & {
 		@apply p-0;
 
 		.icon {
@@ -792,18 +793,14 @@
 	right: 1.7rem;
 	font-size: 1rem;
 
-	.data-table & {
-		right: 1em;
-		font-size: 0.9em;
+	.data-table &,
+	.svws-ui-table & {
+		right: 0.9rem;
+		font-size: 0.9rem;
 	}
 
 	&:hover {
 		@apply opacity-100;
-	}
-
-	.icon {
-		@apply rounded-full;
-		padding: 1px;
 	}
 }
 </style>

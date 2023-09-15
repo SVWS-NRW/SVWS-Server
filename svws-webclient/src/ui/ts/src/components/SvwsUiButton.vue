@@ -57,6 +57,10 @@
 	gap: 0.25em;
 	padding: 0.45em 0.75em;
 
+  .svws-ui-table-filter & {
+    min-height: 2.25rem;
+  }
+
 	svg {
 		margin-top: -0.1em;
 		margin-bottom: -0.1em;
@@ -76,6 +80,10 @@
 
 	&:active {
 		@apply ring-0 brightness-100;
+	}
+
+	.svws-ui-tfoot & {
+		@apply h-7 min-h-[unset];
 	}
 }
 
@@ -206,7 +214,8 @@
 
 .button--trash,
 .button--icon {
-	&.button--small {
+	&.button--small,
+  .svws-ui-tbody &{
 		@apply text-sm font-medium h-6 w-6;
 		padding: 0.3em !important;
 
@@ -216,7 +225,8 @@
 		}
 	}
 
-	.data-table__tfoot-actions &.button {
+	.data-table__tfoot-actions &.button,
+	.svws-ui-tfoot &.button {
 		@apply text-button h-7 w-7;
 		padding: 0.25em !important;
 
@@ -237,7 +247,7 @@
 	}
 
 	&:hover, &:focus {
-		@apply bg-black/10 dark:bg-white/5 rounded;
+		@apply bg-black/10 dark:bg-white/5;
 	}
 
 	&:focus-visible {
@@ -264,6 +274,7 @@
 .button--small,
 .content-card--header .button,
 .data-table__tbody .button,
+.svws-ui-tbody .button,
 .router-tab-bar--subnav .button,
 .router-tab-bar--subnav .radio--label,
 .cv-wrapper .cv-header button {
@@ -272,18 +283,21 @@
 
 .button--small,
 .data-table__tbody .button,
+.svws-ui-tbody .button,
 .content-card--header .button,
 .router-tab-bar--subnav .button,
 .cv-wrapper .cv-header button {
 	padding: 0.3em 0.75em;
 }
 
-.data-table__tbody .button {
+.data-table__tbody .button,
+.svws-ui-tbody .button {
 	@apply -my-2 h-full self-center rounded;
 	padding: 0.1em 0.5em;
 }
 
-.data-table__tbody .button--icon.button--small {
+.data-table__tbody .button--icon.button--small,
+.svws-ui-tbody .button--icon.button--small {
 	@apply w-5 h-5 -m-0.5;
 	@apply p-0 !important;
 }
@@ -305,6 +319,7 @@
 	font-size: 0.8rem;
 
 	.data-table__tbody .button &,
+	.svws-ui-tfoot .button &,
 	.content-card--header .button &,
 	.router-tab-bar--subnav .button &,
 	.cv-wrapper .cv-header button & {

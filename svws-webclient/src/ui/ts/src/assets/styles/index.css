@@ -38,3 +38,7 @@ html.dark {
 .icon {
 	line-height: 1 !important;
 }
+
+hr {
+	@apply border-0 border-t-2 border-solid border-black/10 dark:border-white/10;
+}

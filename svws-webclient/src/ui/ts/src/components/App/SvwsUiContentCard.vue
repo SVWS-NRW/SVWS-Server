@@ -12,17 +12,18 @@
 
 <template>
 	<div class="content-card" :class="{'h-full': overflowScroll}">
-		<div v-if="title || $slots.actions" class="content-card--header" :class="{
+		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
-			<h3 v-if="title" class="content-card--headline" :class="{'content-card--headline--large': largeTitle}" :title="title">
-				{{ title }}
-			</h3>
+			<slot name="title">
+				<h3 v-if="title" class="content-card--headline" :class="{'content-card--headline--large': largeTitle}" :title="title">
+					{{ title }}
+				</h3>
+			</slot>
 			<div v-if="$slots.actions" class="content-card--actions">
 				<slot name="actions" />
 			</div>
 		</div>
-		<slot name="title" />
 		<div class="content-card--content" :class="{'content-card--content--with-title': title || $slots.title, 'content-card--content--overflow-scroll': overflowScroll}">
 			<slot />
 		</div>
@@ -57,7 +58,7 @@
 			@apply inline-flex items-center justify-between mb-1 py-1 w-auto;
 
 			&--has-actions {
-				@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap;
+				@apply flex gap-x-8 gap-y-1 w-full items-start flex-wrap mb-0;
 
 				.content-card--headline {
 					@apply hyphens-auto sm:flex-grow;
@@ -66,7 +67,7 @@
 		}
 
 		&--actions {
-			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3;
+			@apply flex items-center gap-x-2 max-xl:w-full max-xl:mb-3 -mt-1;
 		}
 
     &.col-span-full {

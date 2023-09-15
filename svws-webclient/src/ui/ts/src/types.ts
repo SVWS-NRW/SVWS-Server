@@ -20,4 +20,6 @@ export type DataTableColumn = {
 	tooltip?: string
 	disabled?: boolean
 	type?: InputType
+	divider?: boolean
+	toggle?: boolean
 }

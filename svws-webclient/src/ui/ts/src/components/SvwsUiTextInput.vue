@@ -326,18 +326,23 @@
 	.text-input--search {
 		@apply relative;
 
+    &.text-input--filled {
+      @apply text-svws;
+    }
+
 		&-icon {
-			@apply absolute left-2 opacity-40;
+			@apply absolute left-2 opacity-25;
 			top: 50%;
-			transform: translateY(-50%);
+			transform: translateY(-50%) scale(90%);
 
 			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
-				@apply opacity-60;
+				@apply opacity-50;
 			}
 
 			.text-input-component:focus-within &,
 			.text-input--filled & {
 				@apply opacity-100;
+        transform: translateY(-50%) scale(100%);
 			}
 		}
 

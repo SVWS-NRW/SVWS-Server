@@ -7,7 +7,7 @@
 		@click="toggleTooltip"
 		class="inline-flex flex-wrap items-center gap-0.5 tooltip-trigger"
 		:class="{'tooltip-trigger--underline': indicator, 'tooltip-trigger--triggered': isOpen, 'tooltip-trigger--danger': color === 'danger' || (indicator && indicator === 'danger'), 'cursor-help': !hover, 'cursor-default': hover }"
-		ref="reference">
+		ref="reference" v-bind="$attrs">
 		<slot />
 		<template v-if="(indicator && indicator !== 'underline') || $slots.icon">
 			<slot name="icon">
@@ -162,7 +162,7 @@
 	}
 
 	&--underline {
-		@apply underline decoration-black/10;
+		@apply underline decoration-black/20 dark:decoration-white/20 decoration-dashed;
 
 		&.tooltip-trigger--triggered {
 			@apply no-underline;
@@ -173,24 +173,20 @@
 .tooltip {
 	@apply rounded-md z-50;
 	@apply px-2 py-0.5 w-max max-w-[24rem];
-	@apply bg-white text-black border border-light;
+	@apply bg-white text-black border border-light dark:bg-black dark:text-white dark:border-white/5;
 	box-shadow: -8px -8px 25px -3px rgb(0 0 0 / 0.1), 8px 8px 25px -3px rgb(0 0 0 / 0.1), -4px 4px 6px -4px rgb(0 0 0 / 0.1);
 
 	&--primary {
-		@apply bg-svws text-white border-none;
+		@apply bg-svws text-white dark:bg-svws border-none;
 		@apply shadow-sm shadow-black/25;
 
 		.page--statistik & {
-			@apply bg-violet-500;
+			@apply bg-violet-500 dark:bg-violet-500;
 		}
 	}
 
-	&--dark {
-		@apply bg-dark-20 text-black border border-black/5 shadow-md;
-	}
-
 	&--danger {
-		@apply bg-error text-white border border-error/5 shadow-error/10 shadow-md;
+		@apply bg-error dark:bg-error text-white border border-error/5 shadow-error/10 shadow-md;
 	}
 }
 </style>

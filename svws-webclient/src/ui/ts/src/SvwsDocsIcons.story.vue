@@ -27,12 +27,27 @@
 					<td><code>{{ '<' }}i-ri-add-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
+					<th><i-ri-edit-2-line /></th>
+					<td>Bearbeiten</td>
+					<td><code>{{ '<' }}i-ri-edit-2-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
 					<th><i-ri-delete-bin-line /></th>
 					<td>Löschen</td>
 					<td><code>{{ '<' }}i-ri-delete-bin-line{{ ' />' }}</code></td>
 				</tr>
+				<tr>
+					<th><i-ri-link /></th>
+					<td>Link zu einem anderen Bereich im Client</td>
+					<td><code>{{ '<' }}i-ri-link{{ ' />' }}</code></td>
+				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
+				<tr>
+					<th><i-ri-question-fill /></th>
+					<td>Hilfe/Information, Tooltip Trigger</td>
+					<td><code>{{ '<' }}i-ri-question-fill{{ ' />' }}</code></td>
+				</tr>
 				<tr>
 					<th><i-ri-information-line /></th>
 					<td>Information, Tooltip Trigger</td>
@@ -44,13 +59,18 @@
 					<td><code>{{ '<' }}i-ri-alert-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-alert-fill /></th>
-					<td>Fehler, Steigerung von "Warnung"</td>
-					<td><code>{{ '<' }}i-ri-alert-line{{ ' />' }}</code></td>
+					<th><i-ri-error-warning-line /></th>
+					<td>Alternative Warnung/Fehler</td>
+					<td><code>{{ '<' }}i-ri-error-warning-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-checkbox-circle-line /></th>
-					<td>Keine Fehler</td>
+					<th><i-ri-alert-fill /></th>
+					<td>Fehler, Steigerung von "Warnung"</td>
+					<td><code>{{ '<' }}i-ri-alert-fill{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-checkbox-circle-fill /></th>
+					<td>Keine Fehler, gültig</td>
 					<td><code>{{ '<' }}i-ri-checkbox-circle-fill{{ ' />' }}</code></td>
 				</tr>
 			</table>
@@ -109,48 +129,34 @@
 					<td>Logout</td>
 					<td><code>{{ '<' }}i-ri-logout-circle-line{{ ' />' }}</code></td>
 				</tr>
-				<tr>
+				<!--<tr>
 					<th><i-ri-palette-line /></th>
 					<td>Ansicht (Einstellungen)</td>
 					<td><code>{{ '<' }}i-ri-palette-line{{ ' />' }}</code></td>
-				</tr>
-			</table>
-		</Variant>
-		<Variant title="Input Fields und Interaktion" source=" ">
-			<table class="svws-docs-icon-table">
-				<tr>
-					<th><i-ri-draggable /></th>
-					<td>Drag & Drop Handle</td>
-					<td><code>{{ '<' }}i-ri-draggable{{ ' />' }}</code></td>
-				</tr>
-				<tr>
-					<th><i-ri-checkbox-blank-line /></th>
-					<td>Checkbox: false</td>
-					<td><code>{{ '<' }}i-ri-checkbox-blank-line{{ ' />' }}</code></td>
-				</tr>
-				<tr>
-					<th><i-ri-checkbox-fill /></th>
-					<td>Checkbox: true</td>
-					<td><code>{{ '<' }}i-ri-checkbox-fill{{ ' />' }}</code></td>
-				</tr>
-				<tr>
-					<th><i-ri-checkbox-indeterminate-fill /></th>
-					<td>Checkbox: indeterminate</td>
-					<td><code>{{ '<' }}i-ri-checkbox-indeterminate-fill{{ ' />' }}</code></td>
-				</tr>
-				<tr>
-					<th><i-ri-expand-up-down-fill /></th>
-					<td>Multiselect Input</td>
-					<td><code>{{ '<' }}i-ri-expand-up-down-fill{{ ' />' }}</code></td>
-				</tr>
+				</tr>-->
 			</table>
 		</Variant>
 		<Variant title="Weitere Icons" source=" ">
 			<table class="svws-docs-icon-table">
 				<tr>
+					<th><i-ri-eye-line /></th>
+					<td>Element einblenden</td>
+					<td><code>{{ '<' }}i-ri-eye-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-eye-off-line /></th>
+					<td>Element ausblenden</td>
+					<td><code>{{ '<' }}i-ri-eye-off-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
 					<th><i-ri-printer-line /></th>
 					<td>Drucken</td>
 					<td><code>{{ '<' }}i-ri-printer-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-sparkling-line /></th>
+					<td>Automatisierung, z. B. Verteilen von Kursen</td>
+					<td><code>{{ '<' }}i-ri-sparkling-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-upload-2-line /></th>
@@ -163,14 +169,69 @@
 					<td><code>{{ '<' }}i-ri-download-2-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-bar-chart2-line /></th>
-					<td>Tooltip Label für statistikrelevante Inputs</td>
-					<td><code>{{ '<' }}i-ri-bar-chart-2-line{{ ' />' }}</code></td>
+					<th><i-ri-shield-star-line /></th>
+					<td>Admin-Rechte, Administrative Benutzergruppe</td>
+					<td><code>{{ '<' }}i-ri-shield-star-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-search-line /></th>
-					<td>Suche</td>
-					<td><code>{{ '<' }}i-ri-search-line{{ ' />' }}</code></td>
+					<th><i-ri-bug-fill /></th>
+					<td>Fehlermeldung Bug</td>
+					<td><code>{{ '<' }}i-ri-bug-fill{{ ' />' }}</code></td>
+				</tr>
+			</table>
+		</Variant>
+		<Variant title="Oberstufe" source=" ">
+			<table class="svws-docs-icon-table">
+				<tr>
+					<th><i-ri-spam-3-line /></th>
+					<td>Nichtverteilt</td>
+					<td><code>{{ '<' }}i-ri-spam-3-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-error-warning-line /></th>
+					<td>Kollision</td>
+					<td><code>{{ '<' }}i-ri-error-warning-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-alert-fill /></th>
+					<td>Kollision und Nichtverteilt</td>
+					<td><code>{{ '<' }}i-ri-alert-fill{{ ' />' }}</code></td>
+				</tr>
+			</table>
+			<table class="svws-docs-icon-table">
+				<tr>
+					<th><i-ri-draft-line /></th>
+					<td>Fachwahl: Schriftlich</td>
+					<td><code>{{ '<' }}i-ri-draft-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-speak-line /></th>
+					<td>Fachwahl: Mündliche</td>
+					<td><code>{{ '<' }}i-ri-speak-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-user-line /></th>
+					<td>Überschrift in der Tabelle für Geschlecht</td>
+					<td><code>{{ '<' }}i-ri-user-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-settings-3-line /></th>
+					<td>Regeln zur Blockung</td>
+					<td><code>{{ '<' }}i-ri-settings-3-line{{ ' />' }}</code></td>
+				</tr>
+			</table>
+		</Variant>
+		<Variant title="Input Fields und Interaktion" source=" ">
+			<table class="svws-docs-icon-table">
+				<tr>
+					<th><i-ri-draggable /></th>
+					<td>Drag & Drop Handle</td>
+					<td><code>{{ '<' }}i-ri-draggable{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-expand-up-down-fill /></th>
+					<td>Multiselect Input</td>
+					<td><code>{{ '<' }}i-ri-expand-up-down-fill{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-filter-line /></th>
@@ -178,9 +239,39 @@
 					<td><code>{{ '<' }}i-ri-filter-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-bug-fill /></th>
-					<td>Fehlermeldung Bug</td>
-					<td><code>{{ '<' }}i-ri-bug-fill{{ ' />' }}</code></td>
+					<th><i-ri-filter-off-line /></th>
+					<td>Filter zurücksetzen</td>
+					<td><code>{{ '<' }}i-ri-filter-off-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-search-line /></th>
+					<td>Suche</td>
+					<td><code>{{ '<' }}i-ri-search-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-checkbox-circle-line /></th>
+					<td>Radio Option: true</td>
+					<td><code>{{ '<' }}i-ri-checkbox-circle-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-checkbox-blank-circle-line /></th>
+					<td>Radio Option: false</td>
+					<td><code>{{ '<' }}i-ri-checkbox-circle-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-check-line /></th>
+					<td>Checkbox: headless + true</td>
+					<td><code>{{ '<' }}i-ri-check-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-close-line /></th>
+					<td>Checkbox: headless + disabled + false</td>
+					<td><code>{{ '<' }}i-ri-close-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-bar-chart2-line /></th>
+					<td>Tooltip Label für statistikrelevante Inputs</td>
+					<td><code>{{ '<' }}i-ri-bar-chart-2-line{{ ' />' }}</code></td>
 				</tr>
 			</table>
 		</Variant>

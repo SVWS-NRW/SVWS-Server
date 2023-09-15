@@ -22,6 +22,7 @@ export { default as SvwsUiTooltip } from "./SvwsUiTooltip.vue";
 export { default as SvwsUiRouterTabBar } from "./App/SvwsUiRouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./App/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./App/SvwsUiRouterVerticalTabBar.vue";
+export { default as SvwsUiTable } from "./SvwsUiTable.vue";
 export { default as SvwsUiDataTable } from "./DataTable/SvwsUiDataTable.vue";
 export { default as SvwsUiDataTableRow } from "./DataTable/SvwsUiTableRow.vue";
 export { default as SvwsUiDataTableCell } from "./DataTable/SvwsUiTableCell.vue";

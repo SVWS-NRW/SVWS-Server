@@ -311,7 +311,8 @@
 
 	.secondary-menu--headline,
 	.secondary-menu--header,
-	.secondary-menu--content .text-headline {
+	.secondary-menu--content .text-headline,
+  .app--sidebar .svws-ui-table-filter {
 		@apply px-7;
 	}
 
@@ -326,7 +327,8 @@
 	@media (min-width: 2000px) {
 		.secondary-menu--headline,
 		.secondary-menu--header,
-		.secondary-menu--content .text-headline {
+		.secondary-menu--content .text-headline,
+    .app--sidebar .svws-ui-table-filter {
 			@apply px-8;
 		}
 

@@ -27,6 +27,7 @@ export {
 	SvwsUiRouterTabBar,
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
+	SvwsUiTable,
 	SvwsUiDataTable,
 	SvwsUiDataTableRow,
 	SvwsUiDataTableCell,
