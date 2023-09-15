@@ -1,81 +1,71 @@
 <template>
-	<svws-ui-content-card :title="title" class="table--with-background sticky top-8">
-		<svws-ui-data-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" panel-height overflow-x-hidden contrast-border>
+	<svws-ui-content-card :title="title">
+		<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" has-background>
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-3 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Fach
-							</div>
-						</div>
+				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td col-span-3 svws-divider">
+						Fachwahlen
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Sprachen
-							</div>
-						</div>
+					<div role="columnheader" class="svws-ui-td svws-align-center col-span-2 svws-divider">
+						Sprachen
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-2 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								EF
-							</div>
-						</div>
+					<div role="columnheader" class="svws-ui-td svws-align-center col-span-2 svws-divider">
+						EF
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center col-span-4 data-table__th__separate">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Qualifikationsphase
-							</div>
-						</div>
+					<div role="columnheader" class="svws-ui-td svws-align-center col-span-4 svws-divider">
+						Qualifikationsphase
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center">
-						<div class="data-table__th-wrapper">
-							<div class="data-table__th-title">
-								Abitur
-							</div>
-						</div>
+					<div role="columnheader" class="svws-ui-td svws-align-center">
+						Abitur
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr">
-					<svws-ui-table-cell thead>
+				<div role="row" class="svws-ui-tr">
+					<div class="svws-ui-td">
 						Kürzel
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead>
-						Bezeichnung
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead separate align="center" tooltip="Wochenstunden">
-						WS
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
-						Folge
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate tooltip="Ab Jahrgang">
-						ab Jg
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
-						EF.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate>
-						EF.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
-						Q1.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
-						Q1.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
-						Q2.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate>
-						Q2.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center">
+					</div>
+					<div class="svws-ui-td">
 						Fach
-					</svws-ui-table-cell>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider">
+						<svws-ui-tooltip>
+							<span>WS</span>
+							<template #content>
+								Wochenstunden
+							</template>
+						</svws-ui-tooltip>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
+						Folge
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						<svws-ui-tooltip>
+							<span>ab JG</span>
+							<template #content>
+								Ab Jahrgang
+							</template>
+						</svws-ui-tooltip>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						EF.1
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						EF.2
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						Q1.1
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						Q1.2
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						Q2.1
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						Q2.2
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
+						Fach
+					</div>
 				</div>
 			</template>
 			<template #body>
@@ -84,121 +74,122 @@
 						:fach="row" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
 				</template>
 			</template>
-			<template #footer>
-				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate gap-1">
+			<template #dataFooter>
+				<div role="row" class="svws-ui-tr">
+					<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider gap-1">
 						<span>Anrechenbare Kurse</span>
 						<svws-ui-tooltip>
-							<i-ri-information-line class="text-black/50" />
+							<i-ri-question-line class="-m-0.5 mx-0.5" />
 							<template #content>
 								Pro Halbjahr sollten <strong>10–11</strong> Kurse gewählt werden. Insgesamt sind <strong>33–36</strong> Kurse als Summe aus der Qualifikationsphase optimal.
 							</template>
 						</svws-ui-tooltip>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in kurszahlen" :key="i" :class="{'data-table__th__separate': (i === 1 || i === 5)}">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(jahrgang, i) in kurszahlen" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-amber-400': jahrgang < 10,
-								'bg-lime-500': jahrgang > 9 && jahrgang < 12,
-								'bg-lime-700 text-white': jahrgang > 11
+								'svws-ergebnis--not-enough': jahrgang < 9,
+								'svws-ergebnis--low': jahrgang < 10 && jahrgang > 8,
+								'svws-ergebnis--good': jahrgang > 9 && jahrgang < 12,
+								'svws-ergebnis--more': jahrgang > 11
 							}">
 							{{ jahrgang }}
 						</span>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center data-table__th__separate">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-rose-700 text-white': kurse_summe < 30,
-								'bg-amber-400': kurse_summe >= 31 && kurse_summe <= 32,
-								'bg-lime-500': kurse_summe > 32 && kurse_summe < 37,
-								'bg-lime-700 text-white': kurse_summe > 36
+								'svws-ergebnis--not-enough': kurse_summe < 30,
+								'svws-ergebnis--low': kurse_summe >= 31 && kurse_summe <= 32,
+								'svws-ergebnis--good': kurse_summe > 32 && kurse_summe < 37,
+								'svws-ergebnis--more': kurse_summe > 36
 							}">
 							{{ kurse_summe }}
 						</span>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate gap-1">
+				<div role="row" class="svws-ui-tr">
+					<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 						<span>Wochenstunden</span>
 						<svws-ui-tooltip>
-							<i-ri-information-line class="text-black/50" />
+							<i-ri-question-line class="-m-0.5 mx-0.5" />
 							<template #content>
 								Pro Halbjahr sollten <strong>33–36</strong> Wochenstunden erreicht werden. Insgesamt sind <strong>102–108</strong> Wochenstunden als Summe aus der Qualifikationsphase optimal.
 							</template>
 						</svws-ui-tooltip>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center" v-for="(jahrgang, i) in wochenstunden" :key="i" :class="{'data-table__th__separate': (i === 1 || i === 5)}">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding" v-for="(jahrgang, i) in wochenstunden" :key="i" :class="{'svws-divider': (i === 1 || i === 5)}">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-rose-700 text-white': jahrgang < 30,
-								'bg-amber-400': jahrgang >= 31 && jahrgang <= 32,
-								'bg-lime-500': jahrgang > 32 && jahrgang < 37,
-								'bg-lime-700 text-white': jahrgang > 36
+								'svws-ergebnis--not-enough': jahrgang < 30,
+								'svws-ergebnis--low': jahrgang >= 31 && jahrgang <= 32,
+								'svws-ergebnis--good': jahrgang > 32 && jahrgang < 37,
+								'svws-ergebnis--more': jahrgang > 36
 							}">
 							{{ jahrgang }}
 						</span>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-rose-700 text-white': wst_summe < 100,
-								'bg-amber-400': wst_summe >= 100 && wst_summe < 102,
-								'bg-lime-500': wst_summe >= 102 && wst_summe <= 108,
-								'bg-lime-700 text-white': wst_summe > 108
+								'svws-ergebnis--not-enough': wst_summe < 100,
+								'svws-ergebnis--low': wst_summe >= 100 && wst_summe < 102,
+								'svws-ergebnis--good': wst_summe >= 102 && wst_summe <= 108,
+								'svws-ergebnis--more': wst_summe > 108
 							}">
 							{{ wst_summe }}
 						</span>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__tbody__tr data-table__thead__tr__compact">
-					<div role="rowheader" class="data-table__th font-bold data-table__thead__th data-table__th__align-right col-span-5 data-table__th__separate gap-1">
+				<div role="row" class="svws-ui-tr">
+					<div role="rowheader" class="svws-ui-td font-bold svws-align-right col-span-5 svws-divider">
 						<span>Durchschnitt</span>
 						<svws-ui-tooltip>
-							<i-ri-information-line class="text-black/50" />
+							<i-ri-question-line class="-m-0.5 mx-0.5" />
 							<template #content>
 								In der EF und Qualifikationsphase sollten jeweils im Durchschnitt <strong>34–36</strong> Wochenstunden erreicht werden.
 							</template>
 						</svws-ui-tooltip>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-2 data-table__th__separate">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding col-span-2 svws-divider">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-rose-700 text-white': wst_d_ef < 34,
-								'bg-lime-500': wst_d_ef >= 34 && wst_d_ef < 37,
-								'bg-lime-700 text-white': wst_d_ef >= 37
+								'svws-ergebnis--not-enough': wst_d_ef < 34,
+								'svws-ergebnis--good': wst_d_ef >= 34 && wst_d_ef < 37,
+								'svws-ergebnis--more': wst_d_ef >= 37
 							}">
 							{{ wst_d_ef }}
 						</span>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center col-span-4 data-table__th__separate">
-						<span class="inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-md w-full h-full"
+					<div role="cell" class="svws-ui-td svws-align-center svws-no-padding col-span-4 svws-divider">
+						<span class="svws-ergebnis-badge"
 							:class="{
-								'bg-rose-700 text-white': wst_d_q < 34,
-								'bg-lime-500': wst_d_q >= 34 && wst_d_q < 37,
-								'bg-lime-700 text-white': wst_d_q >= 37
+								'svws-ergebnis--not-enough': wst_d_q < 34,
+								'svws-ergebnis--good': wst_d_q >= 34 && wst_d_q < 37,
+								'svws-ergebnis--more': wst_d_q >= 37
 							}">
 							{{ wst_d_q }}
 						</span>
 					</div>
-					<div role="cell" class="data-table__td col-laufbahnplanung-ergebnis data-table__td__align-center">
+					<div role="cell" class="svws-ui-td svws-align-center">
 						<svws-ui-tooltip>
-							<i-ri-information-line class="text-headline-md text-black/50" />
+							<i-ri-information-line class="-m-0.5" />
 							<template #content>
 								<div class="flex flex-col gap-0.5 text-center">
 									<span class="flex gap-1 items-center">
-										<span class="w-4 h-4 rounded-full bg-rose-700" />
+										<span class="w-4 h-4 rounded-full svws-ergebnis--not-enough" />
 										<span>Zu wenig</span>
 									</span>
 									<span class="flex gap-1 items-center">
-										<span class="w-4 h-4 rounded-full bg-amber-400" />
+										<span class="w-4 h-4 rounded-full svws-ergebnis--low" />
 										<span>Ausreichend</span>
 									</span>
 									<span class="flex gap-1 items-center">
-										<span class="w-4 h-4 rounded-full bg-lime-500" />
+										<span class="w-4 h-4 rounded-full svws-ergebnis--good" />
 										<span>Optimale Anzahl</span>
 									</span>
 									<span class="flex gap-1 items-center">
-										<span class="w-4 h-4 rounded-full bg-lime-700" />
+										<span class="w-4 h-4 rounded-full svws-ergebnis--more" />
 										<span>Mehr als erforderlich</span>
 									</span>
 								</div>
@@ -207,7 +198,7 @@
 					</div>
 				</div>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -271,8 +262,30 @@
 
 </script>
 
-<style scoped lang="postcss">
-.col-laufbahnplanung-ergebnis {
-	padding: 0.175rem;
+<style lang="postcss" scoped>
+.svws-ergebnis-badge {
+  @apply inline-flex justify-center items-center font-bold py-0.5 px-1.5 rounded-lg w-full h-full border-2 border-white dark:border-black;
+}
+
+.svws-ui-tfoot--data {
+  .tooltip-trigger {
+    @apply -m-2;
+  }
+}
+
+.svws-ergebnis--not-enough {
+  @apply bg-error text-white;
+}
+
+.svws-ergebnis--low {
+  @apply bg-amber-400;
+}
+
+.svws-ergebnis--good {
+  @apply bg-success;
+}
+
+.svws-ergebnis--more {
+  @apply bg-lime-700 text-white;
 }
 </style>

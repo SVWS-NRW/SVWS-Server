@@ -10,39 +10,55 @@
 				<i-ri-printer-line />Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
 			</svws-ui-button>
 		</Teleport>
-		<svws-ui-content-card title="Laufbahnfehler">
-			<template #actions>
+		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">
+			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
+				<div class="flex flex-wrap gap-x-5">
+					<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="filterExterne">Externe</svws-ui-checkbox>
+				</div>
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
-			</template>
-			<div class="flex flex-wrap gap-10 mb-3 -mt-3">
-				<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
-				<svws-ui-checkbox type="toggle" v-model="filterExterne">Keine Externe</svws-ui-checkbox>
 			</div>
-			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler vorhanden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
-				<template #cell(schueler)="{value: s}: {value: Schueler}">
-					<div class="flex gap-2 w-full">
-						<div>{{ s.nachname }}, {{ s.vorname }}</div>
-						<svws-ui-badge v-if="s.status !== 2" size="big" title="Status" class="-my-0.5 leading-none">
-							{{ SchuelerStatus.fromID(s.status)?.bezeichnung }}
-						</svws-ui-badge>
-					</div>
+			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
+				<template #header(linkToSchueler)>
+					<i-ri-group-line />
+				</template>
+				<template #header(ergebnis)>
+					<svws-ui-tooltip class="w-6">
+						<i-ri-alert-line class="text-headline-md -my-1 -mx-0.5" />
+						<template #content>
+							Anzahl der Fehler insgesamt
+						</template>
+					</svws-ui-tooltip>
+				</template>
+				<template #cell(linkToSchueler)="{ rowData }">
+					<button type="button" @click.stop="gotoLaufbahnplanung(rowData as Schueler)" class="button button--icon" title="Zur Laufbahnplanung">
+						<i-ri-link />
+					</button>
+				</template>
+				<template #cell(name)="{rowData}">
+					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
+					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold !mt-0 !ml-1 !bg-light dark:!bg-white/5">{{ SchuelerStatus.fromID(rowData.schueler.status)?.bezeichnung || "" }}</span>
 				</template>
 				<template #cell(hinweise)="cell">
-					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-25"><i-ri-information-line /></span>
+					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><i-ri-information-line /></span>
 				</template>
 				<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card v-if="!filtered.isEmpty()" :title="`Details zu Schüler ID: ${schueler.schueler.id}`" class="sticky top-8">
-			<div class="text-headline inline-flex gap-x-5 -mt-3 flex-wrap" :class="counter(schueler.ergebnis.fehlercodes) === 0 ? 'mb-6' : 'mb-1'">
-				<span>{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
-				<svws-ui-button type="secondary" @click.stop="gotoLaufbahnplanung(schueler.schueler.id)">
-					<i-ri-link />
-					Zur Laufbahnplanung
-				</svws-ui-button>
-			</div>
+		<svws-ui-content-card v-if="!filtered.isEmpty() && schueler">
+			<template #title>
+				<svws-ui-tooltip :indicator="false">
+					<span class="text-headline-md" title="Zur Laufbahnplanung">{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
+					<template #content>
+						ID: {{ schueler?.schueler?.id || '' }}
+					</template>
+				</svws-ui-tooltip>
+			</template>
+			<template #actions>
+				<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><i-ri-link />Zur Laufbahnplanung</svws-ui-button>
+			</template>
 			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 			<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 		</svws-ui-content-card>
@@ -62,9 +78,10 @@
 	const props = defineProps<GostLaufbahnfehlerProps>();
 
 	const cols: DataTableColumn[] = [
-		{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true},
-		{key: 'hinweise', label: 'K/WStd', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 6, align: 'center', sortable: false},
-		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'center', sortable: true},
+		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
+		{key: 'name', label: 'Name, Vorname', span: 2},
+		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
+		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
@@ -161,7 +178,6 @@
 
 <style lang="postcss" scoped>
 .page--content {
-  @apply gap-y-3;
-  grid-template-columns: minmax(20rem, 0.5fr) 1fr;
+	grid-template-columns: minmax(20rem, 0.5fr) 1fr;
 }
 </style>

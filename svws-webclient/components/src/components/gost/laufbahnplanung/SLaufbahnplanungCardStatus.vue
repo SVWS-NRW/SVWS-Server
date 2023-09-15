@@ -3,7 +3,7 @@
 		<template #actions>
 			<s-laufbahnplanung-belegpruefungsart v-model="art" />
 		</template>
-		<div class="print:hidden -mt-4">
+		<div class="print:hidden">
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" />

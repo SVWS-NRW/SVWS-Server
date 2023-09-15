@@ -1,41 +1,31 @@
 <template>
 	<template v-if="!abiturdatenManager().faecher().getFachkombinationen().isEmpty()">
-		<h4 class="gap-1 flex items-center font-bold mt-5 cursor-pointer" @click="show=!show">
-			<span class="inline-flex gap-1 items-center">
-				<template v-if="fehler.size">
-					Fehler bei
-				</template>
-				<template v-else>
-					<i-ri-checkbox-circle-fill class="flex-shrink-0 text-success" />
-				</template>
-				Fachkombinationsregeln
-			</span>
-			<svws-ui-badge v-if="fehler.size" type="error" size="big">
-				{{ fehler.size }}
-			</svws-ui-badge>
-			<svws-ui-button type="transparent" size="small" class="ml-3 -mt-0.5">
-				<template v-if="show">
-					Details
-					<i-ri-arrow-down-s-line />
-				</template>
-				<template v-else>
-					Details
-					<i-ri-arrow-right-s-line />
-				</template>
-			</svws-ui-button>
-		</h4>
-		<ul class="mt-1 flex flex-col gap-1.5" v-show="show">
-			<li v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="flex gap-1 leading-tight">
-				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
-				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
-				<span>{{ regel.hinweistext }}</span>
-			</li>
-			<li v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="flex gap-1 leading-tight">
-				<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
-				<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
-				<span>{{ regel.hinweistext }}</span>
-			</li>
-		</ul>
+		<svws-ui-table :no-data="fehler.size === 0" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 2.25},{key: 'beschreibung', label: (fehler.size ? 'Fehler bei Fachkombinationsregeln' : 'Alle Fachkombinationsregeln erfüllt')}]" class="overflow-visible">
+			<template #header(icon)>
+				<span v-if="fehler.size" class="rounded w-[1.75rem] inline-flex items-center justify-center bg-error text-white border-2 border-error -m-1">{{ fehler.size }}</span>
+				<i-ri-checkbox-circle-fill v-else class="flex-shrink-0 text-success text-headline-md" />
+			</template>
+			<template #body>
+				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="svws-ui-tr" role="row">
+					<div class="svws-ui-td" role="cell">
+						<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
+						<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
+					</div>
+					<div class="svws-ui-td leading-tight select-all" role="cell">
+						{{ regel.hinweistext }}
+					</div>
+				</div>
+				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="svws-ui-tr" role="row">
+					<div class="svws-ui-td" role="cell">
+						<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
+						<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
+					</div>
+					<div class="svws-ui-td leading-tight select-all" role="cell">
+						{{ regel.hinweistext }}
+					</div>
+				</div>
+			</template>
+		</svws-ui-table>
 	</template>
 </template>
 

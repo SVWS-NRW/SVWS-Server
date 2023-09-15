@@ -1,13 +1,28 @@
 <template>
-	<div v-if="belegungsHinweise.size()">
-		<h4 class="flex font-bold mt-5">Informationen zur Laufbahn</h4>
-		<ul v-if="belegungsHinweise.size()" class="mt-1 flex flex-col gap-1.5">
-			<li v-for="fehler in belegungsHinweise" :key="fehler.code" class="flex gap-1 leading-tight">
-				<i-ri-information-line class="flex-shrink-0 text-primary" />
-				{{ fehler.beschreibung }}
-			</li>
-		</ul>
-	</div>
+	<svws-ui-table v-if="belegungsHinweise.size()" :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 2.25},{key: 'beschreibung', label: 'Informationen zur Laufbahn'}]" class="overflow-visible">
+		<template #header>
+			<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-td col-span-full" role="columnheader">Informationen zur Laufbahn</div>
+			</div>
+		</template>
+		<template #body>
+			<div v-for="hinweis in belegungsHinweise" :key="hinweis.code" class="svws-ui-tr" role="row">
+				<div class="svws-ui-td" role="cell">
+					<svws-ui-tooltip>
+						<i-ri-information-line class="flex-shrink-0 text-svws text-button mt-0.5" />
+						<template #content>
+							<span class="font-mono">
+								{{ hinweis.code }}
+							</span>
+						</template>
+					</svws-ui-tooltip>
+				</div>
+				<div class="svws-ui-td leading-tight select-all" role="cell">
+					{{ hinweis.beschreibung }}
+				</div>
+			</div>
+		</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

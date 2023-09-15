@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card title="Beratung" class="mt-9">
+	<svws-ui-content-card title="Beratung">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-multi-select title="Letzte Beratung durchgeführt von" :items="mapLehrer.values()" :model-value="getBeratungslehrer()"
 				:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
