@@ -1,53 +1,50 @@
 <template>
-	<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" panel-height overflow-x-hidden>
+	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none col-span-3">
+			<div role="row" class="select-none svws-ui-tr">
+				<div role="columnheader" class="col-span-full svws-ui-td">
 					Informationen zu den Abiturfachwahlen der Schüler
 				</div>
 			</div>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					Leistungskurs
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					3. Abiturfach
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					4. Abiturfach
-				</div>
+			<div role="row" class="select-none svws-ui-tr">
+				<div role="columnheader" class="svws-ui-td">Leistungskurs</div>
+				<div role="columnheader" class="svws-ui-td">3. Abiturfach</div>
+				<div role="columnheader" class="svws-ui-td">4. Abiturfach</div>
 			</div>
 		</template>
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="hatAbiFachwahl(fws)">
-					<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" :style="{ 'background-color': getBgColor(fws) }" @click="onClick(fws)">
-						<div role="cell" class="data-table__td data-table__td__align-left select-none col-span-3 text-sm-bold">
-							{{ faecherManager.get(fws.id)?.bezeichnung }}
+					<div role="row" class="cursor-pointer svws-ui-tr" :style="{ '--background-color': getBgColor(fws) }" @click="onClick(fws)">
+						<div role="cell" class="svws-ui-td col-span-full">
+							<span class="svws-ui-badge">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 					</div>
-					<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" @click="onClick(fws)">
-						<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
+					<div role="row" class="cursor-pointer svws-ui-tr" :class="{'svws-clicked': aktuell?.id === fws.id}" @click="onClick(fws)">
+						<div role="cell" class="svws-ui-td">
 							{{ fws.fachwahlen[5].wahlenLK > 0 ? fws.fachwahlen[5].wahlenLK : "&ndash;" }}
 						</div>
-						<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
+						<div role="cell" class="svws-ui-td">
 							{{ fws.wahlenAB3 > 0 ? fws.wahlenAB3 : "&ndash;" }}
 						</div>
-						<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
+						<div role="cell" class="svws-ui-td">
 							{{ fws.wahlenAB4 > 0 ? fws.wahlenAB4 : "&ndash;" }}
 						</div>
 					</div>
-					<div v-if="aktuell?.id === fws.id" role="row" class="data-table__tr data-table__tbody__tr">
-						<div role="cell" class="data-table__td data-table__td__align-left select-none flex flex-col" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
-							<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="w-full flex flex-row">
-								{{ schueler.nachname + ", " + schueler.vorname }} <i-ri-link class="ml-2 cursor-pointer" @click="gotoLaufbahnplanung(schueler.id)" />
+					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
+						<div role="cell" class="flex select-none flex-col svws-ui-td" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
+							<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+								<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
+									<i-ri-link />
+								</button>
+								<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 							</div>
 						</div>
 					</div>
 				</template>
 			</template>
 		</template>
-	</svws-ui-data-table>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

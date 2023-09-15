@@ -1,52 +1,52 @@
 <template>
-	<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" panel-height overflow-x-hidden>
+	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none col-span-3">
-					Informationen zu den Fachwahlen in {{ faecherManager.get(props.fachID)?.bezeichnung || "&ndash;" }}
+			<div role="row" class="svws-ui-tr" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }">
+				<div role="cell" class="svws-ui-td col-span-full">
+					<span class="svws-ui-badge">{{ faecherManager.get(fws?.id || props.fachID)?.bezeichnung || "&ndash;" }}</span>
 				</div>
 			</div>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (gesamt)
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (schriftlich)
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (mündlich)
-				</div>
+			<div role="row" class="svws-ui-tr">
+				<div role="cell" class="svws-ui-td">HJ</div>
+				<div role="cell" class="svws-ui-td">GK Gesamt</div>
+				<div role="cell" class="svws-ui-td">Schriftlich</div>
+				<div role="cell" class="svws-ui-td">Mündlich</div>
 			</div>
 		</template>
 		<template #body>
 			<template v-if="fws !== undefined">
-				<div role="row" class="data-table__tr data-table__tbody__tr" :style="{ 'background-color': getBgColor(fws) }">
-					<div role="cell" class="data-table__td data-table__td__align-left select-none col-span-3 text-sm-bold">
-						{{ faecherManager.get(fws.id)?.bezeichnung }}
-					</div>
-				</div>
 				<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 					<template v-if="hatFachwahl(fws, halbjahr)">
-						<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" @click="onClick(halbjahr)">
-							<div role="cell" class="data-table__td data-table__td__align-center col-span-3 select-none text-sm-bold bg-slate-100">
+						<div role="row" class="cursor-pointer svws-ui-tr" :class="{'svws-clicked': aktuell?.id === halbjahr.id}" @click="onClick(halbjahr)">
+							<div role="cell" class="svws-ui-td">
 								{{ halbjahr.kuerzel }}
 							</div>
+							<div role="cell" class="svws-ui-td">
+								<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK > 0">
+									{{ fws.fachwahlen[halbjahr.id].wahlenGK }}
+								</template>
+								<span v-else class="opacity-25">—</span>
+							</div>
+							<div role="cell" class="svws-ui-td">
+								<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0">
+									{{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}
+								</template>
+								<span v-else class="opacity-25">—</span>
+							</div>
+							<div role="cell" class="svws-ui-td">
+								<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0">
+									{{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich }}
+								</template>
+								<span v-else class="opacity-25">—</span>
+							</div>
 						</div>
-						<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" @click="onClick(halbjahr)">
-							<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-								{{ fws.fachwahlen[halbjahr.id].wahlenGK > 0 ? fws.fachwahlen[halbjahr.id].wahlenGK : "&ndash;" }}
-							</div>
-							<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-								{{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0 ? fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich : "&ndash;" }}
-							</div>
-							<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-								{{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0 ? fws.fachwahlen[halbjahr.id].wahlenGKMuendlich : "&ndash;" }}
-							</div>
-						</div>
-						<div v-if="aktuell?.id === halbjahr.id" role="row" class="data-table__tr data-table__tbody__tr">
-							<div role="cell" class="data-table__td data-table__td__align-left select-none flex flex-col" v-for="col in [1, 2, 3]" :key="col">
-								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="w-full flex flex-row">
-									{{ schueler.nachname + ", " + schueler.vorname }} <i-ri-link class="ml-2 cursor-pointer" @click="gotoLaufbahnplanung(schueler.id)" />
+						<div v-if="aktuell?.id === halbjahr.id" role="row" class="svws-ui-tr">
+							<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col" :class="{'col-span-2': col === 1}">
+								<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+									<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
+										<i-ri-link />
+									</button>
+									<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 								</div>
 							</div>
 						</div>
@@ -54,7 +54,7 @@
 				</template>
 			</template>
 		</template>
-	</svws-ui-data-table>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
@@ -67,7 +67,8 @@
 
 	const props = defineProps<GostFachwahlenFachProps>();
 
-	const aktuell = ref<GostHalbjahr | undefined>(GostHalbjahr.EF1);
+	/*const aktuell = ref<GostHalbjahr | undefined>(GostHalbjahr.EF1);*/
+	const aktuell = ref<GostHalbjahr | undefined>(undefined);
 
 	function onClick(halbjahr: GostHalbjahr): void {
 		aktuell.value = (aktuell.value?.id === halbjahr.id) ? undefined : halbjahr;
@@ -81,9 +82,10 @@
 	});
 
 	const cols: DataTableColumn[] = [
-		{ key: "GK", label: "GK", span: 1, minWidth: 4 },
-		{ key: "GKS", label: "GKS", span: 1, minWidth: 4 },
-		{ key: "GKM", label: "GKM", span: 1, minWidth: 4 },
+		{ key: "HJ", label: "HJ", fixedWidth: 4 },
+		{ key: "GK", label: "GK", span: 1 },
+		{ key: "GKS", label: "GKS", span: 1 },
+		{ key: "GKM", label: "GKM", span: 1 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);

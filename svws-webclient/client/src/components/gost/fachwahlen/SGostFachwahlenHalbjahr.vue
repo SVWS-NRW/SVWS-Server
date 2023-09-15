@@ -1,48 +1,60 @@
 <template>
-	<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" panel-height overflow-x-hidden>
+	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none col-span-3">
-					Informationen zu den Fachwahlen in der {{ halbjahr.kuerzel }}
+			<div role="row" class="svws-ui-tr">
+				<div role="cell" class="svws-ui-td col-span-full">
+					{{ halbjahr.kuerzel }}
 				</div>
 			</div>
-			<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact select-none">
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (gesamt)
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (schriftlich)
-				</div>
-				<div role="cell" class="data-table__th data-table__thead__th data-table__th__align-center data-table__th__separate select-none">
-					GK (mündlich)
-				</div>
+			<div role="row" class="svws-ui-tr">
+				<div role="cell" class="svws-ui-td">GK Gesamt</div>
+				<div role="cell" class="svws-ui-td">Schriftlich</div>
+				<div role="cell" class="svws-ui-td">Mündlich</div>
 			</div>
 		</template>
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="hatFachwahl(fws, halbjahr)">
 					<template v-if="fws !== undefined">
-						<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" :style="{ 'background-color': getBgColor(fws) }" @click="onClick(fws)">
-							<div role="cell" class="data-table__td data-table__td__align-left select-none col-span-3 text-sm-bold">
-								{{ faecherManager.get(fws.id)?.bezeichnung }}
+						<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
+							<div role="cell" class="col-span-full svws-ui-td">
+								<div class="-ml-1 mr-1">
+									<svws-ui-button type="icon" size="small">
+										<i-ri-arrow-right-s-line v-if="aktuell?.id !== fws.id" />
+										<i-ri-arrow-down-s-line v-else />
+									</svws-ui-button>
+								</div>
+								<span class="svws-ui-badge">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 							</div>
 						</div>
 						<template v-if="aktuell?.id === fws.id">
-							<div role="row" class="data-table__tr data-table__tbody__tr cursor-pointer" @click="onClick(fws)">
-								<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-									{{ fws.fachwahlen[halbjahr.id].wahlenGK > 0 ? fws.fachwahlen[halbjahr.id].wahlenGK : "&ndash;" }}
+							<div role="row" class="svws-ui-tr">
+								<div role="cell" class="svws-ui-td">
+									<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK > 0">
+										{{ fws.fachwahlen[halbjahr.id].wahlenGK }}
+									</template>
+									<span v-else class="opacity-25">—</span>
 								</div>
-								<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-									{{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0 ? fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich : "&ndash;" }}
+								<div role="cell" class="svws-ui-td">
+									<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0">
+										{{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}
+									</template>
+									<span v-else class="opacity-25">—</span>
 								</div>
-								<div role="cell" class="data-table__td data-table__td__align-center select-none text-sm-bold">
-									{{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0 ? fws.fachwahlen[halbjahr.id].wahlenGKMuendlich : "&ndash;" }}
+								<div role="cell" class="svws-ui-td">
+									<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0">
+										{{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich }}
+									</template>
+									<span v-else class="opacity-25">—</span>
 								</div>
 							</div>
-							<div v-if="aktuell?.id === fws.id" role="row" class="data-table__tr data-table__tbody__tr">
-								<div role="cell" class="data-table__td data-table__td__align-left select-none flex flex-col" v-for="col in [1, 2, 3]" :key="col">
-									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="w-full flex flex-row">
-										{{ schueler.nachname + ", " + schueler.vorname }} <i-ri-link class="ml-2 cursor-pointer" @click="gotoLaufbahnplanung(schueler.id)" />
+							<div role="row" class="svws-ui-tr">
+								<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col">
+									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+										<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
+											<i-ri-link />
+										</button>
+										<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 									</div>
 								</div>
 							</div>
@@ -51,7 +63,7 @@
 				</template>
 			</template>
 		</template>
-	</svws-ui-data-table>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
@@ -66,7 +78,8 @@
 
 	const fachwahlenstatistik: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlstatistik.toArray() as GostStatistikFachwahl[]);
 
-	const aktuell = ref<GostStatistikFachwahl | undefined>(fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0));
+	/*const aktuell = ref<GostStatistikFachwahl | undefined>(fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0));*/
+	const aktuell = ref<GostStatistikFachwahl | undefined>(undefined);
 
 	function onClick(fws : GostStatistikFachwahl): void {
 		aktuell.value = (aktuell.value?.id === fws.id) ? undefined : fws;
