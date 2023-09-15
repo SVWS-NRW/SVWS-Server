@@ -892,16 +892,19 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Tabelle mit den übergebenen Spalten ein. Die entsprechende native SQL-INSERT-Anfrage wird aus den übergebenen
 	 * Daten generiert und im Rahmen einer Transaktion ausgeführt.
 	 *
-	 * @param tablename   der Name der Tabelle, in die eingefügt wird
-	 * @param colnames    die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen
-	 *                    der Entitäten passen muss
-	 * @param entities    die Liste mit den einzelnen Datensätzen in Form von Object-Arrays
-	 * @param indexFirst  der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird
-	 * @param indexLast   der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param tablename      der Name der Tabelle, in die eingefügt wird
+	 * @param colnames       die Liste mit den Spaltennamen, die zu der Reihenfolge der Object-Array-Elementen
+	 *                       der Entitäten passen muss
+	 * @param entities       die Liste mit den einzelnen Datensätzen in Form von Object-Arrays
+	 * @param indexFirst     der Index des ersten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param indexLast      der Index des letzten Datensatzes aus der Entitätenliste, der geschrieben wird
+	 * @param maxSQLStrLen   die maximal erlaubte Länge für den SQL-String, der Versuch zu schreiben schlägt fehlt,
+	 *                       wenn die Länge überschritte wird. (-1 um die Prüfung zu deaktivieren)
 	 *
 	 * @return true, falls die SQL-Anfrage erfolgreich ausgeführt wurde und ansonsten false
 	 */
-	public boolean insertRangeNativeUnprepared(final String tablename, final List<String> colnames, final List<Object[]> entities, final int indexFirst, final int indexLast) {
+	public boolean insertRangeNativeUnprepared(final String tablename, final List<String> colnames, final List<Object[]> entities,
+			final int indexFirst, final int indexLast, final int maxSQLStrLen) {
 		if ((entities == null) || (colnames == null) || (tablename == null) || (colnames.isEmpty()) || (entities.isEmpty()))
 			return false;
 		final int first = (indexFirst < 0) ? 0 : indexFirst;
@@ -935,6 +938,8 @@ public final class DBEntityManager implements AutoCloseable {
 			if (i != last)
 				sb.append(",");
 		}
+		if ((maxSQLStrLen > 0) && (sb.length() > maxSQLStrLen))
+			return false;
 		return executeNativeUpdate(sb.toString()) != Integer.MIN_VALUE;
 	}
 
