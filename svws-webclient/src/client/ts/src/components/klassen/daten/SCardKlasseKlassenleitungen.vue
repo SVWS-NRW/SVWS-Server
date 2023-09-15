@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Klassenleitung">
-		<svws-ui-data-table :columns="cols" :items="liste" />
+		<svws-ui-table :columns="cols" :items="liste" />
 	</svws-ui-content-card>
 </template>
 
@@ -10,6 +10,7 @@
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import { PersonalTyp } from "@core";
+	import type { DataTableColumn } from "@ui";
 
 	type Lehrer = {
 		kuerzel?: string;
@@ -39,7 +40,7 @@
 		});
 	});
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
 		{ key: "nachname", label: "Nachname", span: 2, sortable: false },
 		{ key: "vorname", label: "Vorname", span: 2, sortable: false },

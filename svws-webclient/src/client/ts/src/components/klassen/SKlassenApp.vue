@@ -14,8 +14,8 @@
 							</template>
 						</svws-ui-tooltip>
 					</h2>
-					<span class="svws-subline separate-items--custom">
-						<span v-for="(l, i) in inputKlassenlehrer" :key="i" class="opacity-50"> {{ l.kuerzel }} </span>
+					<span class="svws-subline">
+						{{ [...inputKlassenlehrer].map(l => l.kuerzel).join(", ") }}
 					</span>
 				</div>
 			</div>

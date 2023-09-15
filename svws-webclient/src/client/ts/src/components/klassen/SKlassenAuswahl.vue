@@ -5,20 +5,18 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
 				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
 				<template #cell(klassenLehrer)="{value}">
-					<span class="separate-items--custom">
-						<span v-for="(l, i) in value" :key="i"> {{ getKlassenlehrerKuerzelById(l) }} </span>
-					</span>
+					{{ [...value].map(l => getKlassenlehrerKuerzelById(l)).join(", ") }}
 				</template>
 				<template #search>
 					<svws-ui-text-input :model-value="klassenFilter.search" @update:model-value="setKlassenFilter({search: String($event), sichtbar: klassenFilter.sichtbar})" type="search" placeholder="Suche nach Klasse" />
 				</template>
-				<template #filterSimple>
+				<template #filter>
 					<svws-ui-checkbox type="toggle" :model-value="klassenFilter.sichtbar" @update:model-value="setKlassenFilter({search: klassenFilter.search, sichtbar: Boolean($event)})">Sichtbar</svws-ui-checkbox>
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -34,8 +32,8 @@
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
-		{ key: "schueler", label: "Schüler", span: 0.5 },
-		{ key: "klassenLehrer", label: "Klassenleitung", sortable: true }
+		{ key: "klassenLehrer", label: "Klassenleitung" },
+		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
 	];
 
 	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>

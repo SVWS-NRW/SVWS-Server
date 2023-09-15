@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-content-card title="Allgemein" class="col-span-full">
+	<svws-ui-content-card title="Allgemein">
 		<template #actions>
 			<svws-ui-checkbox v-model="inputIstSichtbar"> Ist sichtbar </svws-ui-checkbox>
 		</template>
-		<svws-ui-input-wrapper :grid="4">
+		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
 			<svws-ui-text-input placeholder="Parallelität" :model-value="data.parallelitaet" @change="parallelitaet=>doPatch({parallelitaet})" type="text" />
 			<svws-ui-text-input placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung=>doPatch({sortierung: Number(sortierung)})" type="text" />
