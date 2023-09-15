@@ -7,19 +7,19 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoLehrer" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
-				<template #filter>
+				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="personaltyp" :items="PersonalTyp.values()" :item-text="p => p.bezeichnung" title="Personaltyp" removable class="col-span-full" />
-					<div class="col-span-full flex gap-x-9 pl-2">
+					<div class="col-span-full flex flex-wrap gap-x-5">
 						<svws-ui-checkbox type="toggle" v-model="sichtbar">Sichtbar</svws-ui-checkbox>
 						<svws-ui-checkbox type="toggle" v-model="statistikrelevant">Statistikrelevant</svws-ui-checkbox>
 					</div>
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -73,22 +73,3 @@
 	}
 
 </script>
-
-
-<style lang="postcss">
-
-	.action-button {
-		@apply h-6 w-6;
-	}
-
-	.action-items {
-		@apply bg-white;
-		@apply flex flex-col;
-		@apply px-2 py-1;
-		@apply ring-1;
-		@apply ring-black ring-opacity-5;
-		@apply rounded-md;
-		@apply shadow-lg;
-		@apply w-48;
-	}
-</style>
