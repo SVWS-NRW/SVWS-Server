@@ -156,7 +156,7 @@ public class GostKursklausurManager {
 		for (final @NotNull GostKlausurtermin t : _terminmenge) {
 			final ArrayList<@NotNull Long> listSchuelerIds = new ArrayList<>();
 			_schuelerIds_by_idTermin.put(t.id, listSchuelerIds);
-			List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(t.id);
+			final List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(t.id);
 			if (klausurenZuTermin != null)
 				for (final @NotNull GostKursklausur k : klausurenZuTermin)
 					listSchuelerIds.addAll(k.schuelerIds);
@@ -364,9 +364,9 @@ public class GostKursklausurManager {
 
 	private void terminRemoveOhneUpdateById(final long idTermin) {
 		DeveloperNotificationException.ifMapRemoveFailes(_termin_by_id, idTermin);
-		List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(idTermin);
+		final List<@NotNull GostKursklausur> klausurenZuTermin = _kursklausurmenge_by_idTermin.get(idTermin);
 		if (klausurenZuTermin != null)
-			for (@NotNull GostKursklausur k : klausurenZuTermin)
+			for (@NotNull final GostKursklausur k : klausurenZuTermin)
 				k.idTermin = null;
 	}
 
@@ -710,6 +710,27 @@ public class GostKursklausurManager {
 		final List<@NotNull Long> konflikte = new ArrayList<>(klausur1.schuelerIds);
 		konflikte.retainAll(klausur2.schuelerIds);
 		return konflikte;
+	}
+
+	/**
+	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern alle identisch sind, sonst -1.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return das Quartal aller Klausuren, sofern identisch, sonst -1.
+	 */
+	public int quartalGetByTerminid(final long idTermin) {
+		final List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren == null)
+			return DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin).quartal;
+		int quartal = -1;
+		for (@NotNull final GostKursklausur k : klausuren) {
+			if (quartal == -1)
+				quartal = k.quartal;
+			if (quartal != k.quartal)
+				return -1;
+		}
+		return quartal;
 	}
 
 }

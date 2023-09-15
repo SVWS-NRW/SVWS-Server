@@ -16,7 +16,15 @@
 		<div v-if="!showDetails" class="break-normal">{{ kurzBezeichnungen }}</div>
 		<slot name="details" v-if="showDetails">
 			<table class="w-full">
-				<thead />
+				<thead>
+					<tr>
+						<th>Kurs</th>
+						<th>Kuerzel</th>
+						<th><i-ri-pencil-line /></th>
+						<th><i-ri-time-line /></th>
+						<th v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1">Quartal</th>
+					</tr>
+				</thead>
 				<tbody>
 					<tr v-for="klausur in klausuren()"
 						:key="klausur.id"
@@ -29,8 +37,7 @@
 						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
 						<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
 						<td class="text-center">{{ klausur.dauer }}</td>
-						<td>&nbsp;</td>
-						<td />
+						<td v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1">{{ klausur.quartal }}</td>
 					</tr>
 				</tbody>
 			</table>

@@ -162,7 +162,7 @@ export class GostKursklausurManager extends JavaObject {
 		for (const t of this._terminmenge) {
 			const listSchuelerIds : ArrayList<number> | null = new ArrayList();
 			this._schuelerIds_by_idTermin.put(t.id, listSchuelerIds);
-			let klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
+			const klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
 			if (klausurenZuTermin !== null)
 				for (const k of klausurenZuTermin)
 					listSchuelerIds.addAll(k.schuelerIds);
@@ -351,9 +351,9 @@ export class GostKursklausurManager extends JavaObject {
 
 	private terminRemoveOhneUpdateById(idTermin : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._termin_by_id, idTermin);
-		let klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
+		const klausurenZuTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
 		if (klausurenZuTermin !== null)
-			for (let k of klausurenZuTermin)
+			for (const k of klausurenZuTermin)
 				k.idTermin = null;
 	}
 
@@ -678,6 +678,27 @@ export class GostKursklausurManager extends JavaObject {
 		const konflikte : List<number> | null = new ArrayList(klausur1.schuelerIds);
 		konflikte.retainAll(klausur2.schuelerIds);
 		return konflikte;
+	}
+
+	/**
+	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern alle identisch sind, sonst -1.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return das Quartal aller Klausuren, sofern identisch, sonst -1.
+	 */
+	public quartalGetByTerminid(idTermin : number) : number {
+		const klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(idTermin);
+		if (klausuren === null)
+			return DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin).quartal;
+		let quartal : number = -1;
+		for (const k of klausuren) {
+			if (quartal === -1)
+				quartal = k.quartal;
+			if (quartal !== k.quartal)
+				return -1;
+		}
+		return quartal;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

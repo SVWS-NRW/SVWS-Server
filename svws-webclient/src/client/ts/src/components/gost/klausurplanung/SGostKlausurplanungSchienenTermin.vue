@@ -3,7 +3,7 @@
 		<div class="flex flex-row">
 			<svws-ui-text-input :placeholder="termin().bezeichnung === null ? terminTitel() : 'Terminbezeichnung'" :model-value="termin().bezeichnung" @blur="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" />
 			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line /></svws-ui-button>
-			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" size="small" @click="changeTerminQuartal"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
+			<svws-ui-button class="float-right" size="small" @click="changeTerminQuartal" :disabled="quartalsWechselMoeglich()"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
 			<svws-ui-badge class="-m-2 z-10 float-right"
 				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && termin().quartal === dragData()!.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin > 0)"
 				type="error"
@@ -60,9 +60,18 @@
 		return false;
 	}
 
+	const quartalsWechselMoeglich = () => props.termin().quartal === 0 && props.kursklausurmanager().quartalGetByTerminid(props.termin().id) === -1;
+
 	async function changeTerminQuartal() {
-		await props.patchKlausurtermin!(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});
-		console.log(props.termin().quartal);
+		if (props.termin().quartal === 0)
+			if (props.kursklausurmanager().quartalGetByTerminid(props.termin().id) > 0)
+				await props.patchKlausurtermin!(props.termin().id, {quartal: props.kursklausurmanager().quartalGetByTerminid(props.termin().id)});
+			else
+				return; // TODO Fehlermeldung, Klausuren mit unterschiedlichen Quartale enthalten
+		else if (props.termin().quartal > 0 && props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin().id).size() > 0)
+			await props.patchKlausurtermin!(props.termin().id, {quartal: 0});
+		else
+			await props.patchKlausurtermin!(props.termin().id, {quartal: (props.termin().quartal + 1) % 3});
 	}
 
 	function checkDropZone(event: DragEvent) {
