@@ -1,28 +1,23 @@
 <template>
-	<div role="cell"
-		class="data-table__td data-table__cell-select">
-		<svws-ui-checkbox class="data-table__cell-checkbox"
-			v-model="selected"
-			:disabled="istAlle" />
+	<div class="svws-ui-td svws-align-center" role="cell">
+		<svws-ui-checkbox type="toggle" v-model="selected" :disabled="istAlle" />
 	</div>
-	<div role="cell" class="data-table__td">
-		<div class="flex items-center gap-1">
-			<svws-ui-button type="icon" size="small" @click="gotoBenutzergruppe(row.id)">
+	<div class="svws-ui-td" role="cell">
+		<div class="flex items-center gap-0.5">
+			<svws-ui-button type="icon" @click="gotoBenutzergruppe(row.id)">
 				<i-ri-link />
 			</svws-ui-button>
 			{{ row.bezeichnung }}
 		</div>
 	</div>
-	<div role="cell" class="data-table__td font-mono">
-		<span class="data-table__td-content">
-			{{ row.id }}
-		</span>
+	<div class="svws-ui-td" role="cell">
+		<svws-ui-tooltip v-if="row.istAdmin">
+			<i-ri-shield-star-line class="h-5 w-5 -m-0.5" />
+			<template #content>Administrative Gruppe</template>
+		</svws-ui-tooltip>
 	</div>
-	<div role="cell" class="data-table__row-actions data-table__td">
-		<span class="data-table__td-content">
-			<i-ri-check-line v-if="row.istAdmin" />
-			<i-ri-close-line v-else class="opacity-25" />
-		</span>
+	<div class="svws-ui-td svws-align-right" role="cell">
+		{{ row.id }}
 	</div>
 </template>
 
@@ -53,6 +48,3 @@
 	});
 
 </script>
-
-<style scoped lang="postcss">
-</style>

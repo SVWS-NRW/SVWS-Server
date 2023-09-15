@@ -1,12 +1,12 @@
 <template>
-	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
-		<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
+	<div class="svws-ui-td ml-9" role="cell">
+		<svws-ui-checkbox v-model="selected" :disabled="aktiviert" class="leading-tight">
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
-	</svws-ui-table-cell>
-	<svws-ui-table-cell class="font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+	</div>
+	<div class="svws-ui-td svws-align-right" role="cell">
 		{{ kompetenz.daten.id }}
-	</svws-ui-table-cell>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -40,12 +40,3 @@
 
 </script>
 
-<style scoped lang="postcss">
-.deaktiviert {
-	@apply text-black/50 dark:text-white/50;
-}
-
-.data-table__td-content {
-	@apply inline-block;
-}
-</style>

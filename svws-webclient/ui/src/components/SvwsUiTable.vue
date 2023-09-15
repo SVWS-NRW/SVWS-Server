@@ -91,7 +91,7 @@
 								<span class="line-clamp-1 break-all leading-tight">{{ column.label }}</span>
 							</template>
 						</slot>
-						<span v-if="column.sortable" class="svws-sorting-icon">
+						<span v-if="column.sortable" class="svws-sorting-icon" :class="{'-order-1': column.align === 'right'}">
 							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'asc'}" />
 							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'desc'}" />
 						</span>
@@ -893,6 +893,10 @@
 	.svws-ui-table.svws-selectable &.svws-no-data-text {
 		@apply pl-3 2xl:pl-7 4xl:pl-8;
 	}
+
+  .app--sidebar-container &.svws-align-right:last-child {
+    @apply pr-3;
+  }
 
 	.drag-el:last-child & {
 		@apply border-b-0;

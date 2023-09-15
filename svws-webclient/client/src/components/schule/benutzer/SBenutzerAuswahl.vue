@@ -8,12 +8,14 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)">
+				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
-				<!-- Footer mit Button zum Hinzufügen einer Zeile -->
-				<template #footerActions>
+				<template #header(id)>
+					<span class="font-mono">ID</span>
+				</template>
+				<template #actions>
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
 						:delete-benutzer-allgemein="deleteMultipleUser" />
 				</template>
@@ -36,7 +38,7 @@
 	const cols = [
 		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
 		{ key: "name", label: "Name", sortable: true },
-		{ key: "id", label: "ID", sortable: true, span: 0.5 }
+		{ key: "id", label: "ID", sortable: true, span: 0.5, align: "right" }
 	];
 
 	const search: Ref<string> = ref("");

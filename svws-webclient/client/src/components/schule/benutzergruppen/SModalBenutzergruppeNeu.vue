@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModal" size="small">
+	<svws-ui-modal :show="showModal" size="small" class="hidden">
 		<template #modalTitle>
 			Benutzergruppe hinzufügen
 		</template>
@@ -17,18 +17,10 @@
 		</template>
 	</svws-ui-modal>
 
-	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n" />
+	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppe_n" />
 
 	<svws-ui-button type="icon" @click="showModal().value = true">
 		<i-ri-add-line />
-	</svws-ui-button>
-
-	<svws-ui-button type="icon" disabled>
-		<i-ri-file-copy-line />
-	</svws-ui-button>
-
-	<svws-ui-button type="icon" disabled>
-		<i-ri-more-2-line />
 	</svws-ui-button>
 </template>
 

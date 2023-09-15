@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-table-row>
-		<svws-ui-table-cell>
+	<div class="svws-ui-tr" role="row">
+		<div class="svws-ui-td" role="cell">
 			<div class="flex items-center gap-1">
 				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
@@ -12,15 +12,16 @@
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
-		</svws-ui-table-cell>
-		<svws-ui-table-cell class="font-mono" :class="{'text-black/50 dark:text-white/50': istAdmin}">
+		</div>
+		<div class="svws-ui-td svws-align-right !pr-3" role="cell">
 			{{ kompetenzgruppe.daten.id }}
-		</svws-ui-table-cell>
-	</svws-ui-table-row>
-	<svws-ui-table-row :depth="1" :collapsed="collapsed" :expanded="!collapsed" v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-		<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin"
-			:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
-	</svws-ui-table-row>
+		</div>
+		<template v-if="hatSubKompetenzen">
+			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
+				<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
+			</div>
+		</template>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -58,7 +59,7 @@
 </script>
 
 <style scoped lang="postcss">
-.data-table__tr {
+.svws-ui-tr {
 	grid-template-columns: minmax(4rem, 3fr) minmax(4rem, 0.25fr);
 }
 </style>

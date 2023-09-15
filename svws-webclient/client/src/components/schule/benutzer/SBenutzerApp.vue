@@ -1,17 +1,26 @@
 <template>
 	<div v-if="visible" class="page--flex">
-		<svws-ui-header>
-			<div>
-				<span class="inline-block mr-3">{{ anzeigename }}</span>
-				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ id }}
-				</svws-ui-badge>
+		<header class="svws-ui-header">
+			<div class="svws-ui-header--title">
+				<div class="svws-headline-wrapper">
+					<h2 class="svws-headline">
+						<svws-ui-tooltip :indicator="false">
+							{{ anzeigename || '—' }}
+							<template #content>
+								<span class="font-mono">
+									ID:
+									{{ id || '—' }}
+								</span>
+							</template>
+						</svws-ui-tooltip>
+					</h2>
+					<span class="svws-subline">
+						{{ name || '—' }}
+					</span>
+				</div>
 			</div>
-			<div>
-				<span class="opacity-40">{{ name }}</span>
-			</div>
-		</svws-ui-header>
+			<div class="svws-ui-header--actions" />
+		</header>
 		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" @update:model-value="setTab" :model-value="tab">
 			<router-view />
 		</svws-ui-router-tab-bar>

@@ -25,14 +25,6 @@
 	<svws-ui-button type="icon" @click="showModal().value = true">
 		<i-ri-add-line />
 	</svws-ui-button>
-
-	<svws-ui-button type="icon" disabled>
-		<i-ri-file-copy-line />
-	</svws-ui-button>
-
-	<svws-ui-button type="icon" disabled>
-		<i-ri-more-2-line />
-	</svws-ui-button>
 </template>
 
 <script setup lang="ts">

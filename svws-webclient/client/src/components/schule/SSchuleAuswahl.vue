@@ -10,6 +10,7 @@
 					<svws-ui-menu-item @click="setChild(child_item)">
 						<template #label> <span>{{ child_item.text }}</span> </template>
 					</svws-ui-menu-item>
+					<svws-ui-spacing v-if="child_item.name === 'benutzergruppen'" />
 				</template>
 			</div>
 		</template>

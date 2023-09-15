@@ -1,6 +1,6 @@
 <template>
-	<svws-ui-table-row>
-		<svws-ui-table-cell>
+	<div class="svws-ui-tr" role="row">
+		<div class="svws-ui-td" role="cell" :class="{'col-span-2': getBenutzerManager().istAdmin()}">
 			<div class="flex items-center gap-1">
 				<svws-ui-button type="icon" size="small" @click="collapsed = !collapsed" :class="{'pointer-events-none': !hatSubKompetenzen}" :tabindex="!hatSubKompetenzen ? -1 : ''">
 					<template v-if="hatSubKompetenzen">
@@ -12,21 +12,19 @@
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
-		</svws-ui-table-cell>
-		<svws-ui-table-cell class="text-black/50 dark:text-white/50">
-			<span class="inline-flex gap-1" v-if="getBenutzerManager().istAdmin()">
-				<i-ri-shield-star-line class="opacity-50 -mt-0.5" />
-				<span>Admin</span>
-			</span>
-		</svws-ui-table-cell>
-		<svws-ui-table-cell class="font-mono" :class="{'text-black/50 dark:text-white/50': getBenutzerManager().istAdmin()}">
+		</div>
+		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-black/50 dark:text-white/50" role="cell">
+			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
+		</div>
+		<div class="svws-ui-td svws-align-right !pr-3" role="cell">
 			{{ kompetenzgruppe.daten.id }}
-		</svws-ui-table-cell>
-	</svws-ui-table-row>
-	<svws-ui-table-row :depth="1" :collapsed="collapsed" :expanded="!collapsed" v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id">
-		<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager"
-			:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
-	</svws-ui-table-row>
+		</div>
+		<template v-if="hatSubKompetenzen">
+			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
+				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />
+			</div>
+		</template>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -62,10 +60,20 @@
 		}
 	});
 
+	const getTopLevelGruppen4Kompetenz = computed(() => {
+		if (!hatSubKompetenzen.value) {
+			return props.getGruppen4Kompetenz(props.kompetenzgruppe);
+		}
+
+		const subKompetenzen = [...props.benutzerKompetenzen(props.kompetenzgruppe).toArray()];
+
+		return [...new Set(subKompetenzen.map(k => props.getGruppen4Kompetenz(k)).filter(g => g !== ''))]?.join(', ');
+	});
+
 </script>
 
 <style scoped lang="postcss">
-.data-table__tr {
+.svws-ui-tr {
 	grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr) minmax(4rem, 0.25fr);
 }
 </style>

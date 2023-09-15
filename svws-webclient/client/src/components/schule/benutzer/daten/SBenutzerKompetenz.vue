@@ -1,22 +1,18 @@
 <template>
-	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
-		<svws-ui-checkbox v-model="selected" :disabled="aktiviert">
+	<div class="svws-ui-td ml-9" role="cell">
+		<svws-ui-checkbox v-model="selected" :disabled="aktiviert" class="leading-tight">
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
-	</svws-ui-table-cell>
-	<svws-ui-table-cell :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+	</div>
+	<div class="svws-ui-td" :title="getGruppen4Kompetenz(kompetenz)" role="cell">
 		<!-- TODO Die Methode in Manager auslagern. -->
-		<span class="inline-flex gap-1 text-black/50 dark:text-white/50" v-if="getBenutzerManager().istAdmin()">
-			<i-ri-shield-star-line class="opacity-50 -mt-0.5" />
-			<span>Admin</span>
-		</span>
-		<template v-else>
-			{{ props.getGruppen4Kompetenz(kompetenz) }}
+		<template v-if="!getBenutzerManager().istAdmin()">
+			<span class="line-clamp-1 break-all text-black/50 dark:text-white/50">{{ getGruppen4Kompetenz(kompetenz) }}</span>
 		</template>
-	</svws-ui-table-cell>
-	<svws-ui-table-cell class="font-mono" :class="{'vorhanden' : selected && !aktiviert, 'nichtvorhanden' : !selected && !aktiviert, 'deaktiviert':aktiviert }" :title="aktiviert ? 'Bereits aktiviert durch Benutzergruppe' : ''">
+	</div>
+	<div class="svws-ui-td svws-align-right" role="cell">
 		{{ kompetenz.daten.id }}
-	</svws-ui-table-cell>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -47,13 +43,3 @@
 		}
 	});
 </script>
-
-<style scoped lang="postcss">
-	.deaktiviert {
-		@apply text-black/50 dark:text-white/50;
-	}
-
-	.data-table__td-content {
-		@apply inline-block;
-	}
-</style>

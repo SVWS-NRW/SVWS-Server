@@ -1,34 +1,35 @@
 <template>
-	<svws-ui-content-card title="Einstellungen" class="col-span-full">
+	<svws-ui-content-card title="Einstellungen">
 		<template #actions>
-			<svws-ui-checkbox type="toggle" class="mb-4" v-model="inputIstAdmin" :disabled="getBenutzerManager().istInAdminGruppe()">
-				Admin-Rechte
-			</svws-ui-checkbox>
+			<template v-if="getBenutzerManager().istInAdminGruppe()">
+				<span class="inline-flex gap-1 leading-none">
+					<i-ri-shield-star-line class="flex-shrink-0 -mt-0.5" />
+					<span>Administrator mit allen Kompetenzen</span>
+				</span>
+			</template>
+			<template v-else>
+				<svws-ui-checkbox type="toggle" v-model="inputIstAdmin">
+					Alle Kompetenzen freigeben
+				</svws-ui-checkbox>
+			</template>
 		</template>
-		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
+		<svws-ui-table :items="kompetenzgruppen" class="overflow-visible" type="collapsible">
 			<template #header>
-				<svws-ui-table-row>
-					<svws-ui-table-cell thead>
-						Kompetenz
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead>
-						Übernommen aus der Gruppe
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead class="font-mono">
-						ID
-					</svws-ui-table-cell>
-				</svws-ui-table-row>
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td" role="columnheader" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</div>
+					<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-black/50 dark:text-white/50" role="columnheader">Übernommen aus der Gruppe</div>
+					<div class="svws-ui-td svws-align-right font-mono" role="columnheader">ID</div>
+				</div>
 			</template>
 			<template #body>
-				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen"
-					:key="index">
+				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
 					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
 						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz"
 						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
 						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
 				</template>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -63,7 +64,7 @@
 </script>
 
 <style scoped lang="postcss">
-	.data-table__tr {
+	.svws-ui-tr {
 		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr) minmax(4rem, 0.25fr);
 	}
 </style>

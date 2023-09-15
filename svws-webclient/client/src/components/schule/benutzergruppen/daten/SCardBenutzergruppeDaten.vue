@@ -1,10 +1,8 @@
 <template>
-	<svws-ui-content-card title="Allgemein">
-		<template #actions>
-			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Admin-Rechte </svws-ui-checkbox>
-		</template>
+	<svws-ui-content-card>
 		<svws-ui-input-wrapper>
 			<svws-ui-text-input :model-value="getBenutzergruppenManager().getBezeichnung()" @change="setBezeichnung" type="text" placeholder="Bezeichnung" />
+			<svws-ui-checkbox type="toggle" v-model="inputIstAdmin"> Alle Kompetenzen freigeben </svws-ui-checkbox>
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

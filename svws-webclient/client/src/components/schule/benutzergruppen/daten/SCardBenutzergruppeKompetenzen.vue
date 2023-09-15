@@ -1,33 +1,14 @@
 <template>
-	<svws-ui-content-card title="Einstellungen">
+	<svws-ui-content-card>
 		<svws-ui-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title">
-								<span class="inline-flex items-center gap-1">
-									<span>Kompetenz</span>
-								</span>
-							</span>
-						</div>
-					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th">
-						<div class="data-table__th-wrapper">
-							<span class="data-table__th-title font-mono">
-								<span class="inline-flex items-center gap-1">
-									<span>ID</span>
-								</span>
-							</span>
-						</div>
-					</div>
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td" role="columnheader">Kompetenz</div>
+					<div class="svws-ui-td svws-align-right font-mono" role="columnheader">ID</div>
 				</div>
 			</template>
 			<template #body>
-				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen"
-					:key="index">
+				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
 					<s-benutzergruppe-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :ist-admin="istAdmin"
 						:get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
 						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe" :remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe"
@@ -60,7 +41,7 @@
 </script>
 
 <style scoped lang="postcss">
-.data-table__tr {
+.svws-ui-tr {
 	grid-template-columns: minmax(4rem, 3fr) minmax(4rem, 0.25fr);
 }
 </style>
