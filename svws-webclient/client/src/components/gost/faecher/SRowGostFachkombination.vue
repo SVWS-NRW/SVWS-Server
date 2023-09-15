@@ -1,43 +1,43 @@
 <template>
-	<div role="cell" class="data-table__td data-table__td__no-padding">
+	<div class="svws-ui-td" role="cell">
 		<svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
+	<div class="svws-ui-td svws-divider" role="cell">
 		<svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__no-padding">
+	<div class="svws-ui-td" role="cell">
 		<svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__no-padding data-table__td__separate">
+	<div class="svws-ui-td svws-divider" role="cell">
 		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="gueltigEF1" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
 		<svws-ui-checkbox v-model="gueltigEF2" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="gueltigQ11" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
 		<svws-ui-checkbox v-model="gueltigQ12" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="gueltigQ21" headless />
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
+	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
 		<svws-ui-checkbox v-model="gueltigQ22" headless />
 	</div>
-	<div role="cell" class="data-table__td  data-table__td__align-center">
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
 			<svws-ui-tooltip position="top">
-				<i-ri-edit-2-line @click="openModal" class="cursor-pointer" />
-				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><em class="opacity-50">Klicken, um den Text zu bearbeiten</em> </template>
+				<button role="button" class="button button--icon"><i-ri-edit-2-line @click="openModal" /></button>
+				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><span class="opacity-50">Klicken, um den Text zu bearbeiten</span> </template>
 			</svws-ui-tooltip>
 		</s-row-gost-fachkombination-modal>
 	</div>
-	<div role="cell" class="data-table__td data-table__td__align-center">
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-button type="trash" @click="del_fachkombi" />
 	</div>
 </template>

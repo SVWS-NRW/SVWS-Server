@@ -961,6 +961,12 @@
 }
 
 .svws-ui-table.svws-type-grid {
+  @apply border-x border-t border-black/25 dark:border-white/25;
+
+  &.svws-has-background {
+    @apply border-black/50 dark:border-black/50;
+  }
+
   .svws-ui-thead,
   .svws-ui-tbody {
     .svws-ui-td:not(:last-child) {
@@ -980,8 +986,22 @@
     }
   }
 
+  &.svws-has-background {
+    .svws-ui-thead,
+    .svws-ui-tbody {
+      .svws-ui-td:not(:last-child) {
+        @apply border-black/50 dark:border-black/50;
+      }
+    }
+  }
+
   .content-card &:not(.svws-no-mx) .svws-ui-td:first-child,
   .svws-table-offset & .svws-ui-td:first-child {
+    @apply pl-3;
+  }
+
+  .content-card &.svws-selectable:not(.svws-no-mx) .svws-ui-td:first-child,
+  .svws-table-offset &.svws-selectable .svws-ui-td:first-child {
     @apply pl-1;
   }
 }

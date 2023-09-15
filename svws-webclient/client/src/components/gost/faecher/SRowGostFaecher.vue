@@ -1,84 +1,55 @@
 <template>
-	<div class="data-table__tr data-table__tbody__tr" role="row" :style="{ 'background-color': bgColor }">
-		<div role="cell" class="data-table__td">
-			<div class="data-table__td-content" :title="fach.kuerzelAnzeige || undefined">
+	<div class="svws-ui-tr svws-custom-color" role="row" :style="{ '--background-color': bgColor }">
+		<div role="cell" class="svws-ui-td">
+			<span :title="fach.kuerzelAnzeige || undefined">
 				{{ fach.kuerzelAnzeige }}
+			</span>
+		</div>
+		<div role="cell" class="svws-ui-td" :title="fach?.bezeichnung || undefined">
+			<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ fach.bezeichnung }}</span>
+		</div>
+		<div role="cell" class="svws-ui-td svws-align-center">
+			<input type="checkbox" class="svws-ui-checkbox svws-headless" disabled v-model="fach.istFremdSpracheNeuEinsetzend">
+		</div>
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
+			<div v-if="istProjektkurs" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded">
+				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
+				<span class="opacity-50">/</span>
+				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
 			</div>
+			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
 		</div>
-		<div role="cell" class="data-table__td">
-			<span class="hyphens-auto">{{ fach.bezeichnung }}</span>
-		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center">
-			<input type="checkbox" class="svws-ui-checkbox--headless" disabled v-model="fach.istFremdSpracheNeuEinsetzend">
-		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__separate" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs" class="flex items-center border border-black/25 rounded group w-full">
-				<span class="px-1 py-0.5 rounded-l flex-grow" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 2, 'text-black/50 bg-transparent group-hover:text-black': fach.wochenstundenQualifikationsphase === 3}">2</span>
-				<span class="px-1 py-0.5 rounded-r flex-grow" :class="{ 'bg-black font-bold text-white': fach.wochenstundenQualifikationsphase === 3, 'text-black/50 bg-transparent group-hover:text-black': fach.wochenstundenQualifikationsphase === 2}">3</span>
-			</div>
-			<template v-else>{{ fach.wochenstundenQualifikationsphase }}</template>
-		</div>
-		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding">
-			<div class="flex p-0 flex-grow" v-if="istJahrgangAllgemein && hatLeitfach1">
-				<svws-ui-multi-select headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-				<svws-ui-button type="trash" @click="leitfach1=undefined" :disabled="!leitfach1" />
-			</div>
+		<div role="cell" class="svws-ui-td">
+			<svws-ui-multi-select v-if="istJahrgangAllgemein && hatLeitfach1" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-left data-table__td__no-padding data-table__td__separate">
-			<div class="flex p-0" v-if="istJahrgangAllgemein && istProjektkurs">
-				<svws-ui-multi-select headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" />
-				<svws-ui-button type="trash" @click="leitfach2=undefined" :disabled="!leitfach2" />
-			</div>
+		<div role="cell" class="svws-ui-td svws-divider">
+			<svws-ui-multi-select v-if="istJahrgangAllgemein && istProjektkurs" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
-			:class="{'data-table__td__disabled': !ef_moeglich}"
-			:style="{ 'background-color': bgColor }">
-			<label class="svws-checkbox-label" v-if="ef_moeglich">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="ef1">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
+			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate"
-			:class="{'data-table__td__disabled': !ef_moeglich}"
-			:style="{ 'background-color': bgColor }">
-			<label class="svws-checkbox-label" v-if="ef_moeglich">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="ef2">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider" :class="{'svws-disabled': !ef_moeglich}">
+			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
-			<label class="svws-checkbox-label">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q11">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center">
+			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q11">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
-			<label class="svws-checkbox-label">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q12">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q12">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding">
-			<label class="svws-checkbox-label">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q21">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center">
+			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q21">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding data-table__td__separate">
-			<label class="svws-checkbox-label">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="q22">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
+			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q22">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
-			:class="{'data-table__td__disabled': !abi_gk_moeglich}"
-			:style="{ 'background-color': bgColor }">
-			<label class="svws-checkbox-label" v-if="abi_gk_moeglich">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="abiGK">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_gk_moeglich}">
+			<input v-if="abi_gk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
 		</div>
-		<div role="cell" class="data-table__td data-table__td__align-center data-table__td__no-padding"
-			:class="{'data-table__td__disabled': !abi_lk_moeglich}"
-			:style="{ 'background-color': bgColor }">
-			<label class="svws-checkbox-label" v-if="abi_lk_moeglich">
-				<input type="checkbox" class="svws-ui-checkbox--headless" v-model="abiLK">
-			</label>
+		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_lk_moeglich}">
+			<input v-if="abi_lk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
 		</div>
 	</div>
 </template>
@@ -227,9 +198,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-	.svws-checkbox-label {
-		@apply w-full h-full inline-flex justify-center items-center cursor-pointer;
-	}
-</style>

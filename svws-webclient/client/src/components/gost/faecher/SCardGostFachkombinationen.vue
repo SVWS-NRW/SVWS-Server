@@ -1,64 +1,53 @@
 <template>
 	<svws-ui-content-card :title="title+'e Kombinationen'">
-		<template #actions>
-			<svws-ui-button size="small" type="secondary" @click="add_kurskombi">Hinzufügen <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
-		</template>
-		<svws-ui-data-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
+		<svws-ui-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
 			<template #header>
-				<!--				<svws-ui-table-row thead compact>
-					<svws-ui-table-cell thead align="center" separate class="col-span-4">
-						{{ title }}
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate class="col-span-6">
-						Gültig in
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" class="col-span-2">
-						&lt;!&ndash;Hinweis&ndash;&gt;
-					</svws-ui-table-cell>
-				</svws-ui-table-row>-->
-				<svws-ui-table-row thead>
-					<svws-ui-table-cell thead>
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td" role="columnheader">
 						Fach
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead separate>
+					</div>
+					<div class="svws-ui-td svws-divider" role="columnheader">
 						Kursart
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead>
+					</div>
+					<div class="svws-ui-td" role="columnheader">
 						Fach
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead separate>
+					</div>
+					<div class="svws-ui-td svws-divider" role="columnheader">
 						Kursart
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center">
+					</div>
+					<div class="svws-ui-td svws-align-center" role="columnheader">
 						EF.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center" separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
 						EF.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center">
+					</div>
+					<div class="svws-ui-td svws-align-center" role="columnheader">
 						Q1.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center" separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
 						Q1.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center">
+					</div>
+					<div class="svws-ui-td svws-align-center" role="columnheader">
 						Q2.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center" separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
 						Q2.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center">
-						Text
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead padding-sm align="center" />
-				</svws-ui-table-row>
+					</div>
+					<div class="svws-ui-td svws-align-center" role="columnheader">
+						<!--Text-->
+					</div>
+					<div class="svws-ui-td svws-align-center" role="columnheader" />
+				</div>
 			</template>
 			<template #body>
-				<svws-ui-table-row v-for="row in rows" :key="row.hashCode()">
+				<div v-for="row in rows" :key="row.hashCode()" class="svws-ui-tr" role="columnheader">
 					<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
-				</svws-ui-table-row>
+				</div>
 			</template>
-		</svws-ui-data-table>
+			<template #actions>
+				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><i-ri-add-line /> </svws-ui-button>
+			</template>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -103,18 +92,18 @@
 	}
 
 	const cols: DataTableColumn[] = [
-		{ key: "Fach", label: "Fach", span: 1 },
-		{ key: "Kursart", label: "Kursart", span: 1},
-		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 2.5 },
-		{ key: "Kursart", label: "Kursart", align: 'center', span: 1, minWidth: 2.5 },
-		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.5, minWidth: 2.5 },
-		{ key: "Hinweistext", label: "Hinweistext", align: 'center', span: 0.5, minWidth: 2 },
-		{ key: "Trash", label: "Trash", align: 'center', span: 0.25, minWidth: 2 },
+		{ key: "Fach", label: "Fach", span: 1, minWidth: 5 },
+		{ key: "Kursart", label: "Kursart", span: 1, minWidth: 5},
+		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 5 },
+		{ key: "Kursart", label: "Kursart", align: 'center', span: 1, minWidth: 5 },
+		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.5, minWidth: 3 },
+		{ key: "Hinweistext", label: "Hinweistext", align: 'center', fixedWidth: 2 },
+		{ key: "Trash", label: "Trash", align: 'center', span: 0.25, fixedWidth: 2 },
 	];
 
 </script>

@@ -1,70 +1,75 @@
 <template>
-	<svws-ui-content-card class="table--with-background" title="Angebotene Fächer im Jahrgang">
-		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" contrast-border>
+	<svws-ui-content-card>
+		<svws-ui-table :items="[]" :no-data="false" :columns="cols" has-background>
 			<template #header>
-				<svws-ui-table-row compact thead>
-					<svws-ui-table-cell thead align="center" separate class="col-span-4">
-						Fächer
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate class="col-span-2">
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
+						<span>Angebotene Fächer</span>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider col-span-2" role="columnheader">
 						Leitfächer
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate class="col-span-6">
+					</div>
+					<div class="svws-ui-td svws-divider svws-align-center col-span-6" role="columnheader">
 						Wählbar
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" separate class="col-span-2">
-						im Abitur
-					</svws-ui-table-cell>
-				</svws-ui-table-row>
-				<svws-ui-table-row thead>
-					<svws-ui-table-cell thead>
+					</div>
+					<div class="svws-ui-td svws-align-center col-span-2" role="columnheader">
+						Abitur
+					</div>
+				</div>
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td">
 						Kürzel
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead>
-						Fach
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
-						Neu
-					</svws-ui-table-cell>
-					<svws-ui-table-cell tooltip="Wochenstunden" thead align="center" separate>
-						WS
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
-						1.
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm separate>
-						2.
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
+					</div>
+					<div class="svws-ui-td">
+						Bezeichnung
+					</div>
+					<div class="svws-ui-td svws-align-center">
+						<span class="svws-no-padding">Neu</span>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider">
+						<svws-ui-tooltip>
+							<span>WS</span>
+							<template #content>
+								Wochenstunden
+							</template>
+						</svws-ui-tooltip>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
+						1
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+						2
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
 						EF.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
 						EF.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
 						Q1.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
 						Q1.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
 						Q2.1
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm separate>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
 						Q2.2
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
 						GK
-					</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" padding-sm>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-no-padding">
 						LK
-					</svws-ui-table-cell>
-				</svws-ui-table-row>
+					</div>
+				</div>
 			</template>
 			<template #body>
 				<s-row-gost-faecher v-for="fach in faecher" :key="fach.id" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 

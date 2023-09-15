@@ -47,7 +47,7 @@
 </script>
 
 <template>
-	<div>
+	<div class="inline-flex">
 		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
 			<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-headless': headless && type !== 'toggle'}">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
@@ -69,14 +69,6 @@
 <style lang="postcss">
 .svws-ui-checkbox {
 	@apply inline-flex items-start text-base leading-tight my-0.5;
-
-	.data-table__filter-simple & {
-		@apply my-auto;
-	}
-
-	.data-table__td & {
-		@apply flex h-full w-full cursor-pointer items-center justify-center;
-	}
 
 	&.svws-statistik {
 		@apply text-violet-500;
