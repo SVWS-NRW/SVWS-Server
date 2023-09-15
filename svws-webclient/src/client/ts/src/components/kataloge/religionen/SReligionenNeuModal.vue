@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="medium">
+	<svws-ui-modal ref="modal" size="medium" class="hidden">
 		<template #modalTitle>Religion Hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">

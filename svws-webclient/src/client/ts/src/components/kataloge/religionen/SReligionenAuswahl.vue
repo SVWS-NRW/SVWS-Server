@@ -12,15 +12,15 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" clickable>
-					<template #footerActions>
+				<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" clickable>
+					<template #actions>
 						<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag">
 							<svws-ui-button type="icon" @click="openModal()">
 								<i-ri-add-line />
 							</svws-ui-button>
 						</s-religionen-neu-modal>
 					</template>
-				</svws-ui-data-table>
+				</svws-ui-table>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>

@@ -1,17 +1,15 @@
 <template>
-	<svws-ui-content-card title="Bemerkungen">
-		<div class="entry-content">
-			<div class="col-span-2">
-				<svws-ui-textarea-input :model-value="daten.bemerkungen" @change="bemerkungen => doPatch({ bemerkungen: bemerkungen || '' })"
-					placeholder="Bemerkungen" />
-			</div>
-			<svws-ui-checkbox v-model="ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
-			<svws-ui-checkbox v-model="bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
-			<svws-ui-checkbox v-model="Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
-			<svws-ui-checkbox v-model="ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
-			<svws-ui-checkbox v-model="BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
-		</div>
-	</svws-ui-content-card>
+	<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
+		<svws-ui-checkbox v-model="ausbildungsbetrieb"> Ausbildungsbetrieb </svws-ui-checkbox>
+		<svws-ui-checkbox v-model="bietetPraktika"> Bietet Praktumsplätze </svws-ui-checkbox>
+		<svws-ui-checkbox v-model="Massnahmentraeger"> Maßnahmenträger </svws-ui-checkbox>
+		<svws-ui-checkbox v-model="ErwFuehrungszeugnis"> Erweitertes Führungszeugnis notwendig </svws-ui-checkbox>
+		<svws-ui-checkbox v-model="BelehrungISG"> Belehrung n. Infektionsschutzgesetz notwendig </svws-ui-checkbox>
+	</svws-ui-input-wrapper>
+	<svws-ui-spacing />
+	<svws-ui-spacing />
+	<svws-ui-textarea-input :model-value="daten.bemerkungen" @change="bemerkungen => doPatch({ bemerkungen: bemerkungen || '' })"
+		placeholder="Bemerkungen" />
 </template>
 
 <script setup lang="ts">

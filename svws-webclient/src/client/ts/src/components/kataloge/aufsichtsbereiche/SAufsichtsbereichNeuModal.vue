@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
+	<svws-ui-modal ref="modal" class="hidden">
 		<template #modalTitle>Aufsichtsbereich hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>

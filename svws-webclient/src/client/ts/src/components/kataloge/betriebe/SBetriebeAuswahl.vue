@@ -8,24 +8,19 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered"
-				:columns="cols" clickable scroll-into-view selectable :model-value="selected"
-				@update:model-value="selected=$event" :count="selected.length > 0">
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Betrieb" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
-				<template #footerActions>
+				<template #actions>
+					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag" :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten="mapBeschaeftigungsarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile">
 						<svws-ui-button type="icon" @click="openModal()">
 							<i-ri-add-line />
 						</svws-ui-button>
-						<div v-if="selected.length > 0" class="flex items-center justify-end pr-1 h-full">
-							<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer"
-								:disabled="selected.length === 0" />
-						</div>
 					</s-betriebe-neu-modal>
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
@@ -43,8 +38,8 @@
 	const selected = ref<BetriebListeEintrag[]>([]);
 
 	const cols = [
-		{ key: "id", label: "ID", sortable: true},
 		{ key: "name1", label: "Name", sortable: true, span: 2 },
+		{ key: "id", label: "ID", sortable: true, span: 0.5 },
 	]
 
 	async function doDeleteEintraege() {

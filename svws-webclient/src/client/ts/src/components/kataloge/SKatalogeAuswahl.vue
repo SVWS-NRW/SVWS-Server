@@ -11,6 +11,7 @@
 					<svws-ui-menu-item @click="setChild(child_item)">
 						<template #label> <span>{{ child_item.text }}</span> </template>
 					</svws-ui-menu-item>
+					<svws-ui-spacing v-if="child_item.name === 'kataloge.foerderschwerpunkte' || child_item.name === 'kataloge.zeitraster'" />
 				</template>
 			</div>
 		</template>
@@ -22,15 +23,5 @@
 	import type { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
 
 	const props = defineProps<KatalogeAuswahlProps>();
-
-	const menu_items = [
-		{ title: "Fächer", value: "faecher" },
-		{ title: "Jahrgänge", value: "jahrgaenge" },
-		{ title: "Religionen", value: "religionen" },
-		{ title: "Förderschwerpunkte", value: "foerderschwerpunkte" },
-		{ title: "Haltestellen", value: "haltestellen" },
-		{ title: "Betriebe", value: "betriebe" },
-		{ title: "Räume", value: "raeume" },
-	];
 
 </script>

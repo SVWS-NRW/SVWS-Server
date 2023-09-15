@@ -1,21 +1,17 @@
 <template>
 	<svws-ui-content-card title="Adresse">
-		<div class="input-wrapper">
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>doPatch({strassenname})" type="text" />
-			</div>
-			<div class="col-span-2">
-				<svws-ui-text-input placeholder="Zusatz" :model-value="daten.hausnrzusatz" @change="hausnrzusatz=>doPatch({hausnrzusatz})" type="text" />
-			</div>
-			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-text-input placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>doPatch({strassenname})" type="text" />
+			<svws-ui-text-input placeholder="Zusatz" :model-value="daten.hausnrzusatz" @change="hausnrzusatz=>doPatch({hausnrzusatz})" type="text" />
+			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete span="full" />
 			<!-- <svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
             :item-sort="ortsteilSort" :item-filter="ortsteilFilter" /> -->
-
-			<svws-ui-text-input placeholder="1. Telefon-Nr." :model-value="daten.telefon1" @change="telefon1=>doPatch({telefon1})" type="text" />
-			<svws-ui-text-input placeholder="2. Telefon-Nr." :model-value="daten.telefon2" @change="telefon2=>doPatch({telefon2})" type="text" />
-			<svws-ui-text-input placeholder="Fax-Nr." :model-value="daten.fax" @change="fax=>doPatch({fax})" type="text" />
+			<svws-ui-spacing />
+			<svws-ui-text-input placeholder="Telefon" :model-value="daten.telefon1" @change="telefon1=>doPatch({telefon1})" type="text" />
+			<svws-ui-text-input placeholder="2. Telefon" :model-value="daten.telefon2" @change="telefon2=>doPatch({telefon2})" type="text" />
 			<svws-ui-text-input placeholder="E-Mail Adresse" :model-value="daten.email" @change="email=>doPatch({email})" type="email" verify-email />
-		</div>
+			<svws-ui-text-input placeholder="Fax" :model-value="daten.fax" @change="fax=>doPatch({fax})" type="text" />
+		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
