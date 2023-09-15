@@ -1,22 +1,16 @@
 <template>
 	<svws-ui-content-card v-if="visible">
-		<svws-ui-data-table :columns="cols" :items="props.data?.leistungsdaten">
+		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten" class="overflow-visible">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
 			<template #cell(lehrerID)="{rowData}">
-				<div class="w-full">
-					<div class="-mx-1">
-						<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
-					</div>
-				</div>
+				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell(note)="{rowData}">
-				<div class="-mx-1">
-					<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
-				</div>
+				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 

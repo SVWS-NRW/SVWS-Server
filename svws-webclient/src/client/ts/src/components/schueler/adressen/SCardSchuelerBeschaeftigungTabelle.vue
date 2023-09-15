@@ -1,34 +1,34 @@
 <template>
-	<svws-ui-table-cell no-padding>
+	<div class="svws-ui-td" role="cell">
 		<svws-ui-multi-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell no-padding>
-		<svws-ui-multi-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell no-padding>
-		<svws-ui-text-input :model-value="betrieb.vertragsende" @change="vertragsende=>patchSchuelerBetriebsdaten({vertragsende}, betrieb.id)" type="date" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell align="center">
+	</div>
+	<div class="svws-ui-td" role="cell">
+    <svws-ui-multi-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
+	</div>
+	<div class="svws-ui-td" role="cell">
+    <svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
+	</div>
+	<div class="svws-ui-td" role="cell">
+    <svws-ui-text-input :model-value="betrieb.vertragsende" @change="vertragsende=>patchSchuelerBetriebsdaten({vertragsende}, betrieb.id)" type="date" />
+	</div>
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="praktikum" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell no-padding>
-		<svws-ui-multi-select v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell no-padding>
-		<svws-ui-multi-select :model-value="betrieb.ansprechpartner_id === null ? undefined : mapAnsprechpartner.get(betrieb.ansprechpartner_id)"
-			@change="(ansprechPartner : BetriebAnsprechpartner) => patchSchuelerBetriebsdaten({ ansprechpartner_id: ansprechPartner === undefined ? null : ansprechPartner.id }, betrieb.id)"
-			:items="mapAnsprechpartner"
-			:item-text="(i: BetriebAnsprechpartner) => i.name || ''" headless title="—" />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell>
-		<svws-ui-text-input :model-value="betrieb.ausbilder" @change="ausbilder=>patchSchuelerBetriebsdaten({ausbilder}, betrieb.id)" type="text" placeholder="—" headless />
-	</svws-ui-table-cell>
-	<svws-ui-table-cell align="center">
+	</div>
+	<div class="svws-ui-td" role="cell">
+    <svws-ui-multi-select v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" headless title="—" />
+	</div>
+	<div class="svws-ui-td" role="cell">
+    <svws-ui-multi-select :model-value="betrieb.ansprechpartner_id === null ? undefined : mapAnsprechpartner.get(betrieb.ansprechpartner_id)"
+      @change="(ansprechPartner : BetriebAnsprechpartner) => patchSchuelerBetriebsdaten({ ansprechpartner_id: ansprechPartner === undefined ? null : ansprechPartner.id }, betrieb.id)"
+      :items="mapAnsprechpartner"
+      :item-text="(i: BetriebAnsprechpartner) => i.name || ''" headless title="—" />
+	</div>
+  <div class="svws-ui-td" role="cell">
+    <svws-ui-text-input :model-value="betrieb.ausbilder" @change="ausbilder=>patchSchuelerBetriebsdaten({ausbilder}, betrieb.id)" type="text" placeholder="—" headless />
+  </div>
+	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="anschreiben" />
-	</svws-ui-table-cell>
+	</div>
 </template>
 
 <script setup lang="ts">

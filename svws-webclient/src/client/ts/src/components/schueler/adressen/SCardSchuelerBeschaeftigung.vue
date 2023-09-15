@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Beschäftigungen">
-		<svws-ui-data-table :items="[]" :no-data="false" :columns="cols" clickable>
+		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns="cols" clickable no-data-text="Noch kein Schülerbetrieb vorhanden." class="overflow-visible">
 			<template #header(Anschreiben)>
 				<svws-ui-tooltip>
 					<i-ri-mail-send-line />
@@ -10,18 +10,13 @@
 				</svws-ui-tooltip>
 			</template>
 			<template #body>
-				<!-- <svws-ui-table-row v-for="betrieb in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :clicked="clickedBetrieb === betrieb.id" >
-					<s-card-schueler-beschaeftigung-tabelle :betrieb="betrieb" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
-						:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="mapAnsprechpartner"
-						:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" />
-				</svws-ui-table-row> -->
-				<svws-ui-table-row v-for="(betrieb,index) in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :clicked=" clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0">
+				<div class="svws-ui-tr" role="row" v-for="(betrieb, index) in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :class="{'svws-clicked': clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0}">
 					<s-card-schueler-beschaeftigung-tabelle :betrieb="betrieb" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
 						:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)"
 						:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" />
-				</svws-ui-table-row>
+				</div>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 
@@ -52,7 +47,7 @@
 		{ key: "Praktikum", label: "Praktikum", span: 0.25, tooltip: 'Praktikum', align: "center"},
 		{ key: "Betreuungslehrer", label: "Betreuungslehrer"},
 		{ key: "Ansprechpartner", label: "Ansprechpartner"},
-		{ key: "Ausbilder", label: "sonstiger Betreuer"},
+		{ key: "Ausbilder", label: "Sonstiger Betreuer"},
 		{ key: "Anschreiben", label: "Anschreiben", tooltip: "Betrieb erhält Anschreiben", fixedWidth: 3, align: "center"}
 	];
 

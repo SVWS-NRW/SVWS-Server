@@ -7,13 +7,13 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :filter-open="true" :filtered="filtered" :filterReset="filterReset" scroll-into-view>
 				<template #search>
-					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Klasse" />
+					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
-				<template #filter>
-					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full mb-3" />
+				<template #filterAdvanced>
+					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full" />
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text" removable autocomplete :item-filter="find" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text" removable autocomplete :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text" removable autocomplete :item-filter="find" />
@@ -24,10 +24,10 @@
 					</svws-ui-button>-->
 				</template>
 				<template #cell(idKlasse)="{ value }">
-					{{ value === null ? "--" : mapKlassen.get(value)?.kuerzel }}
+					{{ value === null ? "–" : mapKlassen.get(value)?.kuerzel }}
 				</template>
-				<template #footerActions>
-					<svws-ui-button v-if="selectedItems.length" type="transparent" size="small" @click="modalGruppenaktionen.openModal()">
+				<template #actions>
+					<svws-ui-button v-if="selectedItems.length" type="transparent" @click="modalGruppenaktionen.openModal()">
 						<i-ri-edit-2-line />
 						Auswahl bearbeiten
 					</svws-ui-button>
@@ -41,7 +41,7 @@
 						<i-ri-more-2-line />
 					</svws-ui-button>
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 	<svws-ui-modal ref="modalGruppenaktionen" size="medium">
@@ -79,7 +79,7 @@
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
 	const cols = [
-		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
+		{ key: "idKlasse", label: "Klasse", tooltip: "Klasse", sortable: true, span: 1 },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]

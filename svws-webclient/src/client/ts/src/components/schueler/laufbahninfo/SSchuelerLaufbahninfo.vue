@@ -8,7 +8,7 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachenfolge" class="">
-			<svws-ui-data-table :items="sprachbelegungen()" :columns="colsSprachenfolge" class="mb-4">
+			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge">
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
 					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungVonAbschnitt" @change="belegungVonAbschnitt => patchSprachbelegung({belegungVonAbschnitt: Number(belegungVonAbschnitt), sprache: rowData.sprache})" headless />
 				</template>
@@ -29,17 +29,17 @@
 						<svws-ui-checkbox v-model="hatLatinum" headless title="Latinum">Latinum</svws-ui-checkbox>
 					</template>
 					<template v-else>
-						<svws-ui-multi-select title="Referenzniveau" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @change="(referenzniveau: Sprachreferenzniveau) => patchSprachbelegung({referenzniveau: referenzniveau.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="(i: Sprachreferenzniveau)=>i.name()" />
+						<svws-ui-multi-select title="Referenzniveau" headless :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @change="(referenzniveau: Sprachreferenzniveau) => patchSprachbelegung({referenzniveau: referenzniveau.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="(i: Sprachreferenzniveau)=>i.name()" />
 					</template>
 				</template>
 				<!--  -->
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Sprachprüfungen" class="opacity-50">
+		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
 			<svws-ui-input-wrapper>
-				<svws-ui-data-table :items="sprachpruefungen()" :columns="colsSprachpruefungen">
+				<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen">
 					<!-- -->
-				</svws-ui-data-table>
+				</svws-ui-table>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
@@ -55,29 +55,29 @@
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
-		{ key: "sprache", label: "Sp", tooltip: "Kürzel der Sprache", align: 'center' },
-		{ key: "reihenfolge", label: "RF", tooltip: "Reihenfolge", align: 'center' },
-		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang", align: 'center' },
-		{ key: "belegungVonAbschnitt", label: "ab Hj", tooltip: "belegt ab Abschnitt", align: 'center' },
-		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang", align: 'center' },
-		{ key: "belegungBisAbschnitt", label: "bis Hj", tooltip: "belegt bis Abschnitt", align: 'center' },
-		{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", align: 'center' },
+		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache" },
+		{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
+		{ key: "belegungVonJahrgang", label: "ab Jg", tooltip: "belegt ab Jahrgang" },
+		{ key: "belegungVonAbschnitt", label: "Halbjahr", tooltip: "belegt ab Abschnitt", divider: true },
+		{ key: "belegungBisJahrgang", label: "bis Jg", tooltip: "belegt bis Jahrgang" },
+		{ key: "belegungBisAbschnitt", label: "Halbjahr", tooltip: "belegt bis Abschnitt", divider: true },
+		{ key: "referenzniveau", label: "Qualifikation", tooltip: "die erreichte Qualifikation", span: 2 },
 	];
 
 	const colsSprachpruefungen: Array<DataTableColumn> = [
-		{ key: "sprache", label: "Sp", tooltip: "Kürzel der Sprache", align: 'center', fixedWidth: 4 },
-		{ key: "jahrgang", label: "Jg", tooltip: "im Jahrgang", align: 'center', fixedWidth: 4 },
-		{ key: "anspruchsniveauId", label: "Anspruchsniveau", tooltip: "das Anspruchsniveau", align: 'center', fixedWidth: 4 },
-		{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", align: 'center', fixedWidth: 6 },
-		{ key: "sprache", label: "Ers-Sp", tooltip: "Die durch die Prüfung ersetzte Sprache", align: 'center', fixedWidth: 4 },
-		{ key: "istHSUPruefung", label: "HSU", tooltip: "Ist eine HSU-Prüfung", align: 'center', fixedWidth: 4 },
-		{ key: "istFeststellungspruefung", label: "Festst", tooltip: "Ist eine Feststellungsprüfung", align: 'center', fixedWidth: 4 },
-		{ key: "kannErstePflichtfremdspracheErsetzen", label: "1. FS", tooltip: "Kann die erster Fremdsprache ersetzen", align: 'center', fixedWidth: 4 },
-		{ key: "kannZweitePflichtfremdspracheErsetzen", label: "2. FS", tooltip: "Kann die zweite Fremdsprache ersetzen", align: 'center', fixedWidth: 4 },
-		{ key: "kannWahlpflichtfremdspracheErsetzen", label: "WP FS", tooltip: "Kann die Wahlpflicht-Fremdsprache ersetzen", align: 'center', fixedWidth: 4 },
-		{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef.", tooltip: "Kann die Belegung als fortgeführte Fremdsprache erlauben", align: 'center', fixedWidth: 4 },
-		{ key: "referenzniveau", label: "Niveau", tooltip: "das Referenzniveau", align: 'center', fixedWidth: 6 },
-		{ key: "note", label: "Note", tooltip: "die Prüfungsnote", align: 'center', fixedWidth: 6 },
+		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
+		{ key: "jahrgang", label: "Jahrgang", tooltip: "Im Jahrgang", minWidth: 4 },
+		{ key: "anspruchsniveauId", label: "Anspruch", tooltip: "Anspruchsniveau", minWidth: 4 },
+		{ key: "pruefungsdatum", label: "Prüfungsdatum", tooltip: "Prüfungsdatum", minWidth: 6, span: 1.5 },
+		{ key: "sprache", label: "Ersetzt", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
+		{ key: "istHSUPruefung", label: "HSU", tooltip: "Ist eine HSU-Prüfung", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "istFeststellungspruefung", label: "Feststellungsprüfung", tooltip: "Ist eine Feststellungsprüfung", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "kannErstePflichtfremdspracheErsetzen", label: "1. FS", tooltip: "Kann die erster Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "kannZweitePflichtfremdspracheErsetzen", label: "2. FS", tooltip: "Kann die zweite Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "kannWahlpflichtfremdspracheErsetzen", label: "WP FS", tooltip: "Kann die Wahlpflicht-Fremdsprache ersetzen", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgeführt", tooltip: "Kann die Belegung als fortgeführte Fremdsprache erlauben", align: 'center', minWidth: 4, span: 0.5 },
+		{ key: "referenzniveau", label: "Niveau", tooltip: "Referenzniveau", minWidth: 6 },
+		{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
 	];
 
 	function abschnitt(item: InputDataType) {
