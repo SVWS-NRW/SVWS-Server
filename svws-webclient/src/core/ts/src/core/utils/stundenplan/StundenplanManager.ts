@@ -1995,7 +1995,7 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
 	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
-	 * <br>Laufzeit: O(|Unterrichte des Klassenunterricht|)
+	 * <br>Laufzeit: O(|Unterrichte des Klassenunterrichts|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
@@ -2011,7 +2011,7 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann negativ sein.
 	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
-	 * <br>Laufzeit: O(|Unterrichte des Klassenunterricht|)
+	 * <br>Laufzeit: O(|Unterrichte des Klassenunterrichts|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
@@ -2040,7 +2040,7 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45-Minuten entsprechen, können nur Stundenanteile gesetzt sein.
 	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
-	 * <br>Laufzeit: O(|Unterrichte des Klassenunterricht|)
+	 * <br>Laufzeit: O(|Unterrichte des Klassenunterrichts|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
@@ -2252,34 +2252,101 @@ export class StundenplanManager extends JavaObject {
 		return this.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(idsKurs, wochentyp, wochentag, unterrichtstunde);
 	}
 
-	/**
-	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs}.
-	 * <br>Hinweis: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
-	 * <br>Laufzeit: O(|Unterrichte des Kurses|)
-	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
-	 *
-	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
-	 */
-	public kursGetWochenstundenIst(idKurs : number) : number {
-		let summe : number = 0;
+	private kursGetWochenminutenISTungerundet(idKurs : number) : number {
 		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
-		const listU : List<StundenplanUnterricht> = MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idKurs);
-		for (const u of listU)
-			summe += (u.wochentyp === 0) ? faktor : 1;
-		return ((summe * 100.0 / faktor) as number) / 100.0;
+		let summe_minuten : number = 0;
+		for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idKurs)) {
+			const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
+			const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
+			const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
+			const minuten : number = ende! - beginn!;
+			summe_minuten += (u.wochentyp === 0) ? minuten * faktor : minuten;
+		}
+		return summe_minuten / faktor;
 	}
 
 	/**
-	 * Liefert die Wochenstunden des Kurses.
+	 * Liefert die SOLL-Wochenminuten des {@link StundenplanKurs}.
 	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Wochenstunden des Kurses.
+	 * @return die SOLL-Wochenminuten des {@link StundenplanKurs}.
 	 */
-	public kursGetWochenstundenSoll(idKurs : number) : number {
+	public kursGetWochenminutenSOLL(idKurs : number) : number {
+		return DeveloperNotificationException.ifMapGetIsNull(this._kurs_by_id, idKurs).wochenstunden * StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN;
+	}
+
+	/**
+	 * Liefert die IST-Wochenminuten des {@link StundenplanKurs}.
+	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
+	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
+	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
+	 */
+	public kursGetWochenminutenIST(idKurs : number) : number {
+		return StundenplanManager.gerundet(this.kursGetWochenminutenISTungerundet(idKurs));
+	}
+
+	/**
+	 * Liefert die Differenz aus SOLL-Wochenminuten minus IST-Wochenminuten des {@link StundenplanKurs}.
+	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Hinweis 2: Der Wert kann negativ sein.
+	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
+	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Differenz aus SOLL-Wochenminuten minus IST-Wochenminuten des {@link StundenplanKurs}.
+	 */
+	public kursGetWochenminutenREST(idKurs : number) : number {
+		return this.kursGetWochenminutenSOLL(idKurs) - this.kursGetWochenminutenIST(idKurs);
+	}
+
+	/**
+	 * Liefert die SOLL-Wochenstunden des {@link StundenplanKurs}.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die SOLL-Wochenstunden des {@link StundenplanKurs}.
+	 */
+	public kursGetWochenstundenSOLL(idKurs : number) : number {
 		return DeveloperNotificationException.ifMapGetIsNull(this._kurs_by_id, idKurs).wochenstunden;
+	}
+
+	/**
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45-Minuten entsprechen, können nur Stundenanteile gesetzt sein.
+	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
+	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
+	 */
+	public kursGetWochenstundenIST(idKurs : number) : number {
+		return StundenplanManager.gerundet(this.kursGetWochenminutenISTungerundet(idKurs) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+	}
+
+	/**
+	 * Liefert die Differenz aus SOLL-Wochenstunden minus IST-Wochenstunden des {@link StundenplanKurs}.
+	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
+	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45 min entsprechen, können nur Stundenanteile gesetzt sein.
+	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
+	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Differenz aus SOLL-Wochenstunden minus IST-Wochenstunden des {@link StundenplanKurs}.
+	 */
+	public kursGetWochenstundenREST(idKurs : number) : number {
+		return this.kursGetWochenstundenSOLL(idKurs) - this.kursGetWochenstundenIST(idKurs);
 	}
 
 	/**
