@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
@@ -18,9 +19,10 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.utils.Map2DUtils;
+import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse dient dazu eine CSV-Datei im Format {@link StupasSchulmanagerFormatLine} in einen {@link StundenplanManager} zu konvertieren.
@@ -30,6 +32,7 @@ import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
  */
 public class StupasSchulmanagerFormatReader {
 
+	private StundenplanKomplett komplett = new StundenplanKomplett();
 	private final HashMap<String, StundenplanFach> fach_by_kuerzel = new HashMap<>();
 	private final HashMap<String, StundenplanRaum> raum_by_kuerzel = new HashMap<>();
 	private final HashMap<String, StundenplanLehrer> lehrer_by_kuerzel = new HashMap<>();
@@ -68,24 +71,161 @@ public class StupasSchulmanagerFormatReader {
 		// Daten aus CSV extrahieren.
 		final List<StupasSchulmanagerFormatLine> csvData = CsvReader.fromResource(location, StupasSchulmanagerFormatLine.class);
 
-		// Daten nach der Lerngruppen-ID gruppieren.
-		final HashMap<Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_id = new HashMap<>();
-		for (final StupasSchulmanagerFormatLine line : csvData)
-			MapUtils.getOrCreateArrayList(unterrichtmenge_by_id, line.KursId).add(line);
-
 		// Fast leeren Manager erzeugen
-		final StundenplanKomplett komplett = new StundenplanKomplett();
+		komplett = new StundenplanKomplett();
 		komplett.daten.bezeichnungStundenplan = "Import aus " + location;
 		komplett.daten.wochenTypModell = getWochenTypModell(csvData);
 		komplett.daten.gueltigAb = gueltigAb;
 		komplett.daten.gueltigBis = gueltigBis;
 		final StundenplanManager m = new StundenplanManager(komplett);
 
-		// Daten importieren
-		for (final Integer key : unterrichtmenge_by_id.keySet())
-			importiereUnterricht(m, unterrichtmenge_by_id.get(key));
+		// AB-Wochen erkennen und umwandeln.
+		final List<StupasSchulmanagerFormatLine> csvData2 = convertWochentypen(csvData);
+
+		// Daten überprüfen.
+		check(m, csvData);
+
+		// Rekursiv importieren.
+		importiere(m, csvData2);
 
 		return m;
+	}
+
+	private void check(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> lines) {
+		for (final StupasSchulmanagerFormatLine line : lines) {
+			if (line.Stunde >= 12)
+				throw new DeveloperNotificationException("Die CSV Datei hat Pausenaufsichten!. Bitte vorher entfernen: " + lineToString(line));
+
+			final StundenplanFach fach = getCreateFach(line, m);
+			if (fach == null)
+				throw new DeveloperNotificationException("Die CSV Datei hat undefinierte Fächer!. Bitte vorher entfernen: " + lineToString(line));
+		}
+	}
+
+	private List<StupasSchulmanagerFormatLine> convertWochentypen(final List<StupasSchulmanagerFormatLine> list) {
+		final List<StupasSchulmanagerFormatLine> list2 = new ArrayList<>();
+
+		// Nach (ID, Wochentag, Stunde) gruppieren.
+		final HashMap3D<Integer, Integer, Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_id_and_wochentag_and_stunde = new HashMap3D<>();
+		for (final StupasSchulmanagerFormatLine line : list)
+			Map3DUtils.getOrCreateArrayList(unterrichtmenge_by_id_and_wochentag_and_stunde, line.KursId, line.Wochentag, line.Stunde).add(line);
+
+		// Nach (ID, Wochentag, Stunde) konvertieren.
+		for (final List<StupasSchulmanagerFormatLine> gruppe : unterrichtmenge_by_id_and_wochentag_and_stunde.getNonNullValuesAsList())
+			convertWochentypenWochentagStunde(list2, gruppe);
+
+		return list2;
+	}
+
+	private void convertWochentypenWochentagStunde(final List<StupasSchulmanagerFormatLine> copy, final List<StupasSchulmanagerFormatLine> list) {
+		final int wochentypModell = komplett.daten.wochenTypModell;
+
+		if (wochentypModell == 0) {
+			// Unterricht findet jede Woche statt (und es gibt keine Multiwochen).
+			for (final StupasSchulmanagerFormatLine line : list) {
+				line.Woche = 0;
+				copy.add(line);
+			}
+		} else {
+			if (list.size() > wochentypModell) {
+				// Fehler
+				throw new DeveloperNotificationException("Die CSV Datei hat mehr Unterrichte pro 'Wochentag/Stunde' als Wochentypen!" + linesToString(list));
+			}
+			if (list.size() < wochentypModell) {
+				// Unterricht findet nur in speziellen Wochen statt (A oder B oder C ...).
+				copy.addAll(list);
+			} else {
+				// Unterricht findet jede Woche statt (und es gibt Multiwochen).
+				final StupasSchulmanagerFormatLine first = list.get(0);
+				first.Woche = 0;
+				copy.add(first);
+			}
+		}
+
+	}
+
+	private void importiere(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
+		// Daten nach der Lerngruppen-ID (Kurs-ID) gruppieren.
+		final HashMap<Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_id = new HashMap<>();
+		for (final StupasSchulmanagerFormatLine line : list)
+			MapUtils.getOrCreateArrayList(unterrichtmenge_by_id, line.KursId).add(line);
+
+		// Rekursiv importieren.
+		for (final Integer key : unterrichtmenge_by_id.keySet())
+			importiereKlassenOderKursunterricht(m, unterrichtmenge_by_id.get(key));
+	}
+
+	//	Id;KursId;Art;Lehrerkuerzel;Fach;Kurs;Raum;Wochentag;Stunde;Bezeichnung;Woche;Klassen;Kopplung
+	//	561;36;Stunde;LEHR3;BI;;RAUM3;2;3; 3;1;05a;
+	//	562;36;Stunde;LEHR3;BI;;RAUM3;2;3; 3;2;05a;
+	//	563;36;Stunde;LEHR3;BI;;RAUM3;2;4; 4;1;05a;
+	//	564;36;Stunde;LEHR3;BI;;RAUM3;2;4; 4;2;05a;
+	private void importiereKlassenOderKursunterricht(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
+		final int wochenstunden = getWochenStunden(list);
+		final StupasSchulmanagerFormatLine line = list.get(0);
+		final List<StundenplanKlasse> klassen = getCreateKlassen(line, m);
+		final StundenplanLehrer lehrer = getCreateLehrer(line, m);
+		final StundenplanSchiene schiene = getCreateSchiene(line, m);
+		final StundenplanFach fach = getCreateFach(line, m);
+
+		if ((klassen.size() == 1) && !getIstOberstufe(klassen.get(0).kuerzel) && !getIstAuffangklasse(klassen.get(0).kuerzel) && !getIstAG(klassen.get(0).kuerzel) && !getIstMIA(klassen.get(0).kuerzel)) {
+			// Klassenunterricht (genau eine Klasse und keine Oberstufe)
+			final StundenplanKlassenunterricht klassenunterricht = new StundenplanKlassenunterricht();
+			klassenunterricht.idKlasse = klassen.get(0).id;
+			klassenunterricht.idFach = fach.id;
+			klassenunterricht.bezeichnung = "";
+			klassenunterricht.wochenstunden = wochenstunden;
+			if (schiene != null)
+				klassenunterricht.schienen.add(schiene.id);
+			klassenunterricht.schueler = new ArrayList<>(); // TODO Einen Schüler pro Klasse simulieren.
+			if (lehrer != null)
+				klassenunterricht.lehrer.add(lehrer.id);
+			m.klassenunterrichtAdd(klassenunterricht);
+		} else {
+			// Kursunterricht
+			final StundenplanKurs kurs = new StundenplanKurs();
+			kurs.id = line.KursId;
+			kurs.idFach = fach.id;
+			kurs.bezeichnung = "";
+			kurs.wochenstunden = wochenstunden;
+			kurs.sortierung = 0;
+			kurs.schienen = new ArrayList<>();
+			kurs.jahrgaenge = new ArrayList<>();
+			kurs.schueler = new ArrayList<>();
+			kurs.lehrer = new ArrayList<>();
+		}
+
+		// Rekursiv importieren.
+		for (final StupasSchulmanagerFormatLine lineUnterricht : list)
+			importiereUnterrichtWochentagStundeWochentyp(m, lineUnterricht);
+	}
+
+	private void importiereUnterrichtWochentagStundeWochentyp(final StundenplanManager m, final StupasSchulmanagerFormatLine line) {
+		final StundenplanFach fach = getCreateFach(line, m); // muss
+		final StundenplanZeitraster zeitraster = getCreateZeitraster(line, m); // muss
+		final StundenplanRaum raum = getCreateRaum(line, m); // kann
+		final StundenplanSchiene schiene = getCreateSchiene(line, m); // kann
+		final StundenplanLehrer lehrer = getCreateLehrer(line, m); // kann
+		final List<StundenplanKlasse> klassen = getCreateKlassen(line, m); // kann
+		if ((lehrer == null) && (klassen.size() == 0)) // Mindestens Lehrkraft ODER Klasse
+			return; // TODO Exception?
+
+		// Unterricht erzeugen und hinzufügen.
+		final StundenplanUnterricht u = new StundenplanUnterricht();
+		u.id = unterricht_by_id.size();
+		u.idZeitraster = zeitraster.id;
+		u.wochentyp = line.Woche;
+		u.idFach = fach.id;
+		if (raum != null)
+			u.raeume.add(raum.id);
+		if (lehrer != null)
+			u.lehrer.add(lehrer.id);
+		if (schiene != null)
+			u.schienen.add(schiene.id);
+		for (final StundenplanKlasse klasse : klassen)
+			u.klassen.add(klasse.id);
+		unterricht_by_id.put(u.id, u);
+		m.unterrichtAdd(u);
 	}
 
 	private static int getWochenTypModell(final List<StupasSchulmanagerFormatLine> csvData) {
@@ -95,133 +235,17 @@ public class StupasSchulmanagerFormatReader {
 		return max == 1 ? 0 : max;
 	}
 
-//	Id;KursId;Art;Lehrerkuerzel;Fach;Kurs;Raum;Wochentag;Stunde;Bezeichnung;Woche;Klassen;Kopplung
-//	557;31;Stunde;LEHR1;FörE;;RAUM1;2;7; 7;1;;
-//	558;31;Stunde;LEHR1;FörE;;RAUM1;2;7; 7;2;;
-//	561;36;Stunde;LEHR3;BI;;RAUM3;2;3; 3;1;05a;
-//	562;36;Stunde;LEHR3;BI;;RAUM3;2;3; 3;2;05a;
-//	563;36;Stunde;LEHR3;BI;;RAUM3;2;4; 4;1;05a;
-//	564;36;Stunde;LEHR3;BI;;RAUM3;2;4; 4;2;05a;
-//	565;37;Stunde;LEHR4;D;;RAUM4;1;1; 1;1;05a;
-//	566;37;Stunde;LEHR4;D;;RAUM4;1;1; 1;2;05a;
-//	567;37;Stunde;LEHR4;D;;RAUM4;1;2; 2;1;05a;
-//	568;37;Stunde;LEHR4;D;;RAUM4;1;2; 2;2;05a;
-	private void importiereUnterricht(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
-		// Nach (Wochentag, Stunde) gruppieren.
-		final HashMap2D<Integer, Integer, List<StupasSchulmanagerFormatLine>> unterrichtmenge_by_wochentag_and_stunde = new HashMap2D<>();
+	private int getWochenStunden(final List<StupasSchulmanagerFormatLine> list) {
+		int summe = 0;
+		final int faktor = komplett.daten.wochenTypModell == 0 ? 1 : komplett.daten.wochenTypModell;
+
 		for (final StupasSchulmanagerFormatLine line : list)
-			Map2DUtils.getOrCreateArrayList(unterrichtmenge_by_wochentag_and_stunde, line.Wochentag, line.Stunde).add(line);
+			summe += line.Woche == 0 ? faktor : 1;
 
-		// Nach (Wochentag, Stunde) importieren.
-		for (final Integer key1 : unterrichtmenge_by_wochentag_and_stunde.getKeySet())
-			for (final Integer key2 : unterrichtmenge_by_wochentag_and_stunde.getKeySetOf(key1))
-				importiereUnterrichtWochentagStunde(m, Map2DUtils.getOrCreateArrayList(unterrichtmenge_by_wochentag_and_stunde, key1, key2));
-	}
+		if (summe % faktor != 0)
+			throw new DeveloperNotificationException("Die CSV Datei hat keine glatten Wochenstunden: " + linesToString(list));
 
-	private void importiereUnterrichtWochentagStunde(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
-
-		// WochenTypModell == 0?
-		if (m.getWochenTypModell() == 0) {
-			final List<StupasSchulmanagerFormatLine> list2 = new ArrayList<>();
-			for (final StupasSchulmanagerFormatLine line : list) {
-				line.Woche = 0;
-				list2.add(line);
-			}
-			importiereUnterrichtWochentagStundeWochentyp(m, list2);
-			return;
-		}
-
-		// Unterricht findet nicht immer statt?
-		if (list.size() < m.getWochenTypModell()) {
-			final List<StupasSchulmanagerFormatLine> list2 = new ArrayList<>(list);
-			importiereUnterrichtWochentagStundeWochentyp(m, list2);
-			return;
-		}
-
-		// Unterricht findet immer statt?
-		if (list.size() == m.getWochenTypModell()) {
-			final List<StupasSchulmanagerFormatLine> list2 = new ArrayList<>();
-			final StupasSchulmanagerFormatLine first = list.get(0);
-			first.Woche = 0;
-			list2.add(first);
-			importiereUnterrichtWochentagStundeWochentyp(m, list2);
-			return;
-		}
-
-		// Fehler
-		String lines = "\n";
-		for (final StupasSchulmanagerFormatLine line : list)
-			lines += line + "\n";
-		throw new DeveloperNotificationException("Die CSV Datei hat mehr Unterrichte pro Zelle als Wochentypen!" + lines);
-	}
-
-	private void importiereUnterrichtWochentagStundeWochentyp(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
-		for (final StupasSchulmanagerFormatLine line : list) {
-			// Aufsichten ignorieren.
-			if (line.Stunde >= 12)
-				throw new DeveloperNotificationException("Die CSV Datei hat Pausenaufsichten!. Bitte vorher entfernen: " + lineToString(line));
-
-			// Fach muss existieren.
-			final StundenplanFach fach = getCreateFach(line, m);
-			if (fach == null)
-				throw new DeveloperNotificationException("Die CSV Datei hat undefinierte Fächer!. Bitte vorher entfernen: " + lineToString(line));
-
-			// Zeitraster muss definiert sein.
-			final StundenplanZeitraster zeitraster = getCreateZeitraster(line, m);
-
-			// Unterricht ohne Raum ist möglich (aber unschön).
-			final StundenplanRaum raum = getCreateRaum(line, m);
-
-			// Unterricht ohne Schiene ist möglich.
-			final StundenplanSchiene schiene = getCreateSchiene(line, m);
-
-			// Mindestens Lehrkraft ODER Klasse muss existieren.
-			final StundenplanLehrer lehrer = getCreateLehrer(line, m);
-			final List<StundenplanKlasse> klassen = getCreateKlassen(line, m);
-			if ((lehrer == null) && (klassen.size() == 0))
-				continue;
-
-			// Unterricht erzeugen und hinzufügen.
-			final StundenplanUnterricht u = new StundenplanUnterricht();
-			u.id = unterricht_by_id.size();
-			u.idZeitraster = zeitraster.id;
-			u.wochentyp = line.Woche;
-			u.idFach = fach.id;
-			if (raum != null)
-				u.raeume.add(raum.id);
-			if (lehrer != null)
-				u.lehrer.add(lehrer.id);
-			if (schiene != null)
-				u.schienen.add(schiene.id);
-			for (final StundenplanKlasse klasse : klassen)
-				u.klassen.add(klasse.id);
-			unterricht_by_id.put(u.id, u);
-			m.unterrichtAdd(u);
-
-			// Kurs- oder Klassenunterricht?
-			// Mit "line.KursId" hat man die Objektreferenz.
-
-			if ((klassen.size() == 1) && getIstOberstufe(klassen.get(0).kuerzel)) {
-				// Klassenunterricht
-				final StundenplanKlassenunterricht klassenunterricht = new StundenplanKlassenunterricht();
-				klassenunterricht.idFach = u.idFach;
-				//klassenunterricht.idKlasse
-			} else {
-				// Kursunterricht
-				final StundenplanKurs kurs = new StundenplanKurs();
-				kurs.id = line.KursId;
-				kurs.wochenstunden = 1;
-			}
-		}
-
-	}
-
-	private static String lineToString(final StupasSchulmanagerFormatLine line) {
-		return convertNull(line.Id) + ";" + convertNull(line.KursId) + ";" + convertNull(line.Art) + ";"
-	          + convertNull(line.Lehrerkuerzel) + ";" + convertNull(line.Fach) + ";" + convertNull(line.Kurs) + ";"
-			  + convertNull(line.Raum) + ";" + convertNull(line.Wochentag) + ";" + convertNull(line.Stunde) + ";"
-	          + convertNull(line.Bezeichnung) + ";" + convertNull(line.Woche) + ";" + convertNull(line.Klassen) + ";"
-			  + convertNull(line.Kopplung);
+		return summe / faktor;
 	}
 
 	private static String convertNull(final String s) {
@@ -274,7 +298,7 @@ public class StupasSchulmanagerFormatReader {
 
 		if (!lehrer_by_kuerzel.containsKey(line.Lehrerkuerzel)) {
 			final StundenplanLehrer lehrkraft = new StundenplanLehrer();
-			lehrkraft.id = lehrer_by_kuerzel.size();
+			lehrkraft.id = lehrer_by_kuerzel.size() + 1; // Lasse Lehrer-IDs bei 1 starten.
 			lehrkraft.kuerzel = line.Lehrerkuerzel;
 			lehrkraft.nachname = "Nachname " + line.Lehrerkuerzel;
 			lehrkraft.vorname = "Vorname " + line.Lehrerkuerzel;
@@ -392,7 +416,38 @@ public class StupasSchulmanagerFormatReader {
 	}
 
 	private static boolean getIstOberstufe(final String klassenKuerzel) {
-		return klassenKuerzel.equals("EF") || klassenKuerzel.equals("Q1") || klassenKuerzel.equals("Q2");
+		final String kuerzel = klassenKuerzel.toUpperCase();
+		return kuerzel.equals("EF") || kuerzel.equals("Q1") || kuerzel.equals("Q2");
+	}
+
+	private static boolean getIstAuffangklasse(final String klassenKuerzel) {
+		final String kuerzel = klassenKuerzel.toUpperCase();
+		return kuerzel.equals("AUF") || kuerzel.equals("AUF1") || kuerzel.equals("AUF2");
+	}
+
+	private static boolean getIstAG(@NotNull final String klassenKuerzel) {
+		final String kuerzel = klassenKuerzel.toUpperCase();
+		return kuerzel.equals("AG") || kuerzel.equals("AG1") || kuerzel.equals("AG2");
+	}
+
+	private static boolean getIstMIA(@NotNull final String klassenKuerzel) {
+		final String kuerzel = klassenKuerzel.toUpperCase();
+		return kuerzel.equals("MIA") || kuerzel.equals("MIA1") || kuerzel.equals("MIA2");
+	}
+
+	private static String lineToString(final StupasSchulmanagerFormatLine line) {
+		return convertNull(line.Id) + ";" + convertNull(line.KursId) + ";" + convertNull(line.Art) + ";"
+	          + convertNull(line.Lehrerkuerzel) + ";" + convertNull(line.Fach) + ";" + convertNull(line.Kurs) + ";"
+			  + convertNull(line.Raum) + ";" + convertNull(line.Wochentag) + ";" + convertNull(line.Stunde) + ";"
+	          + convertNull(line.Bezeichnung) + ";" + convertNull(line.Woche) + ";" + convertNull(line.Klassen) + ";"
+			  + convertNull(line.Kopplung);
+	}
+
+	private static String linesToString(final List<StupasSchulmanagerFormatLine> list) {
+		String s = "";
+		for (final StupasSchulmanagerFormatLine line : list)
+			s += "\n" + lineToString(line);
+		return s;
 	}
 
 }

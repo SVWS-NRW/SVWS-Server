@@ -1,6 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
+import { ArrayList } from '../../../java/util/ArrayList';
+import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -202,6 +205,32 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 				this._map1.remove(key1);
 			}
 		}
+	}
+
+	/**
+	 * Liefert das KeySet des 1. Schlüssels.
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public getKeySet() : JavaSet<K1> {
+		return this._map1.keySet();
+	}
+
+	/**
+	 * Liefert eine Liste aller Values in dieser Map.
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public getNonNullValuesAsList() : List<V> {
+		const list : ArrayList<V> = new ArrayList();
+		for (const map2 of this._map1.values())
+			for (const map3 of map2.values())
+				for (const value of map3.values())
+					if (value === null)
+						throw new DeveloperNotificationException("HashMap3D.getNonNullValuesAsList() --> Es existieren NULL Elemente!")
+					else
+						list.add(value);
+		return list;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

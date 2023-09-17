@@ -14,6 +14,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
+import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 
 /**
@@ -31,7 +32,7 @@ class StundenplanManagerTest {
 	 */
 	@DisplayName("testStundenplanManager")
 	@Test
-	void testDatenstz_2023_08_31() {
+	void testDatensatz_2023_08_31() {
 		final String location = "de/svws_nrw/core/utils/stundenplan/StupasSchulmanagerExport.txt";
 		final StupasSchulmanagerFormatReader reader = new StupasSchulmanagerFormatReader();
 		final StundenplanManager m = reader.toManager(location, "2022-03-15", "2022-09-25"); // 11 KW bis 38 KW
@@ -49,6 +50,18 @@ class StundenplanManagerTest {
 	}
 
 	private static void test_klassenunterricht_getter(final StundenplanManager m) {
+		assertEquals(234, m.klassenunterrichtGetMengeAsList().size());
+
+		 final StundenplanKlasse kl10d =  m.klasseGetByIdOrException(21);
+		 assertEquals("10d", kl10d.kuerzel);
+
+		 final StundenplanLehrer le25 =  m.lehrerGetByIdOrException(25);
+		 assertEquals(5, m.klassenunterrichtGetMengeByLehrerIdAsList(le25.id).size());
+
+
+//		 m.klassenunterrichtGetMengeByLehrerIdAsList(0)
+
+
 		// ...
 	}
 

@@ -1,7 +1,10 @@
 package de.svws_nrw.core.adt.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
@@ -238,6 +241,34 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 			}
 		}
 
+	}
+
+	/**
+	 * Liefert das KeySet des 1. Schlüssels.
+	 *
+	 * @return das KeySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<@NotNull K1> getKeySet() {
+		return this._map1.keySet();
+	}
+
+	/**
+	 * Liefert eine Liste aller Values in dieser Map.
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
+		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+
+		for (@NotNull final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 : _map1.values())
+			for (@NotNull final Map<@NotNull K3, V> map3 : map2.values())
+				for (final V value : map3.values())
+					if (value == null)
+						throw new DeveloperNotificationException("HashMap3D.getNonNullValuesAsList() --> Es existieren NULL Elemente!");
+					else
+						list.add(value);
+
+		return list;
 	}
 
 }

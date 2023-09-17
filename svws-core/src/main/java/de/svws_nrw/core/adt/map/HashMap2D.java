@@ -198,7 +198,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 
 		for (final V value : getSubMapOrException(key1).values()) {
 			if (value == null)
-				throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!");
+				throw new DeveloperNotificationException("Liste hat NULL Elemente!");
 			list.add(value);
 		}
 
@@ -216,7 +216,7 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 		for (final @NotNull Map<@NotNull K2, V> map2 : _map.values()) {
 			for (final V value : map2.values()) {
 				if (value == null)
-					throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!");
+					throw new DeveloperNotificationException("Liste hat NULL Elemente!");
 				list.add(value);
 			}
 		}

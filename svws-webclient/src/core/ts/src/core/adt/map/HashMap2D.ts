@@ -187,7 +187,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		const list : ArrayList<V> = new ArrayList();
 		for (const value of this.getSubMapOrException(key1).values()) {
 			if (value === null)
-				throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!")
+				throw new DeveloperNotificationException("Liste hat NULL Elemente!")
 			list.add(value);
 		}
 		return list;
@@ -203,7 +203,7 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 		for (const map2 of this._map.values()) {
 			for (const value of map2.values()) {
 				if (value === null)
-					throw new DeveloperNotificationException("Liste hat ungewünschte NULL Elemente!")
+					throw new DeveloperNotificationException("Liste hat NULL Elemente!")
 				list.add(value);
 			}
 		}
