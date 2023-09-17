@@ -47,7 +47,7 @@
 				:faecher-manager="faecherManager"
 				:map-lehrer="mapLehrer"
 				:kursmanager="kursmanager"
-				:raummanager="() => raummanager as GostKlausurraumManager"
+				:raummanager="() => (raummanager as GostKlausurraumManager)"
 				:stundenplanmanager="stundenplanmanager"
 				:create-klausurraum="createKlausurraum"
 				:loesche-klausurraum="loescheKlausurraum"
@@ -81,7 +81,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = computed(() => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value));
+	const termine = computed(() => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value, false));
 
 	const calculatCssClassesTermin = (termin: GostKlausurtermin) => ({
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,
@@ -110,8 +110,9 @@
 		if (dragData.value instanceof GostKursklausur)
 			if (zone instanceof GostKlausurraum)
 				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
-			else if (zone instanceof GostKlausurtermin)
+			else if (zone instanceof GostKlausurtermin) {
 				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
+			}
 	};
 
 	function isDropZone() : boolean {

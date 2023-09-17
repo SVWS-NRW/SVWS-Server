@@ -16,17 +16,17 @@
 			</div>
 			<svws-ui-content-card title="Klausuren im Raum">
 				<table>
-					<div v-if="klausurenImRaum.size() === 0">Keine Klausuren im Raum</div>
-					<s-gost-klausurplanung-klausur v-for="klausur of klausurenImRaum" :key="klausur.id"
-						:klausur="klausur"
-						:draggable="true"
-						@dragstart="onDrag(klausur)"
-						@dragend="onDrag(undefined)"
-						:termin="kursklausurmanager().terminGetByIdOrException(raum.idTermin)"
-						:kursklausurmanager="kursklausurmanager"
-						:kursmanager="kursmanager"
-						:map-lehrer="mapLehrer"
-						:patch-klausur="patchKlausur" />
+					<div v-if="klausurenImRaum().size() === 0">Keine Klausuren im Raum</div>
+					<tr v-for="klausur of klausurenImRaum()" :key="klausur.id" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
+						<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
+						<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
+						<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
+						<td class="text-center">{{ klausur.dauer }}</td>
+						<td>&nbsp;</td>
+						<td>
+							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" :placeholder="klausur.startzeit === null ? 'Startzeit wie Termin' : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur.id)" />
+						</td>
+					</tr>
 				</table>
 			</svws-ui-content-card>
 		</svws-ui-content-card>
@@ -34,9 +34,10 @@
 </template>
 
 <script setup lang="ts">
-	import { type StundenplanRaum, type StundenplanManager, type GostKlausurraumManager, type GostKursklausur, type GostSchuelerklausur, type GostFaecherManager, type GostKursklausurManager, type KursManager, type LehrerListeEintrag, StundenplanKlassenunterricht, StundenplanKurs } from '@core';
+	import { type StundenplanRaum, type StundenplanManager, type GostKlausurraumManager, GostKursklausur, type GostSchuelerklausur, type GostFaecherManager, type GostKursklausurManager, type KursManager, type LehrerListeEintrag, StundenplanKlassenunterricht, StundenplanKurs } from '@core';
 	import type { GostKlausurraum } from '@core';
 	import { computed } from 'vue';
+	import { DateUtils} from "@core";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<{
@@ -55,12 +56,11 @@
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 	}>();
 
-	const klausurenImRaum = computed(() => {
-		console.log("gtrigger", props.raum.id);
-		console.log("Raum " + props.raum.id, props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()));
-		console.log("Raummanager " + props.raum.id, props.raummanager());
-		return props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager())
-	});
+	const klausurenImRaum = () => {
+		console.log("getriggert", props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
+		return props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager());
+	};
+
 	const anzahlSuS = computed(() => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
 
 	const stundenplanRaumSelected = computed({
@@ -71,7 +71,7 @@
 	});
 
 	function isDropZone() : boolean {
-		if ((props.dragData() === undefined) || (props.dragData() instanceof StundenplanKurs) || (props.dragData() instanceof StundenplanKlassenunterricht))
+		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.raummanager().containsKlausurraumKursklausur(props.raum.id, props.dragData()!.id))
 			return false;
 		return true;
 	}
@@ -79,6 +79,17 @@
 	function checkDropZone(event: DragEvent) {
 		if (isDropZone())
 			event.preventDefault();
+	}
+
+	async function patchKlausurbeginn(event: string | number, id: number) {
+		if (typeof event === 'number')
+			return;
+		try {
+			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;
+			await props.patchKlausur!(id, {id, startzeit});
+		} catch(e) {
+			// Do nothing
+		}
 	}
 
 </script>

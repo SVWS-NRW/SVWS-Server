@@ -526,9 +526,9 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Liste der betroffenen Schüler-IDs
 	 */
-	public List<@NotNull Long> schueleridsGetMengeByTerminid(final long idTermin) {
+	public @NotNull List<@NotNull Long> schueleridsGetMengeByTerminid(final long idTermin) {
 		final List<@NotNull Long> schuelerIds = _schuelerIds_by_idTermin.get(idTermin);
-		return schuelerIds != null || !_termin_by_id.containsKey(idTermin) ? schuelerIds : new ArrayList<>();
+		return schuelerIds != null ? schuelerIds : new ArrayList<>();
 	}
 
 	/**
@@ -731,6 +731,17 @@ public class GostKursklausurManager {
 				return -1;
 		}
 		return quartal;
+	}
+
+	/**
+	 * Liefert die Anzahl der Schülerklausuren zu einem bestimmten Klausurtermin.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Anzahl der Schülerklausuren des Termins.
+	 */
+	public int schuelerklausurAnzahlGetByTerminid(final long idTermin) {
+		return schueleridsGetMengeByTerminid(idTermin).size();
 	}
 
 }

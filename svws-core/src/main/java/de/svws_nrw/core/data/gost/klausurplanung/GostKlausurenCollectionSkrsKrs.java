@@ -34,4 +34,8 @@ public class GostKlausurenCollectionSkrsKrs {
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public long idKlausurraum = -1;
 
+	/** Die ID der Klausurraumstunde. */
+	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	public @NotNull List<@NotNull Long> idsSchuelerklausuren = new ArrayList<>();
+
 }

@@ -96,6 +96,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 */
 	public static Response loescheRaumZuSchuelerklausuren(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
+		result.idsSchuelerklausuren = idsSchuelerklausuren;
 
 		final List<DTOGostKlausurenSchuelerklausurenRaeumeStunden> stundenAlt = conn.queryList("SELECT e FROM DTOGostKlausurenSchuelerklausurenRaeumeStunden e WHERE e.Schuelerklausur_ID IN ?1",
 				DTOGostKlausurenSchuelerklausurenRaeumeStunden.class, idsSchuelerklausuren);
@@ -199,6 +200,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			throw OperationError.NOTHING_TO_DO.exception("Zeitraster konnte nicht ermittelt werden");
 
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
+		result.idsSchuelerklausuren = idsSchuelerklausuren;
 		result.idKlausurraum = idRaum;
 
 		result.raumstunden = createRaumStundenInDb(conn, idRaum, zeitrasterRaum, raumManager);

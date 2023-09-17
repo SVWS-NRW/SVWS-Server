@@ -26,6 +26,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	 */
 	public idKlausurraum : number = -1;
 
+	/**
+	 * Die ID der Klausurraumstunde.
+	 */
+	public idsSchuelerklausuren : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -56,6 +61,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 		if (typeof obj.idKlausurraum === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlausurraum');
 		result.idKlausurraum = obj.idKlausurraum;
+		if ((obj.idsSchuelerklausuren !== undefined) && (obj.idsSchuelerklausuren !== null)) {
+			for (const elem of obj.idsSchuelerklausuren) {
+				result.idsSchuelerklausuren?.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -98,6 +108,18 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			result += ' ]' + ',';
 		}
 		result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
+		if (!obj.idsSchuelerklausuren) {
+			result += '"idsSchuelerklausuren" : []';
+		} else {
+			result += '"idsSchuelerklausuren" : [ ';
+			for (let i = 0; i < obj.idsSchuelerklausuren.size(); i++) {
+				const elem = obj.idsSchuelerklausuren.get(i);
+				result += elem;
+				if (i < obj.idsSchuelerklausuren.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -149,6 +171,20 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 		}
 		if (typeof obj.idKlausurraum !== "undefined") {
 			result += '"idKlausurraum" : ' + obj.idKlausurraum + ',';
+		}
+		if (typeof obj.idsSchuelerklausuren !== "undefined") {
+			if (!obj.idsSchuelerklausuren) {
+				result += '"idsSchuelerklausuren" : []';
+			} else {
+				result += '"idsSchuelerklausuren" : [ ';
+				for (let i = 0; i < obj.idsSchuelerklausuren.size(); i++) {
+					const elem = obj.idsSchuelerklausuren.get(i);
+					result += elem;
+					if (i < obj.idsSchuelerklausuren.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

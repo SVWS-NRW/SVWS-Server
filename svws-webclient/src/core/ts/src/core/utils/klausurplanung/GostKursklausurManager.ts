@@ -501,9 +501,9 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Liste der betroffenen Schüler-IDs
 	 */
-	public schueleridsGetMengeByTerminid(idTermin : number) : List<number> | null {
+	public schueleridsGetMengeByTerminid(idTermin : number) : List<number> {
 		const schuelerIds : List<number> | null = this._schuelerIds_by_idTermin.get(idTermin);
-		return schuelerIds !== null || !this._termin_by_id.containsKey(idTermin) ? schuelerIds : new ArrayList();
+		return schuelerIds !== null ? schuelerIds : new ArrayList();
 	}
 
 	/**
@@ -699,6 +699,17 @@ export class GostKursklausurManager extends JavaObject {
 				return -1;
 		}
 		return quartal;
+	}
+
+	/**
+	 * Liefert die Anzahl der Schülerklausuren zu einem bestimmten Klausurtermin.
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Anzahl der Schülerklausuren des Termins.
+	 */
+	public schuelerklausurAnzahlGetByTerminid(idTermin : number) : number {
+		return this.schueleridsGetMengeByTerminid(idTermin).size();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

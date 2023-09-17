@@ -4,7 +4,7 @@
 		<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
 		<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
 		<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
-		<svws-ui-button type="danger" @click="loescheTermine" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
+		<svws-ui-button type="danger" @click="loescheKlausurtermine(termine)" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 
@@ -35,12 +35,12 @@
 
 		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 			<div class="flex flex-row gap-8 mt-4">
-				<div class="flex flex-col border" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+				<div class="flex flex-col border w-1/4" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 					<div class="text-headline-md">Zu verplanen:</div>
 					<table class="w-full">
 						<thead />
 						<tbody>
-							<tr v-for="klausur in klausurenOhneTermin()"
+							<tr v-for="klausur in props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)"
 								:key="klausur.id"
 								:data="klausur"
 								:draggable="true"
@@ -60,16 +60,13 @@
 				<div class="flex flex-col">
 					<div class="flex flex-row flex-wrap gap-4 items-start">
 						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
-							:jahrgangsdaten="jahrgangsdaten"
+							:termin="() => termin"
 							:class="dropOverCssClasses(termin)"
 							:kursklausurmanager="kursklausurmanager"
-							:termin="() => termin"
-							:faecher-manager="faecherManager"
 							:map-lehrer="mapLehrer"
 							:drag-data="() => dragData"
 							:on-drag="onDrag"
 							:on-drop="onDrop"
-							:map-schueler="mapSchueler"
 							:loesche-klausurtermine="loescheKlausurtermine"
 							:patch-klausurtermin="patchKlausurtermin"
 							:klausur-css-classes="klausurCssClasses"
@@ -97,8 +94,6 @@
 	const loading = ref<boolean>(false);
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
-
-	const klausurenOhneTermin = () => props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value);
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		dragData.value = data;
@@ -140,8 +135,6 @@
 		await props.blockenKursklausuren(daten);
 		loading.value = false;
 	};
-
-	const loescheTermine = async () => await props.loescheKlausurtermine(termine.value);
 
 	const klausurCssClasses = (klausur: GostKursklausur, termin: GostKlausurtermin | undefined) => {
 		let konfliktfreiZuFremdtermin = false;

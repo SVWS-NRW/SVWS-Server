@@ -4,49 +4,50 @@
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 	</svws-ui-sub-nav>
 
-	<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<div class="flex gap-4 mt-4 h-screen">
-			<div class="flex flex-col w-1/4 h-full">
-				<div class="text-headline-md">Zu verplanen:</div>
-				<div v-if="jahrgangsdaten?.abiturjahr !== -1"
-					:class="dropOverCssClasses()"
-					@drop="onDrop(undefined)"
-					@dragover="checkDropZoneTerminAuswahl"
-					class="h-full">
-					<ul class="flex flex-col gap-y-1">
-						<li v-for="termin in termineOhne"
-							:key="termin.id"
-							:data="termin"
-							:draggable="isDraggable(termin)"
-							@dragstart="onDrag(termin)"
-							@dragend="onDrag(undefined)">
-							<s-gost-klausurplanung-kalender-termin :kursklausurmanager="kursklausurmanager"
-								:jahrgangsdaten="jahrgangsdaten"
-								:faecher-manager="faecherManager"
-								:map-lehrer="mapLehrer"
-								:termin="termin"
-								:kursmanager="kursmanager"
-								:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}" />
-						</li>
-					</ul>
+	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
+		<svws-ui-content-card class="w-full">
+			<div class="flex gap-4 mt-4 h-screen w-full">
+				<div class="flex flex-col h-full w-1/4">
+					<div class="text-headline-md">Zu verplanen:</div>
+					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
+						:class="dropOverCssClasses()"
+						@drop="onDrop(undefined)"
+						@dragover="checkDropZoneTerminAuswahl"
+						class="h-full">
+						<ul class="flex flex-col gap-y-1">
+							<li v-for="termin in termineOhne"
+								:key="termin.id"
+								:data="termin"
+								:draggable="isDraggable(termin)"
+								@dragstart="onDrag(termin)"
+								@dragend="onDrag(undefined)">
+								<s-gost-klausurplanung-termin :termin="termin"
+									:kursklausurmanager="kursklausurmanager"
+									:map-lehrer="mapLehrer"
+									:kursmanager="kursmanager"
+									class="rounded bg-dark-20 p-2"
+									:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}" />
+							</li>
+						</ul>
+					</div>
 				</div>
-			</div>
-			<div class="w-full">
-				<div class="flex flex-row gap-2 mb-2">
-					<svws-ui-button @click="navKalenderwoche(-1)"><i-ri-arrow-left-double-fill /></svws-ui-button>
-					<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-						:class="{'print:hidden': !kwAuswahl}"
-						removable
-						:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
-					<svws-ui-button @click="navKalenderwoche(+1)"><i-ri-arrow-right-double-fill /></svws-ui-button>
-				</div>
+				<div class="w-full">
+					<div class="flex flex-row gap-2 mb-2">
+						<svws-ui-button @click="navKalenderwoche(-1)"><i-ri-arrow-left-double-fill /></svws-ui-button>
+						<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+							:class="{'print:hidden': !kwAuswahl}"
+							removable
+							:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+						<svws-ui-button @click="navKalenderwoche(+1)"><i-ri-arrow-right-double-fill /></svws-ui-button>
+					</div>
 
-				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
-					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
+						:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
+						:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
+				</div>
 			</div>
-		</div>
-	</svws-ui-content-card>
+		</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">

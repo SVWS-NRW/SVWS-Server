@@ -34,7 +34,7 @@
 				:kursklausurmanager="kursklausurmanager"
 				:kursmanager="kursmanager"
 				:map-lehrer="mapLehrer"
-				:drag-data="() => dragData"
+				:drag-data="dragData"
 				:on-drag="onDrag"
 				:on-drop="onDrop" />
 		</div>
@@ -42,8 +42,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostSchuelerklausur } from '@core';
-	import { GostKlausurraum, DateUtils} from '@core';
+	import type { GostKursklausurManager, GostFaecherManager, LehrerListeEintrag, GostKlausurtermin, KursManager, StundenplanManager, GostKlausurraumManager, GostKursklausur, GostSchuelerklausur , GostKlausurraum} from '@core';
+	import { DateUtils} from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<{

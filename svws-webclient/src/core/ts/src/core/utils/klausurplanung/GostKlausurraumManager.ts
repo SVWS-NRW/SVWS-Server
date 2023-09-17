@@ -197,10 +197,10 @@ export class GostKlausurraumManager extends JavaObject {
 	private update_klausurraum_by_idSchuelerklausur() : void {
 		this._klausurraum_by_idSchuelerklausur.clear();
 		for (const skrs of this._schuelerklausurraumstundenmenge) {
-			let krsList : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._raumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur);
-			for (let krs of krsList) {
-				let kr : GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
-				let krAlt : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausur.put(skrs.idSchuelerklausur, kr);
+			const krsList : List<GostKlausurraumstunde> = DeveloperNotificationException.ifMapGetIsNull(this._raumstundenmenge_by_idSchuelerklausur, skrs.idSchuelerklausur);
+			for (const krs of krsList) {
+				const kr : GostKlausurraum = DeveloperNotificationException.ifMapGetIsNull(this._raum_by_id, krs.idRaum);
+				const krAlt : GostKlausurraum | null = this._klausurraum_by_idSchuelerklausur.put(skrs.idSchuelerklausur, kr);
 				if (krAlt !== null && krAlt as unknown !== kr as unknown)
 					throw new DeveloperNotificationException("Schülerklausur " + skrs.idSchuelerklausur + " ist zwei Klausurräumen zugeordnet.")
 			}
@@ -286,9 +286,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private raumRemoveOhneUpdateById(idRaum : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._raum_by_id, idRaum);
-		let rsList : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idRaum.get(idRaum);
+		const rsList : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idRaum.get(idRaum);
 		if (rsList !== null)
-			for (let rs of rsList)
+			for (const rs of rsList)
 				this.raumstundeRemoveOhneUpdateById(rs.id);
 	}
 
@@ -392,9 +392,9 @@ export class GostKlausurraumManager extends JavaObject {
 
 	private raumstundeRemoveOhneUpdateById(idRaumstunde : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._raumstunde_by_id, idRaumstunde);
-		let skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
+		const skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idRaumstunde.get(idRaumstunde);
 		if (skrsList !== null)
-			for (let skrs of skrsList)
+			for (const skrs of skrsList)
 				this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausurAndIdRaumstunde(skrs.idSchuelerklausur, skrs.idRaumstunde);
 	}
 
@@ -614,9 +614,9 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	private schuelerklausurraumstundenmengeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur : number) : void {
-		let skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idSchuelerklausur.get(idSchuelerklausur);
+		const skrsList : List<GostSchuelerklausurraumstunde> | null = this._schuelerklausurraumstundenmenge_by_idSchuelerklausur.get(idSchuelerklausur);
 		if (skrsList !== null)
-			for (let skrs of skrsList)
+			for (const skrs of skrsList)
 				DeveloperNotificationException.ifMap2DRemoveFailes(this._schuelerklausurraumstunde_by_idSchuelerklausur_and_idRaumstunde, skrs.idSchuelerklausur, skrs.idRaumstunde);
 	}
 
@@ -642,13 +642,13 @@ export class GostKlausurraumManager extends JavaObject {
 	}
 
 	/**
-	 * Entfernt alle {@link GostSchuelerklausurraumstunde}-Objekte, deren Schülerklausur-ID in den übergebenen GostSchuelerklausurraumstunde-Objekten enthalten ist.
+	 * Entfernt alle {@link GostSchuelerklausurraumstunde}-Objekte, deren Schülerklausur-ID in der übergebenen Liste enthalten ist.
 	 *
-	 * @param listSchuelerklausurRaumstunde die Liste der GostSchuelerklausurraumstunden.
+	 * @param idsSchuelerklausuren die Liste der Schülerklausur-IDs.
 	 */
-	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(listSchuelerklausurRaumstunde : List<GostSchuelerklausurraumstunde>) : void {
-		for (const schuelerklausurraumstunde of listSchuelerklausurRaumstunde)
-			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(schuelerklausurraumstunde.idSchuelerklausur);
+	public schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(idsSchuelerklausuren : List<number>) : void {
+		for (const idSchuelerklausur of idsSchuelerklausuren)
+			this.schuelerklausurraumstundeRemoveOhneUpdateByIdSchuelerklausur(idSchuelerklausur);
 		this.update_all();
 	}
 
@@ -685,7 +685,7 @@ export class GostKlausurraumManager extends JavaObject {
 	public setzeRaumZuSchuelerklausuren(collectionSkrsKrs : GostKlausurenCollectionSkrsKrs) : void {
 		this.raumstundeRemoveAll(collectionSkrsKrs.raumstundenGeloescht);
 		this.raumstundeAddAll(collectionSkrsKrs.raumstunden);
-		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(collectionSkrsKrs.skRaumstunden);
+		this.schuelerklausurraumstundeRemoveAllByIdSchuelerklausur(collectionSkrsKrs.idsSchuelerklausuren);
 		this.schuelerklausurraumstundeAddAll(collectionSkrsKrs.skRaumstunden);
 	}
 
@@ -776,11 +776,23 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @return true, wenn alle Schülerklausuren verplant sind, sonst false
 	 */
 	public isAlleSchuelerklausurenVerplant(kk : GostKursklausur) : boolean {
-		for (let sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurmenge_by_idKursklausur, kk.id)) {
+		for (const sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurmenge_by_idKursklausur, kk.id)) {
 			if (!this._raumstundenmenge_by_idSchuelerklausur.containsKey(sk.idSchuelerklausur))
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur im übergebenen Klausurraum enthalten ist.
+	 *
+	 * @param idRaum der Raum, in dem die Kursklausur geprüft wird
+	 * @param idKursklausur die zu prüfende Kursklausur
+	 *
+	 * @return true, wenn enthalten, sonst false
+	 */
+	public containsKlausurraumKursklausur(idRaum : number, idKursklausur : number) : boolean {
+		return this._schuelerklausurmenge_by_idRaum_and_idKursklausur.contains(idRaum, idKursklausur);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
