@@ -128,13 +128,13 @@
 
 	const termineOhne = computed(() => (props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
 
-	const termineMit = computed(() => {
-		const terms = props.kursklausurmanager().terminGetMengeAsList();
-		return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
-			...obj,
-			startDate: obj.datum !== null ? new Date(obj.datum) : null,
-		}));
-	});
+	// const termineMit = computed(() => {
+	// 	const terms = props.kursklausurmanager().terminGetMengeAsList();
+	// 	return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
+	// 		...obj,
+	// 		startDate: obj.datum !== null ? new Date(obj.datum) : null,
+	// 	}));
+	// });
 
 
 </script>

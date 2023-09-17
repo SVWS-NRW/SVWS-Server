@@ -11,8 +11,8 @@
 				:items="raummanager().stundenplanraumVerfuegbarGetMenge(stundenplanmanager.raumGetMengeAsList())" />
 			<div>
 				Belegung:
-				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
-				<span v-else>{{ anzahlSuS }}</span>
+				<span v-if="raum.idStundenplanRaum !== null" :class="anzahlSuS() > stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse ? 'text-red-700' : 'text-green-600'">{{ anzahlSuS() }} / {{ stundenplanmanager.raumGetByIdOrException(raum.idStundenplanRaum).groesse }}</span>
+				<span v-else>{{ anzahlSuS() }}</span>
 			</div>
 			<svws-ui-content-card title="Klausuren im Raum">
 				<table>
@@ -56,12 +56,9 @@
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 	}>();
 
-	const klausurenImRaum = () => {
-		console.log("getriggert", props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
-		return props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager());
-	};
+	const klausurenImRaum = () => props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager());
 
-	const anzahlSuS = computed(() => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size());
+	const anzahlSuS = () => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size();
 
 	const stundenplanRaumSelected = computed({
 		get: () : StundenplanRaum | undefined => props.raum.idStundenplanRaum === null ? undefined : props.stundenplanmanager.raumGetByIdOrException(props.raum.idStundenplanRaum),

@@ -5,10 +5,10 @@
 			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line /></svws-ui-button>
 			<svws-ui-button class="float-right" size="small" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
 			<svws-ui-badge class="-m-2 z-10 float-right"
-				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && termin().quartal === dragData()!.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin > 0)"
+				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && termin().quartal === dragData()!.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)"
 				type="error"
 				size="big">
-				<span class="text-base">&nbsp;{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin }}&nbsp;</span>
+				<span class="text-base">&nbsp;{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}&nbsp;</span>
 			</svws-ui-badge>
 		</div>
 		<s-gost-klausurplanung-termin :termin="termin()"
@@ -73,8 +73,6 @@
 		props.dragData() !== undefined ? props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(props.termin().id, props.dragData()!.id).size() : -1
 	);
 
-	const konflikteTermin = computed(() =>
-		props.kursklausurmanager().konflikteAnzahlGetByTerminid(props.termin().id)
-	);
+	const konflikteTermin = () => props.kursklausurmanager().konflikteAnzahlGetByTerminid(props.termin().id);
 
 </script>

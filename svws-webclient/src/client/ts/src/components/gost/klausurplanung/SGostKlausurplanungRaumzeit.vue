@@ -7,7 +7,7 @@
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">
 			<ul class="flex flex-col gap-y-1">
-				<li v-for="termin in termine" :key="termin.id" @click="chooseTermin(termin);$event.stopPropagation()" :class="calculatCssClassesTermin(termin)" class="rounded bg-dark-20 p-2"
+				<li v-for="termin in termine()" :key="termin.id" @click="chooseTermin(termin);$event.stopPropagation()" :class="calculatCssClassesTermin(termin)" class="rounded bg-dark-20 p-2"
 					@dragover="checkDropZone($event)" @drop="onDrop(termin)">
 					<header>
 						<div class="text-headline-md">
@@ -64,7 +64,7 @@
 	import type { GostKlausurraumManager} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
-	import { computed, ref } from 'vue';
+	import { ref } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
@@ -81,7 +81,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = computed(() => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value, false));
+	const termine = () => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value, false);
 
 	const calculatCssClassesTermin = (termin: GostKlausurtermin) => ({
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,

@@ -11,7 +11,7 @@
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex-grow">
 			<svws-ui-content-card>
-				<svws-ui-data-table :items="vorgaben" :columns="[{key:'idFach', label: 'Fach', sortable: true},{key: 'kursart', label: 'Kursart', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
+				<svws-ui-data-table :items="vorgaben()" :columns="[{key:'idFach', label: 'Fach', sortable: true},{key: 'kursart', label: 'Kursart', sortable: true},{key: 'quartal', label: 'Quartal', sortable: true},{key: 'dauer', label: 'Länge in Minuten', sortable: true},{key: 'features', label: 'Besonderheiten'}]" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 					<template #cell(idFach)="{ value }">
 						{{ faecherManager.get(value)?.bezeichnung }}
 					</template>
@@ -107,7 +107,7 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const vorgaben = computed(() => props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value));
+	const vorgaben = () => props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value);
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());
