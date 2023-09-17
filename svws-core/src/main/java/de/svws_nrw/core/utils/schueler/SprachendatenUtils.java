@@ -1,15 +1,13 @@
 package de.svws_nrw.core.utils.schueler;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
-
-import java.util.Comparator;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -34,7 +32,7 @@ public final class SprachendatenUtils {
      */
     public static boolean hatSprachbelegung(final Sprachendaten sprachendaten, final String sprache) {
 
-        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
+        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || sprache.equals("")) {
             return false;
         }
 
@@ -52,7 +50,7 @@ public final class SprachendatenUtils {
      */
     public static boolean hatSprachbelegungInSekI(final Sprachendaten sprachendaten, final String sprache) {
 
-        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
+        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || sprache.equals("")) {
             return false;
         }
 
@@ -77,7 +75,7 @@ public final class SprachendatenUtils {
      */
     public static boolean hatSprachbelegungInSekIMitDauer(final Sprachendaten sprachendaten, final String sprache, final Integer mindestBelegdauer) {
 
-        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache) || mindestBelegdauer == null || mindestBelegdauer <= 0) {
+        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || sprache.equals("") || mindestBelegdauer == null || mindestBelegdauer <= 0) {
             return false;
         }
 
@@ -124,7 +122,7 @@ public final class SprachendatenUtils {
      */
     public static Sprachbelegung getSprachbelegung(final Sprachendaten sprachendaten, final String sprache) {
 
-        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
+        if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || sprache.equals("")) {
             return null;
         }
 
@@ -146,59 +144,57 @@ public final class SprachendatenUtils {
      * Sprachprüfungen werden nicht berücksichtigt.
      *
      * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     * @param belegungbeginnStart Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
-     * @param belegungbeginnEnde Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
+     * @param belegungsbeginnStart Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
+     * @param belegungsbeginnEnde Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
      * @param mindestBelegdauer Zulässig sind Werte 1 bis 5 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
      *
      * @return List mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
      */
-    public static @NotNull List<@NotNull Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(final Sprachendaten sprachendaten, final String belegungbeginnStart, final String belegungbeginnEnde, final Integer mindestBelegdauer) {
+    public static @NotNull List<@NotNull Sprachbelegung> getSprachlegungenNachBeginnUndDauerEndeSekI(final Sprachendaten sprachendaten, final String belegungsbeginnStart, final String belegungsbeginnEnde, final Integer mindestBelegdauer) {
 
-        final @NotNull List<@NotNull Sprachbelegung> belegungen = new ArrayList<>();
+        final @NotNull List<@NotNull Sprachbelegung> resultBelegungen = new ArrayList<>();
 
-        if (sprachendaten != null && sprachendaten.belegungen != null
-            && belegungbeginnStart != null && !belegungbeginnStart.equals("")
-            && belegungbeginnEnde != null && !belegungbeginnEnde.equals("")
-            && mindestBelegdauer != null && mindestBelegdauer >= 0) {
+		// Wenn die notwendigen Parameter nicht übergeben werden, wird eine leere Liste zurückgegeben.
+		if (sprachendaten == null || sprachendaten.belegungen == null
+			|| belegungsbeginnStart == null || belegungsbeginnStart.equals("")
+			|| belegungsbeginnEnde == null || belegungsbeginnEnde.equals("")
+			|| mindestBelegdauer == null || mindestBelegdauer < 0)
 
-            int belegtVonJahrgangNumerisch;
-            int belegtBisJahrgangNumerisch;
-            int letzterJahrgangSekI;
-            final HashSet<String> gefundeneSprachen = new HashSet<>();
+			return resultBelegungen;
 
-            final @NotNull List<@NotNull Sprachbelegung> alleBelegungen = sprachendaten.belegungen;
-            for (final Sprachbelegung belegung : alleBelegungen) {
-                if (belegung.belegungVonJahrgang != null) {
-                    belegtVonJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungVonJahrgang);
-                    belegtBisJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungBisJahrgang);
+		// Ab hier sind die notwendigen Werte gefüllt
+		int belegtVonJahrgangNumerisch;
+		int belegtBisJahrgangNumerisch;
+		int letzterJahrgangSekI;
 
-                    letzterJahrgangSekI = 10;
-                    if (belegtVonJahrgangNumerisch == 6 || belegtVonJahrgangNumerisch == 8) {
-                        // Es liegt eine Sprachbelegung aus G8 vor. Daher ist der letzte Jahrgang Sek-I die Klasse 9
-                        letzterJahrgangSekI = 9;
-                    }
+		// Es können nur die Eintragungen berücksichtigt werden, bei denen die Sprache und der Sprachbeginn geklärt ist. Andere Eintragungen werden nicht berücksichtigt.
+		final @NotNull List<@NotNull Sprachbelegung> alleBelegungen = sprachendaten.belegungen;
+		for (final Sprachbelegung belegung : alleBelegungen) {
+			if (belegung.sprache != null && belegung.belegungVonJahrgang != null) {
+				belegtVonJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungVonJahrgang);
+				belegtBisJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungBisJahrgang);
 
-                    if (belegtVonJahrgangNumerisch > 0 && getJahrgangNumerisch(belegungbeginnStart) <= belegtVonJahrgangNumerisch  && belegtVonJahrgangNumerisch <= getJahrgangNumerisch(belegungbeginnEnde)) {
-                        if (belegtBisJahrgangNumerisch == 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
-                            // Bei leerem Ende oder Ende in der Sekundarstufe II wähle als Ende den letzten Sek-I Jahrgang
-                            belegtBisJahrgangNumerisch = letzterJahrgangSekI;
-                        }
-                        if ((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= mindestBelegdauer) {
-                            // Eintragungen evtl. Doppelungen vermeiden
-                            if (!gefundeneSprachen.contains(belegung.sprache)) {
-                                belegungen.add(belegung);
-                            }
-                            gefundeneSprachen.add(belegung.sprache);
-                        }
-                    }
-                }
-            }
-        }
-        if (!belegungen.isEmpty()) {
+				letzterJahrgangSekI = 10;
+				if (belegtVonJahrgangNumerisch == 6 || belegtVonJahrgangNumerisch == 8) {
+					// Es liegt eine Sprachbelegung aus G8 vor. Daher ist der letzte Jahrgang Sek-I die Klasse 9
+					letzterJahrgangSekI = 9;
+				}
+				if (belegtBisJahrgangNumerisch == 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
+					// Bei leerem Ende oder Ende in der Sekundarstufe II wähle als Ende den letzten Sek-I Jahrgang
+					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
+				}
+
+				if (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= mindestBelegdauer) && (belegtVonJahrgangNumerisch > 0) && getJahrgangNumerisch(belegungsbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= getJahrgangNumerisch(belegungsbeginnEnde)) {
+					resultBelegungen.add(belegung);
+				}
+			}
+		}
+
+        if (!resultBelegungen.isEmpty()) {
         	final Comparator<@NotNull Sprachbelegung> comparator = (final @NotNull Sprachbelegung a, final @NotNull Sprachbelegung b) -> Integer.compare(getJahrgangNumerisch(a.belegungVonJahrgang), getJahrgangNumerisch(b.belegungVonJahrgang));
-            belegungen.sort(comparator);
+            resultBelegungen.sort(comparator);
         }
-        return belegungen;
+        return resultBelegungen;
     }
 
 
@@ -214,7 +210,7 @@ public final class SprachendatenUtils {
      */
     public static boolean istFortfuehrbareSpracheInGOSt(final Sprachendaten sprachendaten, final String sprache) {
 
-        if (sprachendaten == null || sprache == null || "".equals(sprache)) {
+        if (sprachendaten == null || sprache == null || sprache.equals("")) {
             return false;
         }
 
@@ -234,7 +230,7 @@ public final class SprachendatenUtils {
                 }
 
                 // Prüfe auf erfolgreiche HSU Prüfung auf HA10/MSA-Niveau
-                if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
+                if (pruefung.istHSUPruefung && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)) {
                     return true;
                 }
 
@@ -264,38 +260,22 @@ public final class SprachendatenUtils {
 
     	final @NotNull List<@NotNull String> sprachen = new ArrayList<>();
 
-        // Sammle die Sprachen mit einer Belegung von mindestens zwei Jahren
         if (sprachendaten != null) {
-            final @NotNull List<@NotNull Sprachbelegung> belegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 2);
-
-            for (final Sprachbelegung belegung : belegungen) {
-                sprachen.add(belegung.sprache);
-            }
+			// Sammle die Sprachen mit einer Belegung von mindestens zwei Jahren
+            final @NotNull List<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
+			if (belegungen != null && !belegungen.isEmpty()) {
+				for (final Sprachbelegung belegung : belegungen) {
+					if (istFortfuehrbareSpracheInGOSt(sprachendaten, belegung.sprache))
+						sprachen.add(belegung.sprache);
+				}
+			}
 
             // Ergänze evtl. vorhandene Sprachprüfungen, die die Fortführung in der Oberstufe ermöglichen
             final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
-            if (pruefungen != null) {
+            if (pruefungen != null && !pruefungen.isEmpty()) {
                 for (final Sprachpruefung pruefung : pruefungen) {
-
-                    // Prüfe auf erfolgreiche HSU Prüfung auf HA10/MSA-Niveau
-                    if (pruefung.istHSUPruefung && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
-						if (!(pruefung.ersetzteSprache == null || pruefung.ersetzteSprache.equals(""))) {
-							sprachen.add(pruefung.ersetzteSprache);
-						} else if (!(pruefung.sprache == null || pruefung.sprache.equals(""))) {
-							sprachen.add(pruefung.sprache);
-						}
-                    }
-
-                    // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
-                    if (pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4)
-                        && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
-                        || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)))) {
-						if (!(pruefung.ersetzteSprache == null || pruefung.ersetzteSprache.equals(""))) {
-							sprachen.add(pruefung.ersetzteSprache);
-						} else if (!(pruefung.sprache == null || pruefung.sprache.equals(""))) {
-							sprachen.add(pruefung.sprache);
-						}
-                    }
+					if (istFortfuehrbareSpracheInGOSt(sprachendaten, pruefung.sprache))
+						sprachen.add(pruefung.sprache);
                 }
             }
         }
@@ -328,7 +308,7 @@ public final class SprachendatenUtils {
         if (pruefungen != null) {
             for (final Sprachpruefung pruefung : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-                if (pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4))
+                if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung))
                     return true;
             }
         }
@@ -361,9 +341,8 @@ public final class SprachendatenUtils {
             final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
             if (pruefungen != null) {
                 for (final Sprachpruefung pruefung : pruefungen) {
-                    // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
-                    if ((pruefung.istFeststellungspruefung && (pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4))
-                        	&& (!belegungen.get(0).sprache.equals(pruefung.sprache))) // Evtl. doppelte Eintragungen bei Belegung und Prüfung abfangen
+                    // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
+                    if ((kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung)) && (!belegungen.get(0).sprache.equals(pruefung.sprache)))
                     	return true;
                 }
             }
@@ -392,6 +371,31 @@ public final class SprachendatenUtils {
     }
 
 
+	/**
+	 * Ermittelt, ob eine Fremdsprache ab Kasse 8/9 im Umfang von mindestens 2 Jahren belegt wurde und gibt sie zurück
+	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
+	 *
+	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 *
+	 * @return Sprache, falls eine Belegung vorhanden ist, sonst null
+	 */
+	public static String getSpracheMit2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
+		if (sprachendaten == null)
+			return null;
+
+		final @NotNull List<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
+		if (belegungen != null) {
+			// Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus, die in Klassen 8, 9 oder 10 begonnen wurden.
+			final @NotNull List<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
+			if (!sprachbelegungen.isEmpty())
+				return sprachbelegungen.get(0).sprache;
+		}
+		// Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
+		// da Sprachfeststellungsprüfungen nur erste und zweite Sprachen (also Klasse 05 bis 07) ersetzen können.
+		return null;
+	}
+
+
     /**
      * Prüft, ob eine Sprachfeststellungsprüfung auf dem Niveau der Einführungsphase (EF) der GOSt vorliegt.
      * Nach §11 (2) APO-GOSt setzt das eine Prüfung in der gleichen Sprache am Ende der Sek-I voraus
@@ -409,10 +413,10 @@ public final class SprachendatenUtils {
         if (pruefungen != null) {
             for (final Sprachpruefung pruefungS1 : pruefungen) {
                 // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
-                if (pruefungS1.istFeststellungspruefung && (pruefungS1.kannErstePflichtfremdspracheErsetzen || pruefungS1.kannZweitePflichtfremdspracheErsetzen || pruefungS1.kannWahlpflichtfremdspracheErsetzen) && (pruefungS1.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefungS1.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefungS1.note != null) && (pruefungS1.note <= 4)) {
+                if (kannFeststellungspruefungErsteSpracheErsetzen(pruefungS1) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefungS1)) {
                     for (final Sprachpruefung pruefungEF : pruefungen) {
                         // Prüfe auf erfolgreiche Feststellungsprüfung auf EF-Niveau zur gefundenen Prüfungssprache
-                        if (pruefungEF.istFeststellungspruefung && pruefungEF.ersetzteSprache.equals(pruefungS1.ersetzteSprache) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id && (pruefungEF.note != null) && (pruefungEF.note <= 4))
+                        if (pruefungEF.istFeststellungspruefung && pruefungEF.sprache.equals(pruefungS1.sprache) && (pruefungEF.kannErstePflichtfremdspracheErsetzen || pruefungEF.kannZweitePflichtfremdspracheErsetzen || pruefungEF.kannWahlpflichtfremdspracheErsetzen) && pruefungEF.anspruchsniveauId == Sprachpruefungniveau.EF.daten.id && (pruefungEF.note != null) && (pruefungEF.note <= 4))
                             return true;
                     }
                 }
@@ -421,9 +425,10 @@ public final class SprachendatenUtils {
         return false;
     }
 
+
     /**
      * Gibt die Fremdsprache zurück, die als erste Fremdsprache der Sekundarstufe I gewertet werden kann.
-     * Im Falle einer Sprachprüfung als erste Pflichtfremdsprache wird diese mit der als Ersatz eingetragene Fremdsprache zurückgegeben.
+     * Im Falle einer Sprachprüfung als erste Pflichtfremdsprache wird diese zurückgegeben, da der Prüfungseintrag diese als erste Sprache explizit festlegt.
      * Ist keine Sprachprüfung als erste Pflichtfremdsprache vorhanden, so wird die als erste Sprache in der Sekundarstufe I belegt
      * Sprache zurückgegeben, unabhängig von deren Belegdauer.
      *
@@ -438,8 +443,8 @@ public final class SprachendatenUtils {
         final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (final Sprachpruefung pruefung : pruefungen) {
-                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4))
-                    return pruefung.ersetzteSprache;
+                if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung))
+                    return pruefung.sprache;
             }
         }
 
@@ -456,7 +461,7 @@ public final class SprachendatenUtils {
 
     /**
      * Gibt die Fremdsprache zurück, die als zweite Fremdsprache der Sekundarstufe I gewertet werden kann.
-     * Im Falle einer Sprachprüfung als zweite Pflichtfremdsprache bzw. WP-Sprache wird diese mit der als Ersatz eingetragene Fremdsprache zurückgegeben.
+     * Im Falle einer Sprachprüfung als zweite Pflichtfremdsprache bzw. WP-Sprache wird diese zurückgegeben, da der Prüfungseintrag diese als zweite Sprache explizit festlegt.
      * Ist keine Sprachprüfung als zweite Pflichtfremdsprache bzw. WP-Sprache vorhanden, so wird die als zweite Sprache in der Sekundarstufe I belegt
      * Sprache zurückgegeben, unabhängig von deren Belegdauer.
      *
@@ -473,11 +478,11 @@ public final class SprachendatenUtils {
         final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (final Sprachpruefung pruefung : pruefungen) {
-                if (pruefung.istFeststellungspruefung && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
-                    pruefungErsteSprache = pruefung.ersetzteSprache;
+                if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung)) {
+                    pruefungErsteSprache = pruefung.sprache;
                 }
-                if (pruefung.istFeststellungspruefung && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id) && (pruefung.note != null) && (pruefung.note <= 4)) {
-                    pruefungZweiteSprache = pruefung.ersetzteSprache;
+                if (kannFeststellungspruefungZweiteSpracheErsetzen(pruefung)) {
+                    pruefungZweiteSprache = pruefung.sprache;
                 }
             }
         }
@@ -505,36 +510,34 @@ public final class SprachendatenUtils {
     }
 
 
-    /**
-     * Ermittelt, ob eine Fremdsprache ab Kasse 8/9 im Umfang von mindestens 2 Jahren belegt wurde und gibt sie zurück
-     * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
-     *
-     * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     *
-     * @return Sprache, falls eine Belegung vorhanden ist, sonst null
-     */
-    public static String getSpracheMit2JahrenDauerEndeSekI(final Sprachendaten sprachendaten) {
-        if (sprachendaten == null)
-            return null;
+	/**
+	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der ersten Pflichtfremdsprache treten kann.
+	 *
+	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
+	 *
+	 * @return True, wenn die Sprache der Prüfung die erste Pflichtfremdsprache ersetzen kann, sonst false
+	 */
+	private static boolean kannFeststellungspruefungErsteSpracheErsetzen(final Sprachpruefung pruefung) {
+		return (pruefung != null && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4) && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
+	}
 
-        final @NotNull List<@NotNull Sprachbelegung> belegungen = sprachendaten.belegungen;
-        if (belegungen != null) {
-            // Wähle alle Sprachen mit Beginn in der Sekundarstufe I aus, die in Klassen 8, 9 oder 10 begonnen wurden.
-        	final @NotNull List<@NotNull Sprachbelegung> sprachbelegungen = getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2);
-            if (!sprachbelegungen.isEmpty())
-                return sprachbelegungen.get(0).sprache;
-        }
-        // Sofern bisher keine fortgeführte Fremdsprache gefunden wurde, müssen die Sprachprüfungen nicht durchsucht werden,
-        // da Sprachfeststellungsprüfungen nur erste und zweite Sprachen (also Klasse 05 bis 07) ersetzen können.
-        return null;
-    }
 
+	/**
+	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung an die Stelle der zweiten Pflichtfremdsprache bzw. einer Wahlpflichtsprache treten kann.
+	 *
+	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
+	 *
+	 * @return True, wenn die Sprache der Prüfung die zweite Pflichtfremdsprache bzw. eine Wahlpflichtsprache ersetzen kann, sonst false
+	 */
+	private static boolean kannFeststellungspruefungZweiteSpracheErsetzen(final Sprachpruefung pruefung) {
+		return (pruefung != null && pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
+	}
 
     /**
      * Hilfsfunktion, die einen ASDJahrgang nach APO-SI und APO-GOSt und in einen numerischen Wert für Vergleiche umwandelt.
      * Dabei wird EF zu 11, Q1 zu 12 und Q2 zu 13. Die übrigen Stufen werden gemäß ihrer numerischen Stufenangaben umgewandelt.
      *
-     * @param kuerzelJg   der in den mumerischen Wert umzuwandelnde ASDJahrgang.
+     * @param kuerzelJg   der in den nummerischen Wert umzuwandelnde ASDJahrgang.
      *
      * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
      */
