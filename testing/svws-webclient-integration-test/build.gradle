@@ -6,7 +6,7 @@ dependencies {
 
 apply from: ('../subproject-plugin.gradle')
 
-def testResultSrc = '../../svws-webclient/build/coverage/api-test'
+def testResultSrc = '../../svws-webclient/api-test/build/coverage'
 def testResultTarget = 'build/test-results/svws-webclient-integration-test'
 
 // lokale variablen, um copyConfigApiTest zu ergänzen
@@ -20,8 +20,8 @@ task apiTest(type: Test) {
 	}
 	group 'verification'
 	description 'Webclient Api Tests aufrufen'
-	dependsOn(tasks.getByPath(':svws-webclient:testApi'))
-	tasks.getByPath(':svws-webclient:testApi').configure {
+	dependsOn(tasks.getByPath(':svws-webclient:api-test:testApi'))
+	tasks.getByPath(':svws-webclient:api-test:testApi').configure {
 		dependsOn(':testing:svws-webclient-integration-test:startTestumgebung')
 		ignoreExitValue = true
 		outputs.upToDateWhen {false}

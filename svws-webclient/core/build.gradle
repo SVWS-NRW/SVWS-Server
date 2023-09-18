@@ -1,0 +1,42 @@
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+task assembleCore(type: NpmRun) {
+	dependsOn rootProject.npmPrepare, project(':svws-transpile').tasks.assemble
+	group "build"
+	args = ['build']
+	inputs.files fileTree("$projectDir").matching { exclude "build", "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
+	outputs.dir file("$projectDir/dist")
+}
+
+assemble.dependsOn assembleCore
+
+task cleanCore(type: Delete) {
+	delete file("$projectDir/dist")
+}
+
+clean.dependsOn cleanCore
+
+task publishNexusCore(type: NpmPublish) {
+	dependsOn assemble
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.nexus"
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+	scopePublic = false
+}
+
+task publishNpmCore(type: NpmPublish) {
+	dependsOn assemble
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.npm"
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
+publishReleaseAll.dependsOn publishNexusCore
+publishReleaseAll.dependsOn publishNpmCore

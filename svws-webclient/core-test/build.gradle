@@ -1,0 +1,16 @@
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+task testCore(type: NpmRun) {
+	group "svws"
+	dependsOn ':svws-webclient:core:assemble'	
+	inputs.files file("$projectDir/src")
+	outputs.dir file("$projectDir/build/coverage")
+	args = [ 'test:run' ]
+	doFirst {
+		mkdir file("$projectDir/build/coverage")
+	}
+}
+
+test.dependsOn testCore

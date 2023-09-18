@@ -1,0 +1,14 @@
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+task testBrowser(type: NpmRun) {
+	group "svws"
+	dependsOn ':svws-webclient:client:assemble'
+	inputs.files file("$projectDir/src"), file("$projectDir/data")
+	outputs.dir file("$projectDir/build/output")
+	args = [ 'test' ]
+	doFirst {
+		mkdir file("$projectDir/build/output")
+	}
+}

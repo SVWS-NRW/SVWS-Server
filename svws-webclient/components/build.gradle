@@ -1,0 +1,58 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+	id 'svws.gradle.node.plugin'
+}
+
+task assembleComponents(type: NpmRun) {
+	dependsOn rootProject.npmPrepare
+	dependsOn ':svws-webclient:core:assemble'
+	dependsOn ':svws-webclient:ui:assemble'
+	group "build"
+	args = ['build']
+	inputs.files fileTree("$rootDir/svws-webclient/core").matching { exclude "build", "dist" }, 
+		fileTree("$rootDir/svws-webclient/ui").matching { exclude "build", "dist", ".histoire" }, 
+		fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" } 
+	outputs.dir file("$projectDir/dist")
+}
+
+task assembleUiHistoire(type: NpmRun) {
+	dependsOn assembleComponents
+	group "build"
+	args = ['story:build']
+	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" } 
+	outputs.dir file("$projectDir/.histoire")
+}
+
+assemble.dependsOn assembleComponents
+
+task cleanComponents(type: Delete) {
+	delete file("$projectDir/dist"), file("$projectDir/.histoire")
+}
+
+clean.dependsOn cleanComponents
+
+/*
+task publishNexusComponents(type: NpmPublish) {
+	dependsOn assemble
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.nexus"
+	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
+	actor = project.ext.getNexusActor()
+	token = project.ext.getNexusToken()
+	scopePublic = false
+}
+
+task publishNpmComponents(type: NpmPublish) {
+	dependsOn assemble
+	group "publishing"
+	npmrc = "$rootDir/.npmrc.npm"
+	repository = "https://registry.npmjs.org/"
+	token = project.ext.getNpmToken()
+	scopePublic = true
+	tokenOnly = true
+}
+
+publishReleaseAll.dependsOn publishNexusComponents
+publishReleaseAll.dependsOn publishNpmComponents
+*/
