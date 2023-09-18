@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
-	implementation project(':svws-webclient')
+	implementation project(':svws-webclient:core'), project(':svws-webclient:client')
 }
 
 apply from: ('../subproject-plugin.gradle')

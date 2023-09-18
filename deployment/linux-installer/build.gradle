@@ -19,7 +19,7 @@ task copyArtifacts(type: Copy) {
 	dependsOn clearAppFolder
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
-	mustRunAfter(':svws-webclient:doZip')
+	mustRunAfter(':svws-webclient:client:doZip')
 	into linuxfileAppDir
 	into ("lib/") {
 		from (configurations.runtimeClasspath) {

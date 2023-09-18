@@ -167,7 +167,7 @@ task rebuild(type: GradleBuild) {
 
 
 task wipe() {
-	dependsOn(':svws-webclient:nodeWipe')
+	dependsOn nodeWipe
 	group "build"
 }
 
@@ -184,12 +184,12 @@ task buildServer() {
 
 
 task assembleTS() {
-	dependsOn(':svws-webclient:assemble')
+	dependsOn(':svws-webclient:client:assemble')
 	group "build"
 }
 
 task buildTS() {
-	dependsOn(':svws-webclient:build')
+	dependsOn(':svws-webclient:client:build')
 	group "build"
 }
 
