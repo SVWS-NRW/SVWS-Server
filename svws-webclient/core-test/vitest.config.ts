@@ -5,10 +5,10 @@ export default defineConfig({
 	test: {
 		globals: true,
 		reporters: ["default", "junit"],
-		outputFile: "../build/coverage/core/junit.xml",
+		outputFile: "build/coverage/junit.xml",
 		coverage: {
 			provider: "v8",
-			reportsDirectory: "../build/coverage/core",
+			reportsDirectory: "build/coverage",
 		},
 		include: [
 			"src/**/*.test.ts",
