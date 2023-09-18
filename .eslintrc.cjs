@@ -16,14 +16,13 @@ module.exports = {
 		project: [
 			"./tsconfig.base.json",
 			"./svws-transpile/src/test/ts/tsconfig.json",
-			"./svws-webclient/src/components/ts/tsconfig.json",
-			"./svws-webclient/src/core/ts/tsconfig.json",
-			"./svws-webclient/src/core-test/ts/tsconfig.json",
-			"./svws-webclient/src/client/ts/tsconfig.json",
-			"./svws-webclient/src/client-test/ts/tsconfig.json",
-			"./svws-webclient/src/ui/ts/tsconfig.json",
-			"./svws-webclient/src/api-test/ts/tsconfig.json",
-			"./svws-webclient/src/browser-test/ts/tsconfig.json",
+			"./svws-webclient/core/tsconfig.json",
+			"./svws-webclient/ui/tsconfig.json",
+			"./svws-webclient/components/tsconfig.json",
+			"./svws-webclient/client/tsconfig.json",
+			"./svws-webclient/core-test/tsconfig.json",
+			"./svws-webclient/api-test/tsconfig.json",
+			"./svws-webclient/browser-test/tsconfig.json",
 		]
 	},
 	rules: {
@@ -77,9 +76,9 @@ module.exports = {
 		},
 		{
 			files: [
-				"svws-webclient/src/components/ts/src/**/*.{ts,js,cjs,mjs}",
-				"svws-webclient/src/ui/ts/src/**/*.{ts,js,cjs,mjs}",
-				"svws-webclient/src/client/ts/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/components/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/ui/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/client/src/**/*.{ts,js,cjs,mjs}",
 			],
 			env: {
 				// diese Packages haben keinen Zugriff auf Node APIs da es im Browser läuft.
