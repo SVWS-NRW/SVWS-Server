@@ -35,7 +35,7 @@ task copyArtifacts(type: Copy) {
 	group = 'testenvironment'
 	description = 'Kopieren der aktuellen Artefakte'
 	// wenn doZip im build ausgeführt wird, muss dieser Task darauf warten
-	mustRunAfter(':svws-webclient:client:doZip', ':svws-webclient:core-test:testCore', ':svws-webclient:api-test:testApi')
+	mustRunAfter(':svws-webclient:client:doZip', ':testing:svws-webclient-integration-test:copyTestResults')
 	into "./build/tmp/extLibs/"
 	into ("lib/") {
 		from (configurations.runtimeClasspath) {
