@@ -187,10 +187,10 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				skStartzeit = termin.Startzeit;
 			if (skStartzeit < minStart)
 				minStart = skStartzeit;
-			final int endzeit = skStartzeit + vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe).dauer;
+			GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
+			final int endzeit = skStartzeit + v.dauer + v.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
-
 		}
 
 		final LocalDate klausurdatum = LocalDate.parse(termin.Datum);
