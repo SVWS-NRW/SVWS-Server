@@ -11,6 +11,7 @@
 	 *
 	 * @deprecated Die Drag&Drop-Komponenten sind *deprecated*
  	*/
+	console.warn("Diese Komponente ist veraltet, bitte entsprechend der Doku auf eine andere Komponente umstellen. In einer der folgenden Versionen wird diese Komponente entfernt.");
 	const props = withDefaults(defineProps<{
 		tag?: string;
 		dropAllowed?:boolean

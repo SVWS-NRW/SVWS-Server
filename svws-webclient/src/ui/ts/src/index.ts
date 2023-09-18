@@ -28,7 +28,6 @@ export {
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
 	SvwsUiTable,
-	SvwsUiDataTable,
 	SvwsUiDataTableRow,
 	SvwsUiDataTableCell,
 	SvwsUiSpinner,
@@ -37,6 +36,7 @@ export {
 	SvwsUiSpacing,
 	SvwsUiDashboardTile,
 	// deprecated
+	SvwsUiDataTable,
 	SvwsUiIcon,
 	SvwsUiDropdown,
 	SvwsUiDropdownItem,

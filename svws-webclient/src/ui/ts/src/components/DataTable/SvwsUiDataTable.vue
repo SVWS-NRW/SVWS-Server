@@ -188,6 +188,8 @@
 	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
 	import { useDebounceFn } from "@vueuse/core";
 
+	console.warn("Diese Komponente ist veraltet, bitte entsprechend der Doku auf eine andere Komponente umstellen. In einer der folgenden Versionen wird diese Komponente entfernt.");
+
 	type DataTableSortingOrder = 'asc' | 'desc' | null
 	const DataTableSortingOptions = ['asc', 'desc', null] as const
 

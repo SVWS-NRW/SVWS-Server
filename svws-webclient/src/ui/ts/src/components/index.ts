@@ -23,7 +23,6 @@ export { default as SvwsUiRouterTabBar } from "./App/SvwsUiRouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./App/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./App/SvwsUiRouterVerticalTabBar.vue";
 export { default as SvwsUiTable } from "./SvwsUiTable.vue";
-export { default as SvwsUiDataTable } from "./DataTable/SvwsUiDataTable.vue";
 export { default as SvwsUiDataTableRow } from "./DataTable/SvwsUiTableRow.vue";
 export { default as SvwsUiDataTableCell } from "./DataTable/SvwsUiTableCell.vue";
 export { default as SvwsUiSpinner } from "./SvwsUiSpinner.vue";
@@ -32,6 +31,7 @@ export { default as SvwsUiInputWrapper } from "./SvwsUiInputWrapper.vue";
 export { default as SvwsUiSpacing } from "./SvwsUiSpacing.vue";
 export { default as SvwsUiDashboardTile } from "./SvwsUiDashboardTile.vue";
 // DEPRECATED
+export { default as SvwsUiDataTable } from "./DataTable/SvwsUiDataTable.vue";
 export { default as SvwsUiProgressBar } from "./Deprecated/SvwsUiProgressBar.vue";
 export { default as SvwsUiIcon } from "./Deprecated/SvwsUiIcon.vue";
 export { default as SvwsUiDropdown } from "./Deprecated/SvwsUiDropdown.vue";
