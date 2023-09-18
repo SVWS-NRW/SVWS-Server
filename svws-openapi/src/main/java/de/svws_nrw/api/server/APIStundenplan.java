@@ -749,7 +749,7 @@ public class APIStundenplan {
      * @return die HTTP-Antwort mit dem Status und ggf. der gelöschten Pausenzeit
      */
     @DELETE
-    @Path("/raeume/{id : \\d+}")
+    @Path("/pausenzeiten/{id : \\d+}")
     @Operation(summary = "Entfernt eine Pausenzeit eines Stundenplans.",
     description = "Entfernt eine Pausenzeit eines Stundenplans."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans hat.")
