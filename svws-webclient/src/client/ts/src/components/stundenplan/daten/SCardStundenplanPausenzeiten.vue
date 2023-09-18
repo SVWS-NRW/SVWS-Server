@@ -1,14 +1,14 @@
 <template>
 	<svws-ui-content-card title="Pausenzeiten">
-		<svws-ui-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" v-model:clicked="zeit" selectable :model-value="selected" @update:model-value="selected=$event" count class="overflow-visible">
+		<svws-ui-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" v-model:clicked="zeit" selectable v-model="selected" count class="overflow-visible">
 			<template #cell(wochentag)="{ rowData }">
 				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 			</template>
 			<template #cell(beginn)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.beginn" @change="beginn => patchPausenzeit({beginn: Number(beginn)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => patchBeginn(beginn, rowData.id)" headless />
 			</template>
 			<template #cell(ende)="{ rowData }">
-				<svws-ui-text-input type="number" :model-value="rowData.ende" @change="ende => patchPausenzeit({ende: Number(ende)}, rowData.id)" headless />
+				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchEnde(ende, rowData.id)" headless />
 			</template>
 			<template #actions>
 				<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten="importPausenzeiten" :list-pausenzeiten="listPausenzeiten">
@@ -26,14 +26,14 @@
 <script setup lang="ts">
 
 	import type { List, StundenplanManager, StundenplanPausenzeit} from "@core";
-	import { Wochentag } from "@core";
+	import { Wochentag, DateUtils } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
 		patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
-		removePausenzeiten: (raeume: StundenplanPausenzeit[]) => Promise<void>;
+		removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		listPausenzeiten: List<StundenplanPausenzeit>;
 	}>();
@@ -44,4 +44,14 @@
 	const cols = [
 		{key: 'wochentag', label: 'Wochentag', span: 1}, {key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
 	]
+
+	async function patchBeginn(minuten: string, id: number) {
+		const beginn = DateUtils.gibMinutenOfZeitAsString(minuten);
+		await props.patchPausenzeit({beginn}, id);
+	}
+
+	async function patchEnde(minuten: string, id: number) {
+		const ende = DateUtils.gibMinutenOfZeitAsString(minuten);
+		await props.patchPausenzeit({ende}, id);
+	}
 </script>
