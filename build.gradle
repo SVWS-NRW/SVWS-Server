@@ -155,7 +155,8 @@ fileVersionTS.withWriter { w -> w << 'export const version = "' + config.project
 
 task npmPrepare(type: NpmInstall) {
 	group "build"
-    inputs.files fileTree(dir: './', include: 'package.json') 
+    inputs.files fileTree(dir: './', include: 'package.json')
+    doNotTrackState("")
 }
 
 
