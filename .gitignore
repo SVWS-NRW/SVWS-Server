@@ -441,3 +441,6 @@ svwsconfig.json
 .netlify
 svws-db-utils/create_db.sh
 /.npmrc
+
+# Nach Änderungen an der Verzeichnisstruktur:
+svws-webclient/src
