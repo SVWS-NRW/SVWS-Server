@@ -5,9 +5,7 @@
 	"license": "BSD-3-Clause",
 	"version": "0.7.3-SNAPSHOT",
 	"scripts": {
-		"build": "npm run build-lib && npm run build-dts",
-		"build-lib": "vite build", 
-		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+		"build": "vite build",
 		"lint-tsc": "vue-tsc --noEmit",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
