@@ -8,27 +8,27 @@ task assembleCore(type: NpmRun) {
 	dependsOn rootProject.npmPrepare, project(':svws-transpile').tasks.assemble
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
-	outputs.dir file("$projectDir/src/core/ts/dist")
-	workingDir = file("$projectDir/src/core/ts")
+	inputs.files fileTree("$projectDir/core").matching { exclude "dist" }, file("$rootDir/svws-transpiler/src/main/resources/typescript")
+	outputs.dir file("$projectDir/core/dist")
+	workingDir = file("$projectDir/core")
 }
 
 task assembleUi(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" } 
-	outputs.dir file("$projectDir/src/ui/ts/dist")
-	workingDir = file("$projectDir/src/ui/ts")
+	inputs.files fileTree("$projectDir/ui").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/ui/dist")
+	workingDir = file("$projectDir/ui")
 }
 
 task assembleUiHistoire(type: NpmRun) {
 	dependsOn assembleUi
 	group "build"
 	args = ['story:build']
-	inputs.files fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" } 
-	outputs.dir file("$projectDir/src/ui/ts/.histoire")
-	workingDir = file("$projectDir/src/ui/ts")
+	inputs.files fileTree("$projectDir/ui").matching { exclude "dist", ".histoire" } 
+	outputs.dir file("$projectDir/ui/.histoire")
+	workingDir = file("$projectDir/ui")
 }
 
 task assembleClient(type: NpmRun) {
@@ -37,12 +37,12 @@ task assembleClient(type: NpmRun) {
 	dependsOn assembleUiHistoire
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir/src/core/ts").matching { exclude "dist" }, 
-		fileTree("$projectDir/src/ui/ts").matching { exclude "dist", ".histoire" }, 
-		fileTree("$projectDir/src/components/ts").matching { exclude "dist", ".histoire" }, 
-		file("$projectDir/src/client/ts")
+	inputs.files fileTree("$projectDir/core").matching { exclude "dist" }, 
+		fileTree("$projectDir/ui").matching { exclude "dist", ".histoire" }, 
+		fileTree("$projectDir/components").matching { exclude "dist", ".histoire" }, 
+		file("$projectDir/client")
 	outputs.dir file("$buildDir/output")
-	workingDir = file("$projectDir/src/client/ts")
+	workingDir = file("$projectDir/client")
 }
 
 assemble.dependsOn assembleCore
@@ -52,10 +52,10 @@ assemble.dependsOn assembleClient
 task testApi(type: NpmRun) {
 	group "svws"
 	dependsOn assembleCore, cleanTestApi
-	inputs.files file("$projectDir/src/api-test/ts/src")
+	inputs.files file("$projectDir/api-test/src")
 	outputs.dir file("$projectDir/build/coverage/api-test")
 	args = [ 'test:runAgainstTestEnv' ]
-	workingDir = file("$projectDir/src/api-test/ts")
+	workingDir = file("$projectDir/api-test")
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
 		mkdir file("$projectDir/build/coverage/api-test")
@@ -65,10 +65,10 @@ task testApi(type: NpmRun) {
 task testCore(type: NpmRun) {
 	group "svws"
 	dependsOn assembleCore
-	inputs.files file("$projectDir/src/core-test/ts/src")
+	inputs.files file("$projectDir/core-test/src")
 	outputs.dir file("$projectDir/build/coverage/core")
 	args = [ 'test:run' ]
-	workingDir = file("$projectDir/src/core-test/ts")
+	workingDir = file("$projectDir/core-test")
 	doFirst {
 		mkdir file("$projectDir/build/coverage")
 		mkdir file("$projectDir/build/coverage/core")
@@ -88,15 +88,15 @@ assemble.dependsOn doZip
 
 
 task cleanCore(type: Delete) {
-	delete 'src/core/ts/dist'
+	delete 'src/core/dist'
 }
 
 task cleanUi(type: Delete) {
-	delete 'src/ui/ts/dist'
+	delete 'src/ui/dist'
 }
 
 task cleanClient(type: Delete) {
-	delete 'src/client/ts/dist'
+	delete 'src/client/dist'
 }
 
 clean.dependsOn cleanCore
@@ -106,7 +106,7 @@ clean.dependsOn cleanClient
 task publishNexusCore(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/core/ts")
+	workingDir = file("$projectDir/core")
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -117,7 +117,7 @@ task publishNexusCore(type: NpmPublish) {
 task publishNexusUi(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/ui/ts")
+	workingDir = file("$projectDir/ui")
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -128,7 +128,7 @@ task publishNexusUi(type: NpmPublish) {
 task publishNexusClient(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/client/ts")
+	workingDir = file("$projectDir/client")
 	npmrc = "$rootDir/.npmrc.nexus"
 	repository = "https://artifactory.svws-nrw.de/repository/npm-private/"
 	actor = project.ext.getNexusActor()
@@ -139,7 +139,7 @@ task publishNexusClient(type: NpmPublish) {
 task publishNpmCore(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/core/ts")
+	workingDir = file("$projectDir/core")
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
@@ -150,7 +150,7 @@ task publishNpmCore(type: NpmPublish) {
 task publishNpmUi(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/ui/ts")
+	workingDir = file("$projectDir/ui")
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()
@@ -161,7 +161,7 @@ task publishNpmUi(type: NpmPublish) {
 task publishNpmClient(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
-	workingDir = file("$projectDir/src/client/ts")
+	workingDir = file("$projectDir/client")
 	npmrc = "$rootDir/.npmrc.npm"
 	repository = "https://registry.npmjs.org/"
 	token = project.ext.getNpmToken()

@@ -1,0 +1,21 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"@core": ["../core/src/index.ts"],
+			"@ui": ["../ui/src/index.ts"]
+		},
+		"types": [
+			"vite/client"
+		]
+	},
+	"include": [
+		"env.d.ts",
+		"vite.config.ts",
+		"src/**/*",
+		"src/**/*.vue",
+		"components.d.ts"
+	]
+}

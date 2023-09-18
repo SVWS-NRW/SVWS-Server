@@ -1,0 +1,24 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["src/*"]
+		},
+		"types": [
+			"vite/client"
+		],
+		"vueCompilerOptions": {
+
+		}
+	},
+	"include": [
+		"src/**/*",
+		"src/**/*.vue",
+		"components.d.ts",
+		"auto-imports.d.ts"
+	],
+	"exclude": ["**/*.story.vue", "src/histoire.setup.ts"]
+}

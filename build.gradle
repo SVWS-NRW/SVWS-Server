@@ -149,7 +149,7 @@ fileTree(dir: './', include: '**/package.json', exclude: '**/node_modules/**').f
 		f.withWriter { w -> w << updated }
 	}
 }
-def fileVersionTS = new File("${rootDir}/svws-webclient/src/client/ts/version.ts")
+def fileVersionTS = new File("${rootDir}/svws-webclient/client/version.ts")
 fileVersionTS.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 
 

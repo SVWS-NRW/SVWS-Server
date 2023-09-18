@@ -1,0 +1,32 @@
+{
+	"name": "@svws-nrw/svws-components",
+	"description": "SVWS-Server-Projekt: UI-Komponenten",
+	"author": "MSB NRW",
+	"license": "BSD-3-Clause",
+	"version": "0.7.3-SNAPSHOT",
+	"scripts": {
+		"build": "npm run build-lib && npm run build-dts",
+		"build-lib": "vite build", 
+		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+		"lint-tsc": "vue-tsc --noEmit",
+		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
+		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
+		"story:dev": "histoire dev",
+		"story:build": "histoire build",
+		"story:preview": "histoire preview",
+		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
+	},
+	"files": [
+		"dist"
+	],
+	"main": "./dist/svws-components.umd.cjs",
+	"module": "./dist/svws-components.js",
+	"exports": {
+		".": {
+			"import": "./dist/svws-components.js",
+			"require": "./dist/svws-components.umd.cjs"
+		}
+	},
+	"type": "module",
+	"types": "./dist/index.d.ts"
+}
