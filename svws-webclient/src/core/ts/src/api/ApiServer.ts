@@ -4177,12 +4177,14 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abschnitt/{abschnittid : -?\d+}
 	 *
 	 * Patcht einen Gost-Kursklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in die Kursklausur integriert.
+	 *   Code 201: Der Patch wurde erfolgreich in die Kursklausur integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrs
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Kursklausuren zu ändern.
 	 *   Code 404: Kein Kursklausur-Eintrag mit der angegebenen ID gefunden
@@ -4193,14 +4195,18 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 *
+	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<void> {
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrs> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString())
 			.replace(/{abschnittid\s*(:[^}]+)?}/g, abschnittid.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionSkrsKrs.transpilerFromJSON(text);
 	}
 
 

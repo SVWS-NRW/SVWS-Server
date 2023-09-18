@@ -316,18 +316,19 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>) => {
+	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs | undefined> => {
 		if ('id' in klausur)
-			await this.patchKursklausur(id, klausur);
+			return await this.patchKursklausur(id, klausur);
 	}
 
-	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>) => {
+	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
 		api.status.start();
 		delete klausur.id;
-		await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt!.id);
+		const result = await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt!.id);
 		this.kursklausurmanager.kursklausurPatchAttributes(Object.assign(this.kursklausurmanager.kursklausurGetByIdOrException(id), klausur));
 		this.commit();
 		api.status.stop();
+		return result;
 	}
 
 	erzeugeKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>) => {

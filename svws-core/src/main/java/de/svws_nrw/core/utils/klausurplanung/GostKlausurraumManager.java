@@ -716,6 +716,18 @@ public class GostKlausurraumManager {
 	}
 
 	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idRaum       die ID des Klausurraums
+	 *
+	 * @return die Klausurraumstunde
+	 */
+	public @NotNull List<@NotNull GostKlausurraumstunde> klausurraumstundeGetMengeByRaumid(final long idRaum) {
+		final List<@NotNull GostKlausurraumstunde> stunden = _raumstundenmenge_by_idRaum.get(idRaum);
+		return stunden != null ? stunden : new ArrayList<>();
+	}
+
+	/**
 	 * Aktualisiert die internen Strukturen, nachdem sich der Klausurraum geändert
 	 * hat.
 	 *

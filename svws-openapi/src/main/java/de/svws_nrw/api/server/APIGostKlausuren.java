@@ -228,11 +228,11 @@ public class APIGostKlausuren {
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
-	@PATCH
+	@POST
 	@Path("/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}")
 	@Operation(summary = "Patcht einen Gost-Kursklausur.", description = "Patcht einen Gost-Kursklausur."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Kursklausur integriert.")
+	@ApiResponse(responseCode = "201", description = "Der Patch wurde erfolgreich in die Kursklausur integriert.", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrs.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursklausuren zu ändern.")
 	@ApiResponse(responseCode = "404", description = "Kein Kursklausur-Eintrag mit der angegebenen ID gefunden")

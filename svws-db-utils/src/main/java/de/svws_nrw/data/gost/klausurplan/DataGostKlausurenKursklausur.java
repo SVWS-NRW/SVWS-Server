@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
@@ -286,9 +287,10 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			if (_idSchuljahresAbschnitt == -1)
 				throw OperationError.FORBIDDEN.exception("idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
 			final List<Long> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", dto.ID, DTOGostKlausurenSchuelerklausuren.class).stream().map(sk -> sk.ID).toList();
-			DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, _idSchuljahresAbschnitt);
+			final GostKlausurenCollectionSkrsKrs result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, _idSchuljahresAbschnitt);
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 		}
-		return Response.status(Status.OK).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new GostKlausurenCollectionSkrsKrs()).build();
 	}
 
 	@Override

@@ -53,12 +53,15 @@
 							:draggable="true"
 							@dragstart="onDrag(kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0))"
 							@dragend="onDrag(undefined)">
-							<s-gost-klausurplanung-kalender-termin-short :kursklausurmanager="kursklausurmanager"
-								:termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+							<s-gost-klausurplanung-termin :termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+								:kursklausurmanager="kursklausurmanager"
 								:faecher-manager="faecherManager"
 								:map-lehrer="mapLehrer"
 								:kursmanager="kursmanager"
-								:class="{'opacity-40': dragData !== undefined}" />
+								:class="{'opacity-40': dragData !== undefined}">
+								<template #main><template /></template>
+								<template #title-rechts><template /></template>
+							</s-gost-klausurplanung-termin>
 						</div>
 					</div>
 				</template>

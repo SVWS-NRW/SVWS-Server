@@ -5,7 +5,7 @@
 			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line /></svws-ui-button>
 			<svws-ui-button class="float-right" size="small" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
 			<svws-ui-badge class="-m-2 z-10 float-right"
-				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && termin().quartal === dragData()!.quartal) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)"
+				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)"
 				type="error"
 				size="big">
 				<span class="text-base">&nbsp;{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}&nbsp;</span>
@@ -15,8 +15,10 @@
 			:kursklausurmanager="kursklausurmanager"
 			:map-lehrer="mapLehrer"
 			:kursmanager="kursmanager"
-			:on-drag="onDrag"
-			:klausur-css-classes="klausurCssClasses" />
+			:on-drag-klausur="onDrag"
+			:klausur-css-classes="klausurCssClasses">
+			<template #title><template /></template>
+		</s-gost-klausurplanung-termin>
 	</div>
 </template>
 

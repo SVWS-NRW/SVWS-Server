@@ -33,12 +33,21 @@
 			</template>
 		</svws-ui-modal>
 
-		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
+		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative w-1/4">
 			<div class="flex flex-row gap-8 mt-4">
-				<div class="flex flex-col border w-1/4" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+				<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 					<div class="text-headline-md">Zu verplanen:</div>
-					<table class="w-full">
-						<thead />
+					<table class="w-full border">
+						<thead>
+							<tr>
+								<th class="border">Kurs</th>
+								<th class="border">Kuerzel</th>
+								<th class="border"><i-ri-pencil-line /></th>
+								<th class="border"><i-ri-time-line /></th>
+								<th class="border">Quartal</th>
+								<th class="border">Schiene</th>
+							</tr>
+						</thead>
 						<tbody>
 							<tr v-for="klausur in props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)"
 								:key="klausur.id"
@@ -47,12 +56,12 @@
 								@dragstart="onDrag(klausur)"
 								@dragend="onDrag(undefined)"
 								:class="klausurCssClasses(klausur, undefined)">
-								<td>{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
-								<td>{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
-								<td class="text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
-								<td class="text-center">{{ klausur.dauer }}</td>
-								<td>&nbsp;</td>
-								<td />
+								<td class="border">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
+								<td class="border">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
+								<td class="border text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
+								<td class="border text-center">{{ klausur.dauer }}</td>
+								<td class="border text-center">{{ klausur.quartal }}</td>
+								<td class="border text-center">{{ klausur.kursSchiene }}</td>
 							</tr>
 						</tbody>
 					</table>

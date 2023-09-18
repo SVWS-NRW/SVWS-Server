@@ -10,7 +10,6 @@
 				<div class="flex flex-col h-full w-1/4">
 					<div class="text-headline-md">Zu verplanen:</div>
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
-						:class="dropOverCssClasses()"
 						@drop="onDrop(undefined)"
 						@dragover="checkDropZoneTerminAuswahl"
 						class="h-full">
@@ -20,13 +19,18 @@
 								:data="termin"
 								:draggable="isDraggable(termin)"
 								@dragstart="onDrag(termin)"
-								@dragend="onDrag(undefined)">
+								@dragend="onDrag(undefined)"
+								@click="onDrag(termin);$event.stopPropagation()">
 								<s-gost-klausurplanung-termin :termin="termin"
 									:kursklausurmanager="kursklausurmanager"
 									:map-lehrer="mapLehrer"
 									:kursmanager="kursmanager"
 									class="rounded bg-dark-20 p-2"
-									:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}" />
+									:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}">
+									<template #main v-if="dragData?.id !== termin.id"><template /></template>
+									<template #title v-else><template /></template>
+									<template #title-rechts><template /></template>
+								</s-gost-klausurplanung-termin>
 							</li>
 						</ul>
 					</div>
@@ -78,10 +82,6 @@
 		}
 	}
 
-	const dropOverCssClasses = () => ({
-		"bg-green-100": dragData.value !== null// && dragData.value.datum !== null,
-	});
-
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
 		if (dragData.value instanceof GostKlausurtermin && dragData.value?.datum !== null)
 			event.preventDefault();
@@ -128,16 +128,4 @@
 
 	const termineOhne = computed(() => (props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
 
-	// const termineMit = computed(() => {
-	// 	const terms = props.kursklausurmanager().terminGetMengeAsList();
-	// 	return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
-	// 		...obj,
-	// 		startDate: obj.datum !== null ? new Date(obj.datum) : null,
-	// 	}));
-	// });
-
-
 </script>
-
-<style lang="postcss">
-</style>
