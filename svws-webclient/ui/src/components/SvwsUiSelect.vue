@@ -20,7 +20,7 @@
 					:aria-controls="showList ? listIdPrefix : null"
 					:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
 					@update:model-value="onInput"
-					@click="toggleListbox"
+					@click.stop="toggleListbox"
 					@focus="onInputFocus"
 					@blur="onInputBlur"
 					@keyup.down.prevent

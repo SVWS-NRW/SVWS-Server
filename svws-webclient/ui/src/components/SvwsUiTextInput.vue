@@ -376,7 +376,7 @@
 	}
 
 	.text-input--readonly .text-input--control {
-		@apply pointer-events-none cursor-default select-none;
+		@apply pointer-events-auto cursor-default select-none;
 	}
 
 	.text-input--placeholder {
