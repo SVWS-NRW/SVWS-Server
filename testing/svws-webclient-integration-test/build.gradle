@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-
 dependencies {
 	implementation project(':svws-webclient:api-test')
 }

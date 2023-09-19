@@ -36,7 +36,7 @@ export default defineConfig({
 		}
 	},
 	build: {
-		outDir: "../build/output",
+		outDir: "build/output",
 		emptyOutDir: true,
 		sourcemap: true,
 		minify: true,
