@@ -11,7 +11,7 @@
 							</span>
 							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
 								@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
-								@blur="name => patch_blockung(name, row.id)" />
+								@change="name => patch_blockung(name, row.id)" />
 						</div>
 						<div v-else>
 							<span>{{ row.name }}</span>

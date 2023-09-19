@@ -52,7 +52,7 @@
 						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-auto">
 							<template v-if="s.id === edit_schienenname">
 								<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
-									@blur="name => patch_schiene(s, name)"
+									@change="name => patch_schiene(s, name)"
 									@keyup.enter="(e: any) => patch_schiene(s, e.target.value)"
 									@keyup.escape="edit_schienenname=undefined" />
 							</template>

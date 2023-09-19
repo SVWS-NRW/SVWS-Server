@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col border border-blue-900 border-solid w-96 shrink-0" @drop="onDrop(termin())" @dragover="checkDropZone($event)">
 		<div class="flex flex-row">
-			<svws-ui-text-input :placeholder="termin().bezeichnung === null ? terminTitel() : 'Terminbezeichnung'" :model-value="termin().bezeichnung" @blur="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" />
+			<svws-ui-text-input :placeholder="termin().bezeichnung === null ? terminTitel() : 'Terminbezeichnung'" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" />
 			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line /></svws-ui-button>
 			<svws-ui-button class="float-right" size="small" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
 			<svws-ui-badge class="-m-2 z-10 float-right"

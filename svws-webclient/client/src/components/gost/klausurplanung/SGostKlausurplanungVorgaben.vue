@@ -68,8 +68,8 @@
 					<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe !== 0" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper>
-					<svws-ui-text-input placeholder="Dauer" type="number" :model-value="activeVorgabe.dauer" @blur="dauer => patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
-					<svws-ui-text-input placeholder="Auswahlzeit" type="number" :model-value="activeVorgabe.auswahlzeit" @blur="auswahlzeit => patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-text-input placeholder="Dauer" type="number" :model-value="activeVorgabe.dauer" @change="dauer => patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
+					<svws-ui-text-input placeholder="Auswahlzeit" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
 				</svws-ui-input-wrapper>
 				<div class="flex flex-col gap-1">
 					<div class="flex flex-row items-center">
@@ -91,7 +91,7 @@
 						</svws-ui-radio-group>
 					</div>
 				</div>
-				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @blur="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+				<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 			</div>
 		</svws-ui-content-card>
 	</div>
