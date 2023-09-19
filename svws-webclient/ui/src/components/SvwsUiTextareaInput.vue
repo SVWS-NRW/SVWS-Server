@@ -128,10 +128,9 @@
 	}
 
 	function onBlur(event: Event) {
-		if (props.modelValue !== data.value) {
+		if (props.modelValue !== data.value)
 			emit("change", data.value);
-			emit("blur", data.value);
-		}
+		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {

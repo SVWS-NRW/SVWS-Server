@@ -177,10 +177,9 @@
 	}
 
 	function onBlur(event: Event) {
-		if (props.modelValue !== data.value) {
+		if (props.modelValue !== data.value)
 			emit("change", String(data.value));   // TODO do not use String()
-			emit("blur", String(data.value));   // TODO do not use String()
-		}
+		emit("blur", String(data.value));   // TODO do not use String()
 	}
 
 	function onKeyEnter(event: Event) {
