@@ -21,8 +21,8 @@
 					:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
 					@update:model-value="onInput"
 					@click="toggleListbox"
-					@focus="onFocus"
-					@blur="onBlur"
+					@focus="onInputFocus"
+					@blur="onInputBlur"
 					@keyup.down.prevent
 					@keyup.up.prevent
 					@keydown.down.prevent="onArrowDown"
@@ -33,14 +33,14 @@
 					@keydown.backspace="onBackspace"
 					@keydown.esc.prevent="onEscape"
 					@keydown.space="onSpace"
-					@keydown.tab.prevent="onTab" />
+					@keydown.tab="onTab" />
 			</div>
-			<div v-if="removable && hasSelected()" @click="removeItem" class="remove-icon">
+			<div v-if="removable && hasSelected()" @click.stop="removeItem" class="remove-icon">
 				<span class="icon">
 					<i-ri-close-line />
 				</span>
 			</div>
-			<div class="dropdown-icon" @click="toggleListbox">
+			<div class="dropdown-icon" @click.stop="toggleListbox">
 				<span class="icon">
 					<i-ri-expand-up-down-fill />
 				</span>
@@ -60,7 +60,8 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type TextInput from "./SvwsUiTextInput.vue";
 	import { computed, nextTick, ref, shallowRef, watch } from "vue";
-	import { useFloating, autoUpdate, flip, offset, shift, size, MaybeElement } from "@floating-ui/vue";
+	import type { MaybeElement } from "@floating-ui/vue";
+	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
@@ -100,7 +101,6 @@
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", items: InputDataType): void;
-		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 	}>();
 
@@ -123,11 +123,12 @@
 	const hasFocus = ref(false);
 	const searchText = ref("");
 
-	function onFocus() {
+	function onInputFocus() {
 		hasFocus.value = true;
 	}
 
-	function onBlur() {
+	function onInputBlur() {
+		const current = document.activeElement;
 		hasFocus.value = false;
 		closeListbox();
 	}
@@ -191,10 +192,13 @@
 
 	function selectItem(item: Item | null | undefined) {
 		selectedItem.value = item;
+		closeListbox();
+		doFocus();
 	}
 
 	function removeItem() {
 		selectedItem.value = props.useNull ? null : undefined;
+		doFocus();
 	}
 
 	const sortedList: ComputedRef<Item[]> = computed(() => {
@@ -221,20 +225,23 @@
 		}
 	});
 
+	function doFocus() {
+		const el: typeof TextInput = inputEl.value!;
+		void nextTick(() => el?.input.focus());
+	}
+
 	function openListbox() {
 		showList.value = true;
 		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && refList.value !== null) {
 			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
-		const el: typeof TextInput = inputEl.value!;
-		void nextTick(() => el?.input.focus());
 	}
 
 	function closeListbox() {
 		showList.value = false;
 		searchText.value = "";
-		if (refList.value)
+		if (refList.value !== null)
 			refList.value.activeItemIndex = -1;
 	}
 
@@ -246,6 +253,7 @@
 
 	function toggleListbox() {
 		showList.value ? closeListbox() : openListbox();
+		doFocus();
 	}
 
 	// Arrow Navigation
