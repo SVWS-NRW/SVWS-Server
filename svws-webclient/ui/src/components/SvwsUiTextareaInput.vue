@@ -99,6 +99,8 @@
 
 	const isValid = computed(() => {
 		let tmpIsValid = true;
+		if ((props.required === true) && (data.value === null))
+			return false;
 		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
 			tmpIsValid = false;
 		if (tmpIsValid && (((data.value !== null) || (data.value !== ''))))
