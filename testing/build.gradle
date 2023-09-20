@@ -1,8 +1,14 @@
 dependencies {
 	implementation project(':svws-server-app')
 }
+
 // alle Tests in diesem und den Unterprojekten sollen nicht während der globalen Buildphase durchlaufen
-ext.excludeFromTestsDuringBuild=true
+subprojects {
+	test {
+		enabled = false
+	}
+}
+
 // Liste der Auszuführenden Subproject-Tests
 def testTasks = ['svws-dav-api-test:apiTest', 'svws-webclient-integration-test:apiTest']
 

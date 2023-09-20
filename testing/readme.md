@@ -132,15 +132,13 @@ In `SVWS-Server/testing/build.gradle` sind die auszuführenden Test-Tasks aufgel
 
 `integrationTest` fügt dabei jedem gelisteten Test-Task die Abhängigkeit auf das Starten der Testumgebung und das `finalizedBy stopTestumgebung` hinzu und setzt das Property `ignoreFailures=true`, damit fehlerhafte Tests das Ausführen weiterer Tests nicht verhindern.
 
-Zu guter Letzt definiert dieses build.gradle die Variable `ext.excludeFromTestsDuringBuild=true`, womit die globale Testhook nicht mehr Tasks des Typ `Test` innerhalb der Subprojekte ausführt. Dies wird erreicht, indem im `SVWS-Server/build.gradle` folgendes enthalten ist:
-
+Zu guter Letzt deaktiviert dieses build.gradle für alle Unterprojekte den Task `Test`, wodurch die Tests nicht mehr automatisch innerhalb der Subprojekte ausgeführt werden:
 ```
+subprojects {
 	test {
-		onlyIf {
-			!project.hasProperty('excludeFromTestsDuringBuild')
-		}
-	    useJUnitPlatform()
+		enabled = false
 	}
+}
 ```
 
 
@@ -176,20 +174,8 @@ Die `SVWS-Server/gitlab-ci.yml` wurde um eine weitere Stage `integration-tests` 
 Die in der `gitlab-ci.yaml`(#gitlab-ci-yml) beschriebenen Parameter für das Gradle-Skript finden sich für lokale Ausführung auch im `local.properties`. Darüber hinaus wird im `local.properties` die Ports des Hostsystems für DB- und App-Container des jeweiligen Testprojekts, sowie die der Hostname mit Protokoll angegeben und an die Tests durchgereicht. Da innerhalb der CI die Ausführung der Tests im selben Dockernetwork stattfindet, müssen die Hostnamen und Ports nicht konfigurierbar gehalten werden, sondern sind über den Container-Namen und Standard-Ports (8443 bzw 3306) erreichbar. Die lokale Ausführung kann sowohl aus der Entwicklungsumgebung heraus als auch mit den vorhandenen Gradle-Tasks stattfinden und muss daher konfigurierbar bleiben, bspw. gegen andere DB-Schemas oder andere SVWS-App-Instanzen (sowohl in Containern als auch anderweitig gehostete).
 
 ## Aenderungen an anderen Gradle-Modulen
-### SVWS-Server
-Im `SVWS-Server/build.gradle` musste ergänzt werden, dass sich Integrations- und API-Tests nicht während der normalen Testhook bspw. während des Build ausführen.
-
-```
-	test {
-		onlyIf {
-			!project.hasProperty('excludeFromTestsDuringBuild')
-		}
-	    useJUnitPlatform()
-	}
-```
-
 ### svws-webclient
-Die vorhandenen API-Tests im Client wurden paramtriert. Dies wird mit den Umgebungsvariablen am Task `svws-webclient:testApi` durch die vorgenommene Konfiguration in `testing:svws-webclient-integration-test:apiTest` erreicht:
+Die vorhandenen API-Tests im Client wurden parametriert. Dies wird mit den Umgebungsvariablen am Task `svws-webclient:testApi` durch die vorgenommene Konfiguration in `testing:svws-webclient-integration-test:apiTest` erreicht:
 
 ```
 environment NODE_TLS_REJECT_UNAUTHORIZED: 0
