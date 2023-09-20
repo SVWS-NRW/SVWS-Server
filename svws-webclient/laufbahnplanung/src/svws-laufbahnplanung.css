@@ -1,0 +1,101 @@
+@import 'print.css' print;
+
+@page {
+	size: A4;
+	margin: 12.1mm 12.1mm 5.6mm 12.1mm;
+}
+
+.app-wrapper {
+	@apply flex h-screen w-full flex-grow flex-col;
+}
+
+.secondary-menu--header .input-wrapper {
+	@apply max-2xl:grid-cols-1;
+}
+
+.page--content {
+	@apply grid grid-cols-1 lg:grid-cols-2 w-full;
+	@apply gap-x-8 gap-y-16 lg:gap-y-20 lg:gap-x-16;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
+	grid-auto-rows: min-content;
+	max-width: 140rem;
+}
+
+.page--content--dashboard {
+	@apply grid grid-cols-2 lg:grid-cols-4 w-full;
+	@apply gap-2 sm:gap-3 lg:gap-4;
+	@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 pt-8 pb-16;
+	@apply overflow-y-auto;
+	grid-auto-rows: min-content;
+	max-width: 140rem;
+}
+
+.page--content .page--content {
+	@apply p-0 !important;
+}
+
+.page--content--single {
+	@apply lg:grid-cols-1;
+}
+
+.page--content--full {
+	@apply flex;
+	max-width: unset;
+}
+
+.page--content--flex {
+	@apply flex flex-col min-h-full gap-y-5;
+}
+
+.separate-items--custom > *:not(:last-child):after {
+	content: ', ';
+}
+
+input[type="file"]::file-selector-button {
+	@apply bg-svws text-white;
+	@apply rounded-md border-0;
+	@apply select-none relative;
+	@apply text-button font-bold;
+	@apply inline-flex items-center;
+	gap: 0.25em;
+	padding: 0.45em 0.75em;
+	@apply shadow-none;
+}
+
+input[type="file"] {
+	@apply text-black/50 dark:text-white/50 cursor-pointer;
+}
+
+input[type="file"]:hover {
+	@apply text-black/75 dark:text-white/75;
+}
+
+input[type="file"]:hover::file-selector-button {
+	@apply brightness-110;
+}
+
+input[type="file"]:focus,
+input[type="file"]:focus::file-selector-button {
+	 @apply outline-none;
+}
+
+input[type="file"]:focus-visible {
+	@apply ring ring-svws/50 rounded-md;
+}
+
+input[type="file"]:focus::file-selector-button {
+	@apply ring-0;
+}
+
+input[type="file"]::file-selector-button:active {
+	@apply ring-0 brightness-100;
+}
+
+input[type="file"]:invalid {
+	@apply text-error;
+}
+
+input[type="file"]:hover::file-selector-button,
+input[type="file"]:focus-visible::file-selector-button {
+	@apply opacity-100;
+}

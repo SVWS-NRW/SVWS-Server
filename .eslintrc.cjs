@@ -20,6 +20,7 @@ module.exports = {
 			"./svws-webclient/ui/tsconfig.json",
 			"./svws-webclient/components/tsconfig.json",
 			"./svws-webclient/client/tsconfig.json",
+			"./svws-webclient/laufbahnplanung/tsconfig.json",
 			"./svws-webclient/core-test/tsconfig.json",
 			"./svws-webclient/api-test/tsconfig.json",
 			"./svws-webclient/browser-test/tsconfig.json",
@@ -79,6 +80,7 @@ module.exports = {
 				"svws-webclient/components/src/**/*.{ts,js,cjs,mjs}",
 				"svws-webclient/ui/src/**/*.{ts,js,cjs,mjs}",
 				"svws-webclient/client/src/**/*.{ts,js,cjs,mjs}",
+				"svws-webclient/laufbahnplanung/src/**/*.{ts,js,cjs,mjs}",
 			],
 			env: {
 				// diese Packages haben keinen Zugriff auf Node APIs da es im Browser läuft.
