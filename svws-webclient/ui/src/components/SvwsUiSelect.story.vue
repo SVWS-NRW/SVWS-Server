@@ -4,7 +4,7 @@
 			<div class="demo-wrapper flex flex-col gap-3">
 				<svws-ui-select v-model="modelValue1"
 					title="Simple"
-					:item-text="item => item?.text || ''"
+					:item-text="item => item.text"
 					:items="items"
 					@input="onInput"
 					:removable="true" />
@@ -17,7 +17,7 @@
 				<svws-ui-select v-model="modelValue2"
 					title="Simple"
 					:items="items"
-					:item-text="item => item?.text || ''"
+					:item-text="item => item.text"
 					:item-sort="(a: any, b: any) => a.text + b.text"
 					@input="onInput" />
 			</div>
@@ -29,7 +29,7 @@
 					autocomplete
 					title="Autocomplete"
 					:items="items"
-					:item-text="item => item?.text || ''"
+					:item-text="item => item.text"
 					:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
 					@input="onInput" />
 			</div>
@@ -38,7 +38,7 @@
 		<Variant title="Headless" id="Headless">
 			<div class="demo-wrapper">
 				<svws-ui-select v-model="modelValue7"
-					:item-text="item => item?.text || ''"
+					:item-text="item => item.text"
 					headless
 					title="Headless"
 					:items="items"
@@ -49,7 +49,7 @@
 		<Variant title="Statistics" id="Statistics">
 			<div class="demo-wrapper">
 				<svws-ui-select v-model="modelValue8"
-					:item-text="item => item?.text || ''"
+					:item-text="item => item.text"
 					autocomplete
 					statistics
 					title="Statistics"
@@ -64,7 +64,7 @@
 	import { logEvent } from "histoire/client";
 	import { ref, reactive } from "vue";
 
-	const items = reactive([
+	const items = reactive<{id: number, text: string}[]>([
 		{ id: 1, text: "Item 1" },
 		{ id: 2, text: "Item 2 with a very, very, very, really long title that's way too big for the row. If this happens, the UI should be prepared" },
 		{ id: 3, text: "Item 3" },

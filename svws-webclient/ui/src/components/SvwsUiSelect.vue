@@ -40,7 +40,7 @@
 					<i-ri-close-line />
 				</span>
 			</div>
-			<div class="dropdown-icon" @click.stop="toggleListbox">
+			<div class="dropdown-icon" @click.stop="showList ? closeListbox() : openListbox()">
 				<span class="icon">
 					<i-ri-expand-up-down-fill />
 				</span>
@@ -58,10 +58,10 @@
 
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import type TextInput from "./SvwsUiTextInput.vue";
-	import { computed, nextTick, ref, shallowRef, watch } from "vue";
 	import type { MaybeElement } from "@floating-ui/vue";
+	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
+	import { computed, nextTick, ref, shallowRef, watch } from "vue";
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
@@ -340,7 +340,6 @@
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-
 	const content = computed<InputDataType>(() => {
 		return data.value;
 	});
@@ -361,35 +360,8 @@
 	@apply w-full;
 	@apply inline-block overflow-visible;
 
-	&--statistics {
-		.multiselect-tags--placeholder {
-			@apply text-violet-500;
-		}
-
-		.tooltip-trigger--triggered svg {
-			@apply text-violet-800;
-		}
-	}
-
 	&--danger {
 		@apply text-error;
-	}
-
-	&.with-open-list,
-	&.with-value,
-	&:focus-within {
-		.tag-list-wrapper {
-			@apply border-black dark:border-white;
-			@apply outline-none;
-		}
-	}
-
-	&--statistics.with-open-list,
-	&--statistics.with-value,
-	&--statistics:focus-within {
-		.tag-list-wrapper {
-			@apply border-violet-500 dark:border-violet-800;
-		}
 	}
 
 	&.with-open-list,
@@ -406,64 +378,10 @@
 	&.with-value:not(:focus-within):hover .tag-list-wrapper {
 		@apply border-black/50 dark:border-white/50;
 	}
-
-	.multiselect-tags--placeholder {
-		@apply absolute;
-		@apply pointer-events-none;
-		@apply opacity-60;
-		@apply transform;
-		@apply flex items-center font-medium;
-
-		top: 0.5em;
-		left: 0.7em;
-		line-height: 1.33;
-	}
-
-	&:not(.with-value) .multiselect-tags--placeholder {
-		@apply font-normal;
-	}
-
-	&:not(.with-open-list):not(.with-value):not(:focus-within):hover .multiselect-tags--placeholder {
-		@apply opacity-100;
-	}
-
-	&.with-value,
-	&:focus-within {
-		.multiselect-tags--placeholder {
-			@apply -translate-y-1/2;
-			@apply bg-white dark:bg-black opacity-100;
-			@apply rounded;
-			@apply px-1;
-
-			top: -0.2em;
-			left: 0.7em;
-			font-size: 0.78rem;
-
-			&:after {
-				content: '';
-			}
-		}
-	}
-
-	.data-table & {
-		.text-input-component {
-			@apply pl-1;
-		}
-	}
 }
 
 .wrapper {
 	@apply relative;
-
-	.data-table & {
-		@apply w-full;
-	}
-
-	.data-table .data-table__td__no-padding & {
-		.text-input-component {
-			padding-left: 0.5rem;
-		}
-	}
 }
 
 .dropdown-icon {
@@ -510,129 +428,6 @@
 	}
 }
 
-.tag-list {
-	@apply flex flex-wrap gap-1 pr-4;
-}
-
-.multiselect--items-wrapper {
-	@apply absolute z-50 w-full min-w-[11rem];
-	@apply rounded-md border border-black/25 dark:border-white/25 bg-white dark:bg-black;
-	@apply shadow-2xl shadow-black/25 dark:shadow-white/5;
-	@apply overflow-hidden;
-}
-
-.multiselect--items-list {
-	@apply overflow-y-auto overflow-x-hidden;
-	@apply px-1.5 py-0.5;
-	max-height: 40ex;
-
-	.multiselect--item {
-		@apply text-black dark:text-white bg-white dark:bg-black rounded border border-transparent;
-		@apply text-base;
-		@apply py-1 my-1 px-2;
-
-		.multiselect--check {
-			@apply hidden -mt-0.5;
-		}
-
-		&.active {
-			@apply ring ring-svws/50 border-svws bg-svws text-white;
-
-			.page--statistik & {
-				@apply ring-violet-500/50 border-violet-500 bg-violet-500;
-			}
-		}
-
-		&:hover {
-			@apply cursor-pointer;
-			@apply bg-svws text-white;
-
-			.page--statistik & {
-				@apply bg-violet-500;
-			}
-		}
-
-		&.selected {
-			@apply font-bold bg-svws text-white;
-
-			.page--statistik & {
-				@apply bg-violet-500;
-			}
-		}
-	}
-
-	&--tags {
-		.multiselect--item .multiselect--check {
-			@apply inline-block;
-		}
-
-		.multiselect--item.selected {
-			@apply bg-transparent text-svws dark:text-svws;
-
-			&.active {
-				@apply ring-svws/25 dark:ring-svws/25;
-			}
-
-			&:hover {
-				@apply bg-svws text-white dark:text-white;
-				/*svg {
-					@apply hidden;
-				}
-
-				&:after {
-					@apply opacity-75 font-normal;
-					content: '\0000a0entfernen';
-				}*/
-			}
-		}
-	}
-}
-
-.multiselect--items-wrapper--statistics {
-	.multiselect--item.active {
-		@apply ring-violet-500/50 border-violet-500 bg-violet-500;
-	}
-
-	.multiselect--item:hover {
-		@apply bg-violet-500;
-	}
-
-	.multiselect--item.selected {
-		@apply bg-violet-500;
-	}
-
-	&.multiselect--items-wrapper--tags {
-		.multiselect--item.selected {
-			@apply bg-transparent text-violet-500 dark:text-violet-500;
-
-			&.active {
-				@apply ring-violet-500/25 dark:ring-violet-500/25;
-			}
-
-			&:hover {
-				@apply bg-violet-500 text-white dark:text-white;
-			}
-		}
-	}
-}
-
-.tag-list-wrapper {
-	@apply flex w-full items-center justify-between overflow-x-auto;
-	@apply bg-white dark:bg-black;
-	@apply rounded-md border border-black/5 dark:border-white/5;
-	@apply w-full;
-	@apply text-base;
-	@apply whitespace-nowrap;
-	@apply h-full;
-	@apply cursor-pointer;
-	padding: 0.3em 1.7em 0.3em 0.35em;
-	min-height: 2.25em;
-
-	&:hover {
-		@apply border-black/25 dark:border-white/25;
-	}
-}
-
 .wrapper--tag-list {
 	.input:not(.sr-only) {
 		& + .tag-list-wrapper {
@@ -651,32 +446,6 @@
 			@apply h-full;
 		}
 	}
-}
-
-.tag-badge {
-	@apply rounded cursor-auto relative z-10;
-	@apply bg-svws/5 text-svws border-svws/25 border font-medium;
-	@apply flex items-center leading-none;
-	@apply max-w-sm;
-	padding: 0.2em 0.4em 0.2em 0.7em;
-
-	> span:first-child {
-		@apply overflow-ellipsis overflow-hidden whitespace-nowrap;
-	}
-
-	.page--statistik &,
-	.multiselect-input-component--statistics & {
-		@apply bg-violet-500/5 text-violet-500 border-violet-500;
-	}
-
-	.tag-remove {
-		@apply text-sm -mr-0.5;
-		height: 1rem;
-	}
-}
-
-.tag-badge--placeholder {
-	@apply bg-transparent pointer-events-none;
 }
 
 .tag-remove .icon,
