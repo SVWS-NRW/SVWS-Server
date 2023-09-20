@@ -1,7 +1,7 @@
 <template>
 	<Story title="Laufbahnplanungsinformationen">
 		<Variant title="Fehlermeldungen">
-			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
+			<s-laufbahnplanung-informationen :fehlerliste="()=>fehlerliste" />
 		</Variant>
 	</Story>
 </template>

@@ -16,7 +16,7 @@ export interface GostKlausurplanungKalenderProps {
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	kursmanager: KursManager;
-	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<boolean>;
+	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	stundenplanmanager: StundenplanManager;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 }

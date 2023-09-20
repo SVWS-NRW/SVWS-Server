@@ -1,5 +1,6 @@
 package de.svws_nrw.core.data.schueler;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,11 +44,11 @@ public class SchuelerBetriebsdaten {
 
 	/** Betrieb erhält Anschreiben Ja/Nein */
 	@Schema(description = "Betrieb erhält Anschreiben Ja/Nein", example = "true")
-	public Boolean allgadranschreiben;
+	public @NotNull Boolean allgadranschreiben = false;
 
 	/** Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler */
 	@Schema(description = "Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler", example = "false")
-	public Boolean praktikum;
+	public @NotNull Boolean praktikum = false;
 
 	/** Sortierung des Betriebeeintrags beim Schüler */
 	@Schema(description = "Sortierung des Betriebeeintrags beim Schüler", example = "true")

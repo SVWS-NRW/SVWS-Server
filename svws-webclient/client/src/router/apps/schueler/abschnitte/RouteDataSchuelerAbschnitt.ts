@@ -46,7 +46,7 @@ export class RouteDataSchuelerAbschnitt {
 		this.setPatchedState({ idSchueler, listAbschnitte })
 	}
 
-	public getEntry(idSchuljahresabschnitt: number, wechselNr: number) : SchuelerLernabschnittListeEintrag | undefined {
+	public getEntry(idSchuljahresabschnitt: number, wechselNr: number|null) : SchuelerLernabschnittListeEintrag | undefined {
 		for (const current of this.listAbschnitte)
 			if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === wechselNr))
 				return current;

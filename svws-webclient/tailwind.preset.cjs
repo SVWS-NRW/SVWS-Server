@@ -1,9 +1,13 @@
-function withOpacity(cssVariale) {
+/**
+ * @param {string} cssVar
+ * @returns {({opacityValue}: {opacityValue: string}) => string}
+ */
+function withOpacity(cssVar) {
 	return ({opacityValue}) => {
 		if (opacityValue !== undefined) {
-			return `rgba(var(${cssVariale}), ${opacityValue})`;
+			return `rgba(var(${cssVar}), ${opacityValue})`;
 		}
-		return `rgb(var(${cssVariale}))`;
+		return `rgb(var(${cssVar}))`;
 	};
 }
 

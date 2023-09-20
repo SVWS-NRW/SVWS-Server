@@ -15,14 +15,14 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht" class="overflow-visible">
 					<template #body>
-            <div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
-                 :draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
+						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
+							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
 							<div role="cell" class="select-none svws-ui-td">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
-                     :class="{ 'cursor-grabbing': dragData !== undefined }">
+									:class="{ 'cursor-grabbing': dragData !== undefined }">
 									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
 									</span>
@@ -39,7 +39,7 @@
 								</template>
 							</div>
 							<div role="cell" class="select-none svws-ui-td svws-align-center">
-                {{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
+								{{ stundenplanManager().klassenunterrichtGetWochenstundenIST(ku.idKlasse, ku.idFach) }}/{{ stundenplanManager().klassenunterrichtGetWochenstundenSOLL(ku.idKlasse, ku.idFach) }}
 							</div>
 						</div>
 					</template>
@@ -64,14 +64,15 @@
 				</svws-ui-table>
 			</div>
 			<!--TODO: Hier kommt das Zeitraster des Stundenplans hin, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
-      <stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
-                           use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
+			<stundenplan-ansicht mode="klasse" mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="() => wochentypAuswahl" :kalenderwoche="() => undefined"
+				use-drag-and-drop :drag-data="() => dragData" :on-drag="onDrag" :on-drop="onDrop" />
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import type { DataTableColumn } from "@ui";
 	import { ArrayList, type List, type StundenplanKlasse, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster } from "@core";
 	import { type StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import { ref, computed, type WritableComputedRef } from "vue";
@@ -171,13 +172,13 @@
 		set: (value : number) => _wochentyp.value = value
 	});
 
-	const colsKlassenunterricht = [
+	const colsKlassenunterricht: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Klassenunterricht", tooltip: "Klassenunterricht", span: 1 },
 		{ key: "irgendwas", label: "Wochentyp", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
-	const colsKursunterricht = [
+	const colsKursunterricht: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Kursunterricht", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];

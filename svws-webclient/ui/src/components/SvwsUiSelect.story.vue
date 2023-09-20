@@ -74,10 +74,10 @@
 	]);
 
 	const modelValue1 = ref(items[0]);
-	const modelValue2 = ref();
-	const modelValue4 = ref();
-	const modelValue7 = ref();
-	const modelValue8 = ref([items[0]]);
+	const modelValue2 = ref(undefined);
+	const modelValue4 = ref(items[3]);
+	const modelValue7 = ref(null);
+	const modelValue8 = ref(items[1]);
 
 	function onInput(event: Event) {
 		logEvent("input", event);

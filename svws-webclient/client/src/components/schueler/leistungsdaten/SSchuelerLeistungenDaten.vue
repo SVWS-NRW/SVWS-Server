@@ -8,7 +8,7 @@
 				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell(note)="{rowData}">
-				<s-schueler-leistung-note :data="props.data!" :note="rowData.note" :patch-leistung="patchLeistung" />
+				<s-schueler-leistung-note :data="props.data!" :note="rowData.note ?? ''" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>

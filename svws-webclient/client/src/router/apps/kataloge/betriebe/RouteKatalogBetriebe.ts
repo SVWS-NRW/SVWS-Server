@@ -93,10 +93,12 @@ export class RouteDataKatalogBetriebe {
 		for (const l of listBeschaeftigungsarten)
 			mapBeschaeftigungsarten.set(l.id, l)
 
-		const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema, auswahl?.id);
 		const mapAnsprechpartner = new Map<number, BetriebAnsprechpartner>();
-		for( const l of listAnsprechpartner)
-			mapAnsprechpartner.set(l.id, l);
+		if (auswahl !== undefined) {
+			const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema, auswahl.id);
+			for( const l of listAnsprechpartner)
+				mapAnsprechpartner.set(l.id, l);
+		}
 
 		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, mapAnsprechpartner, mapBeschaeftigungsarten })
 	}

@@ -27,7 +27,6 @@
 
 	import type { BenutzergruppenManager, BenutzerKompetenzGruppe, List} from "@core";
 	import { BenutzerKompetenz} from "@core";
-	import type { Ref,WritableComputedRef } from "vue";
 	import { ref, computed } from "vue";
 
 	const props = defineProps<{
@@ -41,13 +40,13 @@
 		benutzerKompetenzen : (kompetenzgruppe : BenutzerKompetenzGruppe) => List<BenutzerKompetenz>;
 	}>();
 
-	const collapsed: Ref<boolean> = ref(true);
+	const collapsed = ref(true);
 
-	const hatSubKompetenzen: WritableComputedRef<number> = computed(() =>  props.benutzerKompetenzen(props.kompetenzgruppe).size());
+	const hatSubKompetenzen = computed<number>(() =>  props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
-	const selectedMindestensEine: WritableComputedRef<boolean> = computed(() => props.getBenutzergruppenManager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
+	const selectedMindestensEine = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
 
-	const selected: WritableComputedRef<string | boolean> = computed({
+	const selected = computed<'indeterminate' | boolean>({
 		get: () => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)) || (selectedMindestensEine.value ? 'indeterminate' : false),
 		set: (value) => {
 			if (value)
@@ -56,11 +55,6 @@
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
 		}
 	});
-
-	function setCollapse(){
-		collapsed.value = !collapsed.value;
-	}
-
 </script>
 
 <style scoped lang="postcss">

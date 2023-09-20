@@ -59,6 +59,7 @@
 	import { BetriebStammdaten} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
+	import { orte_filter, orte_sort } from "~/helfer";
 
 	const props = defineProps<{
 		addEintrag: (betrieb: BetriebStammdaten) => Promise<void>;

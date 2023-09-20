@@ -13,7 +13,6 @@ import { routeApp } from "~/router/apps/RouteApp";
 
 import SInit from "~/components/init/SInit.vue";
 import type { InitProps } from "~/components/init/SInitProps";
-import { cast_de_svws_nrw_core_types_gost_GostAbiturFach } from "../../../../../core/ts/src/core/types/gost/GostAbiturFach";
 
 
 export class RouteInit extends RouteNode<unknown, any> {

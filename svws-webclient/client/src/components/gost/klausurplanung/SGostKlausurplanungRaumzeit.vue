@@ -53,13 +53,14 @@
 	import type { GostKlausurraumManager} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
+	import type { Ref} from 'vue';
 	import { ref } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
-	const raummanager = ref<GostKlausurraumManager | null>(null);
+	const raummanager: Ref<GostKlausurraumManager | null> = ref(null);
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
 		if (selectedTermin.value === null || termin.id !== selectedTermin.value.id) {
@@ -76,29 +77,33 @@
 		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,
 	});
 
-	const calculatCssClassesKlausur = (klausur: GostKursklausur) => ({
-		"bg-green-500": raummanager.value!.isAlleSchuelerklausurenVerplant(klausur),
-		"bg-yellow-500": !raummanager.value!.isAlleSchuelerklausurenVerplant(klausur),
-	});
+	const calculatCssClassesKlausur = (klausur: GostKursklausur) => {
+		return raummanager.value !== null
+			? {
+				"bg-green-500": raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
+				"bg-yellow-500": !raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
+			}
+			: {}
+	};
 
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	function isDraggable(object: any) : boolean {
-		if (selectedTermin.value !== null && object instanceof GostKursklausur)
+		if (selectedTermin.value !== null && object instanceof GostKursklausur && raummanager.value !== null)
 			if (object.idTermin === selectedTermin.value.id)
-				return !raummanager.value!.isAlleSchuelerklausurenVerplant(object);
+				return !raummanager.value.isAlleSchuelerklausurenVerplant(object);
 		return false;
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKursklausur)
+		if (dragData.value instanceof GostKursklausur && raummanager.value !== null)
 			if (zone instanceof GostKlausurraum)
-				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value);
 			else if (zone instanceof GostKlausurtermin) {
-				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value!.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value!);
+				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value);
 			}
 	};
 

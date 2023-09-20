@@ -40,12 +40,12 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	/**
 	 * Betrieb erhält Anschreiben Ja/Nein
 	 */
-	public allgadranschreiben : boolean | null = null;
+	public allgadranschreiben : boolean = false;
 
 	/**
 	 * Gibt an ob es ein Praktikum ist beim Betriebeeintrags beim Schüler
 	 */
-	public praktikum : boolean | null = null;
+	public praktikum : boolean = false;
 
 	/**
 	 * Sortierung des Betriebeeintrags beim Schüler
@@ -87,8 +87,12 @@ export class SchuelerBetriebsdaten extends JavaObject {
 		result.vertragsbeginn = typeof obj.vertragsbeginn === "undefined" ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
 		result.vertragsende = typeof obj.vertragsende === "undefined" ? null : obj.vertragsende === null ? null : obj.vertragsende;
 		result.ausbilder = typeof obj.ausbilder === "undefined" ? null : obj.ausbilder === null ? null : obj.ausbilder;
-		result.allgadranschreiben = typeof obj.allgadranschreiben === "undefined" ? null : obj.allgadranschreiben === null ? null : obj.allgadranschreiben;
-		result.praktikum = typeof obj.praktikum === "undefined" ? null : obj.praktikum === null ? null : obj.praktikum;
+		if (typeof obj.allgadranschreiben === "undefined")
+			 throw new Error('invalid json format, missing attribute allgadranschreiben');
+		result.allgadranschreiben = obj.allgadranschreiben;
+		if (typeof obj.praktikum === "undefined")
+			 throw new Error('invalid json format, missing attribute praktikum');
+		result.praktikum = obj.praktikum;
 		result.sortierung = typeof obj.sortierung === "undefined" ? null : obj.sortierung === null ? null : obj.sortierung;
 		result.ansprechpartner_id = typeof obj.ansprechpartner_id === "undefined" ? null : obj.ansprechpartner_id === null ? null : obj.ansprechpartner_id;
 		result.betreuungslehrer_id = typeof obj.betreuungslehrer_id === "undefined" ? null : obj.betreuungslehrer_id === null ? null : obj.betreuungslehrer_id;
@@ -104,8 +108,8 @@ export class SchuelerBetriebsdaten extends JavaObject {
 		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
 		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
-		result += '"allgadranschreiben" : ' + ((!obj.allgadranschreiben) ? 'null' : obj.allgadranschreiben) + ',';
-		result += '"praktikum" : ' + ((!obj.praktikum) ? 'null' : obj.praktikum) + ',';
+		result += '"allgadranschreiben" : ' + obj.allgadranschreiben! + ',';
+		result += '"praktikum" : ' + obj.praktikum! + ',';
 		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
 		result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id) + ',';
 		result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id) + ',';
@@ -138,10 +142,10 @@ export class SchuelerBetriebsdaten extends JavaObject {
 			result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		}
 		if (typeof obj.allgadranschreiben !== "undefined") {
-			result += '"allgadranschreiben" : ' + ((!obj.allgadranschreiben) ? 'null' : obj.allgadranschreiben) + ',';
+			result += '"allgadranschreiben" : ' + obj.allgadranschreiben + ',';
 		}
 		if (typeof obj.praktikum !== "undefined") {
-			result += '"praktikum" : ' + ((!obj.praktikum) ? 'null' : obj.praktikum) + ',';
+			result += '"praktikum" : ' + obj.praktikum + ',';
 		}
 		if (typeof obj.sortierung !== "undefined") {
 			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';

@@ -1,33 +1,3 @@
-<script setup lang="ts">
-	import { ref, reactive } from 'vue';
-	import SvwsUiTextInput
-		from "./SvwsUiTextInput.vue";
-
-	const state = reactive({
-		value: false,
-		label: 'Checkbox Label',
-		title: '',
-		bw: false,
-		statistics: false,
-		disabled: false,
-		toggle: false,
-		headless: false
-	})
-
-	const modelValue = ref(true);
-	const modelValue1 = ref(true);
-	const modelValue2 = ref(true);
-	const modelValue3 = ref(true);
-	const modelValue4 = ref(false);
-	const modelValue5 = ref(false);
-	const modelValue6 = ref('indeterminate');
-	const modelValue7 = ref(true);
-
-	const source = `<svws-ui-checkbox v-model="..." [title | bw | statistics | disabled | type="toggle" | headless]>
-	Label
-</svws-ui-checkbox> `;
-</script>
-
 <template>
 	<Story title="Checkbox" id="svws-ui-checkbox" icon="ri:checkbox-line" auto-props-disabled responsive-disabled>
 		<Variant title="Default" id="Default" :source="source">
@@ -39,7 +9,7 @@
 				</div>
 				<svws-ui-checkbox v-model="modelValue1" headless>Headless</svws-ui-checkbox>
 				<div class="pointer-events-none leading-none">
-					<svws-ui-checkbox v-model="modelValue6">Indeterminate Status</svws-ui-checkbox>
+					<svws-ui-checkbox :model-value="'indeterminate'" @update:model-value="v=>modelValue6=v">Indeterminate Status</svws-ui-checkbox>
 				</div>
 				<svws-ui-checkbox v-model="modelValue3" bw>BW (black and white)</svws-ui-checkbox>
 				<svws-ui-checkbox v-model="modelValue4" statistics>Wichtige Checkbox für die Statistik</svws-ui-checkbox>
@@ -50,7 +20,7 @@
 			<div class="flex flex-col items-start gap-2 mt-10">
 				<svws-ui-checkbox v-model="modelValue2" type="toggle">Toggle</svws-ui-checkbox>
 				<div class="pointer-events-none leading-none">
-					<svws-ui-checkbox v-model="modelValue6" type="toggle">Indeterminate Status</svws-ui-checkbox>
+					<svws-ui-checkbox :model-value="'indeterminate'" @update:model-value="v=>modelValue6=v" type="toggle">Indeterminate Status</svws-ui-checkbox>
 				</div>
 				<svws-ui-checkbox v-model="modelValue3" bw type="toggle">BW (black and white)</svws-ui-checkbox>
 				<svws-ui-checkbox v-model="modelValue4" statistics type="toggle">Wichtige Checkbox für die Statistik</svws-ui-checkbox>
@@ -70,3 +40,31 @@
 		</Variant>
 	</Story>
 </template>
+
+<script setup lang="ts">
+	import { ref, reactive } from 'vue';
+
+	const state = reactive({
+		value: false,
+		label: 'Checkbox Label',
+		title: '',
+		bw: false,
+		statistics: false,
+		disabled: false,
+		toggle: false,
+		headless: false
+	})
+
+	const modelValue = ref(true);
+	const modelValue1 = ref(true);
+	const modelValue2 = ref(true);
+	const modelValue3 = ref(true);
+	const modelValue4 = ref(false);
+	const modelValue5 = ref(false);
+	const modelValue6 = ref();
+	const modelValue7 = ref(true);
+
+	const source = `<svws-ui-checkbox v-model="..." [title | bw | statistics | disabled | type="toggle" | headless]>
+	Label
+</svws-ui-checkbox> `;
+</script>
