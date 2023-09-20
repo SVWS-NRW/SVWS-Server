@@ -1,7 +1,10 @@
 <template>
 	<div class="page--header">
 		<div class="flex flex-row w-full">
-			<h2 class="text-headline grow"> Laufbahnplanung für {{ schueler.nachname }}, {{ schueler.vorname }} </h2>
+			<div class="grow">
+				<h2 class="text-headline"> {{ schueler.nachname }}, {{ schueler.vorname }} </h2>
+				Jahrgang {{ gostJahrgangsdaten.jahrgang }} ({{ gostJahrgangsdaten.bezeichnung }})
+			</div>
 			<div class="flex-none">
 				<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 			</div>

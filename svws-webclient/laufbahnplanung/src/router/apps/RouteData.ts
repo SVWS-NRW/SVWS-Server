@@ -11,6 +11,7 @@ import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpr
 	AbiturFachbelegungHalbjahr,
 	DeveloperNotificationException,
 	GostKursart} from "@core";
+import { Readable, Writable } from "stream";
 
 
 interface RouteState {
@@ -100,6 +101,21 @@ export class RouteData {
 		const gostJahrgang = new GostJahrgang();
 		gostJahrgang.abiturjahr = daten.abiturjahr;
 		gostJahrgang.jahrgang = daten.jahrgang;
+		gostJahrgang.bezeichnung = "Abiturjahr " + daten.abiturjahr;
+		gostJahrgang.istAbgeschlossen = false;
+		const gostJahrgangsdaten = new GostJahrgangsdaten();
+		gostJahrgangsdaten.abiturjahr = gostJahrgang.abiturjahr;
+		gostJahrgangsdaten.jahrgang = gostJahrgang.jahrgang;
+		gostJahrgangsdaten.bezeichnung = gostJahrgang.bezeichnung;
+		gostJahrgangsdaten.istAbgeschlossen = gostJahrgang.istAbgeschlossen;
+		gostJahrgangsdaten.hatZusatzkursGE = daten.hatZusatzkursGE;
+		gostJahrgangsdaten.beginnZusatzkursGE = daten.beginnZusatzkursGE;
+		gostJahrgangsdaten.hatZusatzkursSW = daten.hatZusatzkursSW;
+		gostJahrgangsdaten.beginnZusatzkursSW = daten.beginnZusatzkursSW;
+		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
+		gostJahrgangsdaten.textMailversand = null;
+		for (const bl of daten.beratungslehrer)
+			gostJahrgangsdaten.beratungslehrer.add(bl);
 		// Initialisiere die Map für die Beratungslehrer
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const bl of daten.beratungslehrer) {
@@ -155,6 +171,7 @@ export class RouteData {
 		this.setPatchedDefaultState({
 			mapFachkombinationen,
 			gostJahrgang,
+			gostJahrgangsdaten,
 			mapLehrer,
 			faecherManager,
 			auswahl: schueler,
@@ -162,6 +179,13 @@ export class RouteData {
 			abiturdatenManager: abiturdatenManager,
 		})
 	}
+
+	public async schreibeDaten() : Promise<GostLaufbahnplanungDaten> {
+		const daten = new GostLaufbahnplanungDaten();
+		// TODO
+		return daten;
+	}
+
 
 	get hatAuswahl(): boolean {
 		return (this._state.value.auswahl !== undefined);
@@ -297,9 +321,12 @@ export class RouteData {
 	}
 
 	exportLaufbahnplanung = async (): Promise<Blob> => {
-		const b = new Blob();
-		// TODO Erstellen der GostLaufbahnplanungDaten aus den Abiturdaten, serialisieren als JSON und als GZIP-Blob zurückgeben
-		return b;
+		const json = GostLaufbahnplanungDaten.transpilerToJSON(await this.schreibeDaten());
+		const rawData = new Response(json).body;
+		if (rawData === null)
+			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
+		const compressedStream = await rawData.pipeThrough(new CompressionStream('gzip'))
+		return await new Response(compressedStream).blob();
 	}
 
 	importLaufbahnplanung = async (formData: FormData): Promise<boolean> => {
@@ -354,9 +381,10 @@ export class RouteData {
 	}
 
 	resetFachwahlen = async () => {
-		// TODO Leere die Belegungen in den Abiturdaten
-		const abiturdaten = this._state.value.abiturdaten;
-		this._state.value.abiturdaten = abiturdaten;
+		const abidaten = this._state.value.abiturdaten;
+		if (abidaten === undefined)
+			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		abidaten.fachbelegungen.clear();
 		await this.setGostBelegpruefungErgebnis();
 	}
 

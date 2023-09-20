@@ -339,7 +339,11 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abidaten.abiturjahr, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt);
 		if ((halbjahr == null) && (schuljahresabschnitt.Jahr >= abidaten.abiturjahr))
 			halbjahr = GostHalbjahr.Q22;
-			// Schreibe die Daten in das Export-DTO
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, dtoSchueler.ID, schuljahresabschnitt.ID);
+		String aktJahrgang = (schuelerLernabschnittsdaten.size() == 1) ? schuelerLernabschnittsdaten.get(0).ASDJahrgang : null;
+		if (aktJahrgang == null)
+			aktJahrgang = (halbjahr == null) ? "" : halbjahr.jahrgang;
+		// Schreibe die Daten in das Export-DTO
 		final GostLaufbahnplanungDaten daten = new GostLaufbahnplanungDaten();
 		daten.schulNr = schule.SchulNr;
 		daten.schulBezeichnung1 = schule.Bezeichnung1 == null ? "" : schule.Bezeichnung1;
@@ -347,7 +351,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		daten.schulBezeichnung3 = schule.Bezeichnung3 == null ? "" : schule.Bezeichnung3;
 		daten.anmerkungen = "Exportiert am " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 		daten.abiturjahr = abidaten.abiturjahr;
-		daten.jahrgang = halbjahr == null ? "" : halbjahr.jahrgang;
+		daten.jahrgang = aktJahrgang;
 		daten.textBeratungsbogen = jahrgangsdaten.TextBeratungsbogen;
 		daten.hatZusatzkursGE = jahrgangsdaten.ZusatzkursGEVorhanden;
 		daten.beginnZusatzkursGE = jahrgangsdaten.ZusatzkursGEErstesHalbjahr;
