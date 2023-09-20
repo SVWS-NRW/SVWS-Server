@@ -1,0 +1,44 @@
+version: "3"
+services:
+  mariadb:
+    restart: always
+    image: mariadb:10.7.3
+    environment:
+      MARIADB_ROOT_PASSWORD: "${MariaDB_ROOT_PASSWORD}"
+      MARIADB_DATABASE: "${MariaDB_DATABASE}"
+      MARIADB_USER: "${MariaDB_USER}"
+      MARIADB_PASSWORD: "${MariaDB_PASSWORD}"
+    env_file:
+      - .env
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MariaDB_USER --password=$$MariaDB_PASSWORD
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - svws-db:/var/lib/mysql/
+
+  svws-server:
+    image: svwsnrw/svws-server:0.7.3-SNAPSHOT
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    links:
+      - mariadb
+    ports:
+      - "8443:8443"
+    environment:
+      MariaDB_HOST: "${MariaDB_HOST}"
+      MariaDB_ROOT_PASSWORD: "${MariaDB_ROOT_PASSWORD}"
+      MariaDB_DATABASE: "${MariaDB_DATABASE}"
+      MariaDB_USER: "${MariaDB_USER}"
+      MariaDB_PASSWORD: "${MariaDB_PASSWORD}"
+    env_file:
+      - .env
+    volumes:
+      - svws-app:/opt/app/svws/
+      - svws-conf:/etc/app/svws/
+volumes:
+      svws-app:
+      svws-conf:
+      svws-db:

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -z "$TESTDB_PASSWORD" ]; then
+	exit 1
+fi
+
 CURRENT_SCRIPT=$(readlink -f "$0")
 CURRENT_DIR=$(dirname "$CURRENT_SCRIPT")
 
