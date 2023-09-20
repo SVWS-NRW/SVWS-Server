@@ -8,7 +8,9 @@ import type { GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
 import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	GostLaufbahnplanungBeratungsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr,
 	LehrerListeEintrag,
-	AbiturFachbelegungHalbjahr} from "@core";
+	AbiturFachbelegungHalbjahr,
+	DeveloperNotificationException,
+	GostKursart} from "@core";
 
 
 interface RouteState {
@@ -156,6 +158,7 @@ export class RouteData {
 			mapLehrer,
 			faecherManager,
 			auswahl: schueler,
+			abiturdaten,
 			abiturdatenManager: abiturdatenManager,
 		})
 	}
@@ -223,8 +226,73 @@ export class RouteData {
 		this.setPatchedState({ abiturdatenManager, gostBelegpruefungErgebnis });
 	}
 
+	protected fachbelegungErstellen(fachID: number, wahl: GostSchuelerFachwahl): void {
+		const faecherManager = this.abiturdatenManager.faecher();
+		const abidaten = this._state.value.abiturdaten;
+		if (abidaten === undefined)
+			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		const belegung = new AbiturFachbelegung();
+		const fach = faecherManager.get(fachID);
+		if (fach === null)
+			throw new DeveloperNotificationException("Das Fach mit der ID " + fachID + " steht unerwartet nicht zur Verfügung.");
+		belegung.fachID = fachID;
+		belegung.abiturFach = wahl.abiturFach;
+		belegung.istFSNeu = fach.istFremdSpracheNeuEinsetzend;
+		for (const hj of GostHalbjahr.values()) {
+			const w = wahl.halbjahre[hj.id];
+			if (w === null)
+				continue;
+			const hjBelegung = new AbiturFachbelegungHalbjahr();
+			hjBelegung.halbjahrKuerzel = hj.kuerzel;
+			if (w === "M") {
+				if (fach.kuerzel === "PX")
+					hjBelegung.kursartKuerzel = GostKursart.PJK.kuerzel;
+				else if (fach.kuerzel === "VX")
+					hjBelegung.kursartKuerzel = GostKursart.VTF.kuerzel;
+				else
+					hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
+				hjBelegung.schriftlich = false;
+			} else if (w === "ZK") {
+				hjBelegung.kursartKuerzel = GostKursart.ZK.kuerzel;
+				hjBelegung.schriftlich = false;
+			} else if (w === "S") {
+				hjBelegung.kursartKuerzel = GostKursart.GK.kuerzel;
+				hjBelegung.schriftlich = true;
+			} else if (w === "LK") {
+				hjBelegung.kursartKuerzel = GostKursart.LK.kuerzel;
+				hjBelegung.schriftlich = true;
+			}
+			hjBelegung.biliSprache = fach.biliSprache;
+			belegung.belegungen[hj.id] = hjBelegung;
+			belegung.letzteKursart = hjBelegung.kursartKuerzel;
+		}
+		abidaten.fachbelegungen.add(belegung);
+	}
+
+	protected fachbelegungEntfernen(fachID: number, wahl: GostSchuelerFachwahl): void {
+		const abidaten = this._state.value.abiturdaten;
+		if (abidaten === undefined)
+			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		for (let i = 0; i < abidaten.fachbelegungen.size(); i++)
+			if (abidaten.fachbelegungen.get(i).fachID === fachID)
+				abidaten.fachbelegungen.removeElementAt(i);
+	}
+
 	setWahl = async (fachID: number, wahl: GostSchuelerFachwahl) => {
-		// TODO Anpassen der abiturdaten
+		const abidaten = this._state.value.abiturdaten;
+		if (abidaten === undefined)
+			throw new DeveloperNotificationException("Die Laufbahnplanungsdaten stehen unerwartet nicht zur Verfügung.");
+		const leereWahl = (wahl.halbjahre[0] === null) && (wahl.halbjahre[1] === null) && (wahl.halbjahre[2] === null) &&
+			(wahl.halbjahre[3] === null) && (wahl.halbjahre[4] === null) && (wahl.halbjahre[5] === null);
+		const belegung = this.abiturdatenManager.getFachbelegungByID(fachID);
+		if (belegung === null) {
+			this.fachbelegungErstellen(fachID, wahl);
+		} else if (leereWahl) {
+			this.fachbelegungEntfernen(fachID, wahl);
+		} else {
+			this.fachbelegungEntfernen(fachID, wahl);
+			this.fachbelegungErstellen(fachID, wahl);
+		}
 		await this.setGostBelegpruefungErgebnis();
 	}
 
