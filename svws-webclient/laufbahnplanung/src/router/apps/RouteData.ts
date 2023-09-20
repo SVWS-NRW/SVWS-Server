@@ -336,7 +336,9 @@ export class RouteData {
 	}
 
 	saveLaufbahnplanung = async (): Promise<void> => {
-		const zwischenspeicher = this._state.value.abiturdaten;
+		if (this._state.value.abiturdaten === undefined)
+			return;
+		const zwischenspeicher = Abiturdaten.transpilerFromJSON(Abiturdaten.transpilerToJSON(this._state.value.abiturdaten));
 		this.setPatchedState({ zwischenspeicher });
 	}
 
