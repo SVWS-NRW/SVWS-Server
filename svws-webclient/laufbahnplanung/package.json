@@ -11,14 +11,15 @@
 		"./dist/**/*"
 	],
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"serve": "vite preview",
-		"test": "vitest",
-		"test:run": "vitest run --coverage",
+		"build": "npm run build-app && npm run build-dts",
+		"build-app": "vite build", 
+		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
+		"lint-tsc": "vue-tsc --noEmit",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
-		"lint-tsc": "vue-tsc --noEmit",
+		"story:dev": "histoire dev",
+		"story:build": "histoire build",
+		"story:preview": "histoire preview",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"dependencies": {

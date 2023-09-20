@@ -8,17 +8,11 @@
 			"@comp": ["../components/src/index.ts"],
 			"@ui": ["../ui/src/index.ts"],
 			"@core": ["../core/src/index.ts"]
-		}
+		},
 	},
 	"include": [
-		"*.ts",
-		"tailwind.config.cjs",
-		"postcss.config.cjs",
 		"src/**/*",
-		"src/**/*.vue",
 		"components.d.ts",
-		"../ui/src/",
-		"../components/src/"
 	],
-	"exclude": ["**/*.story.vue", "**/histoire.setup.ts"]
+	"exclude": ["**/*.story.vue", "src/histoire.setup.ts"]
 }

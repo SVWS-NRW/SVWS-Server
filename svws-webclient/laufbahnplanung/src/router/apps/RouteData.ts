@@ -11,7 +11,6 @@ import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpr
 	AbiturFachbelegungHalbjahr,
 	DeveloperNotificationException,
 	GostKursart} from "@core";
-import { Readable, Writable } from "stream";
 
 
 interface RouteState {
