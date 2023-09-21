@@ -1,61 +1,84 @@
 <template>
-	<svws-ui-sub-nav>
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
-	</svws-ui-sub-nav>
-
-	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<svws-ui-content-card class="w-full">
-			<div class="flex gap-4 mt-4 h-screen w-full">
-				<div class="flex flex-col h-full w-1/4">
-					<div class="text-headline-md">Zu verplanen:</div>
-					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
-						@drop="onDrop(undefined)"
-						@dragover="checkDropZoneTerminAuswahl"
-						class="h-full">
-						<ul class="flex flex-col gap-y-1">
-							<li v-for="termin in termineOhne"
-								:key="termin.id"
-								:data="termin"
-								:draggable="isDraggable(termin)"
-								@dragstart="onDrag(termin)"
-								@dragend="onDrag(undefined)"
-								@click="onDrag(termin);$event.stopPropagation()">
-								<s-gost-klausurplanung-termin :termin="termin"
-									:kursklausurmanager="kursklausurmanager"
-									:map-lehrer="mapLehrer"
-									:kursmanager="kursmanager"
-									class="rounded bg-dark-20 p-2"
-									:class="{'bg-green-100': dragData !== undefined && dragData.id === termin.id}">
-									<template #main v-if="dragData?.id !== termin.id"><template /></template>
-									<template #title v-else><template /></template>
-									<template #title-rechts><template /></template>
-								</s-gost-klausurplanung-termin>
-							</li>
-						</ul>
+	</Teleport>
+	<div class="page--content page--content--full relative">
+		<svws-ui-content-card>
+			<template #title>
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+			</template>
+			<div class="flex flex-col">
+				<div v-if="jahrgangsdaten?.abiturjahr !== -1"
+					@drop="onDrop(undefined)"
+					@dragover="checkDropZoneTerminAuswahl"
+					class="h-full">
+					<div class="mb-2">
+						<div class="text-headline-md">Planung</div>
+						<!--Klicke auf einen Termin, um Details zu den Klausuren anzuzeigen. Die aktive Auswahl zeigt eine Übersicht aller Stunden, in denen das jeweilige Fach unterrichtet wird.-->
+						<div class="leading-tight flex flex-col gap-0.5 mt-5" v-if="termineOhne.length === 0">
+							<span>Aktuell keine Klausuren zu planen.</span>
+							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
+						</div>
 					</div>
-				</div>
-				<div class="w-full">
-					<div class="flex flex-row gap-2 mb-2">
-						<svws-ui-button @click="navKalenderwoche(-1)"><i-ri-arrow-left-double-fill /></svws-ui-button>
-						<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-							:class="{'print:hidden': !kwAuswahl}"
-							removable
-							:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
-						<svws-ui-button @click="navKalenderwoche(+1)"><i-ri-arrow-right-double-fill /></svws-ui-button>
-					</div>
-
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
-						:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-						:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" />
+					<ul class="flex flex-col gap-0.5 -mx-3 mt-2">
+						<li v-for="termin in termineOhne"
+							:key="termin.id"
+							:data="termin"
+							:draggable="isDraggable(termin)"
+							@dragstart="onDrag(termin)"
+							@dragend="onDrag(undefined)"
+							@click="onDrag(termin);$event.stopPropagation()"
+							:class="{
+								'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': dragData !== undefined && dragData.id === termin.id,
+								'cursor-pointer': dragData !== undefined && dragData.id !== termin.id || dragData === undefined,
+							}">
+							<s-gost-klausurplanung-termin :termin="termin"
+								:kursklausurmanager="kursklausurmanager"
+								:map-lehrer="mapLehrer"
+								:kursmanager="kursmanager"
+								:compact="dragData?.id !== termin.id"
+								:quartalsauswahl="quartalsauswahl"
+								drag-icon>
+								<template #datum><span /></template>
+							</s-gost-klausurplanung-termin>
+						</li>
+					</ul>
 				</div>
 			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card>
+			<template v-if="kwAuswahl">
+				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
+					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
+					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer">
+					<template #kwAuswahl>
+						<div class="col-span-2 flex gap-0.5 my-auto">
+							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
+							<div class="relative svws-kw-auswahl flex-grow bg-svws/5 text-svws rounded-md h-7 -my-1">
+								<div class="absolute top-0 left-0 w-[20rem] cursor-pointer">
+									<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+										headless
+										:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+								</div>
+								<span class="w-full h-full inline-flex items-center justify-center pointer-events-none z-50 relative">
+									<span class="inline-flex items-center gap-0.5"><i-ri-expand-up-down-line class="text-button opacity-50 -ml-2" />KW {{ kwAuswahl?.kw || '–' }}</span>
+								</span>
+							</div>
+							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><i-ri-arrow-right-s-line class="-m-0.5" /></svws-ui-button>
+						</div>
+					</template>
+				</s-gost-klausurplanung-kalender-stundenplan-ansicht>
+			</template>
+			<template v-else>
+				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
+			</template>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
+	import { computed, ref, onMounted } from "vue";
 	import { GostKlausurtermin, StundenplanZeitraster} from "@core";
 	import { ArrayList} from "@core";
 	import type { Wochentag , GostKursklausur, StundenplanKalenderwochenzuordnung, List} from "@core";
@@ -128,4 +151,30 @@
 
 	const termineOhne = computed(() => (props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
 
+	// const termineMit = computed(() => {
+	// 	const terms = props.kursklausurmanager().terminGetMengeAsList();
+	// 	return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
+	// 		...obj,
+	// 		startDate: obj.datum !== null ? new Date(obj.datum) : null,
+	// 	}));
+	// });
+
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
+
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply grid;
+  grid-template-columns: minmax(20rem, 0.25fr) 1fr;
+}
+
+.svws-kw-auswahl {
+  .wrapper--headless {
+    @apply opacity-0 -ml-4 mt-1;
+  }
+}
+</style>

@@ -1,18 +1,21 @@
 <template>
-	<div class="svws-ui-stundenplan">
+	<div class="svws-ui-stundenplan svws-hat-zeitachse svws-zeitraster-5">
 		<!-- Die Überschriften des Stundenplan -->
 		<div class="svws-ui-stundenplan--head">
-			<div class="inline-flex gap-1 items-center pl-2" :class="{'opacity-50 font-normal print:invisible': wochentyp() === 0, 'font-bold text-headline-md inline-flex items-center gap-1 pb-0.5': wochentyp() !== 0}" />
+			<slot name="kwAuswahl">
+				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
+					KW {{ kwAuswahl?.kw || '–' }}
+				</div>
+			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center inline-flex items-center w-full justify-center">
-				<div> {{ wochentage[wochentag.id] }} <br> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }} </div>
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center my-auto w-full">
+				{{ wochentage[wochentag.id].slice(0, 2) }} {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
 		<div class="svws-ui-stundenplan--body" :style="{'--zeitrasterRows': zeitrasterRows}">
 			<!-- Die Zeitachse des Stundenplans auf der linken Seite -->
-			<div class="svws-ui-stundenplan--zeitraster svws-einheiten">
-				<i-ri-time-line class="svws-time-icon" />
+			<div class="svws-ui-stundenplan--zeitraster svws-zeitachse">
 				<template v-for="n in zeitrasterRows" :key="n">
 					<span v-if="n % 3 === 2" class="svws-ui-stundenplan--einheit" :class="{'svws-extended': n % 4 === 2, 'svws-small': n % 4 === 1 || n % 4 === 3}" :style="`grid-row: ${ n-1 } / ${n+2}; grid-column: 1`">
 						<template v-if="n % 4 === 2">
@@ -44,23 +47,29 @@
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster">
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
-					<div class="svws-ui-stundenplan--stunde" :style="posZeitraster(wochentag, stunde)"
+					<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-						<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0">{{ sumSchreiber(wochentag, stunde) }}</span>
-						<span v-for="kurs in kurseGefiltert(wochentag, stunde)" :key="kurs">{{ kursInfos(kurs) }}&nbsp;</span>
-						<div v-if="!kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).isEmpty()"
-							:data="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/75 z-20">
+							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
+								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
+								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><i-ri-group-line class="text-sm" />{{ sumSchreiber(wochentag, stunde) }}</span>
+							</div>
+						</div>
+						<div v-for="(termin, index) in kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager())"
+							:data="termin"
+							:key="index"
 							:draggable="true"
-							@dragstart="onDrag(kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0))"
-							@dragend="onDrag(undefined)">
-							<s-gost-klausurplanung-termin :termin="kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager()).get(0)"
+							@dragstart="onDrag(termin)"
+							@dragend="onDrag(undefined)"
+							class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-0.5 justify-center items-center text-center bg-svws/5 text-svws">
+							<s-gost-klausurplanung-termin :termin="termin"
 								:kursklausurmanager="kursklausurmanager"
 								:faecher-manager="faecherManager"
 								:map-lehrer="mapLehrer"
 								:kursmanager="kursmanager"
-								:class="{'opacity-40': dragData !== undefined}">
-								<template #main><template /></template>
-								<template #title-rechts><template /></template>
+								:class="{'': dragData()}"
+								compact>
+								<template #compactMaximaleDauer><span /></template>
 							</s-gost-klausurplanung-termin>
 						</div>
 					</div>
@@ -84,7 +93,7 @@
 <script setup lang="ts">
 
 	import type { Wochentag} from "@core";
-	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils } from "@core";
+	import {type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 
@@ -245,126 +254,3 @@
 	}
 
 </script>
-
-<style lang="postcss">
-
-	.svws-ui-stundenplan {
-		@apply flex flex-col h-full min-w-max flex-grow;
-		--zeitrasterRows: 0;
-	}
-
-	.svws-ui-stundenplan--head,
-	.svws-ui-stundenplan--body {
-		@apply grid grid-flow-col;
-		grid-template-columns: 8rem repeat(auto-fit, minmax(8rem, 1fr));
-	}
-
-	.svws-ui-stundenplan--head {
-		@apply bg-white dark:bg-black py-1 text-button;
-		@apply h-[2.75rem] sticky -top-px z-10;
-		@apply border border-black/25 dark:border-white/10;
-	}
-
-	.svws-ui-stundenplan--body {
-		@apply flex-grow border-x border-black/25 dark:border-white/10 bg-white dark:bg-black -mt-px print:mt-0 relative;
-	}
-
-	.svws-ui-stundenplan--zeitraster {
-		@apply grid grid-cols-1;
-		grid-template-rows: repeat(var(--zeitrasterRows), minmax(0.6rem, 1fr));
-
-		&.svws-einheiten {
-			@apply print:hidden absolute h-full w-4 -ml-4 border-b border-r border-transparent;
-
-			.svws-time-icon {
-				@apply absolute -top-7 right-0 w-3.5 h-3.5 opacity-50;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--stunde,
-	.svws-ui-stundenplan--pause {
-		@apply bg-white dark:bg-black tabular-nums w-full h-full p-1 leading-tight flex flex-col overflow-y-auto;
-		@apply border border-l-0 border-black/25 dark:border-white/10;
-
-		.svws-ui-stundenplan--zeitraster:last-child & {
-			@apply border-r-0;
-		}
-
-		.svws-multiple {
-			@apply grid gap-1 h-full grid-flow-col;
-			grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-		}
-	}
-
-	.svws-ui-stundenplan--pause {
-		@apply bg-light dark:bg-white/5 text-black/50 dark:text-white/50;
-	}
-
-	.svws-ui-stundenplan--unterricht,
-	.svws-ui-stundenplan--pausen-aufsicht {
-		@apply rounded grid grid-cols-3 gap-x-1 flex-grow w-full border border-black/10 px-2 py-1 content-center leading-none dark:text-black;
-
-		&.svws-compact {
-			@apply grid-cols-2;
-		}
-
-		+ .svws-ui-stundenplan--unterricht,
-		+ .svws-ui-stundenplan--pausen-aufsicht {
-			@apply rounded-t-none;
-
-			.svws-multiple & {
-				@apply rounded-t;
-			}
-		}
-
-		&:not(:last-child) {
-			@apply rounded-b-none;
-
-			.svws-multiple & {
-				@apply rounded-b;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--unterricht--warning {
-		@apply flex flex-col gap-2 items-center justify-center text-center bg-error text-white rounded p-2 flex-grow print:hidden;
-
-		~ .svws-ui-stundenplan--unterricht {
-			@apply flex-grow-0 min-h-[2rem] hidden print:grid;
-
-			&.svws-compact {
-				@apply min-h-[5rem];
-			}
-		}
-
-		&.svws-show {
-			@apply hidden;
-
-			~ .svws-ui-stundenplan--unterricht {
-				@apply grid;
-			}
-		}
-	}
-
-	.svws-ui-stundenplan--pausen-aufsicht {
-		&.svws-lehrkraft {
-			@apply bg-black/75 dark:bg-white/75 text-white dark:text-black;
-		}
-	}
-
-	.svws-ui-stundenplan--einheit {
-		@apply border-t border-black/50 dark:border-white/50 h-full w-1/2 pt-0.5 py-0.5 opacity-50 ml-auto;
-		font-size: 0.66rem;
-		writing-mode: vertical-lr;
-
-		&.svws-small {
-			@apply w-1/2 opacity-50;
-		}
-
-		&.svws-extended {
-			@apply w-full;
-		}
-	}
-
-</style>
