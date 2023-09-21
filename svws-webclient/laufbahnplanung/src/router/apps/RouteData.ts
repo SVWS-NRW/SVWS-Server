@@ -10,10 +10,12 @@ import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpr
 	LehrerListeEintrag,
 	AbiturFachbelegungHalbjahr,
 	DeveloperNotificationException,
-	GostKursart} from "@core";
+	GostKursart,
+	SchuleStammdaten} from "@core";
 
 
 interface RouteState {
+	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
@@ -33,6 +35,7 @@ interface RouteState {
 export class RouteData {
 
 	private static _defaultState : RouteState = {
+		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
@@ -92,6 +95,12 @@ export class RouteData {
 	}
 
 	public async ladeDaten(daten: GostLaufbahnplanungDaten) {
+		// Lade die Informationen zur Schule
+		const schuleStammdaten = new SchuleStammdaten();
+		schuleStammdaten.schulNr = daten.schulNr;
+		schuleStammdaten.bezeichnung1 = daten.schulBezeichnung1;
+		schuleStammdaten.bezeichnung2 = daten.schulBezeichnung2;
+		schuleStammdaten.bezeichnung3 = daten.schulBezeichnung3;
 		// Lade die Fachkombinationen
 		const mapFachkombinationen = new Map();
 		for (const fk of daten.fachkombinationen)
@@ -142,6 +151,9 @@ export class RouteData {
 		const abiturdaten = new Abiturdaten();
 		abiturdaten.abiturjahr = daten.abiturjahr;
 		abiturdaten.sprachendaten = planungsdaten.sprachendaten;
+		abiturdaten.bilingualeSprache = planungsdaten.bilingualeSprache;
+		for (const hj of GostHalbjahr.values())
+			abiturdaten.bewertetesHalbjahr[hj.id] = planungsdaten.bewertetesHalbjahr[hj.id];
 		for (let i = 0; i < planungsdaten.fachbelegungen.size() ; i++) {
 			const belegung = new AbiturFachbelegung();
 			const fb = planungsdaten.fachbelegungen.get(i);
@@ -168,12 +180,13 @@ export class RouteData {
 		// Erstelle den Abiturdaten-Manager
 		const abiturdatenManager = this.createAbiturdatenmanager(faecherManager, abiturdaten);
 		this.setPatchedDefaultState({
+			schuleStammdaten,
+			auswahl: schueler,
 			mapFachkombinationen,
 			gostJahrgang,
 			gostJahrgangsdaten,
 			mapLehrer,
 			faecherManager,
-			auswahl: schueler,
 			abiturdaten,
 			abiturdatenManager: abiturdatenManager,
 		})
@@ -181,6 +194,7 @@ export class RouteData {
 
 	public async schreibeDaten() : Promise<GostLaufbahnplanungDaten> {
 		const daten = new GostLaufbahnplanungDaten();
+		daten.anmerkungen = "Letzte Änderung am " +  (new Date()).toLocaleDateString("de-DE", { dateStyle: "short", year: "numeric", month: "2-digit", day: "2-digit" });
 		// TODO
 		return daten;
 	}
