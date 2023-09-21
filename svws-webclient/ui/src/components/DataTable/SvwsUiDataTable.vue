@@ -545,7 +545,8 @@
 		@apply border-0;
 	}
 
-	.app--sidebar-container & {
+	.app--sidebar-container &,
+	.svws-ui-termin & {
 		@apply border-x-0;
 	}
 

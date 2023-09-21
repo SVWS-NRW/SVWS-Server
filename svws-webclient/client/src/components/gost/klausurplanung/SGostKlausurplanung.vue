@@ -13,3 +13,17 @@
 	const ansicht = ref("klausurvorlagen");
 
 </script>
+
+<style lang="postcss">
+.router--tab--gost\.klausurplanung {
+  > .router-tab-bar--wrapper {
+    &:after {
+      @apply border-dashed;
+    }
+
+    .router-tab-bar-button--active:after {
+      @apply border-transparent;
+    }
+  }
+}
+</style>

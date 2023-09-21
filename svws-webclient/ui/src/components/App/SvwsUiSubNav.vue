@@ -1,8 +1,17 @@
 <template>
-	<div class="router-tab-bar--subnav">
+	<div class="router-tab-bar--subnav" :class="{'router-tab-bar--subnav--tabs': type === 'tabs'}">
 		<slot />
 	</div>
 </template>
+
+<script setup lang="ts">
+	const props = withDefaults(defineProps<{
+		type?: 'default' | 'tabs';
+	}>(), {
+		type: 'default',
+	});
+
+</script>
 
 <style lang="postcss">
 .router-tab-bar--subnav {
@@ -15,5 +24,9 @@
 	> * {
 		@apply flex-shrink-0;
 	}
+
+  &--tabs {
+    @apply bg-transparent dark:bg-transparent h-11 pt-1;
+  }
 }
 </style>

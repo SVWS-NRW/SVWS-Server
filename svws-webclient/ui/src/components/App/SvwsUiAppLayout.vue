@@ -190,7 +190,7 @@
 		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
 		min-width: 24rem;
-		max-width: 32rem;
+		max-width: 30rem;
 
 		.app--sidebar-container {
 			@apply rounded-2xl h-full;

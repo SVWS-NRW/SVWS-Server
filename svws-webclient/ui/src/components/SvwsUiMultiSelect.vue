@@ -587,6 +587,10 @@
 		}
 	}
 
+  .wrapper--headless & {
+      @apply hidden;
+  }
+
 	.multiselect-input-component--disabled & {
 		@apply pointer-events-none;
 		@apply opacity-10 !important;
@@ -618,7 +622,7 @@
 }
 
 .multiselect--items-list {
-	@apply overflow-y-auto overflow-x-hidden;
+	@apply overflow-y-auto overflow-x-hidden tabular-nums;
 	@apply px-1.5 py-0.5;
 	max-height: 40ex;
 

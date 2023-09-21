@@ -51,6 +51,10 @@
   @apply whitespace-nowrap;
   @apply relative;
 
+  .router-tab-bar--subnav & {
+    @apply py-1.5 px-2.5;
+  }
+
   .svws-ui-spinner {
     @apply w-4 h-4 absolute top-1.5 right-0.5;
   }
@@ -68,9 +72,14 @@
   }
 
   &:focus,
-  &--active {
+  &--active,
+  &--active:hover {
     @apply outline-none;
     @apply text-svws bg-svws/5 dark:bg-svws/10;
+
+    .router-tab-bar--subnav & {
+      @apply text-svws bg-svws/5 dark:bg-svws/10;
+    }
 
     .page--statistik & {
       @apply text-violet-500 bg-violet-500/5 dark:bg-violet-500/10;
@@ -80,6 +89,10 @@
 
 .router-tab-bar-button--active {
   @apply relative;
+
+  &:hover {
+    @apply bg-svws/5 dark:bg-svws/10;
+  }
 
   .svws-api--pending & {
     span {
@@ -92,6 +105,10 @@
     @apply -bottom-2 inset-x-0;
     @apply border-b-2 border-svws z-10;
     content: '';
+
+    .router-tab-bar--subnav & {
+      @apply border-svws;
+    }
 
     .page--statistik & {
       @apply border-violet-500;

@@ -163,16 +163,34 @@
 }
 
 .radio--label--disabled {
-	&,
-	&:hover,
-	&:focus {
-		@apply opacity-20;
-		@apply cursor-not-allowed pointer-events-none;
+  @apply cursor-not-allowed pointer-events-none;
 
-		.radio--label--text {
-			@apply bg-black bg-opacity-25 text-black;
-			@apply bg-black bg-opacity-25 text-black;
-		}
-	}
+  .radio--label--text,
+  &:hover .radio--label--text,
+  &:focus .radio--label--text,
+  &:focus-visible .radio--label--text {
+    @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
+    @apply opacity-25;
+  }
+
+  .radio--indicator:checked ~ .radio--indicator-icon,
+  &.radio--label--checked .radio--indicator-icon {
+    @apply opacity-25 text-black dark:text-white;
+
+    .radio--statistics &,
+    .page--statistik & {
+      @apply opacity-25 text-black dark:text-white;
+    }
+  }
+
+  .radio--indicator:checked ~ .radio--label--text,
+  &.radio--label--checked .radio--label--text {
+    @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
+
+    .radio--statistics &,
+    .page--statistik & {
+      @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
+    }
+  }
 }
 </style>
