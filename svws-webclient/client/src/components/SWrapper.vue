@@ -15,6 +15,9 @@
 					<template v-if="error instanceof UserNotificationException">
 						<br>Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.
 					</template>
+					<template v-if="(error instanceof OpenApiError)">
+						<br>API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.
+					</template>
 				</template>
 				{{ error.message }}
 				<template #stack v-if="error.stack">
@@ -26,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-	import { DeveloperNotificationException, UserNotificationException } from '@core';
+	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { onErrorCaptured, ref } from 'vue';
 	import { api } from '~/router/Api';
 
@@ -38,8 +41,12 @@
 	});
 
 	onErrorCaptured((e) => {
-		console.warn(e)
-		errors.value.push(e);
+		if (e.name === 'resetAllErrors')
+			errors.value = [];
+		else {
+			console.warn(e)
+			errors.value.push(e);
+		}
 		api.status.stop();
 		return false;
 	});

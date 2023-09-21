@@ -141,6 +141,9 @@
 		if (value) {
 			authentication_success.value = true;
 			document.documentElement.style.backgroundImage = "none";
+			const error = new Error();
+			error.name = 'resetAllErrors';
+			throw error;
 		}
 	});
 
