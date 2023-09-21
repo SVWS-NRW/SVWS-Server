@@ -148,7 +148,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws WebApplicationException   falls das Ergebnis nicht in der Datenbank existiert.
 	 */
-	GostBlockungsergebnis getErgebnis(@NotNull final DTOGostBlockungZwischenergebnis ergebnis,
+	public GostBlockungsergebnis getErgebnis(@NotNull final DTOGostBlockungZwischenergebnis ergebnis,
 	        @NotNull final GostBlockungsdatenManager datenManager) throws WebApplicationException {
         final GostBlockungsergebnisManager manager = new GostBlockungsergebnisManager(datenManager, ergebnis.ID);
         // Bestimme alle Kurs-Schienen-Zuordnungen

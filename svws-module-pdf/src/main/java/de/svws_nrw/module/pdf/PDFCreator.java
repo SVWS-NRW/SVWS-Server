@@ -30,20 +30,35 @@ public class PDFCreator {
 	/** Die Daten zum Ersetzen von Platzhaltern im Body */
 	protected HashMap<String, String> bodyData = new HashMap<>();
 
-	/** Default CSS-Definition für die Gestaltung der Seiten */
-	protected String pageCSS = 	"""
-								@Page {
-								    size: A4;
-								    margin-top: 10mm;
-								    margin-bottom: 20mm;
-								    margin-left: 20mm;
-								    margin-right: 10mm;
-								    @bottom-left { content: element(footer); }
-								}
-								.footer {
-								    position: running(footer);
-								}
-								""";
+	/** Default CSS-Definition für die Gestaltung der Seiten im A4 Hochformat */
+	protected String pageCSSA4Hoch = """
+                                     @Page {
+                                         size: A4;
+                                         margin-top: 10mm;
+                                         margin-bottom: 20mm;
+                                         margin-left: 15mm;
+                                         margin-right: 10mm;
+                                         @bottom-left { content: element(footer); }
+                                     }
+                                     .footer {
+                                         position: running(footer);
+                                     }
+                                     """;
+
+	/** Default CSS-Definition für die Gestaltung der Seiten im A4 Querformat */
+	protected String pageCSSA4Quer = """
+                                     @Page {
+                                         size: A4 landscape;
+                                         margin-top: 15mm;
+                                         margin-bottom: 20mm;
+                                         margin-left: 10mm;
+                                         margin-right: 10mm;
+                                         @bottom-left { content: element(footer); }
+                                     }
+                                     .footer {
+                                         position: running(footer);
+                                     }
+                                     """;
 
 	/** Default CSS-Definition für die Gestaltung des Body */
 	protected String bodyCSS = "body { font-family: 'liberation'; font-weight: normal; font-size: 11px; }";
@@ -68,6 +83,9 @@ public class PDFCreator {
 
 	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolger haben. */
 	private PDFCreator next = null;
+
+	/** Definiert, ob eine Seite im Querformat gedruckt werden soll. Standard ist das Hochformat */
+	public boolean querformat = false;
 
 
 	/**
@@ -132,11 +150,12 @@ public class PDFCreator {
 	 * @throws IOException wenn das HTML-Dokument nicht erzeugt werden kann
 	 */
 	private String getHtml() throws IOException {
+
 		return  "<html lang=\"de\">"
 				+ "<head>"
 				+ "<title>" + title + "</title>"
 				+ "<style>"
-				+ pageCSS
+				+ (querformat ? pageCSSA4Quer : pageCSSA4Hoch)
 				+ bodyCSS
 				+ h1CSS
 				+ h2CSS

@@ -132,7 +132,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 *
 	 * @return der Blockungsdaten-Manager
 	 */
-	GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
+	public GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)

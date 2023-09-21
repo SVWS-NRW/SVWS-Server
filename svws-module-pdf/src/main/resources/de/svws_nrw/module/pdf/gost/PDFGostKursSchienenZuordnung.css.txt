@@ -1,0 +1,17 @@
+
+table.schienen tbody th {
+	border: 0.5px solid gray;
+}
+
+table.schienen tbody td {
+	border: 0.5px solid gray;
+}
+
+p {
+	margin: 0em;
+    padding: 0em;
+}
+
+ul {
+   padding-left: 1em;
+}

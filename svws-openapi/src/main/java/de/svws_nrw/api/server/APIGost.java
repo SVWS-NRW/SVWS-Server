@@ -3,6 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
+import de.svws_nrw.module.pdf.gost.PDFGostKursSchienenZuordnung;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.api.OpenAPIApplication;
@@ -2016,7 +2017,37 @@ public class APIGost {
     }
 
 
-    /**
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Kurs-Schienen-Zuordnung eines Blockungsergebnisse als PDF-Datei.
+	 *
+	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param blockungsergebnisid 	die ID des Blockungsergebnisses, dessen Kurs-Schienen-Raster ausgegeben werden soll
+	 * @param request     			die Informationen zur HTTP-Anfrage
+	 *
+	 * @return der PDF-Wahlbogen des Schülers
+	 */
+	@GET
+	@Produces("application/pdf")
+	@Path("/blockungen/pdf/{blockungsergebnisid : \\d+}")
+	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung.",
+		description = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. "
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung "
+			+ "besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
+		content = @Content(mediaType = "application/pdf",
+			schema = @Schema(type = "string", format = "binary", description = "Kurs-Schienen-Zuordnung")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
+	public Response getGostBlockungPDFKursSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid, @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PDFGostKursSchienenZuordnung.query(conn, blockungsergebnisid);
+		}
+	}
+
+
+	/**
      * Die OpenAPI-Methode für das Aktivieren bzw. Persistieren eines Blockungsergebnisses
      * der Gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
      *
