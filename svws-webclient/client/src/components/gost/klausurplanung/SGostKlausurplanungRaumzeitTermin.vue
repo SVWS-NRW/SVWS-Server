@@ -1,42 +1,39 @@
 <template>
-	<svws-ui-content-card title="Daten zur Klausur">
-		<table class="border">
-			<tr>
-				<th>Datum</th>
-				<td>{{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</td>
-			</tr>
-			<tr>
-				<th>Startzeit</th>
-				<td>{{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</td>
-			</tr>
-
-			<tr>
-				<th>Anzahl Klausurschreiber:innen</th>
-				<td>{{ kursklausurmanager().schueleridsGetMengeByTerminid(termin.id)?.size() }}</td>
-			</tr>
-		</table>
-	</svws-ui-content-card>
-
-	<svws-ui-content-card class="f-full" title="Klausurräume">
-		<template #actions>
-			<svws-ui-button size="small" type="secondary" @click="createKlausurraum({idTermin: termin.id}, raummanager())">Erstelle Klausurraum <i-ri-add-circle-line class="-mr-1" /></svws-ui-button>
+	<svws-ui-content-card>
+		<template #title>
+			<div class="flex flex-col leading-tight text-headline-md">
+				<span>Klausuren am {{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</span>
+				<span class="opacity-50">Startzeit: {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</span>
+				<!--<span>{{ kursklausurmanager().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
+			</div>
 		</template>
-		<div class="flex flex-col flex-wrap gap-4 w-full">
-			<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager()?.raumGetMengeAsList()"
-				:key="raum.id"
-				:stundenplanmanager="stundenplanmanager"
-				:raum="raum"
-				:raummanager="raummanager"
-				:patch-klausurraum="patchKlausurraum"
-				:loesche-klausurraum="loescheKlausurraum"
-				:patch-klausur="patchKlausur"
-				:faecher-manager="faecherManager"
-				:kursklausurmanager="kursklausurmanager"
-				:kursmanager="kursmanager"
-				:map-lehrer="mapLehrer"
-				:drag-data="dragData"
-				:on-drag="onDrag"
-				:on-drop="onDrop" />
+		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
+			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><i-ri-add-line class="-ml-1" /> Klausurraum</svws-ui-button>
+		</div>
+		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
+			<template v-if="raummanager()?.raumGetMengeAsList().size()">
+				<s-gost-klausurplanung-raumzeit-raum v-for="raum in raummanager()?.raumGetMengeAsList()"
+					:key="raum.id"
+					:stundenplanmanager="stundenplanmanager"
+					:raum="raum"
+					:termin-startzeit="DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!)"
+					:raummanager="raummanager"
+					:patch-klausurraum="patchKlausurraum"
+					:loesche-klausurraum="loescheKlausurraum"
+					:patch-klausur="patchKlausur"
+					:faecher-manager="faecherManager"
+					:kursklausurmanager="kursklausurmanager"
+					:kursmanager="kursmanager"
+					:map-lehrer="mapLehrer"
+					:drag-data="dragData"
+					:on-drag="onDrag"
+					:on-drop="onDrop" />
+			</template>
+			<template v-else>
+				<div class="h-48 border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
+					<span class="opacity-50">Noch kein Raum für diesen Termin angelegt.</span>
+				</div>
+			</template>
 		</div>
 	</svws-ui-content-card>
 </template>

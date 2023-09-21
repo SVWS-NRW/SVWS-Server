@@ -1,17 +1,29 @@
 <template>
-	<svws-ui-sub-nav>
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
-	</svws-ui-sub-nav>
+	</Teleport>
 
-	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<svws-ui-content-card title="Zu planende Termine" class="flex flex-col">
-			<ul class="flex flex-col gap-y-1">
+	<div class="page--content page--content--full relative">
+		<svws-ui-content-card>
+			<template #title>
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+			</template>
+			<div class="mb-2">
+				<div class="text-headline-md">Planung</div>
+				<div class="leading-tight flex flex-col gap-0.5 mt-5" v-if="termine().size() === 0">
+					<span>Aktuell keine Klausuren zu planen.</span>
+					<span class="opacity-50">Um Räume und Startzeiten festzulegen, müssen Klausuren einem Termin zugeordnet sein.</span>
+				</div>
+			</div>
+			<ul class="flex flex-col gap-0.5 -mx-3 mt-2">
 				<li v-for="termin in termine()"
 					:key="termin.id"
 					@click="chooseTermin(termin);$event.stopPropagation()"
 					:data="termin"
-					class="rounded bg-dark-20 p-2">
+					:class="{
+						'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': selectedTermin?.id === termin.id,
+						'cursor-pointer': selectedTermin?.id !== termin.id,
+					}">
 					<s-gost-klausurplanung-termin :termin="termin"
 						:kursklausurmanager="kursklausurmanager"
 						:map-lehrer="mapLehrer"
@@ -20,17 +32,18 @@
 						:draggable-klausur="isDraggable"
 						:on-drop-termin="onDrop"
 						:klausur-css-classes="calculatCssClassesKlausur"
-						class="rounded bg-dark-20 p-2"
-						:class="calculatCssClassesTermin(termin)">
+						:compact-with-date="selectedTermin?.id !== termin.id">
 						<template #main v-if="selectedTermin?.id !== termin.id"><template /></template>
-						<template #title v-else><template /></template>
 					</s-gost-klausurplanung-termin>
 				</li>
 			</ul>
 		</svws-ui-content-card>
-
-		<div v-if="selectedTermin === null">Bitte Termin durch Klick auswählen!</div>
-		<div class="h-full" v-else>
+		<div v-if="selectedTermin === null">
+			<div class="h-full border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
+				<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
+			</div>
+		</div>
+		<template v-else>
 			<s-gost-klausurplanung-raumzeit-termin :termin="selectedTermin"
 				:kursklausurmanager="kursklausurmanager"
 				:faecher-manager="faecherManager"
@@ -45,7 +58,7 @@
 				:drag-data="() => dragData"
 				:on-drag="onDrag"
 				:on-drop="onDrop" />
-		</div>
+		</template>
 	</div>
 </template>
 
@@ -54,7 +67,7 @@
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import type { Ref} from 'vue';
-	import { ref } from 'vue';
+	import { ref, onMounted } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
@@ -73,15 +86,11 @@
 
 	const termine = () => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value, false);
 
-	const calculatCssClassesTermin = (termin: GostKlausurtermin) => ({
-		"bg-green-100": selectedTermin.value !== null && selectedTermin.value.id === termin.id,
-	});
-
 	const calculatCssClassesKlausur = (klausur: GostKursklausur) => {
 		return raummanager.value !== null
 			? {
-				"bg-green-500": raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
-				"bg-yellow-500": !raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
+				"text-black/50 dark:text-white/50": raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
+				"": !raummanager.value.isAlleSchuelerklausurenVerplant(klausur),
 			}
 			: {}
 	};
@@ -118,4 +127,17 @@
 			event.preventDefault();
 	}
 
+	const isMounted = ref(false);
+
+	onMounted(() => {
+		isMounted.value = true;
+	});
+
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+	@apply grid;
+	grid-template-columns: minmax(20rem, 0.25fr) 1fr;
+}
+</style>
