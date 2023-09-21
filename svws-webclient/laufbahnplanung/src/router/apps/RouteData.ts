@@ -11,7 +11,9 @@ import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpr
 	AbiturFachbelegungHalbjahr,
 	DeveloperNotificationException,
 	GostKursart,
-	SchuleStammdaten} from "@core";
+	SchuleStammdaten,
+	GostLaufbahnplanungDatenSchueler,
+	GostLaufbahnplanungDatenFachbelegung} from "@core";
 
 
 interface RouteState {
@@ -146,6 +148,7 @@ export class RouteData {
 		schueler.id = planungsdaten.id;
 		schueler.vorname = planungsdaten.vorname;
 		schueler.nachname = planungsdaten.nachname;
+		schueler.geschlecht = planungsdaten.geschlecht;
 		schueler.abiturjahrgang = gostJahrgang.abiturjahr;
 		// Erstelle das Abiturdaten-Objekt mit den Fachbelegungen
 		const abiturdaten = new Abiturdaten();
@@ -179,6 +182,9 @@ export class RouteData {
 		}
 		// Erstelle den Abiturdaten-Manager
 		const abiturdatenManager = this.createAbiturdatenmanager(faecherManager, abiturdaten);
+		if (abiturdatenManager === undefined)
+			throw new UserNotificationException("Belegprüfungsergebnis konnte nicht berechnet werden.");
+		const gostBelegpruefungErgebnis = abiturdatenManager.getBelegpruefungErgebnis();
 		this.setPatchedDefaultState({
 			schuleStammdaten,
 			auswahl: schueler,
@@ -189,13 +195,56 @@ export class RouteData {
 			faecherManager,
 			abiturdaten,
 			abiturdatenManager: abiturdatenManager,
+			gostBelegpruefungErgebnis,
 		})
 	}
 
 	public async schreibeDaten() : Promise<GostLaufbahnplanungDaten> {
+		if ((this._state.value.faecherManager === undefined) || (this._state.value.abiturdaten === undefined) || (this._state.value.auswahl === undefined))
+			throw new UserNotificationException("Es müssen Abiturdaten geladen sein.");
 		const daten = new GostLaufbahnplanungDaten();
-		daten.anmerkungen = "Letzte Änderung am " +  (new Date()).toLocaleDateString("de-DE", { dateStyle: "short", year: "numeric", month: "2-digit", day: "2-digit" });
-		// TODO
+		daten.schulNr = this._state.value.schuleStammdaten.schulNr;
+		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
+		daten.schulBezeichnung2 = (this._state.value.schuleStammdaten.bezeichnung2 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung2;
+		daten.schulBezeichnung3 = (this._state.value.schuleStammdaten.bezeichnung3 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung3;
+		daten.anmerkungen = "Letzte Änderung am " +  (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
+		daten.abiturjahr = this._state.value.abiturdaten.abiturjahr;
+		daten.jahrgang = this._state.value.gostJahrgang.jahrgang;
+		daten.hatZusatzkursGE = this._state.value.gostJahrgangsdaten.hatZusatzkursGE;
+		daten.beginnZusatzkursGE = this._state.value.gostJahrgangsdaten.beginnZusatzkursGE;
+		daten.hatZusatzkursSW = this._state.value.gostJahrgangsdaten.hatZusatzkursSW;
+		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
+		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
+		for (const fk of this._state.value.mapFachkombinationen)
+			daten.fachkombinationen.add(fk[1]);
+		for (const bl of this._state.value.gostJahrgangsdaten.beratungslehrer)
+			daten.beratungslehrer.add(bl);
+		daten.faecher.addAll(this._state.value.faecherManager.faecher());
+		daten.anmerkungen = (this._state.value.gostLaufbahnBeratungsdaten.kommentar === null) ? "" : this._state.value.gostLaufbahnBeratungsdaten.kommentar;
+		const s = new GostLaufbahnplanungDatenSchueler();
+		s.id = this._state.value.auswahl.id;
+		s.vorname = this._state.value.auswahl.vorname;
+		s.nachname = this._state.value.auswahl.nachname;
+		s.geschlecht = this._state.value.auswahl.geschlecht;
+		s.bilingualeSprache = this._state.value.abiturdaten.bilingualeSprache;
+		s.sprachendaten = this._state.value.abiturdaten.sprachendaten;
+		for (const hj of GostHalbjahr.values())
+			s.bewertetesHalbjahr[hj.id] = this._state.value.abiturdaten.bewertetesHalbjahr[hj.id];
+		for (let i = 0; i < this._state.value.abiturdaten.fachbelegungen.size() ; i++) {
+			const belegung = this._state.value.abiturdaten.fachbelegungen.get(i);
+			const fb = new GostLaufbahnplanungDatenFachbelegung();
+			fb.fachID = belegung.fachID;
+			fb.abiturFach = belegung.abiturFach;
+			for (const hj of GostHalbjahr.values()) {
+				const hjBelegung = belegung.belegungen[hj.id];
+				if (hjBelegung === null)
+					continue;
+				fb.kursart[hj.id] = hjBelegung.kursartKuerzel;
+				fb.schriftlich[hj.id] = hjBelegung.schriftlich;
+			}
+			s.fachbelegungen.add(fb);
+		}
+		daten.schueler.add(s);
 		return daten;
 	}
 
