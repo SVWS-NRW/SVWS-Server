@@ -1,23 +1,38 @@
 <template>
-	<div class="flex flex-col border border-blue-900 border-solid w-96 shrink-0" @drop="onDrop(termin())" @dragover="checkDropZone($event)">
-		<div class="flex flex-row">
-			<svws-ui-text-input :placeholder="termin().bezeichnung === null ? terminTitel() : 'Terminbezeichnung'" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" />
-			<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" class="float-right" type="danger" size="small" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line /></svws-ui-button>
-			<svws-ui-button class="float-right" size="small" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()"><span class="flex row" v-if="termin().quartal > 0"><i-ri-lock-line />{{ termin().quartal }}</span><i-ri-lock-unlock-line v-else /></svws-ui-button>
-			<svws-ui-badge class="-m-2 z-10 float-right"
-				v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)"
-				type="error"
-				size="big">
-				<span class="text-base">&nbsp;{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}&nbsp;</span>
-			</svws-ui-badge>
-		</div>
+	<div class="flex flex-col border bg-white dark:bg-black rounded-xl" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+		:class="{
+			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
+			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0 || konflikteTermin() > 0),
+			'border-dashed border-error/50 dark:border-error/50': (dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:kursklausurmanager="kursklausurmanager"
 			:map-lehrer="mapLehrer"
 			:kursmanager="kursmanager"
 			:on-drag-klausur="onDrag"
 			:klausur-css-classes="klausurCssClasses">
-			<template #title><template /></template>
+			<template #title>
+				<div class="flex gap-2 w-full mb-1">
+					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (props.kursklausurmanager().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
+					<span v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
+						<i-ri-alert-fill />
+						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>
+					</span>
+				</div>
+			</template>
+			<template #actions>
+				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
+					<template v-if="termin().quartal > 0">
+						<i-ri-lock-line class="opacity-25 text-sm group-hover:opacity-75" />{{ termin().quartal }}. Quartal
+					</template>
+					<template v-else>
+						<i-ri-lock-unlock-line class="opacity-25 text-sm group-hover:opacity-75" /> Alle
+					</template>
+				</svws-ui-button>
+			</template>
+			<template #loeschen>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
 </template>
@@ -42,8 +57,9 @@
 	}>();
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin().id);
-	const terminTitel = () => kurzBezeichnungen;
-	const kurzBezeichnungen = [...klausuren()].map(k => k.kursKurzbezeichnung).join(", ");
+	const terminTitel = () => kurzBezeichnungenShort;
+	const kurzBezeichnungen = [...klausuren()].map(k => k.kursKurzbezeichnung);
+	const kurzBezeichnungenShort = kurzBezeichnungen.length > 3 ? kurzBezeichnungen.slice(0, 3).join(', ') + '...' : kurzBezeichnungen.join(', ');
 
 	function isDropZone() : boolean {
 		if ((props.dragData() !== undefined) && (props.dragData() instanceof GostKursklausur))

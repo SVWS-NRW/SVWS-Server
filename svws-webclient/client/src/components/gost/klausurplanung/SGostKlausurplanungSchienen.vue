@@ -1,87 +1,111 @@
 <template>
-	<svws-ui-sub-nav>
-		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-		<svws-ui-button type="primary" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)">Erstelle Klausuren</svws-ui-button>
-		<svws-ui-button type="secondary" @click="erzeugeKlausurtermin(quartalsauswahl.value)" :disabled="quartalsauswahl.value <= 0">Neuer Termin</svws-ui-button>
-		<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="termine.size() > 0"><svws-ui-spinner :spinning="loading" /> Automatisch blocken</svws-ui-button>
-		<svws-ui-button type="danger" @click="loescheKlausurtermine(termine)" :disabled="termine.size() === 0">Alle Termine löschen</svws-ui-button>
+	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
-	</svws-ui-sub-nav>
+	</Teleport>
+	<svws-ui-modal ref="modal" size="small">
+		<template #modalTitle>
+			Automatisch blocken
+		</template>
+		<template #modalContent>
+			<svws-ui-radio-group :row="true">
+				<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
+			</svws-ui-radio-group>
+			<svws-ui-spacing />
+			<svws-ui-radio-group :row="true">
+				<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
+			</svws-ui-radio-group>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-checkbox type="toggle" v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal" class="text-left">
+				Gleicher Termin falls gleiche Lehrkraft, Fach und Kursart
+			</svws-ui-checkbox>
+		</template>
+		<template #modalActions>
+			<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
+		</template>
+	</svws-ui-modal>
 
-	<div>
-		<svws-ui-modal ref="modal" size="small">
-			<template #modalTitle>
-				Automatisch Blocken
+	<div class="page--content page--content--full relative">
+		<svws-ui-content-card>
+			<template #title>
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 			</template>
-			<template #modalDescription>
-				Hier können Sie weitere Einstellungen vornehmen:
-			</template>
-			<template #modalContent>
-				<svws-ui-radio-group :row="true" class="justify-center">
-					<svws-ui-radio-option v-for="a in KlausurterminblockungAlgorithmen.values()" :key="a.id" :value="a" v-model="algMode" :name="a.bezeichnung" :label="a.bezeichnung" />
-				</svws-ui-radio-group>
-				<svws-ui-radio-group :row="true" class="justify-center">
-					<svws-ui-radio-option v-for="k in KlausurterminblockungModusKursarten.values()" :key="k.id" :value="k" v-model="lkgkMode" :name="k.bezeichnung" :label="k.bezeichnung" />
-				</svws-ui-radio-group>
-				<svws-ui-checkbox v-model="blockeGleicheLehrkraft" v-if="algMode.__ordinal === KlausurterminblockungAlgorithmen.NORMAL.__ordinal">
-					Falls gleiche Lehrkraft, Fach und Kursart, dann gleicher Termin?
-				</svws-ui-checkbox>
-			</template>
-			<template #modalActions>
-				<svws-ui-button type="secondary" @click="blocken"> Blocken </svws-ui-button>
-				<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
-			</template>
-		</svws-ui-modal>
-
-		<svws-ui-content-card class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative w-1/4">
-			<div class="flex flex-row gap-8 mt-4">
-				<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-					<div class="text-headline-md">Zu verplanen:</div>
-					<table class="w-full border">
-						<thead>
-							<tr>
-								<th class="border">Kurs</th>
-								<th class="border">Kuerzel</th>
-								<th class="border"><i-ri-pencil-line /></th>
-								<th class="border"><i-ri-time-line /></th>
-								<th class="border">Quartal</th>
-								<th class="border">Schiene</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="klausur in props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)"
-								:key="klausur.id"
-								:data="klausur"
-								:draggable="true"
-								@dragstart="onDrag(klausur)"
-								@dragend="onDrag(undefined)"
-								:class="klausurCssClasses(klausur, undefined)">
-								<td class="border">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</td>
-								<td class="border">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</td>
-								<td class="border text-center">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</td>
-								<td class="border text-center">{{ klausur.dauer }}</td>
-								<td class="border text-center">{{ klausur.quartal }}</td>
-								<td class="border text-center">{{ klausur.kursSchiene }}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="flex flex-col">
-					<div class="flex flex-row flex-wrap gap-4 items-start">
-						<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
-							:termin="() => termin"
-							:class="dropOverCssClasses(termin)"
-							:kursklausurmanager="kursklausurmanager"
-							:map-lehrer="mapLehrer"
-							:drag-data="() => dragData"
-							:on-drag="onDrag"
-							:on-drop="onDrop"
-							:loesche-klausurtermine="loescheKlausurtermine"
-							:patch-klausurtermin="patchKlausurtermin"
-							:klausur-css-classes="klausurCssClasses"
-							:kursmanager="kursmanager" />
+			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+				<!--<div class="text-headline-md mb-2 inline-flex self-start leading-none py-1 px-2 -mx-2 rounded-md border" :class="{'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData, 'border-transparent': !dragData}">
+					<template v-if="dragData">Planung</template>
+					<template v-else>Planung</template>
+				</div>-->
+				<div class="text-headline-md mb-2">Planung</div>
+				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" :columns="cols" class="!overflow-visible">
+					<template #noData>
+						<div class="leading-tight flex flex-col gap-0.5">
+							<span>Aktuell keine Klausuren zu planen.</span>
+							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
+						</div>
+					</template>
+					<template #header(schriftlich)>
+						<svws-ui-tooltip>
+							<i-ri-group-line />
+							<template #content>Schriftlich/Insgesamt im Kurs</template>
+						</svws-ui-tooltip>
+					</template>
+					<template #header(dauer)>
+						<svws-ui-tooltip>
+							<i-ri-time-line />
+							<template #content>Dauer in Minuten</template>
+						</svws-ui-tooltip>
+					</template>
+					<template #body>
+						<div v-for="klausur in props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
+							:key="klausur.id"
+							:data="klausur"
+							:draggable="true"
+							@dragstart="onDrag(klausur)"
+							@dragend="onDrag(undefined)"
+							:class="klausurCssClasses(klausur, undefined)">
+							<div class="svws-ui-td">
+								<i-ri-draggable class="-m-0.5 -ml-3" />
+								<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
+							</div>
+							<div class="svws-ui-td">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</div>
+							<div class="svws-ui-td svws-align-right">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
+							<div class="svws-ui-td svws-align-right">{{ klausur.dauer }}</div>
+							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
+							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
+						</div>
+					</template>
+					<template #actions>
+						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)" title="Erstelle Klausuren aus den Vorgaben"><i-ri-upload-2-line />Aus Vorgaben erstellen</svws-ui-button>
+					</template>
+				</svws-ui-table>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card>
+			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
+				<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin</svws-ui-button>
+				<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="termine.size() > 0 || props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+				<svws-ui-button type="danger" class="ml-auto" @click="loescheKlausurtermine(termine)" :disabled="termine.size() === 0"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+			</div>
+			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
+				<template v-if="termine.size()">
+					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+						:termin="() => termin"
+						:class="dropOverCssClasses(termin)"
+						:kursklausurmanager="kursklausurmanager"
+						:map-lehrer="mapLehrer"
+						:drag-data="() => dragData"
+						:on-drag="onDrag"
+						:on-drop="onDrop"
+						:loesche-klausurtermine="loescheKlausurtermine"
+						:patch-klausurtermin="patchKlausurtermin"
+						:klausur-css-classes="klausurCssClasses"
+						:kursmanager="kursmanager" />
+				</template>
+				<template v-else>
+					<div class="h-48 border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
+						<span class="opacity-50">Noch keine Termine angelegt.</span>
 					</div>
-				</div>
+				</template>
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -89,12 +113,12 @@
 
 <script setup lang="ts">
 
-	import { GostKursklausur, GostKlausurtermin } from "@core";
-	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten,
-		KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
-	import { computed, ref } from 'vue';
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach} from "@core";
+	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
+	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type {DataTableColumn} from "@ui";
 
 	const modal = ref<any>(null);
 
@@ -123,7 +147,7 @@
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-success": dragData.value !== undefined && (dragData.value.quartal === termin.quartal || termin.quartal === 0),
-		"opacity-40": dragData.value !== undefined && (dragData.value.quartal !== termin.quartal && termin.quartal !== 0),
+		"opacity-25 border-transparent shadow-none": dragData.value !== undefined && (dragData.value.quartal !== termin.quartal && termin.quartal !== 0),
 	});
 
 	const termine = computed(() => props.quartalsauswahl.value === 0 ? props.kursklausurmanager().terminGetMengeAsList() : props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true));
@@ -155,9 +179,42 @@
 		}
 		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kursklausurmanager().konfliktTermininternSchueleridsGetMengeByTerminAndKursklausur(termin, klausur).size() > 0;
 		return {
-			"bg-success": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			"bg-error": konfliktZuEigenemTermin,
+			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
+			"svws-warning": !konfliktfreiZuFremdtermin,
+			"svws-error": konfliktZuEigenemTermin,
 		}
 	};
 
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
+
+	function calculateColumns() {
+		const cols: DataTableColumn[] = [
+			{ key: "kurs", label: "Kurs", span: 1.25 },
+			{ key: "kuerzel", label: "Lehrkraft" },
+			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
+		];
+
+		if (props.quartalsauswahl.value === 0) {
+			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "right", minWidth: 2.75 })
+		}
+
+		return cols;
+	}
+
+	const cols = computed(() => calculateColumns());
+
+	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
+
 </script>
+
+<style lang="postcss" scoped>
+.page--content {
+  @apply grid;
+  grid-template-columns: minmax(22rem, 0.2fr) 1fr;
+}
+</style>
