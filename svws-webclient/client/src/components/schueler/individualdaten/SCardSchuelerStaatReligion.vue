@@ -21,7 +21,7 @@
 
 	import type { ReligionEintrag, SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../helfer";
+	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "../../../utils/helfer";
 	import { computed } from "vue";
 	import { Nationalitaeten } from "@core";
 

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { orte_filter, orte_sort, ortsteilSort } from "~/helfer";
+	import { orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 	import { AdressenUtils } from "@core";
 	import { computed } from "vue";
 

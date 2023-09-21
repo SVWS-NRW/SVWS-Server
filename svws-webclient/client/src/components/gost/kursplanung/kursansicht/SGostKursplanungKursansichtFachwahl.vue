@@ -156,7 +156,7 @@
 	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 	import { ref, type ComputedRef, computed } from "vue";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
-	import { lehrer_filter } from "~/helfer";
+	import { lehrer_filter } from "~/utils/helfer";
 
 	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 

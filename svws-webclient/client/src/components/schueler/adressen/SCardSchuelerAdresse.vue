@@ -50,7 +50,7 @@
 	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { orte_filter, orte_sort } from "~/helfer";
+	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{
 		patchBetrieb: (data : Partial<BetriebStammdaten>, id : number) => Promise<void>;

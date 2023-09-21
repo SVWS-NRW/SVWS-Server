@@ -21,7 +21,7 @@
 	import type { ComputedRef, Ref} from 'vue';
 	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@core";
 	import { computed, ref } from 'vue';
-	import { lehrer_filter } from '~/helfer';
+	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;

@@ -27,7 +27,7 @@
 	import type { LehrerStammdaten} from "@core";
 	import { computed } from "vue";
 	import { DeveloperNotificationException, Geschlecht, Nationalitaeten, PersonalTyp } from "@core";
-	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/helfer";
+	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort } from "~/utils/helfer";
 
 	const props = defineProps<{
 		data: LehrerStammdaten

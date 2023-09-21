@@ -23,7 +23,7 @@
 
 	import type { SchuelerStammdaten } from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/helfer";
+	import { verkehrsspracheKatalogEintragFilter, verkehrsspracheKatalogEintragSort, nationalitaetenKatalogEintragFilter, nationalitaetenKatalogEintragSort } from "~/utils/helfer";
 	import { Nationalitaeten, Verkehrssprache } from "@core";
 	import { computed } from "vue";
 

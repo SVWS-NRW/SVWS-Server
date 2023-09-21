@@ -47,7 +47,8 @@
 
 <script setup lang="ts">
 
-	import { GostBelegpruefungsErgebnisse, List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import type { List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import { GostBelegpruefungsErgebnisse} from '@core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
