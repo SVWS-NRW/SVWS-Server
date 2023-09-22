@@ -57,7 +57,7 @@
 									@keyup.escape="edit_schienenname=undefined" />
 							</template>
 							<template v-else>
-								<span class="underline decoration-dotted underline-offset-2 cursor-text" title="Namen bearbeiten" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
+								<span class="underline decoration-dotted underline-offset-2 cursor-text" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
 							</template>
 							<span v-if="allow_del_schiene(s)" class="icon opacity-25 hover:opacity-100 hover:text-error cursor-pointer -mr-2" @click="del_schiene(s)"><i-ri-delete-bin-line /></span>
 						</div>
