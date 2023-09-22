@@ -33,10 +33,10 @@
 			<div role="row" class="data-table__tr" :style="{ 'background-color': bgColor }">
 				<template v-if="allowRegeln">
 					<div role="cell" class="data-table__td data-table__td__align-center cursor-pointer hover:text-black"
-						:class="{'text-black' : kursdetail_anzeige, 'text-black/50' : !kursdetail_anzeige}" @click="toggle_kursdetail_anzeige"
+						:class="{'text-black' : kursdetail_anzeige === kurs.id, 'text-black/50' : kursdetail_anzeige !== kurs.id}" @click="toggle_kursdetail_anzeige(kurs.id)"
 						title="Kursdetails anzeigen">
 						<div class="inline-block">
-							<i-ri-arrow-up-s-line v-if="kursdetail_anzeige" class="relative top-0.5" />
+							<i-ri-arrow-up-s-line v-if="kursdetail_anzeige === kurs.id" class="relative top-0.5" />
 							<i-ri-arrow-down-s-line v-else class="relative top-0.5" />
 						</div>
 					</div>
@@ -126,23 +126,10 @@
 							<div v-if="allowRegeln && (dragDataKursSchiene() === undefined) && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /> </div>
 						</div>
 					</div>
-					<!-- ... oder das Element in der Zelle ist nicht für Drag & Drop gedacht -->
-					<!-- <div role="cell" v-else class="data-table__td data-table__td__align-center data-table__td__no-padding p-0.5">
-						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" @click="toggleKursAusgewaehlt(kurs)"
-							class="cursor-pointer w-full h-full rounded flex items-center justify-center relative group"
-							:class="{
-								'bg-light text-primary font-bold border border-black/50': istKursAusgewaehlt(kurs).value,
-								'bg-white/50 border border-black/25': !istKursAusgewaehlt(kurs).value,
-							}">
-							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
-							<div class="icon absolute right-1" v-if="istKursFixiertInSchiene(kurs, schiene).value"> <i-ri-pushpin-fill class="inline-block" /> </div>
-							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"> <i-ri-lock-2-line class="inline-block" /> </div>
-						</div>
-					</div> -->
 				</template>
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
-			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
+			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 				:kurs="kurs" :kurse-mit-kursart="kurseMitKursart(kurs).value" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
@@ -178,7 +165,7 @@
 	}
 
 	const editKursID = ref<number | undefined>(undefined);
-	const kursdetail_anzeige = ref<boolean>(false);
+	const kursdetail_anzeige = ref<number | undefined>(undefined);
 
 	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
@@ -277,10 +264,12 @@
 		return [filtered_by_kursart(kurs).value.size(), kdiff, wahlen];
 	});
 
-	const toggle_kursdetail_anzeige = () => kursdetail_anzeige.value = !kursdetail_anzeige.value
+	const toggle_kursdetail_anzeige = (idKurs : number) => kursdetail_anzeige.value = (kursdetail_anzeige.value === idKurs) ? undefined : idKurs;
 
 	const kursOhneBorder = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
-		return kurseMitKursart(kurs).value.size() > 1 && !kursbezeichnung(kurs).value.endsWith(kurseMitKursart(kurs).value.size().toString()) && !kursdetail_anzeige.value;
+		return (kurseMitKursart(kurs).value.size() > 1)
+			&& !kursbezeichnung(kurs).value.endsWith(kurseMitKursart(kurs).value.size().toString())
+			&& (kursdetail_anzeige.value !== kurs.id);
 	})
 
 
