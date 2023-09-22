@@ -6,8 +6,10 @@
 
 <script setup lang="ts">
 
+	import { type SimpleOperationResponse } from '@core';
+
 	const props = defineProps<{
-		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<boolean>;
+		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<SimpleOperationResponse>;
 	}>();
 
 </script>

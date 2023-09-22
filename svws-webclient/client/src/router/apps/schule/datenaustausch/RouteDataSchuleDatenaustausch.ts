@@ -9,6 +9,8 @@ import { type RouteNode } from "~/router/RouteNode";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschLupo";
 
+import { SimpleOperationResponse } from "@core";
+
 
 interface RouteStateDatenaustausch {
 	view: RouteNode<any, any>;
@@ -37,12 +39,15 @@ export class RouteDataSchuleDatenaustausch {
 		return this._state.value.view;
 	}
 
-	setGostLupoImportMDBFuerJahrgang = async (formData: FormData) => {
+	setGostLupoImportMDBFuerJahrgang = async (formData: FormData) : Promise<SimpleOperationResponse> => {
 		try {
-			const res = await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema);
-			return res.success;
+			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema);
 		} catch(e) {
-			return false;
+			const result = new SimpleOperationResponse();
+			result.log.add("Fehler bei der Server-Anfrage. ");
+			if (e instanceof Error)
+				result.log.add("  " + e.message);
+			return result;
 		}
 	}
 
