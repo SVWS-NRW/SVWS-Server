@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<svws-ui-modal ref="zusatzkraefte_modal" size="small">
-			<template #modalTitle>Zusatzkräfte für Kurs {{ kursbezeichnung }}</template>
+			<template #modalTitle>Lehrkräfte für Kurs {{ kursbezeichnung }}</template>
 			<template #modalContent>
 				<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 					:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
@@ -11,7 +11,7 @@
 			</template>
 		</svws-ui-modal>
 		<svws-ui-button type="secondary" @click="toggle_zusatzkraefte_modal">
-			Zusatzkräfte anlegen
+			Lehrkräfte verwalten
 			<template #badge v-if="anzahl_zusatzkraefte">
 				{{ anzahl_zusatzkraefte }}
 			</template>

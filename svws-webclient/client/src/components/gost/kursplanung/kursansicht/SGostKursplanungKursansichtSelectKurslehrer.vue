@@ -3,24 +3,24 @@
 		<div class="flex flex-col w-full" v-for="(lehrer, i) of kurslehrer" :key="lehrer.id">
 			<svws-ui-multi-select :model-value="lehrer" @update:model-value="(val: LehrerListeEintrag) => update_kurslehrer(val, lehrer)" class="flex-1"
 				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
-				:item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
-			<svws-ui-button v-if="!new_kurs_lehrer && i === kurslehrer.length-1" @click="new_kurs_lehrer=true" type="transparent" class="col-span-full mt-3">
-				Weitere Lehrkraft anlegen <i-ri-user-add-line />
+				:item-text="(l: LehrerListeEintrag)=> `${i+1}: ${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
+			<svws-ui-button v-if="!new_kurs_lehrer && (i === kurslehrer.size() - 1)" @click="new_kurs_lehrer=true" type="transparent" class="col-span-full mt-3">
+				Lehrkraft hinzufügen <i-ri-user-add-line />
 			</svws-ui-button>
 		</div>
-		<div v-if="!kurslehrer.length || new_kurs_lehrer">
-			<svws-ui-multi-select
-				:model-value="undefined" @update:model-value="update_kurslehrer" class="flex-1" autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag)=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
+		<div v-if="!kurslehrer.size() || new_kurs_lehrer">
+			<svws-ui-multi-select :model-value="undefined" @update:model-value="update_kurslehrer" class="flex-1" autocomplete
+				:item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag) => `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 		</div>
 	</svws-ui-input-wrapper>
 </template>
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager} from "@core";
-	import type { ComputedRef, Ref} from 'vue';
-	import { GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@core";
 	import { computed, ref } from 'vue';
+	import type { ComputedRef, Ref} from 'vue';
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, List } from "@core";
+	import { ArrayList, GostBlockungRegel, GostKursblockungRegelTyp, LehrerListeEintrag } from "@core";
 	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<{
@@ -34,15 +34,18 @@
 
 	const new_kurs_lehrer: Ref<boolean> = ref(false);
 
-	const kurslehrer: ComputedRef<LehrerListeEintrag[]> = computed(() => {
+	const kurslehrer: ComputedRef<List<LehrerListeEintrag>> = computed(() => {
 		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
-		const lehrer = new Set();
-		for (const l of liste)
-			lehrer.add(l.id)
-		const result = [];
-		for (const l of props.mapLehrer.values())
-			if (lehrer.has(l.id))
-				result.push(l);
+		const tmp = new ArrayList<GostBlockungKursLehrer>(liste);
+		tmp.sort({ compare(a : GostBlockungKursLehrer, b : GostBlockungKursLehrer) {
+			return a.reihenfolge - b.reihenfolge;
+		}});
+		const result = new ArrayList<LehrerListeEintrag>();
+		for (const l of tmp) {
+			const lehrer = props.mapLehrer.get(l.id);
+			if (lehrer !== undefined)
+				result.add(lehrer);
+		}
 		return result;
 	})
 
@@ -52,7 +55,7 @@
 			vergeben.add(l.id);
 		const result = [];
 		for (const l of props.mapLehrer.values())
-			if (!vergeben.has(l.id))
+			if ((!vergeben.has(l.id)) && (l.istSichtbar))
 				result.push(l);
 		return result;
 	})
