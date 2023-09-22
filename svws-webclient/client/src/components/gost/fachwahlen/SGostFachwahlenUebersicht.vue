@@ -79,7 +79,7 @@
 			case "LK":
 				await props.doSelect(fach_id, group);
 				break;
-			case "Abiturfach":
+			case "Abitur":
 				await props.doSelect(fach_id, "Abi");
 				break;
 			default:
@@ -114,7 +114,7 @@
 	function isSelectable(row: GostStatistikFachwahl, group: string) : boolean {
 		if (group === "Fach")
 			return true;
-		if (group === "Abiturfach")
+		if (group === "Abitur")
 			return (row.wahlenAB3 !== 0) || (row.wahlenAB4 !== 0);
 		if ((group == "ZK") || (group == "LK"))
 			return false; // Evtl. für weitere Ansichten: return getData(row, group, "") !== "";
@@ -132,9 +132,9 @@
 			return row.kuerzel;
 		if ((group === "Fach") && (item === "Fach"))
 			return row.bezeichnung;
-		if ((group === "Abiturfach") && (item === "3"))
+		if ((group === "Abitur") && (item === "3"))
 			return row.wahlenAB3 || "";
-		if ((group === "Abiturfach") && (item === "4"))
+		if ((group === "Abitur") && (item === "4"))
 			return row.wahlenAB4 || "";
 		if ((group === "ZK") && (item === "")) {
 			const maxZK = Math.max(row.fachwahlen[2].wahlenZK, row.fachwahlen[3].wahlenZK, row.fachwahlen[4].wahlenZK, row.fachwahlen[5].wahlenZK);
