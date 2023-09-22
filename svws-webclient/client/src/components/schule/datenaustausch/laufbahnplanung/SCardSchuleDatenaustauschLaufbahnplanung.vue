@@ -1,15 +1,19 @@
 <template>
-	<div class="flex flex-col items-start gap-3">
-		<div>
-			<input type="file" accept=".lup" @change="import_file" :disabled="loading">
-			<svws-ui-spinner :spinning="loading" />
-		</div>
-		<div v-if="log != null" class="mt-4">
-			<div class="flex text-error mb-4">
-				<div class="text-headline-md"> Log </div>
-				<i-ri-alert-line v-if="(status === true)" class="ml-1" />
+	<div class="content-card overflow-auto h-full w-full">
+		<div class="content-card--content">
+			<div class="flex flex-col items-start gap-3">
+				<div>
+					<input type="file" accept=".lup" @change="import_file" :disabled="loading">
+					<svws-ui-spinner :spinning="loading" />
+				</div>
+				<div v-if="log != null" class="mt-4">
+					<div class="flex text-error mb-4">
+						<div class="text-headline-md"> Log </div>
+						<i-ri-alert-line v-if="(status === true)" class="ml-1" />
+					</div>
+					<pre>{{ log }}</pre>
+				</div>
 			</div>
-			<pre>{{ log }}</pre>
 		</div>
 	</div>
 </template>
