@@ -379,7 +379,9 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
 					continue;
 				}
-				final GostLaufbahnplanungFachkombinationTyp typ = nmk.Typ == null ? GostLaufbahnplanungFachkombinationTyp.VERBOTEN : ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN);
+				GostLaufbahnplanungFachkombinationTyp typ = GostLaufbahnplanungFachkombinationTyp.VERBOTEN;
+				if (nmk.Typ != null)
+					typ = ("+".equals(nmk.Typ) ? GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH : GostLaufbahnplanungFachkombinationTyp.VERBOTEN);
 				final DTOGostJahrgangFachkombinationen lupoNMK = new DTOGostJahrgangFachkombinationen(idNMK++, abiJahrgang,
 						dtoFach1.ID, dtoFach2.ID, !"Q1Q4".equals(nmk.Phase), !"Q1Q4".equals(nmk.Phase), true, true, true, true,
 						typ, "");
@@ -462,7 +464,6 @@ public class LupoMDB {
 			logger.logLn("Prüfe Schülerdaten...");
 			logger.modifyIndent(2);
 			for (final ABPSchueler abpSchueler : schueler) {
-				// TODO Prüfe oder entferne evtl. vorhandene Einträge !!!
 				logger.logLn("- Lese LuPO-Schüler " + abpSchueler.ID + " mit der DB-ID " + abpSchueler.Schild_ID + " ein...");
 				logger.modifyIndent(2);
 				final DTOSchueler dtoSchueler = dtoSchuelerMap.get(abpSchueler.Schild_ID == null ? null : (long) abpSchueler.Schild_ID);
@@ -471,6 +472,7 @@ public class LupoMDB {
 					logger.modifyIndent(-2);
 					continue;
 				}
+
 				final DTOSchuljahresabschnitte dtoAbschnittSchueler = schuljahresabschnitte.get(dtoSchueler.Schuljahresabschnitts_ID);
 				if (dtoAbschnittSchueler == null) {
 					logger.logLn("- FEHLER: Der Schuljahresabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
@@ -480,6 +482,16 @@ public class LupoMDB {
 				final DTOSchuelerLernabschnittsdaten dtoAktAbschnitt = dtoSchuelerAktAbschnittMap.get(dtoSchueler.ID);
 				if (dtoAktAbschnitt == null) {
 					logger.logLn("- FEHLER: Der Lernabschnitt des Schülers konnte nicht in der DB gefunden werden. Überspringe Schüler!");
+					logger.modifyIndent(-2);
+					continue;
+				}
+
+				// Prüfe, ob dem Schüler bereits Laufbahnplanungsdaten zugewiesern wurden
+				final DTOGostSchueler lupoSchuelerVorhanden = conn.queryByKey(DTOGostSchueler.class, dtoSchueler.ID);
+				final boolean hatLaufbahnplanungdaten = (lupoSchuelerVorhanden != null);
+				if (hatLaufbahnplanungdaten) {
+					// TODO Ersetze ggf. vorhandene Laufbahnplanungsdaten anstatt den Schüler zu überspringen. Dies sollte eine optional beim Import sein.
+					logger.logLn("- HINWEIS: Für den Schüler liegen bereits Laufbahnplanungsdaten vor. Überspringe Schüler!");
 					logger.modifyIndent(-2);
 					continue;
 				}
@@ -564,7 +576,7 @@ public class LupoMDB {
 	}
 
 
-	private String convertBlankToNull(final String input) {
+	private static String convertBlankToNull(final String input) {
 		if ((input == null) || (input.isBlank()))
 			return null;
 		return input;

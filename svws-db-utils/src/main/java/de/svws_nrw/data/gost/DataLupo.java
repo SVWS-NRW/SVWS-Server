@@ -70,7 +70,6 @@ public final class DataLupo {
 		lupoMDB.logger.copyConsumer(logger);
 		try {
 			lupoMDB.importFrom();
-
 			// Schreibe in die LuPO-Datenbank
 			lupoMDB.setLUPOTables(user, false);   // TODO konfigurierbar machen !
 			logger.logLn("  Import beendet");
@@ -86,6 +85,7 @@ public final class DataLupo {
 				logger.logLn(2, "[FEHLER]");
 			}
 		}
+		logger.logLn("Fertig!");
 		final SimpleOperationResponse daten = new SimpleOperationResponse();
 		daten.success = true;
 		daten.log = log.getStrings();
