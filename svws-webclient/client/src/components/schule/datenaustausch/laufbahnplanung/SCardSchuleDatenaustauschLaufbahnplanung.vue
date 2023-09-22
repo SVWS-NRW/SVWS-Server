@@ -1,16 +1,17 @@
 <template>
-	<svws-ui-content-card title="LuPO-Datei für die Laufbahnplanung hochladen">
-		<div class="flex items-start gap-3">
+	<div class="flex flex-col items-start gap-3">
+		<div>
 			<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
-			<br> {{ status === false ? "Fehler beim Import" : status === true ? "Import erfolgreich" : "" }}
 		</div>
-	</svws-ui-content-card>
-	<svws-ui-content-card v-if="log != null" title="Log">
-		<pre class="flex flex-col">
-			{{ log }}
-		</pre>
-	</svws-ui-content-card>
+		<div v-if="log != null" class="mt-4">
+			<div class="flex text-error mb-4">
+				<div class="text-headline-md"> Log </div>
+				<i-ri-alert-line v-if="(status === true)" class="ml-1" />
+			</div>
+			<pre>{{ log }}</pre>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -54,4 +55,5 @@
 	defineExpose({
 		status
 	});
+
 </script>
