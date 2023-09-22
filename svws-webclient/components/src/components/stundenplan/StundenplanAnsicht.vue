@@ -70,6 +70,9 @@
 						<template v-else>
 							<!-- Allgemeiner Wochentyp ausgewählt -->
 							<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
+							<template v-for="schiene in getSchienenWochentypAllgemein(wochentag, stunde, 0)" :key="schiene.nummer">
+								<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ schiene.bezeichnung }}</div>
+							</template>
 							<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, 0)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
 								:class="{'flex-grow': getUnterrichtWochentypAllgemein(wochentag, stunde, 0).size() === 1}"
@@ -150,7 +153,7 @@
 
 <script setup lang="ts">
 
-	import type { Wochentag} from "@core";
+	import type { StundenplanSchiene, Wochentag} from "@core";
 	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
 	import { computed } from "vue";
 	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
@@ -239,6 +242,26 @@
 			result += bereich.kuerzel;
 		}
 		return result;
+	}
+
+	function getSchienenWochentypSpeziell(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
+		if (props.mode === 'schueler')
+			return props.manager().schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
+		if (props.mode === 'lehrer')
+			return props.manager().schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
+		if (props.mode === 'klasse')
+			return props.manager().schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
+		throw new DeveloperNotificationException("function getSchienenWochentypSpeziell: Unbekannter Mode " + props.mode);
+	}
+
+	function getSchienenWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
+		if (props.mode === 'schueler')
+			return props.manager().schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+		if (props.mode === 'lehrer')
+			return props.manager().schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+		if (props.mode === 'klasse')
+			return props.manager().schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+		throw new DeveloperNotificationException("function getSchienenWochentypAllgemein: Unbekannter Mode " + props.mode);
 	}
 
 	function getUnterrichtWochentypSpeziell(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
