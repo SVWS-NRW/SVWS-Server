@@ -36,7 +36,7 @@
 					<template v-else>Planung</template>
 				</div>-->
 				<div class="text-headline-md mb-2">Planung</div>
-				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" :columns="cols" class="!overflow-visible">
+				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
 							<span>Aktuell keine Klausuren zu planen.</span>

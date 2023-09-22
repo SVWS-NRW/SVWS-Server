@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Beschäftigungen">
-		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns="cols" clickable no-data-text="Noch kein Schülerbetrieb vorhanden." class="overflow-visible">
+		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns="cols" clickable no-data-text="Noch kein Schülerbetrieb vorhanden.">
 			<template #header(Anschreiben)>
 				<svws-ui-tooltip>
 					<i-ri-mail-send-line />

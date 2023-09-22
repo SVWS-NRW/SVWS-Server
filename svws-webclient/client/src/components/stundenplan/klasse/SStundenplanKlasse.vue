@@ -13,7 +13,7 @@
 						:disabled="wochentypen().size() <= 0"
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 				</svws-ui-input-wrapper>
-				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht" class="overflow-visible">
+				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
 							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
@@ -44,7 +44,7 @@
 						</div>
 					</template>
 				</svws-ui-table>
-				<svws-ui-table :items="kursliste" :columns="colsKursunterricht" class="overflow-visible">
+				<svws-ui-table :items="kursliste" :columns="colsKursunterricht">
 					<template #body>
 						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="svws-ui-tr"
 							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">

@@ -1,10 +1,10 @@
 <template>
 	<Story title="Table" id="svws-ui-table" icon="ri:table-line" auto-props-disabled>
 		<Variant title="Default">
-			<div class="p-12">
+			<div class="px-3">
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols" :clickable="state.clickable" :disable-header="state.disableHeader" :disable-footer="state.disableFooter" :selectable="state.selectable" :count="state.count" v-model:clicked="clickedRow" :filtered="docsMultiselectFilterA?.length > 0 || docsMultiselectFilterB?.length > 0"
-						:toggle-columns="state.toggleColumns" :filter-reset="filterReset">
+						:toggle-columns="state.toggleColumns" :filter-reset="filterReset" :type="state.typeGrid ? 'grid' : 'table'">
 						<template #search v-if="state.docsWithSearch">
 							<svws-ui-text-input type="search" placeholder="Suche" v-model="search" />
 						</template>
@@ -65,6 +65,7 @@
 				<HstCheckbox v-model="state.clickable" title="clickable" />
 				<HstCheckbox v-model="state.selectable" title="selectable" />
 				<HstCheckbox v-model="state.toggleColumns" title="toggle-columns" />
+				<HstCheckbox v-model="state.typeGrid" title="type='grid'" />
 				<HstCheckbox v-model="state.disableHeader" title="disable-header" />
 				<HstCheckbox v-model="state.disableFooter" title="disable-footer" />
 				<HstCheckbox v-model="state.count" title="count" />
@@ -98,6 +99,7 @@
 		docsWithFilter: false,
 		docsWithFilterAdvanced: true,
 		docsToggleValue: true,
+		typeGrid: false,
 	});
 
 	const cols = ref([
@@ -184,8 +186,10 @@ Die Suche ist ein einfaches `<svws-ui-text-input type="search" />` Element, das 
 | `svws-has-selection` | | Wenn mindestens eine Zeile über eine Checkbox ausgewählt wurde: alle nicht ausgewählten Zeilen verblassen leicht |
 | `svws-sortable` | `sortBy` (string\|undefined) | Tabellen-Spalten sind sortierbar |
 | `svws-no-data` | `noData` (bool) | Zeigt einen Fallback Text an, reduziert Opacity bei thead und tfoot |
+| `svws-type-grid` | `type="grid"` (string) | Jede Zelle einzeln abgetrennt ("Excel"-Style). Sollte nur für einzelne, komplexe Tabellen eingesetzt werden – in den meisten Fällen wird die vertikale Trennung nicht benötigt. |
 | `svws-type-navigation` | `type="navigation"` (string) | Style zur Verwendung als Navigation (ohne Border, Zeilen sehen aus wie Buttons bei Hover und Active Status) |
 | `svws-has-background` | `hasBackground` (bool) | Stärkerer Kontrast für Borders und Input-Elemente bei der Verwendung von vollflächigen Hintergrundfarben in den Zeilen |
+| `overflow-[visible\|auto]` | `scroll` (bool) | Damit thead und tfoot sticky relativ zum Content-Bereich angezeigt werden, wird `overflow-visible` verwendet (Standard: scroll=false). In seltenen Fällen soll die Tabelle einzeln gescrollt werden – dafür kann `scroll` als Attribut gesetzt werden. |
 
 ---
 

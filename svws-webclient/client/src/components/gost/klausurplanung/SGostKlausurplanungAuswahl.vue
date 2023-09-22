@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-data-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
+	<svws-ui-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
 		:items="GostHalbjahr.values()" />
 	<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 		<svws-ui-sub-nav type="tabs">
@@ -7,7 +7,6 @@
 				:hidden="false" @select="setChild(c)" :key="c.name" />
 		</svws-ui-sub-nav>
 	</Teleport>
-	<!--<svws-ui-data-table :clicked="child" @update:clicked="setChild" :items="children" :columns="cols" clickable />-->
 </template>
 
 <script setup lang="ts">

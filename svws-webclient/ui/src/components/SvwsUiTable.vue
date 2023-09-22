@@ -57,7 +57,10 @@
 			'svws-sortable': sortBy,
 			'svws-no-data': typeof noData !== 'undefined' ? noData : noDataCalculated,
 			'svws-type-navigation': type === 'navigation',
+			'svws-type-grid': type === 'grid',
 			'svws-has-background': hasBackground,
+			'overflow-visible': !scroll,
+			'overflow-auto': scroll,
 		}"
 		v-bind="$attrs">
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
@@ -238,7 +241,7 @@
 			noData?: boolean;
 			noDataText?: string;
 			scrollIntoView?: boolean;
-			type?: 'table' | 'navigation';
+			type?: 'table' | 'navigation' | 'grid';
 			hasBackground?: boolean;
 			filterOpen?: boolean;
 			filterHide?: boolean;
@@ -247,6 +250,7 @@
 			sortBy?: string;
 			sortingOrder?: DataTableSortingOrder;
 			toggleColumns?: boolean;
+			scroll?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -272,6 +276,7 @@
 			sortBy: undefined,
 			sortingOrder: undefined,
 			toggleColumns: false,
+			scroll: false,
 		}
 	);
 
@@ -529,7 +534,7 @@
 
 <style lang="postcss">
 .svws-ui-table {
-	@apply flex max-h-full w-full flex-col overflow-auto bg-white tabular-nums dark:bg-black;
+	@apply flex max-h-full w-full flex-col bg-white tabular-nums dark:bg-black;
   @apply border-black/25 dark:border-white/25;
 	--checkbox-width: 1.75rem;
 	--background-color: rgb(var(--color-white));
@@ -757,12 +762,9 @@
 
 .svws-ui-tfoot,
 .svws-ui-tfoot--data {
-	@apply sticky bottom-0 z-10;
+	@apply sticky z-10;
 	@apply -mt-px border-y;
-}
-
-.svws-ui-tfoot--data {
-	@apply -bottom-px;
+  @apply -bottom-px;
 }
 
 .svws-ui-tfoot {
@@ -956,6 +958,32 @@
 			@apply w-fit rounded;
 		}
 	}
+}
+
+.svws-ui-table.svws-type-grid {
+  .svws-ui-thead,
+  .svws-ui-tbody {
+    .svws-ui-td:not(:last-child) {
+      @apply border-r border-black/25 dark:border-white/25;
+    }
+
+    .svws-ui-td:not(.svws-align-center) {
+      @apply pl-1.5;
+    }
+
+    .svws-ui-td:not(.svws-align-center):not(:last-child) {
+      @apply pr-1.5;
+    }
+
+    .svws-ui-td.svws-divider {
+      @apply border-r-2;
+    }
+  }
+
+  .content-card &:not(.svws-no-mx) .svws-ui-td:first-child,
+  .svws-table-offset & .svws-ui-td:first-child {
+    @apply pl-1;
+  }
 }
 
 .svws-ui-table-filter {

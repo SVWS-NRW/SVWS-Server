@@ -7,7 +7,7 @@
 			<template #title>
 				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 			</template>
-			<svws-ui-table :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit" class="!overflow-visible">
+			<svws-ui-table :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
 				</template>
@@ -42,7 +42,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8 h-full">
+		<svws-ui-content-card :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
 			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
@@ -52,7 +52,7 @@
 			<template v-else>
 				<div class="flex flex-col gap-4">
 					<svws-ui-input-wrapper>
-            <svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" :disabled="activeVorgabe.idVorgabe !== 0" />
+						<svws-ui-multi-select :items="faecherSortiert" :item-text="(fach : GostFach) => fach.bezeichnung || ''" v-model="inputVorgabeFach" title="Fach" :disabled="activeVorgabe.idVorgabe !== 0" />
 						<svws-ui-radio-group id="rbgKursart" :row="true">
 							<svws-ui-radio-option v-for="kursart in formKursarten" v-model="activeVorgabe.kursart" :key="kursart" :value="kursart" name="formKursarten" :label="kursart" :disabled="activeVorgabe.idVorgabe !== 0" />
 						</svws-ui-radio-group>
@@ -100,7 +100,7 @@
 							</svws-ui-radio-group>
 						</div>
 						<svws-ui-spacing />
-            <svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 					</svws-ui-input-wrapper>
 				</div>
 				<div class="flex gap-1 flex-wrap justify-start mt-9">

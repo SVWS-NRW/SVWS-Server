@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Kursliste">
-		<svws-ui-table :columns="cols" :items="listSchueler" class="overflow-visible">
+		<svws-ui-table :columns="cols" :items="listSchueler">
 			<template #cell(status)="{ value }: { value: number}">
 				<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 			</template>

@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" scroll>
 				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
 				<template #cell(klassenLehrer)="{value}">
 					{{ [...value].map(l => getKlassenlehrerKuerzelById(l)).join(", ") }}

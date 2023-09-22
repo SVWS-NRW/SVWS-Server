@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card v-if="visible">
-		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten" class="overflow-visible">
+		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
@@ -32,9 +32,4 @@
 
 </script>
 
-<style scoped lang="postcss">
-	.data-table {
-		@apply overflow-visible;
-	}
-</style>
 

@@ -8,7 +8,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :filter-open="true" :filtered="filtered" :filterReset="filterReset" scroll-into-view>
+				:columns="cols" clickable selectable count :filter-open="true" :filtered="filtered" :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>

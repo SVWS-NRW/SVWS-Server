@@ -7,7 +7,7 @@
 			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 			<svws-ui-spacing />
 			<div class="col-span-full">
-				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols" class="overflow-visible">
+				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
 					<template #cell(id)="{value}">
 						<svws-ui-checkbox type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
 					</template>

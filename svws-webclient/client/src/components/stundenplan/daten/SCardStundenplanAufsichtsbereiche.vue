@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Aufsichtsbereiche">
-		<svws-ui-table :columns="cols" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" v-model:clicked="bereich" selectable :model-value="selected" @update:model-value="selected=$event" count class="overflow-visible">
+		<svws-ui-table :columns="cols" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" v-model:clicked="bereich" selectable :model-value="selected" @update:model-value="selected=$event" count>
 			<template #cell(kuerzel)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.kuerzel" @change="kuerzel=>patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
 			</template>

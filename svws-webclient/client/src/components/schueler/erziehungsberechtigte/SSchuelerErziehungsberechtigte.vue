@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table :items="[]" :columns="cols" :no-data="data.size() === 0" clickable no-data-html="Noch keine Einträge vorhanden." class="overflow-visible">
+			<svws-ui-table :items="[]" :columns="cols" :no-data="data.size() === 0" clickable no-data-html="Noch keine Einträge vorhanden.">
 				<template #header(anschreiben)>
 					<svws-ui-tooltip>
 						<i-ri-mail-send-line />
