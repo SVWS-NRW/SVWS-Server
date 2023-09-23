@@ -399,7 +399,7 @@ export class GostKursklausurManager extends JavaObject {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
@@ -476,21 +476,6 @@ export class GostKursklausurManager extends JavaObject {
 			return klausuren !== null ? klausuren : new ArrayList();
 		}
 		return this.kursklausurOhneTerminGetMenge();
-	}
-
-	/**
-	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
-	 *
-	 * @param idTermin die ID des Klausurtermins
-	 *
-	 * @return die maximale Klausurdauer innerhalb des Termins
-	 */
-	public maxKlausurdauerGetByTerminid(idTermin : number) : number {
-		const klausuren : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin);
-		let maxDauer : number = -1;
-		for (const klausur of klausuren)
-			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
-		return maxDauer;
 	}
 
 	/**
@@ -681,7 +666,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern alle identisch sind, sonst -1.
+	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern
+	 * alle identisch sind, sonst -1.
 	 *
 	 * @param idTermin die ID des Klausurtermins
 	 *
@@ -710,6 +696,72 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public schuelerklausurAnzahlGetByTerminid(idTermin : number) : number {
 		return this.schueleridsGetMengeByTerminid(idTermin).size();
+	}
+
+	/**
+	 * Liefert die minimale Startzeit des Klausurtermins in Minuten
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die minimale Startzeit
+	 */
+	public minKursklausurstartzeitByTerminid(idTermin : number) : number {
+		let minStart : number = 1440;
+		const termin : GostKlausurtermin | null = DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin);
+		for (const kk of DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin)) {
+			let skStartzeit : number = -1;
+			if (kk.startzeit !== null)
+				skStartzeit = kk.startzeit.valueOf();
+			else
+				if (termin.startzeit !== null)
+					skStartzeit = termin.startzeit.valueOf();
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+			if (skStartzeit < minStart)
+				minStart = skStartzeit;
+		}
+		return minStart;
+	}
+
+	/**
+	 * Liefert die maximale Endzeit des Klausurtermins in Minuten
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Endzeit
+	 */
+	public maxKursklausurendzeitByTerminid(idTermin : number) : number {
+		let maxEnd : number = 0;
+		const termin : GostKlausurtermin | null = DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin);
+		for (const kk of DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin)) {
+			let skStartzeit : number = -1;
+			if (kk.startzeit !== null)
+				skStartzeit = kk.startzeit.valueOf();
+			else
+				if (termin.startzeit !== null)
+					skStartzeit = termin.startzeit.valueOf();
+				else
+					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
+			const endzeit : number = skStartzeit + kk.dauer + kk.auswahlzeit;
+			if (endzeit > maxEnd)
+				maxEnd = endzeit;
+		}
+		return maxEnd;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public maxKlausurdauerGetByTerminid(idTermin : number) : number {
+		const klausuren : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin);
+		let maxDauer : number = -1;
+		for (const klausur of klausuren)
+			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		return maxDauer;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

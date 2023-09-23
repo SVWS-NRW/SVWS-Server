@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
@@ -30,6 +31,11 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 	 * Die ID der Klausurraumstunde.
 	 */
 	public idsSchuelerklausuren : List<number> = new ArrayList();
+
+	/**
+	 * Die ID der Klausurraumstunde.
+	 */
+	public kursKlausurPatched : GostKursklausur | null = null;
 
 
 	public constructor() {
@@ -66,6 +72,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				result.idsSchuelerklausuren?.add(elem);
 			}
 		}
+		result.kursKlausurPatched = ((typeof obj.kursKlausurPatched === "undefined") || (obj.kursKlausurPatched === null)) ? null : GostKursklausur.transpilerFromJSON(JSON.stringify(obj.kursKlausurPatched));
 		return result;
 	}
 
@@ -120,6 +127,7 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
+		result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -185,6 +193,9 @@ export class GostKlausurenCollectionSkrsKrs extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
+		}
+		if (typeof obj.kursKlausurPatched !== "undefined") {
+			result += '"kursKlausurPatched" : ' + ((!obj.kursKlausurPatched) ? 'null' : GostKursklausur.transpilerToJSON(obj.kursKlausurPatched)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

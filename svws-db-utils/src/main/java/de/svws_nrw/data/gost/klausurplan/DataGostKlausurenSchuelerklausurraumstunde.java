@@ -95,6 +95,18 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @return die Antwort
 	 */
 	public static Response loescheRaumZuSchuelerklausuren(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(loescheRaumZuSchuelerklausurenTransaction(conn, idsSchuelerklausuren)).build();
+	}
+
+	/**
+	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
+	 *
+	 * @param conn                 x
+	 * @param idsSchuelerklausuren die IDs der zuzuweisenden Schülerklausuren
+	 *
+	 * @return die Antwort
+	 */
+	public static GostKlausurenCollectionSkrsKrs loescheRaumZuSchuelerklausurenTransaction(final DBEntityManager conn, final List<Long> idsSchuelerklausuren) {
 		final GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		result.idsSchuelerklausuren = idsSchuelerklausuren;
 
@@ -104,7 +116,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		conn.transactionFlush();
 		result.raumstundenGeloescht = removeRaumStundenInDb(conn);
 
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
+		return result;
 	}
 
 	/**
@@ -187,7 +199,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				skStartzeit = termin.Startzeit;
 			if (skStartzeit < minStart)
 				minStart = skStartzeit;
-			GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
+			final GostKlausurvorgabe v = vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
 			final int endzeit = skStartzeit + v.dauer + v.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;

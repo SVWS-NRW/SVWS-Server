@@ -325,7 +325,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		delete klausur.id;
 		const result = await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt!.id);
-		this.kursklausurmanager.kursklausurPatchAttributes(Object.assign(this.kursklausurmanager.kursklausurGetByIdOrException(id), klausur));
+		this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched!);
 		this.commit();
 		api.status.stop();
 		return result;
@@ -408,10 +408,8 @@ export class RouteDataGostKlausurplanung {
 	patchKlausurraum = async (id: number, raum: Partial<GostKlausurraum>, manager: GostKlausurraumManager): Promise<boolean> => {
 		api.status.start();
 		const oldRaum: GostKlausurraum = manager.raumGetByIdOrException(id);
-		Object.assign(oldRaum, raum);
-		manager.raumPatchAttributes(oldRaum);
-		Object.assign(oldRaum, raum);
 		await api.server.patchGostKlausurenRaum(raum, api.schema, id);
+		manager.raumPatchAttributes(Object.assign(oldRaum, raum));
 		this.commit();
 		api.status.stop();
 		return true;

@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -245,7 +245,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 	private final Map<String, DataBasicMapper<DTOGostKlausurenKursklausuren>> patchMappings = Map.ofEntries(
 			Map.entry("idVorgabe", (conn, dto, value, map) -> dto.Vorgabe_ID = JSONMapper.convertToLong(value, false)),
-			Map.entry("idKurs", (conn, dto, value, map) -> dto.Kurs_ID = JSONMapper.convertToLong(value, false)), Map.entry("idTermin", (conn, dto, value, map) -> {
+			Map.entry("idKurs", (conn, dto, value, map) -> dto.Kurs_ID = JSONMapper.convertToLong(value, false)),
+			Map.entry("idTermin", (conn, dto, value, map) -> {
 				final Long newTermin = JSONMapper.convertToLong(value, true);
 				if (newTermin != null) {
 					final DTOGostKlausurenTermine termin = conn.queryByKey(DTOGostKlausurenTermine.class, newTermin);
@@ -254,7 +255,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 						throw OperationError.CONFLICT.exception("Klausur-Quartal entspricht nicht Termin-Quartal.");
 				}
 				dto.Termin_ID = newTermin;
-			}), Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)));
+			}),
+			Map.entry("startzeit", (conn, dto, value, map) -> dto.Startzeit = JSONMapper.convertToIntegerInRange(value, true, 0, 1440)));
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
@@ -266,7 +268,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final DTOGostKlausurenKursklausuren dto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		boolean startzeitPatched = false;
+		final List<DTOGostKlausurenSchuelerklausuren> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", dto.ID, DTOGostKlausurenSchuelerklausuren.class);
+		final List<Long> sks_ids = sks.stream().map(sk -> sk.ID).toList();
+		GostKlausurenCollectionSkrsKrs result = new GostKlausurenCollectionSkrsKrs();
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
@@ -277,20 +281,25 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				throw OperationError.BAD_REQUEST.exception();
 			if (key.equals("startzeit")) {
 				final Integer startzeitNeu = JSONMapper.convertToIntegerInRange(value, true, 0, 1440);
-				if (startzeitNeu == null && dto.Startzeit != null || startzeitNeu != null && !startzeitNeu.equals(dto.Startzeit))
-					startzeitPatched = true;
+				if (startzeitNeu == null && dto.Startzeit != null || startzeitNeu != null && !startzeitNeu.equals(dto.Startzeit)) {
+					dto.Startzeit = startzeitNeu;
+					conn.transactionPersist(dto);
+					if (_idSchuljahresAbschnitt == -1)
+						throw OperationError.FORBIDDEN.exception("idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
+					result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks_ids, _idSchuljahresAbschnitt);
+				}
+			}
+			if (key.equals("idTermin")) {
+				dto.Startzeit = null; // Bei Zuweisung eines neuen Termins wird individuelle Startzeit gelöscht
+				result = DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausurenTransaction(conn, sks_ids); // Auch alle Raumzuweisungen werden gelöscht
 			}
 			mapper.map(conn, dto, value, map);
 		}
 		conn.transactionPersist(dto);
-		if (startzeitPatched) {
-			if (_idSchuljahresAbschnitt == -1)
-				throw OperationError.FORBIDDEN.exception("idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
-			final List<Long> sks = conn.queryNamed("DTOGostKlausurenSchuelerklausuren.kursklausur_id", dto.ID, DTOGostKlausurenSchuelerklausuren.class).stream().map(sk -> sk.ID).toList();
-			final GostKlausurenCollectionSkrsKrs result = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, null, sks, _idSchuljahresAbschnitt);
-			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
-		}
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new GostKlausurenCollectionSkrsKrs()).build();
+		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, dto.Kurs_ID);
+		final GostKlausurvorgabe vorgabe = DataGostKlausurenVorgabe.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenVorgaben.class, dto.Vorgabe_ID));
+		result.kursKlausurPatched = dtoMapper.apply(dto, vorgabe, kurs, sks);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
 	@Override

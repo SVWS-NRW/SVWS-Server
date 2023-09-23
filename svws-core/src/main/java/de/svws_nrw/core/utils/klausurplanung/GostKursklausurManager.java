@@ -416,7 +416,7 @@ public class GostKursklausurManager {
 	/**
 	 * Liefert eine Liste von GostKlausurtermin-Objekten zum übergebenen Datum
 	 *
-	 * @param datum das Datum der Klausurtermine
+	 * @param datum das Datum der Klausurtermine im Format YYYY-MM-DD
 	 *
 	 * @return die Liste von GostKlausurtermin-Objekten
 	 */
@@ -439,8 +439,9 @@ public class GostKursklausurManager {
 		final List<@NotNull GostKlausurtermin> termine = terminGetMengeByDatum(datum);
 		final List<@NotNull GostKlausurtermin> retList = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : termine) {
-			final List<@NotNull StundenplanZeitraster> zrsTermin = manager.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag),
-					DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit), maxKlausurdauerGetByTerminid(termin.id));
+			final List<@NotNull StundenplanZeitraster> zrsTermin = manager
+					.getZeitrasterByWochentagStartVerstrichen(Wochentag.fromIDorException(zr.wochentag), DeveloperNotificationException.ifNull("Startzeit des Klausurtermins", termin.startzeit),
+							maxKlausurdauerGetByTerminid(termin.id));
 			for (@NotNull final StundenplanZeitraster zrTermin : zrsTermin)
 				if (zrTermin != null && zrTermin.id == zr.id)
 					retList.add(termin);
@@ -501,21 +502,6 @@ public class GostKursklausurManager {
 //		}
 //		return klausuren;
 		return kursklausurOhneTerminGetMenge();
-	}
-
-	/**
-	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
-	 *
-	 * @param idTermin die ID des Klausurtermins
-	 *
-	 * @return die maximale Klausurdauer innerhalb des Termins
-	 */
-	public int maxKlausurdauerGetByTerminid(final long idTermin) {
-		final @NotNull List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
-		int maxDauer = -1;
-		for (@NotNull final GostKursklausur klausur : klausuren)
-			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
-		return maxDauer;
 	}
 
 	/**
@@ -713,7 +699,8 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern alle identisch sind, sonst -1.
+	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern
+	 * alle identisch sind, sonst -1.
 	 *
 	 * @param idTermin die ID des Klausurtermins
 	 *
@@ -743,5 +730,76 @@ public class GostKursklausurManager {
 	public int schuelerklausurAnzahlGetByTerminid(final long idTermin) {
 		return schueleridsGetMengeByTerminid(idTermin).size();
 	}
+
+	/**
+	 * Liefert die minimale Startzeit des Klausurtermins in Minuten
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die minimale Startzeit
+	 */
+	public int minKursklausurstartzeitByTerminid(final long idTermin) {
+		int minStart = 1440;
+		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
+		for (final GostKursklausur kk : DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin)) {
+			int skStartzeit = -1;
+			if (kk.startzeit != null)
+				skStartzeit = kk.startzeit;
+			else if (termin.startzeit != null)
+				skStartzeit = termin.startzeit;
+			else
+				throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+			if (skStartzeit < minStart)
+				minStart = skStartzeit;
+		}
+		return minStart;
+	}
+
+	/**
+	 * Liefert die maximale Endzeit des Klausurtermins in Minuten
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Endzeit
+	 */
+	public int maxKursklausurendzeitByTerminid(final long idTermin) {
+		int maxEnd = 0;
+		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
+		for (final GostKursklausur kk : DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin)) {
+			int skStartzeit = -1;
+			if (kk.startzeit != null)
+				skStartzeit = kk.startzeit;
+			else if (termin.startzeit != null)
+				skStartzeit = termin.startzeit;
+			else
+				throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
+			final int endzeit = skStartzeit + kk.dauer + kk.auswahlzeit;
+			if (endzeit > maxEnd)
+				maxEnd = endzeit;
+		}
+		return maxEnd;
+	}
+
+	/**
+	 * Liefert die maximale Klausurdauer innerhalb eines Klausurtermins
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die maximale Klausurdauer innerhalb des Termins
+	 */
+	public int maxKlausurdauerGetByTerminid(final long idTermin) {
+		final @NotNull List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
+		int maxDauer = -1;
+		for (@NotNull final GostKursklausur klausur : klausuren)
+			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		return maxDauer;
+	}
+
+//	public int startzeitSchuelerklausurenByTerminid(final long idTermin) {
+//
+//		return 0;
+//	}
+//
+//	public int endzeit
 
 }
