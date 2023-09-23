@@ -2021,28 +2021,31 @@ public class APIGost {
 	 * Die OpenAPI-Methode für die Abfrage der Kurs-Schienen-Zuordnung eines Blockungsergebnisse als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param blockungsergebnisid 	die ID des Blockungsergebnisses, dessen Kurs-Schienen-Raster ausgegeben werden soll
+	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Kurs-Schienen-Zuordnung ausgegeben werden soll.
+	 * @param objlistschuelerids	Liste der IDs der SuS, deren Kurs-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
 	 * @param request     			die Informationen zur HTTP-Anfrage
 	 *
-	 * @return der PDF-Wahlbogen des Schülers
+	 * @return Die zu den übergebenen IDs zugehörige Kurs-Schienen-Zuordnung
 	 */
-	@GET
+	@POST
 	@Produces("application/pdf")
 	@Path("/blockungen/pdf/{blockungsergebnisid : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung.",
-		description = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung "
-			+ "besitzt.")
+	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung für das angegebene Blockungsergebnis, unter Umständen eingeschränkt auf die angegebenen Schüler.",
+			   description = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung."
+				   		   + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
-		content = @Content(mediaType = "application/pdf",
-			schema = @Schema(type = "string", format = "binary", description = "Kurs-Schienen-Zuordnung")))
+									   content = @Content(mediaType = "application/pdf",
+									   schema = @Schema(type = "string", format = "binary", description = "Kurs-Schienen-Zuordnung")))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
-	public Response getGostBlockungPDFKursSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid, @Context final HttpServletRequest request) {
+	public Response getGostBlockungPDFKursSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+															@RequestBody(description = "Schüler-IDs, für die die Kurs-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
+															@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Object.class)))) final List<Object> objlistschuelerids,
+															@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFGostKursSchienenZuordnung.query(conn, blockungsergebnisid);
+			return PDFGostKursSchienenZuordnung.query(conn, blockungsergebnisid, objlistschuelerids);
 		}
 	}
 

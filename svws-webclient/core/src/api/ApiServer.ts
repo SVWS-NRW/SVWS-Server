@@ -3556,30 +3556,7 @@ export class ApiServer extends BaseApi {
 	}
 
 
-	/**
-	 * Implementierung der GET-Methode getGostBlockungPDFKursSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/{blockungsergebnisid : \d+}
-	 *
-	 * Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
-	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} blockungsergebnisid - der Pfad-Parameter blockungsergebnisid
-	 *
-	 * @returns Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
-	 */
-	public async getGostBlockungPDFKursSchienenZuordnung(schema : string, blockungsergebnisid : number) : Promise<Blob> {
-		const path = "/db/{schema}/gost/blockungen/pdf/{blockungsergebnisid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
-		const data : Blob = await super.getPDF(path);
-		return data;
-	}
+	// API-Methode getGostBlockungPDFKursSchienenZuordnung konnte nicht nach Typescript transpiliert werden
 
 
 	/**
