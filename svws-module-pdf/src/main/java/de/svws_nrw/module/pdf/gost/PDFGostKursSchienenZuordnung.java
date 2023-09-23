@@ -160,16 +160,16 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 
 				// Zeilenkopf für Schiene mit zugehörigen Informationen erstellen.
 				zeileMatrix.append(("<td style=\"text-align: left;%s\">"
-					+ "<b>%s</b>")
-					.formatted(((ergebnisManager.getOfSchieneHatKollision(schiene.id) && !schuelerPDF) ? " background-color: rgb(255,0,0);" : ""),
-						schiene.bezeichnung));
+									+ "<b>%s</b>")
+									.formatted(((ergebnisManager.getOfSchieneHatKollision(schiene.id) && !schuelerPDF) ? " background-color: rgb(255,0,0);" : ""),
+												 schiene.bezeichnung));
 				if (!schuelerPDF)
 					zeileMatrix.append(("<p class=\"tinyfont\">"
-						+ "<b>%d</b> K. mit "
-						+ "<b>%d</b> S.<br/>"
-						+ "(-1 Externe)</p></td>")
-						.formatted(ergebnisManager.getSchieneE(schiene.id).kurse.size(),
-							ergebnisManager.getOfSchieneAnzahlSchueler(schiene.id)));
+										+ "<b>%d</b> K. mit "
+										+ "<b>%d</b> S.<br/>"
+										+ "(-1 Externe)</p></td>")
+										.formatted(ergebnisManager.getSchieneE(schiene.id).kurse.size(),
+												   ergebnisManager.getOfSchieneAnzahlSchueler(schiene.id)));
 				else
 					zeileMatrix.append("</td>");
 
@@ -205,21 +205,25 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 			if (schuelerPDF && !kurs.schueler.contains(schuelerID))
 				farbe = "";
 
-			zeileKurse.append(("<td%s><b>%s</b>"
-				+ "<p class=\"tinyfont\">"
-				+ "%s")
-				.formatted(farbe,
-					datenManager.kursGetName(kurs.id),
-					datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","))));
+			zeileKurse.append("<td%s><b>%s</b>" .formatted(farbe, datenManager.kursGetName(kurs.id)));
 
-			if (!schuelerPDF)
-				zeileKurse.append(("<br/><b>%d</b> (%d, %d, %d)</p></td>")
-					.formatted(ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
-						ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
-						ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
-						ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id)));
-			else
-				zeileKurse.append("</p></td>");
+			if (schuelerPDF) {
+				zeileKurse.append(("<p class=\"tinyfont\">"
+								   + "%s<br/>"
+								   + "%s</p></td>")
+								   .formatted("".equals(farbe) ? "" : ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel,
+											  datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","))));
+				//TODO: Aktuell wird nur die allgemeine Kursart LK, GK usw. ausgegeben. Methode für die individuelle Kursrat LK1, GKS wird noch benötigt.
+			} else {
+				zeileKurse.append(("<p class=\"tinyfont\">"
+								   + "%s<br/>"
+								   + "<b>%d</b> (%d, %d, %d)</p></td>")
+								   .formatted(datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(",")),
+											  ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
+											  ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
+											  ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id),
+											  ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id)));
+			}
 		}
 		return zeileKurse.toString();
 	}
