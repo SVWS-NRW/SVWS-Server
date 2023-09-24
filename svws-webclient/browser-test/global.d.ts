@@ -1,4 +1,4 @@
-import type ErrorPage from "./src/ErrorPage";
+import type ErrorPage from "./src/PageError";
 
 export {};
 

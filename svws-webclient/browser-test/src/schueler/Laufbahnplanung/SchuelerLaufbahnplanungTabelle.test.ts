@@ -1,10 +1,12 @@
-import type SchuelerLaufbahnPage from "../pages/SchuelerLaufbahnPage";
-import { test } from "../schuelerfixtures";
 import type { Page } from "@playwright/test";
-import { config } from "../../config/data.connection"
-import { config_schueler } from "../../config/data.schueler"
-import type { Schueler } from "../../config/data.schueler"
-import type { SchuelerLaufbahntabellePage } from "../pages/SchuelerLaufbahntabellePage";
+
+import { test } from "./SchuelerLaufbahnplanung.pages";
+
+import { dataServerConnection } from "../../DataServerConnection"
+import { dataSchueler , type Schueler } from "../DataSchueler"
+
+import type { SchuelerLaufbahnPage } from "./PageSchuelerLaufbahn";
+import type { SchuelerLaufbahntabellePage } from "./PageSchuelerLaufbahntabelle";
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -12,7 +14,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 test.beforeEach(async ({ baseURL, page, loginPage }) => {
 	await page.goto(`${baseURL}login`);
-	await loginPage.login(config.server.servername, config.server.benutzername, config.server.passwort);
+	await loginPage.login(dataServerConnection.server.servername, dataServerConnection.server.benutzername, dataServerConnection.server.passwort);
 	await page.goto(`${baseURL}schueler/9115/laufbahnplanung`);
 	// await page.getByRole('row', { name: schueler.d }).click();
 	// await page.getByRole('button', { name: 'Laufbahnplanung' }).click();
@@ -28,7 +30,7 @@ const tabclicken = async (page: Page, schueler: Schueler, sp : SchuelerLaufbahnP
 };
 
 
-for (const schueler of config_schueler) {
+for (const schueler of dataSchueler) {
 
 	test(`Laufbahntabelle Sichtbarkeit Tabellentexte mit ${schueler.name}`, async ({ page, schuelerLaufbahntabellePage }) => {
 		await tabclicken(page, schueler,schuelerLaufbahntabellePage);

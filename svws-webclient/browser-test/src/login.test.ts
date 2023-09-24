@@ -1,15 +1,10 @@
-import { test } from "@playwright/test";
-import LoginPage from "./LoginPage";
-import {config} from "./config/data.connection"
+import { test } from "./App.pages";
 
-const servername = "localhost"
-const benutzername = "Admin"
-const passwort = ""
+import { dataServerConnection } from "./DataServerConnection"
 
-test("Login test", async ({ page, baseURL }) => {
+test("Login test", async ({ page, baseURL, loginPage }) => {
 	await page.goto(`${baseURL}login`);
-	const login = new LoginPage(page);
-	await login.login(config.server.servername, config.server.benutzername, config.server.passwort);
+	await loginPage.login(dataServerConnection.server.servername, dataServerConnection.server.benutzername, dataServerConnection.server.passwort);
 	await page.goto(`${baseURL}schueler`);
 	await page.waitForTimeout(2000);
 });

@@ -1,4 +1,4 @@
-export const config = {
+export const dataServerConnection = {
 	server : {
 		benutzername : "Admin",
 		passwort: "",

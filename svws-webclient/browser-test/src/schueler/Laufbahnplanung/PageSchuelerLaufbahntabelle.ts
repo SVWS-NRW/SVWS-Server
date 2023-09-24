@@ -1,8 +1,8 @@
 import type { Locator, Page} from "@playwright/test";
 import { expect } from "@playwright/test";
-import { api } from "../../api/Api";
+import { api } from "../../Api";
 import type { GostFach, List } from "@core";
-import type { Schueler } from "../../config/data.schueler";
+import type { Schueler } from "../DataSchueler";
 
 
 interface fach_webseite_zelle{
@@ -94,7 +94,7 @@ export class SchuelerLaufbahntabellePage {
 	/**
 	 * Erstellt aus den Zeilen der Laufbahntabelle Objekte des Typs "fach_webseite" und speichert sie in "fachbelegung".
 	 */
-	async ladeFachbelegungeng_von_Webseite(){
+	async ladeFachbelegungeng_von_Webseite() {
 		const rows = this.rg_tabelleninhalt.getByRole('row');
 		await expect(rows).toHaveCount(35);
 		let zeile = 0;
@@ -176,7 +176,7 @@ export class SchuelerLaufbahntabellePage {
 		}
 	}
 
-	async clickZelle_EF_bis_Q2_alle_Faecher(){
+	async clickZelle_EF_bis_Q2_alle_Faecher() {
 		await this.ladeFachbelegungeng_von_Webseite();
 		for (const [key, value] of this.fachbelegung) {
 			if (value.kuerzel.text) {
@@ -190,7 +190,7 @@ export class SchuelerLaufbahntabellePage {
 		}
 	}
 
-	async clickZelle(value : Locator | undefined){
+	async clickZelle(value : Locator | undefined) {
 		await value?.waitFor({ state: "visible" });
 		await value?.click();
 	}

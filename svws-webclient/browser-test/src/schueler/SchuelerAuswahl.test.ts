@@ -1,11 +1,10 @@
-import { test, expect } from "../schuelerfixtures"
+import { test } from "./Schueler.pages"
 
-import { config } from "src/config/data.connection";
-import { config_schueler } from "src/config/data.schueler";
+import { dataServerConnection } from "~/DataServerConnection";
 
 test.beforeEach(async ({ baseURL, page, loginPage }) => {
 	await page.goto(`${baseURL}login`);
-	await loginPage.login(config.server.servername, config.server.benutzername, config.server.passwort);
+	await loginPage.login(dataServerConnection.server.servername, dataServerConnection.server.benutzername, dataServerConnection.server.passwort);
 	// await page.goto(`${baseURL}schueler/9115/laufbahnplanung`);
 	// await page.getByRole('row', { name: schueler.name }).click();
 	// await page.getByRole('button', { name: 'Laufbahnplanung' }).click();

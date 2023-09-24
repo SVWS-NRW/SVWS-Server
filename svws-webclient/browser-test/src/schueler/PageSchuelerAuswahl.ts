@@ -1,7 +1,7 @@
 import type { KlassenListeEintrag, List, SchuelerListeEintrag } from "@core";
 import type { Locator, Page} from "@playwright/test";
 import { expect } from "@playwright/test";
-import { api } from "../../api/Api";
+import { api } from "../Api";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
