@@ -2,9 +2,15 @@
 	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
-				<div role="columnheader" class="svws-ui-td col-span-full">
-					Zusatzkurse
+				<div role="cell" class="svws-ui-td col-span-full">
+					<span class="flex gap-1">
+						<span class="svws-ui-badge">Alle Fächer</span>
+						als Zusatzkurs
+					</span>
 				</div>
+			</div>
+			<div role="row" class="svws-ui-tr">
+				<div role="cell" class="svws-ui-td col-span-full" :class="{'opacity-25': !aktuell.fachwahl?.id}">Gesamt im Halbjahr</div>
 			</div>
 		</template>
 		<template #body>
@@ -12,29 +18,35 @@
 				<template v-if="fws !== undefined">
 					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws, undefined)">
 						<div role="cell" class="svws-ui-td col-span-full">
-							<div class="-ml-1 mr-1">
+							<div class="-ml-1 mr-0.5">
 								<svws-ui-button type="icon" size="small">
 									<i-ri-arrow-right-s-line v-if="aktuell.fachwahl?.id !== fws.id" />
 									<i-ri-arrow-down-s-line v-else />
 								</svws-ui-button>
 							</div>
-							<span class="svws-ui-badge">{{ faecherManager.get(fws.id)?.bezeichnung || "&ndash;" }}</span>
+							<span :class="{'svws-ui-badge': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
 							<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-								<div role="row" class="svws-ui-tr grid-cols-2" v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0" :class="{'svws-clicked': aktuell?.halbjahr?.id === halbjahr.id}" @click.stop="onClick(fws, halbjahr)">
+								<div role="row" class="cursor-pointer svws-ui-tr !border-solid !border-black/25 !dark:border-white/25" v-if="fws.fachwahlen[halbjahr.id].wahlenZK > 0" @click.stop="onClick(fws, halbjahr)">
 									<div role="cell" class="svws-ui-td">
-										<span class="w-16">{{ halbjahr.kuerzel }}</span>
+										<span class="flex gap-1 pl-0.5">
+											<svws-ui-button type="icon" size="small">
+												<i-ri-arrow-right-s-line v-if="aktuell.halbjahr?.id !== halbjahr.id" />
+												<i-ri-arrow-down-s-line v-else />
+											</svws-ui-button>
+											<span>{{ halbjahr.kuerzel }}</span>
+										</span>
+									</div>
+									<div role="cell" class="svws-ui-td col-span-3">
 										{{ fws.fachwahlen[halbjahr.id].wahlenZK }}
 									</div>
 								</div>
 								<div v-if="aktuell?.halbjahr?.id === halbjahr.id" role="row" class="svws-ui-tr">
-									<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight">
-										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
-											<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
-												<i-ri-link />
-											</button>
-											<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
+									<div role="cell" class="flex flex-col svws-ui-td col-span-full mb-5 leading-tight !pl-4">
+										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+											<i-ri-link class="text-sm" />
+											<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 										</div>
 									</div>
 								</div>
@@ -106,7 +118,10 @@
 	}
 
 	const cols: DataTableColumn[] = [
-		{ key: "ZK", label: "ZK", span: 1, minWidth: 4 },
+		{ key: "HJ", label: "HJ", fixedWidth: 6 },
+		{ key: "ZK", label: "ZK", span: 1 },
+		{ key: "GKS", label: "GKS", span: 1 },
+		{ key: "GKM", label: "GKM", span: 1 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);

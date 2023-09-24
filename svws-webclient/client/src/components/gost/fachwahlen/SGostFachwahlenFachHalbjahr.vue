@@ -10,15 +10,21 @@
 				</div>
 			</div>
 			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td">GK Gesamt</div>
-				<div role="cell" class="svws-ui-td">Schriftlich</div>
-				<div role="cell" class="svws-ui-td">Mündlich</div>
+				<div role="cell" class="svws-ui-td col-span-2">Gesamt im Halbjahr</div>
+				<div role="cell" class="svws-ui-td">
+					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span>Schriftlich</span>
+				</div>
+				<div role="cell" class="svws-ui-td">
+					<i-ri-speak-line class="text-sm -my-0.5" />
+					<span>Mündlich</span>
+				</div>
 			</div>
 		</template>
 		<template #body>
 			<template v-if="fws !== undefined && hatFachwahl(fws)">
 				<div role="row" class="svws-ui-tr">
-					<div role="cell" class="svws-ui-td">
+					<div role="cell" class="svws-ui-td col-span-2">
 						<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK > 0">
 							{{ fws.fachwahlen[halbjahr.id].wahlenGK }}
 						</template>
@@ -38,12 +44,10 @@
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr">
-					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col">
-						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
-							<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
-								<i-ri-link />
-							</button>
-							<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
+					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col" :class="{'col-span-2 !pl-4 text-black/50 dark:text-white/50 hover:text-black focus-within:text-black dark:hover:text-white dark:focus-within:text-white': col === 1}">
+						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+							<i-ri-link class="text-sm" />
+							<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 						</div>
 					</div>
 				</div>
@@ -70,9 +74,10 @@
 	});
 
 	const cols: DataTableColumn[] = [
-		{ key: "GK", label: "GK", span: 1},
-		{ key: "GKS", label: "GKS", span: 1},
-		{ key: "GKM", label: "GKM", span: 1},
+		{ key: "HJ", label: "HJ", fixedWidth: 6 },
+		{ key: "GK", label: "GK", span: 1 },
+		{ key: "GKS", label: "GKS", span: 1 },
+		{ key: "GKM", label: "GKM", span: 1 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);

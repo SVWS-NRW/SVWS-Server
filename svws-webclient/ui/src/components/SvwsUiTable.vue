@@ -922,6 +922,10 @@
 
       > .svws-ui-td {
         @apply border-dashed border-transparent;
+
+		  &.svws-divider {
+			  @apply border-solid border-r-black/25 dark:border-r-white/25;
+		  }
       }
     }
 

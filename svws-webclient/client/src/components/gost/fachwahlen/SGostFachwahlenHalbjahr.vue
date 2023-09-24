@@ -3,13 +3,22 @@
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
-					{{ halbjahr.kuerzel }}
+					<span class="flex gap-1">
+						<span class="svws-ui-badge">Alle Fächer</span>
+						in der {{ halbjahr.kuerzel }}
+					</span>
 				</div>
 			</div>
 			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td">GK Gesamt</div>
-				<div role="cell" class="svws-ui-td">Schriftlich</div>
-				<div role="cell" class="svws-ui-td">Mündlich</div>
+				<div role="cell" class="svws-ui-td col-span-2" :class="{'opacity-25': !aktuell?.id}">Gesamt im Halbjahr</div>
+				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell?.id}">
+					<i-ri-draft-line class="text-sm -my-0.5" />
+					<span>Schriftlich</span>
+				</div>
+				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell?.id}">
+					<i-ri-speak-line class="text-sm -my-0.5" />
+					<span>Mündlich</span>
+				</div>
 			</div>
 		</template>
 		<template #body>
@@ -17,19 +26,19 @@
 				<template v-if="hatFachwahl(fws, halbjahr)">
 					<template v-if="fws !== undefined">
 						<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
-							<div role="cell" class="col-span-full svws-ui-td">
-								<div class="-ml-1 mr-1">
+							<div role="cell" class="svws-ui-td col-span-full">
+								<div class="-ml-1 mr-0.5">
 									<svws-ui-button type="icon" size="small">
 										<i-ri-arrow-right-s-line v-if="aktuell?.id !== fws.id" />
 										<i-ri-arrow-down-s-line v-else />
 									</svws-ui-button>
 								</div>
-								<span class="svws-ui-badge">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
+								<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 							</div>
 						</div>
 						<template v-if="aktuell?.id === fws.id">
 							<div role="row" class="svws-ui-tr">
-								<div role="cell" class="svws-ui-td">
+								<div role="cell" class="svws-ui-td col-span-2 !pl-7">
 									<template v-if="fws.fachwahlen[halbjahr.id].wahlenGK > 0">
 										{{ fws.fachwahlen[halbjahr.id].wahlenGK }}
 									</template>
@@ -49,12 +58,10 @@
 								</div>
 							</div>
 							<div role="row" class="svws-ui-tr">
-								<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col">
-									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 -mt-0.5 cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
-										<button role="link" class="button button--icon button--small flex-shrink-0 relative top-0.5 !self-start">
-											<i-ri-link />
-										</button>
-										<span class="line-clamp-1 break-all" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
+								<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2, 3]" :key="col" :class="{'col-span-2 !pl-7 text-black/50 dark:text-white/50 hover:text-black focus-within:text-black dark:hover:text-white dark:focus-within:text-white': col === 1}">
+									<div v-for="schueler in getSchuelerListe(fws.id, halbjahr, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+										<i-ri-link class="text-sm" />
+										<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 									</div>
 								</div>
 							</div>
@@ -86,11 +93,11 @@
 	}
 
 	const cols: DataTableColumn[] = [
-		{ key: "GK", label: "GK", span: 1, minWidth: 4 },
-		{ key: "GKS", label: "GKS", span: 1, minWidth: 4 },
-		{ key: "GKM", label: "GKM", span: 1, minWidth: 4 },
+		{ key: "HJ", label: "HJ", fixedWidth: 6 },
+		{ key: "GK", label: "GK", span: 1 },
+		{ key: "GKS", label: "GKS", span: 1 },
+		{ key: "GKM", label: "GKM", span: 1 },
 	];
-
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
 
 	function doSortSchuelerListeByNachnameAndVornameAndId(liste : List<SchuelerListeEintrag>): List<SchuelerListeEintrag> {
