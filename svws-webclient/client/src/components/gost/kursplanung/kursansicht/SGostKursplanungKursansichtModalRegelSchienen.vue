@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modal" size="small" class="hidden">
+	<svws-ui-modal :show="showModal" size="small" class="hidden">
 		<template #modalTitle>Regel erstellen</template>
 		<template #modalContent>
 			<div class="flex flex-col gap-1">
@@ -24,21 +24,23 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	}>();
 
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const von = ref<GostBlockungSchiene>(new GostBlockungSchiene());
 	const bis = ref<GostBlockungSchiene>(new GostBlockungSchiene());
 
-	const modal = ref();
 	const openModal = (schieneVon: GostBlockungSchiene, schieneBis: GostBlockungSchiene) => {
 		von.value = schieneVon;
 		bis.value = schieneBis;
-		modal.value.openModal();
+		showModal().value = true;
 	};
 	defineExpose({ openModal });
 
 	const kursart: ShallowRef<GostKursart> = shallowRef(GostKursart.GK)
 
 	async function regel_hinzufuegen(regeltyp: GostKursblockungRegelTyp) {
-		modal.value.closeModal();
+		showModal().value = false;
 		const regel = new GostBlockungRegel();
 		regel.typ = regeltyp.typ;
 		regel.parameter.add(kursart.value.id);

@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<svws-ui-button type="secondary" @click="modal.openModal()">
+		<svws-ui-button type="secondary" @click="showModal().value = true">
 			<i-ri-question-line />
 			<span>Hilfe</span>
 		</svws-ui-button>
-		<svws-ui-modal ref="modal" size="help" class="hidden">
+		<svws-ui-modal :show="showModal" size="help" class="hidden">
 			<template #modalTitle>
 				<div class="inline-flex items-center gap-1 mr-4">
 					Hilfe <i-ri-question-line />
@@ -21,16 +21,19 @@
 
 	import { ref } from 'vue';
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
 
 </script>
 
 <style lang="postcss">
-.markdown-body {
-	@apply prose leading-tight;
 
-	* {
-		@apply first:mt-0;
+	.markdown-body {
+		@apply prose leading-tight;
+
+		* {
+			@apply first:mt-0;
+		}
 	}
-}
+
 </style>

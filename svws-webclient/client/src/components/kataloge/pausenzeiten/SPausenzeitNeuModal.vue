@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" class="hidden">
+	<svws-ui-modal :show="showModal" class="hidden">
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
@@ -10,7 +10,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.wochentag || !item.beginn || !item.ende"> Pausenzeit Hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -24,16 +24,18 @@
 		addPausenzeit: (raum: StundenplanPausenzeit) => Promise<void>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const item = ref<StundenplanPausenzeit>(new StundenplanPausenzeit());
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 	async function importer() {
 		await props.addPausenzeit(item.value);
 		item.value = new StundenplanPausenzeit();
-		modal.value.closeModal();
+		showModal().value = false;
 	}
 </script>

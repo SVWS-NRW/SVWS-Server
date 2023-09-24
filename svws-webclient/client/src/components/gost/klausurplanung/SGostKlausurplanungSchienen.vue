@@ -2,7 +2,7 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>
 			Automatisch blocken
 		</template>
@@ -20,7 +20,7 @@
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -91,7 +91,7 @@
 		<svws-ui-content-card>
 			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
 				<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin</svws-ui-button>
-				<svws-ui-button type="secondary" @click="modal.openModal()" :disabled="termine.size() > 0 || props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+				<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = true" :disabled="termine.size() > 0 || props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				<svws-ui-button type="danger" class="ml-auto" @click="loescheKlausurtermine(termine)" :disabled="termine.size() === 0"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
@@ -131,7 +131,8 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 
-	const modal = ref<any>(null);
+	const _showModalAutomatischBlocken = ref<boolean>(false);
+	const showModalAutomatischBlocken = () => _showModalAutomatischBlocken;
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 
@@ -180,7 +181,7 @@
 
 	const blocken = async () => {
 		loading.value = true;
-		modal.value.closeModal();
+		showModalAutomatischBlocken().value = false;
 		const daten = new GostKlausurterminblockungDaten();
 		daten.klausuren = props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value);
 		daten.konfiguration.modusQuartale = KlausurterminblockungModusQuartale.GETRENNT.id;

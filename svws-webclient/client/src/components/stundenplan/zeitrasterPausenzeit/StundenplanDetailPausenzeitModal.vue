@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
+	<svws-ui-modal :show="showModal">
 		<template #modalTitle>Pausenaufsicht hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
@@ -14,13 +14,14 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="add"> Pausenaufsicht hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
+
 	import type { StundenplanPausenzeit, StundenplanPausenaufsicht, List , StundenplanAufsichtsbereich} from "@core";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { LehrerListeEintrag, ArrayList } from "@core";
@@ -37,7 +38,9 @@
 		addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const refLehrer = ref<ComponentExposed<typeof SvwsUiMultiSelect<LehrerListeEintrag>> | null>(null);
 	const refAufsichtsbereich = ref<ComponentExposed<typeof SvwsUiMultiSelect<StundenplanAufsichtsbereich>> | null>(null);
 	const refWochentyp = ref<ComponentExposed<typeof SvwsUiMultiSelect<WT>> | null>(null);
@@ -60,7 +63,7 @@
 	};
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 	async function add() {
@@ -72,6 +75,7 @@
 				bereiche.add(aufsichtsbereich.id);
 		const wochentyp = refWochentyp.value?.content && 'typ' in refWochentyp.value.content ? refWochentyp.value.content.typ : 0;
 		await props.addAufsichtUndBereich({ idPausenzeit: props.pausenzeit.id, idLehrer: refLehrer.value.content.id, wochentyp, bereiche });
-		modal.value.closeModal();
+		showModal().value = false;
 	}
+
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modalNeueBenutzergruppe" size="small">
+	<svws-ui-modal :show="showModal" size="small">
 		<template #modalTitle>
 			Benutzergruppe hinzufügen
 		</template>
@@ -12,14 +12,14 @@
 		</template>
 
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modalNeueBenutzergruppe.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
 	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzergruppe_n" />
 
-	<svws-ui-button type="icon" @click="modalNeueBenutzergruppe.openModal()">
+	<svws-ui-button type="icon" @click="showModal().value = true">
 		<i-ri-add-line />
 	</svws-ui-button>
 
@@ -36,10 +36,6 @@
 
 	import { ref } from "vue";
 
-	const modalNeueBenutzergruppe = ref();
-	const bezeichnung = ref();
-	const inputbgIstAdmin=ref(false);
-
 	const props = defineProps<{
 		showDeleteIcon: boolean;
 		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
@@ -47,10 +43,16 @@
 		deleteBenutzergruppe_n : () => Promise<void>;
 	}>();
 
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
+	const bezeichnung = ref();
+	const inputbgIstAdmin=ref(false);
+
 	function create(){
 		void props.createBenutzergruppe(bezeichnung.value,inputbgIstAdmin.value);
-		modalNeueBenutzergruppe.value.closeModal();
-		bezeichnung.value="";
+		showModal().value = false;
+		bezeichnung.value = "";
 		inputbgIstAdmin.value=false;
 	}
 

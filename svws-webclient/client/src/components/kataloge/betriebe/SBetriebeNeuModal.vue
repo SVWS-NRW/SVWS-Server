@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="big" class="hidden">
+	<svws-ui-modal :show="showModal" size="big" class="hidden">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -47,7 +47,7 @@
 			</svws-ui-content-card>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="importer()" :disabled="!betrieb.name1"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -55,10 +55,8 @@
 
 <script setup lang="ts">
 
-	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag} from "@core";
-	import { BetriebStammdaten} from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
-	import { computed, ref } from "vue";
+	import { BetriebStammdaten, type KatalogEintrag, type OrtKatalogEintrag, type OrtsteilKatalogEintrag } from "@core";
+	import { computed, ref, type ComputedRef, type WritableComputedRef } from "vue";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{
@@ -69,7 +67,9 @@
 		mapOrtsteile: Map<number, OrtsteilKatalogEintrag>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
 
 	const inputBeschaeftigungsarten: ComputedRef<Array<KatalogEintrag>> = computed(()=>
@@ -82,13 +82,13 @@
 	});
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 	async function importer() {
 		await props.addEintrag(betrieb.value)
 		betrieb.value = new BetriebStammdaten();
-		modal.value.closeModal();
+		showModal().value = false;
 	}
 
 </script>

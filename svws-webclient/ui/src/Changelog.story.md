@@ -10,11 +10,14 @@ icon: 'carbon:bookmark'
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
 
+## ab 0.7.3
+* Modal wurde überarbeitet und stellt nicht mehr die Funktionen openModal, closeModal und isOpen zur Verfügung. Das Öffnen erfolgt nun über die Property show, mit der eine Funktion übergeben wird, welche eine vue-Ref auf einen boolean zurückgibt
+
 ## ab 0.7
 * DataTable ist nun auf generics umgestellt, die Items bestimmen den Typ.
 * Multiselect, TextInput und TextArea geben nun auch den Wert bei @blur/@change raus. Darüber hinaus verwalten sie nun den internen State.
 
-## ab 0.6.18: 
+## ab 0.6.18:
 
 * TextInput: Fix, wenn `type="number"` ist, dann wird beim Klicken der rauf/runter-Pfeile kein `emit` ausgelöst, weil `document.ativeElement` nicht das Input-Feld ist. Es muss erst durch ein `focus()` gesetzt werden.
 * Multiselect kann bei autocomplete nun auch per Tab das erste Element auswählen.

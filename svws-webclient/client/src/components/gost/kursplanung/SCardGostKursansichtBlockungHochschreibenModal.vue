@@ -1,18 +1,19 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="small" class="hidden">
+	<svws-ui-modal :show="showModal" size="small" class="hidden">
 		<template #modalTitle>Blockungsergebnis hochschreiben</template>
 		<template #modalContent>
 			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
 			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
+
 	import type { GostBlockungsdatenManager } from '@core';
 	import { ref } from 'vue';
 
@@ -21,14 +22,16 @@
 		ergebnisHochschreiben: () => Promise<void>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
 
 	async function hochschreiben_ergebnis() {
-		modal.value.closeModal();
+		showModal().value = false;
 		await props.ergebnisHochschreiben();
 	}
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
+
 </script>

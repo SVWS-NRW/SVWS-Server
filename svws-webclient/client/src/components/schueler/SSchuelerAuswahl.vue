@@ -27,7 +27,7 @@
 					{{ value === null ? "–" : mapKlassen.get(value)?.kuerzel }}
 				</template>
 				<template #actions>
-					<svws-ui-button v-if="selectedItems.length" type="transparent" @click="modalGruppenaktionen.openModal()">
+					<svws-ui-button v-if="selectedItems.length" type="transparent" @click="showModalGruppenaktionen().value = true">
 						<i-ri-edit-2-line />
 						Auswahl bearbeiten
 					</svws-ui-button>
@@ -44,7 +44,7 @@
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
-	<svws-ui-modal ref="modalGruppenaktionen" size="medium">
+	<svws-ui-modal :show="showModalGruppenaktionen" size="medium">
 		<template #modalTitle>
 			Aktionen für {{ selectedItems.length }} ausgewählte Schüler
 		</template>
@@ -74,6 +74,9 @@
 	import { SchuelerStatus } from "@core";
 
 	const props = defineProps<SchuelerAuswahlProps>();
+
+	const _showModalGruppenaktionen = ref<boolean>(false);
+	const showModalGruppenaktionen = () => _showModalGruppenaktionen;
 
 	// TODO Speichere in einem speziellen Filter-Objekt
 	const filtered: Ref<boolean> = ref(false);
@@ -239,5 +242,4 @@
 		filtered.value = false;
 	}
 
-	const modalGruppenaktionen = ref();
 </script>

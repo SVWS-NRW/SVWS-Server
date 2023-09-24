@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="showModal" size="small">
 		<template #modalTitle>Kurse zusammenfassen</template>
 		<template #modalContent>
 			<p>Sollen die Kurse {{ kursname1 }} und {{ kursname2 }} zu einem Kurs zusammengefasst werden?</p>
@@ -21,6 +21,9 @@
 		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
 	}>();
 
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const kurs1 = ref<GostBlockungKurs | undefined>(undefined);
 	const kurs2 = ref<GostBlockungKurs | undefined>(undefined);
 
@@ -29,26 +32,25 @@
 	})
 
 	const kursname2 = computed<string>(() => {
-		return (kurs2.value === undefined || !modal.value.isOpen) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
+		return (kurs2.value === undefined || !showModal().value) ? "???" : props.getDatenmanager().kursGetName(kurs2.value.id);
 	})
 
-	const modal = ref();
 	const openModal = (k1 : GostBlockungKurs, k2 : GostBlockungKurs) => {
 		kurs1.value = k1;
 		kurs2.value = k2;
-		modal.value.openModal();
+		showModal().value = true;
 	}
 	defineExpose({ openModal });
 
 	async function clickYes() {
 		if ((kurs1.value === undefined) || (kurs2.value === undefined))
 			return;
-		modal.value.closeModal();
+		showModal().value = false;
 		await props.combineKurs(kurs1.value, kurs2.value);
 	}
 
 	async function clickNo() {
-		modal.value.closeModal();
+		showModal().value = false;
 	}
 
 </script>

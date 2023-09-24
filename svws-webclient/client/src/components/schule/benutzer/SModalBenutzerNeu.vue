@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modalNeuerBenutzer" size="small">
+	<svws-ui-modal :show="showModal" size="small">
 		<template #modalTitle>
 			Benutzer hinzufügen
 		</template>
@@ -15,14 +15,14 @@
 		</template>
 
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modalNeuerBenutzer.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button @click="create"> Weiter </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 
 	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzerAllgemein()" />
 
-	<svws-ui-button type="icon" @click="modalNeuerBenutzer.openModal()">
+	<svws-ui-button type="icon" @click="showModal().value = true">
 		<i-ri-add-line />
 	</svws-ui-button>
 
@@ -39,8 +39,6 @@
 
 	import { ref } from "vue";
 
-	const modalNeuerBenutzer = ref();
-
 	const props = withDefaults(defineProps<{
 		showDeleteIcon?: boolean;
 		createBenutzerAllgemein: (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
@@ -48,6 +46,9 @@
 	}>(), {
 		showDeleteIcon: false,
 	});
+
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
 
 	const anzeigename = ref();
 	const name = ref();
@@ -57,7 +58,7 @@
 	async function create() {
 		if (passwort1.value === passwort2.value){
 			await props.createBenutzerAllgemein(name.value, anzeigename.value, passwort1.value);
-			modalNeuerBenutzer.value.closeModal();
+			showModal().value = false;
 			anzeigename.value = "";
 			name.value = "";
 			passwort1.value = "";

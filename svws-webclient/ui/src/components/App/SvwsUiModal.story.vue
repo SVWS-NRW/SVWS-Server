@@ -1,21 +1,9 @@
-<script setup lang="ts">
-	import { ref } from 'vue';
-	import { logEvent } from 'histoire/client';
-
-	const modal = ref<any>(null);
-	const modalDanger = ref<any>(null);
-
-	function onClick(event: Event) {
-		logEvent('click', event);
-	}
-</script>
-
 <template>
 	<Story title="Modal" id="svws-ui-modal" group="app" :layout="{type: 'grid', width: '45%'}" icon="ri:fullscreen-line">
 		<Variant title="Default" id="Default">
-			<svws-ui-button @click="modal.openModal()">Open Modal</svws-ui-button>
+			<svws-ui-button @click="show().value = true">Open Modal</svws-ui-button>
 
-			<svws-ui-modal ref="modal" size="small">
+			<svws-ui-modal :show="show" size="small">
 				<template #modalTitle>Schüler hinzufügen</template>
 				<template #modalDescription>
 					Welches Schuljahr soll bei den neu aufzunehmenden Schülern gesetzt
@@ -34,16 +22,16 @@
 				</template>
 
 				<template #modalActions>
-					<svws-ui-button type="secondary" @click="modal?.closeModal()">Abbrechen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="show().value = false">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="onClick">Weiter</svws-ui-button>
 				</template>
 			</svws-ui-modal>
 		</Variant>
 
 		<Variant title="Danger" id="Danger">
-			<svws-ui-button @click="modalDanger.openModal()" type="danger">Dangerous Action</svws-ui-button>
+			<svws-ui-button @click="showDanger().value = true" type="danger">Dangerous Action</svws-ui-button>
 
-			<svws-ui-modal ref="modalDanger" size="small" type="danger">
+			<svws-ui-modal :show="showDanger" size="small" type="danger">
 				<template #modalTitle>Schüler hinzufügen</template>
 				<template #modalDescription>
 					Welches Schuljahr soll bei den neu aufzunehmenden Schülern gesetzt
@@ -62,10 +50,27 @@
 				</template>
 
 				<template #modalActions>
-					<svws-ui-button type="secondary" @click="modalDanger?.closeModal()">Abbrechen</svws-ui-button>
+					<svws-ui-button type="secondary" @click="showDanger().value = false">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="onClick">Weiter</svws-ui-button>
 				</template>
 			</svws-ui-modal>
 		</Variant>
 	</Story>
 </template>
+
+<script setup lang="ts">
+
+	import { ref } from 'vue';
+	import { logEvent } from 'histoire/client';
+
+	const _show = ref<boolean>(false);
+	const show = () => _show;
+
+	const _showDanger = ref<boolean>(false);
+	const showDanger = () => _showDanger;
+
+	function onClick(event: Event) {
+		logEvent('click', event);
+	}
+
+</script>

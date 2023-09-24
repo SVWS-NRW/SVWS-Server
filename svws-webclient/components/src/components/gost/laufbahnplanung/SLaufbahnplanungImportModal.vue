@@ -1,6 +1,5 @@
 <template>
-	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="show" size="small">
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalContent>
 			<input type="file" accept=".lp" @change="import_file" :disabled="loading">
@@ -14,19 +13,20 @@
 			}}
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()">{{ status === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
+			<svws-ui-button type="secondary" @click="show().value = false">{{ status === true ? 'Schließen':'Abbrechen' }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
-	import { ref } from 'vue';
+
+	import { type Ref, ref } from 'vue';
 
 	const props = defineProps<{
+		show: () => Ref<boolean>;
 		importLaufbahnplanung: (data: FormData) => Promise<boolean>;
 	}>();
 
-	const modal = ref();
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 
@@ -43,10 +43,7 @@
 		status.value = await props.importLaufbahnplanung(formData);
 		loading.value = false;
 		if (status.value === true)
-			modal.value.closeModal();
+			props.show().value = false;
 	}
 
-	const openModal = () => {
-		modal.value.openModal();
-	}
 </script>

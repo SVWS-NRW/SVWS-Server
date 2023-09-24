@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="showModal" size="small">
 		<template #modalTitle>Regel erstellen</template>
 		<template #modalContent>
 			<p>
@@ -24,21 +24,23 @@
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	}>();
 
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const id1 = ref<number>(-1);
 	const id2 = ref<number>(-1);
 
-	const modal = ref();
 	const openModal = (idKurs1 : number, idKurs2 : number) => {
 		id1.value = idKurs1;
 		id2.value = idKurs2;
-		modal.value.openModal();
+		showModal().value = true;
 	}
 	defineExpose({ openModal });
 
 	async function regelImmerZusammen() {
 		if (id1.value === 0)
 			return;
-		modal.value.closeModal();
+		showModal().value = false;
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS.typ;
 		regel.parameter.add(id1.value)
@@ -49,7 +51,7 @@
 	async function regelNieZusammen() {
 		if (id1.value === 0)
 			return;
-		modal.value.closeModal();
+		showModal().value = false;
 		const regel = new GostBlockungRegel();
 		regel.typ = GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS.typ;
 		regel.parameter.add(id1.value)

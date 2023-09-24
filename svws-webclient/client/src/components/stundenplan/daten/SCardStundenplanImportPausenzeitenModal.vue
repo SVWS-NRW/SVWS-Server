@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
+	<svws-ui-modal :show="showModal">
 		<template #modalTitle>Pausenzeiten aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
@@ -11,13 +11,14 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="modal.closeModal" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
+
 	import type { List, StundenplanPausenzeit } from "@core";
 	import { ref } from "vue";
 
@@ -26,11 +27,14 @@
 		listPausenzeiten: List<StundenplanPausenzeit>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const selected = ref<StundenplanPausenzeit[]>([]);
 	const pausenzeit = ref<StundenplanPausenzeit>()
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
+
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal ref="modal" class="hidden">
+	<svws-ui-modal :show="showModal" class="hidden">
 		<template #modalTitle>Ansprechpartner bearbeiten</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -16,10 +16,10 @@
 		</template>
 		<template #modalActions>
 			<!-- <svws-ui-button type="secondary" @click="$refs.modalEdit.closeModal"> Abbrechen </svws-ui-button> -->
-			<svws-ui-button type="primary" @click="modal.closeModal"> Fertig </svws-ui-button>
+			<svws-ui-button type="primary" @click="showModal().value = false"> Fertig </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-button type="icon" @click="modal.openModal()" title="Ansprechpartner bearbeiten">
+	<svws-ui-button type="icon" @click="showModal().value = true" title="Ansprechpartner bearbeiten">
 		<i-ri-edit-2-line />
 	</svws-ui-button>
 </template>
@@ -34,6 +34,7 @@
 		patchAnsprechpartner: (data : Partial<BetriebAnsprechpartner>, id : number) => Promise<void>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
 
 </script>

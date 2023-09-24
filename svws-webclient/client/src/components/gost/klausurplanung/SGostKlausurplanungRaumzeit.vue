@@ -2,7 +2,6 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
-
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card>
 			<template #title>

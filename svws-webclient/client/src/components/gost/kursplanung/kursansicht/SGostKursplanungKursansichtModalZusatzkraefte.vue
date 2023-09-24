@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<svws-ui-modal ref="zusatzkraefte_modal" size="small">
+		<svws-ui-modal :show="showModal" size="small">
 			<template #modalTitle>Lehrkräfte für Kurs {{ kursbezeichnung }}</template>
 			<template #modalContent>
 				<s-gost-kursplanung-kursansicht-select-kurslehrer :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
@@ -22,8 +22,7 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, LehrerListeEintrag } from "@core";
-	import type { ComputedRef, Ref } from 'vue';
-	import { computed, ref } from 'vue';
+	import { computed, ref, type ComputedRef } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -34,16 +33,18 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 	}>();
 
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
-	const zusatzkraefte_modal: Ref<any> = ref(null);
 	function toggle_zusatzkraefte_modal() {
-		zusatzkraefte_modal.value.isOpen ? zusatzkraefte_modal.value.closeModal() : zusatzkraefte_modal.value.openModal();
+		showModal().value = !showModal().value;
 	}
 
-	const anzahl_zusatzkraefte = computed(()=>{
+	const anzahl_zusatzkraefte = computed(() => {
 		const nr = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id).size();
 		return nr ? `${nr}` : ""
-	})
+	});
 
 </script>

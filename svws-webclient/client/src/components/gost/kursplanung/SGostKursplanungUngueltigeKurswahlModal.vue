@@ -1,17 +1,18 @@
 <template>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="showModal" size="small">
 		<template #modalTitle>Ungültige Schüler-Kurszuordnungen</template>
 		<template #modalDescription>
 			Die folgenden Schüler haben ungültige Kurszuordnungen in dieser Blockung
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()">Abbrechen</svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
 			<svws-ui-button @click="remove_blockung">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
+
 	import type { GostBlockungsergebnisManager } from '@core';
 	import { ref } from 'vue';
 
@@ -19,14 +20,15 @@
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
 
 	async function remove_blockung() {
-		modal.value.closeModal()
+		showModal().value = false;
 	}
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 </script>

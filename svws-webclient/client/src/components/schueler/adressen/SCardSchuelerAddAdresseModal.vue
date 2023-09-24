@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal" size="medium">
+	<svws-ui-modal :show="showModal" size="medium">
 		<template #modalTitle>Schülerbetrieb hinzufügen</template>
 		<template #modalDescription />
 		<template #modalContent>
@@ -19,7 +19,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal()"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="save"> Speichern </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -41,7 +41,9 @@
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const schuelerBetriebsdaten : Ref<SchuelerBetriebsdaten> = ref(new SchuelerBetriebsdaten());
 
 	const betrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
@@ -85,11 +87,11 @@
 			return;
 		}
 		await props.createSchuelerBetriebsdaten(schuelerBetriebsdaten.value);
-		modal.value.closeModal();
+		showModal().value = false;
 	}
 
 	const openModal = () => {
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 	const listAnpsrechpartner : ComputedRef<Map<number, BetriebAnsprechpartner>> =computed(() => {

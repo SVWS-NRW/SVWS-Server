@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal ref="modal">
+	<svws-ui-modal :show="showModal">
 		<template #modalTitle>Zeitraster bearbeiten</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper :grid="2">
@@ -17,7 +17,7 @@
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="modal.closeModal"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.unterrichtstunde"> Zeitraster Anpassen </svws-ui-button>
 			<svws-ui-button v-if="removeZeitraster" type="secondary" @click="remove()"> Zeitraster entfernen </svws-ui-button>
 		</template>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-	import type { List} from "@core";
+	import type { List } from "@core";
 	import { StundenplanZeitraster, Wochentag } from "@core";
 	import { computed, ref, shallowRef } from "vue";
 
@@ -36,7 +36,9 @@
 		removeZeitraster?: (multi: StundenplanZeitraster[]) => Promise<void>;
 	}>();
 
-	const modal = ref();
+	const _showModal = ref<boolean>(false);
+	const showModal = () => _showModal;
+
 	const item = ref<StundenplanZeitraster>(new StundenplanZeitraster());
 	const multi = shallowRef<StundenplanZeitraster[]>([]);
 
@@ -80,7 +82,7 @@
 		} else
 			a.push(item.value);
 		multi.value = a;
-		modal.value.openModal();
+		showModal().value = true;
 	}
 
 	async function importer() {
@@ -93,13 +95,14 @@
 					list.push(tag);
 			await props.addZeitraster(item.value, list);
 		}
-		modal.value.closeModal();
+		showModal().value = false;
 	}
 
 	async function remove() {
 		if (item.value.id > 0 && props.removeZeitraster) {
 			await props.removeZeitraster(multi.value);
 		}
-		modal.value.closeModal();
+		showModal().value = false;
 	}
+
 </script>

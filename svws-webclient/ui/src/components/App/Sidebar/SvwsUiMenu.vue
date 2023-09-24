@@ -11,21 +11,21 @@
 		<div class="sidebar--menu--footer">
 			<slot name="footer" />
 			<div class="app--appearance-settings">
-				<svws-ui-menu-item subline="" @click="modal.openModal()">
+				<svws-ui-menu-item subline="" @click="showModalEinstellungen().value = true">
 					<template #label>Ansicht</template>
 					<template #icon><i-ri-palette-line /></template>
 				</svws-ui-menu-item>
 			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center opacity-25 dark:opacity-50">
 				<div class="text-sm mb-2 text-center">Powered by<br>SVWS NRW</div>
-				<button role="link" @click="modalInfo.openModal()"
+				<button role="link" @click="showModalInfo().value = true"
 					class="mb-1 hover:opacity-100 underline hover:no-underline text-sm">
 					Client Info
 				</button>
 			</div>
 		</div>
 	</div>
-	<svws-ui-modal ref="modal" size="small">
+	<svws-ui-modal :show="showModalEinstellungen" size="small">
 		<template #modalTitle>
 			Einstellungen
 		</template>
@@ -69,7 +69,7 @@
 			</div>
 		</template>
 	</svws-ui-modal>
-	<svws-ui-modal ref="modalInfo" size="small">
+	<svws-ui-modal :show="showModalInfo" size="small">
 		<template #modalTitle>
 			SVWS-Client
 		</template>
@@ -99,8 +99,12 @@
 	const themeRef = ref<string>('light');
 	const fontSize = ref<string>('default');
 
-	const modal = ref<any>(null);
-	const modalInfo = ref<any>(null);
+	const _showModalEinstellungen = ref<boolean>(false);
+	const showModalEinstellungen = () => _showModalEinstellungen;
+
+	const _showModalInfo = ref<boolean>(false);
+	const showModalInfo = () => _showModalInfo;
+
 
 	const updateFontSize = (size: string) => {
 		document.documentElement.classList.remove('font-size-small', 'font-size-large');

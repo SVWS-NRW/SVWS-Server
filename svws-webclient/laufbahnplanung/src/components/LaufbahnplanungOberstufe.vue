@@ -12,9 +12,8 @@
 	</div>
 	<svws-ui-sub-nav>
 		<svws-ui-button size="small" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-download-2-line />Exportieren</svws-ui-button>
-		<s-laufbahnplanung-import-modal :import-laufbahnplanung="importLaufbahnplanung" v-slot="{openModal}">
-			<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="openModal"><i-ri-upload-2-line /> Importieren…</svws-ui-button>
-		</s-laufbahnplanung-import-modal>
+		<svws-ui-button size="small" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-upload-2-line /> Importieren…</svws-ui-button>
+		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="importLaufbahnplanung" />
 		<svws-ui-button size="small" :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 		<svws-ui-button size="small" type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 		<svws-ui-button size="small" :type="modus === 'manuell' ? 'error' : modus === 'hochschreiben' ? 'primary' : 'transparent'" @click="switchModus" :title="modus === 'manuell' ? 'Manueller Modus' : modus === 'normal' ? 'Normaler Modus':'Hochschreibemodus'">
@@ -46,6 +45,9 @@
 	import { computed, onMounted, ref } from "vue";
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
+
+	const _showModalImport = ref<boolean>(false);
+	const showModalImport = () => _showModalImport;
 
 	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== undefined);
 
