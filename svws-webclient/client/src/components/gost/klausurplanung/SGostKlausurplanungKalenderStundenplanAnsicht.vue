@@ -49,7 +49,7 @@
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
 						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/75 z-20">
+						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20">
 							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
 								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><i-ri-group-line class="text-sm" />{{ sumSchreiber(wochentag, stunde) }}</span>
@@ -69,20 +69,33 @@
 					</div>
 				</template>
 				<template v-for="termin in kursklausurmanager().terminGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))" :key="termin.id">
-					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-0.5 justify-center items-center text-center bg-svws/5 text-svws z-20"
+					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] text-center z-10 border-transparent"
 						:style="posKlausurtermin(termin)"
 						:data="termin"
 						:draggable="true"
 						@dragstart="onDrag(termin)"
 						@dragend="onDrag(undefined)">
-						<s-gost-klausurplanung-termin :termin="termin"
-							:kursklausurmanager="kursklausurmanager"
-							:faecher-manager="faecherManager"
-							:map-lehrer="mapLehrer"
-							:kursmanager="kursmanager"
-							:class="{'': dragData()}">
-							<template #datum><span /></template>
-						</s-gost-klausurplanung-termin>
+						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
+							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
+							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
+							<div class="absolute inset-0 flex w-full flex-col pointer-events-none">
+								<span v-for="color in getBgColors(termin.id)" :key="color" class="h-full inline-block" :style="`background-color: ${color}`" />
+							</div>
+							<svws-ui-tooltip :hover="false">
+								<span class="z-10 relative p-2">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
+								<template #content>
+									<div class="-mx-3">
+										<s-gost-klausurplanung-termin :termin="termin"
+											:kursklausurmanager="kursklausurmanager"
+											:faecher-manager="faecherManager"
+											:map-lehrer="mapLehrer"
+											:kursmanager="kursmanager">
+											<template #datum><span /></template>
+										</s-gost-klausurplanung-termin>
+									</div>
+								</template>
+							</svws-ui-tooltip>
+						</div>
 					</div>
 				</template>
 			</div>
@@ -263,6 +276,12 @@
 	function checkDropZonePausenzeit(event: DragEvent, pause : StundenplanPausenzeit) {
 		if (isDropZonePausenzeit(pause))
 			event.preventDefault();
+	}
+
+	function getBgColors(termin: number | null) {
+		const klausuren = [...props.kursklausurmanager().kursklausurGetMengeByTerminid(termin)].map(k => k.kursKurzbezeichnung?.split('-')[0])
+
+		return klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 	}
 
 </script>
