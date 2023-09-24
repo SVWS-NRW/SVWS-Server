@@ -55,23 +55,6 @@
 								<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><i-ri-group-line class="text-sm" />{{ sumSchreiber(wochentag, stunde) }}</span>
 							</div>
 						</div>
-						<div v-for="(termin, index) in kursklausurmanager().terminGetMengeByDatumAndZeitraster(manager().datumGetByKwzAndZeitraster(kwAuswahl, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde)), manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde), manager())"
-							:data="termin"
-							:key="index"
-							:draggable="true"
-							@dragstart="onDrag(termin)"
-							@dragend="onDrag(undefined)"
-							class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-0.5 justify-center items-center text-center bg-svws/5 text-svws">
-							<s-gost-klausurplanung-termin :termin="termin"
-								:kursklausurmanager="kursklausurmanager"
-								:faecher-manager="faecherManager"
-								:map-lehrer="mapLehrer"
-								:kursmanager="kursmanager"
-								:class="{'': dragData()}"
-								compact>
-								<template #compactMaximaleDauer><span /></template>
-							</s-gost-klausurplanung-termin>
-						</div>
 					</div>
 				</template>
 				<!-- Darstellung der Pausenzeiten und der zugehörigen Aufsichten -->
@@ -85,6 +68,23 @@
 						</template>
 					</div>
 				</template>
+				<template v-for="termin in kursklausurmanager().terminGetMengeByDatum(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag))" :key="termin.id">
+					<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-0.5 justify-center items-center text-center bg-svws/5 text-svws z-20"
+						:style="posKlausurtermin(termin)"
+						:data="termin"
+						:draggable="true"
+						@dragstart="onDrag(termin)"
+						@dragend="onDrag(undefined)">
+						<s-gost-klausurplanung-termin :termin="termin"
+							:kursklausurmanager="kursklausurmanager"
+							:faecher-manager="faecherManager"
+							:map-lehrer="mapLehrer"
+							:kursmanager="kursmanager"
+							:class="{'': dragData()}">
+							<template #datum><span /></template>
+						</s-gost-klausurplanung-termin>
+					</div>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -92,7 +92,7 @@
 
 <script setup lang="ts">
 
-	import type { Wochentag} from "@core";
+	import type { GostKlausurtermin, Wochentag} from "@core";
 	import {type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
@@ -214,6 +214,18 @@
 		if ((pzeit.beginn !== null) && (pzeit.ende !== null)) {
 			rowStart = (pzeit.beginn - beginn.value) / 5;
 			rowEnd = (pzeit.ende - beginn.value) / 5;
+		}
+		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
+	}
+
+	function posKlausurtermin(termin: GostKlausurtermin): string {
+		let rowStart = 0;
+		let rowEnd = 10;
+		const terminBeginn = props.kursklausurmanager().minKursklausurstartzeitByTerminid(termin.id);
+		const terminEnde = props.kursklausurmanager().maxKursklausurendzeitByTerminid(termin.id);
+		if ((terminBeginn !== -1) && (terminEnde !== -1)) {
+			rowStart = (terminBeginn - beginn.value) / 5;
+			rowEnd = (terminEnde - beginn.value) / 5;
 		}
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
