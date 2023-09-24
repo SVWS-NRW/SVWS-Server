@@ -1,5 +1,42 @@
 <template>
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
+		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+			<svws-ui-sub-nav>
+				<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
+					<template v-if="blockungstabelleVisible">
+						<i-ri-eye-off-line />
+						Tabelle ausblenden
+					</template>
+					<template v-else>
+						<i-ri-eye-line />
+						Tabelle einblenden
+					</template>
+				</svws-ui-button>
+				<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
+					<i-ri-settings3-line />
+					<span class="pr-1">Regeln zur Blockung</span>
+					<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+				</svws-ui-button>
+				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+					<template v-if="aktivieren_moeglich">
+						<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+					</template>
+					<template v-else>
+						<svws-ui-tooltip>
+							<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
+							<template #content>
+								<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
+								<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
+								<span v-else />
+							</template>
+						</svws-ui-tooltip>
+					</template>
+				</s-card-gost-kursansicht-blockung-aktivieren-modal>
+				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+					<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
+				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+			</svws-ui-sub-nav>
+		</Teleport>
 		<template v-if="hatBlockung">
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:jahrgangsdaten="jahrgangsdaten"
@@ -12,15 +49,7 @@
 				:ergebnis-hochschreiben="ergebnisHochschreiben"
 				:toggle-blockungstabelle="toggleBlockungstabelle"
 				:blockungstabelle-visible="blockungstabelleVisible"
-				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs">
-				<template #triggerRegeln>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
-						<i-ri-settings3-line />
-						<span class="pr-1">Regeln zur Blockung</span>
-						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
-					</svws-ui-button>
-				</template>
-			</s-card-gost-kursansicht>
+				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :combine-kurs="combineKurs" :split-kurs="splitKurs" />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
@@ -52,6 +81,12 @@
 	const collapsed = ref<boolean>(true);
 
 	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
+
+	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
+
+	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
+
+	const aktivieren_moeglich = computed<boolean>(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;

@@ -1,38 +1,5 @@
 <template>
 	<svws-ui-content-card class="h-full table--with-background" overflow-scroll :style="blockungstabelleVisible ? 'width: calc(100% + 2rem); padding-right: 2rem;' : ''">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-					<template v-if="blockungstabelleVisible">
-						<i-ri-eye-off-line />
-						Tabelle ausblenden
-					</template>
-					<template v-else>
-						<i-ri-eye-line />
-						Tabelle einblenden
-					</template>
-				</svws-ui-button>
-				<slot name="triggerRegeln" />
-				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<template v-if="aktivieren_moeglich">
-						<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
-					</template>
-					<template v-else>
-						<svws-ui-tooltip>
-							<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
-							<template #content>
-								<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
-								<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
-								<span v-else />
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</s-card-gost-kursansicht-blockung-aktivieren-modal>
-				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
-				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-			</svws-ui-sub-nav>
-		</Teleport>
 		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer contrast-border>
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
@@ -229,15 +196,9 @@
 		return (anzahl > 0) || (allow_regeln.value && getAnzahlFachwahlen(fachwahlen, kursart) > 0);
 	});
 
-	const blockungsname: ComputedRef<string> = computed(() => props.getDatenmanager().daten().name);
-
 	const schienen: ComputedRef<List<GostBlockungSchiene>> = computed(() => props.getDatenmanager().schieneGetListe());
 
 	const allow_regeln: ComputedRef<boolean> = computed(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
-
-	const bereits_aktiv: ComputedRef<boolean> = computed(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
-
-	const aktivieren_moeglich : ComputedRef<boolean> = computed(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [];
