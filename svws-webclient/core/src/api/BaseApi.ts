@@ -147,6 +147,28 @@ export class BaseApi {
 		return this.postTextBased(path, 'application/json', 'application/json', body);
 	}
 
+	protected async postTextBasedToBinary(path : string, mimetype_send : string, mimetype_receive : string, body : string | null) : Promise<Blob> {
+		const requestInit : RequestInit = { ...this.requestinit };
+		requestInit.headers = { ...this.headers };
+		requestInit.headers["Content-Type"] = mimetype_send;
+		requestInit.headers["Accept"] = mimetype_receive;
+		requestInit.body = body;
+		requestInit.method = 'POST';
+		try {
+			const response = await fetch(this.getURL(path), requestInit);
+			if (!response.ok)
+				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
+			return await response.blob();
+		} catch (e) {
+			if (e instanceof Error)
+				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
+			throw new Error("Unexpected Error: " + e);
+		}
+	}
+
+	public async postJSONtoPDF(path : string, body : string | null) : Promise<Blob> {
+		return this.postTextBasedToBinary(path, 'application/json', 'application/pdf', body);
+	}
 
 	protected async patchTextBased(path : string, mimetype : string, body : string) : Promise<void> {
 		const requestInit : RequestInit = { ...this.requestinit };

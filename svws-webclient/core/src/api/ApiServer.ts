@@ -3556,7 +3556,32 @@ export class ApiServer extends BaseApi {
 	}
 
 
-	// API-Methode getGostBlockungPDFKursSchienenZuordnung konnte nicht nach Typescript transpiliert werden
+	/**
+	 * Implementierung der POST-Methode getGostBlockungPDFKursSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurs_schienen_zuordnung/{blockungsergebnisid : \d+}
+	 *
+	 * Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsergebnisid - der Pfad-Parameter blockungsergebnisid
+	 *
+	 * @returns Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
+	 */
+	public async getGostBlockungPDFKursSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<Blob> {
+		const path = "/db/{schema}/gost/blockungen/pdf/kurs_schienen_zuordnung/{blockungsergebnisid : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : Blob = await super.postJSONtoPDF(path, body);
+		return result;
+	}
 
 
 	/**

@@ -1,5 +1,14 @@
 package de.svws_nrw.module.pdf.gost;
 
+import java.text.Collator;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -17,21 +26,9 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
-
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-
-import java.text.Collator;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 /**
@@ -97,7 +94,7 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		final int maxKurseInSchienen = ergebnisManager.getOfSchieneMaxKursanzahl();
 		// Zähle die Schienen manuel, da leere Schienen später nicht ausgegeben werden.
 		int anzahlSchienen = 0;
-		for (GostBlockungSchiene schiene : schienen) {
+		for (final GostBlockungSchiene schiene : schienen) {
 			if (!ergebnisManager.getSchieneE(schiene.id).kurse.isEmpty()) {
 				anzahlSchienen++;
 			}
@@ -128,7 +125,7 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		}
 
 		// Erste Zeile der Kurs-Schienen-Matrix für die Spaltenbreiten erzeugen. Die Spalte ist unsichtbar und dient nur der Formatierung.
-		StringBuilder zeileSpaltenbreiten = new StringBuilder();
+		final StringBuilder zeileSpaltenbreiten = new StringBuilder();
 		for (int i = 0; i <= anzahlSpaltenAnsichtOptimierung; i++) {
 			zeileSpaltenbreiten.append("<td style=\"width: %s; border-width: 0em;\"></td>".formatted(spaltenbreite));
 		}
@@ -153,8 +150,8 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 	 */
 	private static String getSchienenUndKurseZeilen(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final Long schuelerID, final List<GostBlockungSchiene> schienen, final boolean schuelerPDF) {
 		// Nun für jede Schiene eine Zeile ind er Matrix erzeugen.
-		StringBuilder zeileMatrix = new StringBuilder();
-		for (GostBlockungSchiene schiene : schienen) {
+		final StringBuilder zeileMatrix = new StringBuilder();
+		for (final GostBlockungSchiene schiene : schienen) {
 			if (!ergebnisManager.getSchieneE(schiene.id).kurse.isEmpty()) {
 				zeileMatrix.append("<tr>");
 
@@ -195,7 +192,7 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		final StringBuilder zeileKurse = new StringBuilder();
 
 		// Kurse mit deren Informationen in der aktuellen Zeile der Schiene ergänzen.
-		for (GostBlockungsergebnisKurs kurs : ergebnisManager.getSchieneE(schiene.id).kurse) {
+		for (final GostBlockungsergebnisKurs kurs : ergebnisManager.getSchieneE(schiene.id).kurse) {
 			String fachFarbeClientRGB = "";
 			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
 			if (fach != null)
@@ -266,62 +263,60 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 								   GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
 								   blockungsergebnisID);
 			return new PDFGostKursSchienenZuordnung(dateiname, schulnummer,	datenManager, ergebnisManager, null, null);
-		} else {
-			// Schülerspezifische Kurs-Schienen-Zuordnung eines Blockungsergebnisses
-
-			// Schüler in der Blockung ermitteln
-			final List<Schueler> schuelerListe = datenManager.schuelerGetListe();
-
-			// Zu Beginn Schüler-IDs auf Validität prüfen, d. h. ob diese Schüler zum Blockungsergebnis gehören
-			for (final Long schuelerID : schuelerIDs) {
-				if (schuelerListe.stream().noneMatch(s -> (s.id == schuelerID)))
-					throw OperationError.NOT_FOUND.exception();
-			}
-
-			// Die Schüler-IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe mehrerer Kurs-Schienen-Zuordnungen sollten
-			// sie aber in alphabetischer Reihenfolge der Schüler sein.
-			// Erzeuge daher eine Liste mit Schüler-IDs, die in der alphabetischen Reihenfolge der Schüler sortiert ist
-			final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-			final Map<Long, Schueler> mapSchueler = schuelerListe.stream().filter(s -> schuelerIDs.contains(s.id)).collect(Collectors.toMap(s -> s.id, s -> s));
-
-			final List<Long> sortedSchuelerIDs = mapSchueler.values().stream()
-				.sorted(Comparator.comparing((final Schueler s) -> s.nachname, colGerman)
-					.thenComparing((final Schueler s) -> s.vorname, colGerman)
-					.thenComparing((final Schueler s) -> s.id))
-				.map(s -> s.id)
-				.toList();
-
-			if (sortedSchuelerIDs.size() == 1) {
-				final Long schuelerID = sortedSchuelerIDs.get(0);
-				dateiname = "Kurs-Schienen-Zuordnung_%s-%s-%s_(eID%d)-(sID%d).pdf"
-							.formatted(datenManager.schuelerGet(schuelerID).nachname.replace(" ", "_").replace(".", "_"),
-									   datenManager.schuelerGet(schuelerID).vorname.replace(" ", "_").replace(".", "_"),
-									   GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
-									   blockungsergebnisID,
-									   schuelerID);
-			} else {
-				dateiname = "Kurs-Schienen-Zuordnung_SuS-%d-%s_(eID%d).pdf"
-							.formatted(datenManager.daten().abijahrgang,
-									   GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
-								 	   blockungsergebnisID);
-			}
-
-			// Erstelle die PDF-Datei, die entweder die Kurs-Schienen-Zuordnung eines Schülers beinhaltet oder die aller Schüler eines Abiturjahrgangs.
-			int lfdNr = 0;
-			PDFGostKursSchienenZuordnung pdf = null;
-			PDFGostKursSchienenZuordnung pdfAktuelleSeite = null;
-			for (final Long schuelerID : sortedSchuelerIDs) {
-				lfdNr++;
-				final PDFGostKursSchienenZuordnung pdfNeueSeite = new PDFGostKursSchienenZuordnung(dateiname, schulnummer,	datenManager, ergebnisManager, schuelerID, lfdNr);
-				if (pdfAktuelleSeite == null) {
-					pdf = pdfNeueSeite;
-				} else {
-					pdfAktuelleSeite.setNext(pdfNeueSeite);
-				}
-				pdfAktuelleSeite = pdfNeueSeite;
-			}
-			return pdf;
 		}
+
+		// Schüler in der Blockung ermitteln
+		final List<Schueler> schuelerListe = datenManager.schuelerGetListe();
+
+		// Zu Beginn Schüler-IDs auf Validität prüfen, d. h. ob diese Schüler zum Blockungsergebnis gehören
+		for (final Long schuelerID : schuelerIDs) {
+			if (schuelerListe.stream().noneMatch(s -> (s.id == schuelerID)))
+				throw OperationError.NOT_FOUND.exception();
+		}
+
+		// Die Schüler-IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe mehrerer Kurs-Schienen-Zuordnungen sollten
+		// sie aber in alphabetischer Reihenfolge der Schüler sein.
+		// Erzeuge daher eine Liste mit Schüler-IDs, die in der alphabetischen Reihenfolge der Schüler sortiert ist
+		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
+		final Map<Long, Schueler> mapSchueler = schuelerListe.stream().filter(s -> schuelerIDs.contains(s.id)).collect(Collectors.toMap(s -> s.id, s -> s));
+
+		final List<Long> sortedSchuelerIDs = mapSchueler.values().stream()
+			.sorted(Comparator.comparing((final Schueler s) -> s.nachname, colGerman)
+				.thenComparing((final Schueler s) -> s.vorname, colGerman)
+				.thenComparing((final Schueler s) -> s.id))
+			.map(s -> s.id)
+			.toList();
+
+		if (sortedSchuelerIDs.size() == 1) {
+			final Long schuelerID = sortedSchuelerIDs.get(0);
+			dateiname = "Kurs-Schienen-Zuordnung_%s-%s-%s_(eID%d)-(sID%d).pdf"
+						.formatted(datenManager.schuelerGet(schuelerID).nachname.replace(" ", "_").replace(".", "_"),
+								   datenManager.schuelerGet(schuelerID).vorname.replace(" ", "_").replace(".", "_"),
+								   GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
+								   blockungsergebnisID,
+								   schuelerID);
+		} else {
+			dateiname = "Kurs-Schienen-Zuordnung_SuS-%d-%s_(eID%d).pdf"
+						.formatted(datenManager.daten().abijahrgang,
+								   GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
+							 	   blockungsergebnisID);
+		}
+
+		// Erstelle die PDF-Datei, die entweder die Kurs-Schienen-Zuordnung eines Schülers beinhaltet oder die aller Schüler eines Abiturjahrgangs.
+		int lfdNr = 0;
+		PDFGostKursSchienenZuordnung pdf = null;
+		PDFGostKursSchienenZuordnung pdfAktuelleSeite = null;
+		for (final Long schuelerID : sortedSchuelerIDs) {
+			lfdNr++;
+			final PDFGostKursSchienenZuordnung pdfNeueSeite = new PDFGostKursSchienenZuordnung(dateiname, schulnummer,	datenManager, ergebnisManager, schuelerID, lfdNr);
+			if (pdfAktuelleSeite == null) {
+				pdf = pdfNeueSeite;
+			} else {
+				pdfAktuelleSeite.setNext(pdfNeueSeite);
+			}
+			pdfAktuelleSeite = pdfNeueSeite;
+		}
+		return pdf;
 	}
 
 
@@ -331,24 +326,13 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 	 *
 	 * @param conn          		die Datenbank-Verbindung
 	 * @param blockungsergebnisID	ID des Blockungsergebnisses, dessen Kurs-Schienen-Zuordnung ausgegeben werden soll.
-	 * @param objListSchuelerIDs 	Liste der IDs der SuS, deren Kurs-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param schuelerIDs           Liste der IDs der SuS, deren Kurs-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
 	 *
-	 * @return 						die HTTP-Response mit dem PDF-Dokument
+	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
-	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Object> objListSchuelerIDs) {
+	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
 		if (blockungsergebnisID == null)
 			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
-
-		// List vom Type Long mit SchülerIDs erstellen.
-		List<Long> schuelerIDs = null;
-		if (objListSchuelerIDs != null && !objListSchuelerIDs.isEmpty()) {
-			try {
-				final List<String> stringSchuelerIDs = objListSchuelerIDs.stream().map(obj -> Objects.toString(obj, "-1")).toList();
-				schuelerIDs = stringSchuelerIDs.stream().map(Long::parseLong).filter(l -> l >= 0).toList();
-			} catch (Exception ex) {
-				throw OperationError.NOT_FOUND.exception("Ungültige Schüler-ID übergeben.");
-			}
-		}
 
 		final PDFGostKursSchienenZuordnung pdf = getPDFmitKursSchienenZuordnung(conn, blockungsergebnisID, (schuelerIDs == null || schuelerIDs.isEmpty()) ? null : schuelerIDs);
 
@@ -359,10 +343,8 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		return Response.status(Status.OK)
-			.type("application/pdf")
-			.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-			.entity(data)
-			.build();
+		return Response.status(Status.OK).type("application/pdf").header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
+			.entity(data).build();
 	}
+
 }
