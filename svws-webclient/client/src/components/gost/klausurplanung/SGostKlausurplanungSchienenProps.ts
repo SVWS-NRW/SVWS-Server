@@ -7,12 +7,14 @@ import type {
 	KursManager,
 	LehrerListeEintrag,
 	List,
+	SchuelerListeEintrag,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungSchienenProps {
 	kursklausurmanager: () => GostKursklausurManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	mapSchueler: Map<number, SchuelerListeEintrag>;
 	patchKursklausur: (id: number, klausur: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrs>;
 	erzeugeKlausurtermin: (quartal: number) => Promise<GostKlausurtermin>;
 	loescheKlausurtermine: (termine: List<GostKlausurtermin>) => Promise<void>;

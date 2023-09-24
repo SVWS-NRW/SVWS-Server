@@ -3,8 +3,10 @@ package de.svws_nrw.core.utils.klausurplanung;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
@@ -573,132 +575,6 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
-	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
-	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
-	 * gibt es keinen Konflikt.
-	 *
-	 * @param termin  der zu prüfende Klausurtermin
-	 * @param klausur die zu prüfende Kursklausur
-	 *
-	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
-	 */
-	public @NotNull List<@NotNull Long> konfliktTermininternSchueleridsGetMengeByTerminAndKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
-		final @NotNull List<@NotNull Long> konflikte = new ArrayList<>();
-
-		final List<@NotNull GostKursklausur> listKlausurenZuTermin = kursklausurGetMengeByTerminid(termin.id);
-		if (listKlausurenZuTermin == null)
-			return konflikte;
-
-		for (final @NotNull GostKursklausur klausurInTermin : listKlausurenZuTermin)
-			konflikte.addAll(konfliktSchueleridsGetMengeByKursklausurAndKursklausur(klausur, klausurInTermin));
-
-		return konflikte;
-	}
-
-	/**
-	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
-	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
-	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
-	 * gibt es keinen Konflikt.
-	 *
-	 * @param termin  der zu prüfende Klausurtermin
-	 * @param klausur die zu prüfende Kursklausur
-	 *
-	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
-	 */
-	public @NotNull List<@NotNull Long> konfliktSchueleridsGetMengeByTerminAndKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
-		if (klausur.idTermin == termin.id) {
-			return new ArrayList<>();
-		}
-
-		final List<@NotNull Long> schuelerIds = schueleridsGetMengeByTerminid(termin.id);
-		if (schuelerIds == null) {
-			return new ArrayList<>();
-		}
-
-		final @NotNull List<@NotNull Long> konflikte = new ArrayList<>(schuelerIds);
-
-		konflikte.retainAll(klausur.schuelerIds);
-		return konflikte;
-	}
-
-	/**
-	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
-	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
-	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
-	 * gibt es keinen Konflikt.
-	 *
-	 * @param idTermin      die ID des zu prüfenden Klausurtermins
-	 * @param idKursklausur die ID der zu prüfenden Kursklausur
-	 *
-	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
-	 */
-	public @NotNull List<@NotNull Long> konfliktSchueleridsGetMengeByTerminidAndKursklausurid(final long idTermin, final long idKursklausur) {
-		final GostKursklausur klausur = DeveloperNotificationException.ifMapGetIsNull(_kursklausur_by_id, idKursklausur);
-		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
-
-		return konfliktSchueleridsGetMengeByTerminAndKursklausur(termin, klausur);
-	}
-
-	/**
-	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
-	 * wird die Anzahl der Konflikte zurückgegeben.
-	 *
-	 * @param idTermin die ID des zu prüfenden Klausurtermins
-	 *
-	 * @return die Anzahl der Konflikte innerhalb des Termins.
-	 */
-	public int konflikteAnzahlGetByTerminid(final long idTermin) {
-		int anzahl = 0;
-		final List<@NotNull GostKursklausur> listKlausurenZuTermin = kursklausurGetMengeByTerminid(idTermin);
-		if (listKlausurenZuTermin != null) {
-			final List<@NotNull GostKursklausur> copyListKlausurenZuTermin = new ArrayList<>(listKlausurenZuTermin);
-			for (final @NotNull GostKursklausur k1 : listKlausurenZuTermin) {
-				copyListKlausurenZuTermin.remove(k1);
-				for (final @NotNull GostKursklausur k2 : copyListKlausurenZuTermin)
-					anzahl += konfliktSchueleridsGetMengeByKursklausuridAndKursklausurid(k1.id, k2.id).size();
-			}
-		}
-		return anzahl;
-	}
-
-	/**
-	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
-	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
-	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 *
-	 * @param idKursklausur1 die ID der ersten zu prüfenden Kursklausur
-	 * @param idKursklausur2 die ID der zweiten zu prüfenden Kursklausur
-	 *
-	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
-	 */
-	public @NotNull List<@NotNull Long> konfliktSchueleridsGetMengeByKursklausuridAndKursklausurid(final long idKursklausur1, final long idKursklausur2) {
-		final GostKursklausur klausur1 = DeveloperNotificationException.ifMapGetIsNull(_kursklausur_by_id, idKursklausur1);
-		final GostKursklausur klausur2 = DeveloperNotificationException.ifMapGetIsNull(_kursklausur_by_id, idKursklausur2);
-		return konfliktSchueleridsGetMengeByKursklausurAndKursklausur(klausur1, klausur2);
-	}
-
-	/**
-	 * Prüft, ob die Schülermengen zweier Kursklausuren disjunkt sind. Es werden die
-	 * Schüler-IDs, die beide Klausuren schreiben, als Liste zurückgegeben. Wenn die
-	 * zurückgegebene Liste leer ist, gibt es keine Übereinstimmungen.
-	 *
-	 * @param klausur1 die erste zu prüfende Kursklausur
-	 * @param klausur2 die zweite zu prüfende Kursklausur
-	 *
-	 * @return die Liste der Schüler-IDs, die beide Klausuren schreiben.
-	 */
-	public @NotNull List<@NotNull Long> konfliktSchueleridsGetMengeByKursklausurAndKursklausur(final @NotNull GostKursklausur klausur1, final @NotNull GostKursklausur klausur2) {
-		if (klausur1 == klausur2) {
-			return new ArrayList<>();
-		}
-		final List<@NotNull Long> konflikte = new ArrayList<>(klausur1.schuelerIds);
-		konflikte.retainAll(klausur2.schuelerIds);
-		return konflikte;
-	}
-
-	/**
 	 * Liefert das Quartal der Kursklausuren innerhalb des Klausurtermins, sofern
 	 * alle identisch sind, sonst -1.
 	 *
@@ -795,11 +671,108 @@ public class GostKursklausurManager {
 		return maxDauer;
 	}
 
-//	public int startzeitSchuelerklausurenByTerminid(final long idTermin) {
-//
-//		return 0;
-//	}
-//
-//	public int endzeit
+	private static @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> berechneKonflikte(@NotNull final List<@NotNull GostKursklausur> klausuren1,
+			@NotNull final List<@NotNull GostKursklausur> klausuren2) {
+		final Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> result = new HashMap<>();
+		final List<@NotNull GostKursklausur> kursklausuren2Copy = new ArrayList<>(klausuren2);
+		for (@NotNull final GostKursklausur kk1 : klausuren1) {
+			kursklausuren2Copy.remove(kk1);
+			for (@NotNull final GostKursklausur kk2 : kursklausuren2Copy) {
+				final Set<@NotNull Long> konflikte = berechneKlausurKonflikte(kk1, kk2);
+				if (!konflikte.isEmpty()) {
+					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
+					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
+				}
+			}
+		}
+		return result;
+	}
+
+	private static @NotNull Set<@NotNull Long> berechneKlausurKonflikte(@NotNull final GostKursklausur kk1, @NotNull final GostKursklausur kk2) {
+		final HashSet<@NotNull Long> konflikte = new HashSet<>(kk1.schuelerIds);
+		konflikte.retainAll(kk2.schuelerIds);
+		return konflikte;
+	}
+
+	private static int countKonflikte(@NotNull final Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> konflikte) {
+		final @NotNull HashSet<@NotNull Long> susIds = new HashSet<>();
+		for (final @NotNull Set<@NotNull Long> klausurSids : konflikte.values())
+			susIds.addAll(klausurSids);
+		return susIds.size();
+	}
+
+	/**
+	 * Liefert eine Map Kursklausur -> Schülerids, die die Konflikte in jeder
+	 * Klausur der übergebenen Termin-ID enthält
+	 *
+	 * @param idTermin die ID des Klausurtermins
+	 *
+	 * @return die Map Kursklausur -> Schülerids
+	 */
+	public @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> konflikteMapKursklausurSchueleridsByTerminid(final long idTermin) {
+		@NotNull final List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
+		return berechneKonflikte(klausuren, klausuren);
+	}
+
+	/**
+	 * Liefert eine Map Kursklausur -> Schülerids, die nur die Konflikte liefert,
+	 * die die übergeben Klausur im übergebenen Termin verursacht
+	 *
+	 * @param idTermin      die ID des Klausurtermins
+	 * @param idKursklausur die ID der Kursklausur
+	 *
+	 * @return die Map Kursklausur -> Schülerids
+	 */
+	public @NotNull Map<@NotNull GostKursklausur, @NotNull Set<@NotNull Long>> konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(final long idTermin, final long idKursklausur) {
+		final List<@NotNull GostKursklausur> klausuren1 = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
+		final List<@NotNull GostKursklausur> klausuren2 = new ArrayList<>();
+		klausuren2.add(DeveloperNotificationException.ifMapGetIsNull(_kursklausur_by_id, idKursklausur));
+		return berechneKonflikte(klausuren1, klausuren2);
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
+	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
+	 * gibt es keinen Konflikt.
+	 *
+	 * @param klausur die zu prüfende Kursklausur
+	 *
+	 * @return die Anzahl der Schüler-IDs, die einen Konflikt verursachen.
+	 */
+	public int konflikteAnzahlZuEigenemTerminGetByKursklausur(final @NotNull GostKursklausur klausur) {
+		final @NotNull List<@NotNull GostKursklausur> klausuren1 = new ArrayList<>(DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, klausur.idTermin));
+		klausuren1.remove(klausur);
+		final List<@NotNull GostKursklausur> klausuren2 = new ArrayList<>();
+		klausuren2.add(klausur);
+		return countKonflikte(berechneKonflikte(klausuren1, klausuren2));
+	}
+
+	/**
+	 * Prüft, ob eine Kursklausur konfliktfrei zu einem bestehenden Klausurtermin
+	 * hinzugefügt werden kann. Es werden die Schüler-IDs, die den Konflikt
+	 * verursachen, als Liste zurückgegeben. Wenn die zurückgegebene Liste leer ist,
+	 * gibt es keinen Konflikt.
+	 *
+	 * @param termin  der zu prüfende Klausurtermin
+	 * @param klausur die zu prüfende Kursklausur
+	 *
+	 * @return die Liste der Schüler-IDs, die einen Konflikt verursachen.
+	 */
+	public int konflikteAnzahlZuTerminGetByTerminAndKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
+		return countKonflikte(konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(termin.id, klausur.id));
+	}
+
+	/**
+	 * Prüft, ob es innerhalb eines bestehenden Klausurtermins Konflikte gibt. Es
+	 * wird die Anzahl der Konflikte zurückgegeben.
+	 *
+	 * @param idTermin die ID des zu prüfenden Klausurtermins
+	 *
+	 * @return die Anzahl der Konflikte innerhalb des Termins.
+	 */
+	public int konflikteAnzahlGetByTerminid(final long idTermin) {
+		return countKonflikte(konflikteMapKursklausurSchueleridsByTerminid(idTermin));
+	}
 
 }

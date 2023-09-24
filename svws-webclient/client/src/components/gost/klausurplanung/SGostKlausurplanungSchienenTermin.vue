@@ -31,7 +31,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]))"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()"><i-ri-delete-bin-line class="-mx-1.5" /></svws-ui-button>
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
@@ -88,7 +88,7 @@
 	}
 
 	const konflikteTerminDragKlausur = computed(() =>
-		props.dragData() !== undefined ? props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(props.termin().id, props.dragData()!.id).size() : -1
+		props.dragData() !== undefined ? props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), props.dragData()! as GostKursklausur) : -1
 	);
 
 	const konflikteTermin = () => props.kursklausurmanager().konflikteAnzahlGetByTerminid(props.termin().id);

@@ -79,6 +79,14 @@
 					</template>
 				</svws-ui-table>
 			</div>
+			<svws-ui-content-card title="Konflikte" v-if="klausurKonflikte().size() > 0" class="mt-5">
+				<div v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
+					<div class="text-red-600 text-headline-sm">{{ klausur.getKey().kursKurzbezeichnung }}:</div>
+					<div class="mb-5">
+						<span v-for="sid in klausur.getValue()" :key="sid">{{ mapSchueler.get(sid)?.vorname }} {{ mapSchueler.get(sid)?.nachname }}, </span>
+					</div>
+				</div>
+			</svws-ui-content-card>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
 			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
@@ -94,8 +102,10 @@
 						:kursklausurmanager="kursklausurmanager"
 						:map-lehrer="mapLehrer"
 						:drag-data="() => dragData"
+						@dragover="terminSelected=termin"
 						:on-drag="onDrag"
 						:on-drop="onDrop"
+						@click="terminSelected=termin;$event.stopPropagation()"
 						:loesche-klausurtermine="loescheKlausurtermine"
 						:patch-klausurtermin="patchKlausurtermin"
 						:klausur-css-classes="klausurCssClasses"
@@ -113,7 +123,8 @@
 
 <script setup lang="ts">
 
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach} from "@core";
+	import type { JavaMapEntry, JavaSet } from "@core";
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet} from "@core";
 	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
@@ -127,10 +138,21 @@
 	const loading = ref<boolean>(false);
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
+	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
+		terminSelected.value = undefined;
 		dragData.value = data;
 	};
+
+	const klausurKonflikte = () => {
+		if (dragData.value !== undefined && terminSelected.value !== undefined) {
+			if (dragData.value!.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
+				return props.kursklausurmanager().konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(terminSelected.value.id, dragData.value.id).entrySet();
+		} else if (terminSelected.value !== undefined)
+			return props.kursklausurmanager().konflikteMapKursklausurSchueleridsByTerminid(terminSelected.value.id).entrySet();
+		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
+	}
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur) {
@@ -173,11 +195,11 @@
 		let konfliktfreiZuFremdtermin = false;
 		for (const oTermin of termine.value) {
 			if (oTermin.id !== klausur.idTermin && oTermin.quartal === klausur.quartal || oTermin.quartal === 0)
-				konfliktfreiZuFremdtermin = props.kursklausurmanager().konfliktSchueleridsGetMengeByTerminidAndKursklausurid(oTermin.id, klausur.id).isEmpty();
+				konfliktfreiZuFremdtermin = props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
 			if (konfliktfreiZuFremdtermin)
 				break;
 		}
-		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kursklausurmanager().konfliktTermininternSchueleridsGetMengeByTerminAndKursklausur(termin, klausur).size() > 0;
+		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kursklausurmanager().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
 			"svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			"svws-warning": !konfliktfreiZuFremdtermin,
