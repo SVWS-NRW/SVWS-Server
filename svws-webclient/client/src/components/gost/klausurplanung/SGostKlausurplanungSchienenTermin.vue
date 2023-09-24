@@ -2,8 +2,8 @@
 	<div class="flex flex-col border bg-white dark:bg-black rounded-xl" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
-			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0 || konflikteTermin() > 0),
-			'border-dashed border-error/50 dark:border-error/50': (dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
+			'border-dashed border-error/50 dark:border-error/50': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:kursklausurmanager="kursklausurmanager"
@@ -14,8 +14,8 @@
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :placeholder="(termin().bezeichnung === null ? (props.kursklausurmanager().kursklausurGetMengeByTerminid(termin().id).size() ? terminTitel() : 'Neuer Termin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
-					<span v-if="(dragData() === undefined || dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
-						<i-ri-alert-fill />
+					<span v-if="(dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0)" class="inline-flex items-center flex-shrink-0 text-error font-bold text-headline-md -my-1">
+						<i-ri-alert-line />
 						<span>{{ konflikteTerminDragKlausur >= 0 ? konflikteTerminDragKlausur : konflikteTermin() }}</span>
 					</span>
 				</div>

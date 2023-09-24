@@ -574,11 +574,6 @@
   }
 
   .svws-ui-badge {
-    @apply rounded border border-black/10 font-medium text-black line-clamp-1 break-all;
-    background-color: var(--background-color);
-    padding: 0.05rem 0.25rem;
-    margin: -0.125rem auto -0.125rem -0.125rem;
-
     .svws-has-background & {
       @apply border-transparent;
     }

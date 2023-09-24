@@ -31,10 +31,6 @@
 				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 			</template>
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<!--<div class="text-headline-md mb-2 inline-flex self-start leading-none py-1 px-2 -mx-2 rounded-md border" :class="{'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData, 'border-transparent': !dragData}">
-					<template v-if="dragData">Planung</template>
-					<template v-else>Planung</template>
-				</div>-->
 				<div class="text-headline-md mb-2">Planung</div>
 				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
@@ -79,14 +75,6 @@
 					</template>
 				</svws-ui-table>
 			</div>
-			<svws-ui-content-card title="Konflikte" v-if="klausurKonflikte().size() > 0" class="mt-5">
-				<div v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
-					<div class="text-red-600 text-headline-sm">{{ klausur.getKey().kursKurzbezeichnung }}:</div>
-					<div class="mb-5">
-						<span v-for="sid in klausur.getValue()" :key="sid">{{ mapSchueler.get(sid)?.vorname }} {{ mapSchueler.get(sid)?.nachname }}, </span>
-					</div>
-				</div>
-			</svws-ui-content-card>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
 			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
@@ -116,6 +104,36 @@
 						<span class="opacity-50">Noch keine Termine angelegt.</span>
 					</div>
 				</template>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card>
+			<template #title>
+				<span class="pt-1 text-headline-md leading-none inline-flex gap-1">
+					<template v-if="klausurKonflikte().size() > 0">
+						<i-ri-alert-fill class="text-error -my-1" />
+						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
+					</template>
+					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
+						<i-ri-checkbox-circle-fill class="text-success -my-1" />
+						<span>Keine Konflikte</span>
+					</template>
+					<template v-else>
+						<span>Konflikte</span>
+					</template>
+				</span>
+			</template>
+			<div v-if="klausurKonflikte().size() > 0" class="mt-6">
+				<ul class="flex flex-col gap-3">
+					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
+						<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.getKey().kursKurzbezeichnung.split('-')[0])};`">{{ klausur.getKey().kursKurzbezeichnung }}</span>
+						<div class="leading-tight">
+							{{ [...klausur.getValue()].map(sid => mapSchueler.get(sid)?.vorname + ' ' + mapSchueler.get(sid)?.nachname).join(", ") }}
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div v-else-if="terminSelected === undefined" class="mt-6 opacity-50 flex flex-col gap-2">
+				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
 	</div>
@@ -238,6 +256,6 @@
 <style lang="postcss" scoped>
 .page--content {
   @apply grid;
-  grid-template-columns: minmax(22rem, 0.2fr) 1fr;
+  grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
 }
 </style>
