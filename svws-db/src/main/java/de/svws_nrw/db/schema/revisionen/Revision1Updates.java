@@ -209,6 +209,9 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 			""",
 			Schema.tab_EigeneSchule_Abteilungen, Schema.tab_K_Lehrer
 		);
+		add("Korrektur für den Fremdschluessel auf die Spalte Klasse der Tabelle EigeneSchule_Abt_Kl",
+			"DELETE FROM %s WHERE %s NOT IN (SELECT %s FROM %s)".formatted(Schema.tab_EigeneSchule_Abt_Kl.name(),
+				Schema.tab_EigeneSchule_Abt_Kl.col_Klasse.name(), Schema.tab_Versetzung.col_Klasse.name(), Schema.tab_Versetzung.name()));
 		add("Korrektur für den Fremdschluessel auf die Spalte FloskelGruppe der Tabelle Floskeln",
 			"""
 			UPDATE Floskeln
