@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
-import { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -713,6 +713,19 @@ export class RouteDataGostKursplanung {
 				await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, this.halbjahr.id));
 			else
 				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, value.id));
+		}
+	}
+
+	getPDFKursSchienenZuordnung = async () : Promise<Blob> => {
+		if (!this.hatErgebnis)
+			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
+		try {
+			api.status.start();
+			return await api.server.getGostBlockungPDFKursSchienenZuordnung(new ArrayList<number>(), api.schema, this.ergebnismanager.getErgebnis().id);
+		} catch(e) {
+			throw new DeveloperNotificationException("Fehler beim Herunterladen der Kurs-Schienen-Zuordnung");
+		} finally {
+			api.status.stop();
 		}
 	}
 

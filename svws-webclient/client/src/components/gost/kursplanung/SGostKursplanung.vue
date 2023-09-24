@@ -1,43 +1,46 @@
 <template>
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
-					<template v-if="blockungstabelleVisible">
-						<i-ri-eye-off-line />
-						Tabelle ausblenden
-					</template>
-					<template v-else>
-						<i-ri-eye-line />
-						Tabelle einblenden
-					</template>
-				</svws-ui-button>
-				<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
-					<i-ri-settings3-line />
-					<span class="pr-1">Regeln zur Blockung</span>
-					<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
-				</svws-ui-button>
-				<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-					<template v-if="aktivieren_moeglich">
-						<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
-					</template>
-					<template v-else>
-						<svws-ui-tooltip>
-							<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
-							<template #content>
-								<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
-								<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
-								<span v-else />
-							</template>
-						</svws-ui-tooltip>
-					</template>
-				</s-card-gost-kursansicht-blockung-aktivieren-modal>
-				<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-					<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
-				</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-			</svws-ui-sub-nav>
-		</Teleport>
 		<template v-if="hatBlockung">
+			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+				<svws-ui-sub-nav>
+					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
+						<template v-if="blockungstabelleVisible">
+							<i-ri-eye-off-line />
+							Tabelle ausblenden
+						</template>
+						<template v-else>
+							<i-ri-eye-line />
+							Tabelle einblenden
+						</template>
+					</svws-ui-button>
+					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
+						<i-ri-settings3-line />
+						<span class="pr-1">Regeln zur Blockung</span>
+						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+					</svws-ui-button>
+					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<template v-if="aktivieren_moeglich">
+							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+						</template>
+						<template v-else>
+							<svws-ui-tooltip>
+								<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
+								<template #content>
+									<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
+									<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
+									<span v-else />
+								</template>
+							</svws-ui-tooltip>
+						</template>
+					</s-card-gost-kursansicht-blockung-aktivieren-modal>
+					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
+					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+					<svws-ui-button type="secondary" @click.prevent="downloadPDFKursSchienenZuordnung" title="Kurs-Schienen-Zuordnung herunterladen">
+						<i-ri-printer-line />Kurs-Schienen-Zuordnung
+					</svws-ui-button>
+				</svws-ui-sub-nav>
+			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:jahrgangsdaten="jahrgangsdaten"
 				:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
@@ -103,21 +106,33 @@
 		blockungstabelleVisible.value = !blockungstabelleVisible.value;
 	}
 
+	async function downloadPDFKursSchienenZuordnung() {
+		const pdf = await props.getPDFKursSchienenZuordnung();
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(pdf);
+		link.download = `Kurs-Schienen-Zuordnung-${props.jahrgangsdaten.abiturjahr}-${props.jahrgangsdaten.jahrgang}-${props.halbjahr.kuerzel}-${props.getErgebnismanager().getErgebnis().id}.pdf`;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
 </script>
 
 <style lang="postcss" scoped>
-.page--content {
-  @apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
-  grid-auto-rows: 100%;
-  grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
-  grid-auto-columns: max-content;
 
-  &.svws-blockungstabelle-hidden {
-    grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
+	.page--content {
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
+		grid-auto-rows: 100%;
+		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
+		grid-auto-columns: max-content;
 
-    .s-gost-kursplanung-schueler-auswahl {
-      @apply -ml-8 lg:-ml-16;
-    }
-  }
-}
+		&.svws-blockungstabelle-hidden {
+			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
+
+			.s-gost-kursplanung-schueler-auswahl {
+			@apply -ml-8 lg:-ml-16;
+			}
+		}
+	}
+
 </style>
