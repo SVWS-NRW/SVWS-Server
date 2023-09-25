@@ -18,7 +18,7 @@
 				<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
 				<svws-ui-checkbox type="toggle" v-model="filterExterne">Keine Externe</svws-ui-checkbox>
 			</div>
-			<svws-ui-data-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler vorhanden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
+			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler vorhanden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
 				<template #cell(schueler)="{value: s}: {value: Schueler}">
 					<div class="flex gap-2 w-full">
 						<div>{{ s.nachname }}, {{ s.vorname }}</div>
@@ -30,7 +30,7 @@
 				<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card v-if="!filtered.isEmpty()" :title="`Details zu Schüler ID: ${schueler.schueler.id}`" class="sticky top-8">
 			<div class="text-headline inline-flex gap-x-5 -mt-3 flex-wrap" :class="counter(schueler.ergebnis.fehlercodes) === 0 ? 'mb-6' : 'mb-1'">
