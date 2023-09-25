@@ -22,7 +22,12 @@
 	"exports": {
 		".": {
 			"import": "./dist/svws-components.js",
+			"types": "./dist/index.d.ts",
 			"require": "./dist/svws-components.umd.cjs"
+		},
+		"./style.css": {
+			"import": "./dist/style.css",
+			"require": "./dist/style.css"
 		}
 	},
 	"type": "module",
