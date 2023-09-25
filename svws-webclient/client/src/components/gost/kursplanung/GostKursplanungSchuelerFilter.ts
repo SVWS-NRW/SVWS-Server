@@ -34,6 +34,10 @@ export class GostKursplanungSchuelerFilter {
 		return this._name.value;
 	}
 
+	set name(value: string) {
+		this._name.value = value;
+	}
+
 	get kurs(): GostBlockungKurs | undefined {
 		return this._kurs.value;
 	}
