@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Einstellungen">
-		<svws-ui-data-table :items="kompetenzgruppen" :disable-footer="true">
+		<svws-ui-table :items="kompetenzgruppen" :disable-footer="true">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="columnheader"
@@ -34,7 +34,7 @@
 						:benutzer-kompetenzen="benutzerKompetenzen" />
 				</template>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 

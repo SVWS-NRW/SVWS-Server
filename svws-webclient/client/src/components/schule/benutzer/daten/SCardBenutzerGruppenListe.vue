@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Zugewiesene Benutzergruppen">
-		<svws-ui-data-table selectable :items="listBenutzergruppen" :disable-footer="true">
+		<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true">
 			<template #header>
 				<div role="row" class="data-table__tr data-table__thead__tr">
 					<div role="checkbox" aria-label="Alle auswählen"
@@ -44,7 +44,7 @@
 						:goto-benutzergruppe="gotoBenutzergruppe" />
 				</div>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 	</svws-ui-content-card>
 </template>
 

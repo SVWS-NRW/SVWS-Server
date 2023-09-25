@@ -1,6 +1,6 @@
 <template>
 	<template v-if="visible">
-		<svws-ui-data-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl"
+		<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl"
 			:items="listBlockungen" :columns="[{ key: 'name', label: 'Blockung' }]" class="mt-10">
 			<template #cell(name)="{ rowData: row }">
 				<div class="flex justify-between w-full items-start">
@@ -39,7 +39,7 @@
 			<template #footer>
 				<auswahl-blockung-api-status v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" :blockung="auswahlBlockung" :api-status="apiStatus" />
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />

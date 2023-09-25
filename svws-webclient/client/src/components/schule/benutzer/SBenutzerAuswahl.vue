@@ -7,7 +7,7 @@
 			</nav>
 		</template>
 		<template #content>
-			<svws-ui-data-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
+			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
 				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Namen oder Kürzel" />
@@ -17,7 +17,7 @@
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
 						:delete-benutzer-allgemein="deleteMultipleUser" />
 				</template>
-			</svws-ui-data-table>
+			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
 </template>
