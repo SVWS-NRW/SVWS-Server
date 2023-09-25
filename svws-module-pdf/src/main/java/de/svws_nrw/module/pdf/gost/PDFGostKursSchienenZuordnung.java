@@ -32,8 +32,8 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
- * für die Laufbahnplanung der gymnasialen Oberstufe.
+ * Diese Klasse beinhaltet den Code zur Erstellung einer Übersicht der Kurs-Schienen-Zuordnung
+ * eines Blockungsergebnisses, entweder für das gesamte Ergebnis oder für einzelne Schüler.
  */
 public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 
@@ -47,7 +47,7 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 	/**
 	 * Erstellt die Kurs-Schienen-Matrix für eine Jahrgangsstufe oder für einen Schüler der Stufe auf Basis der HTML-Vorlage
 	 *
-	 * @param dateiname        	Dateiname der finalen PDF-Datei. Ist dieser leer, so wird aus den übergebenen Daten des Schülers ein eindeutiger Dateiname erzeugt.
+	 * @param dateiname        	Dateiname der finalen PDF-Datei.
 	 * @param schulnummer      	Schulnummer der Schule, deren Blockungsergebnis verwendet wird.
 	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
 	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Kurs-Schienen-Zuordnung ausgegeben werden soll.
@@ -85,9 +85,9 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		bodyData.put("SCHULNUMMER", schulnummer);
 		if (lfdNr == null)
 			// TODO: Ergebnismanager braucht Methode um die ErgebnisID abzurufen.
-			bodyData.put("INFORMATIONEN", "Blockungsergebnis-ID: -1 - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Externe, Dummy)");
+			bodyData.put("INFORMATIONEN", "Blockungsergebnis: %s (eID%d) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Externe, Dummy)".formatted(ergebnisManager.getErgebnis().name, ergebnisManager.getErgebnis().id));
 		else
-			bodyData.put("INFORMATIONEN", "Blockungsergebnis-ID: -1 - Ausdruck lfd. Nr: %03d".formatted(lfdNr));
+			bodyData.put("INFORMATIONEN", "Blockungsergebnis: %s (eID%d) - Ausdruck lfd. Nr: %03d".formatted(ergebnisManager.getErgebnis().name, ergebnisManager.getErgebnis().id, lfdNr));
 
 		// Grundwerte für die Kurs-Schienenmatrix ermitteln
 		final List<GostBlockungSchiene> schienen = datenManager.schieneGetListe();

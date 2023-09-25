@@ -1,0 +1,9 @@
+
+p {
+	margin: 0em;
+    padding: 0em;
+}
+
+ul {
+   padding-left: 1em;
+}

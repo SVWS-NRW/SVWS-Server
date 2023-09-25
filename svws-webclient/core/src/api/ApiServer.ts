@@ -3585,6 +3585,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode getGostBlockungPDFSchuelerKurseListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \d+}
+	 *
+	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsergebnisid - der Pfad-Parameter blockungsergebnisid
+	 *
+	 * @returns Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
+	 */
+	public async getGostBlockungPDFSchuelerKurseListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<Blob> {
+		const path = "/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : Blob = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostBlockungRegel für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/regeln/{regelid : \d+}
 	 *
 	 * Liest die angegebene Regel einer Blockung der gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
