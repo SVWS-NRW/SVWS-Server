@@ -15,10 +15,10 @@ export class GostKursplanungSchuelerFilter {
 	private _kursart: Ref<GostKursart | undefined> = ref(undefined);
 	private mapSchueler: Map<number, SchuelerListeEintrag>;
 	private datenmanager: GostBlockungsdatenManager | undefined;
-	private ergebnismanager: GostBlockungsergebnisManager | undefined;
+	private ergebnismanager: () => GostBlockungsergebnisManager | undefined;
 	private faecher: List<GostFach>;
 
-	public constructor(datenmanager: GostBlockungsdatenManager | undefined, ergebnismanager: GostBlockungsergebnisManager | undefined,
+	public constructor(datenmanager: GostBlockungsdatenManager | undefined, ergebnismanager: () => GostBlockungsergebnisManager | undefined,
 		faecher: List<GostFach>, mapSchueler: Map<number, SchuelerListeEintrag>) {
 		this.datenmanager = datenmanager;
 		this.ergebnismanager = ergebnismanager;
@@ -66,14 +66,14 @@ export class GostKursplanungSchuelerFilter {
 
 	public filtered: ComputedRef<SchuelerListeEintrag[]> = computed(() => {
 		const gefiltert: SchuelerListeEintrag[] = [];
-		if (this.ergebnismanager === undefined)
-			return gefiltert;
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
-		const res = this.ergebnismanager.getOfSchuelerMengeGefiltert(this.kurs?.id || -1,
+		const res = this.ergebnismanager()?.getOfSchuelerMengeGefiltert(this.kurs?.id || -1,
 			this.fach || -1,
 			this.kursart?.id || -1,
 			pKonfliktTyp,
 			this._name.value);
+		if (res === undefined)
+			return gefiltert;
 		for (const s of res) {
 			const ss = this.mapSchueler.get(s.id);
 			if (ss !== undefined)
@@ -86,37 +86,37 @@ export class GostKursplanungSchuelerFilter {
 		if (this.fach !== undefined) {
 			if (this.kursart !== undefined)
 				return {
-					m: this.ergebnismanager?.getOfFachartAnzahlSchuelerMaennlich(this.fach, this.kursart.id),
-					w: this.ergebnismanager?.getOfFachartAnzahlSchuelerWeiblich(this.fach, this.kursart.id),
-					d: this.ergebnismanager?.getOfFachartAnzahlSchuelerDivers(this.fach, this.kursart.id),
-					x: this.ergebnismanager?.getOfFachartAnzahlSchuelerOhneAngabe(this.fach, this.kursart.id),
-					schriftlich: this.ergebnismanager?.getOfFachartAnzahlSchuelerSchriftlich(this.fach, this.kursart.id),
-					muendlich: this.ergebnismanager?.getOfFachartAnzahlSchuelerMuendlich(this.fach, this.kursart.id),
+					m: this.ergebnismanager()?.getOfFachartAnzahlSchuelerMaennlich(this.fach, this.kursart.id),
+					w: this.ergebnismanager()?.getOfFachartAnzahlSchuelerWeiblich(this.fach, this.kursart.id),
+					d: this.ergebnismanager()?.getOfFachartAnzahlSchuelerDivers(this.fach, this.kursart.id),
+					x: this.ergebnismanager()?.getOfFachartAnzahlSchuelerOhneAngabe(this.fach, this.kursart.id),
+					schriftlich: this.ergebnismanager()?.getOfFachartAnzahlSchuelerSchriftlich(this.fach, this.kursart.id),
+					muendlich: this.ergebnismanager()?.getOfFachartAnzahlSchuelerMuendlich(this.fach, this.kursart.id),
 				}
 			else
 				return {
-					m: this.ergebnismanager?.getOfFachAnzahlSchuelerMaennlich(this.fach),
-					w: this.ergebnismanager?.getOfFachAnzahlSchuelerWeiblich(this.fach),
-					d: this.ergebnismanager?.getOfFachAnzahlSchuelerDivers(this.fach),
-					x: this.ergebnismanager?.getOfFachAnzahlSchuelerOhneAngabe(this.fach),
-					schriftlich: this.ergebnismanager?.getOfFachAnzahlSchuelerSchriftlich(this.fach),
-					muendlich: this.ergebnismanager?.getOfFachAnzahlSchuelerMuendlich(this.fach),
+					m: this.ergebnismanager()?.getOfFachAnzahlSchuelerMaennlich(this.fach),
+					w: this.ergebnismanager()?.getOfFachAnzahlSchuelerWeiblich(this.fach),
+					d: this.ergebnismanager()?.getOfFachAnzahlSchuelerDivers(this.fach),
+					x: this.ergebnismanager()?.getOfFachAnzahlSchuelerOhneAngabe(this.fach),
+					schriftlich: this.ergebnismanager()?.getOfFachAnzahlSchuelerSchriftlich(this.fach),
+					muendlich: this.ergebnismanager()?.getOfFachAnzahlSchuelerMuendlich(this.fach),
 				}
 		}	else if (this.kurs !== undefined)
 			return {
-				m: this.ergebnismanager?.getOfKursAnzahlSchuelerMaennlich(this.kurs.id),
-				w: this.ergebnismanager?.getOfKursAnzahlSchuelerWeiblich(this.kurs.id),
-				d: this.ergebnismanager?.getOfKursAnzahlSchuelerDivers(this.kurs.id),
-				x: this.ergebnismanager?.getOfKursAnzahlSchuelerOhneAngabe(this.kurs.id),
-				schriftlich: this.ergebnismanager?.getOfKursAnzahlSchuelerSchriftlich(this.kurs.id),
-				muendlich: this.ergebnismanager?.getOfKursAnzahlSchuelerMuendlich(this.kurs.id),
+				m: this.ergebnismanager()?.getOfKursAnzahlSchuelerMaennlich(this.kurs.id),
+				w: this.ergebnismanager()?.getOfKursAnzahlSchuelerWeiblich(this.kurs.id),
+				d: this.ergebnismanager()?.getOfKursAnzahlSchuelerDivers(this.kurs.id),
+				x: this.ergebnismanager()?.getOfKursAnzahlSchuelerOhneAngabe(this.kurs.id),
+				schriftlich: this.ergebnismanager()?.getOfKursAnzahlSchuelerSchriftlich(this.kurs.id),
+				muendlich: this.ergebnismanager()?.getOfKursAnzahlSchuelerMuendlich(this.kurs.id),
 			}
 		else
 			return {
-				m: this.ergebnismanager?.getOfSchuelerAnzahlMaennlich(),
-				w: this.ergebnismanager?.getOfSchuelerAnzahlWeiblich(),
-				d: this.ergebnismanager?.getOfSchuelerAnzahlDivers(),
-				x: this.ergebnismanager?.getOfSchuelerAnzahlOhneAngabe(),
+				m: this.ergebnismanager()?.getOfSchuelerAnzahlMaennlich(),
+				w: this.ergebnismanager()?.getOfSchuelerAnzahlWeiblich(),
+				d: this.ergebnismanager()?.getOfSchuelerAnzahlDivers(),
+				x: this.ergebnismanager()?.getOfSchuelerAnzahlOhneAngabe(),
 				schriftlich: 0,
 				muendlich: 0,
 			}
