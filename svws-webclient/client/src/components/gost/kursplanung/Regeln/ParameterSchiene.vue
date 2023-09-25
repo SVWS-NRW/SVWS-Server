@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="schienen"
+	<svws-ui-select v-model="selected" :items="schienen"
 		:item-text="(i: GostBlockungSchiene) => i.bezeichnung" />
 </template>
 

@@ -13,7 +13,7 @@
 			</div>
 			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
 			<div>
-				<svws-ui-multi-select v-if="kurseMitKursart.size()"
+				<svws-ui-select v-if="kurseMitKursart.size()"
 					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
 					title="Zusammenlegen mit…" class="placeholder--visible text-sm" headless
 					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />

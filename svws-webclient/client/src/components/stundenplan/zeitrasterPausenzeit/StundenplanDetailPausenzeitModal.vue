@@ -4,13 +4,13 @@
 		<template #modalTitle>Pausenaufsicht hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-multi-select title="Aufsichtführende Lehrkraft" :items="listLehrer"
+				<svws-ui-select title="Aufsichtführende Lehrkraft" :items="listLehrer"
 					:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 					:item-filter="filter" removable autocomplete :model-value="undefined" ref="refLehrer" />
 				<svws-ui-multi-select title="Aufsichtsbereiche" :items="listAufsichtsbereiche" tags
 					:item-text="(i: StundenplanAufsichtsbereich)=>i.beschreibung" ref="refAufsichtsbereich"
 					:item-filter="filterAufsichtsbereiche" removable autocomplete :model-value="undefined" />
-				<svws-ui-multi-select v-if="wochentypen > 0" title="Wochentyp" :items="wochentypenArray" :model-value="wochentypenArray[0]" :item-text="(i: WT)=>i?.text || 'leer'" ref="refWochentyp" />
+				<svws-ui-select v-if="wochentypen > 0" title="Wochentyp" :items="wochentypenArray" :model-value="wochentypenArray[0]" :item-text="(i: WT)=>i?.text || 'leer'" ref="refWochentyp" />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>

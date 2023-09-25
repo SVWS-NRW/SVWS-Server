@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Allgemeine Angaben">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
-			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-select title="Klasse" v-model="klasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
+			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="i => `${i.kuerzel}`" autocomplete />
 			<svws-ui-text-input placeholder="Datum von" :model-value="data.datumAnfang || undefined" @change="datumAnfang=>doPatch({datumAnfang})" type="date" />
 			<svws-ui-text-input placeholder="Datum bis" :model-value="data.datumEnde || undefined" @change="datumEnde=>doPatch({datumEnde})" type="date" />
 			<svws-ui-spacing />
@@ -20,8 +20,8 @@
 					</span>
 				</div>
 			</div>
-			<svws-ui-multi-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
-			<svws-ui-multi-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
+			<svws-ui-select title="Tutor" v-model="tutor" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
+			<svws-ui-select title="Sonderpädagoge" v-model="sonderpaedagoge" :items="mapLehrer" :item-text="getLehrerText" autocomplete />
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden</span>
@@ -31,23 +31,23 @@
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-multi-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
+				<svws-ui-select title="Schulgliederung" v-model="gliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete />
 				<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="data.pruefungsOrdnung || undefined" />
-				<svws-ui-multi-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete />
-				<svws-ui-multi-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete />
+				<svws-ui-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete />
+				<svws-ui-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-multi-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
-				<svws-ui-multi-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
+				<svws-ui-select title="Förderschwerpunkt" v-model="foerderschwerpunkt" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
+				<svws-ui-select title="Weiterer Förderschwerpunkt" v-model="foerderschwerpunkt2" :items="mapFoerderschwerpunkte" :item-text="i => i.text" autocomplete />
 				<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
-				<svws-ui-multi-select title="Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
+				<svws-ui-select title="Gesellschaftswissenschaft" v-model="lernbereichsnoteGSbzwAL" :items="getLernbereichsnoten()"
 					:item-text="i => `${i.kuerzel}`" autocomplete />
-				<svws-ui-multi-select title="Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
+				<svws-ui-select title="Naturwissenschaft" v-model="lernbereichsnoteNW" :items="getLernbereichsnoten()"
 					:item-text="i => `${i.kuerzel}`" autocomplete />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" />

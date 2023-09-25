@@ -1,17 +1,17 @@
 <template>
 	<svws-ui-content-card title="Lehramtsangaben">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()"
+			<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()"
 				:item-text="(i: LehrerLehramt) => i.daten.text" required />
-			<svws-ui-multi-select title="Anerkennung Lehramt" v-model="lehramt_anerkennung" :items="LehrerLehramtAnerkennung.values()"
+			<svws-ui-select title="Anerkennung Lehramt" v-model="lehramt_anerkennung" :items="LehrerLehramtAnerkennung.values()"
 				:item-text="(i: LehrerLehramtAnerkennung) => i.daten.text" required />
-			<svws-ui-multi-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
+			<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
 				:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required />
-			<svws-ui-multi-select title="Anerkennung Lehrbefähigung" v-model="lehrbefaehigung_anerkennung" :items="LehrerLehrbefaehigungAnerkennung.values()"
+			<svws-ui-select title="Anerkennung Lehrbefähigung" v-model="lehrbefaehigung_anerkennung" :items="LehrerLehrbefaehigungAnerkennung.values()"
 				:item-text="(i: LehrerLehrbefaehigungAnerkennung) => i.daten.text" required />
-			<svws-ui-multi-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
+			<svws-ui-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
 				:item-text="(i: LehrerFachrichtung) => i.daten.text" required />
-			<svws-ui-multi-select title="Anerkennung Fachrichtung" v-model="fachrichtung_anerkennung" :items="LehrerFachrichtungAnerkennung.values()"
+			<svws-ui-select title="Anerkennung Fachrichtung" v-model="fachrichtung_anerkennung" :items="LehrerFachrichtungAnerkennung.values()"
 				:item-text="(i: LehrerFachrichtungAnerkennung) => i.daten.text" required />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>

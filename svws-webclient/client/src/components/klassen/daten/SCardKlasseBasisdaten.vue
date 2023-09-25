@@ -7,7 +7,7 @@
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
 			<svws-ui-text-input placeholder="Parallelität" :model-value="data.parallelitaet" @change="parallelitaet=>doPatch({parallelitaet})" type="text" />
 			<svws-ui-text-input placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung=>doPatch({sortierung: Number(sortierung)})" type="text" />
-			<svws-ui-multi-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
+			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

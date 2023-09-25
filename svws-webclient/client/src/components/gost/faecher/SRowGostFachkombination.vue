@@ -1,15 +1,15 @@
 <template>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+		<svws-ui-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
 	<div class="svws-ui-td svws-divider" role="cell">
-		<svws-ui-multi-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+		<svws-ui-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+		<svws-ui-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
 	<div class="svws-ui-td svws-divider" role="cell">
-		<svws-ui-multi-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+		<svws-ui-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
 		<svws-ui-checkbox v-model="gueltigEF1" headless />

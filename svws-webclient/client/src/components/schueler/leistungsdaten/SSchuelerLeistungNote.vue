@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select title="—" v-model="inputNote" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel" headless class="w-full" />
+	<svws-ui-select title="—" v-model="inputNote" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel" headless class="w-full" />
 </template>
 
 <script setup lang="ts">

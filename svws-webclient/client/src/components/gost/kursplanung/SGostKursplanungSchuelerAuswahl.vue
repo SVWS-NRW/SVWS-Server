@@ -15,12 +15,12 @@
 					<svws-ui-radio-option v-model="schuelerFilter.fach_toggle.value" value="fach" name="Fach" label="Fachfilter" :icon="false" />
 				</svws-ui-radio-group>
 				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter.kurs_toggle.value === 'kurs'">
-					<svws-ui-multi-select v-model="schuelerFilter.kurs" :items="schuelerFilter.getKurse()"
+					<svws-ui-select v-model="schuelerFilter.kurs" :items="schuelerFilter.getKurse()"
 						:item-text="(kurs: GostBlockungKurs) => getErgebnismanager().getOfKursName(kurs.id) ?? ''" />
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper :grid="2" class="col-span-full" v-if="schuelerFilter.fach_toggle.value === 'fach'">
-					<svws-ui-multi-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
-					<svws-ui-multi-select title="Kursart" v-model="schuelerFilter.kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" removable />
+					<svws-ui-select title="Fach" v-model="fach" :items="faecherManager.faecher()" :item-text="(fach: GostFach) => fach.bezeichnung ?? ''" />
+					<svws-ui-select title="Kursart" v-model="schuelerFilter.kursart" :items="GostKursart.values()" :item-text="(kursart: GostKursart) => kursart.kuerzel" removable />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
 				<svws-ui-radio-group class="radio--row col-span-full">

@@ -2,7 +2,7 @@
 	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border border-black/10 bg-white shadow-lg shadow-black/5 dark:border-white/10 dark:bg-black">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
-				<svws-ui-multi-select :title="stundenplanRaumSelected ? 'Raum' : 'Raum auswählen...'"
+				<svws-ui-select :title="stundenplanRaumSelected ? 'Raum' : 'Raum auswählen...'"
 					v-model="stundenplanRaumSelected"
 					headless
 					class="flex-grow"

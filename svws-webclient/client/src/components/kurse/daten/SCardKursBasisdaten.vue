@@ -5,7 +5,7 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
-			<svws-ui-multi-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
+			<svws-ui-select title="Lehrer" v-model="lehrer" :items="mapLehrer.values()" :item-text="(l: LehrerListeEintrag) => l.kuerzel" />
 			<svws-ui-multi-select title="Jahrgänge" v-model="jahrgaenge" tags :items="mapJahrgaenge" :item-text="(jg: JahrgangsListeEintrag) => jg?.kuerzel ?? ''" />
 			<svws-ui-text-input placeholder="Schuljahresabschnitt" :model-value="data.idSchuljahresabschnitt" @change="idSchuljahresabschnitt=>doPatch({idSchuljahresabschnitt: Number(idSchuljahresabschnitt)})" type="text" />
 			<svws-ui-text-input placeholder="Fach-ID" :model-value="data.idFach" @change="idFach=>doPatch({idFach: Number(idFach)})" type="number" />

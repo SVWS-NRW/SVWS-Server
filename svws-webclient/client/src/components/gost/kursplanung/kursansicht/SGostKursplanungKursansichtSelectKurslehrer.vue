@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-input-wrapper>
 		<div class="flex flex-col w-full" v-for="(lehrer, i) of kurslehrer" :key="lehrer.id">
-			<svws-ui-multi-select :model-value="lehrer" @update:model-value="(val: LehrerListeEintrag) => update_kurslehrer(val, lehrer)" class="flex-1"
+			<svws-ui-select :model-value="lehrer" @update:model-value="(val: LehrerListeEintrag) => update_kurslehrer(val, lehrer)" class="flex-1"
 				autocomplete :item-filter="lehrer_filter" :items="lehrer_liste" removable
 				:item-text="(l: LehrerListeEintrag)=> `${i+1}: ${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 			<svws-ui-button v-if="!new_kurs_lehrer && (i === kurslehrer.size() - 1)" @click="new_kurs_lehrer=true" type="transparent" class="col-span-full mt-3">
@@ -9,7 +9,7 @@
 			</svws-ui-button>
 		</div>
 		<div v-if="!kurslehrer.size() || new_kurs_lehrer">
-			<svws-ui-multi-select :model-value="undefined" @update:model-value="update_kurslehrer" class="flex-1" autocomplete
+			<svws-ui-select :model-value="undefined" @update:model-value="update_kurslehrer" class="flex-1" autocomplete
 				:item-filter="lehrer_filter" :items="lehrer_liste" :item-text="(l: LehrerListeEintrag) => `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 		</div>
 	</svws-ui-input-wrapper>

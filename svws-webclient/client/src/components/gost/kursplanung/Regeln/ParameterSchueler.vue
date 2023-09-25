@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select v-model="selected" :items="mapSchueler"
+	<svws-ui-select v-model="selected" :items="mapSchueler"
 		:item-text="(i: SchuelerListeEintrag) => `${i.nachname}, ${i.vorname}`"
 		:item-filter="filter" :item-sort="sort" autocomplete />
 </template>

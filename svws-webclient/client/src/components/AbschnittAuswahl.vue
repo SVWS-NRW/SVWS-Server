@@ -13,7 +13,7 @@
 				</span>
 			</template>
 		</svws-ui-tooltip>
-		<svws-ui-multi-select :model-value="aktAbschnitt" @update:model-value="setAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" />
+		<svws-ui-select :model-value="aktAbschnitt" @update:model-value="setAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" />
 	</div>
 </template>
 

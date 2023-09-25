@@ -2,8 +2,8 @@
 	<svws-ui-content-card title="Wohnort und Kontaktdaten">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Straße" :model-value="inputStrasse" @change="patchStrasse" type="text" span="full" />
-			<svws-ui-multi-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-multi-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
+			<svws-ui-select v-model="inputWohnortID" title="Wohnort" :items="mapOrte" :item-filter="orte_filter" :item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
+			<svws-ui-select v-model="inputOrtsteilID" title="Ortsteil" :items="mapOrtsteile" :item-sort="ortsteilSort" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" />
 			<svws-ui-spacing />
 			<svws-ui-text-input :model-value="data.telefon" @change="telefon=>doPatch({telefon})" type="tel" placeholder="Telefon" />
 			<svws-ui-text-input :model-value="data.telefonMobil" @change="telefonMobil=>doPatch({telefonMobil})" type="tel" placeholder="Mobil oder Fax" />

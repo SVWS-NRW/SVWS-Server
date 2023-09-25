@@ -1,12 +1,12 @@
 <template>
 	<svws-ui-content-card title="Beschäftigungsdaten">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Rechtsverhältnis" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
+			<svws-ui-select title="Rechtsverhältnis" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
 				:item-text="(i: LehrerRechtsverhaeltnis) =>i.daten.text" />
-			<svws-ui-multi-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
+			<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
 				:item-text="(i: LehrerBeschaeftigungsart) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Pflichtstundensoll" :model-value="personaldaten.pflichtstundensoll" @change="pflichtstundensoll=>doPatch({pflichtstundensoll: Number(pflichtstundensoll)})" type="text" />
-			<svws-ui-multi-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
+			<svws-ui-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 				:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
 			<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer=>doPatch({stammschulnummer})" type="text" />
 		</svws-ui-input-wrapper>

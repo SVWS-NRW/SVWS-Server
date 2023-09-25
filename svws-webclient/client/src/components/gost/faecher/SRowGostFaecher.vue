@@ -20,11 +20,11 @@
 			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td">
-			<svws-ui-multi-select v-if="istJahrgangAllgemein && hatLeitfach1" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-divider">
-			<svws-ui-multi-select v-if="istJahrgangAllgemein && istProjektkurs" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">

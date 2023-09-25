@@ -7,7 +7,7 @@
 			<svws-ui-content-card title="Basisdaten">
 				<div class="input-wrapper">
 					<svws-ui-text-input placeholder="Name" v-model="betrieb.name1" type="text" />
-					<svws-ui-multi-select title="Beschäftigungsart" v-model="inputBeschaeftigungsarten" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
+					<svws-ui-select title="Beschäftigungsart" v-model="inputBeschaeftigungsarten" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" />
 					<svws-ui-text-input placeholder="Namensergänzung" v-model="betrieb.name2" type="text" />
 					<svws-ui-text-input placeholder="1. Telefon-Nr." v-model="betrieb.telefon1" type="text" />
 					<svws-ui-text-input placeholder="2. Telefon-Nr." v-model="betrieb.telefon2" type="text" />
@@ -24,10 +24,10 @@
 					<div class="col-span-2">
 						<svws-ui-text-input placeholder="Zusatz" v-model="betrieb.hausnrzusatz" type="text" />
 					</div>
-					<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
+					<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 						:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 					<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
-					<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
+					<svws-ui-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
 						:item-sort="ortsteilSort" :item-text="i => i.ortsteil" />
 					-->
 					<!-- <svws-ui-checkbox v-model="anschreiben"> erhält Anschreiben </svws-ui-checkbox> -->

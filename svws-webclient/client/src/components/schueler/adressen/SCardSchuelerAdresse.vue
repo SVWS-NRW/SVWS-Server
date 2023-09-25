@@ -12,17 +12,17 @@
 			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche}, props.betriebsStammdaten.id)" title="Branche" type="text" />
 			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-multi-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
+			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
 			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email}, props.betriebsStammdaten.id)" type="email" verify-email />
 			<svws-ui-spacing />
-			<svws-ui-multi-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
+			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" />
 			<div class="flex gap-1 h-min items-center">
 				<div class="flex-grow">
-					<svws-ui-multi-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
+					<svws-ui-select v-if="mapAnsprechpartner.size > 0" title="Ansprechpartner" v-model="ansprechpartner"
 						:items="getAnsprechpartnervonBetrieb()" :item-text="(i: BetriebAnsprechpartner) => i.name ??''" />
 					<span v-else class="opacity-50">Kein Ansprechpartner</span>
 				</div>
@@ -34,10 +34,10 @@
 			<!-- <svws-ui-text-input placeholder="Zusatz" :model-value="betriebsStammdaten.hausnrzusatz" @change="hausnrzusatz=>patchBetrieb({hausnrzusatz}, props.betriebsStammdaten.id)" type="text" /> -->
 
 			<!-- TODO In der Datenbank gibt es für die Adresse nur Ortsteil_id
-			<svws-ui-multi-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
+			<svws-ui-select title="Ortsteil" v-model="inputOrtsteilID" :items="inputKatalogOrtsteil" :item-filter="ortsteilFilter"
 				:item-sort="ortsteilSort" :item-text="i => i.ortsteil" />
 			-->
-			<!-- <svws-ui-multi-select title="Ortsteil" disabled :items="[]" :item-text="i=>i" /> -->
+			<!-- <svws-ui-select title="Ortsteil" disabled :items="[]" :item-text="i=>i" /> -->
 			<svws-ui-spacing :size="1" />
 			<svws-ui-textarea-input :model-value="betriebsStammdaten?.bemerkungen" placeholder="Bemerkungen" autoresize span="full"
 				@change="bemerkungen => patchBetrieb({ bemerkungen: bemerkungen === null ? '' : bemerkungen }, betriebsStammdaten.id)" />

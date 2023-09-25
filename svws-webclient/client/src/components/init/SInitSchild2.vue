@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Datenbank auswählen">
 		<div class="flex items-start gap-3">
 			<div class="flex flex-col gap-3">
-				<svws-ui-multi-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" />
+				<svws-ui-select :model-value="items.get(db)" :items="items.values()" @update:model-value="set" :item-text="i => i" />
 				<div class="flex flex-col gap-3" v-if="db !== 'mdb'">
 					<svws-ui-checkbox v-model="schildzentral">mit Angabe einer Schulnummer bei Migration aus einer Schild-Zentral-Instanz</svws-ui-checkbox>
 					<svws-ui-text-input v-if="schildzentral" v-model="schulnummer" placeholder="Schulnummer" />

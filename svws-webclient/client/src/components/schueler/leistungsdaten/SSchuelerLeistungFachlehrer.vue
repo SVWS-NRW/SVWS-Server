@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-multi-select title="—" v-model="lehrer" :items="mapLehrer.values()" :item-text="getLehrerText" headless class="w-full" />
+	<svws-ui-select title="—" v-model="lehrer" :items="mapLehrer.values()" :item-text="getLehrerText" headless class="w-full" />
 </template>
 
 <script setup lang="ts">

@@ -4,9 +4,9 @@
 			<svws-ui-checkbox v-model="inputIstDuplikat">Ist Duplikat</svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" span="full" statistics />
-			<svws-ui-multi-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i=>i.text ?? ''" />
-			<svws-ui-multi-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i=>i.text ?? ''" />
+			<svws-ui-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" span="full" statistics />
+			<svws-ui-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i=>i.text ?? ''" />
+			<svws-ui-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i=>i.text ?? ''" />
 			<svws-ui-text-input placeholder="Anmeldedatum" :model-value="data().anmeldedatum" @change="anmeldedatum=>doPatch({anmeldedatum})" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" :model-value="data().aufnahmedatum" @change="aufnahmedatum=>doPatch({aufnahmedatum})" type="date" statistics />
 			<svws-ui-spacing />

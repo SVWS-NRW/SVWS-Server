@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Pausenzeiten">
 		<svws-ui-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" v-model:clicked="zeit" selectable v-model="selected" count>
 			<template #cell(wochentag)="{ rowData }">
-				<svws-ui-multi-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
+				<svws-ui-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="patchPausenzeit({wochentag: Number($event.id)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 			</template>
 			<template #cell(beginn)="{ rowData }">
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => patchBeginn(beginn, rowData.id)" headless />

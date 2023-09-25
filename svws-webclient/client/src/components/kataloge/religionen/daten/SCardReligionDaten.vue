@@ -14,7 +14,7 @@
 			</div>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-multi-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="(i: Religion) => i.daten.kuerzel" required />
+			<svws-ui-select title="Statistikkürzel" v-model="inputStatistikKuerzel" :items="Religion.values()" :item-text="(i: Religion) => i.daten.kuerzel" required />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Schule auswählen">
 		<div class="flex items-start gap-3">
-			<svws-ui-multi-select :model-value="model" @update:model-value="runInitSchule" title="Auswahl Schule" autocomplete
+			<svws-ui-select :model-value="model" @update:model-value="runInitSchule" title="Auswahl Schule" autocomplete
 				:items="listSchulkatalog" :item-text="i => i.KurzBez || 'Schule ohne Name'"
 				:item-filter="filter" required :disabled="loading" />
 			<svws-ui-spinner :spinning="loading" />

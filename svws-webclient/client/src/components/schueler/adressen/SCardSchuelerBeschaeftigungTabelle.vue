@@ -1,9 +1,9 @@
 <template>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
+		<svws-ui-select title="—" headless v-model="inputBetrieb" :items="mapBetriebe" :item-text="(i: BetriebListeEintrag) => i.name1 ?? ''" />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
+		<svws-ui-select v-model="beschaeftigungsart" :items="mapBeschaeftigungsarten" :item-text="(i: KatalogEintrag) => i.text ?? ''" headless title="—" />
 	</div>
 	<div class="svws-ui-td" role="cell">
 		<svws-ui-text-input :model-value="betrieb.vertragsbeginn" @change="vertragsbeginn=>patchSchuelerBetriebsdaten({vertragsbeginn}, betrieb.id)" type="date" />
@@ -15,10 +15,10 @@
 		<svws-ui-checkbox v-model="praktikum" />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" headless title="—" />
+		<svws-ui-select v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i: LehrerListeEintrag) => i.nachname" headless title="—" />
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-multi-select :model-value="betrieb.ansprechpartner_id === null ? undefined : mapAnsprechpartner.get(betrieb.ansprechpartner_id)"
+		<svws-ui-select :model-value="betrieb.ansprechpartner_id === null ? undefined : mapAnsprechpartner.get(betrieb.ansprechpartner_id)"
 			@change="(ansprechPartner : BetriebAnsprechpartner) => patchSchuelerBetriebsdaten({ ansprechpartner_id: ansprechPartner === undefined ? null : ansprechPartner.id }, betrieb.id)"
 			:items="mapAnsprechpartner"
 			:item-text="(i: BetriebAnsprechpartner) => i.name || ''" headless title="—" />

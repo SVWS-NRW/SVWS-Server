@@ -6,7 +6,7 @@
 			<svws-ui-text-input placeholder="Rufname" :model-value="data().vorname" @change="vorname => doPatch({ vorname })" type="text" />
 			<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data().alleVornamen" @change="alleVornamen => doPatch({ alleVornamen })" type="text" />
 			<svws-ui-spacing />
-			<svws-ui-multi-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="(i: Geschlecht)=>i.text" />
+			<svws-ui-select title="Geschlecht" v-model="geschlecht" :items="Geschlecht.values()" statistics :item-text="(i: Geschlecht)=>i.text" />
 			<svws-ui-text-input placeholder="Geburtsdatum" :model-value="data().geburtsdatum" @change="geburtsdatum => doPatch({geburtsdatum})" type="date" :valid="istGeburtsdatumGueltig" required statistics />
 			<svws-ui-text-input placeholder="Geburtsort" :model-value="data().geburtsort" @change="geburtsort => doPatch({ geburtsort })" type="text" />
 			<svws-ui-text-input placeholder="Geburtsname" :model-value="data().geburtsname" @change="geburtsname => doPatch({ geburtsname })" type="text" />

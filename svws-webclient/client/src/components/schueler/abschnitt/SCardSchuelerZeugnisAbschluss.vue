@@ -8,7 +8,7 @@
 				<div class="opacity-50"> TODO: istAbschlussPrognose </div>
 				<div class="opacity-50"> TODO: versetzungsvermerk </div>
 				<div class="opacity-50"> TODO: abschlussart </div>
-				<svws-ui-multi-select title="Folgeklasse" v-model="folgeklasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
+				<svws-ui-select title="Folgeklasse" v-model="folgeklasse" :items="mapKlassen" :item-text="i => `${i.kuerzel}`" autocomplete />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper class="opacity-50">
