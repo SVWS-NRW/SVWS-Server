@@ -32,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-	import type { ComputedRef } from 'vue';
 	import type { GostKursplanungAuswahlProps } from './SGostKursplanungAuswahlProps';
 	import { computed } from 'vue';
 	import { GostHalbjahr } from "@core";
@@ -47,7 +46,7 @@
 
 	async function select_hj(halbjahr: GostHalbjahr | null) {
 		if (halbjahr !== null)
-			await props.setHalbjahr(halbjahr as unknown as GostHalbjahr);
+			await props.setHalbjahr(halbjahr);
 	}
 
 	async function blockung_hinzufuegen() {
@@ -56,7 +55,7 @@
 		await props.addBlockung();
 	}
 
-	const visible: ComputedRef<boolean> = computed(() =>
+	const visible = computed<boolean>(() =>
 		(props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0));
 
 </script>

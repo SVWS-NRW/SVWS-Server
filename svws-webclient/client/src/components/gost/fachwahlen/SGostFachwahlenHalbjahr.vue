@@ -22,7 +22,7 @@
 			</div>
 		</template>
 		<template #body>
-			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
+			<template v-for="fws in fachwahlstatistik" :key="fws.id">
 				<template v-if="hatFachwahl(fws, halbjahr)">
 					<template v-if="fws !== undefined">
 						<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
@@ -77,13 +77,10 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenHalbjahrProps } from "./SGostFachwahlenHalbjahrProps";
-	import type { ComputedRef} from "vue";
-	import { computed, ref } from "vue";
+	import { ref } from "vue";
 	import { ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, type GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenHalbjahrProps>();
-
-	const fachwahlenstatistik: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlstatistik.toArray() as GostStatistikFachwahl[]);
 
 	/*const aktuell = ref<GostStatistikFachwahl | undefined>(fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0));*/
 	const aktuell = ref<GostStatistikFachwahl | undefined>(undefined);

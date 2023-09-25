@@ -3,7 +3,7 @@ import { shallowRef } from "vue";
 import type { Abiturdaten, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
 	SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
-	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr } from "@core";
+	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 
@@ -92,7 +92,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 
 	get abiturdatenManager(): AbiturdatenManager {
 		if (this._state.value.abiturdatenManager === undefined)
-			throw new Error("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
+			throw new DeveloperNotificationException("Unerwarteter Fehler: Abiturdaten-Manager nicht initialisiert");
 		return this._state.value.abiturdatenManager;
 	}
 	set abiturdatenManager(abiturdatenManager: AbiturdatenManager | undefined) {
@@ -109,7 +109,11 @@ export class RouteDataSchuelerLaufbahnplanung {
 	}
 
 	get modus(): 'manuell'|'normal'|'hochschreiben' {
-		return api.config.getValue("app.schueler.laufbahnplanung.modus") as 'manuell'|'normal'|'hochschreiben';
+		const s = api.config.getValue("app.schueler.laufbahnplanung.modus");
+		if (s === 'manuell' || s === 'normal' || s === 'hochschreiben')
+			return s;
+		void api.config.setValue("app.schueler.laufbahnplanung.modus", 'normal');
+		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Modusart als Standardauswahl hinterlegt");
 	}
 
 	setModus = async (modus: 'manuell'|'normal'|'hochschreiben') => {
@@ -189,7 +193,11 @@ export class RouteDataSchuelerLaufbahnplanung {
 	}
 
 	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
-		return api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
+		const s = api.config.getValue("app.gost.belegpruefungsart");
+		if (s === 'ef1' || s === 'gesamt' || s === 'auto')
+			return s;
+		void api.config.setValue("app.gost.belegpruefungsart", 'auto');
+		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Belegpruefungsart als Standardauswahl hinterlegt");
 	}
 
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto') => {

@@ -15,7 +15,7 @@
 						</svws-ui-tooltip>
 					</h2>
 					<span class="svws-subline">
-						{{ [...inputKlassenlehrer].map(l => l.kuerzel).join(", ") }}
+						{{ lehrerkuerzel }}
 					</span>
 				</div>
 			</div>
@@ -32,16 +32,25 @@
 
 <script setup lang="ts">
 
-	import type { LehrerListeEintrag } from "@core";
+	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { KlassenAppProps } from "./SKlassenAppProps";
 
 	const props = defineProps<KlassenAppProps>();
 
-	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
-		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
-	);
+	const lehrerkuerzel = computed<string>(() => {
+		let s = '';
+		if (props.auswahl)
+			for (const id of props.auswahl.klassenLehrer) {
+				const lehrer = props.mapLehrer.get(id);
+				if (lehrer) {
+					if (s.length)
+						s += `, ${lehrer.kuerzel}`;
+					else s = lehrer.kuerzel;
+				}
+			}
+		return s;
+	});
 
 	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 

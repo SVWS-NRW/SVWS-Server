@@ -49,8 +49,8 @@ export class AES {
 			output.set(iv, 0);
 			output.set(new Uint8Array(encrypted), 16);
 			return output;
-		} catch (e: unknown) {
-			throw new AESException("Fehler beim Verschlüsseln der Daten.", e as Error);
+		} catch (e: any) {
+			throw new AESException("Fehler beim Verschlüsseln der Daten.", e);
 		}
 	}
 
@@ -74,9 +74,9 @@ export class AES {
 			const data = input.slice(16);
 			const decryptedData = await crypto.subtle.decrypt({name: this.algo.value, iv}, this.key, data);
 			return new Uint8Array(decryptedData);
-		} catch (e: unknown) {
+		} catch (e: any) {
 			console.log(e)
-			throw new AESException("Fehler beim Entschlüsseln der Daten.", e as Error);
+			throw new AESException("Fehler beim Entschlüsseln der Daten.", e);
 		}
 	}
 
@@ -158,8 +158,8 @@ export class AES {
 	public static async getRandomKey256(): Promise<CryptoKey> {
 		try {
 			return await crypto.subtle.generateKey({name: "AEA-CBC", length: 256}, true, ["encrypt", "decrypt"]);
-		} catch (e: unknown) {
-			throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", e as Error);
+		} catch (e: any) {
+			throw new AESException("Fehler beim Erstellen eines zufälligen AES-Schlüssels.", e);
 		}
 	}
 
@@ -185,9 +185,9 @@ export class AES {
 			const derivedKeyType = { name: "AES-CBC", length: 256}
 			const key = await crypto.subtle.deriveKey(keySpec, passwordKey, derivedKeyType, true, ["encrypt", "decrypt"]);
 			return key;
-		} catch (e: unknown) {
+		} catch (e: any) {
 			console.log(e)
-			throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", e as Error);
+			throw new AESException("Fehler beim Erstellen des AES-Schlüssels aus dem Kennwort und dem Salt.", e);
 		}
 	}
 

@@ -390,7 +390,7 @@ export class RouteDataSchuleBenutzergruppe {
 			return;
 		const b_ids = new ArrayList<number>();
 		b_ids.add(benutzer.id);
-		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema,this.benutzergruppenManager.getID()) as BenutzergruppeDaten;
+		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema,this.benutzergruppenManager.getID());
 		this._state.value.listBenutzergruppenBenutzer.add(benutzer);
 		const temp = this.listBenutzergruppenBenutzer;
 		const liste_benutzer_ids = new Set();
@@ -422,7 +422,7 @@ export class RouteDataSchuleBenutzergruppe {
 			return;
 		const bg_ids = new ArrayList<number>();
 		bg_ids.add(benutzer.id);
-		const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID()) as BenutzergruppeDaten;
+		const result = await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID());
 		this.listBenutzergruppenBenutzer.remove(benutzer);
 		this.listBenutzerAlle.add(benutzer);
 		this.setPatchedState({

@@ -4,7 +4,7 @@
 		<template #beschreibung="{ regel: r }">
 			{{ getDatenmanager().kursGetName(r.parameter.get(0)) }} hat externe Schüler: {{ r.parameter.get(1) }}
 		</template>
-		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered.toArray() as GostBlockungKurs[]" />
+		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" />
 		<span class="leading-none">hat externe Schüler: </span>
 		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" />
 	</BlockungsregelBase>

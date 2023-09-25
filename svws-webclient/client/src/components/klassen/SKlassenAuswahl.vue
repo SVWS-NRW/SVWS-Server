@@ -8,7 +8,7 @@
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" scroll>
 				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
 				<template #cell(klassenLehrer)="{value}">
-					{{ [...value].map(l => getKlassenlehrerKuerzelById(l)).join(", ") }}
+					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #search>
 					<svws-ui-text-input :model-value="klassenFilter.search" @update:model-value="setKlassenFilter({search: String($event), sichtbar: klassenFilter.sichtbar})" type="search" placeholder="Suche nach Klasse" />
@@ -23,10 +23,7 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import type {LehrerListeEintrag} from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
@@ -36,14 +33,18 @@
 		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
 	];
 
-	const inputKlassenlehrer: ComputedRef<LehrerListeEintrag[]> = computed(() =>
-		(props.auswahl?.klassenLehrer?.toArray() as number[] || []).map(id => props.mapLehrer.get(id) || undefined).filter(l => l !== undefined) as LehrerListeEintrag[]
-	);
-
-	const getKlassenlehrerKuerzelById = (id: number) => {
-		const lehrer = props.mapLehrer.get(id);
-		if (lehrer) return lehrer.kuerzel;
-		return "";
+	function lehrerkuerzel(list: number[]) {
+		let s = '';
+		if (props.auswahl)
+			for (const id of list) {
+				const lehrer = props.mapLehrer.get(id);
+				if (lehrer) {
+					if (s.length)
+						s += `, ${lehrer.kuerzel}`;
+					else s = lehrer.kuerzel;
+				}
+			}
+		return s;
 	}
 
 </script>

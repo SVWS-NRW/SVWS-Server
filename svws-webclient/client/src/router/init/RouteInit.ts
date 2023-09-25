@@ -113,8 +113,10 @@ export class RouteInit extends RouteNode<unknown, any> {
 			return { name: this.name, params: { source: to_params.source, db: 'mdb' }};
 		if ((to_params.source !== 'schild2') && (to_params.db !== undefined))
 			return { name: this.name, params: { source: to_params.source }};
-		this.source.value = ['schulkatalog','schild2','backup',undefined].includes(to_params.source) ? to_params.source as 'schulkatalog'|'schild2'|'backup'|undefined : undefined;
-		this.db.value = ['mysql','mariadb','mssql','mdb',undefined].includes(to_params.db) ? to_params.db as 'mysql'|'mariadb'|'mssql'|'mdb'|undefined : undefined;
+		const s = to_params.source;
+		const db = to_params.db;
+		this.source.value = (s === 'schulkatalog' || s === 'schild2' || s === 'backup') ? s : undefined;
+		this.db.value = (db === 'mysql' || db === 'mariadb' || db === 'mssql' || db === 'mdb') ? db : undefined;
 	}
 
 	public getRoute(): RouteLocationRaw {

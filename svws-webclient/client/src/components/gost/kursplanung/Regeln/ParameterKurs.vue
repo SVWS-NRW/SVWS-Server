@@ -5,14 +5,14 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostFach} from "@core";
-	import { GostKursart } from "@core";
 	import type { WritableComputedRef } from "vue";
+	import { GostKursart } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		modelValue: GostBlockungKurs;
 		mapFaecher: Map<number, GostFach>;
-		kurse: GostBlockungKurs[];
+		kurse: Iterable<GostBlockungKurs>;
 	}>();
 
 	const emit = defineEmits(['update:modelValue'])

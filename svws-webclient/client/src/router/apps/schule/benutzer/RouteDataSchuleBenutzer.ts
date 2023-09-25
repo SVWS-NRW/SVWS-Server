@@ -267,7 +267,7 @@ export class RouteDataSchuleBenutzer {
 				return;
 			const bg_ids = new ArrayList<number>();
 			bg_ids.add(this.benutzerManager.getID());
-			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id) as BenutzergruppeDaten;
+			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id);
 			this.benutzerManager.addToGruppe(result);
 		}else{
 			const benutzer_id = new ArrayList<number>();
@@ -299,7 +299,7 @@ export class RouteDataSchuleBenutzer {
 		const ids = new ArrayList<number>();
 		ids.add(this.benutzerManager.getID());
 		if (bg_id !== -1) {
-			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id) as BenutzergruppeDaten;
+			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id);
 			this.benutzerManager.removeFromGruppe(result);
 		} else {
 			for (const eintrag of this.listBenutzergruppen) {

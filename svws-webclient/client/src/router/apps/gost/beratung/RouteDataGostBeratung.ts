@@ -1,6 +1,6 @@
 import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag } from "@core";
 import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
-	AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr} from "@core";
+	AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException} from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 
@@ -120,7 +120,11 @@ export class RouteDataGostBeratung  {
 	}
 
 	get gostBelegpruefungsArt(): 'ef1'|'gesamt'|'auto' {
-		return api.config.getValue("app.gost.belegpruefungsart") as 'ef1'|'gesamt'|'auto';
+		const s = api.config.getValue("app.gost.belegpruefungsart");
+		if (s === 'ef1' || s === 'gesamt' || s === 'auto')
+			return s;
+		void api.config.setValue("app.gost.belegpruefungsart", 'auto');
+		throw new DeveloperNotificationException("Es wurde eine fehlerhafte Belegpruefungsart als Standardauswahl hinterlegt");
 	}
 
 	setGostBelegpruefungsArt = async (gostBelegpruefungsArt: 'ef1'|'gesamt'|'auto') => {

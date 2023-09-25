@@ -11,7 +11,7 @@
 
 	const props = defineProps<{
 		modelValue: GostBlockungSchiene;
-		schienen: GostBlockungSchiene[];
+		schienen: Iterable<GostBlockungSchiene>;
 	}>();
 	const emit = defineEmits(['update:modelValue'])
 

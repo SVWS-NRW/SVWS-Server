@@ -8,7 +8,7 @@
 				<i-ri-group-line />
 			</template>
 			<template #cell(linkToSchueler)="{ rowData }">
-				<button type="button" @click.stop="gotoSchueler(rowData as Schueler)" class="button button--icon" title="Schüler ansehen">
+				<button type="button" @click.stop="gotoSchueler(rowData)" class="button button--icon" title="Schüler ansehen">
 					<i-ri-link />
 				</button>
 			</template>

@@ -1,11 +1,15 @@
 import type { GostBlockungRegel, GostFach } from "@core";
-import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@core";
 import type { Ref, WritableComputedRef } from 'vue';
+import { GostBlockungKurs, GostBlockungSchiene, GostKursart, SchuelerListeEintrag } from "@core";
 import { computed } from 'vue';
 
-export function getKursFromId(kurse: GostBlockungKurs[], kursId: number): GostBlockungKurs {
-	return kurse.find(kurs => kurs.id === kursId) || new GostBlockungKurs();
+export function getKursFromId(kurse: Iterable<GostBlockungKurs>, kursId: number): GostBlockungKurs {
+	for (const kurs of kurse)
+		if (kurs.id === kursId)
+			return kurs;
+	return new GostBlockungKurs();
 }
+
 export function getKursbezeichnung(kurs: GostBlockungKurs, mapFaecher: Map<number, GostFach>) {
 	const kuerzel = mapFaecher.get(kurs.fach_id)?.kuerzel;
 	const kursart = kurs.kursart > 0 ? GostKursart.fromID(kurs.kursart) : 'kursart-fehlt';
@@ -30,16 +34,26 @@ export function useRegelParameterKursart(regel: Ref<GostBlockungRegel | undefine
 	})
 }
 
-export function useRegelParameterKurs(kurse: GostBlockungKurs[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
+export function useRegelParameterKurs(kurse: Iterable<GostBlockungKurs>, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungKurs> {
 	return computed({
-		get: () => kurse.find(kurs => kurs.id === regel.value?.parameter.get(parameter)) || new GostBlockungKurs(),
+		get: () => {
+			for (const kurs of kurse)
+				if (kurs.id === regel.value?.parameter.get(parameter))
+					return kurs;
+			return new GostBlockungKurs();
+		},
 		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.id)	}
 	})
 }
 
-export function useRegelParameterSchiene(schienen: GostBlockungSchiene[], regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
+export function useRegelParameterSchiene(schienen: Iterable<GostBlockungSchiene>, regel: Ref<GostBlockungRegel | undefined>, parameter: number): WritableComputedRef<GostBlockungSchiene> {
 	return computed({
-		get: () => schienen.find(schiene => schiene.nummer === regel.value?.parameter.get(parameter)) || new GostBlockungSchiene(),
+		get: () => {
+			for (const schiene of schienen)
+				if (schiene.nummer === regel.value?.parameter.get(parameter))
+					return schiene;
+			return new GostBlockungSchiene();
+		},
 		set: (value) => { if (regel.value) regel.value.parameter.set(parameter, value.nummer) }
 	})
 }

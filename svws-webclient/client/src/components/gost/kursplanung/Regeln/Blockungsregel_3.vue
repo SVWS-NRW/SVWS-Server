@@ -22,8 +22,8 @@
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
 		mapFaecher: Map<number, GostFach>;
-		kurse: GostBlockungKurs[];
-		schienen: GostBlockungSchiene[];
+		kurse: Iterable<GostBlockungKurs>;
+		schienen: Iterable<GostBlockungSchiene>;
 		regeln: GostBlockungRegel[];
 		disabled: boolean;
 	}>();
@@ -42,11 +42,14 @@
 
 	const regel_typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
 	const kurs = useRegelParameterKurs(props.kurse, regel, 0)
+	// eslint-disable-next-line vue/no-setup-props-destructure
 	const schiene = useRegelParameterSchiene(props.schienen, regel, 1)
 
 	const regel_hinzufuegen = (r: GostBlockungRegel) => {
-		r.parameter.add(props.kurse[0].id)
+		const [kurs] = props.kurse;
+		r.parameter.add(kurs.id);
 		r.parameter.add(1)
 		regel.value = r;
 	}

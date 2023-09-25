@@ -44,7 +44,7 @@
 			loading.value = false;
 		} catch (e) {
 			loading.value = false;
-			throw e as Error;
+			throw e;
 		}
 	}
 

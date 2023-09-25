@@ -17,7 +17,7 @@ export class RouteGostKlausurplanungKonflikte extends RouteNode<unknown, RouteGo
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
 		return (abiturjahr === undefined) || (abiturjahr === -1);
 	}
 

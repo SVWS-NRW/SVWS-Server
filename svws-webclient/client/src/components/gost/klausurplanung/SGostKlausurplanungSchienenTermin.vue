@@ -38,10 +38,9 @@
 </template>
 
 <script setup lang="ts">
-
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import { type GostKursklausurManager, GostKursklausur, type GostKlausurtermin, type LehrerListeEintrag, type List, type KursManager, Arrays} from "@core";
 	import { computed } from 'vue';
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 	const props = defineProps<{
 		termin: () => GostKlausurtermin;
@@ -87,9 +86,13 @@
 			event.preventDefault();
 	}
 
-	const konflikteTerminDragKlausur = computed(() =>
-		props.dragData() !== undefined ? props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), props.dragData()! as GostKursklausur) : -1
-	);
+	const konflikteTerminDragKlausur = computed(() => {
+		const data = props.dragData();
+		if (data instanceof GostKursklausur)
+			return props.kursklausurmanager().konflikteAnzahlZuTerminGetByTerminAndKursklausur(props.termin(), data)
+		else
+			return -1
+	});
 
 	const konflikteTermin = () => props.kursklausurmanager().konflikteAnzahlGetByTerminid(props.termin().id);
 

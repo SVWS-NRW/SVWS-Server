@@ -78,12 +78,12 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, onMounted } from "vue";
-	import { GostKlausurtermin, StundenplanZeitraster} from "@core";
-	import { ArrayList} from "@core";
-	import type { Wochentag , GostKursklausur, StundenplanKalenderwochenzuordnung, List} from "@core";
+	import type { Wochentag, StundenplanKalenderwochenzuordnung, List} from "@core";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import { GostKlausurtermin, StundenplanZeitraster} from "@core";
+	import { computed, ref, onMounted } from "vue";
+	import { ArrayList} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
@@ -112,12 +112,10 @@
 
 	function kurseGefiltert(day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
-		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin) {
-			for (const klausur of props.kursklausurmanager().kursklausurGetMengeByTerminid(dragData.value.id).toArray() as GostKursklausur[]) {
+		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin)
+			for (const klausur of props.kursklausurmanager().kursklausurGetMengeByTerminid(dragData.value.id))
 				kursIds.add(klausur.idKurs);
-			}
-		}
-		return props.stundenplanmanager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde( kursIds, 1, day, stunde);
+		return props.stundenplanmanager.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, 1, day, stunde);
 	}
 
 	function sumSchreiber(day: any, stunde: number) {
@@ -149,7 +147,13 @@
 			}
 	};
 
-	const termineOhne = computed(() => (props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true).toArray() as GostKlausurtermin[]).filter(termin => termin.datum === null));
+	const termineOhne = computed(() => {
+		const a = [];
+		for (const termin of props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true))
+			if (termin.datum === null)
+				a.push(termin);
+		return a;
+	});
 
 	// const termineMit = computed(() => {
 	// 	const terms = props.kursklausurmanager().terminGetMengeAsList();

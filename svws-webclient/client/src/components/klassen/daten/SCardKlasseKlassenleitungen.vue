@@ -7,7 +7,6 @@
 <script setup lang="ts">
 
 	import type { KlassenDaten, LehrerListeEintrag} from "@core";
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import { PersonalTyp } from "@core";
 	import type { DataTableColumn } from "@ui";
@@ -24,20 +23,19 @@
 		mapLehrer: Map<number, LehrerListeEintrag>
 	}>();
 
-	const liste: ComputedRef<Lehrer[]> = computed(() => {
-		if (props.data.klassenLeitungen === undefined)
-			return [];
-		return (props.data.klassenLeitungen?.toArray() as number[]).map((id) => {
+	const liste = computed<Lehrer[]>(() => {
+		const a = [];
+		for (const id of props.data.klassenLeitungen) {
 			const lehrer = props.mapLehrer.get(id);
-			if (lehrer === undefined)
-				return {};
-			return {
-				kuerzel: lehrer.kuerzel,
-				nachname: lehrer.nachname,
-				vorname: lehrer.vorname,
-				typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung ?? undefined
-			};
-		});
+			if (lehrer)
+				a.push(
+					{ kuerzel: lehrer.kuerzel,
+						nachname: lehrer.nachname,
+						vorname: lehrer.vorname,
+						typ: PersonalTyp.fromBezeichnung(lehrer.personTyp)?.bezeichnung ?? undefined
+					});
+		}
+		return a;
 	});
 
 	const cols: DataTableColumn[] = [

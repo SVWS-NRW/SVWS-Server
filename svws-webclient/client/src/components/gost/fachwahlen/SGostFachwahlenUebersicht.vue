@@ -33,7 +33,7 @@
 				</div>
 			</template>
 			<template #body>
-				<div role="row" v-for="row in rows" :key="row.id" class="svws-ui-tr" :style="{ '--background-color': getBgColor(row) }">
+				<div role="row" v-for="row in fachwahlstatistik" :key="row.id" class="svws-ui-tr" :style="{ '--background-color': getBgColor(row) }">
 					<template v-for="(heading, index) in colHeadings" :key="heading.text">
 						<div v-for="(h, n) in heading.cols" :key="n" class="svws-ui-td select-none" role="cell" @click="selectData(row, heading.text)"
 							:class="{
@@ -51,15 +51,12 @@
 </template>
 
 <script setup lang="ts">
-
-	import { computed, ref, type ComputedRef } from "vue";
-	import { GostHalbjahr, ZulaessigesFach, type GostStatistikFachwahl } from "@core";
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
 	import type { DataTableColumn } from "@ui";
+	import { ref } from "vue";
+	import { GostHalbjahr, ZulaessigesFach, type GostStatistikFachwahl } from "@core";
 
 	const props = defineProps<GostFachwahlenProps>();
-
-	const rows: ComputedRef<GostStatistikFachwahl[]> = computed(() => props.fachwahlstatistik.toArray() as GostStatistikFachwahl[]);
 
 	const getBgColor = (row: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
 

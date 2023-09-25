@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, SchuelerListeEintrag } from "@core";
-	import type { ComputedRef, ShallowRef, WritableComputedRef } from 'vue';
+	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
+	import type { ComputedRef } from 'vue';
 	import { computed, shallowRef, ref } from 'vue';
 
 	const props = defineProps<{
@@ -39,17 +39,17 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const disabled = ref<boolean>(props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
 
-	const schienen: ComputedRef<GostBlockungSchiene[]> = computed(() => {
-		return props.getDatenmanager().schieneGetListe()?.toArray() as GostBlockungSchiene[];
+	const schienen = computed<List<GostBlockungSchiene>>(() => {
+		return props.getDatenmanager().schieneGetListe();
 	});
 
-	const kurse: ComputedRef<GostBlockungKurs[]> = computed(() => {
-		return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()?.toArray() as GostBlockungKurs[];
+	const kurse = computed<List<GostBlockungKurs>>(() => {
+		return props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer();
 	});
 
-	const _regel: ShallowRef<GostBlockungRegel | undefined> = shallowRef(undefined);
+	const _regel = shallowRef<GostBlockungRegel | undefined>(undefined);
 
-	const regel: WritableComputedRef<GostBlockungRegel|undefined> = computed({
+	const regel = computed<GostBlockungRegel|undefined>({
 		get: () => _regel.value,
 		set: value => {
 			_regel.value = value;
@@ -59,10 +59,16 @@
 		}
 	})
 
-	const alle_regeln: ComputedRef<GostBlockungRegel[]> = computed(() => props.getDatenmanager().regelGetListe().toArray() as GostBlockungRegel[]);
+	const alle_regeln = computed<List<GostBlockungRegel>>(() => props.getDatenmanager().regelGetListe());
 	const regeln: ComputedRef<GostBlockungRegel[]>[] = [];
 	for (let i = 1; i < 11; i++)
-		regeln[i] = computed(() => alle_regeln.value.filter(r => r.typ === i));
+		regeln[i] = computed(() => {
+			const a = [];
+			for (const r of alle_regeln.value)
+				if (r.typ === i)
+					a.push(r);
+			return a;
+		});
 
 	async function regelEntfernen(r: GostBlockungRegel) {
 		await props.removeRegel(r.id);

@@ -42,12 +42,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : parseInt(params.abiturjahr as string);
+		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
 		return (abiturjahr === undefined);
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr as string);
+		const abiturjahr = to_params.abiturjahr === undefined ? undefined : Number(to_params.abiturjahr);
 		if ((abiturjahr === undefined))
 			return routeGost.defaultChild!.getRoute(-1);
 		return true;

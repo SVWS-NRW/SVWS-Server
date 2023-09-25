@@ -1,12 +1,12 @@
-import { computed, shallowRef } from "vue";
 
 import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
-import * as Core from "@core";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, Arrays, StundenplanListUtils } from "@core";
+import type { RouteNode } from "~/router/RouteNode";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils } from "@core";
+import { GostKlausurtermin, ArrayList} from "@core";
+import { computed, shallowRef } from "vue";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
@@ -293,9 +293,9 @@ export class RouteDataGostKlausurplanung {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
 	}
 
-	erzeugeKlausurtermin = async (quartal: number): Promise<Core.GostKlausurtermin> => {
+	erzeugeKlausurtermin = async (quartal: number): Promise<GostKlausurtermin> => {
 		api.status.start();
-		const terminNeu : Partial<Core.GostKlausurtermin> = new Core.GostKlausurtermin();
+		const terminNeu : Partial<GostKlausurtermin> = new GostKlausurtermin();
 		terminNeu.abijahr = this.abiturjahr;
 		terminNeu.halbjahr = this.halbjahr.id;
 		terminNeu.quartal = quartal;
@@ -307,9 +307,11 @@ export class RouteDataGostKlausurplanung {
 		return termin;
 	}
 
-	loescheKlausurtermine = async (termine: List<Core.GostKlausurtermin>) => {
+	loescheKlausurtermine = async (termine: List<GostKlausurtermin>) => {
 		api.status.start();
-		const terminIds = Arrays.asList((termine.toArray() as Core.GostKlausurtermin[]).map((termin) => termin.id));
+		const terminIds = new ArrayList<number>();
+		for (const termin of termine)
+			terminIds.add(termin.id);
 		await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
 		this.kursklausurmanager.terminRemoveAll(termine);
 		this.commit();
@@ -369,7 +371,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausurtermin = async (id: number, termin: Partial<Core.GostKlausurtermin>) => {
+	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
 		api.status.start();
 		const oldTtermin = this.kursklausurmanager.terminGetByIdOrException(id);
 		await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
@@ -415,7 +417,7 @@ export class RouteDataGostKlausurplanung {
 		return true;
 	}
 
-	erzeugeKlausurraummanager = async (termin: Core.GostKlausurtermin): Promise<GostKlausurraumManager> => {
+	erzeugeKlausurraummanager = async (termin: GostKlausurtermin): Promise<GostKlausurraumManager> => {
 		api.status.start();
 		const raeume = await api.server.getGostKlausurenRaeumeTermin(api.schema, termin.id);
 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
@@ -427,7 +429,10 @@ export class RouteDataGostKlausurplanung {
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
 		api.status.start();
-		const skids = Arrays.asList((sks.toArray() as GostSchuelerklausur[]).map(sk => sk.idSchuelerklausur));
+
+		const skids = new ArrayList<number>();
+		for (const sk of sks)
+			skids.add(sk.idSchuelerklausur);
 		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt!.id);
 		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
