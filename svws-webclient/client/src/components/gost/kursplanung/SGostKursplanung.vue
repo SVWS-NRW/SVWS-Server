@@ -1,5 +1,11 @@
 <template>
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
+		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+			<svws-ui-button v-if="hatBlockung" type="secondary" @click.prevent="downloadPDFKursSchienenZuordnung" title="Kurs-Schienen-Zuordnung herunterladen">
+				<i-ri-printer-line />Kurs-Schienen-Zuordnung
+			</svws-ui-button>
+			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
+		</Teleport>
 		<template v-if="hatBlockung">
 			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
@@ -36,9 +42,6 @@
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-					<svws-ui-button type="secondary" @click.prevent="downloadPDFKursSchienenZuordnung" title="Kurs-Schienen-Zuordnung herunterladen">
-						<i-ri-printer-line />Kurs-Schienen-Zuordnung
-					</svws-ui-button>
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
