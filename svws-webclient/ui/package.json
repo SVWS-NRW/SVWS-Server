@@ -24,6 +24,7 @@
 	"exports": {
 		".": {
 			"import": "./dist/svws-ui.js",
+			"types": "./dist/index.d.ts",
 			"require": "./dist/svws-ui.umd.cjs"
 		},
 		"./style.css": {
