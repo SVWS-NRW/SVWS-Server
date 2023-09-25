@@ -12,7 +12,7 @@ export class RouteStundenplanKlasse extends RouteNode<unknown, RouteStundenplan>
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.klasse", "klasse", SStundenplanKlasse);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klasse";
+		super.text = "Klassen";
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
