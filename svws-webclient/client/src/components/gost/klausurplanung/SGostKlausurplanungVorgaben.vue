@@ -103,7 +103,7 @@
 						<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 					</svws-ui-input-wrapper>
 				</div>
-				<div class="flex gap-1 flex-wrap justify-start mt-9">
+				<div v-if="activeVorgabe.idVorgabe === 0" class="flex gap-1 flex-wrap justify-start mt-9">
 					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1">Speichern</svws-ui-button>
 					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mt-2 leading-tight opacity-50">Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
