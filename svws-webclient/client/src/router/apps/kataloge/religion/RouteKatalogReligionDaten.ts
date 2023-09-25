@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, ReligionEintrag, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogReligion, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
@@ -30,7 +30,7 @@ export class RouteKatalogReligionDaten extends RouteNode<unknown, RouteKatalogRe
 	public getProps(to: RouteLocationNormalized): ReligionDatenProps {
 		return {
 			patch: routeKatalogReligion.data.patch,
-			auswahl: routeKatalogReligion.data.auswahl!
+			auswahl: routeKatalogReligion.data.auswahl || new ReligionEintrag(),
 		};
 	}
 

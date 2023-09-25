@@ -34,7 +34,7 @@
 				<!-- Die Pausenzeiten -->
 				<template v-for="pause in manager().pausenzeitGetMengeAsList()" :key="pause.id">
 					<div class="svws-ui-stundenplan--pause text-sm text-center justify-center svws-no-hover" :style="posPause(undefined, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
-						<div>{{ (pause.ende! - pause.beginn!) }} Minuten</div>
+						<div>{{ ((pause.ende || 0) - (pause.beginn || 0)) }} Minuten</div>
 					</div>
 				</template>
 			</div>

@@ -2,8 +2,8 @@
 	<svws-ui-content-card>
 		<template #title>
 			<div class="flex flex-col leading-tight text-headline-md">
-				<span>Klausuren am {{ DateUtils.gibDatumGermanFormat(termin.datum!) }}</span>
-				<span class="opacity-50">Startzeit: {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!) }} Uhr</span>
+				<span v-if="termin.datum !== null">Klausuren am {{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
+				<span v-if="termin.startzeit !== null" class="opacity-50">Startzeit: {{ DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit) }} Uhr</span>
 				<!--<span>{{ kursklausurmanager().schueleridsGetMengeByTerminid(termin.id)?.size() }} Klausurschreiber:innen</span>-->
 			</div>
 		</template>
@@ -16,7 +16,7 @@
 					:key="raum.id"
 					:stundenplanmanager="stundenplanmanager"
 					:raum="raum"
-					:termin-startzeit="DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit!)"
+					:termin-startzeit="termin.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(termin.startzeit) : undefined"
 					:raummanager="raummanager"
 					:patch-klausurraum="patchKlausurraum"
 					:loesche-klausurraum="loescheKlausurraum"

@@ -1,7 +1,7 @@
 
 import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils } from "@core";
+import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
 import { computed, shallowRef } from "vue";
 
@@ -324,10 +324,13 @@ export class RouteDataGostKlausurplanung {
 	}
 
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
+		if (this._state.value.abschnitt === undefined)
+			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
 		api.status.start();
 		delete klausur.id;
-		const result = await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt!.id);
-		this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched!);
+		const result = await api.server.patchGostKlausurenKursklausur(klausur, api.schema, id, this._state.value.abschnitt.id);
+		if (result.kursKlausurPatched !== null)
+			this.kursklausurmanager.kursklausurPatchAttributes(result.kursKlausurPatched);
 		this.commit();
 		api.status.stop();
 		return result;
@@ -428,12 +431,13 @@ export class RouteDataGostKlausurplanung {
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
+		if (this._state.value.abschnitt === undefined)
+			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
 		api.status.start();
-
 		const skids = new ArrayList<number>();
 		for (const sk of sks)
 			skids.add(sk.idSchuelerklausur);
-		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt!.id);
+		const collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(skids, api.schema, raum === null ? -1 : raum.id, this._state.value.abschnitt.id);
 		manager.setzeRaumZuSchuelerklausuren(collectionSkrsKrs);
 		this.commit();
 		api.status.stop();

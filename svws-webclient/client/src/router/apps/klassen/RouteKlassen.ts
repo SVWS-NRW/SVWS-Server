@@ -40,8 +40,8 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 				throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 			const idKlasse = (to_params.id === undefined) || (to_params.id === "") ? undefined : parseInt(to_params.id);
 			await this.data.setEintrag(routeApp.data.aktAbschnitt.value.id, idKlasse);
-			if ((this.data.hatAuswahl) && (this.data.auswahl?.id !== idKlasse)) {
-				to_params.id = this.data.auswahl!.id.toString();
+			if ((this.data.hatAuswahl) && (this.data.auswahl?.id !== idKlasse) && this.data.auswahl !== undefined) {
+				to_params.id = this.data.auswahl.id.toString();
 				return { name: to.name, params: to_params };
 			}
 			if ((to.name === this.name) && (this.data.hatAuswahl))

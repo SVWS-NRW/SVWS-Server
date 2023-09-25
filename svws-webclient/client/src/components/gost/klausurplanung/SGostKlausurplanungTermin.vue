@@ -1,5 +1,5 @@
 <template>
-	<div @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin!(termin);" class="svws-ui-termin h-full flex flex-col">
+	<div @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin(termin);" class="svws-ui-termin h-full flex flex-col">
 		<slot name="header">
 			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle}">
 				<template v-if="!$slots.tableTitle">
@@ -49,8 +49,8 @@
 								:key="klausur.id"
 								:data="klausur"
 								:draggable="onDragKlausur !== undefined && (draggableKlausur === undefined || draggableKlausur(klausur))"
-								@dragstart="onDragKlausur!(klausur)"
-								@dragend="onDragKlausur!(undefined)"
+								@dragstart="onDragKlausur && onDragKlausur(klausur)"
+								@dragend="onDragKlausur && onDragKlausur(undefined)"
 								class="svws-ui-tr" role="row" :title="`Kurs, Lehrkraft, Schriftlich, Dauer in Minuten,${kursklausurmanager().quartalGetByTerminid(termin.id) === -1 ? ' Quartal,' : ''} Schiene`"
 								:class="[
 									props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
@@ -62,8 +62,8 @@
 									<i-ri-draggable v-if="onDragKlausur !== undefined && (draggableKlausur === undefined || draggableKlausur(klausur))" class="i-ri-draggable -m-0.5 -ml-3" />
 									<span class="svws-ui-badge" :class="{'!ml-2': draggableKlausur !== undefined && !draggableKlausur(klausur)}" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
 								</div>
-								<div class="svws-ui-td" role="cell">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</div>
-								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
+								<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
+								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)?.schueler.size() || 0 }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.dauer }}</div>
 								<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
 								<div v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
@@ -135,6 +135,14 @@
 	});
 
 	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
+
+	function getLehrerKuerzel(kursid: number) {
+		const kurs = props.kursmanager.get(kursid);
+		const lehrerid = kurs?.lehrer;
+		if (typeof lehrerid === 'number')
+			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
+		return ''
+	}
 
 </script>
 

@@ -250,7 +250,7 @@ export class RouteDataSchuleBenutzer {
 		if (!this.benutzerManager)
 			return false;
 		await api.server.setBenutzerPasswort(passwort,api.schema,this.benutzerManager.getID());
-		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert!!" ); }, 300 );
+		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert." ); }, 300 );
 	}
 
 	/**

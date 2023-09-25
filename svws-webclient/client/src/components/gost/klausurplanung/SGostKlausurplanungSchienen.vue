@@ -63,7 +63,7 @@
 								<i-ri-draggable class="-m-0.5 -ml-3" />
 								<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
 							</div>
-							<div class="svws-ui-td">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</div>
+							<div class="svws-ui-td">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
 							<div class="svws-ui-td svws-align-right">{{ klausur.dauer }}</div>
 							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
@@ -141,9 +141,8 @@
 
 <script setup lang="ts">
 
-	import type { JavaMapEntry, JavaSet } from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet} from "@core";
-	import { KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale } from "@core";
+	import type { JavaMapEntry, JavaSet} from "@core";
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale} from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -164,9 +163,16 @@
 		dragData.value = data;
 	};
 
+	function getLehrerKuerzel(kursid: number) {
+		const kurs = props.kursmanager.get(kursid);
+		const lehrerid = kurs?.lehrer;
+		if (typeof lehrerid === 'number')
+			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
+		return ''
+	}
 	const klausurKonflikte = () => {
 		if (dragData.value !== undefined && terminSelected.value !== undefined) {
-			if (dragData.value!.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
+			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
 				return props.kursklausurmanager().konflikteNeuMapKursklausurSchueleridsByTerminidAndKursklausurid(terminSelected.value.id, dragData.value.id).entrySet();
 		} else if (terminSelected.value !== undefined)
 			return props.kursklausurmanager().konflikteMapKursklausurSchueleridsByTerminid(terminSelected.value.id).entrySet();

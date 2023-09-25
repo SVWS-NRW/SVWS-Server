@@ -368,7 +368,7 @@ export class RouteDataSchuleBenutzergruppe {
 		for(const b of selectedItems) {
 			this.listBenutzergruppe.remove(b);
 		}
-		alert("Benutzergruppe gelöscht!!!");
+		alert("Benutzergruppe gelöscht.");
 		if(auswahl_gewaehlt)
 			 await this.gotoBenutzergruppe(this.listBenutzergruppe.get(0));
 		this.setPatchedState({

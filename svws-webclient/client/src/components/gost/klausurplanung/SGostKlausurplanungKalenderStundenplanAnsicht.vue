@@ -39,7 +39,7 @@
 				<template v-for="pause in pausenzeiten" :key="pause">
 					<div class="svws-ui-stundenplan--pause text-sm font-bold text-center justify-center" :style="posPause(pause)">
 						<div> {{ pause.bezeichnung }} </div>
-						<div> {{ (pause.ende! - pause.beginn!) }} Minuten </div>
+						<div> {{ ((pause.ende || 0) - (pause.beginn || 0)) }} Minuten </div>
 					</div>
 				</template>
 			</div>
@@ -121,7 +121,7 @@
 
 	const kursInfos = (idKurs: number) => {
 		const test = props.kursmanager.get(idKurs);
-		return test!.kuerzel/* + " " + props.kursklausurmanager().getKursklausurByTerminKurs(dragTermin.value!.id, idKurs)!.schuelerIds.size() + "/??"*/;
+		return test?.kuerzel || '' /* + " " + props.kursklausurmanager().getKursklausurByTerminKurs(dragTermin.value.id, idKurs)!.schuelerIds.size() + "/??"*/;
 	}
 
 	const beginn = computed(() => {

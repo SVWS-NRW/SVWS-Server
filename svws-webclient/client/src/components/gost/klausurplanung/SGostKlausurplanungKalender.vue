@@ -121,9 +121,9 @@
 	function sumSchreiber(day: any, stunde: number) {
 		const kurse = kurseGefiltert(day, stunde);
 		let summe = 0;
-		for (const klausur of kurse) {
-			summe += props.kursklausurmanager().kursklausurGetByTerminidAndKursid(dragData.value!.id, klausur)!.schuelerIds.size();
-		}
+		if (dragData.value !== undefined)
+			for (const klausur of kurse)
+				summe += props.kursklausurmanager().kursklausurGetByTerminidAndKursid(dragData.value.id, klausur)!.schuelerIds.size();
 		return summe;
 	}
 

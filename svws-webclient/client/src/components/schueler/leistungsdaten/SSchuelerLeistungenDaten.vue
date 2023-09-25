@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="visible">
+	<svws-ui-content-card v-if="data">
 		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten">
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
@@ -8,7 +8,7 @@
 				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
 			<template #cell(note)="{rowData}">
-				<s-schueler-leistung-note :data="props.data!" :note="rowData.note ?? ''" :patch-leistung="patchLeistung" />
+				<s-schueler-leistung-note :data="data" :note="rowData.note ?? ''" :patch-leistung="patchLeistung" />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -17,8 +17,6 @@
 <script setup lang="ts">
 
 	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
 
@@ -27,8 +25,6 @@
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true, minWidth: 20 },
 		{ key: "note", label: "Note", span: 0.25, sortable: true },
 	];
-
-	const visible: ComputedRef<boolean> = computed(() => props.data !== undefined);
 
 </script>
 

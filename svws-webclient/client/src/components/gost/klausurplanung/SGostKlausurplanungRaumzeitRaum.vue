@@ -21,7 +21,7 @@
 							<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
 							<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
 						</div>
-						<div class="svws-ui-td" role="cell">{{ mapLehrer.get(props.kursmanager.get(klausur.idKurs)!.lehrer!)?.kuerzel }}</div>
+						<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 						<div class="svws-ui-td" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
 						<div class="svws-ui-td" role="cell">{{ klausur.dauer }}</div>
 						<div class="svws-ui-td" role="cell">
@@ -45,27 +45,12 @@
 </template>
 
 <script setup lang="ts">
-	import {
-		type StundenplanRaum,
-		type StundenplanManager,
-		type GostKlausurraumManager,
-		GostKursklausur,
-		type GostSchuelerklausur,
-		type GostFaecherManager,
-		type GostKursklausurManager,
-		type KursManager,
-		type LehrerListeEintrag,
-		StundenplanKlassenunterricht,
-		StundenplanKurs,
-		ZulaessigesFach
-	} from '@core';
-	import type { GostKlausurenCollectionSkrsKrs, GostKlausurraum } from '@core';
+	import type { StundenplanRaum, StundenplanManager, GostKlausurraumManager, GostSchuelerklausur, GostFaecherManager, GostKursklausurManager, KursManager , GostKlausurenCollectionSkrsKrs, GostKlausurraum , LehrerListeEintrag} from '@core';
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+	import type { DataTableColumn } from "@ui";
+	import { GostKursklausur, ZulaessigesFach } from '@core';
 	import { computed } from 'vue';
 	import { DateUtils} from "@core";
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
-	import type {
-		DataTableColumn
-	} from "@ui";
 
 	const props = defineProps<{
 		stundenplanmanager: StundenplanManager;
@@ -98,6 +83,14 @@
 			props.raum.idStundenplanRaum = value === undefined ? null : value.id;
 		}
 	});
+
+	function getLehrerKuerzel(kursid: number) {
+		const kurs = props.kursmanager.get(kursid);
+		const lehrerid = kurs?.lehrer;
+		if (typeof lehrerid === 'number')
+			return props.mapLehrer.get(lehrerid)?.kuerzel || ''
+		return ''
+	}
 
 	function isDropZone() : boolean {
 		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.raummanager().containsKlausurraumKursklausur(props.raum.id, props.dragData()!.id))
