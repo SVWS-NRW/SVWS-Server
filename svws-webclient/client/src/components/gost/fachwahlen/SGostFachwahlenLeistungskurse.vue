@@ -9,14 +9,11 @@
 					</span>
 				</div>
 			</div>
-			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td col-span-full" :class="{'opacity-25': !aktuell.fachwahl?.id}">Gesamt im Halbjahr</div>
-			</div>
 		</template>
 		<template #body>
 			<template v-for="fws in fachwahlenstatistik" :key="fws.id">
 				<template v-if="fws !== undefined">
-					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws, undefined)">
+					<div role="row" class="svws-ui-tr cursor-pointer" :style="{ '--background-color': fws ? getBgColor(fws) : 'transparent' }" @click="onClick(fws)">
 						<div role="cell" class="svws-ui-td col-span-full">
 							<div class="-ml-1 mr-0.5">
 								<svws-ui-button type="icon" size="small">
@@ -27,30 +24,23 @@
 							<span :class="{'svws-ui-badge': aktuell.fachwahl?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 						<template v-if="aktuell.fachwahl?.id === fws.id">
-							<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-								<div role="row" class="cursor-pointer svws-ui-tr !border-solid !border-black/25 !dark:border-white/25" v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0" @click.stop="onClick(fws, halbjahr)">
-									<div role="cell" class="svws-ui-td">
-										<span class="flex gap-1 pl-0.5">
-											<svws-ui-button type="icon" size="small">
-												<i-ri-arrow-right-s-line v-if="aktuell.halbjahr?.id !== halbjahr.id" />
-												<i-ri-arrow-down-s-line v-else />
-											</svws-ui-button>
-											<span>{{ halbjahr.kuerzel }}</span>
-										</span>
+							<div role="row" class="svws-ui-tr">
+								<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
+									<div role="cell" class="svws-ui-td svws-align-center" v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0">
+										{{ halbjahr.kuerzel }} ({{ fws.fachwahlen[halbjahr.id].wahlenLK }})
 									</div>
-									<div role="cell" class="svws-ui-td col-span-3">
-										{{ fws.fachwahlen[halbjahr.id].wahlenLK }}
-									</div>
-								</div>
-								<div v-if="aktuell?.halbjahr?.id === halbjahr.id" role="row" class="svws-ui-tr">
-									<div role="cell" class="flex flex-col svws-ui-td col-span-full mb-5 leading-tight !pl-4">
+								</template>
+							</div>
+							<div role="row" class="svws-ui-tr">
+								<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
+									<div role="cell" v-if="fws.fachwahlen[halbjahr.id].wahlenLK > 0" class="flex flex-col svws-ui-td mb-5 leading-tight !pl-4">
 										<div v-for="schueler in getSchuelerListe(fws.id, halbjahr)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 											<i-ri-link class="text-sm" />
 											<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 										</div>
 									</div>
-								</div>
-							</template>
+								</template>
+							</div>
 						</template>
 					</div>
 				</template>
@@ -79,49 +69,27 @@
 
 	type Auswahl = {
 		fachwahl: GostStatistikFachwahl | undefined;
-		halbjahr: GostHalbjahr | undefined;
 	}
 
 	const aktuell = ref<Auswahl>({
 		fachwahl: undefined, //fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
-		halbjahr: undefined, //GostHalbjahr.Q21
 	});
 
-	function onClick(fws : GostStatistikFachwahl, halbjahr: GostHalbjahr | undefined): void {
+	function onClick(fws : GostStatistikFachwahl): void {
 		if (fws.id === aktuell.value.fachwahl?.id) {
-			// Das gleiche Fach wurde angeklickt
-			if (halbjahr === undefined) { // Klick auf das Fach
-				if (aktuell.value.halbjahr == undefined) {
-					// Das Fach war zuvor nicht ausgewählt und muss daher aufgeklappt werden
-					aktuell.value = { fachwahl: fws, halbjahr: undefined }; //GostHalbjahr.Q22
-				} else {
-					// Das Fach war zuvor ausgewählt und muss daher zusammengeklappt werden
-					aktuell.value = { fachwahl: undefined, halbjahr: undefined };
-				}
-			} else { // Klick auf das Halbjahr
-				if (aktuell.value.halbjahr?.id === halbjahr.id) {
-					// Bei dem Fach wurde das gleiche Halbjahr angeklickt, dieses muss zusammengeklappt werden
-					aktuell.value = { fachwahl: fws, halbjahr: undefined };
-				} else {
-					// Bei dem Fach wurde ein anderes Halbjahr angeklickt, dieses muss aufgeklappt werden
-					aktuell.value = { fachwahl: fws, halbjahr: halbjahr };
-				}
-			}
+			// Das Fach war zuvor ausgewählt und muss daher zusammengeklappt werden
+			aktuell.value = { fachwahl: undefined };
 		} else {
 			// Ein anderes Fach wurde angeklickt
-			if (halbjahr === undefined) { // Klick auf das Fach
-				aktuell.value = { fachwahl: fws, halbjahr: undefined }; //GostHalbjahr.Q22
-			} else { // Klick auf das Halbjahr
-				aktuell.value = { fachwahl: fws, halbjahr: halbjahr };
-			}
+			aktuell.value = { fachwahl: fws };
 		}
 	}
 
 	const cols: DataTableColumn[] = [
-		{ key: "HJ", label: "HJ", fixedWidth: 6 },
-		{ key: "LK", label: "LK", span: 1 },
-		{ key: "GKS", label: "GKS", span: 1 },
-		{ key: "GKM", label: "GKM", span: 1 },
+		{ key: "LK1", label: "LK Q1.1", span: 1 },
+		{ key: "LK2", label: "LK Q1.2", span: 1 },
+		{ key: "LK3", label: "LK Q2.1", span: 1 },
+		{ key: "LK4", label: "LK Q2.2", span: 1 },
 	];
 
 	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
