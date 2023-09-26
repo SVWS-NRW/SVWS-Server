@@ -12,6 +12,7 @@ Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breakin
 
 ## ab 0.7.3
 * Modal wurde überarbeitet und stellt nicht mehr die Funktionen openModal, closeModal und isOpen zur Verfügung. Das Öffnen erfolgt nun über die Property show, mit der eine Funktion übergeben wird, welche eine vue-Ref auf einen boolean zurückgibt
+* Das MultiSelect kann nur noch die Variante mit Tags übernehmen, ohne Tags wird mit Select verwendet. Da sich bis auf das `tags`-Prop nichts ändert, kann mit Suchen und Ersetzen diese Komponente relativ problemlos ausgetauscht werden.
 
 ## ab 0.7
 * DataTable ist nun auf generics umgestellt, die Items bestimmen den Typ.
