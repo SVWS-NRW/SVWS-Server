@@ -269,13 +269,13 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		final PDFGostSchuelerKurseListe pdf = getPDFmitSchuelerKurseListe(conn, blockungsergebnisID,  schuelerIDs);
 
 		if (pdf == null)
-			return OperationError.NOT_FOUND.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
 		final byte[] data = pdf.toByteArray();
 		if (data == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
-		String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
+		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
 
 		return Response.ok(data, "application/pdf")
 					   .header("Content-Disposition", "attachment; " + encodedFilename)

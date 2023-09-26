@@ -3,7 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.module.pdf.gost.PDFGostKursSchienenZuordnung;
+import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
 import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
@@ -87,7 +87,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die gymnasiale Oberstufe.
- * Ein Zugriff erfolgt über den Pfad https://{hostname}/db/{schema}/gost/...
+ * Ein Zugriff erfolgt über den Pfad https://{hostname}/db/{schema}/gost/.
  */
 @Path("/db/{schema}/gost")
 @Produces(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class APIGost {
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen
 	 * besitzt.
 	 *
-	 * @param schema   das Schema aus dem die Leistungsdaten des Schüler kommen sollen
+	 * @param schema   das Schema aus dem die Leistungsdaten des Schülers kommen sollen
 	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
 	 *
@@ -126,7 +126,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Erstellen eines neuen Abiturjahrgangs der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Erstellen eines neuen Abiturjahrgangs der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param jahrgangID   die ID des Jahrgangs, für welchen der Abitur-Jahrgang erstellt werden soll
@@ -157,7 +157,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage der Daten eines Jahrgangs der gymnasialen Oberstufe.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr  das Jahr, in welchem der Jahrgang Abitur machen wird
@@ -187,7 +187,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen der Daten eines Jahrgangs der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen der Daten eines Jahrgangs der gymnasialen Oberstufe.
      *
      * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param abiturjahr  das Jahr, in welchem der Jahrgang Abitur machen wird
@@ -239,7 +239,7 @@ public class APIGost {
     @GET
     @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/schueler")
     @Operation(summary = "Gibt eine Übersicht von allen Schülern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller Schüler, welche zu dem angebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). "
+               description = "Erstellt eine Liste aller Schüler, welche zu dem angegebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Schüler-Listen-Einträgen",
@@ -275,7 +275,7 @@ public class APIGost {
     @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/faecher")
     @Operation(summary = "Gibt eine Übersicht von allen Fächern des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, "
-                           + "welche für den angebenen Abitur-Jahrgang festgelegt wurden.. "
+                           + "welche für den angegebenen Abitur-Jahrgang festgelegt wurden.. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Fächer-Listen-Einträgen",
@@ -290,7 +290,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Daten eines Faches in Bezug auf die Gymnasiale Oberstufe
+     * Die OpenAPI-Methode für die Abfrage der Daten eines Faches in Bezug auf die gymnasiale Oberstufe
      * und in Bezug auf einen Abiturjahrgang.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -321,7 +321,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Daten eines Faches in Bezug auf den
-     * Abiturjahrgang der Gymnasiale Oberstufe.
+     * Abiturjahrgang der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param abiturjahr   der Abitur-Jahrgang
@@ -368,7 +368,7 @@ public class APIGost {
     @GET
     @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlstatistik")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
+               description = "Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden "
                		       + "Fachwahlen der gymnasialen Oberstufe. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
                		       + "besitzt.")
@@ -405,7 +405,7 @@ public class APIGost {
     @GET
     @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahlen")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
+               description = "Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden "
                            + "Fachwahlen der gymnasialen Oberstufe. "
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
                            + "besitzt.")
@@ -443,7 +443,7 @@ public class APIGost {
     @GET
     @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/fachwahlen")
     @Operation(summary = "Gibt eine Übersicht von allen Fachwahlen des Abitur-Jahrganges der gymnasialen Oberstufe zurück.",
-               description = "Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden "
+               description = "Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden "
                            + "Fachwahlen der gymnasialen Oberstufe. "
                            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten "
                            + "besitzt.")
@@ -538,17 +538,17 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der PDF-Wahlbögen für die Gymnasiale Oberstufe eines Abiturjahrgangs.
+     * Die OpenAPI-Methode für die Abfrage der PDF-Wahlbögen für die gymnasiale Oberstufe eines Abiturjahrgangs.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abiturjahr   die Abiturjahr zu welchem die Wahlbögen erstellt werden sollen
+	 * @param abiturjahr   das Abiturjahr, zu welchem die Wahlbögen erstellt werden sollen
      * @param request      die Informationen zur HTTP-Anfrage
      *
      * @return das PDF mit den Wahlbögen des Abiturjahrgangs
      */
     @GET
     @Produces("application/pdf")
-    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/wahlboegen")
+    @Path("/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\\d+}")
     @Operation(summary = "Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang.",
                description = "Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.")
@@ -570,7 +570,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Default-Laufbahnplanungsdaten der Gymnasialen Oberstufe für einen
+     * Die OpenAPI-Methode für die Abfrage der Default-Laufbahnplanungsdaten der gymnasialen Oberstufe für einen
      * Abiturjahrgang.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -601,7 +601,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage einer Fachwahl der Gymnasialen Oberstufe in der Vorlage
+     * Die OpenAPI-Methode für die Abfrage einer Fachwahl der gymnasialen Oberstufe in der Vorlage
      * eines Abiturjahrgangs.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
@@ -617,7 +617,7 @@ public class APIGost {
                description = "Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Abiturjahrgang aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Abiturjahrgang",
+    @ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Abiturjahrgang",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostSchuelerFachwahl.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Abiturjahrgang auszulesen.")
@@ -634,7 +634,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen der Fachwahlen zu einem Fach der Gymnasiale Oberstufe
+     * Die OpenAPI-Methode für das Anpassen der Fachwahlen zu einem Fach der gymnasialen Oberstufe
      * für die Vorlage des angegebenen Abiturjahrgangs.
      *
      * @param schema       das Datenbankschema, auf welches der Patch ausgeführt werden soll
@@ -721,7 +721,7 @@ public class APIGost {
     description = "Setzt die Fachwahlen aller Schüler des angegebenen Abiturjahrgang zurück. "
     			+ "Die Fachwahlen werden von allen Halbjahren ohn Leistungsdaten entfernt. Sollten danach "
     			+ "keine Fachwahlen bei einem Schüler vorhanden sein, so wird die Laufbahnplanung mit der Fachwahlen-Vorlage des "
-    			+ "Aniturjahrgangs initialisiert."
+    			+ "Abiturjahrgangs initialisiert."
     		    + "Außerdem wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.")
     @ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich zurückgesetzt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.")
@@ -738,7 +738,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der Gymnasialen Oberstufe eines Schülers.
+     * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der gymnasialen Oberstufe eines Schülers.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id          die ID des Schülers zu dem die Laufbahnplanungsdaten ausgelesen werden
@@ -770,13 +770,13 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Beratungsdaten für die Laufbahnplanung der Gymnasialen Oberstufe eines Schülers.
+     * Die OpenAPI-Methode für die Abfrage der Beratungsdaten für die Laufbahnplanung der gymnasialen Oberstufe eines Schülers.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param id          die ID des Schülers zu dem die Beratungsdaten ausgelesen werden
      * @param request     die Informationen zur HTTP-Anfrage
      *
-     * @return die Beratungsdaten zum dem Schüler
+     * @return die Beratungsdaten zu dem Schüler
      */
     @GET
     @Path("/schueler/{id : \\d+}/laufbahnplanung/beratungsdaten")
@@ -802,7 +802,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Beratungsdaten für die Laufbahnplanung der
-     * Gymnasialen Oberstufe eines Schülers.
+     * gymnasialen Oberstufe eines Schülers.
      *
      * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
@@ -838,17 +838,17 @@ public class APIGost {
     }
 
     /**
-     * Die OpenAPI-Methode für die Abfrage des PDF-Wahlbogens für die Gymnasiale Oberstufe eines Schülers.
+     * Die OpenAPI-Methode für die Abfrage des PDF-Wahlbogens für die gymnasiale Oberstufe eines Schülers.
      *
      * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param id          die ID des Schülers zu dem der Wahlbigen erstellt werden soll
+	 * @param schuelerid  die ID des Schülers zu dem der Wahlbogen erstellt werden soll
      * @param request     die Informationen zur HTTP-Anfrage
      *
      * @return der PDF-Wahlbogen des Schülers
      */
     @GET
     @Produces("application/pdf")
-    @Path("/schueler/{id : \\d+}/wahlbogen")
+    @Path("/schueler/pdf/wahlbogen/{schuelerid : \\d+}")
     @Operation(summary = "Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID.",
                description = "Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens "
@@ -858,19 +858,19 @@ public class APIGost {
                  schema = @Schema(type = "string", format = "binary", description = "PDF-Wahlbogen")))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
     @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
     			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return PDFGostWahlbogen.query(conn, id);
+    		return PDFGostWahlbogen.query(conn, schuelerid);
     	}
     }
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage einer Fachwahl der Gymnasialen Oberstufe eines Schülers.
+     * Die OpenAPI-Methode für die Abfrage einer Fachwahl der gymnasialen Oberstufe eines Schülers.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
@@ -885,7 +885,7 @@ public class APIGost {
                description = "Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Schüler",
+    @ApiResponse(responseCode = "200", description = "Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = Abiturdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers auszulesen.")
@@ -903,7 +903,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Fachwahlen eines Schülers
-     * zu einem Fach der Gymnasiale Oberstufe.
+     * zu einem Fach der gymnasialen Oberstufe.
      *
      * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param schueler_id   die ID des Schülers
@@ -951,8 +951,8 @@ public class APIGost {
      */
     @POST
     @Path("/schueler/{schuelerid : \\d+}/fachwahl/reset")
-    @Operation(summary = "Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück.",
-    description = "Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück."
+    @Operation(summary = "Setzt die Fachwahlen des Schülers mit der angegebenen ID zurück.",
+    description = "Setzt die Fachwahlen des Schülers mit der angegebenen ID zurück."
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.")
     @ApiResponse(responseCode = "203", description = "Die Fachwahlen wurden erfolgreich zurückgesetzt.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen zurückzusetzen.")
@@ -972,13 +972,13 @@ public class APIGost {
 	 * Liest die Leistungsdaten in Bezug auf die gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
-	 * @param schema   das Schema aus dem die Leistungsdaten des Schüler kommen sollen
+	 * @param schema   das Schema aus dem die Leistungsdaten des Schülers kommen sollen
 	 * @param id       die ID des Schülers zu dem die Leistungsdaten geliefert werden sollen
 	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Leistungsdaten in der gymnasialen Oberstufe für den Schüler mit der
-	 *         angegebenen ID und die Berechtigung des Datenbank Users
+	 *         angegebenen ID und die Berechtigung des Datenbank-Users
 	 */
     @GET
     @Path("/schueler/{id : \\d+}/leistungsdaten")
@@ -1006,16 +1006,16 @@ public class APIGost {
 
 
 	/**
-	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasiale Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
+	 * Liest die Abiturdaten aus den Leistungsdaten der gymnasialen Oberstufe des Schülers mit der angegebene ID aus der Datenbank und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
-	 * @param schema   das Schema aus dem die Abiturdaten des Schüler kommen sollen
+	 * @param schema   das Schema aus dem die Abiturdaten des Schülers kommen sollen
 	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
 	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
-	 *         angegebenen ID und die Berechtigung des Datenbank Users
+	 *         angegebenen ID und die Berechtigung des Datenbank-Users
 	 */
     @GET
     @Path("/schueler/{id : \\d+}/abiturdatenAusLeistungsdaten")
@@ -1048,13 +1048,13 @@ public class APIGost {
 	 * Liest die Abiturdaten aus den Abiturtabellen des Schülers mit der angegebene ID und liefert diese zurück.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Leistungsdaten besitzt.
 	 *
-	 * @param schema   das Schema aus dem die Abiturdaten des Schüler kommen sollen
+	 * @param schema   das Schema aus dem die Abiturdaten des Schülers kommen sollen
 	 * @param id       die ID des Schülers zu dem die Abiturdaten geliefert werden sollen
 	 *
 	 * @param request  die Informationen zur HTTP-Anfrage
 	 *
 	 * @return die Abiturdaten in der gymnasialen Oberstufe für den Schüler mit der
-	 *         angegebenen ID und die Berechtigung des Datenbank Users
+	 *         angegebenen ID und die Berechtigung des Datenbank-Users
 	 */
     @GET
     @Path("/schueler/{id : \\d+}/abiturdaten")
@@ -1088,7 +1088,7 @@ public class APIGost {
      * @param abidaten      zu übergebende Fächerdaten für die Prüfung der Belegung im Abitur
      * @param request       die Informationen zur HTTP-Anfrage
      *
-     * @return              das Ergebis der Prüfung der Belegprüfung der Abiturdaten
+     * @return              das Ergebnis der Prüfung der Belegprüfung der Abiturdaten
      */
     @POST
     @Path("abitur/belegpruefung/gesamt")
@@ -1128,7 +1128,7 @@ public class APIGost {
      * @param abidaten      zu übergebende Fächerdaten für die Prüfung der Belegung nur für die EF_1
      * @param request       die Informationen zur HTTP-Anfrage
      *
-     * @return              das Ergebis der Prüfung der Belegprüfung nur für die EF_1
+     * @return              das Ergebnis der Prüfung der Belegprüfung nur für die EF_1
      */
     @POST
     @Path("abitur/belegpruefung/EF1")
@@ -1162,7 +1162,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Liste der Blockungen der gymnasialen Oberstufe
-     * im angegebenen Schema für den angegebenen Abitur-Jahrgang und das angebene Halbjahr.
+     * im angegebenen Schema für den angegebenen Abitur-Jahrgang und das angegebene Halbjahr.
      *
      * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param abiturjahr    der Abitur-Jahrgang
@@ -1175,7 +1175,7 @@ public class APIGost {
     @Path("/abiturjahrgang/{abiturjahr : \\d+}/{halbjahr : \\d+}/blockungen")
     @Operation(summary = "Gibt eine Übersicht von allen Blockungen des Abitur-Jahrganges in dem angegebenen Halbjahr der gymnasialen Oberstufe zurück.",
                description = "Erstellt eine Liste aller in der Datenbank vorhanden Blockungen der gymnasialen Oberstufe, "
-                           + "welche für den angebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. "
+                           + "welche für den angegebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. "
                		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten "
                		       + "besitzt.")
     @ApiResponse(responseCode = "200", description = "Eine Liste von Blockungs-Listen-Einträgen",
@@ -1192,7 +1192,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Erstellen einer neuen Blockung der Gymnasiale Oberstufe.
+     * Die OpenAPI-Methode für das Erstellen einer neuen Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param abiturjahr   der Abitur-Jahrgang
@@ -1227,7 +1227,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Löschen von Blockungsdaten der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Löschen von Blockungsdaten der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Blockung
@@ -1244,7 +1244,7 @@ public class APIGost {
     @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue für die angegebene ID wurden erfolgreich gelöscht.",
                  content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu löschen.")
-    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response deleteGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1255,7 +1255,7 @@ public class APIGost {
 
 
    /**
-     * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID der Blockung
@@ -1306,7 +1306,7 @@ public class APIGost {
                  content = @Content(mediaType = "application/json",
                 		 array = @ArraySchema(schema = @Schema(implementation = Long.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.")
-    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response rechneGostBlockung(@PathParam("schema") final String schema, @PathParam("blockungsid") final long id, @PathParam("zeit") final long zeit, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1317,7 +1317,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen der Blockungsdaten der Gymnasiale Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen der Blockungsdaten der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Blockung
@@ -1353,7 +1353,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Hinzufügen eines weiteren Kurses zu einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem der Kurs der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
@@ -1388,7 +1388,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Entfernen eines weiteren Kurses zu einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem der Kurs der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
@@ -1422,7 +1422,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage eines Kurses einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage eines Kurses einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Kurses der Blockung
@@ -1436,7 +1436,7 @@ public class APIGost {
                description = "Liest den angegebenen Kurs einer Blockung der gymnasialen Oberstufe aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der Kurs der Blockung der gymnasialen Oberstfue für die angegebene ID",
+    @ApiResponse(responseCode = "200", description = "Der Kurs der Blockung der gymnasialen Oberstufe für die angegebene ID",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostBlockungKurs.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
@@ -1451,7 +1451,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen eines Kurses einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen eines Kurses einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID des Kurses der Blockung
@@ -1469,7 +1469,7 @@ public class APIGost {
     @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Blockungsdaten integriert.")
     @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Kein Kurs einer Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Kein Kurs einer Blockung mit der angegebenen ID gefunden.")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockungKurs(
@@ -1487,7 +1487,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Aufteilen eines Kurses bei einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema    das Datenbankschema, in welchem der Kurs der Blockung aufgeteilt wird
      * @param idKurs    die ID des aufzuteilenden Kurses
@@ -1519,7 +1519,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Zusammenführen eines Kurses bei einer
-     * Blockung der Gymnasialen Oberstufe mit einem zweiten Kurs des gleichen
+     * Blockung der gymnasialen Oberstufe mit einem zweiten Kurs des gleichen
      * Faches und Kursart. Der zweite Kurs fällt dabei weg.
      *
      * @param schema       das Datenbankschema, in welchem der Kurs der Blockung aufgeteilt wird
@@ -1553,7 +1553,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen eines Kurses bei einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs       die ID des Kurses
@@ -1582,7 +1582,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Daten eines Kurs-Lehrers eines Kurses einer Blockung
-     * der Gymnasialen Oberstufe.
+     * der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
@@ -1612,7 +1612,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Anpassen der Daten eines Kurs-Lehrers eines Kurses einer Blockung
-     * der Gymnasialen Oberstufe.
+     * der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
@@ -1645,7 +1645,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Hinzufügen eines Kurs-Lehrers zu einem Kurs einer Blockung
-     * der Gymnasialen Oberstufe.
+     * der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
@@ -1674,8 +1674,8 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Entfernen eines Kurs-Lehrers eines Kurs einer Blockung
-     * der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Entfernen eines Kurs-Lehrers eines Kurses einer Blockung
+     * der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idKurs     die ID des Kurses der Blockung
@@ -1704,7 +1704,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer weiteren Schiene zu einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Schiene der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
@@ -1736,7 +1736,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Entfernen einer Schiene bei einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Schiene der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
@@ -1767,10 +1767,10 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage einer Schiene einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage einer Schiene einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id         die ID der Schiener der Blockung
+     * @param id         die ID der Schiene der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
      *
      * @return die Informationen zur Schiene der Blockung
@@ -1796,7 +1796,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen einer Schiene einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen einer Schiene einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Schiene der Blockung
@@ -1814,7 +1814,7 @@ public class APIGost {
     @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Blockungsdaten integriert.")
     @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Keine Schiene einer Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Schiene einer Blockung mit der angegebenen ID gefunden.")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostBlockungSchiene(
@@ -1832,7 +1832,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen einer Schiene bei einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idSchiene    die ID der Schiene
@@ -1861,7 +1861,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Hinzufügen einer Regel zu einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Regel der Blockung erstellt wird
      * @param idBlockung   die ID der Blockung
@@ -1897,10 +1897,10 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage einer Regel einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage einer Regel einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param id         die ID der Schiener der Blockung
+     * @param id         die ID der Schiene der Blockung
      * @param request    die Informationen zur HTTP-Anfrage
      *
      * @return die Informationen zur Regel der Blockung
@@ -1911,11 +1911,11 @@ public class APIGost {
                description = "Liest die angegebene Regel einer Blockung der gymnasialen Oberstufe aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Regel der Blockung der gymnasialen Oberstfue für die angegebene ID",
+    @ApiResponse(responseCode = "200", description = "Die Regel der Blockung der gymnasialen Oberstufe für die angegebene ID",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostBlockungRegel.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.")
-    @ApiResponse(responseCode = "404", description = "Keine Regel einer Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Regel einer Blockung mit der angegebenen ID gefunden.")
     public Response getGostBlockungRegel(@PathParam("schema") final String schema, @PathParam("regelid") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -1926,7 +1926,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen einer Regel einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen einer Regel einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Regel der Blockung
@@ -1962,7 +1962,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen einer Regel bei einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idRegel   die ID der Regel
@@ -1990,7 +1990,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage von Blockungsergebnissen zu Blockungen der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für die Abfrage von Blockungsergebnissen zu Blockungen der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Blockungsergebnisses
@@ -2004,7 +2004,7 @@ public class APIGost {
                description = "Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsergebnisse "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockungsergebnisse der gymnasialen Oberstfue für die angegebene ID",
+    @ApiResponse(responseCode = "200", description = "Die Blockungsergebnisse der gymnasialen Oberstufe für die angegebene ID",
                  content = @Content(mediaType = "application/json",
                  schema = @Schema(implementation = GostBlockungsergebnis.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsergebnisse einer Blockung der Gymnasialen Oberstufe auszulesen.")
@@ -2019,34 +2019,36 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Kurs-Schienen-Zuordnung eines Blockungsergebnisse als PDF-Datei.
+	 * Die OpenAPI-Methode für die Abfrage der Kurse-Schienen-Zuordnung eines Blockungsergebnisse als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Kurs-Schienen-Zuordnung ausgegeben werden soll.
-	 * @param schuelerids           Liste der IDs der SuS, deren Kurs-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Kurse-Schienen-Zuordnung ausgegeben werden soll.
+	 * @param schuelerids           Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
 	 * @param request     			die Informationen zur HTTP-Anfrage
 	 *
-	 * @return Die zu den übergebenen IDs zugehörige Kurs-Schienen-Zuordnung
+	 * @return Die zu den übergebenen IDs zugehörige Kurse-Schienen-Zuordnung
 	 */
 	@POST
 	@Produces("application/pdf")
-	@Path("/blockungen/pdf/kurs_schienen_zuordnung/{blockungsergebnisid : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung für das angegebene Blockungsergebnis, unter Umständen eingeschränkt auf die angegebenen Schüler.",
-			   description = "Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung."
-				   		   + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
+	@Path("/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}")
+	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung für das angegebene Blockungsergebnis, unter Umständen eingeschränkt auf die angegebenen Schüler.",
+			   description = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung."
+				   		   + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
 									   content = @Content(mediaType = "application/pdf",
-									   schema = @Schema(type = "string", format = "binary", description = "Kurs-Schienen-Zuordnung")))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
+									   schema = @Schema(type = "string", format = "binary", description = "Kurse-Schienen-Zuordnung")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
 	public Response getGostBlockungPDFKursSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-															@RequestBody(description = "Schüler-IDs, für die die Kurs-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
+															@RequestBody(description = "Schüler-IDs, für die die Kurse-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
 															@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
 															@Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFGostKursSchienenZuordnung.query(conn, blockungsergebnisid, schuelerids);
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PDFGostKurseSchienenZuordnung.query(conn, blockungsergebnisid, schuelerids);
 		}
 	}
 
@@ -2055,7 +2057,7 @@ public class APIGost {
 	 * Die OpenAPI-Methode für die Abfrage einer Liste von Schülern mit den Kursbelegungen eines Blockungsergebnisse als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Kurs-Schienen-Zuordnung ausgegeben werden soll.
+	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
 	 * @param schuelerids           Liste der IDs der SuS, deren Liste der Kursbelegungen erstellt werden soll.
 	 * @param request     			die Informationen zur HTTP-Anfrage
 	 *
@@ -2066,19 +2068,21 @@ public class APIGost {
 	@Path("/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \\d+}")
 	@Operation(summary = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen für das angegebene Blockungsergebnis.",
 		description = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung."
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.")
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
 	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung",
 		content = @Content(mediaType = "application/pdf",
-			schema = @Schema(type = "string", format = "binary", description = "Kurs-Schienen-Zuordnung")))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
+			schema = @Schema(type = "string", format = "binary", description = "Schüler-Kurse-Liste")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
 	public Response getGostBlockungPDFSchuelerKurseListe(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-														 @RequestBody(description = "Schüler-IDs, für die die Kurs-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
+														 @RequestBody(description = "Schüler-IDs, deren Kurse-Liste erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
 														 @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
 														 @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
 			return PDFGostSchuelerKurseListe.query(conn, blockungsergebnisid, schuelerids);
 		}
 	}
@@ -2086,7 +2090,7 @@ public class APIGost {
 
 	/**
      * Die OpenAPI-Methode für das Aktivieren bzw. Persistieren eines Blockungsergebnisses
-     * der Gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
+     * der gymnasialen Oberstufe in der Kursliste und den Leistungsdaten von Schülern.
      *
      * @param schema       das Datenbankschema
      * @param id           die ID des zu aktivierenden Blockungsergebnisses
@@ -2117,7 +2121,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Löschen von Blockungsergebnissen einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Löschen von Blockungsergebnissen einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id         die ID des Blockungsergebnisses
@@ -2131,10 +2135,10 @@ public class APIGost {
                description = "Entfernt das angegebene Zwischenergebnis einer Blockung der gymnasialen Oberstufe. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Zwischenergebnisses "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Das Zwischenergebnis einer Blockung der gymnasialen Oberstfue für die angegebene ID wurde erfolgreich gelöscht.",
+    @ApiResponse(responseCode = "200", description = "Das Zwischenergebnis einer Blockung der gymnasialen Oberstufe für die angegebene ID wurde erfolgreich gelöscht.",
                  content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Zwischenergebnis einer Blockung der Gymnasialen Oberstufe zu löschen.")
-    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Keine Blockung mit der angegebenen ID gefunden.")
     public Response deleteGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -2163,11 +2167,11 @@ public class APIGost {
                	+ "Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln",
+    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln",
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.")
-    @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angebenen ID gefunden.")
+    @ApiResponse(responseCode = "404", description = "Kein Blockungsergebnis mit der angegebenen ID gefunden.")
     public Response dupliziereGostBlockungMitErgebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -2229,7 +2233,7 @@ public class APIGost {
                description = "Restauriert die Blockung aus den Leistungsdaten. "
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung "
     		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung",
+    @ApiResponse(responseCode = "200", description = "Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung",
     	content = @Content(mediaType = "application/json",
     	schema = @Schema(implementation = GostBlockungsdaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.")
@@ -2246,7 +2250,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
@@ -2280,8 +2284,8 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Verschieben eines Schüler zwischen zwei Kursen bei einem Blockungsergebnis einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Verschieben eines Schülers zwischen zwei Kursen bei einem Blockungsergebnis einer
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
@@ -2316,7 +2320,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einem Schüler bei einem Blockungsergebnis einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idErgebnis   die ID des Blockungsergebnisses
@@ -2347,7 +2351,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Erstellen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis   die ID des Blockungsergebnisses
@@ -2381,12 +2385,12 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Verschieben eines Kurse von einer Schiene zu einer anderen Schiene
-     * bei einem Blockungsergebnis einer Blockung der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Verschieben eines Kurses von einer Schiene zu einer anderen Schiene
+     * bei einem Blockungsergebnis einer Blockung der gymnasialen Oberstufe.
      *
      * @param schema         das Datenbankschema, in welchem die Blockung erstellt wird
      * @param idErgebnis     die ID des Blockungsergebnisses
-     * @param idSchieneAlt   die ID der Schiene der Blockung in Bezug auf die alten Zuordnung
+     * @param idSchieneAlt   die ID der Schiene der Blockung in Bezug auf die alte Zuordnung
      * @param idKurs         die ID des Kurses der Blockung
      * @param idSchieneNeu   die ID der Schiene der Blockung in Bezug auf die neue Zuordnung
      * @param request        die Informationen zur HTTP-Anfrage
@@ -2417,7 +2421,7 @@ public class APIGost {
 
     /**
      * Die OpenAPI-Methode für das Löschen einer Kurszuordnung zu einer Schiene bei einem Blockungsergebnis einer
-     * Blockung der Gymnasialen Oberstufe.
+     * Blockung der gymnasialen Oberstufe.
      *
      * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param idErgebnis   die ID des Blockungsergebnisses
@@ -2477,7 +2481,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Anpassen einer Fachkombination für Fächer der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Anpassen einer Fachkombination für Fächer der gymnasialen Oberstufe.
      *
      * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
      * @param id         die ID der Regel für die Fachkombination
@@ -2495,7 +2499,7 @@ public class APIGost {
     @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Fachkombination integriert.")
     @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Fachkombinationen zu ändern.")
-    @ApiResponse(responseCode = "404", description = "Keine Fachkombination mit der angebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.")
+    @ApiResponse(responseCode = "404", description = "Keine Fachkombination mit der angegebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.")
     @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response patchGostFachkombination(
@@ -2514,8 +2518,8 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Löschen einer Regel zu einer Fchkombination
-     * der Gymnasialen Oberstufe.
+     * Die OpenAPI-Methode für das Löschen einer Regel zu einer Fächkombination
+     * der gymnasialen Oberstufe.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID der Regel der Fachkombination
@@ -2544,7 +2548,7 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für das Hinzufügen einer weiteren Fachkombination der Gymnasialen Oberstufe mit dem angegebenen Typ
+     * Die OpenAPI-Methode für das Hinzufügen einer weiteren Fachkombination der gymnasialen Oberstufe mit dem angegebenen Typ
      * bei dem angegebenen Abiturjahrgang.
      *
      * @param schema       das Datenbankschema, in welchem die Fachkombination erstellt wird
@@ -2579,14 +2583,14 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
+     * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der gymnasialen Oberstufe
      * in Bezug auf den angegebenen Schüler als GZIP-Json.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
      *
-     * @return die Laufbahnplanungs-Daten
+     * @return die Laufbahnplanungsdaten
      */
     @GET
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
@@ -2629,7 +2633,7 @@ public class APIGost {
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
     public Response importGostSchuelerLaufbahnplanung(@PathParam("schema") final String schema,
     		@PathParam("id") final long id,
-    		@RequestBody(description = "Die Laufbahnplanungs-Datei", required = true, content =
+    		@RequestBody(description = "Die Laufbahnplanungsdatei", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)) {
@@ -2639,14 +2643,14 @@ public class APIGost {
 
 
     /**
-     * Die OpenAPI-Methode für die Abfrage der Laufbahplanungs-Daten der gymnasialen Oberstufe
+     * Die OpenAPI-Methode für die Abfrage der Laufbahnplanungsdaten der gymnasialen Oberstufe
      * in Bezug auf den angegebenen Schüler.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
      * @param id        die ID des Schülers
      * @param request   die Informationen zur HTTP-Anfrage
      *
-     * @return die Laufbahnplanungs-Daten
+     * @return die Laufbahnplanungsdaten
      */
     @GET
     @Path("/schueler/{id : \\d+}/laufbahnplanung/daten")
@@ -2654,7 +2658,7 @@ public class APIGost {
     	description = "Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank "
     			+ "und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die "
     			+ "notwendige Berechtigung zum Auslesen der Daten besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die Laufbahndaten der gymnasialen Obertufe",
+    @ApiResponse(responseCode = "200", description = "Die Laufbahndaten der gymnasialen Oberstufe",
 			content = @Content(mediaType = "application/json",
 			schema = @Schema(implementation = GostLaufbahnplanungDaten.class)))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.")

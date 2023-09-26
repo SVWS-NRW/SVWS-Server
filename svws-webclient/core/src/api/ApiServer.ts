@@ -2628,7 +2628,7 @@ export class ApiServer extends BaseApi {
 	 * Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Abiturjahrgang aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Abiturjahrgang
+	 *   Code 200: Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Abiturjahrgang
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostSchuelerFachwahl
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Abiturjahrgang auszulesen.
@@ -2638,7 +2638,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} fachid - der Pfad-Parameter fachid
 	 *
-	 * @returns Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Abiturjahrgang
+	 * @returns Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Abiturjahrgang
 	 */
 	public async getGostAbiturjahrgangFachwahl(schema : string, abiturjahr : number, fachid : number) : Promise<GostSchuelerFachwahl> {
 		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/fachwahl/{fachid : \\d+}"
@@ -2705,7 +2705,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode resetGostAbiturjahrgangSchuelerFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahl/schueler/reset
 	 *
-	 * Setzt die Fachwahlen aller Schüler des angegebenen Abiturjahrgang zurück. Die Fachwahlen werden von allen Halbjahren ohn Leistungsdaten entfernt. Sollten danach keine Fachwahlen bei einem Schüler vorhanden sein, so wird die Laufbahnplanung mit der Fachwahlen-Vorlage des Aniturjahrgangs initialisiert.Außerdem wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
+	 * Setzt die Fachwahlen aller Schüler des angegebenen Abiturjahrgang zurück. Die Fachwahlen werden von allen Halbjahren ohn Leistungsdaten entfernt. Sollten danach keine Fachwahlen bei einem Schüler vorhanden sein, so wird die Laufbahnplanung mit der Fachwahlen-Vorlage des Abiturjahrgangs initialisiert.Außerdem wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 203: Die Fachwahlen wurden erfolgreich zurückgesetzt.
@@ -2728,7 +2728,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlen
 	 *
-	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste der Fachwahlen
@@ -2755,7 +2755,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFachwahlstatistik für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/fachwahlstatistik
 	 *
-	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Fachwahlstatistik
@@ -2784,7 +2784,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangFaecher für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/faecher
 	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, welche für den angebenen Abitur-Jahrgang festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Fächer der gymnasialen Oberstufe, welche für den angegebenen Abitur-Jahrgang festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Fächer-Listen-Einträgen
@@ -2813,7 +2813,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangHalbjahrFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/fachwahlen
 	 *
-	 * Erstellt eine Liste aller in der Datenbank für den angebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank für den angegebenen Abitur-Jahrgang vorhanden Fachwahlen der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Fächerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste der Fachwahlen
@@ -2869,7 +2869,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangSchueler für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/schueler
 	 *
-	 * Erstellt eine Liste aller Schüler, welche zu dem angebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten besitzt.
+	 * Erstellt eine Liste aller Schüler, welche zu dem angegebenen Abitur-Jahrgang gehören (ohne Informationen zu Kursen). Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Schülerdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Schüler-Listen-Einträgen
@@ -2896,35 +2896,9 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFWahlboegen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/wahlboegen
-	 *
-	 * Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
-	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 *
-	 * @returns Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
-	 */
-	public async getGostAbiturjahrgangPDFWahlboegen(schema : string, abiturjahr : number) : Promise<Blob> {
-		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/wahlboegen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const data : Blob = await super.getPDF(path);
-		return data;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangBlockungsliste für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : \d+}/{halbjahr : \d+}/blockungen
 	 *
-	 * Erstellt eine Liste aller in der Datenbank vorhanden Blockungen der gymnasialen Oberstufe, welche für den angebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.
+	 * Erstellt eine Liste aller in der Datenbank vorhanden Blockungen der gymnasialen Oberstufe, welche für den angegebenen Abitur-Jahrgang und das angegebene Halbjahr festgelegt wurden.. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Blockungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Blockungs-Listen-Einträgen
@@ -3013,12 +2987,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFWahlboegen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\d+}
+	 *
+	 * Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
+	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
+	 */
+	public async getGostAbiturjahrgangPDFWahlboegen(schema : string, abiturjahr : number) : Promise<Blob> {
+		const path = "/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const data : Blob = await super.getPDF(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode restauriereGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{abiturjahr : \d+}/{halbjahr : \d+}/restore
 	 *
 	 * Restauriert die Blockung aus den Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung
+	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungsdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu restaurieren.
@@ -3028,7 +3028,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
-	 * @returns Die Blockungsdaten der gymnasialen Oberstfue der restaurierten Blockung
+	 * @returns Die Blockungsdaten der gymnasialen Oberstufe der restaurierten Blockung
 	 */
 	public async restauriereGostBlockung(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/{abiturjahr : \\d+}/{halbjahr : \\d+}/restore"
@@ -3051,7 +3051,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Long
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu löschen.
-	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Keine Blockung mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
@@ -3288,7 +3288,7 @@ export class ApiServer extends BaseApi {
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<Long>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auf dem Server zu rechnen.
-	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Keine Blockung mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
@@ -3315,7 +3315,7 @@ export class ApiServer extends BaseApi {
 	 * Liest den angegebenen Kurs einer Blockung der gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Kurs der Blockung der gymnasialen Oberstfue für die angegebene ID
+	 *   Code 200: Der Kurs der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungKurs
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.
@@ -3324,7 +3324,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} kursid - der Pfad-Parameter kursid
 	 *
-	 * @returns Der Kurs der Blockung der gymnasialen Oberstfue für die angegebene ID
+	 * @returns Der Kurs der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 */
 	public async getGostBlockungKurs(schema : string, kursid : number) : Promise<GostBlockungKurs> {
 		const path = "/db/{schema}/gost/blockungen/kurse/{kursid : \\d+}"
@@ -3345,7 +3345,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich in die Blockungsdaten integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.
-	 *   Code 404: Kein Kurs einer Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Kein Kurs einer Blockung mit der angegebenen ID gefunden.
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -3557,25 +3557,25 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFKursSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurs_schienen_zuordnung/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode getGostBlockungPDFKursSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
 	 *
-	 * Erstellt eine PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.
+	 * Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
+	 *   Code 200: Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 *     - Mime-Type: application/pdf
 	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
 	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsergebnisid - der Pfad-Parameter blockungsergebnisid
 	 *
-	 * @returns Die PDF-Datei mit der Kurs-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
+	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 */
 	public async getGostBlockungPDFKursSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<Blob> {
-		const path = "/db/{schema}/gost/blockungen/pdf/kurs_schienen_zuordnung/{blockungsergebnisid : \\d+}"
+		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
@@ -3587,13 +3587,13 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode getGostBlockungPDFSchuelerKurseListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \d+}
 	 *
-	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurs-Schienen-Zuordnung besitzt.
+	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
 	 *     - Mime-Type: application/pdf
 	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurs-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.
 	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
@@ -3618,16 +3618,16 @@ export class ApiServer extends BaseApi {
 	 * Liest die angegebene Regel einer Blockung der gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Regel der Blockung der gymnasialen Oberstfue für die angegebene ID
+	 *   Code 200: Die Regel der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungRegel
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.
-	 *   Code 404: Keine Regel einer Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Keine Regel einer Blockung mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} regelid - der Pfad-Parameter regelid
 	 *
-	 * @returns Die Regel der Blockung der gymnasialen Oberstfue für die angegebene ID
+	 * @returns Die Regel der Blockung der gymnasialen Oberstufe für die angegebene ID
 	 */
 	public async getGostBlockungRegel(schema : string, regelid : number) : Promise<GostBlockungRegel> {
 		const path = "/db/{schema}/gost/blockungen/regeln/{regelid : \\d+}"
@@ -3728,7 +3728,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich in die Blockungsdaten integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Blockungsdaten zu ändern.
-	 *   Code 404: Keine Schiene einer Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Keine Schiene einer Blockung mit der angegebenen ID gefunden.
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -3778,7 +3778,7 @@ export class ApiServer extends BaseApi {
 	 * Liest für das angegebene Blockungsergebnis einer Blockung der gymnasialen Oberstufe die Daten aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsergebnisse besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Blockungsergebnisse der gymnasialen Oberstfue für die angegebene ID
+	 *   Code 200: Die Blockungsergebnisse der gymnasialen Oberstufe für die angegebene ID
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungsergebnis
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsergebnisse einer Blockung der Gymnasialen Oberstufe auszulesen.
@@ -3787,7 +3787,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 *
-	 * @returns Die Blockungsergebnisse der gymnasialen Oberstfue für die angegebene ID
+	 * @returns Die Blockungsergebnisse der gymnasialen Oberstufe für die angegebene ID
 	 */
 	public async getGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsergebnis> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
@@ -3805,16 +3805,16 @@ export class ApiServer extends BaseApi {
 	 * Entfernt das angegebene Zwischenergebnis einer Blockung der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen des Zwischenergebnisses besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Das Zwischenergebnis einer Blockung der gymnasialen Oberstfue für die angegebene ID wurde erfolgreich gelöscht.
+	 *   Code 200: Das Zwischenergebnis einer Blockung der gymnasialen Oberstufe für die angegebene ID wurde erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Long
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Zwischenergebnis einer Blockung der Gymnasialen Oberstufe zu löschen.
-	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *   Code 404: Keine Blockung mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 *
-	 * @returns Das Zwischenergebnis einer Blockung der gymnasialen Oberstfue für die angegebene ID wurde erfolgreich gelöscht.
+	 * @returns Das Zwischenergebnis einer Blockung der gymnasialen Oberstufe für die angegebene ID wurde erfolgreich gelöscht.
 	 */
 	public async deleteGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<number | null> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}"
@@ -3856,16 +3856,16 @@ export class ApiServer extends BaseApi {
 	 * Dupliziert zu dem angegebenen Zwischenergebnis gehörende Blockung der gymnasialen Oberstufe. Das Zwischenergebnis wird als einziges mit dupliziert und dient bei dem Blockungsduplikat. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Duplizieren einer Blockung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln
+	 *   Code 200: Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostBlockungsdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe zu duplizieren.
-	 *   Code 404: Kein Blockungsergebnis mit der angebenen ID gefunden.
+	 *   Code 404: Kein Blockungsergebnis mit der angegebenen ID gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
 	 *
-	 * @returns Die Blockungsdaten der gymnasialen Oberstfue des Duplikats als Vorlage für die Definition von Regeln
+	 * @returns Die Blockungsdaten der gymnasialen Oberstufe des Duplikats als Vorlage für die Definition von Regeln
 	 */
 	public async dupliziereGostBlockungMitErgebnis(schema : string, ergebnisid : number) : Promise<GostBlockungsdaten> {
 		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/dupliziere"
@@ -4081,7 +4081,7 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Patch wurde erfolgreich in die Fachkombination integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Fachkombinationen zu ändern.
-	 *   Code 404: Keine Fachkombination mit der angebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.
+	 *   Code 404: Keine Fachkombination mit der angegebenen ID gefunden oder es wurden kein gültiges Fach als ID übergeben.
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -5033,7 +5033,7 @@ export class ApiServer extends BaseApi {
 	 * Liest die Laufbahnplanungsdaten der gymnasialen Oberstufe für den angegebenen Schüler aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Laufbahndaten der gymnasialen Obertufe
+	 *   Code 200: Die Laufbahndaten der gymnasialen Oberstufe
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostLaufbahnplanungDaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
@@ -5042,7 +5042,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Die Laufbahndaten der gymnasialen Obertufe
+	 * @returns Die Laufbahndaten der gymnasialen Oberstufe
 	 */
 	public async exportGostSchuelerLaufbahnplanungsdaten(schema : string, id : number) : Promise<GostLaufbahnplanungDaten> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/daten"
@@ -5169,38 +5169,12 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostSchuelerPDFWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{id : \d+}/wahlbogen
-	 *
-	 * Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.
-	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
-	 */
-	public async getGostSchuelerPDFWahlbogen(schema : string, id : number) : Promise<Blob> {
-		const path = "/db/{schema}/gost/schueler/{id : \\d+}/wahlbogen"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const data : Blob = await super.getPDF(path);
-		return data;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostSchuelerFachwahl für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/{fachid : \d+}
 	 *
 	 * Liest für die gymnasiale Oberstufe die Fachwahlen zu einem Fach von dem angegebenen Schüler aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Fachwahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Schüler
+	 *   Code 200: Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Abiturdaten
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Fachwahlen der Gymnasialen Oberstufe eines Schülers auszulesen.
@@ -5210,7 +5184,7 @@ export class ApiServer extends BaseApi {
 	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 * @param {number} fachid - der Pfad-Parameter fachid
 	 *
-	 * @returns Die Fachwahlen der gymnasialen Oberstfue für das angegebene Fach und den angegebenen Schüler
+	 * @returns Die Fachwahlen der gymnasialen Oberstufe für das angegebene Fach und den angegebenen Schüler
 	 */
 	public async getGostSchuelerFachwahl(schema : string, schuelerid : number, fachid : number) : Promise<Abiturdaten> {
 		const path = "/db/{schema}/gost/schueler/{schuelerid : \\d+}/fachwahl/{fachid : \\d+}"
@@ -5254,7 +5228,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode resetGostSchuelerFachwahlen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/{schuelerid : \d+}/fachwahl/reset
 	 *
-	 * Setzt die Fachwahlen des Schülers mit der angebebenen ID zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
+	 * Setzt die Fachwahlen des Schülers mit der angegebenen ID zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zurücksetzen der Fachwahlen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 203: Die Fachwahlen wurden erfolgreich zurückgesetzt.
@@ -5297,6 +5271,32 @@ export class ApiServer extends BaseApi {
 			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
 		const body : string = GostLaufbahnplanungBeratungsdaten.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostSchuelerPDFWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \d+}
+	 *
+	 * Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: Blob
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.
+	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
+	 *
+	 * @returns Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
+	 */
+	public async getGostSchuelerPDFWahlbogen(schema : string, schuelerid : number) : Promise<Blob> {
+		const path = "/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
+		const data : Blob = await super.getPDF(path);
+		return data;
 	}
 
 
