@@ -27,7 +27,8 @@ export class BaseApi {
 	protected constructor(url : string, username : string, password : string) {
 		this.url = url;
 		this.username = username;
-		this.headers["Authorization"] = "Basic " + btoa(username + ":" + password);
+		const tmp = (new TextEncoder()).encode(username + ":" + password);
+		this.headers["Authorization"] = "Basic " + btoa(String.fromCodePoint(...tmp));
 	}
 
 

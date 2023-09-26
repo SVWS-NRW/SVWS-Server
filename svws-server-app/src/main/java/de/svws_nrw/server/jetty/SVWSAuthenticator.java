@@ -47,7 +47,7 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         if (auth != null) {
             final int space = auth.indexOf(' ');
             if ((space > 0) && ("basic".equalsIgnoreCase(auth.substring(0, space)))) {
-                auth = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.ISO_8859_1);
+                auth = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.UTF_8);
                 final int colon = auth.indexOf(':');
                 if (colon > 0) {
                     username = auth.substring(0, colon);
@@ -71,7 +71,7 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
             return new UserAuthentication(getAuthMethod(), user);
         }
         try {
-            response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + '"');
+            response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
 			final int _ACCESS_CONTROL_MAX_AGE_IN_SECONDS = 12 * 60 * 60;
 			final String origin = request.getHeader("Origin");
 			response.setHeader("Vary", "Origin");
