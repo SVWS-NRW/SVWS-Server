@@ -16,9 +16,6 @@
 			<template #content>Administrative Gruppe</template>
 		</svws-ui-tooltip>
 	</div>
-	<div class="svws-ui-td svws-align-right" role="cell">
-		{{ row.id }}
-	</div>
 </template>
 
 <script setup lang="ts">

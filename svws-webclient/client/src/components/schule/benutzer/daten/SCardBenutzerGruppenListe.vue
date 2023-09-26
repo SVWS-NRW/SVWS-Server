@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true">
+		<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true" :columns="cols">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<!--<div class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
@@ -8,12 +8,6 @@
 					</div>-->
 					<div class="svws-ui-td col-span-2" role="columnheader">
 						Zugewiesene Benutzergruppen
-					</div>
-					<div class="svws-ui-td" role="columnheader">
-						<span />
-					</div>
-					<div class="svws-ui-td svws-align-right font-mono" role="columnheader">
-						ID
 					</div>
 				</div>
 			</template>
@@ -53,6 +47,11 @@
 				void props.removeBenutzerFromBenutzergruppe(-1);
 		}
 	});
+
+	const cols = [
+		{key: 'bezeichnung', label: 'Bezeichnung'},
+		{key: 'istAdmin', label: 'ist Admin'}
+	]
 
 </script>
 

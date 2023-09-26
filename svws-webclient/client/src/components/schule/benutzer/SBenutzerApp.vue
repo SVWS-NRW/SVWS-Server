@@ -4,15 +4,10 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<svws-ui-tooltip :indicator="false">
-							{{ anzeigename || '—' }}
-							<template #content>
-								<span class="font-mono">
-									ID:
-									{{ id || '—' }}
-								</span>
-							</template>
-						</svws-ui-tooltip>
+						<span>{{ anzeigename || '—' }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID: {{ id }}
+						</svws-ui-badge>
 					</h2>
 					<span class="svws-subline">
 						{{ name || '—' }}

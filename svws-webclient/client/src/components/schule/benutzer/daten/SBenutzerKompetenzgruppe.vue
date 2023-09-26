@@ -16,9 +16,6 @@
 		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-black/50 dark:text-white/50" role="cell">
 			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
 		</div>
-		<div class="svws-ui-td svws-align-right !pr-3" role="cell">
-			{{ kompetenzgruppe.daten.id }}
-		</div>
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
 				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" :get-gruppen4-kompetenz="getGruppen4Kompetenz" />

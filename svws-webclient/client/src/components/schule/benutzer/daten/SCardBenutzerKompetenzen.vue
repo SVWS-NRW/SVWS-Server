@@ -13,12 +13,11 @@
 				</svws-ui-checkbox>
 			</template>
 		</template>
-		<svws-ui-table :items="kompetenzgruppen" class="overflow-visible" type="collapsible">
+		<svws-ui-table :items="kompetenzgruppen">
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td" role="columnheader" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</div>
 					<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-black/50 dark:text-white/50" role="columnheader">Übernommen aus der Gruppe</div>
-					<div class="svws-ui-td svws-align-right font-mono" role="columnheader">ID</div>
 				</div>
 			</template>
 			<template #body>
@@ -36,8 +35,8 @@
 <script setup lang="ts">
 
 	import type { BenutzerKompetenz, BenutzerManager, List } from "@core";
-	import { BenutzerKompetenzGruppe } from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
+	import { BenutzerKompetenzGruppe } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<{

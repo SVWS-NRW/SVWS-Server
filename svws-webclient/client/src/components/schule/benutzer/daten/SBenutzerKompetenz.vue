@@ -10,9 +10,6 @@
 			<span class="line-clamp-1 break-all text-black/50 dark:text-white/50">{{ getGruppen4Kompetenz(kompetenz) }}</span>
 		</template>
 	</div>
-	<div class="svws-ui-td svws-align-right" role="cell">
-		{{ kompetenz.daten.id }}
-	</div>
 </template>
 
 <script setup lang="ts">
