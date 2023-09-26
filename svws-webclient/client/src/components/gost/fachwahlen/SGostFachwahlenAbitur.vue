@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" :columns="cols">
+	<svws-ui-table :items="[]" :no-data="false" :columns="cols" class="select-none">
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="cell" class="svws-ui-td col-span-full">
@@ -7,17 +7,6 @@
 						<span class="svws-ui-badge">Alle Fächer</span>
 						im Abitur
 					</span>
-				</div>
-			</div>
-			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td col-span-2" :class="{'opacity-25': !aktuell?.id}">Gesamt im Leistungskurs</div>
-				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell?.id}">
-					<i-ri-draft-line class="text-sm -my-0.5" />
-					<span>3. Abiturfach</span>
-				</div>
-				<div role="cell" class="svws-ui-td" :class="{'opacity-25': !aktuell?.id}">
-					<i-ri-speak-line class="text-sm -my-0.5" />
-					<span>4. Abiturfach</span>
 				</div>
 			</div>
 		</template>
@@ -35,29 +24,26 @@
 							<span :class="{'svws-ui-badge': aktuell?.id === fws.id}">{{ faecherManager.get(fws.id)?.bezeichnung }}</span>
 						</div>
 					</div>
-					<div v-if="aktuell?.id === fws.id" role="row" class="cursor-pointer svws-ui-tr">
-						<div role="cell" class="svws-ui-td col-span-2 !pl-7">
-							<template v-if="fws.fachwahlen[5].wahlenLK > 0">
-								{{ fws.fachwahlen[5].wahlenLK }}
-							</template>
-							<span v-else class="opacity-25">—</span>
+					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
+						<div role="cell" class="svws-ui-td svws-align-center">
+							<i-ri-draft-line class="text-sm -my-0.5" />
+							<span v-if="fws.fachwahlen[5].wahlenLK > 0">Leistungskurs ({{ fws.fachwahlen[5].wahlenLK }})</span>
+							<span v-else class="opacity-25">Leistungskurs (—)</span>
 						</div>
-						<div role="cell" class="svws-ui-td">
-							<template v-if="fws.wahlenAB3 > 0">
-								{{ fws.wahlenAB3 }}
-							</template>
-							<span v-else class="opacity-25">—</span>
+						<div role="cell" class="svws-ui-td svws-align-center">
+							<i-ri-draft-line class="text-sm -my-0.5" />
+							<span v-if="fws.wahlenAB3 > 0">3. Abiturfach ({{ fws.wahlenAB3 }})</span>
+							<span v-else class="opacity-25">3. Abiturfach (—)</span>
 						</div>
-						<div role="cell" class="svws-ui-td">
-							<template v-if="fws.wahlenAB4 > 0">
-								{{ fws.wahlenAB4 }}
-							</template>
-							<span v-else class="opacity-25">—</span>
+						<div role="cell" class="svws-ui-td svws-align-center">
+							<i-ri-speak-line class="text-sm -my-0.5" />
+							<span v-if="fws.wahlenAB4 > 0">4. Abiturfach ({{ fws.wahlenAB4 }})</span>
+							<span v-else class="opacity-25">4. Abiturfach (—)</span>
 						</div>
 					</div>
 					<div v-if="aktuell?.id === fws.id" role="row" class="svws-ui-tr">
-						<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="(abifach, index) in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id" :class="{'col-span-2 !pl-7 text-black/50 dark:text-white/50 hover:text-black focus-within:text-black dark:hover:text-white dark:focus-within:text-white': index === 0}">
-							<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
+						<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="abifach in [GostAbiturFach.LK1, GostAbiturFach.AB3, GostAbiturFach.AB4]" :key="abifach.id">
+							<div v-for="schueler in getSchuelerListe(fws.id, abifach)" :key="schueler.id" class="flex gap-1 py-0.5 px-4 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 								<i-ri-link class="text-sm" />
 								<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="schueler.nachname + ', ' + schueler.vorname">{{ schueler.nachname + ", " + schueler.vorname }}</span>
 							</div>
@@ -81,7 +67,6 @@
 	const aktuell = ref<GostStatistikFachwahl | undefined>(undefined); //fachwahlenstatistik.value.length === 0 ? undefined : fachwahlenstatistik.value.at(0)
 
 	const cols: DataTableColumn[] = [
-		{ key: "HJ", label: "HJ", fixedWidth: 6 },
 		{ key: "LK", label: "LK", span: 1 },
 		{ key: "AB3", label: "AB3", span: 1 },
 		{ key: "AB4", label: "Ab4", span: 1 },
