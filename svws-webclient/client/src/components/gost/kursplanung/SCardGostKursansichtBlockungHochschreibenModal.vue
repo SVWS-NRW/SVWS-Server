@@ -1,13 +1,13 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="small" class="hidden">
-		<template #modalTitle>Ergebnis hochschreiben</template>
-    <template #modalDescription>
-      <p>Das Blockungsergebnis wird mit dieser Aktion in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben.</p>
-    </template>
+		<template #modalTitle>Blockungsergebnis hochschreiben</template>
+		<template #modalContent>
+			<p>Soll das Blockungsergebnis in das nächste Halbjahr ({{ getDatenmanager().getHalbjahr().next()?.kuerzel }}) hochgeschrieben werden?</p>
+		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
-			<svws-ui-button @click="hochschreiben_ergebnis">Hochschreiben</svws-ui-button>
+			<svws-ui-button @click="hochschreiben_ergebnis">Ja</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>

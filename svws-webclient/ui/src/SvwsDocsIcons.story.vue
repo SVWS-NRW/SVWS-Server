@@ -44,9 +44,9 @@
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-question-line /></th>
+					<th><i-ri-question-fill /></th>
 					<td>Hilfe/Information, Tooltip Trigger</td>
-					<td><code>{{ '<' }}i-ri-question-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-question-fill{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-information-line /></th>
@@ -188,26 +188,31 @@
 					<td><code>{{ '<' }}i-ri-spam-3-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-alert-line /></th>
+					<th><i-ri-error-warning-line /></th>
 					<td>Kollision</td>
-					<td><code>{{ '<' }}i-ri-alert-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-error-warning-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-error-warning-fill /></th>
+					<th><i-ri-alert-fill /></th>
 					<td>Kollision und Nichtverteilt</td>
-					<td><code>{{ '<' }}i-ri-error-warning-fill{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-alert-fill{{ ' />' }}</code></td>
 				</tr>
 			</table>
 			<table class="svws-docs-icon-table">
 				<tr>
-					<th><i-ri-pen-nib-line /></th>
+					<th><i-ri-draft-line /></th>
 					<td>Fachwahl: Schriftlich</td>
-					<td><code>{{ '<' }}i-ri-pen-nib-line{{ ' />' }}</code></td>
+					<td><code>{{ '<' }}i-ri-draft-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
-					<th><i-ri-chat1-line /></th>
-					<td>Fachwahl: Mündlich</td>
-					<td><code>{{ '<' }}i-ri-chat1-line{{ ' />' }}</code></td>
+					<th><i-ri-speak-line /></th>
+					<td>Fachwahl: Mündliche</td>
+					<td><code>{{ '<' }}i-ri-speak-line{{ ' />' }}</code></td>
+				</tr>
+				<tr>
+					<th><i-ri-user-line /></th>
+					<td>Überschrift in der Tabelle für Geschlecht</td>
+					<td><code>{{ '<' }}i-ri-user-line{{ ' />' }}</code></td>
 				</tr>
 				<tr>
 					<th><i-ri-settings-3-line /></th>

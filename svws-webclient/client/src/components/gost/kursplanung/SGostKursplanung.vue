@@ -19,7 +19,7 @@
 							Tabelle einblenden
 						</template>
 					</svws-ui-button>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1" :class="{'mr-2': regelzahl > 0}">
+					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1">
 						<i-ri-settings3-line />
 						<span class="pr-1">Regeln zur Blockung</span>
 						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
@@ -40,7 +40,7 @@
 						</template>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben…</svws-ui-button>
+						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 				</svws-ui-sub-nav>
 			</Teleport>
@@ -59,11 +59,11 @@
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
-				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed && !(regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)">
+				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed" :class="{ 'app-layout--aside--collapsed': collapsed }">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
-						<h2 class="text-headline-md flex justify-between px-3">
-							<span>Regeln zur Blockung</span>
-							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
+						<h2 class="text-headline-md flex justify-between pl-5 pt-4">
+							<span class="text-headline">Regeln zur Blockung</span>
+							<svws-ui-button type="transparent" @click="onToggle"> Schließen <i-ri-close-line /> </svws-ui-button>
 						</h2>
 						<s-card-gost-regelansicht :get-datenmanager="getDatenmanager" :faecher-manager="faecherManager" :map-schueler="mapSchueler"
 							:patch-regel="patchRegel" :add-regel="addRegel" :remove-regel="removeRegel" />
@@ -71,14 +71,9 @@
 				</aside>
 			</Teleport>
 		</template>
-		<div v-else class="col-span-full">
-			<div class="p-3 border-2 border-dashed border-black/10 dark:border-white/10 rounded-lg max-w-xl">
-				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
-				<div class="opacity-50 leading-tight flex flex-col gap-2">
-					<div>Klicke in der Übersicht auf <i-ri-add-line class="inline -mt-1" />, um eine neue Kursplanung zu erstellen.</div>
-					<div>Falls eine persistierte Blockung vorliegt, kann mit "Wiederherstellen" aus bestehenden Leistungsdaten eine Blockung geladen werden.</div>
-				</div>
-			</div>
+		<div v-else>
+			<h3 class="text-headline-md mb-2"><i-ri-information-line class="inline align-text-top" /> Es liegt noch keine Planung für dieses Halbjahr vor.</h3>
+			<p>Klicken Sie auf „Neue Blockung“, um eine neue Kursplanung zu erstellen oder auf „Wiederherstellen“, um aus bestehenden Leistungsdaten ein Blockung zu restaurieren.</p>
 		</div>
 	</div>
 </template>

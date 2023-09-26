@@ -1,8 +1,10 @@
 <template>
-	<div class="mt-10">
-		<svws-ui-checkbox type="toggle" v-model="hatRegel" :disabled="disabled">
-			{{ regel_typ.bezeichnung }}
-		</svws-ui-checkbox>
+	<div class="pl-5 pr-3 bg-light rounded-lg mb-3">
+		<div class="flex gap-4 px-3 pt-4 pb-3 -mx-3">
+			<svws-ui-checkbox type="toggle" v-model="hatRegel" :disabled="disabled">
+				{{ regel_typ.bezeichnung }}
+			</svws-ui-checkbox>
+		</div>
 	</div>
 </template>
 

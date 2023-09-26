@@ -1,66 +1,49 @@
 <template>
-	<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl" :items="listBlockungen" :columns="[{ key: 'name', label: 'Blockungen' }]" no-data-text="Es liegt noch keine Planung für dieses Halbjahr vor.">
-		<template #noData v-if="istBlockungPersistiert">
-			<span class="inline-flex items-center gap-1">
-				<i-ri-error-warning-line />
-				<span>Es liegt bereits eine persistierte Blockung vor, die wiederhergestellt werden kann.</span>
-			</span>
-		</template>
-		<template #header(name)>
-			<span>Blockungen</span>
-		</template>
-		<template #cell(name)="{ rowData: row }">
-			<div class="flex justify-between w-full items-start">
-				<div class="flex items-center gap-1 w-full">
-					<div class="flex" v-if="row === auswahlBlockung">
-						<span v-if="(!edit_blockungsname)" class="border-b border-dotted hover:border-transparent cursor-text" @click.stop="edit_blockungsname = true">
-							{{ row.name }}
-						</span>
-						<svws-ui-text-input v-else :model-value="row.name" headless focus
-							@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
-							@change="name => patch_blockung(name, row.id)" class="-my-0.5 w-full" />
-					</div>
-					<div v-else>
-						<span>{{ row.name }}</span>
-					</div>
-					<div class="-my-1 ml-auto">
-						<svws-ui-tooltip v-if="row.istAktiv">
-							<i-ri-checkbox-circle-fill class="text-svws text-headline-md relative top-0.5" />
-							<template #content> Aktivierte Blockung </template>
+	<template v-if="visible">
+		<svws-ui-table clickable :clicked="auswahlBlockung" @update:clicked="select_blockungauswahl"
+			:items="listBlockungen" :columns="[{ key: 'name', label: 'Blockung' }]" class="mt-10">
+			<template #cell(name)="{ rowData: row }">
+				<div class="flex justify-between w-full items-start">
+					<div class="flex items-center gap-1">
+						<div class="flex" v-if="row === auswahlBlockung">
+							<span v-if="(!edit_blockungsname)" class="text-input--inline" @click.stop="edit_blockungsname = true">
+								{{ row.name }}
+							</span>
+							<svws-ui-text-input v-else :model-value="row.name" style="width: 10rem" headless focus
+								@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
+								@change="name => patch_blockung(name, row.id)" />
+						</div>
+						<div v-else>
+							<span>{{ row.name }}</span>
+						</div>
+						<svws-ui-tooltip v-if="row.istAktiv" position="right">
+							<i-ri-pushpin-line /> <template #content> Aktivierte Blockung </template>
 						</svws-ui-tooltip>
 					</div>
+					<div v-if="row === auswahlBlockung" class="inline-flex gap-1 h-5">
+						<svws-ui-button size="small" type="secondary" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung"> Berechnen </svws-ui-button>
+						<svws-ui-tooltip position="top" v-else>
+							<svws-ui-button size="small" type="secondary" disabled> Berechnen </svws-ui-button>
+							<template #content>
+								<div class="normal-case text-base rich-text">
+									Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
+								</div>
+							</template>
+						</svws-ui-tooltip>
+						<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
+							<svws-ui-button type="trash" class="cursor-pointer" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" />
+						</s-gost-kursplanung-remove-blockung-modal>
+					</div>
 				</div>
-			</div>
-		</template>
-		<template #actions>
-			<div class="mr-auto">
-				<slot name="blockungRecoverAction" />
-			</div>
-			<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id))">
-				<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Ergebnisse berechnen" :disabled="apiStatus.pending" v-if="allow_berechne_blockung"> Berechnen </svws-ui-button>
-				<svws-ui-tooltip position="top" v-else>
-					<svws-ui-button type="transparent" disabled> Berechnen </svws-ui-button>
-					<template #content>
-						<div class="normal-case text-base rich-text">
-							Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
-						</div>
-					</template>
-				</svws-ui-tooltip>
-				<s-gost-kursplanung-remove-blockung-modal :remove-blockung="removeBlockung" v-slot="{ openModal }">
-					<svws-ui-button type="icon" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending">
-						<i-ri-delete-bin-line class="-mx-0.5" />
-					</svws-ui-button>
-				</s-gost-kursplanung-remove-blockung-modal>
 			</template>
-			<slot name="blockungAuswahlActions" />
-		</template>
-	</svws-ui-table>
-	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3">
-		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status="apiStatus" />
-	</div>
-	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
-		:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
-		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+			<template #footer>
+				<auswahl-blockung-api-status v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" :blockung="auswahlBlockung" :api-status="apiStatus" />
+			</template>
+		</svws-ui-table>
+		<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
+			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+			:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
+	</template>
 </template>
 
 <script setup lang="ts">
@@ -88,7 +71,6 @@
 		hatBlockung: boolean;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 		restoreBlockung: () => Promise<void>;
-		istBlockungPersistiert: boolean;
 	}>();
 
 	const edit_blockungsname: Ref<boolean> = ref(false);

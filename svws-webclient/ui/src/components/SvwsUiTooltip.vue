@@ -13,7 +13,7 @@
 			<slot name="icon">
 				<i-ri-information-fill class="icon--indicator" v-if="indicator === 'info'" />
 				<i-ri-alert-fill class="icon--indicator" v-else-if="indicator === 'danger'" />
-				<i-ri-question-line class="icon--indicator -my-1 text-headline-md" v-else />
+				<i-ri-question-fill class="icon--indicator" v-else />
 			</slot>
 		</template>
 	</span>

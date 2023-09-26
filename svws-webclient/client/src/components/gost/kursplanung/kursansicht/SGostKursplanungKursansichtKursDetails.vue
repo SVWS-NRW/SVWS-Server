@@ -1,31 +1,33 @@
 <template>
-	<div class="svws-ui-tr !grid-cols-1 -mt-px border-y border-black/10 !border-t-black/10 shadow-inner" :style="{ '--background-color': bgColor }">
-		<div class="pr-3 pl-7 py-4 flex gap-16">
-			<div class="flex flex-col gap-2">
-				<div class="text-sm font-bold">Kurs</div>
-				<div class="flex items-center gap-1">
-					<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">Hinzufügen</svws-ui-button>
-					<svws-ui-button type="secondary" @click="del_kurs" title="Kurs entfernen"><i-ri-delete-bin-line /></svws-ui-button>
-					<svws-ui-button type="secondary" @click="splitKurs(kurs)" class="ml-3">Aufteilen</svws-ui-button>
-				</div>
-			</div>
-			<div class="flex flex-col gap-1 max-w-[12rem]">
-				<span class="text-sm font-bold">Zusammenlegen mit</span>
-				<svws-ui-select v-if="kurseMitKursart.size()"
-					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
-					title="Kurs auswählen" class="text-sm" headless
-					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
-			</div>
-			<div class="flex flex-col gap-1">
-				<div class="text-sm font-bold">Schienen</div>
-				<div class="flex items-center gap-1">
-					<svws-ui-button type="icon" @click="del_schiene" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
-					<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-					<svws-ui-button type="icon" @click="add_schiene" size="small"><i-ri-add-line /></svws-ui-button>
-				</div>
-			</div>
+	<div class="table--row-kursdetail" :style="{ 'background-color': bgColor }">
+		<div class="pr-3 pl-6 pt-2 pb-5 flex gap-10 items-center">
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+			<div class="flex items-center gap-1">
+				<svws-ui-button type="secondary" @click="del_kurs" title="Kurs entfernen">
+					Kurs <i-ri-subtract-line />
+				</svws-ui-button>
+				<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">
+					Kurs <i-ri-add-line />
+				</svws-ui-button>
+			</div>
+			<svws-ui-button size="small" type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
+			<div>
+				<svws-ui-select v-if="kurseMitKursart.size()"
+					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
+					title="Zusammenlegen mit…" class="placeholder--visible text-sm" headless
+					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
+			</div>
+			<div class="flex items-center gap-1 ml-auto">
+				<div class="mr-1 text-sm">Schienen:</div>
+				<svws-ui-button type="icon" @click="del_schiene" size="small">
+					<i-ri-subtract-line />
+				</svws-ui-button>
+				<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
+				<svws-ui-button type="icon" @click="add_schiene" size="small">
+					<i-ri-add-line />
+				</svws-ui-button>
+			</div>
 		</div>
 	</div>
 </template>
