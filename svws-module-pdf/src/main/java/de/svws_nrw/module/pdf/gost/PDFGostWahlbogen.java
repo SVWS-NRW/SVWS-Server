@@ -1,16 +1,5 @@
 package de.svws_nrw.module.pdf.gost;
 
-import java.text.Collator;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFehler;
@@ -32,9 +21,23 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.views.gost.DTOViewGostSchuelerAbiturjahrgang;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
+
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.Collator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
@@ -362,10 +365,10 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		return Response.status(Status.OK)
-			.type("application/pdf")
-			.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-			.entity(data)
+		String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
+
+		return Response.ok(data, "application/pdf")
+			.header("Content-Disposition", "attachment; " + encodedFilename)
 			.build();
 	}
 
@@ -396,11 +399,11 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		return Response.status(Status.OK)
-			.type("application/pdf")
-			.header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-			.entity(data)
-			.build();
+		String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
+
+		return Response.ok(data, "application/pdf")
+					   .header("Content-Disposition", "attachment; " + encodedFilename)
+					   .build();
 	}
 
 }

@@ -16,10 +16,12 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
+
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -259,10 +261,10 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 	 */
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
 		if (blockungsergebnisID == null)
-			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+			return OperationError.NOT_FOUND.getResponse("Ungültige Blockungsergebnis-ID übergeben.");
 
 		if (schuelerIDs == null || schuelerIDs.isEmpty())
-			throw OperationError.NOT_FOUND.exception("Fehlende Schüler-IDs.");
+			return OperationError.NOT_FOUND.getResponse("Keine Schüler-IDs übergeben.");
 
 		final PDFGostSchuelerKurseListe pdf = getPDFmitSchuelerKurseListe(conn, blockungsergebnisID,  schuelerIDs);
 
@@ -273,8 +275,11 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		return Response.status(Status.OK).type("application/pdf").header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-			.entity(data).build();
+		String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
+
+		return Response.ok(data, "application/pdf")
+					   .header("Content-Disposition", "attachment; " + encodedFilename)
+					   .build();
 	}
 
 }

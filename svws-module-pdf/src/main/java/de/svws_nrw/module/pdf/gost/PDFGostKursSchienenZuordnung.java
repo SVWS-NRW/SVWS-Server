@@ -1,14 +1,5 @@
 package de.svws_nrw.module.pdf.gost;
 
-import java.text.Collator;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -26,9 +17,20 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergeb
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.PDFCreator;
+
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.text.Collator;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -84,7 +86,6 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 		bodyData.put("SCHULNUMMER", schulnummer);
 		if (lfdNr == null)
-			// TODO: Ergebnismanager braucht Methode um die ErgebnisID abzurufen.
 			bodyData.put("INFORMATIONEN", "Blockungsergebnis: %s (eID%d) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Externe, Dummy)".formatted(ergebnisManager.getErgebnis().name, ergebnisManager.getErgebnis().id));
 		else
 			bodyData.put("INFORMATIONEN", "Blockungsergebnis: %s (eID%d) - Ausdruck lfd. Nr: %03d".formatted(ergebnisManager.getErgebnis().name, ergebnisManager.getErgebnis().id, lfdNr));
@@ -332,7 +333,7 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 	 */
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
 		if (blockungsergebnisID == null)
-			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+			return OperationError.NOT_FOUND.getResponse("Ungültige Blockungsergebnis-ID übergeben.");
 
 		final PDFGostKursSchienenZuordnung pdf = getPDFmitKursSchienenZuordnung(conn, blockungsergebnisID, (schuelerIDs == null || schuelerIDs.isEmpty()) ? null : schuelerIDs);
 
@@ -343,8 +344,11 @@ public final class PDFGostKursSchienenZuordnung extends PDFCreator {
 		if (data == null)
 			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
 
-		return Response.status(Status.OK).type("application/pdf").header("Content-Disposition", "attachment; filename=\"" + pdf.filename + "\"")
-			.entity(data).build();
+		String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
+
+		return Response.ok(data, "application/pdf")
+					   .header("Content-Disposition", "attachment; " + encodedFilename)
+					   .build();
 	}
 
 }
