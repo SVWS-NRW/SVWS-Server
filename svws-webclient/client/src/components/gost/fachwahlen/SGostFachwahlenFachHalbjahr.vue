@@ -9,37 +9,22 @@
 					</div>
 				</div>
 			</div>
-			<div role="row" class="svws-ui-tr">
-				<div role="cell" class="svws-ui-td">Halbjahr</div>
-				<div role="cell" class="svws-ui-td">
-					<i-ri-draft-line class="text-sm -my-0.5" />
-					<span>Schriftlich</span>
-				</div>
-				<div role="cell" class="svws-ui-td">
-					<i-ri-speak-line class="text-sm -my-0.5" />
-					<span>Mündlich</span>
-				</div>
-			</div>
 		</template>
 		<template #body>
 			<template v-if="fws !== undefined && hatFachwahl(fws)">
 				<div role="row" class="svws-ui-tr">
-					<div> <!----> </div>
-					<div role="cell" class="svws-ui-td">
-						<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0">
-							{{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}
-						</template>
-						<span v-else class="opacity-25">—</span>
+					<div role="cell" class="svws-ui-td svws-align-center">
+						<i-ri-draft-line class="text-sm -my-0.5 mr-0.5" />
+						<span v-if="fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich > 0"> Schriftlich ({{ fws.fachwahlen[halbjahr.id].wahlenGKSchriftlich }}) </span>
+						<span v-else class="opacity-25">Schriftlich(—)</span>
 					</div>
-					<div role="cell" class="svws-ui-td">
-						<template v-if="fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0">
-							{{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich }}
-						</template>
-						<span v-else class="opacity-25">—</span>
+					<div role="cell" class="svws-ui-td svws-align-center">
+						<i-ri-speak-line class="text-sm -my-0.5 mr-0.5" />
+						<span v-if="fws.fachwahlen[halbjahr.id].wahlenGKMuendlich > 0"> Mündlich ({{ fws.fachwahlen[halbjahr.id].wahlenGKMuendlich }}) </span>
+						<span v-else class="opacity-25">Mündlich (—)</span>
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr">
-					<div> <!----> </div>
 					<div role="cell" class="flex flex-col svws-ui-td mb-5 leading-tight" v-for="col in [1, 2]" :key="col">
 						<div v-for="schueler in getSchuelerListe(fws.id, col)" :key="schueler.id" class="flex gap-1 py-0.5 px-1 -mx-1 -mt-0.5 hover:bg-black/10 dark:hover:bg-white/10 rounded cursor-pointer" role="link" @click="gotoLaufbahnplanung(schueler.id)">
 							<i-ri-link class="text-sm" />
@@ -70,7 +55,6 @@
 	});
 
 	const cols: DataTableColumn[] = [
-		{ key: "HJ", label: "HJ", fixedWidth: 6 },
 		{ key: "GKS", label: "GKS", span: 1 },
 		{ key: "GKM", label: "GKM", span: 1 },
 	];
