@@ -121,7 +121,7 @@ public enum GostKursblockungRegelTyp {
 	 * - Parameter A: Datenbank-ID des 1. Kurses (long) <br>
 	 * - Parameter B: Die Anzahl an Dummy-SuS. Gültige Werte sind im Intervall 1 bis 100.
 	 */
-	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Kurs: Fülle mit Dummy-SuS auf.", Arrays.asList(
+	KURS_MIT_DUMMY_SUS_AUFFUELLEN(9, "Kurs: Fülle mit Dummy-SuS auf", Arrays.asList(
 		GostKursblockungRegelParameterTyp.KURS_ID,
 		GostKursblockungRegelParameterTyp.GANZZAHL
 	)),
