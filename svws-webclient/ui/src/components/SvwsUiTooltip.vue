@@ -13,7 +13,7 @@
 			<slot name="icon">
 				<i-ri-information-fill class="icon--indicator" v-if="indicator === 'info'" />
 				<i-ri-alert-fill class="icon--indicator" v-else-if="indicator === 'danger'" />
-				<i-ri-question-fill class="icon--indicator" v-else />
+				<i-ri-question-line class="icon--indicator -my-1 text-headline-md" v-else />
 			</slot>
 		</template>
 	</span>
@@ -53,12 +53,14 @@
 		showArrow?: boolean;
 		color?: "primary" | "light" | "dark" | "danger";
 		indicator?: "help" | "info" | "danger" | "underline" | false;
+		forceOpen?: boolean;
 	}>(), {
 		position: "bottom",
 		showArrow: true,
 		color: "light",
 		hover: true,
 		indicator: "underline",
+		forceOpen: false,
 	});
 
 	const flipped = {
@@ -72,6 +74,10 @@
 	const reference = ref(null);
 	const floating = ref(null);
 	const floatingArrow = ref(null);
+
+	if (props.forceOpen) {
+		isOpen.value = true;
+	}
 
 	const {x, y, strategy, placement, middlewareData} = useFloating(
 		reference,
@@ -104,7 +110,7 @@
 	}
 
 	function hoverEnterTooltip() {
-		if (props.hover) {
+		if (props.hover && !props.forceOpen) {
 			showTooltip();
 		}
 	}
@@ -114,13 +120,15 @@
 	}
 
 	function hoverLeaveTooltip() {
-		if (props.hover) {
+		if (props.hover && !props.forceOpen) {
 			hideTooltip();
 		}
 	}
 
 	function toggleTooltip() {
-		isOpen.value = !isOpen.value;
+		if (!props.forceOpen) {
+			isOpen.value = !isOpen.value;
+		}
 	}
 </script>
 

@@ -1,87 +1,87 @@
 <template>
-	<svws-ui-content-card class="h-full table--with-background" overflow-scroll :style="blockungstabelleVisible ? 'width: calc(100% + 2rem); padding-right: 2rem;' : ''">
-		<svws-ui-data-table :items="GostKursart.values()" :columns="cols" disable-footer contrast-border>
+	<svws-ui-content-card overflow-scroll :class="{'mr-8': blockungstabelleVisible}">
+		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-left" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
-						<div class="flex items-center justify-between">
+				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+						<div class="flex items-center justify-between w-full -my-2">
 							<span>Schiene</span>
 							<template v-if="allow_regeln">
-								<svws-ui-button type="transparent" size="small" @click="add_schiene" title="Schiene hinzufügen" class="h-6 py-0 px-1">
-									<i-ri-add-box-line />Hinzufügen
+								<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
+									<i-ri-add-line />
 								</svws-ui-button>
 							</template>
 						</div>
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
-						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-auto">
-							<template v-if="s.id === edit_schienenname">
-								<svws-ui-text-input :model-value="s.bezeichnung" focus headless style="width: 6rem"
-									@change="name => patch_schiene(s, name)"
-									@keyup.enter="(e: any) => patch_schiene(s, e.target.value)"
-									@keyup.escape="edit_schienenname=undefined" />
-							</template>
+					<div role="columnheader" class="svws-ui-td svws-align-center !overflow-visible !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
+						<div v-if="allow_regeln" class="flex justify-center text-center items-center w-full relative">
+							<svws-ui-tooltip v-if="s.id === edit_schienenname" force-open>
+								<span class="opacity-50 border-b border-transparent">{{ s.nummer }}</span>
+								<template #content>
+									<div class="py-2">
+										<svws-ui-text-input :model-value="s.bezeichnung" focus headless
+											@change="name => patch_schiene(s, name)"
+											@keyup.enter="(e: any) => patch_schiene(s, e.target.value)"
+											@keyup.escape="edit_schienenname=undefined" class="text-center" />
+									</div>
+								</template>
+							</svws-ui-tooltip>
 							<template v-else>
-								<span class="underline decoration-dotted underline-offset-2 cursor-text" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
+								<span class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center border-b border-dotted hover:border-transparent" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="edit_schienenname = s.id">{{ s.nummer }}</span>
+								<i-ri-delete-bin-line v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="cursor-pointer absolute w-4 h-4 top-1/2 transform -translate-y-1/2 right-px text-sm opacity-50 hover:opacity-100 hover:text-error" />
 							</template>
-							<span v-if="allow_del_schiene(s)" class="icon opacity-25 hover:opacity-100 hover:text-error cursor-pointer -mr-2" @click="del_schiene(s)"><i-ri-delete-bin-line /></span>
 						</div>
 						<template v-else>{{ s.nummer }}</template>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-left" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
 						Schülerzahl
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id">
-						{{ getAnzahlSchuelerSchiene(s.id) }}
+					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
+						<template v-if="getAnzahlSchuelerSchiene(s.id) > 0">
+							<span class="inline-flex items-center gap-1">{{ getAnzahlSchuelerSchiene(s.id) }}</span>
+						</template>
+						<span v-else class="opacity-25">0</span>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-left" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
 						Kollisionen
 					</div>
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th data-table__th__align-center" v-for="s in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0}">
-						{{ getAnzahlKollisionenSchiene(s.id) }} <i-ri-alert-line v-if="getAnzahlKollisionenSchiene(s.id) > 0" />
+					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
+						<template v-if="getAnzahlKollisionenSchiene(s.id) > 0">
+							<span class="inline-flex items-center"><i-ri-alert-line />{{ getAnzahlKollisionenSchiene(s.id) }}</span>
+						</template>
+						<span v-else class="opacity-25 font-normal">0</span>
 					</div>
 				</div>
-				<div role="row" class="data-table__tr data-table__thead__tr data-table__thead__tr__compact">
-					<div role="columnheader"
-						class="data-table__th data-table__thead__th cursor-pointer" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'" :class="allow_regeln ? 'col-span-2' : 'col-span-1'">
-						<div class="data-table__th-wrapper data-table__th-wrapper__sortable">
-							<span class="data-table__th-title">Kurs</span>
-							<span role="button"
-								class="data-table__th-sorting"
-								tabindex="-1">
-								<span class="sorting-arrows sorting-arrows__column">
-									<i-ri-arrow-up-down-line class="sorting-arrows__up"
-										:class="{'sorting-arrows__active': sort_by === 'kursart'}" />
-									<i-ri-arrow-up-down-line class="sorting-arrows__down"
-										:class="{'sorting-arrows__active': sort_by === 'kursart'}" />
-								</span>
-							</span>
-						</div>
+				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': sort_by === 'kursart'}">
+						<span>Kurs</span>
+						<span class="svws-sorting-icon">
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sort_by === 'kursart'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sort_by === 'kursart'}" />
+						</span>
 					</div>
-					<div role="columnheader" class="data-table__th data-table__thead__th">Lehrer</div>
-					<svws-ui-table-cell thead align="center" tooltip="Kooperation">Koop</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" tooltip="Fachwahlen">FW</svws-ui-table-cell>
-					<svws-ui-table-cell thead align="center" tooltip="Differenz">Diff</svws-ui-table-cell>
+					<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
+					<div class="svws-ui-td svws-align-center" title="Kooperation">Koop</div>
+					<div class="svws-ui-td svws-align-center" title="Fachwahlen">
+						<svws-ui-tooltip>
+							FW
+							<template #content>
+								Fachwahlen
+							</template>
+						</svws-ui-tooltip>
+					</div>
+					<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 					<!--Schienen-->
 					<template v-if="allow_regeln">
-						<template v-for="schiene in schienen" :key="schiene.id">
-							<div @dragover="if (istDropZoneSchiene(schiene).value) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)"
-								class="data-table__th data-table__thead__th data-table__th__align-center text-black/25 hover:text-black relative group"
-								:class="{ 'bg-primary/5 text-primary hover:text-primary': istDropZoneSchiene(schiene).value, }">
-								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)"
-									class="select-none cursor-grab text-center" :class="{'cursor-grabbing': dragDataKursartSchiene !== undefined}"
-									:draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
-									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem]">
+						<template v-for="(schiene, index) in schienen" :key="schiene.id">
+							<div @dragover="if (istDropZoneSchiene(schiene).value) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
+								:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene).value, 'svws-divider': index + 1 < schienen.size() }">
+								<div :key="schiene.id" @click="openModalRegelKursartSchiene(schiene)" class="select-none cursor-pointer text-center" :class="{'cursor-grabbing': dragDataKursartSchiene !== undefined}" :draggable="true" @dragstart="dragSchieneStarted(schiene)" @dragend="dragSchieneEnded">
+									<span class="rounded-sm w-3 absolute top-1 left-1 max-w-[0.75rem] cursor-grab">
 										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-25 group-hover:opacity-100 group-hover:text-black" />
 									</span>
 									<i-ri-lock-unlock-line class="inline-block" />
@@ -89,9 +89,13 @@
 							</div>
 						</template>
 					</template>
-					<div v-else role="columnheader" class="data-table__th data-table__thead__th data-table__th__align-center normal-case font-normal text-black/50" :style="{'gridColumn': 'span ' + schienen.size()}">
-						<span class="inline-flex items-center gap-1"><i-ri-information-line />Regeln können in diesem Ergebnis nicht erstellt werden.</span>
-					</div>
+					<template v-else>
+						<div v-for="(schiene, index) in schienen" :key="schiene.id" role="columnheader" class="svws-ui-td !px-0 svws-align-center font-normal text-black/10 dark:text-white/10" :class="{'svws-divider': index + 1 < schienen.size() }">
+							<span>
+								<i-ri-lock-unlock-line class="inline-block" />
+							</span>
+						</div>
+					</template>
 				</div>
 			</template>
 
@@ -127,7 +131,7 @@
 					</template>
 				</template>
 			</template>
-		</svws-ui-data-table>
+		</svws-ui-table>
 		<s-gost-kursplanung-kursansicht-modal-regel-schienen :add-regel="addRegel" ref="modalRegelKursartSchienen" />
 		<s-gost-kursplanung-kursansicht-modal-regel-kurse :get-datenmanager="getDatenmanager" :add-regel="addRegel" ref="modal_regel_kurse" />
 		<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
@@ -207,14 +211,14 @@
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
 		}
 
-		cols.push({ key: "kurs", label: "Kurs", span: 2, minWidth: 8 },
-			{ key: "lehrer", label: "Lehrer", minWidth: 6 },
-			{ key: "koop", label: "Kooperation", align: 'center' },
-			{ key: "FW", label: "Fachwahl", align: 'center' },
-			{ key: "Diff", label: "Diff", align: 'center' });
+		cols.push({ key: "kurs", label: "Kurs", span: 1.75, minWidth: 8 },
+			{ key: "lehrer", label: "Lehrer", span: 1.5, minWidth: 6 },
+			{ key: "koop", label: "Kooperation", align: 'center', fixedWidth: 3.75 },
+			{ key: "FW", label: "Fachwahl", align: 'center', fixedWidth: 3.75 },
+			{ key: "Diff", label: "Diff", align: 'center', fixedWidth: 3.75 });
 
 		for (let i = 0; i < schienen.value.size(); i++) {
-			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), minWidth: 3.5, align: 'center' });
+			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3.75, align: 'center' });
 		}
 
 		return cols;
