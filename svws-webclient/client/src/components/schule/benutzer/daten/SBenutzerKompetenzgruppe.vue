@@ -61,7 +61,7 @@
 	});
 
 	const getTopLevelGruppen4Kompetenz = computed(() => {
-		if (!hatSubKompetenzen.value) {
+		if (hatSubKompetenzen.value === 0) {
 			return props.getGruppen4Kompetenz(props.kompetenzgruppe);
 		}
 

@@ -17,9 +17,6 @@
 <script setup lang="ts">
 
 	import type { BenutzerListeEintrag, List} from "@core";
-	import { BenutzergruppeDaten, ArrayList } from "@core";
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		listBenutzerAlle: () => List<BenutzerListeEintrag> ;

@@ -1,7 +1,7 @@
 import type { BenutzerListeEintrag} from "@core";
-import { List } from "@core";
+
 export interface BenutzerAuswahlProps {
-    auswahl: () => BenutzerListeEintrag | undefined;
+  auswahl: () => BenutzerListeEintrag | undefined;
 	mapBenutzer: Map<number, BenutzerListeEintrag>;
 	gotoBenutzer: (benutzer: BenutzerListeEintrag) => Promise<void>;
 	createBenutzerAllgemein : (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;

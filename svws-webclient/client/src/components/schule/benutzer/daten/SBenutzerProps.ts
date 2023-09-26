@@ -1,9 +1,7 @@
 import type { BenutzergruppeListeEintrag, BenutzerKompetenz, BenutzerKompetenzGruppe, BenutzerManager, List } from "@core";
-import { BenutzerListeEintrag } from "@core";
-import { ShallowRef } from "vue";
 
 export interface BenutzerProps{
-    	listBenutzergruppen: List<BenutzergruppeListeEintrag>;
+		listBenutzergruppen: List<BenutzergruppeListeEintrag>;
 		getBenutzerManager: () => BenutzerManager;
 		setAnzeigename : (anzeigename : string) => Promise<void>;
 		setAnmeldename : (anzeigename : string) => Promise<void>;

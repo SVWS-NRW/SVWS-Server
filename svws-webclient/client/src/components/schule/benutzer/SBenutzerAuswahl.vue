@@ -27,23 +27,23 @@
 <script setup lang="ts">
 
 	import type { BenutzerListeEintrag} from "@core";
-	import type { ComputedRef, Ref} from "vue";
 	import type { BenutzerAuswahlProps } from "./SBenutzerAuswahlProps";
+	import type { DataTableColumn } from "@ui";
 	import { computed, ref } from "vue";
 
-	const selectedItems: Ref<BenutzerListeEintrag[]> = ref([]);
+	const selectedItems = ref<BenutzerListeEintrag[]>([]);
 
 	const props = defineProps<BenutzerAuswahlProps>();
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
 		{ key: "name", label: "Name", sortable: true },
 		{ key: "id", label: "ID", sortable: true, span: 0.5, align: "right" }
 	];
 
-	const search: Ref<string> = ref("");
+	const search = ref<string>("");
 
-	const rowsFiltered: ComputedRef<Map<number, BenutzerListeEintrag>> = computed(() => {
+	const rowsFiltered = computed<Map<number, BenutzerListeEintrag>>(() => {
 		if (!search.value)
 			return props.mapBenutzer;
 		const result = new Map<number, BenutzerListeEintrag>();
