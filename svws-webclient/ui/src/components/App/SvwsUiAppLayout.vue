@@ -301,8 +301,8 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 p-3 absolute top-0 right-0 bottom-0;
-		@apply shadow-2xl shadow-black/25 dark:shadow-white/25 bg-white dark:bg-black border-l border-black/25 dark:border-white/25;
+		@apply -ml-4 z-50 w-1/2 p-3 absolute top-5 right-5 bottom-5 rounded-2xl;
+		@apply shadow-xl bg-white dark:bg-black border border-black/10 dark:border-white/10;
 	}
 
 	.app--sidebar-container {
