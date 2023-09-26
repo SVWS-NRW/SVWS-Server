@@ -48,8 +48,7 @@
 </template>
 
 <style lang="postcss">
-.button,
-.cv-wrapper .cv-header button {
+.button {
 	@apply rounded-md border;
 	@apply select-none relative;
 	@apply text-button font-bold;
@@ -85,10 +84,6 @@
 	.svws-ui-tfoot & {
 		@apply h-7 min-h-[unset];
 	}
-}
-
-.cv-wrapper .cv-header button {
-	@apply inline-flex;
 }
 
 .button--primary {
@@ -151,8 +146,7 @@
 	}
 }
 
-.button--transparent,
-.cv-wrapper .cv-header button {
+.button--transparent {
 	@apply bg-transparent border-transparent dark:bg-transparent dark:border-transparent;
 
 	&:hover {
@@ -215,7 +209,7 @@
 .button--trash,
 .button--icon {
 	&.button--small,
-  .svws-ui-tbody &{
+  	.svws-ui-tbody & {
 		@apply text-sm font-medium h-6 w-6;
 		padding: 0.3em !important;
 
@@ -225,7 +219,6 @@
 		}
 	}
 
-	.data-table__tfoot-actions &.button,
 	.svws-ui-tfoot &.button {
 		@apply text-button h-7 w-7;
 		padding: 0.25em !important;
@@ -255,8 +248,7 @@
 	}
 }
 
-.button:disabled,
-.cv-wrapper .cv-header button:disabled {
+.button:disabled {
 	&,
 	&:hover,
 	&:focus,
@@ -273,30 +265,28 @@
 
 .button--small,
 .content-card--header .button,
-.data-table__tbody .button,
 .svws-ui-tbody .button,
 .router-tab-bar--subnav .button,
-.router-tab-bar--subnav .radio--label,
-.cv-wrapper .cv-header button {
-	@apply text-sm font-medium;
+.router-tab-bar--subnav .radio--label {
+	@apply text-sm font-bold;
 }
 
 .button--small,
-.data-table__tbody .button,
 .svws-ui-tbody .button,
 .content-card--header .button,
-.router-tab-bar--subnav .button,
-.cv-wrapper .cv-header button {
-	padding: 0.3em 0.75em;
+.router-tab-bar--subnav .button {
+	padding: 0.3rem 0.65rem;
 }
 
-.data-table__tbody .button,
 .svws-ui-tbody .button {
 	@apply -my-2 h-full self-center rounded;
-	padding: 0.1em 0.5em;
+	padding: 0.1rem 0.5rem;
+
+	&.button--transparent {
+		@apply px-1.5;
+	}
 }
 
-.data-table__tbody .button--icon.button--small,
 .svws-ui-tbody .button--icon.button--small {
 	@apply w-5 h-5 -m-0.5;
 	@apply p-0 !important;
@@ -313,18 +303,16 @@
 	@apply bg-error rounded-full shadow;
 	@apply flex items-center justify-center;
 	@apply pointer-events-none;
-	@apply -mt-2 -ml-3;
+	@apply -mt-3 -ml-3;
 	@apply px-1.5;
 	@apply h-5;
 	font-size: 0.8rem;
 
-	.data-table__tbody .button &,
 	.svws-ui-tfoot .button &,
 	.content-card--header .button &,
-	.router-tab-bar--subnav .button &,
-	.cv-wrapper .cv-header button & {
+	.router-tab-bar--subnav .button & {
 		@apply -mt-1 h-4 -ml-1.5;
-		font-size: 0.7rem;
+		font-size: 0.75rem;
 	}
 
 	.router-tab-bar--subnav .button & {
