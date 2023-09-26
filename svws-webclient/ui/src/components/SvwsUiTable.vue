@@ -759,7 +759,11 @@
 .svws-ui-tfoot--data {
 	@apply sticky z-10;
 	@apply -mt-px border-y;
-  @apply -bottom-px;
+  	@apply -bottom-px;
+
+	.svws-ui-table.overflow-auto & {
+		@apply bottom-0;
+	}
 }
 
 .svws-ui-tfoot {
@@ -872,7 +876,7 @@
 			content: '';
 
 			.svws-has-background & {
-				@apply bg-black/30;
+				@apply bg-black/40;
 			}
 		}
 	}
