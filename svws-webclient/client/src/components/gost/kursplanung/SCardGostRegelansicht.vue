@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, List, SchuelerListeEintrag } from "@core";
+	import { GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostFach, GostFaecherManager, GostKursblockungRegelTyp, List, SchuelerListeEintrag } from "@core";
 	import type { ComputedRef } from 'vue';
 	import { computed, shallowRef, ref } from 'vue';
 
@@ -55,7 +55,8 @@
 			_regel.value = value;
 			if (value === undefined || value.id < 1)
 				return;
-			void props.patchRegel(value, value.id);
+			if (value.typ === GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN.typ)
+				void props.patchRegel(value, value.id);
 		}
 	})
 
