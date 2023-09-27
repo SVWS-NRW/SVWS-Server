@@ -13,9 +13,6 @@
 				</svws-ui-checkbox>
 			</div>
 		</div>
-		<div class="svws-ui-td svws-align-right !pr-3" role="cell">
-			{{ kompetenzgruppe.daten.id }}
-		</div>
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
 				<s-benutzergruppe-kompetenz :kompetenz="kompetenz" :ist-admin="istAdmin" :get-benutzergruppen-manager="getBenutzergruppenManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
@@ -56,10 +53,13 @@
 				void props.removeBenutzerKompetenzGruppe(props.kompetenzgruppe);
 		}
 	});
+
 </script>
 
 <style scoped lang="postcss">
-.svws-ui-tr {
-	grid-template-columns: minmax(4rem, 3fr) minmax(4rem, 0.25fr);
-}
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(4rem, 3fr);
+	}
+
 </style>

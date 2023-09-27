@@ -10,9 +10,6 @@
 		</div>
 		<div class="svws-ui-td" role="cell">
 			{{ benutzer.name }}
-		</div>
-		<div class="svws-ui-td" :class="[spalteLinks ? 'svws-align-right' : '!pr-0']" role="cell">
-			{{ benutzer.id }}
 			<svws-ui-button v-if="!spalteLinks" type="icon" class="ml-auto" @click.prevent="add()">
 				<i-ri-delete-bin-line />
 			</svws-ui-button>
@@ -32,8 +29,6 @@
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		goToBenutzer: (b_id: number) => Promise<void>;
 	}>();
-
-	const showIcon = ref(false);
 
 	async function add() {
 		props.spalteLinks

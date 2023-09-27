@@ -12,9 +12,6 @@
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
-				<template #header(id)>
-					<span class="font-mono">ID</span>
-				</template>
 				<template #actions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
 						:delete-benutzergruppe_n="deleteMultipleGroup" />
@@ -26,23 +23,22 @@
 
 <script setup lang="ts">
 
-	import type { BenutzergruppeListeEintrag } from "@core";
-	import type { ComputedRef, Ref} from "vue";
 	import { computed, ref } from "vue";
-	import type { BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
+	import { type BenutzergruppeListeEintrag } from "@core";
+	import { type DataTableColumn } from "@ui";
+	import { type BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();
 
-	const selectedItems: Ref<BenutzergruppeListeEintrag[]> = ref([]);
+	const selectedItems = ref<BenutzergruppeListeEintrag[]>([]);
 
-	const cols = [
-		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 2 },
-		{ key: "id", label: "ID", sortable: true, span: 0.5, align: "right" }
+	const cols : DataTableColumn[] = [
+		{ key: "bezeichnung", label: "Bezeichnung", sortable: true }
 	];
 
-	const search: Ref<string> = ref("");
+	const search = ref<string>("");
 
-	const rowsFiltered: ComputedRef<Map<number, BenutzergruppeListeEintrag>> = computed(() => {
+	const rowsFiltered = computed<Map<number, BenutzergruppeListeEintrag>>(() => {
 		if (!search.value)
 			return props.mapBenutzergruppe;
 		const result = new Map<number, BenutzergruppeListeEintrag>();

@@ -10,9 +10,6 @@
 						<template v-else>{{ listBenutzer().size() }} aktiv zugewiesen</template>
 					</div>
 					<div class="svws-ui-td" />
-					<div class="svws-ui-td" :class="{'svws-align-right': spalteLinks}">
-						<span class="font-mono">ID</span>
-					</div>
 				</div>
 			</template>
 			<template #body>
@@ -34,6 +31,7 @@
 	import type { BenutzerListeEintrag, List } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
+
 	const props = defineProps<{
 		listBenutzer: () => List<BenutzerListeEintrag>;
 		title : string;
@@ -54,7 +52,6 @@
 	const cols = [
 		{key: 'anzeigename', label: 'Anzeigename', span: 2},
 		{key: 'name', label: ' ', span: 1},
-		{key: 'id', label: 'ID', span: 0.5}
 	];
 
 </script>

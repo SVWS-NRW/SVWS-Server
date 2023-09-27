@@ -4,9 +4,6 @@
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
 	</div>
-	<div class="svws-ui-td svws-align-right" role="cell">
-		{{ kompetenz.daten.id }}
-	</div>
 </template>
 
 <script setup lang="ts">

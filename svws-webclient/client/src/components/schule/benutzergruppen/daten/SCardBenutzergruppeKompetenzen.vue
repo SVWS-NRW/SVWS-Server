@@ -4,7 +4,6 @@
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td" role="columnheader">Kompetenz</div>
-					<div class="svws-ui-td svws-align-right font-mono" role="columnheader">ID</div>
 				</div>
 			</template>
 			<template #body>
@@ -41,7 +40,9 @@
 </script>
 
 <style scoped lang="postcss">
-.svws-ui-tr {
-	grid-template-columns: minmax(4rem, 3fr) minmax(4rem, 0.25fr);
-}
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(4rem, 3fr);
+	}
+
 </style>

@@ -57,6 +57,6 @@
 
 <style scoped lang="postcss">
 	.svws-ui-tr {
-		grid-template-columns: minmax(3rem, 0.5fr) minmax(4rem, 10fr) var(--checkbox-width) minmax(4rem, 0.25fr) !important;
+		grid-template-columns: minmax(3rem, 0.5fr) minmax(4rem, 10fr) var(--checkbox-width) !important;
 	}
 </style>

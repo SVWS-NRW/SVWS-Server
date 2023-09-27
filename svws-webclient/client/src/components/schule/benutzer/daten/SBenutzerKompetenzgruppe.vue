@@ -70,7 +70,9 @@
 </script>
 
 <style scoped lang="postcss">
-.svws-ui-tr {
-	grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr) minmax(4rem, 0.25fr);
-}
+
+	.svws-ui-tr {
+		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr);
+	}
+
 </style>
