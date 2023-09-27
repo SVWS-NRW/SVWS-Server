@@ -1,4 +1,4 @@
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten } from "@core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile } from "@core";
 import type { Config } from "~/components/Config";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 
@@ -23,7 +23,7 @@ export interface GostKursplanungProps {
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
-	getPDFKursSchienenZuordnung: () => Promise<Blob>;
+	getPDFKursSchienenZuordnung: () => Promise<ApiFile>;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;
 	jahrgangsdaten: GostJahrgangsdaten;

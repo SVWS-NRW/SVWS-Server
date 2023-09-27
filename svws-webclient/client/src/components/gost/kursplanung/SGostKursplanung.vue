@@ -115,10 +115,10 @@
 	}
 
 	async function downloadPDFKursSchienenZuordnung() {
-		const pdf = await props.getPDFKursSchienenZuordnung();
+		const { data, name } = await props.getPDFKursSchienenZuordnung();
 		const link = document.createElement("a");
-		link.href = URL.createObjectURL(pdf);
-		link.download = `Kurs-Schienen-Zuordnung-${props.jahrgangsdaten.abiturjahr}-${props.jahrgangsdaten.jahrgang}-${props.halbjahr.kuerzel}-${props.getErgebnismanager().getErgebnis().id}.pdf`;
+		link.href = URL.createObjectURL(data);
+		link.download = name;
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);

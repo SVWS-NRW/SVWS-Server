@@ -12,6 +12,7 @@ import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individuald
 
 import type { GostUmwahlansichtProps } from "~/components/gost/kursplanung/SCardGostUmwahlansichtProps";
 import type { KursplanungSchuelerAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahlProps";
+import { ConfigElement } from "~/components/Config";
 
 const SCardGostUmwahlansicht = () => import("~/components/gost/kursplanung/SCardGostUmwahlansicht.vue");
 const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungSchuelerAuswahl.vue");
@@ -27,6 +28,9 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 		this.isHidden = (params?: RouteParams) => {
 			return this.checkHidden(params);
 		}
+		api.config.addElements([
+			new ConfigElement("gost.schuelerauswahl.geschlecht", "user", "true")
+		]);
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -111,7 +115,8 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
 			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
-			faecherManager: routeGost.data.faecherManager
+			faecherManager: routeGost.data.faecherManager,
+			config: api.config,
 		}
 	}
 

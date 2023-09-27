@@ -23,7 +23,7 @@
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>
 				<svws-ui-input-wrapper class="col-span-full" v-if="schuelerFilter.alle_toggle.value === 'alle'">
-					<svws-ui-select disabled />
+					<svws-ui-select disabled :model-value="[]" :items="[]" :item-text="() => ''" />
 					<svws-ui-spacing />
 				</svws-ui-input-wrapper>
 				<svws-ui-radio-group class="radio--row col-span-full">
@@ -101,7 +101,7 @@
 							</template>
 						</div>
 					</div>
-					<div v-if="geschlechtVisible" role="cell" class="svws-ui-td svws-align-center pl-0">
+					<div v-if="showGeschlecht" role="cell" class="svws-ui-td svws-align-center pl-0">
 						<span class="w-full text-center">{{ s.geschlecht }}</span>
 					</div>
 					<div v-if="istSchriftlich(s.id)" role="cell" class="svws-ui-td svws-align-center">
@@ -125,7 +125,7 @@
 								</span>
 							</template>
 							<div class="col-span-full flex items-center gap-1">
-								<svws-ui-checkbox type="toggle" v-model="geschlechtVisible" :title="geschlechtVisible ? 'Geschlecht in der Tabelle ausblenden' : 'Geschlecht in der Tabelle einblenden'">
+								<svws-ui-checkbox type="toggle" v-model="showGeschlecht" :title="showGeschlecht ? 'Geschlecht in der Tabelle ausblenden' : 'Geschlecht in der Tabelle einblenden'">
 									<span class="text-button font-medium">Geschlecht: </span>
 								</svws-ui-checkbox>
 								<span v-if="schuelerFilter.statistics.value.m">{{ schuelerFilter.statistics.value.m }} m<span v-if="schuelerFilter.statistics.value.w || schuelerFilter.statistics.value.d || schuelerFilter.statistics.value.x">, </span></span>
@@ -145,15 +145,22 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostFach, SchuelerListeEintrag } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
+	import type { DataTableColumn } from "@ui";
 	import { GostKursart, SchuelerStatus } from "@core";
 	import { computed, ref } from "vue";
-	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
-	const fach: WritableComputedRef<GostFach|undefined> = computed({
+	const showGeschlecht = computed<boolean>({
+		get: () => props.config.getValue('gost.schuelerauswahl.geschlecht') === 'true',
+		set: (value) => {
+			if (value === undefined)
+				value = true
+			void props.config.setValue('gost.schuelerauswahl.geschlecht', value ? 'true':'false');
+		}
+	});
+	const fach = computed<GostFach|undefined>({
 		get: () => {
 			for (const fach of props.faecherManager.faecher())
 				if (fach.id === props.schuelerFilter.fach)
@@ -163,19 +170,19 @@
 		set: (value) => props.schuelerFilter.fach = value?.id
 	})
 
-	const selected: WritableComputedRef<SchuelerListeEintrag | undefined> = computed({
+	const selected = computed<SchuelerListeEintrag | undefined>({
 		get: () => props.schueler,
 		set: (value) => { if (value !== undefined) void props.setSchueler(value); }
 	});
 
-	const kollision = (idSchueler: number) : ComputedRef<boolean> => computed(() => {
+	const kollision = (idSchueler: number) => computed<boolean>(() => {
 		const kursid = props.schuelerFilter.kurs?.id;
 		if (kursid === undefined)
 			return props.getErgebnismanager().getOfSchuelerHatKollision(idSchueler);
 		return props.getErgebnismanager().getOfSchuelerOfKursHatKollision(idSchueler, kursid);
 	});
 
-	const nichtwahl = (idSchueler: number) : ComputedRef<boolean> => computed(() =>
+	const nichtwahl = (idSchueler: number) => computed<boolean>(() =>
 		props.getErgebnismanager().getOfSchuelerHatNichtwahl(idSchueler)
 	);
 
@@ -195,15 +202,13 @@
 		return '';
 	}
 
-	const geschlechtVisible = ref(false)
-
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
 			{key: 'status', label: '  ', fixedWidth: 1.75},
 			{key: 'schuelerAuswahl', label: 'Schüler', span: 1},
 		];
 
-		if (geschlechtVisible.value) {
+		if (showGeschlecht.value) {
 			cols.push({key: 'geschlecht', label: 'G', tooltip: "Geschlecht", fixedWidth: 2, align: "center"});
 		}
 

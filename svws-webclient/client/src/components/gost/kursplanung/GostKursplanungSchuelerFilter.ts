@@ -183,7 +183,6 @@ export class GostKursplanungSchuelerFilter {
 	private setKursFilter(value: boolean) {
 		if (value && (this.faecher.size() > 0)) {
 			this.kurs = this.getKurse().get(0);
-			console.log(1, this.kurs)
 			this.setFachFilter(false);
 			console.log(2, this.kurs)
 		} else
