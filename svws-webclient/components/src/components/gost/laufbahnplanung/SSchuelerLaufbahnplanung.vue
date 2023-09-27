@@ -78,11 +78,10 @@
 	}
 
 	async function download_file() {
-		const pdf = await props.getPdfWahlbogen();
+		const { data, name } = await props.getPdfWahlbogen();
 		const link = document.createElement("a");
-		link.href = URL.createObjectURL(pdf);
-		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
-			+ props.schueler.nachname + "_" + props.schueler.vorname + "-" + props.schueler.id + ".pdf";
+		link.href = URL.createObjectURL(data);
+		link.download = name;
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
