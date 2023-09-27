@@ -2019,7 +2019,7 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage der Kurse-Schienen-Zuordnung eines Blockungsergebnisse als PDF-Datei.
+	 * Die OpenAPI-Methode für die Abfrage der Kurse-Schienen-Zuordnung eines Blockungsergebnisses als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Kurse-Schienen-Zuordnung ausgegeben werden soll.
@@ -2039,10 +2039,10 @@ public class APIGost {
 									   schema = @Schema(type = "string", format = "binary", description = "Kurse-Schienen-Zuordnung")))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
 	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
-	public Response getGostBlockungPDFKursSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-															@RequestBody(description = "Schüler-IDs, für die die Kurse-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
-															@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
-															@Context final HttpServletRequest request) {
+	public Response getGostBlockungPDFKurseSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+															 @RequestBody(description = "Schüler-IDs, für die die Kurse-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
+															 @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
+															 @Context final HttpServletRequest request) {
 		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
@@ -2054,7 +2054,7 @@ public class APIGost {
 
 
 	/**
-	 * Die OpenAPI-Methode für die Abfrage einer Liste von Schülern mit den Kursbelegungen eines Blockungsergebnisse als PDF-Datei.
+	 * Die OpenAPI-Methode für die Abfrage einer Liste von Schülern mit den Kursbelegungen eines Blockungsergebnisses als PDF-Datei.
 	 *
 	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
 	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.

@@ -3557,7 +3557,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFKursSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode getGostBlockungPDFKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.
 	 *
@@ -3574,7 +3574,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFKursSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+	public async getGostBlockungPDFKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
