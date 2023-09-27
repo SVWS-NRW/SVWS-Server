@@ -39,9 +39,9 @@ export class RouteDataSchuleDatenaustausch {
 		return this._state.value.view;
 	}
 
-	setGostLupoImportMDBFuerJahrgang = async (formData: FormData) : Promise<SimpleOperationResponse> => {
+	setGostLupoImportMDBFuerJahrgang = async (formData: FormData, mode: 'none' | 'schueler' | 'all') : Promise<SimpleOperationResponse> => {
 		try {
-			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema);
+			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema, mode);
 		} catch(e) {
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");

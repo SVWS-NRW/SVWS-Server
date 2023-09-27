@@ -11,7 +11,7 @@
 	import { type SimpleOperationResponse } from '@core';
 
 	const props = defineProps<{
-		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<SimpleOperationResponse>;
+		setGostLupoImportMDBFuerJahrgang: (formData: FormData, mode: 'none' | 'schueler' | 'all') => Promise<SimpleOperationResponse>;
 	}>();
 
 </script>

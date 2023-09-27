@@ -2,6 +2,8 @@
 	<div class="content-card overflow-auto h-full w-full">
 		<div class="content-card--content">
 			<div class="flex flex-col items-start gap-3">
+				<div> <svws-ui-checkbox v-model="replaceSchueler">Laufbahndaten von Schüler ersetzen</svws-ui-checkbox> </div>
+				<div> <svws-ui-checkbox v-model="replaceJahrgang" :disabled="!replaceSchueler">Jahrgangs-spezifische Daten ersetzen</svws-ui-checkbox> </div>
 				<div>
 					<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 					<svws-ui-spinner :spinning="loading" />
@@ -20,12 +22,24 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import { type List, type SimpleOperationResponse } from "@core";
 
 	const props = defineProps<{
-		setGostLupoImportMDBFuerJahrgang: (formData: FormData) => Promise<SimpleOperationResponse>;
+		setGostLupoImportMDBFuerJahrgang: (formData: FormData, mode: 'none' | 'schueler' | 'all') => Promise<SimpleOperationResponse>;
 	}>();
+
+	const mode = ref<'none' | 'schueler' | 'all'>('none');
+
+	const replaceSchueler = computed<boolean>({
+		get: () => (mode.value !== 'none'),
+		set: (value) => mode.value = value ? 'schueler' : 'none'
+	});
+
+	const replaceJahrgang = computed<boolean>({
+		get: () => (mode.value === 'all'),
+		set: (value) => mode.value = value ? 'all' : 'schueler'
+	});
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
@@ -50,7 +64,7 @@
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("data", file);
-		const result = await props.setGostLupoImportMDBFuerJahrgang(formData);
+		const result = await props.setGostLupoImportMDBFuerJahrgang(formData, mode.value);
 		log.value = log2str(result.log);
 		status.value = result.success;
 		loading.value = false;

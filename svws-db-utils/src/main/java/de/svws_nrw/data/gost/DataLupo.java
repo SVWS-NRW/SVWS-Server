@@ -36,12 +36,16 @@ public final class DataLupo {
     /**
      * Importiert die in dem Multipart übergebene Datei.
      *
-     * @param user        der Datenbank-Benutzer
-     * @param multipart   der Multipart-Body mmit der Datei
+     * @param user               der Datenbank-Benutzer
+     * @param multipart          der Multipart-Body mmit der Datei
+	 * @param replaceJahrgang    gibt an, ob alte Daten für den Jahrgang der LuPO-Datei ersetzt werden
+	 *                           sollen, sofern sie bereits vorhanden sind.
+	 * @param replaceSchueler    gibt an, ob alte Daten für die Schüler der LuPO-Datei ersetzt werden
+	 *                           sollen, sofern sie bereits vorhanden sind.
      *
      * @return die HTTP-Response mit dem Log
      */
-    public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart) {
+    public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang, final boolean replaceSchueler) {
     	final Logger logger = new Logger();
     	final LogConsumerList log = new LogConsumerList();
     	logger.addConsumer(log);
@@ -71,7 +75,7 @@ public final class DataLupo {
 		try {
 			lupoMDB.importFrom();
 			// Schreibe in die LuPO-Datenbank
-			lupoMDB.setLUPOTables(user, false, false);   // TODO konfigurierbar machen !
+			lupoMDB.setLUPOTables(user, replaceJahrgang, replaceSchueler);
 			logger.logLn("  Import beendet");
 		} catch (@SuppressWarnings("unused") final IOException e1) {
 			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank.");

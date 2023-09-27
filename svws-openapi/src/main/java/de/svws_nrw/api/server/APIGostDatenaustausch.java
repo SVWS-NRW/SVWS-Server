@@ -11,6 +11,7 @@ import de.svws_nrw.data.gost.DataKurs42;
 import de.svws_nrw.data.gost.DataLupo;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,15 +44,16 @@ public class APIGostDatenaustausch {
     /**
      * Die OpenAPI-Methode für den Import einer LuPO-MDB-Datenbank in ein Schema mit dem angegebenen Namen.
      *
-     * @param multipart     LuPO-MDB-Datenbank im Binärformat
      * @param schemaname    Name des Schemas, in welches die LuPO-Daten importiert werden sollen
+     * @param multipart     LuPO-MDB-Datenbank im Binärformat
+     * @param mode          der Modus, wie vorhandene Daten ersetzt werden sollen (node, schueler oder all)
      * @param request       die Informationen zur HTTP-Anfrage
      *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
      */
     @POST
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Path("/lupo/import/mdb/jahrgang")
+    @Path("/lupo/import/mdb/jahrgang/replace/{mode}")
     @Operation(summary = "Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.",
                description = "Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Import der Laufbahndaten",
@@ -60,11 +62,15 @@ public class APIGostDatenaustausch {
     			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.")
     public Response setGostLupoImportMDBFuerJahrgang(@PathParam("schema") final String schemaname,
-    		@RequestBody(description = "Die LuPO-Datei", required = true, content =
-			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
+    		@PathParam("mode") final String mode, @RequestBody(description = "Die LuPO-Datei", required = true, content =
+				@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
+    	if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode)))
+    		return OperationError.BAD_REQUEST.getResponse("Der Modus zum Ersetzen von Daten muss auf 'none', 'schueler' oder 'all' gesetzt sein");
     	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
-    	return DataLupo.importMDB(user, multipart);
+    	final boolean replaceJahrgang = "all".equals(mode);
+    	final boolean replaceSchueler = "all".equals(mode) || "schueler".equals(mode);
+    	return DataLupo.importMDB(user, multipart, replaceJahrgang, replaceSchueler);
     }
 
 
