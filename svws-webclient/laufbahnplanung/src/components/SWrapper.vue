@@ -1,5 +1,11 @@
 <template>
 	<router-view />
+	<svws-ui-notification type="error" v-if="!browser()">
+		<template #header>
+			Browser veraltet
+		</template>
+		Bitte aktualisieren Sie Ihren Browser, diese Version kann keine Laufbahndaten laden.
+	</svws-ui-notification>
 	<svws-ui-notifications v-if="errors.length">
 		<template v-if="errors.length > 1">
 			<svws-ui-button @click="errors = []" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.length }} Meldungen schließen</svws-ui-button>
@@ -35,6 +41,15 @@
 		errors.value.push(new Error(event.reason))
 		event.preventDefault();
 	});
+
+	const browser = () => {
+		try {
+			const dc = new DecompressionStream("gzip");
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
 
 	onErrorCaptured((e) => {
 		console.warn(e)
