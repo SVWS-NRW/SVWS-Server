@@ -660,7 +660,7 @@ public final class SVWSKonfiguration {
 	 * @return die Schema-Konfiguration, falls eines vorhanden ist, ansonsten null
 	 */
 	private SVWSKonfigurationSchemaDTO getSchemaKonfiguration(final String schemaName) {
-		if ((dto == null) || (schemaName == null) || ("".equals(schemaName)))
+		if ((dto == null) || (dto.dbKonfiguration.schemata == null) || (schemaName == null) || ("".equals(schemaName)))
 			return null;
 		for (final SVWSKonfigurationSchemaDTO config : dto.dbKonfiguration.schemata) {
 			if (schemaName.equals(config.name))
