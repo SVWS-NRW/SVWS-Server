@@ -1,12 +1,18 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
-		<template #beschreibung="{ regel: r }">
-			{{ getDatenmanager().kursGetName(r.parameter.get(0)) }} hat externe Schüler: {{ r.parameter.get(1) }}
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
+		<template #regelRead="{regel: r}">
+			<div class="svws-ui-td" role="cell">
+				{{ getDatenmanager().kursGetName(r.parameter.get(0)) }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ r.parameter.get(1) }}
+			</div>
 		</template>
-		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" />
-		<span class="leading-none">hat externe Schüler: </span>
-		<svws-ui-text-input placeholder="Anzahl" v-model="anzahl" type="number" />
+		<template #regelEdit>
+			<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" label="Kurs hat" />
+			<svws-ui-text-input placeholder="externe Schüler" v-model="anzahl" type="number" />
+		</template>
 	</BlockungsregelBase>
 </template>
 
@@ -15,6 +21,7 @@
 	import type { WritableComputedRef } from "vue";
 	import { GostBlockungKurs, type List, type GostBlockungRegel, type GostFach, type GostBlockungsdatenManager, ArrayList, GostKursblockungRegelTyp } from "@core";
 	import { computed } from "vue";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -80,5 +87,10 @@
 		r.parameter.add(1);
 		regel.value = r;
 	}
+
+	const cols: DataTableColumn[] = [
+		{key: 'kurs', label: 'Kurs auffüllen mit'},
+		{key: 'anzahl', label: 'externen Schülern', tooltip: 'Dummy-Daten'},
+	]
 
 </script>

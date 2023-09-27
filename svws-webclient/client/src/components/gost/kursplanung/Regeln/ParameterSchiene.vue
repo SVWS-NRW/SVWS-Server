@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-select v-model="selected" :items="schienen"
-		:item-text="(i: GostBlockungSchiene) => i.bezeichnung" />
+		:item-text="(i: GostBlockungSchiene) => i.nummer.toString()" />
 </template>
 
 <script setup lang="ts">

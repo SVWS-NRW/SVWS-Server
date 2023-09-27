@@ -1,15 +1,22 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
-		<template #beschreibung="{ regel: r }">
-			{{ GostKursart.fromID(r.parameter.get(0)).beschreibung }} alleine in Schiene {{ r.parameter.get(1) }} bis {{ r.parameter.get(2) }}
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
+		<template #regelRead="{regel: r}">
+			<div class="svws-ui-td" role="cell">
+				{{ GostKursart.fromID(r.parameter.get(0)).beschreibung }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ r.parameter.get(1) }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ r.parameter.get(2) }}
+			</div>
 		</template>
-		Nur
-		<parameter-kursart v-model="kursart" />
-		von
-		<parameter-schiene v-model="start" :schienen="schienen" />
-		bis
-		<parameter-schiene v-model="ende" :schienen="schienen" />
+		<template #regelEdit>
+			<parameter-kursart v-model="kursart" label="Nur diese Kursart" />
+			<parameter-schiene v-model="start" :schienen="schienen" label="von Schiene" />
+			<parameter-schiene v-model="ende" :schienen="schienen" label="bis Schiene" />
+		</template>
 	</BlockungsregelBase>
 </template>
 
@@ -17,9 +24,10 @@
 
 	import type { GostBlockungRegel, GostBlockungSchiene} from "@core";
 	import type { WritableComputedRef } from "vue";
-	import { useRegelParameterKursart, useRegelParameterSchiene } from '../composables';
+	import {useRegelParameterKursart, useRegelParameterSchiene} from '../composables';
 	import { GostKursart, GostKursblockungRegelTyp } from "@core";
-	import { computed } from "vue";
+	import {computed} from "vue";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
@@ -53,5 +61,11 @@
 		r.parameter.add(1);
 		regel.value = r;
 	}
+
+	const cols: DataTableColumn[] = [
+		{key: 'kursart', label: 'Kursart allein in Schienen', span: 2},
+		{key: 'von', label: 'von'},
+		{key: 'bis', label: 'bis'},
+	]
 
 </script>

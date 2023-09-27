@@ -1,13 +1,18 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
-		<template #beschreibung="{ regel: r }">
-			{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} auf Schiene {{ r.parameter.get(1) }} fixiert
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
+		<template #regelRead="{regel: r}">
+			<div class="svws-ui-td" role="cell">
+				{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ r.parameter.get(1) }}
+			</div>
 		</template>
-		Fixiere
-		<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" />
-		in
-		<parameter-schiene v-model="schiene" :schienen="schienen" />
+		<template #regelEdit>
+			<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" label="Fixiere" />
+			<parameter-schiene v-model="schiene" :schienen="schienen" label="in Schiene" />
+		</template>
 	</BlockungsregelBase>
 </template>
 
@@ -18,6 +23,7 @@
 	import { getKursbezeichnung, useRegelParameterKurs, useRegelParameterSchiene, getKursFromId  } from '../composables';
 	import { GostKursblockungRegelTyp } from "@core";
 	import { computed } from "vue";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
@@ -52,5 +58,10 @@
 		r.parameter.add(1);
 		regel.value = r;
 	}
+
+	const cols: DataTableColumn[] = [
+		{key: 'kursart', label: 'Kurs fixiert'},
+		{key: 'in', label: 'in Schiene'},
+	]
 
 </script>

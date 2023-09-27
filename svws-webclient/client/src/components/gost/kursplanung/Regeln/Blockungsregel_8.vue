@@ -1,12 +1,18 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
-		<template #beschreibung="{ regel: r }">
-			{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }} immer zusammen mit {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }}
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
+		<template #regelRead="{regel: r}">
+			<div class="svws-ui-td" role="cell">
+				{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(0)), mapFaecher) }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }}
+			</div>
 		</template>
-		<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse" />
-		<span class="leading-none">immer zusammen mit</span>
-		<parameter-kurs v-model="kurs2" :map-faecher="mapFaecher" :kurse="kurse" />
+		<template #regelEdit>
+			<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse" label="Kurs immer zusammen" />
+			<parameter-kurs v-model="kurs2" :map-faecher="mapFaecher" :kurse="kurse" label="mit Kurs" />
+		</template>
 	</BlockungsregelBase>
 </template>
 
@@ -16,7 +22,8 @@
 	import type { WritableComputedRef } from "vue";
 	import { useRegelParameterKurs, getKursbezeichnung, getKursFromId } from '../composables';
 	import { GostKursblockungRegelTyp } from "@core";
-	import { computed } from "vue";
+	import {computed} from "vue";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
@@ -50,5 +57,10 @@
 		r.parameter.add(kurs.id);
 		regel.value = r;
 	}
+
+	const cols: DataTableColumn[] = [
+		{key: 'kurs1', label: 'Kurs immer zusammen'},
+		{key: 'kurs2', label: 'mit Kurs'},
+	]
 
 </script>

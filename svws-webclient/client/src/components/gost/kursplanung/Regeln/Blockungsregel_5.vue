@@ -1,13 +1,18 @@
 <template>
 	<BlockungsregelBase v-model="regel" @update:model-value="e => emit('update:modelValue', e)" :regel-typ="regel_typ" :regeln="regeln"
-		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled">
-		<template #beschreibung="{ regel: r }">
-			{{ name(r.parameter.get(0)) }} in {{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }} verboten
+		@regel-hinzugefuegen="regel_hinzufuegen" @regel-speichern="emit('regelSpeichern')" @regel-entfernen="e=>emit('regelEntfernen', e)" :disabled="disabled" :cols="cols">
+		<template #regelRead="{regel: r}">
+			<div class="svws-ui-td" role="cell">
+				{{ name(r.parameter.get(0)) }}
+			</div>
+			<div class="svws-ui-td" role="cell">
+				{{ getKursbezeichnung(getKursFromId(kurse, r.parameter.get(1)), mapFaecher) }}
+			</div>
 		</template>
-		Verbiete
-		<parameter-schueler v-model="schueler" :map-schueler="mapSchueler" />
-		in
-		<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" />
+		<template #regelEdit>
+			<parameter-schueler v-model="schueler" :map-schueler="mapSchueler" label="Verbiete" />
+			<parameter-kurs v-model="kurs" :map-faecher="mapFaecher" :kurse="kurse" label="in Kurs" />
+		</template>
 	</BlockungsregelBase>
 </template>
 
@@ -16,7 +21,8 @@
 	import type { WritableComputedRef } from "vue";
 	import { useRegelParameterKurs, useRegelParameterSchueler, getKursbezeichnung, getKursFromId } from '../composables';
 	import { GostKursblockungRegelTyp } from "@core";
-	import { computed } from "vue";
+	import {computed} from "vue";
+	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
 		modelValue: GostBlockungRegel | undefined;
@@ -55,5 +61,10 @@
 		const schueler = props.mapSchueler.get(id);
 		return schueler ? `${schueler.nachname}, ${schueler.vorname}` : "";
 	}
+
+	const cols: DataTableColumn[] = [
+		{key: 'schueler', label: 'Schüler verboten'},
+		{key: 'in', label: 'in Kurs'},
+	]
 
 </script>

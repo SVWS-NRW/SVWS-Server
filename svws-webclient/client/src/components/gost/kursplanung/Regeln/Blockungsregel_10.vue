@@ -1,5 +1,5 @@
 <template>
-	<div class="mt-10">
+	<div class="mt-10 px-6">
 		<svws-ui-checkbox type="toggle" v-model="hatRegel" :disabled="disabled">
 			{{ regel_typ.bezeichnung }}
 		</svws-ui-checkbox>

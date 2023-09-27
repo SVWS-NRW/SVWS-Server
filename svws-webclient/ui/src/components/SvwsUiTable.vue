@@ -576,8 +576,20 @@
     }
   }
 
+  .app-layout--aside-container & {
+    @apply -mx-6 w-auto;
+
+    .svws-ui-td:first-child {
+      @apply pl-6;
+    }
+
+    .svws-ui-td:last-child {
+      @apply pr-6;
+    }
+  }
+
   .svws-ui-badge {
-    .svws-has-background & {
+  	&.svws-has-background & {
       @apply border-transparent;
     }
   }
@@ -595,7 +607,7 @@
 	@apply sticky bg-white dark:bg-black dark:text-white;
 	@apply border-black/25 dark:border-white/25;
 
-	.svws-has-background & {
+	.svws-ui-table.svws-has-background & {
 		@apply border-black/50 dark:border-white/50;
 	}
 
@@ -723,7 +735,7 @@
   }
 
   .svws-ui-tr {
-    .svws-has-background & {
+	  .svws-ui-table.svws-has-background & {
       background-color: var(--background-color);
     }
   }
@@ -843,7 +855,7 @@
     }
 	}
 
-	.svws-has-background & {
+	.svws-ui-table.svws-has-background & {
 		@apply border-black/50 dark:border-white/50;
 	}
 
@@ -861,7 +873,7 @@
 	.svws-disabled-soft & {
 		@apply relative cursor-default text-black/50 dark:text-white/50;
 
-		.svws-has-background & {
+		.svws-ui-table.svws-has-background & {
 			@apply text-black/75 dark:text-black/75;
 		}
 
@@ -869,7 +881,7 @@
 			@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10 border border-black/5;
 			content: '';
 
-			.svws-has-background & {
+			.svws-ui-table.svws-has-background & {
 				@apply bg-black/40;
 			}
 		}
@@ -888,7 +900,7 @@
 		}
 
 		&:before {
-			.svws-has-background & {
+			.svws-ui-table.svws-has-background & {
 				@apply bg-black/20;
 				box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
 			}

@@ -3,15 +3,17 @@
 		title?: string;
 		overflowScroll?: boolean;
 		largeTitle?: boolean;
+		hasBackground?: boolean;
 	}>(), {
 		title: '',
 		overflowScroll: false,
-		largeTitle: false
+		largeTitle: false,
+		hasBackground: false,
 	});
 </script>
 
 <template>
-	<div class="content-card" :class="{'h-full': overflowScroll}">
+	<div class="content-card" :class="{'h-full': overflowScroll, 'svws-has-background': hasBackground}">
 		<div v-if="title || $slots.actions || $slots.title" class="content-card--header" :class="{
 			'content-card--header--has-actions': $slots.actions
 		}">
@@ -33,6 +35,37 @@
 <style lang="postcss">
 	.content-card {
 		@apply h-fit;
+
+		&.svws-has-background {
+			@apply bg-light dark:bg-white/5 px-6 py-3;
+
+      &:first-child {
+        @apply pt-6;
+      }
+
+      &:last-child {
+        @apply pb-6;
+      }
+
+			.svws-ui-table {
+				@apply rounded-lg;
+
+				.svws-ui-tr {
+					.svws-ui-td:last-child {
+						@apply !pr-0;
+					}
+				}
+
+				.svws-ui-tbody:last-child .svws-ui-tr:last-child .svws-ui-td,
+				.svws-ui-tfoot {
+					@apply border-b-0;
+				}
+			}
+
+			.svws-ui-thead {
+				@apply rounded-t-lg;
+			}
+		}
 
 		&--content {
 			&--with-title {

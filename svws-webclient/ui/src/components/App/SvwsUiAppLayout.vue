@@ -285,9 +285,9 @@
 	}
 
 	.app-layout--aside-container {
-		@apply overflow-y-auto;
+		@apply overflow-y-auto px-6 py-8;
 		@apply h-full w-full;
-		@apply flex flex-col py-5;
+		@apply flex flex-col;
 	}
 
 	.app--content-container.fullwidth-content {
@@ -301,7 +301,7 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 p-3 absolute top-5 right-5 bottom-5 rounded-2xl;
+		@apply -ml-4 z-50 w-1/2 absolute top-5 right-5 bottom-5 rounded-2xl;
 		@apply shadow-xl bg-white dark:bg-black border border-black/10 dark:border-white/10;
 	}
 

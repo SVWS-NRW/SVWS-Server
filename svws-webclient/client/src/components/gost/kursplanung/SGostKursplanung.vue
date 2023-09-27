@@ -74,7 +74,7 @@
 			<Teleport to="body">
 				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed && !(regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
-						<h2 class="text-headline-md flex justify-between px-3">
+						<h2 class="text-headline-md flex justify-between">
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
@@ -171,7 +171,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-8;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-8 lg:gap-x-12;
 		grid-auto-rows: 100%;
 		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;
@@ -180,7 +180,7 @@
 			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
 
 			.s-gost-kursplanung-schueler-auswahl {
-			@apply -ml-8 lg:-ml-16;
+			@apply -ml-8 lg:-ml-12;
 			}
 		}
 	}
