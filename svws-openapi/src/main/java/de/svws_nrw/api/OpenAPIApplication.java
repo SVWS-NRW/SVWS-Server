@@ -198,6 +198,8 @@ public final class OpenAPIApplication extends Application {
 			final DBConfig config = user.connectionManager.getConfig();
 			if ((config == null) || (config.getDBSchema() == null))
 				return user;
+			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
+				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
 			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
 				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
 			return user;

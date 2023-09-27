@@ -54,6 +54,9 @@ public final class SVWSKonfiguration {
 	/** Die Menge der gesperrten Schemata */
 	private final HashSet<String> schemataLocked = new HashSet<>();
 
+	/** Die Menge der deaktivierten Schemata */
+	private final HashSet<String> schemataDeactivated = new HashSet<>();
+
 
 
 	/**
@@ -597,6 +600,34 @@ public final class SVWSKonfiguration {
 	 */
 	public synchronized boolean isLockedSchema(final String schemaName) {
 		return (schemataLocked.contains(schemaName));
+	}
+
+
+	/**
+	 * Deaktviert das angegebene Schema, so dass es im Anschluss nach aussen hin
+	 * nicht mehr zur Verfpgung steht.
+	 *
+	 * @param schemaName   der Name des zu sperrenden Schemas
+	 *
+	 * @return true, fall das Schema gesperrt werden konnte
+	 */
+	public synchronized boolean deactivateSchema(final String schemaName) {
+		if (schemataDeactivated.contains(schemaName))
+			return false;
+		schemataDeactivated.add(schemaName);
+		return true;
+	}
+
+
+	/**
+	 * Gibt an, ob das angegebene Schema deaktiviert ist oder nicht
+	 *
+	 * @param schemaName   der Name des Schemas
+	 *
+	 * @return true, falls das Schema deaktiviert ist
+	 */
+	public synchronized boolean isDeactivatedSchema(final String schemaName) {
+		return (schemataDeactivated.contains(schemaName));
 	}
 
 

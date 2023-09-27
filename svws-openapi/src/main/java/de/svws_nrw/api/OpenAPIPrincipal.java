@@ -146,8 +146,12 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 			return new OpenAPIPrincipal();
 
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
-		if ((config.getDBSchema() != null) && SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
-			throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+		if (config.getDBSchema() != null) {
+			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()))
+				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");
+			if (SVWSKonfiguration.get().isLockedSchema(config.getDBSchema()))
+				throw OperationError.SERVICE_UNAVAILABLE.exception("Datenbank-Schema ist zur Zeit aufgrund von internen Operationen gesperrt. Der Zugriff kann später nochmals versucht werden.");
+		}
 
 		if (config.useDBLogin()) {
 			// Setze den übergebene Benutzername und das Kennwort auch für die Datenbankverbindung, falls die DB-Konfiguration eine Anmeldung per SVWS-Benutzer vorsieht

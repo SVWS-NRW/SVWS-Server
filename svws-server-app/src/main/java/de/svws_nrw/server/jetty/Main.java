@@ -65,6 +65,7 @@ public class Main {
 				logger.modifyIndent(2);
 				final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 				final Benutzer dbUser = Benutzer.create(dbconfig);
+				boolean schemaOK = true;
 				try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 					if (dbConn == null) {
 						logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
@@ -74,17 +75,25 @@ public class Main {
 					if (!dbManager.updater.isUptodate(-1, devMode)) {
 						logger.logLn("Revision veraltet - führe Update aus...");
 						logger.modifyIndent(2);
-						dbManager.updater.update(dbUser, -1, devMode, true);
+						if (!dbManager.updater.update(dbUser, -1, devMode, true))
+							schemaOK = false;
 						logger.modifyIndent(-2);
 					}
 					if (!dbManager.updater.coreTypes.isUptodate()) {
 						logger.logLn("Core-Types veraltet - führe Update aus...");
 						logger.modifyIndent(2);
-						dbManager.updater.coreTypes.update(dbUser, true, -1);
+						if (!dbManager.updater.coreTypes.update(dbUser, true, -1))
+							schemaOK = false;
 						logger.modifyIndent(-2);
 					}
-					logger.modifyIndent(-2);
+				} catch (@SuppressWarnings("unused") final Exception e) {
+					schemaOK = false;
 				}
+				if (!schemaOK) {
+					svwsconfig.deactivateSchema(schema.name);
+					logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
+				}
+				logger.modifyIndent(-2);
 			}
 			logger.modifyIndent(-2);
 		}

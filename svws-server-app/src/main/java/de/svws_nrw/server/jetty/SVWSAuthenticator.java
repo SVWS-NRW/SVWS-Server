@@ -8,6 +8,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.WebApplicationException;
 
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.security.ServerAuthException;
@@ -66,9 +67,19 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         }
         //Workaround Ende
 
-        final UserIdentity user = login(username, password, request);
-        if (user != null) {
-            return new UserAuthentication(getAuthMethod(), user);
+        try {
+	        final UserIdentity user = login(username, password, request);
+	        if (user != null) {
+	            return new UserAuthentication(getAuthMethod(), user);
+	        }
+        } catch (final WebApplicationException wae) {
+    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
+    			response.setStatus(r.getStatus());
+    			writer.print(r.getEntity());
+        		return Authentication.SEND_FAILURE;
+            } catch (final IOException e) {
+                throw new ServerAuthException(e);
+            }
         }
         try {
             response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
