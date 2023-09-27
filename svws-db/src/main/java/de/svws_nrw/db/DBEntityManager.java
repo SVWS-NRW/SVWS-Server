@@ -855,6 +855,8 @@ public final class DBEntityManager implements AutoCloseable {
 							prepared.setString(pos, datetimeFormatter.format(timestamp.toLocalDateTime()));
 						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Date date)) {
 							prepared.setString(pos, dateFormatter.format(date.toLocalDate()));
+						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Time time)) {
+							prepared.setString(pos, timeFormatter.format(time.toLocalTime()));
 						} else {
 							prepared.setObject(pos, data[j]);
 						}
