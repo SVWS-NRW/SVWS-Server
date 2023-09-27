@@ -27,6 +27,9 @@
 						</svws-ui-badge>
 					</div>
 				</template>
+				<template #cell(hinweise)="cell">
+					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-25"><i-ri-information-line /></span>
+				</template>
 				<template #cell(ergebnis)="{value: f}: {value: GostBelegpruefungErgebnis}">
 					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
 				</template>
@@ -41,6 +44,7 @@
 				</svws-ui-button>
 			</div>
 			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+			<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -59,7 +63,8 @@
 
 	const cols: DataTableColumn[] = [
 		{key: 'schueler', label: 'Name, Vorname', span: 1, sortable: true},
-		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'right', sortable: true}
+		{key: 'hinweise', label: 'K/WStd', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 6, align: 'center', sortable: false},
+		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 6, align: 'center', sortable: true},
 	];
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
@@ -106,16 +111,33 @@
 	});
 
 
-	function counter(fehlercodes: List<GostBelegpruefungErgebnisFehler>): number {
+	function counter(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined): number {
+		if (fehlercodes === undefined)
+			return 0;
 		let res = 0;
 		for (const fehler of fehlercodes)
-			if (!!fehler &&
-				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.BELEGUNG ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHULSPEZIFISCH ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT))
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) !== GostBelegungsfehlerArt.HINWEIS)
+				res++;
+		return res;
+	}
+
+	function counterHinweise(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined): number {
+		if (fehlercodes === undefined)
+			return 0;
+		let res = 0;
+		for (const fehler of fehlercodes)
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+				res++;
+		return res;
+	}
+
+	function counterAnzahlOderWochenstunden(fehlercodes: List<GostBelegpruefungErgebnisFehler> | undefined) : number {
+		if (fehlercodes === undefined)
+			return 0;
+		let res = 0;
+		for (const fehler of fehlercodes)
+			if ((GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS) &&
+				(fehler.code.startsWith("WST") || fehler.code.startsWith("ANZ")))
 				res++;
 		return res;
 	}
