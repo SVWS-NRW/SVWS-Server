@@ -93,7 +93,9 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück, die alle
-	 * als Präfix indet erhalten. Dies dient z.B. dem Einrücken der Log-Informationen.
+	 * als Präfix indent erhalten. Dies dient z.B. dem Einrücken der Log-Informationen.
+	 * Außerdem werden Log-Einträge, die kein newline am Ende haben mit den jeweils nachfolgenden
+	 * Einträgen zusammengefasst.
 	 *
 	 * @param indent   das Präfix, welches zum Einrücken der Log-Informationen genutzt wird
 	 *
@@ -110,12 +112,19 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 		} else if (((typeof __param0 !== "undefined") && (typeof __param0 === "string"))) {
 			const indent : string = __param0;
 			const result : ArrayList<string> | null = new ArrayList();
+			let temp : string = indent;
 			for (let i : number = 0; i < this.logData.size(); i++) {
 				const data : LogData = this.logData.get(i);
 				if (data === null)
 					continue;
-				result.add(indent! + data.getText()!);
+				temp += data.getText();
+				if (data.isNewLine()) {
+					result.add(temp);
+					temp = indent;
+				}
 			}
+			if (!JavaObject.equalsTranspiler(indent, (temp)))
+				result.add(temp);
 			return result;
 		} else throw new Error('invalid method overload');
 	}

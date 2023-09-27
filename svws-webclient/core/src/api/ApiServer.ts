@@ -4892,7 +4892,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setGostLupoImportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode: none | schueler | all}
+	 * Implementierung der POST-Methode setGostLupoImportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode}
 	 *
 	 * Importiert die Laufbahndaten der übergebenen LuPO-Datenbank in das Schema mit dem angegebenen Namen.
 	 *
@@ -4912,7 +4912,7 @@ export class ApiServer extends BaseApi {
 	 * @returns Der Log vom Import der Laufbahndaten
 	 */
 	public async setGostLupoImportMDBFuerJahrgang(data : FormData, schema : string, mode : string) : Promise<SimpleOperationResponse> {
-		const path = "/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode: none | schueler | all}"
+		const path = "/db/{schema}/gost/lupo/import/mdb/jahrgang/replace/{mode}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{mode\s*(:[^}]+)?}/g, mode);
 		const result : string = await super.postMultipart(path, data);

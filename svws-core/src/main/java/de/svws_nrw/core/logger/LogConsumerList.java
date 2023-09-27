@@ -92,7 +92,9 @@ public class LogConsumerList implements Consumer<@NotNull LogData> {
 
 	/**
 	 * Gibt die gesammelten Log-Informationen als Liste von Strings zurück, die alle
-	 * als Präfix indet erhalten. Dies dient z.B. dem Einrücken der Log-Informationen.
+	 * als Präfix indent erhalten. Dies dient z.B. dem Einrücken der Log-Informationen.
+	 * Außerdem werden Log-Einträge, die kein newline am Ende haben mit den jeweils nachfolgenden
+	 * Einträgen zusammengefasst.
 	 *
 	 * @param indent   das Präfix, welches zum Einrücken der Log-Informationen genutzt wird
 	 *
@@ -100,12 +102,19 @@ public class LogConsumerList implements Consumer<@NotNull LogData> {
 	 */
 	public List<@NotNull String> getStrings(final @NotNull String indent) {
 		final ArrayList<@NotNull String> result = new ArrayList<>();
+		@NotNull String temp = indent;
 		for (int i = 0; i < logData.size(); i++) {
 			final @NotNull LogData data = logData.get(i);
 			if (data == null)
 				continue;
-			result.add(indent + data.getText());
+			temp += data.getText();
+			if (data.isNewLine()) {
+				result.add(temp);
+				temp = indent;
+			}
 		}
+		if (!indent.equals(temp))
+			result.add(temp);
 		return result;
 	}
 
