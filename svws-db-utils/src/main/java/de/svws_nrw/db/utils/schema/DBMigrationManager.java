@@ -33,7 +33,6 @@ import de.svws_nrw.core.utils.AdressenUtils;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
-import de.svws_nrw.db.DBConnectionException;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -352,87 +351,78 @@ public final class DBMigrationManager {
 
 		try {
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
-			final Benutzer srcUser = Benutzer.create(srcConfig);
-			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-				srcManager = getSchemaManager(srcConfig, srcUser, true);
+			srcManager = getSchemaManager(srcConfig, Benutzer.create(srcConfig), true);
 
-				logger.log("-> Verbinde zum Ziel-Schema...");
-				final Benutzer tgtUser = Benutzer.create(tgtConfig);
-				try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
-					tgtManager = getSchemaManager(tgtConfig, tgtUser, false);
-					tgtManager.createSVWSSchema(tgtUser, 0, false, true);
+			logger.log("-> Verbinde zum Ziel-Schema...");
+			tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false);
 
-					boolean result = true;
-					try {
-						tgtConn.reconnect();
-					} catch (@SuppressWarnings("unused") final DBConnectionException e) {
-						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
-					}
+			try {
+				tgtManager.createSVWSSchema(tgtManager.getUser(), 0, false, true);
 
-					logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
-					logger.modifyIndent(2);
-					result = copy();
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" " + strFehler);
-						throw new DBException("Fehler beim Kopieren der zu migrierenden Daten");
-					}
-					logger.logLn(strOK);
-
-					try {
-						tgtConn.reconnect();
-					} catch (@SuppressWarnings("unused") final DBConnectionException e) {
-						logger.logLn(" [Fehler] Erneuter Verbindungsaufbau zur Zieldatenbank fehlgeschlagen!");
-					}
-
-					logger.logLn("-> Lege ggf. weitere Schuljahresabschnitte an, falls Folgeklassen bei Schüler-Lernabschnitte angelegt sind...");
-					logger.modifyIndent(2);
-					result = erstelleFolgeSchuljahresabschnitte(tgtConn);
-					logger.modifyIndent(-2);
-					if (!result) {
-						logger.logLn(" " + strFehler);
-						throw new DBException("Fehler beim Anlegen der Schuljahresabschnitte");
-					}
-					logger.logLn(strOK);
-
-					logger.logLn("-> Überprüfe die in der DB eingetragene Schulform anhand der Statistik-Vorgaben und korrigiere diese ggf. ...");
-					logger.modifyIndent(2);
-					result = fixSchulform();
-					logger.modifyIndent(-2);
-					logger.logLn(result ? strOK : strFehler);
-
-					logger.logLn("-> Konvertiere die Bilder als Base64-kodiertes Text-Format...");
-					logger.modifyIndent(2);
-					convertImages();
-					logger.modifyIndent(-2);
-					logger.logLn(result ? strOK : strFehler);
-
-					if (maxUpdateRevision != 0) {
-						logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
-						logger.modifyIndent(2);
-						result = tgtManager.updater.update(tgtManager.getUser(), maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
-						logger.modifyIndent(-2);
-						if (!result) {
-							logger.logLn(strFehler);
-							throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
-						}
-						logger.logLn(strOK);
-					}
-
-					logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
-					logger.logLn("-> Migration erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
-				} finally {
-					tgtManager = null;
+				logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
+				logger.modifyIndent(2);
+				boolean result = copy();
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" " + strFehler);
+					throw new DBException("Fehler beim Kopieren der zu migrierenden Daten");
 				}
-			} finally {
-				srcManager = null;
+				logger.logLn(strOK);
+
+				logger.logLn("-> Lege ggf. weitere Schuljahresabschnitte an, falls Folgeklassen bei Schüler-Lernabschnitte angelegt sind...");
+				logger.modifyIndent(2);
+				try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
+					result = erstelleFolgeSchuljahresabschnitte(tgtConn);
+				}
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(" " + strFehler);
+					throw new DBException("Fehler beim Anlegen der Schuljahresabschnitte");
+				}
+				logger.logLn(strOK);
+
+				logger.logLn("-> Überprüfe die in der DB eingetragene Schulform anhand der Statistik-Vorgaben und korrigiere diese ggf. ...");
+				logger.modifyIndent(2);
+				result = fixSchulform();
+				logger.modifyIndent(-2);
+				logger.logLn(result ? strOK : strFehler);
+
+				logger.logLn("-> Konvertiere die Bilder als Base64-kodiertes Text-Format...");
+				logger.modifyIndent(2);
+				convertImages();
+				logger.modifyIndent(-2);
+				logger.logLn(result ? strOK : strFehler);
+			} catch (final DBException e) {
+				// Entferne das Schema aus der svwsconfig.json, damit es nicht mehr beim Start berücksichtigt wird.
+				// Entferne es aber nicht aus der SVWS-DB, damit eine Fehleranalyse noch möglich ist.
+				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
+				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
+				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
+				SVWSKonfiguration.get().removeSchema(tgtSchema);
+				throw e;
 			}
+
+			if (maxUpdateRevision != 0) {
+				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision" + ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
+				logger.modifyIndent(2);
+				final boolean result = tgtManager.updater.update(tgtManager.getUser(), maxUpdateRevision < 0 ? -1 : maxUpdateRevision, devMode, false);
+				logger.modifyIndent(-2);
+				if (!result) {
+					logger.logLn(strFehler);
+					throw new DBException("Fehler beim Aktualsieren der Ziel-DB");
+				}
+				logger.logLn(strOK);
+			}
+
+			logger.logLn("-> Speicherbelegung (frei/verfügbar/gesamt): " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/" + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
+			logger.logLn("-> Migration erfolgreich in " + ((System.currentTimeMillis() - timeStart) / 1000.0) + " Sekunden abgeschlossen.");
 		} catch (final DBException e) {
 			logger.logLn("-> Migration fehlgeschlagen! (" + e.getMessage() + ")");
 			success = false;
 		} finally {
+			tgtManager = null;
+			srcManager = null;
 			System.gc();
-
 			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
 				logger.logLn("-> Migration evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
 				success = false;
