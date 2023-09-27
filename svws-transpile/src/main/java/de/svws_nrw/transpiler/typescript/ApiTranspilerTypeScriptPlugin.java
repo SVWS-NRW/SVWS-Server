@@ -166,7 +166,7 @@ public final class ApiTranspilerTypeScriptPlugin extends TranspilerLanguagePlugi
 				final Collator collator = Collator.getInstance(Locale.GERMAN);
 				return collator.compare(a.getKey(), b.getKey());
 			});
-			String fileImports = "import { BaseApi } from '../api/BaseApi';" + System.lineSeparator();
+			String fileImports = "import { BaseApi, type ApiFile } from '../api/BaseApi';" + System.lineSeparator();
 			for (final Map.Entry<String, String> imp : allImports) {
 				if (imp.getKey().equals("String"))
 					continue;

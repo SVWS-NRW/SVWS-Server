@@ -1,4 +1,4 @@
-import { BaseApi } from '../api/BaseApi';
+import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { AbschlussErgebnis } from '../core/data/abschluss/AbschlussErgebnis';
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';

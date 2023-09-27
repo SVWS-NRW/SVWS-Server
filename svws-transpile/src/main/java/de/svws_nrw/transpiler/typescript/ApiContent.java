@@ -104,7 +104,7 @@ public class ApiContent {
 				expr = schemaArgs.get("format");
 				if (expr instanceof final LiteralTree lt) {
 					if ((lt.getKind() == Kind.STRING_LITERAL) && "binary".equals(lt.getValue()))
-						return "Blob";
+						return "ApiFile";
 				}
 				throw new TranspilerException("Transpiler Exception: Unhandled implementation argument for Schema annotation.");
 			}

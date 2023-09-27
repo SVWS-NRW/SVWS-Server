@@ -452,7 +452,7 @@ public final class ApiMethod {
 					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn;" + System.lineSeparator());
 				} else {
-					sb.append("\t\tconst result : Blob = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+					sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn result;" + System.lineSeparator());
 				}
 			} else if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.MULTIPART_FORM_DATA)) {
@@ -512,13 +512,13 @@ public final class ApiMethod {
 				sb.append("\t\tconst text : string = await super.getText(path);" + System.lineSeparator());
 				sb.append("\t\treturn text;" + System.lineSeparator());
 			} else if (this.produces == ApiMimeType.PDF) {
-				sb.append("\t\tconst data : Blob = await super.getPDF(path);" + System.lineSeparator());
+				sb.append("\t\tconst data : ApiFile = await super.getPDF(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			} else if (this.produces == ApiMimeType.APPLICATION_OCTET_STREAM) {
-				sb.append("\t\tconst data : Blob = await super.getOctetStream(path);" + System.lineSeparator());
+				sb.append("\t\tconst data : ApiFile = await super.getOctetStream(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			} else if (this.produces == ApiMimeType.SQLITE) {
-				sb.append("\t\tconst data : Blob = await super.getSQLite(path);" + System.lineSeparator());
+				sb.append("\t\tconst data : ApiFile = await super.getSQLite(path);" + System.lineSeparator());
 				sb.append("\t\treturn data;" + System.lineSeparator());
 			} else
 				throw new TranspilerException("Transpiler Error: GET which produces " + this.produces + " not yet implemented in the transpiler.");

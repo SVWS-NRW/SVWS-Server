@@ -1,4 +1,4 @@
-import { BaseApi } from '../api/BaseApi';
+import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { AbgangsartKatalog } from '../core/data/schule/AbgangsartKatalog';
 import { Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
@@ -1787,7 +1787,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die GZip-komprimierte ENM-JSON-Datei
 	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten des ENM auszulesen.
 	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der ENM-Daten gefunden.
 	 *
@@ -1795,10 +1795,10 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierte ENM-JSON-Datei
 	 */
-	public async getENMDatenGZip(schema : string) : Promise<Blob> {
+	public async getENMDatenGZip(schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/enm/alle/gzip"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const data : Blob = await super.getOctetStream(path);
+		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -1945,17 +1945,17 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Export der SQLite-Datenbank
 	 *     - Mime-Type: application/vnd.sqlite3
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Das Schema darf nicht exportiert werden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Der Export der SQLite-Datenbank
 	 */
-	public async exportSQLite(schema : string) : Promise<Blob> {
+	public async exportSQLite(schema : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/export/sqlite"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const data : Blob = await super.getSQLite(path);
+		const data : ApiFile = await super.getSQLite(path);
 		return data;
 	}
 
@@ -2994,7 +2994,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
 	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
 	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
 	 *
@@ -3003,11 +3003,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
 	 */
-	public async getGostAbiturjahrgangPDFWahlboegen(schema : string, abiturjahr : number) : Promise<Blob> {
+	public async getGostAbiturjahrgangPDFWahlboegen(schema : string, abiturjahr : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const data : Blob = await super.getPDF(path);
+		const data : ApiFile = await super.getPDF(path);
 		return data;
 	}
 
@@ -3564,7 +3564,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
 	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
 	 *
@@ -3574,12 +3574,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFKursSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<Blob> {
+	public async getGostBlockungPDFKursSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
-		const result : Blob = await super.postJSONtoPDF(path, body);
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
 	}
 
@@ -3592,7 +3592,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
 	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.
 	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
 	 *
@@ -3602,12 +3602,12 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFSchuelerKurseListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<Blob> {
+	public async getGostBlockungPDFSchuelerKurseListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
-		const result : Blob = await super.postJSONtoPDF(path, body);
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
 	}
 
@@ -4873,7 +4873,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die LuPO-Lehrerdatei
 	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der Benutzer hat keine Rechter zum Export der Laufbahndaten.
 	 *   Code 500: Ein interner Server-Fehler beim Erzeugen der LuPO-Datei.
 	 *
@@ -4882,11 +4882,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die LuPO-Lehrerdatei
 	 */
-	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<Blob> {
+	public async getGostLupoExportMDBFuerJahrgang(schema : string, jahrgang : string) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/lupo/export/mdb/jahrgang/{jahrgang}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{jahrgang\s*(:[^}]+)?}/g, jahrgang);
-		const data : Blob = await super.getOctetStream(path);
+		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -5093,7 +5093,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 *     - Mime-Type: application/octet-stream
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Laufbahndaten auszulesen.
 	 *   Code 404: Es wurden nicht alle benötigten Daten für das Erstellen der Laufbahn-Daten gefunden.
 	 *
@@ -5102,11 +5102,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die GZip-komprimierten Laufbahndaten der gymnasialen Obertufe
 	 */
-	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<Blob> {
+	public async exportGostSchuelerLaufbahnplanung(schema : string, id : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/{id : \\d+}/laufbahnplanung/export"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const data : Blob = await super.getOctetStream(path);
+		const data : ApiFile = await super.getOctetStream(path);
 		return data;
 	}
 
@@ -5282,7 +5282,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
 	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: Blob
+	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.
 	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
 	 *
@@ -5291,11 +5291,11 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
 	 */
-	public async getGostSchuelerPDFWahlbogen(schema : string, schuelerid : number) : Promise<Blob> {
+	public async getGostSchuelerPDFWahlbogen(schema : string, schuelerid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
-		const data : Blob = await super.getPDF(path);
+		const data : ApiFile = await super.getPDF(path);
 		return data;
 	}
 

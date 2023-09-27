@@ -1,4 +1,4 @@
-import { BaseApi } from '../api/BaseApi';
+import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { ArrayList } from '../java/util/ArrayList';
 import { List } from '../java/util/List';
 

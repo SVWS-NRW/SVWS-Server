@@ -41,7 +41,7 @@ export class BaseApi {
 		return this.url + path;
 	}
 
-	private decodeFilename(header: string) {
+	protected decodeFilename(header: string) {
 		// prüfe, ob filename vorhanden ist im Header und ermittel `filename`. Ebenso `filenameUTF8`
 		const nameRegex = /(.*filename="(?<filename>.*)")?(.*filename\*=UTF-8''(?<filenameUTF8>.*))?/
 		const match = nameRegex.exec(header);
@@ -170,7 +170,7 @@ export class BaseApi {
 		return this.postTextBased(path, 'application/json', 'application/json', body);
 	}
 
-	protected async postTextBasedToBinary(path : string, mimetype_send : string, mimetype_receive : string, body : string | null) : Promise<Blob> {
+	protected async postTextBasedToBinary(path : string, mimetype_send : string, mimetype_receive : string, body : string | null) : Promise<ApiFile> {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
 		requestInit.headers["Content-Type"] = mimetype_send;
@@ -181,7 +181,11 @@ export class BaseApi {
 			const response = await fetch(this.getURL(path), requestInit);
 			if (!response.ok)
 				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
-			return await response.blob();
+			const file : ApiFile = { name: "", data: await response.blob() };
+			const header = response.headers.get('content-disposition');
+			if (header !== null)
+				file.name = this.decodeFilename(header);
+			return file;
 		} catch (e) {
 			if (e instanceof Error)
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
@@ -189,7 +193,7 @@ export class BaseApi {
 		}
 	}
 
-	public async postJSONtoPDF(path : string, body : string | null) : Promise<Blob> {
+	public async postJSONtoPDF(path : string, body : string | null) : Promise<ApiFile> {
 		return this.postTextBasedToBinary(path, 'application/json', 'application/pdf', body);
 	}
 
