@@ -1,7 +1,5 @@
 package de.svws_nrw.db.utils.lupo.app;
 
-import java.io.IOException;
-
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -35,7 +33,7 @@ public class ImportLupoMDB {
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
-			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Beantwortet alle Fragen beim Import automatisch mit \"Ja\""));
+			cmdLine.addOption(new CommandLineOption("j", "ja", false, "Gibt an, dass alle vorhandenen Daten ersetzt werden sollen"));
 			cmdLine.addOption(new CommandLineOption("f", "file", true, "Der vollständige Dateiname, wo die LuPO-Datei liegt"));
 			cmdLine.addOption(new CommandLineOption("cp", "configPath", true, "Gibt den Pfad zu der SVWS-Konfigurationsdatei an, wenn diese nicht an einem Standardort liegt."));
 			cmdLine.addOption(new CommandLineOption("td", "tgtDrv", true, "Der Treiber für die Ziel-DB (\"MDB\", \"MSSQL\", \"MYSQL\", \"MARIA_DB\" oder \"SQLITE\")"));
@@ -43,8 +41,8 @@ public class ImportLupoMDB {
 			cmdLine.addOption(new CommandLineOption("ts", "tgtDB", true, "Der Schema-Name für die Ziel-DB (bei \\\"MDB\\\" und \\\"SQLITE\\\" nicht benötigt)"));
 			cmdLine.addOption(new CommandLineOption("tu", "tgtUser", true, "Der DB-Benutzer für die Ziel-DB"));
 			cmdLine.addOption(new CommandLineOption("tp", "tgtPwd", true, "Das DB-Kennwort für die Ziel-DB"));
-
-			final boolean antwort_ja = cmdLine.isSet("j");
+			cmdLine.addOption(new CommandLineOption("rj", "replaceJahrgang", false, "Gibt, an dass die Jahrgangs-spezifischen Informationen ersetzt werden sollen"));
+			cmdLine.addOption(new CommandLineOption("rs", "replaceSchueler", false, "Gibt, an dass die Schüler-spezifischen Informationen ersetzt werden sollen"));
 
 			// Lade die Konfigurationsdatei für den Datenbankzugriff
 			logger.logLn("Lese SVWS Konfiguration ein...");
@@ -67,13 +65,16 @@ public class ImportLupoMDB {
 			lupoMDB.logger.copyConsumer(logger);
 			lupoMDB.importFrom();
 
+			final boolean replaceJahrgang = cmdLine.isSet("rj") || cmdLine.isSet("j");
+			final boolean replaceSchueler = cmdLine.isSet("rs") || cmdLine.isSet("j");
+
 			// Schreibe in die LuPO-Datenbank
-			lupoMDB.setLUPOTables(user, antwort_ja);
+			lupoMDB.setLUPOTables(user, replaceJahrgang, replaceSchueler);
 
 			logger.logLn("Fertig!");
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 			cmdLine.printOptionsAndExit(2, e.getMessage());
 		}
 	}

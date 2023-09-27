@@ -71,7 +71,7 @@ public final class DataLupo {
 		try {
 			lupoMDB.importFrom();
 			// Schreibe in die LuPO-Datenbank
-			lupoMDB.setLUPOTables(user, false);   // TODO konfigurierbar machen !
+			lupoMDB.setLUPOTables(user, false, false);   // TODO konfigurierbar machen !
 			logger.logLn("  Import beendet");
 		} catch (@SuppressWarnings("unused") final IOException e1) {
 			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank.");
