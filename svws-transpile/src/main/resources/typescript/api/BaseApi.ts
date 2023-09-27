@@ -1,5 +1,10 @@
 import { OpenApiError } from '../api/OpenApiError';
 
+export interface ApiFile {
+	name: string,
+	data: Blob,
+}
+
 export class BaseApi {
 
 	/** Die URL des Servers. Alle Pfadangaben sind relativ zu dieser URL. */
@@ -36,8 +41,21 @@ export class BaseApi {
 		return this.url + path;
 	}
 
+	private decodeFilename(header: string) {
+		// prüfe, ob filename vorhanden ist im Header und ermittel `filename`. Ebenso `filenameUTF8`
+		const nameRegex = /(.*filename="(?<filename>.*)")?(.*filename\*=UTF-8''(?<filenameUTF8>.*))?/
+		const match = nameRegex.exec(header);
+		if (match !== null) {
+			const { filename, filenameUTF8 } = match.groups as { filename?: string; filenameUTF8?: string };
+			if (filenameUTF8)
+				return decodeURIComponent(filenameUTF8);
+			if (filename)
+				return decodeURIComponent(filename);
+		}
+		throw new Error('Failed to extract file name from Header');
+	}
 
-	protected async getBinary(path : string, mimetype : string) : Promise<Blob> {
+	protected async getBinary(path : string, mimetype : string) : Promise<ApiFile> {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
 		requestInit.headers["Accept"] = mimetype;
@@ -47,7 +65,11 @@ export class BaseApi {
 			const response = await fetch(this.getURL(path), requestInit);
 			if (!response.ok)
 				throw new OpenApiError(response, 'Fetch failed for GET: ' + path);
-			return await response.blob();
+			const file : ApiFile = { name: "", data: await response.blob() };
+			const header = response.headers.get('content-disposition');
+			if (header !== null)
+				file.name = this.decodeFilename(header);
+			return file;
 		} catch (e) {
 			if (e instanceof Error)
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for GET: ' + path);
@@ -56,17 +78,17 @@ export class BaseApi {
 	}
 
 
-	public getPDF(path : string) : Promise<Blob> {
+	public getPDF(path : string) : Promise<ApiFile> {
 		return this.getBinary(path, 'application/pdf');
 	}
 
 
-	public getSQLite(path : string) : Promise<Blob> {
+	public getSQLite(path : string) : Promise<ApiFile> {
 		return this.getBinary(path, 'application/vnd.sqlite3');
 	}
 
 
-	public getOctetStream(path : string) : Promise<Blob> {
+	public getOctetStream(path : string) : Promise<ApiFile> {
 		return this.getBinary(path, 'application/octet-stream');
 	}
 

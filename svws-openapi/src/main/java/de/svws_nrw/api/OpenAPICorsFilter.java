@@ -34,6 +34,7 @@ public final class OpenAPICorsFilter implements ContainerResponseFilter, Contain
 	        headers.add("Access-Control-Allow-Credentials", "true");
 	        headers.add("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD");
 	        headers.add("Access-Control-Max-Age", _ACCESS_CONTROL_MAX_AGE_IN_SECONDS);
+	        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
 		}
 	}
 
