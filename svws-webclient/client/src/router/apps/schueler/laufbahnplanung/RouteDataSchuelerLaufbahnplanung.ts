@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { Abiturdaten, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
+import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
 	SchuelerListeEintrag } from "@core";
 import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
 	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
@@ -154,7 +154,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.auswahl.id);
 	}
 
-	exportLaufbahnplanung = async (): Promise<Blob> => {
+	exportLaufbahnplanung = async (): Promise<ApiFile> => {
 		return await api.server.exportGostSchuelerLaufbahnplanung(api.schema, this.auswahl.id);
 	}
 

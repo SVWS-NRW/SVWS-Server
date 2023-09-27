@@ -137,10 +137,12 @@ public class CoreTranspiler {
 				isTypeOnly = true;
 			sbExports.append("export ");
 			if (isTypeOnly)
-				sbExports.append("type ");
-			sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
+					sbExports.append("type ");
+			if ("BaseApi".equals(classname))
+					sbExports.append("{ ").append(classname).append(", type ApiFile } from './").append(importName).append("';").append("\n");
+			else
+					sbExports.append("{ ").append(classname).append(" } from './").append(importName).append("';").append("\n");
 		}
-
 		try {
 			Files.writeString(Paths.get(typeScriptOutputDir + "/index.ts"), sbExports.toString(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 		} catch (@SuppressWarnings("unused") final IOException e) {

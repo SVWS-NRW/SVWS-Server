@@ -1,7 +1,7 @@
 export { ApiSchema } from './api/ApiSchema';
 export { ApiServer } from './api/ApiServer';
 export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';
-export { BaseApi } from './api/BaseApi';
+export { BaseApi, type ApiFile } from './api/BaseApi';
 export { OpenApiError } from './api/OpenApiError';
 export { Service } from './core/Service';
 export { AbschlussManager } from './core/abschluss/AbschlussManager';
