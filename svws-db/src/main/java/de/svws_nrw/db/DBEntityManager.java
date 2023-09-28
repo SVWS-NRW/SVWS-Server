@@ -883,7 +883,7 @@ public final class DBEntityManager implements AutoCloseable {
 		if (str == null)
 			return null;
 		if (config.getDBDriver() == DBDriver.SQLITE)
-			return "'" + str.replace("'", "''") + "'";
+			return "'" + str.replace("'", "''").replace("\0", "'||char(0)||'") + "'";
 		// else MariaDB / MYSQL ...
 		return "'" + str.replace("\\", "\\\\").replace("'", "\\'") + "'";
 	}
