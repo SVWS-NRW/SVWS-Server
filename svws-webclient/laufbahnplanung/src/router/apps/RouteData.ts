@@ -4,7 +4,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
-import type { GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
+import type { ApiFile, GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
 import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
 	GostLaufbahnplanungBeratungsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr,
 	LehrerListeEintrag,
@@ -382,13 +382,15 @@ export class RouteData {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	exportLaufbahnplanung = async (): Promise<Blob> => {
+	exportLaufbahnplanung = async (): Promise<ApiFile> => {
 		const json = GostLaufbahnplanungDaten.transpilerToJSON(await this.schreibeDaten());
 		const rawData = new Response(json).body;
 		if (rawData === null)
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
-		const compressedStream = await rawData.pipeThrough(new CompressionStream('gzip'))
-		return await new Response(compressedStream).blob();
+		const compressedStream = rawData.pipeThrough(new CompressionStream('gzip'))
+		const data = await new Response(compressedStream).blob();
+		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}-${this.auswahl.id}.lp`;
+		return { data, name };
 	}
 
 	importLaufbahnplanung = async (formData: FormData): Promise<boolean> => {

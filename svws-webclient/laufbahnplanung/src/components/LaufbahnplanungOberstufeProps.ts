@@ -1,10 +1,10 @@
 import type { GostSchuelerFachwahl, SchuelerListeEintrag, GostJahrgangsdaten, GostBelegpruefungErgebnis, AbiturdatenManager,
-	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten } from "@core";
+	GostLaufbahnplanungBeratungsdaten, LehrerListeEintrag, GostLaufbahnplanungDaten, ApiFile } from "@core";
 
 export interface LaufbahnplanungOberstufeProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
-	exportLaufbahnplanung: () => Promise<Blob>;
+	exportLaufbahnplanung: () => Promise<ApiFile>;
 	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
 	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;

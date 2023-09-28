@@ -88,11 +88,11 @@
 	}
 
 	async function export_laufbahnplanung() {
-		const gzip = await props.exportLaufbahnplanung();
+		const { data, name } = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
-		link.href = URL.createObjectURL(gzip);
-		link.download = "Laufbahnplanung_" + props.gostJahrgangsdaten.abiturjahr + "_" + props.gostJahrgangsdaten.jahrgang + "_"
-			+ props.schueler.nachname + "_" + props.schueler.vorname + "-" + props.schueler.id + ".lp";
+		console.log(data, name)
+		link.href = URL.createObjectURL(data);
+		link.download = name;
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
