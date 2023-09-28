@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import jakarta.ws.rs.core.MediaType;
@@ -13,6 +14,7 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.utils.OperationError;
 
@@ -81,12 +83,14 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 	 * @return eine Liste der Core-DTOs für die Beratungslehrer
 	 */
 	public static List<GostBeratungslehrer> getBeratungslehrer(final DBEntityManager conn, final List<DTOGostJahrgangBeratungslehrer> dtosBeratungslehrer) {
-		// TODO Query nur für Lehrer-IDs, die auch in der Liste der Beratungslehrer enthalten ist
-		final Map<Long, DTOLehrer> dtosLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		if ((dtosBeratungslehrer == null) || (dtosBeratungslehrer.isEmpty()))
+			return Collections.emptyList();
+		final List<Long> lehrerIDs = dtosBeratungslehrer.stream().map(l -> l.Lehrer_ID).toList();
+		final Map<Long, DTOLehrer> dtosLehrer = conn.queryNamed("DTOLehrer.id.multiple", lehrerIDs, DTOLehrer.class)
+				.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		final ArrayList<GostBeratungslehrer> result = new ArrayList<>();
-		if (dtosBeratungslehrer != null)
-			for (final DTOGostJahrgangBeratungslehrer dto : dtosBeratungslehrer)
-				result.add(getBeratungslehrer(dto, dtosLehrer.get(dto.Lehrer_ID)));
+		for (final DTOGostJahrgangBeratungslehrer dto : dtosBeratungslehrer)
+			result.add(getBeratungslehrer(dto, dtosLehrer.get(dto.Lehrer_ID)));
 		return result;
 	}
 
@@ -108,6 +112,54 @@ public final class DataGostBeratungslehrer extends DataManager<Long> {
 		result.nachname = lehrer.Nachname;
 		result.vorname = lehrer.Vorname;
 		return result;
+	}
+
+	/**
+	 * Fügt den Lehrer mit der angegebenen ID als Beratungslehrer hinzu.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return die HTTP-Response, im Erfolgsfall mit dem Beratungslehrer
+	 */
+	public Response add(final long idLehrer) {
+		final DTOGostJahrgangsdaten gostJahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+		if (gostJahrgangsdaten == null)
+			throw OperationError.NOT_FOUND.exception("Der Abiturjahrgang %d ist nicht vorhanden.".formatted(abijahr));
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
+		if (lehrer == null)
+			throw OperationError.NOT_FOUND.exception("Der Lehrer mit der ID %d ist nicht vorhanden.".formatted(idLehrer));
+		final DTOGostJahrgangBeratungslehrer beratungslehrer = conn.queryByKey(DTOGostJahrgangBeratungslehrer.class, abijahr, idLehrer);
+		if (beratungslehrer != null)
+			throw OperationError.NOT_FOUND.exception("Der Lehrer mit der ID %d ist bereits als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
+		final DTOGostJahrgangBeratungslehrer dto = new DTOGostJahrgangBeratungslehrer(abijahr, idLehrer);
+		conn.transactionPersist(dto);
+		conn.transactionFlush();
+		final var daten = getBeratungslehrer(dto, lehrer);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Erntfernt den Lehrer mit der angegebenen ID als Beratungslehrer.
+	 *
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @return die HTTP-Response, im Erfolgsfall mit dem Beratungslehrer
+	 */
+	public Response remove(final long idLehrer) {
+		final DTOGostJahrgangsdaten gostJahrgangsdaten = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
+		if (gostJahrgangsdaten == null)
+			throw OperationError.NOT_FOUND.exception("Der Abiturjahrgang %d ist nicht vorhanden.".formatted(abijahr));
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
+		if (lehrer == null)
+			throw OperationError.NOT_FOUND.exception("Der Lehrer mit der ID %d ist nicht vorhanden.".formatted(idLehrer));
+		final DTOGostJahrgangBeratungslehrer beratungslehrer = conn.queryByKey(DTOGostJahrgangBeratungslehrer.class, abijahr, idLehrer);
+		if (beratungslehrer == null)
+			throw OperationError.NOT_FOUND.exception("Der Lehrer mit der ID %d ist nicht als Beratungslehrer für den Abiturjahrgang %d eingetragen.".formatted(idLehrer, abijahr));
+		final var daten = getBeratungslehrer(beratungslehrer, lehrer);
+		conn.transactionRemove(beratungslehrer);
+		conn.transactionFlush();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 }

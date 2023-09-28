@@ -3,8 +3,6 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
-import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.api.OpenAPIApplication;
@@ -14,6 +12,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse;
+import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -42,6 +41,7 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostAbiturjahrgangFachwahlen;
+import de.svws_nrw.data.gost.DataGostBeratungslehrer;
 import de.svws_nrw.data.gost.DataGostBlockungKurs;
 import de.svws_nrw.data.gost.DataGostBlockungKursLehrer;
 import de.svws_nrw.data.gost.DataGostBlockungRegel;
@@ -61,6 +61,8 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
+import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
 import de.svws_nrw.module.pdf.gost.PDFGostWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -223,6 +225,70 @@ public class APIGost {
     			BenutzerKompetenz.ABITUR_AENDERN_FUNKTIONSBEZOGEN)) {
     		return (new DataGostJahrgangsdaten(conn)).patch(abiturjahr, is);
     	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines Beratungslehrers zu einem Abiturjahrgang.
+     *
+     * @param schema       das Datenbankschema
+     * @param abiturjahr   das Jahr, in welchem der Jahrgang Abitur machen wird
+     * @param idLehrer     die ID des Lehrers, der hinzugefügt werden soll
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Beratungslehrer
+     */
+    @POST
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/add")
+    @Operation(summary = "Fügt einen Lehrer als Beratungslehrer zu einem Abiturjahrgang der Gymnasialen Oberstufe hinzu.",
+               description = "Fügt einen Lehrer als Beratungslehrer zu einem Abiturjahrgang der Gymnasialen Oberstufe hinzu."
+    		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen eines Beratungslehrers hat.")
+    @ApiResponse(responseCode = "200", description = "Der hinzugefügte Beratungslehrer",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBeratungslehrer.class)))
+    @ApiResponse(responseCode = "400", description = "Der Lehrer ist bereits als Beratungslehrer eingetragen.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Beratungslehrer hinzuzufügen.")
+    @ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder der Lehrer ist nicht vorhanden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addGostAbiturjahrgangBeratungslehrer(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+            @RequestBody(description = "Die ID des Lehrers", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Long.class))) final long idLehrer,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGostBeratungslehrer(conn, abiturjahr).add(idLehrer),
+        		request, ServerMode.STABLE,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Erntfernen eines Beratungslehrers aus einem Abiturjahrgang.
+     *
+     * @param schema       das Datenbankschema
+     * @param abiturjahr   das Jahr, in welchem der Jahrgang Abitur machen wird
+     * @param idLehrer     die ID des Lehrers, der entfernt werden soll
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem entfernten Beratungslehrer
+     */
+    @POST
+    @Path("/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/remove")
+    @Operation(summary = "Entfernt einen Lehrer als Beratungslehrer aus einem Abiturjahrgang der Gymnasialen Oberstufe.",
+               description = "Entfernt einen Lehrer als Beratungslehrer aus einem Abiturjahrgang der Gymnasialen Oberstufe."
+    		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen eines Beratungslehrers hat.")
+    @ApiResponse(responseCode = "200", description = "Der entfernte Beratungslehrer",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = GostBeratungslehrer.class)))
+    @ApiResponse(responseCode = "400", description = "Der Lehrer ist nicht als Beratungslehrer eingetragen.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Beratungslehrer zu entfernen.")
+    @ApiResponse(responseCode = "404", description = "Der Abiturjahrgang oder der Lehrer ist nicht vorhanden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response removeGostAbiturjahrgangBeratungslehrer(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+            @RequestBody(description = "Die ID des Lehrers", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = Long.class))) final long idLehrer,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGostBeratungslehrer(conn, abiturjahr).remove(idLehrer),
+        		request, ServerMode.STABLE,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 

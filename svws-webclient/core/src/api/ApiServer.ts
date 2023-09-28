@@ -35,6 +35,7 @@ import { FoerderschwerpunktKatalogEintrag } from '../core/data/schule/Foerdersch
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostBelegpruefungsErgebnisse } from '../core/data/gost/GostBelegpruefungsErgebnisse';
+import { GostBeratungslehrer } from '../core/data/gost/GostBeratungslehrer';
 import { GostBlockungKurs } from '../core/data/gost/GostBlockungKurs';
 import { GostBlockungKursAufteilung } from '../core/data/gost/GostBlockungKursAufteilung';
 import { GostBlockungKursLehrer } from '../core/data/gost/GostBlockungKursLehrer';
@@ -2502,6 +2503,68 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<GostBelegpruefungsErgebnisse>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBelegpruefungsErgebnisse.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addGostAbiturjahrgangBeratungslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/beratungslehrer/add
+	 *
+	 * Fügt einen Lehrer als Beratungslehrer zu einem Abiturjahrgang der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Hinzufügen eines Beratungslehrers hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der hinzugefügte Beratungslehrer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBeratungslehrer
+	 *   Code 400: Der Lehrer ist bereits als Beratungslehrer eingetragen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Beratungslehrer hinzuzufügen.
+	 *   Code 404: Der Abiturjahrgang oder der Lehrer ist nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {number | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Der hinzugefügte Beratungslehrer
+	 */
+	public async addGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/add"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const body : string = JSON.stringify(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostBeratungslehrer.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode removeGostAbiturjahrgangBeratungslehrer für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}/beratungslehrer/remove
+	 *
+	 * Entfernt einen Lehrer als Beratungslehrer aus einem Abiturjahrgang der Gymnasialen Oberstufe.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen eines Beratungslehrers hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der entfernte Beratungslehrer
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostBeratungslehrer
+	 *   Code 400: Der Lehrer ist nicht als Beratungslehrer eingetragen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Beratungslehrer zu entfernen.
+	 *   Code 404: Der Abiturjahrgang oder der Lehrer ist nicht vorhanden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {number | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 *
+	 * @returns Der entfernte Beratungslehrer
+	 */
+	public async removeGostAbiturjahrgangBeratungslehrer(data : number | null, schema : string, abiturjahr : number) : Promise<GostBeratungslehrer> {
+		const path = "/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\\d+}/beratungslehrer/remove"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
+		const body : string = JSON.stringify(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostBeratungslehrer.transpilerFromJSON(text);
 	}
 
 
