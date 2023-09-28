@@ -400,6 +400,14 @@ public final class DBMigrationManager {
 				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
 				SVWSKonfiguration.get().removeSchema(tgtSchema);
 				throw e;
+			} catch (final Exception e) {
+				// Entferne das Schema aus der svwsconfig.json, damit es nicht mehr beim Start berücksichtigt wird.
+				// Entferne es aber nicht aus der SVWS-DB, damit eine Fehleranalyse noch möglich ist.
+				logger.logLn("-> Die Daten konnten nicht erfolgreich aus der Quelldatenbank übertragen werden. ");
+				logger.logLn("   Das Schema ist in einem inkonsisten Zustand und wird nicht beim Start angezeigt.");
+				logger.logLn("   Wenden Sie sich zum Beheben des Problems an den System-Administrator.");
+				SVWSKonfiguration.get().removeSchema(tgtSchema);
+				throw new DBException(e);
 			}
 
 			if (maxUpdateRevision != 0) {
@@ -442,7 +450,7 @@ public final class DBMigrationManager {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
 			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
 			logger.logLn("- Schulnummer: " + schule.SchulNr);
-			logger.logLn("- Schulform: " + schule.Schulform.daten.kuerzel);
+			logger.logLn("- Schulform: " + ((schule.Schulform == null) ? "???" : schule.Schulform.daten.kuerzel));
 			final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
 			final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.SchulNr)).findFirst().orElse(null);
 			if (dtoSchulver == null) {
