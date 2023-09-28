@@ -1,6 +1,5 @@
-import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag } from "@core";
-import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
-	AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException} from "@core";
+import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag, List } from "@core";
+import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException, GostBeratungslehrer } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 
@@ -56,6 +55,10 @@ export class RouteDataGostBeratung  {
 
 	get gostJahrgangsdaten(): GostJahrgangsdaten {
 		return this._state.value.gostJahrgangsdaten;
+	}
+
+	get beratungslehrer(): List<GostBeratungslehrer> {
+		return this._state.value.gostJahrgangsdaten.beratungslehrer;
 	}
 
 	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
@@ -165,6 +168,29 @@ export class RouteDataGostBeratung  {
 		const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, this.auswahl);
 		this._state.value.abiturdaten = abiturdaten;
 		await this.setGostBelegpruefungErgebnis();
+	}
+
+	addBeratungslehrer = async (id: number) => {
+		api.status.start();
+		const lehrer = new GostBeratungslehrer() //await api.server.addStundenplan(api.schema, api.abschnitt.id);
+		lehrer.kuerzel = this.mapLehrer.get(id)?.kuerzel || 'LEER';
+		this.gostJahrgangsdaten.beratungslehrer.add(lehrer)
+		this.setPatchedState({gostJahrgangsdaten: this._state.value.gostJahrgangsdaten});
+		api.status.stop();
+	}
+
+	removeBeratungslehrer = async (eintraege: GostBeratungslehrer[]) => {
+		api.status.start();
+		for (const eintrag of eintraege) {
+			//await api.server.deleteStundenplan(api.schema, eintrag.id);
+			for (let i = 0; i < this.gostJahrgangsdaten.beratungslehrer.size() ; i++) {
+				const b = this.gostJahrgangsdaten.beratungslehrer.get(i);
+				if (b.id === eintrag.id)
+					this.gostJahrgangsdaten.beratungslehrer.removeElementAt(i);
+			 }
+		}
+		this.setPatchedState({gostJahrgangsdaten: this._state.value.gostJahrgangsdaten});
+		api.status.stop();
 	}
 
 }

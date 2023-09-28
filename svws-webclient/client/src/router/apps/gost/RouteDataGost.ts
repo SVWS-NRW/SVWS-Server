@@ -218,7 +218,6 @@ export class RouteDataGost {
 		return true;
 	}
 
-
 	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>) : Promise<Partial<RouteDataGost>> {
 		if (jahrgang && jahrgang.abiturjahr === curState.auswahl?.abiturjahr && curState.jahrgangsdaten !== undefined)
 			return curState;
@@ -244,7 +243,6 @@ export class RouteDataGost {
 		});
 	}
 
-
 	setAbiturjahrgang = async (jahrgang: GostJahrgang | undefined) => {
 		const daten = await this.ladeDatenFuerAbiturjahrgang(jahrgang, this._state.value);
 		this.setPatchedDefaultState(daten);
@@ -259,7 +257,6 @@ export class RouteDataGost {
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostBeratung.name : routeGost.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { abiturjahr: value.abiturjahr } });
 	}
-
 
 	private getAbiturjahrFuerJahrgangMitMap(idJahrgang : number, mapJahrgaenge : Map<number, JahrgangsListeEintrag>) : number | null {
 		const jahrgang = mapJahrgaenge.get(idJahrgang);

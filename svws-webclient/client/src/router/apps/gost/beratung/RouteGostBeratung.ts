@@ -52,6 +52,9 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			mapLehrer: this.data.mapLehrer,
 			id: this.data.id,
 			resetFachwahlen: this.data.resetFachwahlen,
+			beratungslehrer: () => this.data.beratungslehrer,
+			addBeratungslehrer: this.data.addBeratungslehrer,
+			removeBeratungslehrer: this.data.removeBeratungslehrer,
 		};
 	}
 

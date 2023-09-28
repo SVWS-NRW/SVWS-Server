@@ -721,7 +721,7 @@ export class RouteDataGostKursplanung {
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
 		try {
 			api.status.start();
-			return await api.server.getGostBlockungPDFKursSchienenZuordnung(new ArrayList<number>(), api.schema, this.ergebnismanager.getErgebnis().id);
+			return await api.server.getGostBlockungPDFKurseSchienenZuordnung(new ArrayList<number>(), api.schema, this.ergebnismanager.getErgebnis().id);
 		} catch(e) {
 			throw new DeveloperNotificationException("Fehler beim Herunterladen der Kurs-Schienen-Zuordnung");
 		} finally {

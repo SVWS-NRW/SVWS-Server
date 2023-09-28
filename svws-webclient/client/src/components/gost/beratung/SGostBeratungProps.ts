@@ -1,4 +1,4 @@
-import type { AbiturdatenManager, GostBelegpruefungErgebnis, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag } from "@core";
+import type { AbiturdatenManager, GostBelegpruefungErgebnis, GostBeratungslehrer, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag, List } from "@core";
 
 export interface GostBeratungProps {
 	patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
@@ -11,4 +11,7 @@ export interface GostBeratungProps {
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
 	resetFachwahlen: () => Promise<void>;
+	beratungslehrer: () => List<GostBeratungslehrer>;
+	addBeratungslehrer: (id: number) => Promise<void>;
+	removeBeratungslehrer: (lehrer: GostBeratungslehrer[]) => Promise<void>;
 }

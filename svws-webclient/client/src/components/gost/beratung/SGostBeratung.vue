@@ -21,8 +21,18 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
 				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
-			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="opacity-50">
-				<span>Hier kommen die Beratungslehrer hin.</span>
+			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
+				<svws-ui-table :items="beratungslehrer()" selectable :model-value="selected" @update:model-value="selected=$event" count :columns="cols">
+					<template #cell(kuerzel)="{ rowData:l }">
+						{{ `${l.nachname}, ${l.vorname} (${l.kuerzel})` }}
+					</template>
+					<template #actions>
+						<svws-ui-button @click="removeBeratungslehrer(selected)" type="trash" :disabled="!selected.length" />
+						<!-- TODO: Hier kommt das Dropdown hin -->
+						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => addLehrer(lehrer || undefined)" headless
+							autocomplete :item-filter="lehrer_filter" :items="lehrer" removable :item-text="l=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
+					</template>
+				</svws-ui-table>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Textvorlagen">
 				<svws-ui-input-wrapper>
@@ -38,23 +48,40 @@
 
 <script setup lang="ts">
 
-	import { onMounted, computed, ref, type ComputedRef } from "vue";
 	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import { type GostJahrgangsdaten } from "@core";
+	import type { GostBeratungslehrer, LehrerListeEintrag, GostJahrgangsdaten } from "@core";
+	import { onMounted, computed, ref } from "vue";
+	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<GostBeratungProps>();
 
-	const istAbiturjahrgang: ComputedRef<boolean> = computed(() => (props.jahrgangsdaten().abiturjahr > 0));
+	const selected = ref<GostBeratungslehrer[]>([]);
+
+	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
 
 	const istManuellerModus = ref(false)
 	function switchManuellerModus() {
 		istManuellerModus.value = !istManuellerModus.value;
 	}
 
+	const lehrer = computed<Map<number, LehrerListeEintrag>>(() => {
+		const map = new Map<number, LehrerListeEintrag>(props.mapLehrer);
+		for (const l of props.beratungslehrer())
+			map.delete(l.id);
+		return map;
+	})
+
+	const cols = [{key: 'kuerzel', label: 'Name'}];
+
+	async function addLehrer(lehrer?: LehrerListeEintrag) {
+		if (lehrer === undefined)
+			return;
+		await props.addBeratungslehrer(lehrer.id);
+	}
+
 	async function doPatch(data: Partial<GostJahrgangsdaten>) {
 		return await props.patchJahrgangsdaten(data, props.jahrgangsdaten().abiturjahr);
 	}
-
 	// Check if component is mounted
 	const isMounted = ref(false);
 	onMounted(() => {
