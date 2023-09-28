@@ -35,6 +35,11 @@ public class Main {
      * @throws Exception   gibt in einem unerwarteten Fehlerfall eine Exception zurück.
      */
 	public static void main(final String[] args) throws Exception {
+		// Setze das Default-Encoding auf UTF-8
+		System.setProperty("file.encoding", "UTF-8");
+		System.setProperty("stdout.encoding", "UTF-8");
+		System.setProperty("stderr.encoding", "UTF-8");
+
 		// Der Logger zur Ausgabe der Informationen beim Serverstart
 		final Logger logger = new Logger();
 		logger.addConsumer(new LogConsumerConsole(false, false));
