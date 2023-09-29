@@ -2205,6 +2205,7 @@ public class APIGost {
     		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines "
     		    + "Blockungsergebnisses besitzt.")
     @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich synchronisiert.")
+    @ApiResponse(responseCode = "400", description = "Das Ergebnis ist einem vergangenem Schuljahresabschnitt zugeordnet. Eine Synchronisation wird hier nicht mehr zugelassen.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis mit den Leristungsdaten zu synchronisieren.")
     @ApiResponse(responseCode = "404", description = "Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu synchronisieren")
     @ApiResponse(responseCode = "409", description = "Es sind noch keinerlei Leistungsdaten für eine Synchronisation in dem Schuljahresabschnitt bei den Schülern vorhanden. Verwenden Sie stattdessen das Aktivieren eines Ergebnisses.")
