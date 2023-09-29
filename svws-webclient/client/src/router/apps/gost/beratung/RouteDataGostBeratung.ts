@@ -1,5 +1,5 @@
 import type { Abiturdaten, GostSchuelerFachwahl, LehrerListeEintrag, List , GostBeratungslehrer } from "@core";
-import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException } from "@core";
+import { GostBelegpruefungErgebnis, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, AbiturdatenManager, GostBelegpruefungsArt, BenutzerTyp, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 
@@ -58,7 +58,7 @@ export class RouteDataGostBeratung  {
 	}
 
 	get beratungslehrer(): List<GostBeratungslehrer> {
-		return this._state.value.gostJahrgangsdaten.beratungslehrer;
+		return new ArrayList(this._state.value.gostJahrgangsdaten.beratungslehrer);
 	}
 
 	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
@@ -172,8 +172,8 @@ export class RouteDataGostBeratung  {
 
 	addBeratungslehrer = async (id: number) => {
 		api.status.start();
-		const lehrer = await api.server.addGostAbiturjahrgangBeratungslehrer(id, api.schema, this.gostJahrgangsdaten.abiturjahr)
-		this.gostJahrgangsdaten.beratungslehrer.add(lehrer)
+		const lehrer = await api.server.addGostAbiturjahrgangBeratungslehrer(id, api.schema, this.gostJahrgangsdaten.abiturjahr);
+		this._state.value.gostJahrgangsdaten.beratungslehrer.add(lehrer);
 		this.setPatchedState({gostJahrgangsdaten: this._state.value.gostJahrgangsdaten});
 		api.status.stop();
 	}
