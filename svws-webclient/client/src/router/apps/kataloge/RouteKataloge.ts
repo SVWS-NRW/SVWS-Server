@@ -16,7 +16,7 @@ import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatal
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
+import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteDataKatalogZeitraster";
 import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 
 import { RouteDataKataloge } from "~/router/apps/kataloge/RouteDataKataloge";

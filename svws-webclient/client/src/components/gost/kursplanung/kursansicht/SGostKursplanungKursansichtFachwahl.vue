@@ -54,7 +54,7 @@
 				</div>
 				<div role="cell" class="svws-ui-td">
 					<template v-if="allowRegeln">
-						<svws-ui-select :model-value="kurslehrer(kurs).value" @update:model-value="(lehrer: LehrerListeEintrag | undefined) => setKurslehrer(kurs, lehrer)" autocomplete :item-filter="lehrer_filter" removable headless
+						<svws-ui-select :model-value="kurslehrer(kurs).value" @update:model-value="lehrer => setKurslehrer(kurs, lehrer ?? undefined)" autocomplete :item-filter="lehrer_filter" removable headless
 							:items="mapLehrer" :item-text="l=> l.kuerzel" title="Lehrkraft" />
 					</template>
 					<template v-else>

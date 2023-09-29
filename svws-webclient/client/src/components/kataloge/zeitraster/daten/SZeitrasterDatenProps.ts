@@ -1,8 +1,8 @@
-import type { List, StundenplanZeitraster } from "@core";
+import type { StundenplanManager, StundenplanZeitraster, Wochentag } from "@core";
 
 export interface ZeitrasterDatenProps {
-	listKatalogeintraege: () => List<StundenplanZeitraster>;
-	patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
-	addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
+	stundenplanManager: () => StundenplanManager;
+	patchZeitraster: (daten: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
+	addZeitraster: (wochentag: Wochentag | undefined, stunde: number | undefined) => Promise<void>;
 	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
 }

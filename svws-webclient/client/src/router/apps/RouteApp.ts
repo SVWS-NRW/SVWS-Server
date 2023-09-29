@@ -23,7 +23,7 @@ import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerders
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
+import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteDataKatalogZeitraster";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";

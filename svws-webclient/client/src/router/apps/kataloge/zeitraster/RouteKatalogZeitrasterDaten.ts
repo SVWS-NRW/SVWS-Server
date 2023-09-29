@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogZeitraster, type RouteKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
+import { routeKatalogZeitraster, type RouteKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteDataKatalogZeitraster";
 
 import type { ZeitrasterDatenProps } from "~/components/kataloge/zeitraster/daten/SZeitrasterDatenProps";
 
@@ -23,7 +23,7 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalog
 
 	public getProps(to: RouteLocationNormalized): ZeitrasterDatenProps {
 		return {
-			listKatalogeintraege: () => routeKatalogZeitraster.data.listKatalogeintraege,
+			stundenplanManager: () => routeKatalogZeitraster.data.stundenplanManager,
 			patchZeitraster: routeKatalogZeitraster.data.patchZeitraster,
 			addZeitraster: routeKatalogZeitraster.data.addZeitraster,
 			removeZeitraster: routeKatalogZeitraster.data.removeZeitraster,
