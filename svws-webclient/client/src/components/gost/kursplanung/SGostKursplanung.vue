@@ -14,7 +14,7 @@
 						<span class="pr-1">Regeln zur Blockung</span>
 						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 					</svws-ui-button>
-					<s-card-gost-kursansicht-blockung-aktivieren-modal :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="aktivieren_moeglich">
 							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
 						</template>
@@ -29,7 +29,7 @@
 							</svws-ui-tooltip>
 						</template>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
-					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="synchronisieren_moeglich">
 							<svws-ui-button type="transparent" size="small" @click="openModal()">Synchronisieren</svws-ui-button>
 						</template>
@@ -37,7 +37,7 @@
 							<svws-ui-tooltip>
 								<svws-ui-button disabled type="transparent" size="small">Synchronisieren</svws-ui-button>
 								<template #content>
-									<span>Nur bereits aktivierte und persistierte Blockungen können synchronisiert werden</span>
+									<span>Nur aktuelle und zukünftige, bereits aktivierte und persistierte Blockungen können synchronisiert werden</span>
 								</template>
 							</svws-ui-tooltip>
 						</template>
@@ -110,24 +110,18 @@
 
 	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
 
-	const aktivieren_moeglich = computed<boolean>(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
-
-	const synchronisieren_moeglich = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
-
-	function onToggle() {
-		collapsed.value = !collapsed.value;
-	}
+	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id+1]);
+	const persistiert = computed<boolean>(()=> props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id])
+	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value);
+	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
 
 	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
+	onMounted(() => isMounted.value = true);
 
 	const blockungstabelleVisible = ref(true);
 
-	const toggleBlockungstabelle = () => {
-		blockungstabelleVisible.value = !blockungstabelleVisible.value;
-	}
+	const onToggle = () => collapsed.value = !collapsed.value;
+	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
 
 	async function downloadPDFKursSchienenZuordnung() {
 		const { data, name } = await props.getPDFKursSchienenZuordnung();
