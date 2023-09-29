@@ -4136,6 +4136,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode syncGostBlockungsergebnis für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \d+}/synchronize
+	 *
+	 * Synchronisiert das Blockungsergebnis mit den Kursen und den Leistungsdaten. Dies ist nur erlaubt, wenn Leistungsdatenin der DB vorliegen. Beim Synchronisieren werden die Kursliste und die Leistungsdaten der Schüler angepasst. Es werden jedoch keine Kurse entfernt und es werden keine Fachwahlen bei Schülern ergänzt.Dies muss ggf. manuell erfolgen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines Blockungsergebnisses besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Zuordnung wurde erfolgreich synchronisiert.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis mit den Leristungsdaten zu synchronisieren.
+	 *   Code 404: Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu synchronisieren
+	 *   Code 409: Es sind noch keinerlei Leistungsdaten für eine Synchronisation in dem Schuljahresabschnitt bei den Schülern vorhanden. Verwenden Sie stattdessen das Aktivieren eines Ergebnisses.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} ergebnisid - der Pfad-Parameter ergebnisid
+	 */
+	public async syncGostBlockungsergebnis(schema : string, ergebnisid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/synchronize"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{ergebnisid\s*(:[^}]+)?}/g, ergebnisid.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der PATCH-Methode patchGostFachkombination für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/fachkombination/{id : \d+}
 	 *
 	 * Passt die Fachkombination mit der angegebenen ID an.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anpassen von Fachkombinationen besitzt.

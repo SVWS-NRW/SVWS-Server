@@ -2186,6 +2186,40 @@ public class APIGost {
     }
 
 
+	/**
+     * Die OpenAPI-Methode für das Synchronisieren eines Blockungsergebnisses
+     * der gymnasialen Oberstufe mit den Daten in der Kursliste und den
+     * Leistungsdaten von Schülern des Abiturjahrgangs.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des zu synchronisierenden Blockungsergebnisses
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort
+     */
+    @POST
+    @Path("/blockungen/zwischenergebnisse/{ergebnisid : \\d+}/synchronize")
+    @Operation(summary = "Synchronisiert das Blockungsergebnis mit den Kursen und den Leistungsdaten.",
+    description = "Synchronisiert das Blockungsergebnis mit den Kursen und den Leistungsdaten. Dies ist nur erlaubt, wenn Leistungsdaten"
+    		    + "in der DB vorliegen. Beim Synchronisieren werden die Kursliste und die Leistungsdaten der "
+    		    + "Schüler angepasst. Es werden jedoch keine Kurse entfernt und es werden keine Fachwahlen bei Schülern ergänzt."
+    		    + "Dies muss ggf. manuell erfolgen."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Aktivieren eines "
+    		    + "Blockungsergebnisses besitzt.")
+    @ApiResponse(responseCode = "204", description = "Die Zuordnung wurde erfolgreich synchronisiert.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis mit den Leristungsdaten zu synchronisieren.")
+    @ApiResponse(responseCode = "404", description = "Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu synchronisieren")
+    @ApiResponse(responseCode = "409", description = "Es sind noch keinerlei Leistungsdaten für eine Synchronisation in dem Schuljahresabschnitt bei den Schülern vorhanden. Verwenden Sie stattdessen das Aktivieren eines Ergebnisses.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response syncGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
+    		return (new DataGostBlockungsergebnisse(conn)).synchronisiere(id);
+    	}
+    }
+
+
     /**
      * Die OpenAPI-Methode für das Löschen von Blockungsergebnissen einer Blockung der gymnasialen Oberstufe.
      *

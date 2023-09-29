@@ -749,4 +749,23 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	    }
     }
 
+
+    /**
+     * Synchronisiert das Blockungsergebnis mit den Daten in der Kursliste und in den Leistungsdaten der
+     * Schüler des Abiturjahrgangs. Dabei werden
+     * <ul>
+     *   <li> ggf. neue Kurse angelegt </li>
+     *   <li> keine (!) leeren Kurse entfernt </li>
+     *   <li> die Kurs-Schüler-Zuordnungen bei vorhanden (!) Leistungsdaten zu einem Fach auf
+     *     die Zuordnungen der Blockungsdaten angepasst </li>
+     * </ul>
+     *
+     * @param idErgebnis   das zu persistierende Blockungsergebnis
+     *
+     * @return die HTTP-Response, welchen den Erfolg der Operation angibt
+     */
+    public Response synchronisiere(final Long idErgebnis) {
+    	throw new UnsupportedOperationException("Die Funktion wird zur Zeit noch nicht unterstützt.");
+    }
+
 }
