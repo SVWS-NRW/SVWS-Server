@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@core";
+import type { FaecherListeEintrag, LehrerListeEintrag, KursListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,6 +12,7 @@ interface RouteStateSchuelerLeistungenDaten {
 	daten: SchuelerLernabschnittsdaten | undefined;
 	mapFaecher: Map<number, FaecherListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	mapKurse: Map<number, KursListeEintrag>;
 }
 
 export class RouteDataSchuelerLeistungenDaten {
@@ -21,6 +22,7 @@ export class RouteDataSchuelerLeistungenDaten {
 		daten: undefined,
 		mapFaecher: new Map(),
 		mapLehrer: new Map(),
+		mapKurse: new Map(),
 	}
 
 	private _state = shallowRef(RouteDataSchuelerLeistungenDaten._defaultState);
@@ -56,6 +58,10 @@ export class RouteDataSchuelerLeistungenDaten {
 		return this._state.value.mapLehrer;
 	}
 
+	get mapKurse(): Map<number, KursListeEintrag> {
+		return this._state.value.mapKurse;
+	}
+
 	public async ladeListe() {
 		const listFaecher = await	api.server.getFaecher(api.schema);
 		const mapFaecher = new Map<number, FaecherListeEintrag>();
@@ -72,7 +78,11 @@ export class RouteDataSchuelerLeistungenDaten {
 		if (lernabschnitt === undefined)
 			return;
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, lernabschnitt.id);
-		this.setPatchedState({ auswahl: lernabschnitt, daten });
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, lernabschnitt.schuljahresabschnitt);
+		const mapKurse = new Map<number, KursListeEintrag>();
+		for (const k of listKurse)
+			mapKurse.set(k.id, k);
+		this.setPatchedState({ auswahl: lernabschnitt, daten, mapKurse });
 	}
 
 	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {

@@ -4,6 +4,9 @@
 			<template #cell(fachID)="{rowData}">
 				<s-schueler-leistung-fach :fach="rowData.fachID" :map-faecher="mapFaecher" />
 			</template>
+			<template #cell(kursID)="{rowData}">
+				<s-schueler-leistung-kurs :kurs="rowData.kursID" :map-kurse="mapKurse" />
+			</template>
 			<template #cell(lehrerID)="{rowData}">
 				<s-schueler-leistung-fachlehrer :fachlehrer="rowData.lehrerID" :map-lehrer="props.mapLehrer" />
 			</template>
@@ -22,6 +25,7 @@
 
 	const cols = [
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: true, minWidth: 14 },
+		{ key: "kursID", label: "Kurs", span: 0.75, sortable: true, minWidth: 14 },
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true, minWidth: 20 },
 		{ key: "note", label: "Note", span: 0.25, sortable: true },
 	];

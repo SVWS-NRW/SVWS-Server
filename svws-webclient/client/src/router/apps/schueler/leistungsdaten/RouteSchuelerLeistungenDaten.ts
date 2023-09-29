@@ -63,6 +63,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 			data: this.data.daten,
 			mapFaecher: this.data.mapFaecher,
 			mapLehrer: this.data.mapLehrer,
+			mapKurse: this.data.mapKurse,
 			patchLeistung: this.data.patchLeistung
 		};
 	}
