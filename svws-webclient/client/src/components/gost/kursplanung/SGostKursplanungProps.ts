@@ -23,6 +23,7 @@ export interface GostKursplanungProps {
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
+	ergebnisSynchronisieren: () => Promise<void>;
 	getPDFKursSchienenZuordnung: () => Promise<ApiFile>;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;

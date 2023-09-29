@@ -29,6 +29,19 @@
 							</svws-ui-tooltip>
 						</template>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
+					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+						<template v-if="synchronisieren_moeglich">
+							<svws-ui-button type="transparent" size="small" @click="openModal()">Synchronisieren</svws-ui-button>
+						</template>
+						<template v-else>
+							<svws-ui-tooltip>
+								<svws-ui-button disabled type="transparent" size="small">Synchronisieren</svws-ui-button>
+								<template #content>
+									<span>Nur bereits aktivierte und persistierte Blockungen können synchronisiert werden</span>
+								</template>
+							</svws-ui-tooltip>
+						</template>
+					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()">Ergebnis hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
@@ -98,6 +111,8 @@
 	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
 
 	const aktivieren_moeglich = computed<boolean>(() => props.existiertSchuljahresabschnitt && !bereits_aktiv.value);
+
+	const synchronisieren_moeglich = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
 
 	function onToggle() {
 		collapsed.value = !collapsed.value;

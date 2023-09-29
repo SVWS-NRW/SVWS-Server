@@ -261,7 +261,7 @@ export class RouteDataGostKursplanung {
 
 	public setAuswahlErgebnis = async (value: GostBlockungsergebnisListeneintrag | undefined) => {
 		if (this._state.value.abiturjahr === undefined)
-			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
+			throw new Error("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if ((this._state.value.auswahlErgebnis?.id === value?.id) && (this._state.value.ergebnismanager !== undefined))
 			return;
 		if (value === undefined) {
@@ -701,6 +701,12 @@ export class RouteDataGostKursplanung {
 		this.ergebnismanager.getErgebnis().istVorlage = true;
 		this.auswahlErgebnis.istVorlage = true;
 		return true;
+	}
+
+	ergebnisSynchronisieren = async (): Promise<void> => {
+		if ((!this.hatBlockung && !this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id]) || (this._state.value.auswahlErgebnis === undefined))
+			return;
+		await api.server.syncGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
 	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
