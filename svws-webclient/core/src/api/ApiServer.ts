@@ -4142,6 +4142,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 204: Die Zuordnung wurde erfolgreich synchronisiert.
+	 *   Code 400: Das Ergebnis ist einem vergangenem Schuljahresabschnitt zugeordnet. Eine Synchronisation wird hier nicht mehr zugelassen.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Blockungsergebnis mit den Leristungsdaten zu synchronisieren.
 	 *   Code 404: Keine oder nicht alle Daten zu dem Ergebnis gefunden, um dieses zu synchronisieren
 	 *   Code 409: Es sind noch keinerlei Leistungsdaten für eine Synchronisation in dem Schuljahresabschnitt bei den Schülern vorhanden. Verwenden Sie stattdessen das Aktivieren eines Ergebnisses.
