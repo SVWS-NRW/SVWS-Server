@@ -58,7 +58,6 @@
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
-				:jahrgangsdaten="jahrgangsdaten"
 				:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 				:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
@@ -108,10 +107,10 @@
 
 	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
 
-	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id]);
+	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
 
-	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id+1]);
-	const persistiert = computed<boolean>(()=> props.jahrgangsdaten.istBlockungFestgelegt[props.halbjahr.id])
+	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id+1]);
+	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value);
 	const synchronisieren_moeglich = computed<boolean>(()=> !vergangenheit.value && persistiert.value);
 

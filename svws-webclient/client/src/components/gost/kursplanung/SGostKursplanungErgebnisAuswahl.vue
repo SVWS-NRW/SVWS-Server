@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, GostJahrgangsdaten, List } from "@core";
+	import type { GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List } from "@core";
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import { ref } from 'vue';
 
@@ -67,7 +67,6 @@
 		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
 	}>();

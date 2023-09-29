@@ -58,16 +58,17 @@
 	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3">
 		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status="apiStatus" />
 	</div>
-	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :jahrgangsdaten="jahrgangsdaten" :halbjahr="halbjahr" :api-status="apiStatus"
+	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
 		:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 </template>
 
 <script setup lang="ts">
 
+	import type { GostBlockungListeneintrag, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostHalbjahr, List } from "@core";
 	import type { ComputedRef, Ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
-	import { ArrayList, BlockungsUtils, type GostBlockungListeneintrag, type GostBlockungsdaten, type GostBlockungsdatenManager, type GostBlockungsergebnisListeneintrag, type GostHalbjahr, type GostJahrgangsdaten, type List } from "@core";
+	import { ArrayList, BlockungsUtils } from "@core";
 	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
@@ -76,7 +77,6 @@
 		setAuswahlBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
 		auswahlBlockung: GostBlockungListeneintrag | undefined;
 		mapBlockungen: () => Map<number, GostBlockungListeneintrag>;
-		jahrgangsdaten: GostJahrgangsdaten | undefined;
 		halbjahr: GostHalbjahr;
 		apiStatus: ApiStatus;
 		// ... zusätzlich für die Ergebnisauswahl

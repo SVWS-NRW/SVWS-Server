@@ -1,6 +1,6 @@
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile } from "@core";
-import type { Config } from "~/components/Config";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+import type { Config } from "~/components/Config";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
@@ -25,9 +25,9 @@ export interface GostKursplanungProps {
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
 	getPDFKursSchienenZuordnung: () => Promise<ApiFile>;
+	jahrgangsdaten: () => GostJahrgangsdaten;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;
-	jahrgangsdaten: GostJahrgangsdaten;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
 	schuelerFilter: GostKursplanungSchuelerFilter | undefined;

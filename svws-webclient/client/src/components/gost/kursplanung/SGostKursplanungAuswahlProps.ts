@@ -4,7 +4,7 @@ import type { ApiStatus } from "~/components/ApiStatus";
 export interface GostKursplanungAuswahlProps {
 	setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 	halbjahr: GostHalbjahr;
-	jahrgangsdaten: GostJahrgangsdaten | undefined;
+	jahrgangsdaten: () => GostJahrgangsdaten | undefined;
 	// ... zusätzlich für die Blockungsauswahl
 	patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 	addBlockung: () => Promise<void>;

@@ -1,4 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
+import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
 import { BenutzerKompetenz, GostHalbjahr, Schulform, ServerMode } from "@core";
 
@@ -12,9 +14,6 @@ import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/Rou
 import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 
 import { ConfigElement } from "~/components/Config";
-import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/SGostKursplanungAuswahlProps";
-import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
-
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -180,7 +179,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		return {
 			// Für die Halbjahresauswahl
 			setHalbjahr: this.data.gotoHalbjahr,
-			jahrgangsdaten: this.data.jahrgangsdaten,
+			jahrgangsdaten: () => this.data.jahrgangsdaten,
 			halbjahr: this.data.halbjahr,
 			// ... und zusätzlich für die Blockungsauswahl
 			addBlockung: this.data.addBlockung,
@@ -206,7 +205,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public getProps(to: RouteLocationNormalized): GostKursplanungProps {
 		return {
 			config: api.config,
-			jahrgangsdaten: this.data.jahrgangsdaten,
+			jahrgangsdaten: () => this.data.jahrgangsdaten,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,
 			hatErgebnis: this.data.hatErgebnis,

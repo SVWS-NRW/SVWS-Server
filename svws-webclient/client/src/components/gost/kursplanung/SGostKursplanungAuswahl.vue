@@ -11,7 +11,7 @@
 				</div>
 			</template>
 		</svws-ui-table>
-		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :jahrgangsdaten="jahrgangsdaten" :remove-blockung="removeBlockung"
+		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
 			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
@@ -38,9 +38,8 @@
 	const props = defineProps<GostKursplanungAuswahlProps>();
 
 	const istBlockungPersistiert = (row: GostHalbjahr): boolean => {
-		if (props.jahrgangsdaten === undefined)
-			return true;
-		return props.jahrgangsdaten.istBlockungFestgelegt[row.id];
+		const festgelegt = props.jahrgangsdaten()?.istBlockungFestgelegt[row.id];
+		return festgelegt === true;
 	}
 
 	async function select_hj(halbjahr: GostHalbjahr | null) {
@@ -49,13 +48,15 @@
 	}
 
 	async function blockung_hinzufuegen() {
-		if (props.jahrgangsdaten?.abiturjahr === undefined)
+		if (props.jahrgangsdaten()?.abiturjahr === undefined)
 			return;
 		await props.addBlockung();
 	}
 
-	const visible = computed<boolean>(() =>
-		(props.jahrgangsdaten !== undefined) && (props.jahrgangsdaten.abiturjahr > 0));
+	const visible = computed<boolean>(() => {
+		const res = props.jahrgangsdaten()?.abiturjahr;
+		return (res && res > 0) ? true : false;
+	})
 
 </script>
 

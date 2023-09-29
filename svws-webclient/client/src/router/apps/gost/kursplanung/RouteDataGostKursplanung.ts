@@ -1,14 +1,14 @@
-import { shallowRef } from "vue";
 
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
+import type { ApiPendingData } from "~/components/ApiStatus";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
+import { shallowRef } from "vue";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
-import type { ApiPendingData } from "~/components/ApiStatus";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
 
 interface RouteStateGostKursplanung {
@@ -694,19 +694,24 @@ export class RouteDataGostKursplanung {
 	ergebnisAktivieren = async (): Promise<boolean> => {
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return false;
+		api.status.start();
 		await api.server.activateGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
 		this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id] = true;
 		this.auswahlBlockung.istAktiv = true;
 		this.datenmanager.daten().istAktiv = true;
 		this.ergebnismanager.getErgebnis().istVorlage = true;
 		this.auswahlErgebnis.istVorlage = true;
+		this.commit();
+		api.status.stop();
 		return true;
 	}
 
 	ergebnisSynchronisieren = async (): Promise<void> => {
 		if ((!this.hatBlockung && !this.jahrgangsdaten.istBlockungFestgelegt[this.halbjahr.id]) || (this._state.value.auswahlErgebnis === undefined))
 			return;
+		api.status.start();
 		await api.server.syncGostBlockungsergebnis(api.schema, this.auswahlErgebnis.id);
+		api.status.stop();
 	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
@@ -726,12 +731,9 @@ export class RouteDataGostKursplanung {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
 		try {
-			api.status.start();
 			return await api.server.getGostBlockungPDFKurseSchienenZuordnung(new ArrayList<number>(), api.schema, this.ergebnismanager.getErgebnis().id);
 		} catch(e) {
 			throw new DeveloperNotificationException("Fehler beim Herunterladen der Kurs-Schienen-Zuordnung");
-		} finally {
-			api.status.stop();
 		}
 	}
 
