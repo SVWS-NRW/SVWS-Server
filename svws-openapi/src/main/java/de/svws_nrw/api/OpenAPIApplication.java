@@ -317,7 +317,7 @@ public final class OpenAPIApplication extends Application {
 			} catch (final Exception e) {
 				if (e instanceof final WebApplicationException webAppException)
 					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+				return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
 			} finally {
 				// Perform a rollback if necessary
 				conn.transactionRollbackOrThrow();

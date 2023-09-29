@@ -41,7 +41,6 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
@@ -493,193 +492,187 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @param halbjahr          das Halbjahr der gymnasialen Oberstufe
      */
     private void aktiviere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr) {
-        try {
-            conn.transactionBegin();
-	    	// Bestimme die ID des Jahrgangs
-	    	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
-	    	if (jahrgangsliste.isEmpty())
-	    		throw OperationError.NOT_FOUND.exception();
-	    	if (jahrgangsliste.size() > 1)
-	    		throw OperationError.CONFLICT.exception();
-	    	final DTOJahrgang jahrgang = jahrgangsliste.get(0);
-			// Bestimme die ID, mit welche der nächste Kurs eingefügt wird
-			final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Kurse.name());
-			long idKurs = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
-	    	// Durchwandere alle Kurse der Blockung und lege diese an, merke dabei auch die Zuordnung der neuen Kurs-IDs zu den Kurs-IDs der Blockung
-			final HashMap<Long, Long> mapKursIDs = new HashMap<>();
-			final HashMap<Long, DTOKurs> mapKursDTOs = new HashMap<>();
-	    	final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
-	    	for (final GostBlockungKurs kurs : datenManager.daten().kurse) {
-	    		final long id = idKurs++;
-	    		mapKursIDs.put(kurs.id, id);
-	    		// Bestimme die Kurslehrer, sofern bereits festgelegt
-	    		DTOGostBlockungKurslehrer kurslehrer = null;
-	    		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", kurs.id, DTOGostBlockungKurslehrer.class);
-	    		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
-	    		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
-	    			if (dtoKurslehrer.Reihenfolge == 1) {
-	    				kurslehrer = dtoKurslehrer;
-	    			} else {
-	    				final DTOKursLehrer kl = new DTOKursLehrer(id, dtoKurslehrer.Lehrer_ID);
-	    				kl.Anteil = (double) dtoKurslehrer.Wochenstunden;
-	    				kursLehrerZusatzkraefte.add(kl);
-	    			}
-	    		}
-	    		final DTOKurs dto = new DTOKurs(id, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id);
-	    		dto.Jahrgang_ID = jahrgang.ID;
-	    		dto.ASDJahrgang = halbjahr.jahrgang;
-	    		dto.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
-	    		dto.WochenStd = kurs.wochenstunden;
-	    		dto.Lehrer_ID = kurslehrer == null ? null : kurslehrer.Lehrer_ID;
-	    		final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
-	    		dto.Sortierung = fach.sortierung;
-	    		dto.Sichtbar = true;
-	    		final int[] schienen = ergebnisManager.getOfKursSchienenNummern(kurs.id);
-	    		dto.Schienen = (schienen == null) ? null : Arrays.stream(schienen).mapToObj(i -> "" + i)
-	    				.collect(Collectors.joining(","));
-	    		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
-	    		dto.WochenstdKL = (kurslehrer == null) ? null : (double) kurslehrer.Wochenstunden;
-	    		dto.SchulNr = null;
-	    		dto.EpochU = false;
-	    		dto.ZeugnisBez = null;
-	    		dto.Jahrgaenge = null;
-	    		conn.transactionPersist(dto);
-	    		mapKursDTOs.put(kurs.id, dto);
-	    		for (final DTOKursLehrer kl : kursLehrerZusatzkraefte)
-	    			conn.transactionPersist(kl);
-	    	}
-	        if (!conn.transactionCommit())
-	        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-	    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege ggf. fehlende Lernabschnitte an
-			final HashMap<Long, Long> mapLernabschnitte = new HashMap<>();
-	    	for (final Schueler schueler : datenManager.daten().schueler) {
-	    		final DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten
-	    				.transactionGetOrCreateByPrevious(conn, schueler.id, abschnitt);
-	    		mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
-	    	}
-            conn.transactionBegin();
-			// Bestimme die ID, mit welcher die nächsten Schülerleistungsdaten eingefügt werden
-			final DTOSchemaAutoInkremente dbLeistungenID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
-			long idLeistungen = dbLeistungenID == null ? 1 : dbLeistungenID.MaxID + 1;
-	    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege die Leistungsdaten an
-	    	for (final Schueler schueler : datenManager.daten().schueler) {
-	    		// Bestimme die Kurse, in welche der Schüler gesetzt wurde
-	    		final Set<GostBlockungsergebnisKurs> kursMenge = ergebnisManager.getOfSchuelerKursmenge(schueler.id);
-	    		for (final GostBlockungsergebnisKurs kurszuordnung : kursMenge) {
-	    			final GostBlockungKurs kurs = datenManager.kursGet(kurszuordnung.id);
-	    			final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
-	    			final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
-	    			final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);
-	    			final DTOSchuelerLeistungsdaten leistung = new DTOSchuelerLeistungsdaten(idLeistungen++, mapLernabschnitte.get(schueler.id), kurs.fach_id);
-	    			leistung.Hochrechnung = null;
-	    			leistung.Fachlehrer_ID = kursDTO.Lehrer_ID;
-	    			leistung.Kursart = switch (halbjahr) {
-	    				case EF1 -> switch (fachwahl.EF1_Kursart) {
-	    					case "M" -> "GKM";
-	    					case "S" -> "GKS";
-	    					case "AT" -> "GKM";
-	    					default -> null;
-	    				};
-	    				case EF2 -> switch (fachwahl.EF2_Kursart) {
-							case "M" -> "GKM";
-							case "S" -> "GKS";
-							case "AT" -> "GKM";
-							default -> null;
-						};
-	    				case Q11 -> switch (fachwahl.Q11_Kursart) {
-							case "M" -> "GKM";
-							case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-							case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
-							case "ZK" -> "ZK";
-							case "AT" -> "GKM";
-							default -> null;
-						};
-	    				case Q12 -> switch (fachwahl.Q12_Kursart) {
-							case "M" -> "GKM";
-							case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-							case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
-							case "ZK" -> "ZK";
-							case "AT" -> "GKM";
-							default -> null;
-						};
-	    				case Q21 -> switch (fachwahl.Q21_Kursart) {
-							case "M" -> "GKM";
-							case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-							case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
-							case "ZK" -> "ZK";
-							case "AT" -> "GKM";
-							default -> null;
-						};
-	    				case Q22 -> switch (fachwahl.Q22_Kursart) {
-							case "M" -> (fachwahl.AbiturFach == null) ? "GKM" : "AB" + fachwahl.AbiturFach;
-							case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
-							case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
-							case "ZK" -> "ZK";
-							case "AT" -> "GKM";
-							default -> null;
-						};
-	    			};
-	    			leistung.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
-	    			leistung.Kurs_ID = mapKursIDs.get(kurs.id);
-	    			leistung.NotenKrz = switch (halbjahr) {
-						case EF1 -> switch (fachwahl.EF1_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-						case EF2 -> switch (fachwahl.EF2_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-						case Q11 -> switch (fachwahl.Q11_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-						case Q12 -> switch (fachwahl.Q12_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-						case Q21 -> switch (fachwahl.Q21_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-						case Q22 -> switch (fachwahl.Q22_Kursart) {
-							case "AT" -> Note.ATTEST;
-							default -> null;
-						};
-	    			};
-	    			leistung.Warnung = null;
-	    			leistung.Warndatum = null;
-	    			leistung.AbiFach = fachwahl.AbiturFach == null ? null : "" + fachwahl.AbiturFach;
-	    			leistung.Wochenstunden = kurs.wochenstunden;
-	    			leistung.AbiZeugnis = null;
-	    			leistung.Prognose = null;
-	    			leistung.FehlStd = 0;
-	    			leistung.uFehlStd = 0;
-	    			leistung.Sortierung = fach.sortierung;
-	    			leistung.Lernentw = null;
-	    			leistung.Gekoppelt = null;
-	    			leistung.VorherAbgeschl = null;
-	    			leistung.AbschlussJahrgang = null;
-	    			leistung.HochrechnungStatus = null;
-	    			leistung.SchulNr = null;
-	    			leistung.Zusatzkraft_ID = null;  // TODO
-	    			leistung.WochenstdZusatzkraft = null;  // TODO
-	    			leistung.Prf10Fach = null;
-	    			leistung.AufZeugnis = true;
-	    			leistung.Gewichtung = 1;
-	    			leistung.NoteAbschlussBA = null;
-	    			leistung.Umfang = null;
-	    			conn.transactionPersist(leistung);
-	    		}
-	    	}
-	        if (!conn.transactionCommit())
-	        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-	    } catch (final Exception exception) {
-	        conn.transactionRollback();
-	        if (exception instanceof final WebApplicationException webex)
-	            throw webex;
-	        throw exception;
-	    }
+    	// Bestimme die ID des Jahrgangs
+    	final List<DTOJahrgang> jahrgangsliste = conn.queryList("SELECT e FROM DTOJahrgang e WHERE e.ASDJahrgang = ?1 AND e.Sichtbar = ?2", DTOJahrgang.class, halbjahr.jahrgang, true);
+    	if (jahrgangsliste.isEmpty())
+    		throw OperationError.NOT_FOUND.exception();
+    	if (jahrgangsliste.size() > 1)
+    		throw OperationError.CONFLICT.exception();
+    	final DTOJahrgang jahrgang = jahrgangsliste.get(0);
+		// Bestimme die ID, mit welche der nächste Kurs eingefügt wird
+		final DTOSchemaAutoInkremente dbKurseID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Kurse.name());
+		long idKurs = dbKurseID == null ? 1 : dbKurseID.MaxID + 1;
+    	// Durchwandere alle Kurse der Blockung und lege diese an, merke dabei auch die Zuordnung der neuen Kurs-IDs zu den Kurs-IDs der Blockung
+		final HashMap<Long, Long> mapKursIDs = new HashMap<>();
+		final HashMap<Long, DTOKurs> mapKursDTOs = new HashMap<>();
+    	final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
+    	for (final GostBlockungKurs kurs : datenManager.daten().kurse) {
+    		final long id = idKurs++;
+    		mapKursIDs.put(kurs.id, id);
+    		// Bestimme die Kurslehrer, sofern bereits festgelegt
+    		DTOGostBlockungKurslehrer kurslehrer = null;
+    		final List<DTOGostBlockungKurslehrer> kurslehrerListe = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", kurs.id, DTOGostBlockungKurslehrer.class);
+    		final List<DTOKursLehrer> kursLehrerZusatzkraefte = new ArrayList<>();
+    		for (final DTOGostBlockungKurslehrer dtoKurslehrer : kurslehrerListe) {
+    			if (dtoKurslehrer.Reihenfolge == 1) {
+    				kurslehrer = dtoKurslehrer;
+    			} else {
+    				final DTOKursLehrer kl = new DTOKursLehrer(id, dtoKurslehrer.Lehrer_ID);
+    				kl.Anteil = (double) dtoKurslehrer.Wochenstunden;
+    				kursLehrerZusatzkraefte.add(kl);
+    			}
+    		}
+    		final DTOKurs dto = new DTOKurs(id, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id);
+    		dto.Jahrgang_ID = jahrgang.ID;
+    		dto.ASDJahrgang = halbjahr.jahrgang;
+    		dto.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
+    		dto.WochenStd = kurs.wochenstunden;
+    		dto.Lehrer_ID = kurslehrer == null ? null : kurslehrer.Lehrer_ID;
+    		final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
+    		dto.Sortierung = fach.sortierung;
+    		dto.Sichtbar = true;
+    		final int[] schienen = ergebnisManager.getOfKursSchienenNummern(kurs.id);
+    		dto.Schienen = (schienen == null) ? null : Arrays.stream(schienen).mapToObj(i -> "" + i)
+    				.collect(Collectors.joining(","));
+    		dto.Fortschreibungsart = KursFortschreibungsart.KEINE;
+    		dto.WochenstdKL = (kurslehrer == null) ? null : (double) kurslehrer.Wochenstunden;
+    		dto.SchulNr = null;
+    		dto.EpochU = false;
+    		dto.ZeugnisBez = null;
+    		dto.Jahrgaenge = null;
+    		conn.transactionPersist(dto);
+        	conn.transactionFlush();
+    		mapKursDTOs.put(kurs.id, dto);
+    		for (final DTOKursLehrer kl : kursLehrerZusatzkraefte) {
+    			conn.transactionPersist(kl);
+            	conn.transactionFlush();
+    		}
+    	}
+    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege ggf. fehlende Lernabschnitte an
+		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLernabschnittsdaten.name());
+		long idSLA = (dbID == null) ? 1 : dbID.MaxID + 1;
+		final HashMap<Long, Long> mapLernabschnitte = new HashMap<>();
+    	for (final Schueler schueler : datenManager.daten().schueler) {
+    		DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.get(conn, schueler.id, abschnitt.ID);
+    		if (lernabschnitt == null)
+    			lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.createByPrevious(idSLA++, conn, schueler.id, abschnitt);
+    		mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
+    	}
+		// Bestimme die ID, mit welcher die nächsten Schülerleistungsdaten eingefügt werden
+		final DTOSchemaAutoInkremente dbLeistungenID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLeistungsdaten.name());
+		long idLeistungen = dbLeistungenID == null ? 1 : dbLeistungenID.MaxID + 1;
+    	// Durchwandere alle Schüler des Abitur-Jahrgangs und lege die Leistungsdaten an
+    	for (final Schueler schueler : datenManager.daten().schueler) {
+    		// Bestimme die Kurse, in welche der Schüler gesetzt wurde
+    		final Set<GostBlockungsergebnisKurs> kursMenge = ergebnisManager.getOfSchuelerKursmenge(schueler.id);
+    		for (final GostBlockungsergebnisKurs kurszuordnung : kursMenge) {
+    			final GostBlockungKurs kurs = datenManager.kursGet(kurszuordnung.id);
+    			final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
+    			final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
+    			final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);
+    			final DTOSchuelerLeistungsdaten leistung = new DTOSchuelerLeistungsdaten(idLeistungen++, mapLernabschnitte.get(schueler.id), kurs.fach_id);
+    			leistung.Hochrechnung = null;
+    			leistung.Fachlehrer_ID = kursDTO.Lehrer_ID;
+    			leistung.Kursart = switch (halbjahr) {
+    				case EF1 -> switch (fachwahl.EF1_Kursart) {
+    					case "M" -> "GKM";
+    					case "S" -> "GKS";
+    					case "AT" -> "GKM";
+    					default -> null;
+    				};
+    				case EF2 -> switch (fachwahl.EF2_Kursart) {
+						case "M" -> "GKM";
+						case "S" -> "GKS";
+						case "AT" -> "GKM";
+						default -> null;
+					};
+    				case Q11 -> switch (fachwahl.Q11_Kursart) {
+						case "M" -> "GKM";
+						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
+						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "ZK" -> "ZK";
+						case "AT" -> "GKM";
+						default -> null;
+					};
+    				case Q12 -> switch (fachwahl.Q12_Kursart) {
+						case "M" -> "GKM";
+						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
+						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "ZK" -> "ZK";
+						case "AT" -> "GKM";
+						default -> null;
+					};
+    				case Q21 -> switch (fachwahl.Q21_Kursart) {
+						case "M" -> "GKM";
+						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
+						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "ZK" -> "ZK";
+						case "AT" -> "GKM";
+						default -> null;
+					};
+    				case Q22 -> switch (fachwahl.Q22_Kursart) {
+						case "M" -> (fachwahl.AbiturFach == null) ? "GKM" : "AB" + fachwahl.AbiturFach;
+						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : "AB" + fachwahl.AbiturFach;
+						case "LK" -> (fachwahl.AbiturFach == 1) ? "LK1" : "LK2";
+						case "ZK" -> "ZK";
+						case "AT" -> "GKM";
+						default -> null;
+					};
+    			};
+    			leistung.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
+    			leistung.Kurs_ID = mapKursIDs.get(kurs.id);
+    			leistung.NotenKrz = switch (halbjahr) {
+					case EF1 -> switch (fachwahl.EF1_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+					case EF2 -> switch (fachwahl.EF2_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+					case Q11 -> switch (fachwahl.Q11_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+					case Q12 -> switch (fachwahl.Q12_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+					case Q21 -> switch (fachwahl.Q21_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+					case Q22 -> switch (fachwahl.Q22_Kursart) {
+						case "AT" -> Note.ATTEST;
+						default -> null;
+					};
+    			};
+    			leistung.Warnung = null;
+    			leistung.Warndatum = null;
+    			leistung.AbiFach = fachwahl.AbiturFach == null ? null : "" + fachwahl.AbiturFach;
+    			leistung.Wochenstunden = kurs.wochenstunden;
+    			leistung.AbiZeugnis = null;
+    			leistung.Prognose = null;
+    			leistung.FehlStd = 0;
+    			leistung.uFehlStd = 0;
+    			leistung.Sortierung = fach.sortierung;
+    			leistung.Lernentw = null;
+    			leistung.Gekoppelt = null;
+    			leistung.VorherAbgeschl = null;
+    			leistung.AbschlussJahrgang = null;
+    			leistung.HochrechnungStatus = null;
+    			leistung.SchulNr = null;
+    			leistung.Zusatzkraft_ID = null;  // TODO
+    			leistung.WochenstdZusatzkraft = null;  // TODO
+    			leistung.Prf10Fach = null;
+    			leistung.AufZeugnis = true;
+    			leistung.Gewichtung = 1;
+    			leistung.NoteAbschlussBA = null;
+    			leistung.Umfang = null;
+    			conn.transactionPersist(leistung);
+    		}
+    	}
+    	conn.transactionFlush();
     }
 
 
@@ -692,61 +685,37 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      * @return die HTTP-Response, welchen den Erfolg der Operation angibt
      */
     public Response aktiviere(final Long idErgebnis) {
-    	try {
-			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 
-			// Bestimme das Blockungs-Zwischenergebnis
-			final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
-			if (dtoErgebnis == null)
-				return OperationError.NOT_FOUND.getResponse();
-			final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
-			// Bestimme die Daten des Ergebnisses
-	        final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
-	        final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
+		// Bestimme das Blockungs-Zwischenergebnis
+		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
+		if (dtoErgebnis == null)
+			return OperationError.NOT_FOUND.getResponse();
+		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
+		// Bestimme die Daten des Ergebnisses
+        final GostBlockungsergebnis ergebnis = getErgebnis(dtoErgebnis, datenManager);
+        final GostBlockungsergebnisManager ergebnisManager = new GostBlockungsergebnisManager(datenManager, ergebnis);
 
-	        // Bestimme das Schuljahr und das Halbjahr, welchem das Ergebnis zugeordnet ist
-	        final GostHalbjahr halbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
-	        final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(datenManager.daten().abijahrgang);
-	        // Prüfe, ob der bzw. die Schuljahresabschnitte (im Quartalsmodus) bereits angelegt wurden
-	        if (schule.AnzahlAbschnitte == 4) {
-	        	final DTOSchuljahresabschnitte abschnitt1 = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr == 1 ? 1 : 3);
-	        	final DTOSchuljahresabschnitte abschnitt2 = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr == 1 ? 2 : 4);
-	        	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt1)
-	        			|| DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt2))
-	        		return OperationError.CONFLICT.getResponse();
-	        	aktiviere(ergebnisManager, abschnitt1, halbjahr);
-	        	aktiviere(ergebnisManager, abschnitt2, halbjahr);
-	        } else {
-	        	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
-	        	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
-	        		return OperationError.CONFLICT.getResponse();
-	        	aktiviere(ergebnisManager, abschnitt, halbjahr);
-	        }
-	        // Markiere die Blockung und das Ergebnis als aktiviert
-	        try {
-	            conn.transactionBegin();
-	        	final DTOGostBlockung bl = conn.queryByKey(DTOGostBlockung.class, dtoErgebnis.Blockung_ID);
-	        	bl.IstAktiv = true;
-	        	if (!conn.transactionPersist(bl))
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-				final DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, dtoErgebnis.ID);
-	        	erg.IstVorlage = true;
-	        	if (!conn.transactionPersist(erg))
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		        if (!conn.transactionCommit())
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		    } catch (final Exception exception) {
-		        conn.transactionRollback();
-		        if (exception instanceof final WebApplicationException webex)
-		            throw webex;
-		        throw exception;
-		    }
-	        return Response.status(Status.NO_CONTENT).build();
-	    } catch (final Exception exception) {
-	        if (exception instanceof final WebApplicationException webex)
-	            return webex.getResponse();
-	        throw exception;
-	    }
+        // Bestimme das Schuljahr und das Halbjahr, welchem das Ergebnis zugeordnet ist
+        final GostHalbjahr halbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
+        final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(datenManager.daten().abijahrgang);
+        // Prüfe, ob der Schuljahresabschnitt bereits angelegt wurde
+    	final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
+    	if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
+    		return OperationError.CONFLICT.getResponse();
+    	aktiviere(ergebnisManager, abschnitt, halbjahr);
+        // Markiere die Blockung und das Ergebnis als aktiviert
+    	final DTOGostBlockung bl = conn.queryByKey(DTOGostBlockung.class, dtoErgebnis.Blockung_ID);
+    	bl.IstAktiv = true;
+    	if (!conn.transactionPersist(bl))
+        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+    	conn.transactionFlush();
+		final DTOGostBlockungZwischenergebnis erg = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, dtoErgebnis.ID);
+    	erg.IstVorlage = true;
+    	if (!conn.transactionPersist(erg))
+        	throw OperationError.INTERNAL_SERVER_ERROR.exception();
+    	conn.transactionFlush();
+        return Response.status(Status.NO_CONTENT).build();
     }
 
 
@@ -760,11 +729,13 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
      *     die Zuordnungen der Blockungsdaten angepasst </li>
      * </ul>
      *
-     * @param idErgebnis   das zu persistierende Blockungsergebnis
+     * @param idErgebnis   das zu synchronisierende Blockungsergebnis
      *
      * @return die HTTP-Response, welchen den Erfolg der Operation angibt
      */
     public Response synchronisiere(final Long idErgebnis) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// TODO
     	throw new UnsupportedOperationException("Die Funktion wird zur Zeit noch nicht unterstützt.");
     }
 

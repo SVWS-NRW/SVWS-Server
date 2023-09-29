@@ -2178,11 +2178,9 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Es wurde bereits eine Blockung aktiviert")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response activateGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).aktiviere(id), request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).aktiviere(id);
-    	}
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 
@@ -2212,11 +2210,9 @@ public class APIGost {
     @ApiResponse(responseCode = "409", description = "Es sind noch keinerlei Leistungsdaten für eine Synchronisation in dem Schuljahresabschnitt bei den Schülern vorhanden. Verwenden Sie stattdessen das Aktivieren eines Ergebnisses.")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response syncGostBlockungsergebnis(@PathParam("schema") final String schema, @PathParam("ergebnisid") final long id, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataGostBlockungsergebnisse(conn).synchronisiere(id), request, ServerMode.STABLE,
     			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return (new DataGostBlockungsergebnisse(conn)).synchronisiere(id);
-    	}
+    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
     }
 
 

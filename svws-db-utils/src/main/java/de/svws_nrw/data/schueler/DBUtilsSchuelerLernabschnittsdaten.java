@@ -10,8 +10,6 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
-import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 
@@ -156,7 +154,8 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 * vorhanden (z.B. bei Neuaufnahmen), so wird basierend auf den Daten des Schülers
 	 * - sofern möglich - ein Lernabschnitt angelegt.
 	 *
-	 * @param conn                   die Datenbank-Verbindung
+	 * @param idSLA                  die ID des anzulegenden Lernabschnitts
+	 * @param conn                   die Datenbank-Verbindung mit einer aktiven Transaktion
 	 * @param idSchueler             die ID des Schülers
 	 * @param schuljahresabschnitt   der Schuljahresabschnitt
 	 *
@@ -164,57 +163,42 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 *
 	 * @throws WebApplicationException   falls ein Fehler beim Erstellen des Lernabschnitts auftritt
 	 */
-	public static DTOSchuelerLernabschnittsdaten transactionGetOrCreateByPrevious(final DBEntityManager conn, final long idSchueler,
+	public static DTOSchuelerLernabschnittsdaten createByPrevious(final long idSLA, final DBEntityManager conn, final long idSchueler,
 			final DTOSchuljahresabschnitte schuljahresabschnitt) throws WebApplicationException {
-		try {
-			conn.transactionBegin();
-			// Prüfe, ob der Lernabschnitt bereits existiert
-			DTOSchuelerLernabschnittsdaten sla = get(conn, idSchueler, schuljahresabschnitt.ID);
-			if (sla != null)
-				return sla;
-			// Bestimme die ID, mit welche der Schüler-Lernabschnitt eingefügt wird
-			final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_SchuelerLernabschnittsdaten.name());
-			final long idSLA = (dbID == null) ? 1 : dbID.MaxID + 1;
-			// Prüfe, ob der vorige Lernabschnitt existiert
-			final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
-			if (slaPrev != null) {
-				// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
-				final boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
-				DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
-				if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
-					klassePrev = DBUtilsKlassen.get(conn, slaPrev.Klassen_ID);
-					if (schuljahrNeu)
-						klassePrev = DBUtilsKlassen.getFolgeKlasse(conn, klassePrev);
-				} else {
-					klassePrev = DBUtilsKlassen.get(conn, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
-				}
-				final DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
-				final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
-				sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
-				if (slaPrev.Schulbesuchsjahre != null)
-					sla.Schulbesuchsjahre = schuljahrNeu ? slaPrev.Schulbesuchsjahre + 1 : slaPrev.Schulbesuchsjahre;
-				sla.BilingualerZweig = slaPrev.BilingualerZweig;
-				sla.Schwerbehinderung = slaPrev.Schwerbehinderung;
-				sla.Foerderschwerpunkt_ID = slaPrev.Foerderschwerpunkt_ID;
-				sla.Foerderschwerpunkt2_ID = slaPrev.Foerderschwerpunkt2_ID;
-				sla.Sonderpaedagoge_ID = slaPrev.Sonderpaedagoge_ID;
-				sla.AOSF = slaPrev.AOSF;
-				sla.Autist = slaPrev.Autist;
-				sla.ZieldifferentesLernen = slaPrev.ZieldifferentesLernen;
-				sla.Folgeklasse_ID = null;
-				sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
-				if (!conn.transactionPersist(sla))
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
-		        if (!conn.transactionCommit())
-		        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
-		        return sla;
+		// Prüfe, ob der vorige Lernabschnitt existiert
+		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
+		if (slaPrev != null) {
+			// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
+			final boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
+			DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
+			if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
+				klassePrev = DBUtilsKlassen.get(conn, slaPrev.Klassen_ID);
+				if (schuljahrNeu)
+					klassePrev = DBUtilsKlassen.getFolgeKlasse(conn, klassePrev);
+			} else {
+				klassePrev = DBUtilsKlassen.get(conn, schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 			}
-        	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
-		} catch (final Exception e) {
-			if (!conn.transactionRollback())
-	        	throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
-			throw e;
+			final DTOKlassen klasse = DBUtilsKlassen.getKlasseInAbschnitt(conn, klassePrev, schuljahresabschnitt.ID);
+			final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
+			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
+			if (slaPrev.Schulbesuchsjahre != null)
+				sla.Schulbesuchsjahre = schuljahrNeu ? slaPrev.Schulbesuchsjahre + 1 : slaPrev.Schulbesuchsjahre;
+			sla.BilingualerZweig = slaPrev.BilingualerZweig;
+			sla.Schwerbehinderung = slaPrev.Schwerbehinderung;
+			sla.Foerderschwerpunkt_ID = slaPrev.Foerderschwerpunkt_ID;
+			sla.Foerderschwerpunkt2_ID = slaPrev.Foerderschwerpunkt2_ID;
+			sla.Sonderpaedagoge_ID = slaPrev.Sonderpaedagoge_ID;
+			sla.AOSF = slaPrev.AOSF;
+			sla.Autist = slaPrev.Autist;
+			sla.ZieldifferentesLernen = slaPrev.ZieldifferentesLernen;
+			sla.Folgeklasse_ID = null;
+			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
+			if (!conn.transactionPersist(sla))
+	        	throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+			conn.transactionFlush();
+	        return sla;
 		}
+    	throw OperationError.NOT_FOUND.exception("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.".formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
 	}
 
 }
