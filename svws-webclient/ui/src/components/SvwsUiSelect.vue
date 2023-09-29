@@ -84,6 +84,7 @@
 		removable?: boolean;
 		required?: boolean;
 		span?: 'full';
+		indeterminate?: boolean;
 	}>(), {
 		placeholder: '',
 		title: '',
@@ -96,7 +97,8 @@
 		useNull: false,
 		headless: false,
 		removable: false,
-		span: undefined
+		span: undefined,
+		indeterminate: false,
 	})
 
 	const emit = defineEmits<{
@@ -163,6 +165,9 @@
 			return;
 		data.value = value;
 		emit("update:modelValue", data.value);
+		if (props.indeterminate === true) {
+			data.value = undefined;
+		}
 	}
 
 	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({

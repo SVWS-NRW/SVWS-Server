@@ -19,8 +19,6 @@
 			:abiturdaten-manager="abiturdatenManager" :manueller-modus="istManuellerModus"
 			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
-				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
 				<svws-ui-table :items="beratungslehrer()" selectable :model-value="selected" @update:model-value="selected=$event" count :columns="cols">
 					<template #cell(kuerzel)="{ rowData:l }">
@@ -29,11 +27,13 @@
 					<template #actions>
 						<svws-ui-button @click="removeBeratungslehrer(selected)" type="trash" :disabled="!selected.length" />
 						<!-- TODO: Hier kommt das Dropdown hin -->
-						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => addLehrer(lehrer || undefined)" headless
+						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => addLehrer(lehrer || undefined)" headless indeterminate
 							autocomplete :item-filter="lehrer_filter" :items="lehrer" removable :item-text="l=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
+			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
+				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 			<svws-ui-content-card title="Textvorlagen">
 				<svws-ui-input-wrapper>
 					<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
