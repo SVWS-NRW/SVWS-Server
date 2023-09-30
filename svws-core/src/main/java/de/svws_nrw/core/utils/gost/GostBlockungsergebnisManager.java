@@ -1594,6 +1594,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Menge aller Schüler-Objekte des Kurses.
+	 *
+	 * @param idKursID  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler-Objekte des Kurses.
+	 */
+	public @NotNull List<@NotNull Schueler> getOfKursSchuelermenge(final long idKursID) {
+		final @NotNull List<@NotNull Schueler> list = new ArrayList<>();
+
+		for (final @NotNull Long idSchueler : getKursE(idKursID).schueler)
+			list.add(getSchuelerG(idSchueler));
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Schienenmenge des Kurses.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
