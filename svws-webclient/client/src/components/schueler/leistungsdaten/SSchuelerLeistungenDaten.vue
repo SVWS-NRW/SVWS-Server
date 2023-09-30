@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card v-if="data">
 		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten" hasBackground>
-			<template #body={rows}>
+			<template #body={ rows }>
 				<template v-for="row in rows" :key="row.source.id">
 					<div class="svws-ui-tr" role="row" :style="{ '--background-color': bgColor(row.source.fachID) }">
 						<div class="svws-ui-td" role="cell">
@@ -37,12 +37,12 @@
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: true, minWidth: 20 },
 		{ key: "note", label: "Note", span: 0.25, sortable: true },
 	];
-	
+
 	function getLehrer(daten: SchuelerLeistungsdaten) : WritableComputedRef<LehrerListeEintrag | undefined> {
 		return computed({
 			get: () => daten.lehrerID === null ? undefined : props.mapLehrer.get(daten.lehrerID),
 			set: (value) => void props.patchLeistung({ lehrerID: value === undefined ? null : value.id }, daten.id)
-		}); 
+		});
 	}
 
 	function getNote(daten: SchuelerLeistungsdaten) : WritableComputedRef<Note> {

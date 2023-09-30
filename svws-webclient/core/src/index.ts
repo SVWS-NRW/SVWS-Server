@@ -518,6 +518,7 @@ export { KlausurterminblockungAlgorithmusGreedy2 } from './core/utils/klausurpla
 export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/klausurplanung/KlausurterminblockungAlgorithmusGreedy2b';
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/klausurplanung/KlausurterminblockungDynDaten';
+export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
