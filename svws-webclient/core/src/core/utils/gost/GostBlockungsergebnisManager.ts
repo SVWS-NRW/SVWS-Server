@@ -548,6 +548,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl externer SuS.
+	 *
+	 * @return die Anzahl externer SuS.
+	 */
+	public getAnzahlSchuelerExterne() : number {
+		return ListUtils.getCountFiltered(this._parent.daten().schueler, { test : (schueler: Schueler) => this.getOfSchuelerHatStatusExtern(schueler.id) });
+	}
+
+	/**
 	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
 	 *
 	 * @return den zugehörigen Daten-Manager für diesen Ergebnis-Manager.

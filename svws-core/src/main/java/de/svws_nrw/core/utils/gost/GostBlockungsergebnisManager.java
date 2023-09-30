@@ -621,6 +621,26 @@ public class GostBlockungsergebnisManager {
 	// ##########           Allgemeine Anfragen                       ##########
 	// #########################################################################
 
+	/**
+	 * Liefert die Anzahl an externern SuS.
+	 *
+	 * @return die Anzahl an externern SuS.
+	 */
+	public int getAnzahlSchuelerExterne() {
+		return ListUtils.getCountFiltered(_parent.daten().schueler,  (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS.
+	 *
+	 * @return die Anzahl an Dummy-SuS.
+	 */
+	public int getAnzahlSchuelerDummy() {
+		int summe = 0;
+		for (final long idKurs : _map_kursID_dummySuS.keySet())
+			summe += getOfKursAnzahlSchuelerDummy(idKurs);
+		return summe;
+	}
 
 	/**
 	 * Liefert den zugehörigen Daten-Manager für diesen Ergebnis-Manager.
