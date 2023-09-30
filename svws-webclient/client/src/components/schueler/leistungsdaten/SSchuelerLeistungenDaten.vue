@@ -1,23 +1,23 @@
 <template>
 	<svws-ui-content-card v-if="data">
-		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten">
+		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten" hasBackground>
 			<template #body={rows}>
-				<div class="svws-ui-tr" role="row" v-for="row in rows" :key="row.source.id">
-					<div class="svws-ui-td" role="cell">
-						<span class="svws-ui-badge" :style="{ '--background-color': bgColor(row.source.fachID) }">
-							{{ getFach(row.source.fachID).bezeichnung }}
-						</span>
+				<template v-for="row in rows" :key="row.source.id">
+					<div class="svws-ui-tr" role="row" :style="{ '--background-color': bgColor(row.source.fachID) }">
+						<div class="svws-ui-td" role="cell">
+							<span>{{ getFach(row.source.fachID).bezeichnung }}</span>
+						</div>
+						<div class="svws-ui-td" role="cell">
+							<span>{{ row.source.kursID == null ? "" : mapKurse.get(row.source.kursID)?.kuerzel }}</span>
+						</div>
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-select title="—" v-model="getLehrer(row.source).value" :items="mapLehrer.values()" :item-text="getLehrerText" headless class="w-full" />
+						</div>
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-select title="—" v-model="getNote(row.source).value" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel" headless class="w-full" />
+						</div>
 					</div>
-					<div class="svws-ui-td" role="cell">
-						<span> {{ row.source.kursID == null ? "" : mapKurse.get(row.source.kursID)?.kuerzel }} </span>
-					</div>
-					<div class="svws-ui-td" role="cell">
-						<svws-ui-select title="—" v-model="getLehrer(row.source).value" :items="mapLehrer.values()" :item-text="getLehrerText" headless class="w-full" />
-					</div>
-					<div class="svws-ui-td" role="cell">
-						<svws-ui-select title="—" v-model="getNote(row.source).value" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel" headless class="w-full" />
-					</div>
-				</div>
+				</template>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
