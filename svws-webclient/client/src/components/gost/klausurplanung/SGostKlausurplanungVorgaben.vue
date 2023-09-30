@@ -60,13 +60,13 @@
 							<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe !== 0" />
 						</svws-ui-radio-group>
 						<svws-ui-spacing />
-						<svws-ui-text-input placeholder="Dauer (Minuten)" type="number" :model-value="activeVorgabe.dauer" @change="dauer => patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
-						<svws-ui-text-input placeholder="Auswahlzeit (Minuten)" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-text-input placeholder="Dauer (Minuten)" type="number" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe) : activeVorgabe.dauer = parseInt(dauer)" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-text-input placeholder="Auswahlzeit (Minuten)" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe) : activeVorgabe.auswahlzeit = parseInt(auswahlzeit)" :disabled="activeVorgabe.idVorgabe < 0" />
 						<svws-ui-spacing />
 						<div>
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
 									<i-ri-speak-line v-if="value.name === 'Ja'" />
 									<template v-else>
 										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
@@ -78,7 +78,7 @@
 						<div>
 							<label class="sr-only" for="rbgAudioNotwendig">Audio notwendig: </label>
 							<svws-ui-radio-group id="rbgAudioNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formAudioNotwendig" :label="value.name === 'Ja' ? 'Mit Audioteil' : 'Ohne Audio'" :model-value="activeVorgabe.istAudioNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istAudioNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istAudioNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
 									<i-ri-headphone-line v-if="value.name === 'Ja'" />
 									<template v-else>
 										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
@@ -90,7 +90,7 @@
 						<div>
 							<label class="sr-only" for="rbgVideoNotwendig">Video notwendig: </label>
 							<svws-ui-radio-group id="rbgVideoNotwendig" :row="true">
-								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe)" :disabled="activeVorgabe.idVorgabe < 0">
+								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formVideoNotwendig" :label="value.name === 'Ja' ? 'Mit Videoteil' : 'Ohne Video'" :model-value="activeVorgabe.istVideoNotwendig ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istVideoNotwendig: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istVideoNotwendig = value.key" :disabled="activeVorgabe.idVorgabe < 0">
 									<i-ri-vidicon-line v-if="value.name === 'Ja'" />
 									<template v-else>
 										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
@@ -100,7 +100,7 @@
 							</svws-ui-radio-group>
 						</div>
 						<svws-ui-spacing />
-						<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe)" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="activeVorgabe.bemerkungVorgabe" @change="bemerkungVorgabe => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({bemerkungVorgabe}, activeVorgabe.idVorgabe) : activeVorgabe.bemerkungVorgabe = bemerkungVorgabe" resizeable="vertical" :disabled="activeVorgabe.idVorgabe < 0" />
 					</svws-ui-input-wrapper>
 				</div>
 				<div v-if="activeVorgabe.idVorgabe === 0" class="flex gap-1 flex-wrap justify-start mt-9">
