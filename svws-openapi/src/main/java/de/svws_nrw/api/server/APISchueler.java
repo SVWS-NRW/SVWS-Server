@@ -8,6 +8,7 @@ import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerBetriebsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
+import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
@@ -28,6 +29,7 @@ import de.svws_nrw.data.schueler.DataKatalogSchuelerFahrschuelerarten;
 import de.svws_nrw.data.schueler.DataKatalogUebergangsempfehlung;
 import de.svws_nrw.data.schueler.DataSchuelerBetriebsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerKAoADaten;
+import de.svws_nrw.data.schueler.DataSchuelerLeistungsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsliste;
 import de.svws_nrw.data.schueler.DataSchuelerSchulbesuchsdaten;
@@ -326,6 +328,32 @@ public class APISchueler {
     public Response getSchuelerLernabschnittsdatenByID(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
     		                                        @Context final HttpServletRequest request) {
     	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).get(abschnitt),
+    		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Leistungsdaten eines Schülers.
+     *
+     * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id         die Datenbank-ID der Schülerleistungsdaten
+     * @param request    die Informationen zur HTTP-Anfrage
+     *
+     * @return die Leistungsdaten des Schülers
+     */
+    @GET
+    @Path("/leistungsdaten/{id : \\d+}")
+    @Operation(summary = "Liefert die Schülerleistungsdaten zu der angegebenen ID.",
+    description = "Liest die Schülerleistungsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerleistungsdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Leistungsdaten des Schülers",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = SchuelerLeistungsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schülerleistungsdaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Schülerleistungsdaten-Eintrag mit der angegebenen ID gefunden")
+    public Response getSchuelerLeistungsdatenByID(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 

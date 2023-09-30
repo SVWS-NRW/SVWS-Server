@@ -102,7 +102,7 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse();
 		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
     	if (dto == null)
-    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+    		return OperationError.NOT_FOUND.getResponse("Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
 		final SchuelerLeistungsdaten daten = dtoMapper.apply(dto);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
