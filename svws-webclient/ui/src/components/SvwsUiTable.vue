@@ -567,7 +567,10 @@
     .svws-ui-td:first-child {
       @apply pl-3;
     }
+  }
 
+  .content-card &:not(.svws-no-mx):not(.svws-has-background),
+  .svws-table-offset &:not(.svws-has-background) {
     .svws-ui-td:last-child {
       @apply pr-3;
     }
@@ -604,6 +607,10 @@
 .svws-ui-thead {
 	@apply top-0 z-20;
 	@apply border-b;
+
+  .svws-ui-tr:not(:last-child) .svws-ui-td {
+    @apply border-t border-t-transparent;
+  }
 
   .svws-ui-badge {
     @apply text-button font-bold;
@@ -868,11 +875,11 @@
 		@apply relative cursor-default text-black/50 dark:text-white/50;
 
 		.svws-has-background & {
-			@apply text-black dark:text-black;
+			@apply text-black/75 dark:text-black/75;
 		}
 
 		&:before {
-			@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10;
+			@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10 border border-black/5;
 			content: '';
 
 			.svws-has-background & {

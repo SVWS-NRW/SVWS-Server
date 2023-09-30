@@ -6,7 +6,7 @@
 			</div>
 		</div>
 		<div role="cell" class="svws-ui-td select-all" :title="fach.bezeichnung || ''">
-			<div class="break-all line-clamp-1">
+			<div class="break-all line-clamp-1 leading-tight -my-0.5">
 				{{ fach.bezeichnung || '' }}
 			</div>
 		</div>
@@ -29,15 +29,15 @@
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium" :class="{
-				'cursor-pointer hover:shadow-inner hover:shadow-black/25': istMoeglich[halbjahr.id] && !istBewertet(halbjahr), '': istMoeglich[halbjahr.id],
+				'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr), '': istMoeglich[halbjahr.id],
 				'cursor-not-allowed': !istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id],
 				'svws-disabled': !istMoeglich[halbjahr.id],
-				'svws-disabled-light': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
+				'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
 			}" @click.stop="stepper(halbjahr)" :title="istBewertet(halbjahr) ? 'Bewertet, keine Änderungen mehr möglich' : (!istMoeglich[halbjahr.id] ? 'Wahl nicht möglich' : '')">
 				<template v-if="istFachkombiErforderlich[halbjahr.id] || istFachkombiVerboten[halbjahr.id] || !zkMoeglich(halbjahr)">
 					<div class="inline-flex items-center relative w-full">
 						<span class="w-full text-center">{{ wahlen[halbjahr.id] }}&#8203;</span>
-						<span class="absolute -right-1.5">
+						<span class="absolute -right-1">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'" position="bottom">
 								<i-ri-error-warning-line :class="istBewertet(halbjahr) ? 'text-black/50' : 'text-error'" />
 								<template #content v-if="istFachkombiErforderlich[halbjahr.id]">
@@ -93,7 +93,7 @@
 			'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
 			'cursor-not-allowed': !istMoeglichAbi,
 			'svws-disabled': !istMoeglichAbi,
-			'svws-disabled-light': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
+			'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
 		}" @click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
 		</div>

@@ -215,6 +215,13 @@
 					<td><code>{{ '<' }}i-ri-settings-3-line{{ ' />' }}</code></td>
 				</tr>
 			</table>
+			<table class="svws-docs-icon-table">
+				<tr>
+					<th><i-ri-loop-right-line /></th>
+					<td>Laufbahnplanung: Modus wechseln (Normal, Manuell, Hochschreiben)</td>
+					<td><code>{{ '<' }}i-ri-loop-right-line{{ ' />' }}</code></td>
+				</tr>
+			</table>
 		</Variant>
 		<Variant title="Input Fields und Interaktion" source=" ">
 			<table class="svws-docs-icon-table">

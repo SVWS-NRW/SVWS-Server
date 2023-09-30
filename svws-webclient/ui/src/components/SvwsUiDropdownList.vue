@@ -73,10 +73,6 @@
 
 <style lang="postcss" scoped>
 
-	&--danger {
-		@apply text-error;
-	}
-
 .multiselect--items-wrapper {
 	@apply absolute z-50 w-full min-w-[11rem];
 	@apply rounded-md border border-black/25 dark:border-white/25 bg-white dark:bg-black;

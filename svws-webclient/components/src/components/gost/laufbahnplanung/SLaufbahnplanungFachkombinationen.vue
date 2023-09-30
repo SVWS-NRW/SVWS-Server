@@ -1,15 +1,24 @@
 <template>
 	<template v-if="!abiturdatenManager().faecher().getFachkombinationen().isEmpty()">
-		<svws-ui-table :no-data="fehler.size === 0" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 2.25},{key: 'beschreibung', label: (fehler.size ? 'Fehler bei Fachkombinationsregeln' : 'Alle Fachkombinationsregeln erfüllt')}]" class="overflow-visible">
-			<template #header(icon)>
-				<span v-if="fehler.size" class="rounded w-[1.75rem] inline-flex items-center justify-center bg-error text-white border-2 border-error -m-1">{{ fehler.size }}</span>
-				<i-ri-checkbox-circle-fill v-else class="flex-shrink-0 text-success text-headline-md" />
+		<svws-ui-table :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Fachkombinationsregeln'}]" type="navigation">
+			<template #header>
+				<div class="svws-ui-tr" role="row">
+					<div class="svws-ui-td col-span-full" role="columnheader">
+						<i-ri-checkbox-circle-fill v-if="fehler.size === 0" class="flex-shrink-0 text-success text-headline-md -my-1 -mx-0.5" />
+						<template v-if="fehler.size">
+							{{ fehler.size }} Fehler bei Fachkombinationsregeln
+						</template>
+						<template v-else>
+							Alle Fachkombinationsregeln erfüllt
+						</template>
+					</div>
+				</div>
 			</template>
 			<template #body>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenErforderlich()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td" role="cell">
-						<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
-						<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
+						<i-ri-check-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
+						<i-ri-error-warning-line class="flex-shrink-0 text-error text-button mt-0.5" />
 					</div>
 					<div class="svws-ui-td leading-tight select-all" role="cell">
 						{{ regel.hinweistext }}
@@ -17,8 +26,8 @@
 				</div>
 				<div v-for="regel in abiturdatenManager().faecher().getFachkombinationenVerboten()" :key="regel.id" class="svws-ui-tr" role="row">
 					<div class="svws-ui-td" role="cell">
-						<i-ri-checkbox-circle-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
-						<i-ri-error-warning-line v-else class="flex-shrink-0 text-error" />
+						<i-ri-check-line v-if="regel_umgesetzt(regel)" class="flex-shrink-0 text-success" />
+						<i-ri-error-warning-line class="flex-shrink-0 text-error text-button mt-0.5" />
 					</div>
 					<div class="svws-ui-td leading-tight select-all" role="cell">
 						{{ regel.hinweistext }}

@@ -95,13 +95,11 @@
 						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
-							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black cursor-grab"
+							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black cursor-grab p-px"
 							:class="{
 								'cursor-grabbing': dragDataKursSchiene() !== undefined,
 								'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
-								'p-px': dragDataKursSchiene() === undefined && !isKursDropZone(kurs, schiene).value,
-								'p-px': dragDataKursSchiene() !== undefined || isKursDropZone(kurs, schiene).value,
 							}"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}

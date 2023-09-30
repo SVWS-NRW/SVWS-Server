@@ -97,6 +97,19 @@
 			@apply cursor-wait;
 		}
 	}
+
+  .router-tab-bar--subnav & {
+    @apply text-sm font-bold;
+    padding: 0.3rem 0.65rem;
+
+    &:first-child {
+      @apply -ml-3;
+    }
+
+    .svws-ui-checkbox--label {
+      @apply mt-0;
+    }
+  }
 }
 
 input[type="checkbox"] {

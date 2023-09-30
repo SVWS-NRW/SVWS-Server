@@ -1,8 +1,12 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="belegungsfehler.size() === 0" no-data-text="Planung ist gültig." :columns="[{key: 'icon', label: '0', fixedWidth: 2.25, align: 'center'},{key: 'beschreibung', label: (belegungsfehler.size() === 0 ? 'Keine ' : '') + 'Laufbahnfehler ' + belegpruefungsArt().kuerzel}]" class="overflow-visible">
-		<template #header(icon)>
-			<span v-if="belegungsfehler.size() > 0" class="rounded w-[1.75rem] inline-flex items-center justify-center bg-error text-white border-2 border-error -m-1">{{ belegungsfehler.size() }}</span>
-			<i-ri-checkbox-circle-fill v-else class="flex-shrink-0 text-success text-headline-md" />
+	<svws-ui-table :items="[]" :no-data="false" no-data-text="Planung ist gültig." :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]" type="navigation">
+		<template #header>
+			<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-td col-span-full" role="columnheader">
+					<i-ri-checkbox-circle-fill v-if="belegungsfehler.size() === 0" class="flex-shrink-0 text-success text-headline-md -my-1 -mx-0.5" />
+					{{ (belegungsfehler.size() === 0 ? 'Keine' : belegungsfehler.size()) }} {{ 'Laufbahnfehler' }} {{ belegpruefungsArt().kuerzel }}
+				</div>
+			</div>
 		</template>
 		<template #body v-if="belegungsfehler.size() > 0">
 			<div v-for="fehler in belegungsfehler" :key="fehler.code" class="svws-ui-tr" role="row">
