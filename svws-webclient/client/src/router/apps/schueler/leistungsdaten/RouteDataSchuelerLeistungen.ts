@@ -153,6 +153,9 @@ export class RouteDataSchuelerLeistungen {
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
 		// TODO await api.server.patchSchuelerLeistungsdaten(data, api.schema, id);
+		const leistung = this.manager.leistungGetByIdOrException(id);
+		Object.assign(leistung, data);
+		this.commit();
 	}
 
 }

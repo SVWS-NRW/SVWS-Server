@@ -142,6 +142,18 @@ public class SchuelerLernabschnittManager {
 	}
 
 	/**
+	 * Gibt die Leistungsdaten für die übergebene ID zurück.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
+	 * @return die Leistungsdaten
+	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
+	 */
+	public @NotNull SchuelerLeistungsdaten leistungGetByIdOrException(final long idLeistung) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
+	}
+
+	/**
 	 * Gibt die Menge der Leistungsdaten sortiert anhand des Faches zurück.
 	 *
 	 * @return die Menge der Leistungsdaten
@@ -252,6 +264,24 @@ public class SchuelerLernabschnittManager {
 		return this.kurse;
 	}
 
+	/**
+	 * Gibt die Liste der Kurse zurück und filtert diese anhand des Jahrgangs des Schülers sowie
+	 * des Faches der Leistungsdaten.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
+	 * @return die gefilterte Liste der Kurse
+	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
+	 */
+	public @NotNull List<@NotNull KursListeEintrag> kursGetMengeFilteredByLeistung(final long idLeistung) {
+		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
+		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
+		for (final @NotNull KursListeEintrag k : this.kurse) {
+			if ((k.idFach == leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
+				result.add(k);
+		}
+		return result;
+	}
 
 
 	/**

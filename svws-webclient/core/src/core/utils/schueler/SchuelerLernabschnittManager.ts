@@ -134,6 +134,18 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Leistungsdaten für die übergebene ID zurück.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
+	 * @return die Leistungsdaten
+	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
+	 */
+	public leistungGetByIdOrException(idLeistung : number) : SchuelerLeistungsdaten {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
+	}
+
+	/**
 	 * Gibt die Menge der Leistungsdaten sortiert anhand des Faches zurück.
 	 *
 	 * @return die Menge der Leistungsdaten
@@ -239,6 +251,25 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public kursGetMenge() : List<KursListeEintrag> {
 		return this.kurse;
+	}
+
+	/**
+	 * Gibt die Liste der Kurse zurück und filtert diese anhand des Jahrgangs des Schülers sowie
+	 * des Faches der Leistungsdaten.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
+	 * @return die gefilterte Liste der Kurse
+	 * @throws DeveloperNotificationException falls die ID der Leistungsdaten nicht korrekt ist
+	 */
+	public kursGetMengeFilteredByLeistung(idLeistung : number) : List<KursListeEintrag> {
+		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
+		const result : List<KursListeEintrag> = new ArrayList();
+		for (const k of this.kurse) {
+			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
+				result.add(k);
+		}
+		return result;
 	}
 
 	/**

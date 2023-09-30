@@ -30,6 +30,11 @@ export class SchuelerListeEintrag extends JavaObject {
 	public idKlasse : number = -1;
 
 	/**
+	 * Die ID des aktuellen Jahrgangs des Schülers.
+	 */
+	public idJahrgang : number = -1;
+
+	/**
 	 * Der aktuelle Jahrgang des Schülers.
 	 */
 	public jahrgang : string = "";
@@ -86,6 +91,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.idKlasse === "undefined")
 			 throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
+		if (typeof obj.idJahrgang === "undefined")
+			 throw new Error('invalid json format, missing attribute idJahrgang');
+		result.idJahrgang = obj.idJahrgang;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
@@ -114,6 +122,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht!) + ',';
 		result += '"idKlasse" : ' + obj.idKlasse! + ',';
+		result += '"idJahrgang" : ' + obj.idJahrgang! + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
 		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung!) + ',';
@@ -152,6 +161,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.idKlasse !== "undefined") {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
+		}
+		if (typeof obj.idJahrgang !== "undefined") {
+			result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';

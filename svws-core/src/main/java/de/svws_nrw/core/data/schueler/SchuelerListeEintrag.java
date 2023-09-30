@@ -39,6 +39,10 @@ public class SchuelerListeEintrag {
 	@Schema(description = "die ID der aktuellen Klasse des Schülers", example = "47")
 	public @NotNull Long idKlasse = -1L;
 
+	/** Die ID des aktuellen Jahrgangs des Schülers.*/
+	@Schema(description = "die ID des aktuellen Jahrgangs des Schülers", example = "32")
+	public @NotNull Long idJahrgang = -1L;
+
 	/** Der aktuelle Jahrgang des Schülers.*/
 	@Schema(description = "der aktuelle Jahrgang des Schülers", example = "09")
 	public @NotNull String jahrgang = "";
