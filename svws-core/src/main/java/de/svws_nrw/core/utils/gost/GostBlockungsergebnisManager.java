@@ -622,9 +622,9 @@ public class GostBlockungsergebnisManager {
 	// #########################################################################
 
 	/**
-	 * Liefert die Anzahl an externern SuS.
+	 * Liefert die Anzahl an externen SuS.
 	 *
-	 * @return die Anzahl an externern SuS.
+	 * @return die Anzahl an externen SuS.
 	 */
 	public int getAnzahlSchuelerExterne() {
 		return ListUtils.getCountFiltered(_parent.daten().schueler,  (final @NotNull Schueler schueler) -> getOfSchuelerHatStatusExtern(schueler.id));
@@ -1658,9 +1658,9 @@ public class GostBlockungsergebnisManager {
 		final @NotNull HashSet<@NotNull Long> set = new HashSet<>();
 
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKursID))
-			for (final @NotNull Long schuelerID : getKursE(idKursID).schueler)
-				if (getOfSchuelerOfSchieneKursmenge(schuelerID, schiene.id).size() > 1)
-					set.add(schuelerID); // Set ist wichtig, da bei Multikursen ein Schüler mehrfach kollidieren kann.
+			for (final @NotNull Long idSchueler : getKursE(idKursID).schueler)
+				if (getOfSchuelerOfSchieneKursmenge(idSchueler, schiene.id).size() > 1)
+					set.add(idSchueler); // Set ist wichtig, da bei Multikursen ein Schüler mehrfach kollidieren kann.
 
 		return set;
 	}
@@ -1994,13 +1994,13 @@ public class GostBlockungsergebnisManager {
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
-	 * @param idShiene  Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
-	public boolean getOfSchieneRemoveAllowed(final long idShiene) throws DeveloperNotificationException {
-		return getSchieneE(idShiene).kurse.isEmpty();
+	public boolean getOfSchieneRemoveAllowed(final long idSchiene) throws DeveloperNotificationException {
+		return getSchieneE(idSchiene).kurse.isEmpty();
 	}
 
 
@@ -2014,6 +2014,39 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisSchiene schiene : _ergebnis.schienen)
 			max = Math.max(max, schiene.kurse.size());
 		return max;
+	}
+
+	/**
+	 * Liefert die Anzahl an externen SuS der Schiene.
+	 * <br>Hinweis: Ist ein Schüler mehrfach in der Schiene (Kollision) wird er auch mehrfach gezählt.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Anzahl an externen SuS der Schiene.
+	 */
+	public int getOfSchieneAnzahlSchuelerExterne(final long idSchiene) {
+		int summe = 0;
+		for (final @NotNull GostBlockungsergebnisKurs kurs : getSchieneE(idSchiene).kurse)
+			for (final long idSchueler : kurs.schueler)
+				if (getOfSchuelerHatStatusExtern(idSchueler))
+					summe++;
+		return summe;
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS der Schiene.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Anzahl an Dummy-SuS der Schiene.
+	 */
+	public int getOfSchieneAnzahlSchuelerDummy(final long idSchiene) {
+		int summe = 0;
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : getSchieneE(idSchiene).kurse)
+			summe += getOfKursAnzahlSchuelerDummy(kurs.id);
+
+		return summe;
 	}
 
 	/**

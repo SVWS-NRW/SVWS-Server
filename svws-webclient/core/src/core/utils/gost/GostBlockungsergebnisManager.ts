@@ -548,12 +548,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl externer SuS.
+	 * Liefert die Anzahl an externen SuS.
 	 *
-	 * @return die Anzahl externer SuS.
+	 * @return die Anzahl an externen SuS.
 	 */
 	public getAnzahlSchuelerExterne() : number {
 		return ListUtils.getCountFiltered(this._parent.daten().schueler, { test : (schueler: Schueler) => this.getOfSchuelerHatStatusExtern(schueler.id) });
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS.
+	 *
+	 * @return die Anzahl an Dummy-SuS.
+	 */
+	public getAnzahlSchuelerDummy() : number {
+		let summe : number = 0;
+		for (const idKurs of this._map_kursID_dummySuS.keySet())
+			summe += this.getOfKursAnzahlSchuelerDummy(idKurs);
+		return summe;
 	}
 
 	/**
@@ -1518,9 +1530,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursSchuelermengeMitKollisionen(idKursID : number) : JavaSet<number> {
 		const set : HashSet<number> = new HashSet();
 		for (const schiene of this.getOfKursSchienenmenge(idKursID))
-			for (const schuelerID of this.getKursE(idKursID).schueler)
-				if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, schiene.id).size() > 1)
-					set.add(schuelerID);
+			for (const idSchueler of this.getKursE(idKursID).schueler)
+				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
+					set.add(idSchueler);
 		return set;
 	}
 
@@ -1849,13 +1861,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * Liefert TRUE, falls ein Löschen der Schiene erlaubt ist.<br>
 	 * Kriterium: Es dürfen keine Kurse der Schiene zugeordnet sein.
 	 *
-	 * @param idShiene  Die Datenbank-ID der Schiene.
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return TRUE, falls ein Löschen der Schiene erlaubt ist.
 	 * @throws DeveloperNotificationException Falls die Schiene nicht existiert.
 	 */
-	public getOfSchieneRemoveAllowed(idShiene : number) : boolean {
-		return this.getSchieneE(idShiene).kurse.isEmpty();
+	public getOfSchieneRemoveAllowed(idSchiene : number) : boolean {
+		return this.getSchieneE(idSchiene).kurse.isEmpty();
 	}
 
 	/**
@@ -1868,6 +1880,37 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const schiene of this._ergebnis.schienen)
 			max = Math.max(max, schiene.kurse.size());
 		return max;
+	}
+
+	/**
+	 * Liefert die Anzahl an externen SuS der Schiene.
+	 * <br>Hinweis: Ist ein Schüler mehrfach in der Schiene (Kollision) wird er auch mehrfach gezählt.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Anzahl an externen SuS der Schiene.
+	 */
+	public getOfSchieneAnzahlSchuelerExterne(idSchiene : number) : number {
+		let summe : number = 0;
+		for (const kurs of this.getSchieneE(idSchiene).kurse)
+			for (const idSchueler of kurs.schueler)
+				if (this.getOfSchuelerHatStatusExtern(idSchueler))
+					summe++;
+		return summe;
+	}
+
+	/**
+	 * Liefert die Anzahl an Dummy-SuS der Schiene.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return die Anzahl an Dummy-SuS der Schiene.
+	 */
+	public getOfSchieneAnzahlSchuelerDummy(idSchiene : number) : number {
+		let summe : number = 0;
+		for (const kurs of this.getSchieneE(idSchiene).kurse)
+			summe += this.getOfKursAnzahlSchuelerDummy(kurs.id);
+		return summe;
 	}
 
 	/**
