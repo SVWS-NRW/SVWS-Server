@@ -1,9 +1,6 @@
-import type { FaecherListeEintrag, LehrerListeEintrag, KursListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittsdaten } from "@core";
+import type { SchuelerLeistungsdaten, SchuelerLernabschnittManager } from "@core";
 
 export interface SchuelerLeistungenDatenProps {
-	data: SchuelerLernabschnittsdaten | undefined;
-	mapFaecher: Map<number, FaecherListeEintrag>;
-	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapKurse: Map<number, KursListeEintrag>;
+	manager: () => SchuelerLernabschnittManager;
 	patchLeistung: (data : Partial<SchuelerLeistungsdaten>, id : number) => Promise<void>;
 }

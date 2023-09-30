@@ -1,24 +1,25 @@
 import { shallowRef } from "vue";
 
-import type { List, FaecherListeEintrag, LehrerListeEintrag, KursListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten } from "@core";
-import { ArrayList } from "@core";
+import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@core";
+import { ArrayList, SchuelerLernabschnittManager, SchuelerListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
+import { routeSchueler } from "../RouteSchueler";
 
 
 interface RouteStateDataSchuelerLeistungen {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
 	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
-	mapFaecher: Map<number, FaecherListeEintrag>;
-	mapLehrer: Map<number, LehrerListeEintrag>;
+	listFaecher: List<FaecherListeEintrag>;
+	listLehrer: List<LehrerListeEintrag>;
 	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
-	mapKurse: Map<number, KursListeEintrag>;
+	manager: SchuelerLernabschnittManager | undefined;
 }
 
 
@@ -27,11 +28,11 @@ export class RouteDataSchuelerLeistungen {
 	private static _defaultState: RouteStateDataSchuelerLeistungen = {
 		idSchueler: -1,
 		listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
-		mapFaecher: new Map(),
-		mapLehrer: new Map(),
+		listFaecher: new ArrayList(),
+		listLehrer: new ArrayList(),
 		auswahl: undefined,
 		daten: undefined,
-		mapKurse: new Map(),
+		manager: undefined,
 	}
 
 	private _state = shallowRef(RouteDataSchuelerLeistungen._defaultState);
@@ -58,12 +59,10 @@ export class RouteDataSchuelerLeistungen {
 		return this._state.value.listAbschnitte;
 	}
 
-	get mapFaecher(): Map<number, FaecherListeEintrag> {
-		return this._state.value.mapFaecher;
-	}
-
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
+	get manager(): SchuelerLernabschnittManager {
+		if (this._state.value.manager === undefined)
+			throw new Error("Unerwarteter Fehler: Schüler-Lernabschnittsdaten nicht initialisiert");
+		return this._state.value.manager;
 	}
 
 	protected getLernabschnitt(curState : RouteStateDataSchuelerLeistungen, idSchuljahresabschnitt : number, wechselNr : number) : SchuelerLernabschnittListeEintrag | undefined {
@@ -101,10 +100,11 @@ export class RouteDataSchuelerLeistungen {
 		}
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
-		const mapKurse = new Map<number, KursListeEintrag>();
-		for (const k of listKurse)
-			mapKurse.set(k.id, k);
-		curState = Object.assign({ ... curState }, { auswahl: found, daten, mapKurse });
+		let schueler = routeSchueler.data.auswahl;
+		if (schueler === undefined)
+			schueler = new SchuelerListeEintrag();
+		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, listKurse, curState.listLehrer);
+		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager });
 		return curState;
 	}
 
@@ -114,14 +114,8 @@ export class RouteDataSchuelerLeistungen {
 			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);
-		const mapFaecher = new Map<number, FaecherListeEintrag>();
-		for (const f of listFaecher)
-			mapFaecher.set(f.id, f);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const l of listLehrer)
-			mapLehrer.set(l.id, l);
-		let newState = <RouteStateDataSchuelerLeistungen>{ idSchueler, listAbschnitte, mapFaecher, mapLehrer };
+		let newState = <RouteStateDataSchuelerLeistungen>{ idSchueler, listAbschnitte, listFaecher, listLehrer };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
@@ -143,10 +137,6 @@ export class RouteDataSchuelerLeistungen {
 		if (this._state.value.daten === undefined)
 			throw new Error("Unerwarteter Fehler: Leistungsdaten nicht initialisiert");
 		return this._state.value.daten;
-	}
-
-	get mapKurse(): Map<number, KursListeEintrag> {
-		return this._state.value.mapKurse;
 	}
 
 	public async setLernabschnitt(idSchuljahresabschnitt : number, wechselNr : number) {

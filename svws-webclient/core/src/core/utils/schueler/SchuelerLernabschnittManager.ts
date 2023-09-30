@@ -5,10 +5,13 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../java/lang/JavaString';
+import type { Comparator } from '../../../java/util/Comparator';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../core/types/Note';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -32,6 +35,41 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private readonly lehrer : List<LehrerListeEintrag> = new ArrayList();
 
 	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap();
+
+	private static readonly _compFach : Comparator<FaecherListeEintrag> = { compare : (a: FaecherListeEintrag, b: FaecherListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel === null) || (b.kuerzel === null))
+			throw new DeveloperNotificationException("Fachkürzel dürfen nicht null sein")
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	private static readonly _compKurs : Comparator<KursListeEintrag> = { compare : (a: KursListeEintrag, b: KursListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	private static readonly _compLehrer : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.nachname, b.nachname);
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.vorname, b.vorname);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	private readonly _compLeistungenByFach : Comparator<SchuelerLeistungsdaten> = { compare : (a: SchuelerLeistungsdaten, b: SchuelerLeistungsdaten) => {
+		const aFach : FaecherListeEintrag = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, a.fachID);
+		const bFach : FaecherListeEintrag = DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, b.fachID);
+		return SchuelerLernabschnittManager._compFach.compare(aFach, bFach);
+	} };
 
 
 	/**
@@ -62,6 +100,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initFaecher(faecher : List<FaecherListeEintrag>) : void {
 		this.faecher.clear();
 		this.faecher.addAll(faecher);
+		this.faecher.sort(SchuelerLernabschnittManager._compFach);
 		this._mapFachByID.clear();
 		for (const f of faecher)
 			this._mapFachByID.put(f.id, f);
@@ -70,6 +109,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initKurse(kurse : List<KursListeEintrag>) : void {
 		this.kurse.clear();
 		this.kurse.addAll(kurse);
+		this.kurse.sort(SchuelerLernabschnittManager._compKurs);
 		this._mapKursByID.clear();
 		for (const k of kurse)
 			this._mapKursByID.put(k.id, k);
@@ -78,6 +118,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initLehrer(lehrer : List<LehrerListeEintrag>) : void {
 		this.lehrer.clear();
 		this.lehrer.addAll(lehrer);
+		this.lehrer.sort(SchuelerLernabschnittManager._compLehrer);
 		this._mapLehrerByID.clear();
 		for (const l of lehrer)
 			this._mapLehrerByID.put(l.id, l);
@@ -90,6 +131,18 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public leistungAdd(leistungsdaten : SchuelerLeistungsdaten) : void {
 		this._mapLeistungById.put(leistungsdaten.id, leistungsdaten);
+	}
+
+	/**
+	 * Gibt die Menge der Leistungsdaten sortiert anhand des Faches zurück.
+	 *
+	 * @return die Menge der Leistungsdaten
+	 */
+	public leistungGetMengeAsListSortedByFach() : List<SchuelerLeistungsdaten> {
+		const result : List<SchuelerLeistungsdaten> = new ArrayList();
+		result.addAll(this._lernabschnittsdaten.leistungsdaten);
+		result.sort(this._compLeistungenByFach);
+		return result;
 	}
 
 	/**
@@ -145,6 +198,15 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Liste der Fächer zurück.
+	 *
+	 * @return die Liste der Fächer
+	 */
+	public fachGetMenge() : List<FaecherListeEintrag> {
+		return this.faecher;
+	}
+
+	/**
 	 * Ermittelt die Informationen zu dem Kurs, sofern einer mit diesen Leistungsdaten verknüpft ist.
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
@@ -171,6 +233,15 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Liste der Kurse zurück.
+	 *
+	 * @return die Liste der Kurse
+	 */
+	public kursGetMenge() : List<KursListeEintrag> {
+		return this.kurse;
+	}
+
+	/**
 	 * Ermittelt die Informationen zu dem Lehrer, sofern einer mit diesen Leistungsdaten verknüpft ist.
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
@@ -194,6 +265,15 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public lehrerGetByLeistungIdOrException(idLeistung : number) : LehrerListeEintrag {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		return DeveloperNotificationException.ifMapGetIsNull(this._mapLehrerByID, leistung.lehrerID);
+	}
+
+	/**
+	 * Gibt die Liste der Lehrer zurück.
+	 *
+	 * @return die Liste der Lehrer
+	 */
+	public lehrerGetMenge() : List<LehrerListeEintrag> {
+		return this.lehrer;
 	}
 
 	/**

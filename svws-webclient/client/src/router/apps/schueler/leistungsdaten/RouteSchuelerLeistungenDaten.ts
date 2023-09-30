@@ -51,10 +51,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuel
 
 	public getProps(to: RouteLocationNormalized): SchuelerLeistungenDatenProps {
 		return {
-			data: routeSchuelerLeistungen.data.daten,
-			mapFaecher: routeSchuelerLeistungen.data.mapFaecher,
-			mapLehrer: routeSchuelerLeistungen.data.mapLehrer,
-			mapKurse: routeSchuelerLeistungen.data.mapKurse,
+			manager: () => routeSchuelerLeistungen.data.manager,
 			patchLeistung: routeSchuelerLeistungen.data.patchLeistung
 		};
 	}
