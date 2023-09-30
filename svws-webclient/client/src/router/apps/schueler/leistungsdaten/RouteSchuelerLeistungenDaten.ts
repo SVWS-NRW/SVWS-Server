@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
-import { RouteDataSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteDataSchuelerLeistungenDaten";
 
 import type { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
 import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
@@ -14,20 +13,16 @@ import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistun
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
 const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahl.vue")
 
-export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLeistungenDaten, RouteSchuelerLeistungen> {
+export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuelerLeistungen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.leistungen.daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLeistungenDaten, new RouteDataSchuelerLeistungenDaten());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.leistungen.daten", ":abschnitt(\\d+)?/:wechselNr(\\d+)?", SSchuelerLeistungenDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
 		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 		];
-	}
-
-	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		await this.data.ladeListe();
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -42,7 +37,7 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 			const abschnitt = parseInt(to_params.abschnitt);
 			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? 0 : parseInt(to_params.wechselNr);
 			const eintrag = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
-			await this.data.setEintrag(eintrag);
+			await routeSchuelerLeistungen.data.setEintrag(eintrag);
 		}
 	}
 
@@ -52,19 +47,19 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<RouteDataSchuelerLei
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerLeistungenAuswahlProps {
 		return {
-			lernabschnitt: this.data.auswahl,
+			lernabschnitt: routeSchuelerLeistungen.data.auswahl,
 			lernabschnitte: routeSchuelerLeistungen.data.listAbschnitte,
-			gotoLernabschnitt: this.data.gotoLernabschnitt
+			gotoLernabschnitt: routeSchuelerLeistungen.data.gotoLernabschnitt
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLeistungenDatenProps {
 		return {
-			data: this.data.daten,
-			mapFaecher: this.data.mapFaecher,
-			mapLehrer: this.data.mapLehrer,
-			mapKurse: this.data.mapKurse,
-			patchLeistung: this.data.patchLeistung
+			data: routeSchuelerLeistungen.data.daten,
+			mapFaecher: routeSchuelerLeistungen.data.mapFaecher,
+			mapLehrer: routeSchuelerLeistungen.data.mapLehrer,
+			mapKurse: routeSchuelerLeistungen.data.mapKurse,
+			patchLeistung: routeSchuelerLeistungen.data.patchLeistung
 		};
 	}
 
