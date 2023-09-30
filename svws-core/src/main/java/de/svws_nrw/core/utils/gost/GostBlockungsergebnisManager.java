@@ -1412,7 +1412,7 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 * Liefert TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 *
 	 * @param idSchueler        Die Datenbank-ID des Schülers.
 	 * @param idKurs            Falls >= 0, muss der Schüler in dem Kurs sein.
@@ -1423,7 +1423,7 @@ public class GostBlockungsergebnisManager {
 	 * @param geschlecht        Falls != null, muss der Schüler das definierte Geschlecht haben.
 	 * @param schriftlichkeit   Falls != null, muss der Schüler das definierte {@link GostSchriftlichkeit} haben.
 	 *
-	 * @return TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 * @return TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 */
 	public boolean getOfSchuelerErfuelltKriterien(final long idSchueler, final long idKurs, final long idFach, final int idKursart, final int konfliktTyp, @NotNull final String subString, final Geschlecht geschlecht, final GostSchriftlichkeit schriftlichkeit) {
 
@@ -1439,7 +1439,7 @@ public class GostBlockungsergebnisManager {
 		if ((subString.length() > 0) && (!getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
 
-		if ((geschlecht != null) && (getOfSchuelerGeschlechtOrException(idSchueler) != geschlecht))
+		if ((geschlecht != null) && (getOfSchuelerGeschlechtOrException(idSchueler).id != geschlecht.id))
 			return false;
 
 		// Kurs-Filter

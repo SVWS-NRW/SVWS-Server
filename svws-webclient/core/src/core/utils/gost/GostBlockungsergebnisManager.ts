@@ -1306,7 +1306,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 * Liefert TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 *
 	 * @param idSchueler        Die Datenbank-ID des Schülers.
 	 * @param idKurs            Falls >= 0, muss der Schüler in dem Kurs sein.
@@ -1317,7 +1317,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param geschlecht        Falls != null, muss der Schüler das definierte Geschlecht haben.
 	 * @param schriftlichkeit   Falls != null, muss der Schüler das definierte {@link GostSchriftlichkeit} haben.
 	 *
-	 * @return TRUE, falls der Schäler alle definierten Kriterien erfüllt.
+	 * @return TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 */
 	public getOfSchuelerErfuelltKriterien(idSchueler : number, idKurs : number, idFach : number, idKursart : number, konfliktTyp : number, subString : string, geschlecht : Geschlecht | null, schriftlichkeit : GostSchriftlichkeit | null) : boolean {
 		if ((konfliktTyp === 1) && (!this.getOfSchuelerHatKollision(idSchueler)))
@@ -1328,7 +1328,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		if ((subString.length > 0) && (!this.getOfSchuelerHatImNamenSubstring(idSchueler, subString)))
 			return false;
-		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler) as unknown !== geschlecht as unknown))
+		if ((geschlecht !== null) && (this.getOfSchuelerGeschlechtOrException(idSchueler).id !== geschlecht.id))
 			return false;
 		if (idKurs >= 0) {
 			if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
