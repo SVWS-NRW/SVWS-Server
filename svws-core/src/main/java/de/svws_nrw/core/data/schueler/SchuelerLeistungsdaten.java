@@ -36,7 +36,7 @@ public class SchuelerLeistungsdaten {
 
 	/** Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4) */
 	@Schema(description = "gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt (NULL, 1, 2, 3, 4)", example = "1")
-	public String abifach = null;
+	public Integer abifach = null;
 
 	/** Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8) */
 	@Schema(description = "gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)", example = "false")
@@ -78,13 +78,17 @@ public class SchuelerLeistungsdaten {
 	@Schema(description = "das Kürzel der erteilten Note - es können auch Pseudonoten eingetragen werden (z.B. AT)", example = "3-")
 	public String note = null;
 
+	/** Das Kürzel der erteilten Qurtalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT). */
+	@Schema(description = "das Kürzel der erteilten Quartalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT)", example = "3-")
+	public String noteQuartal = null;
+
 	/** Gibt an, ob die Leistung gemahnt wurde oder nicht. */
 	@Schema(description = "gibt an, ob die Leistung gemahnt wurde oder nicht", example = "false")
 	public boolean istGemahnt = false;
 
 	/** Das Datum, wann die Leistung gemahnt wurde oder null. */
 	@Schema(description = "das Datum, wann die Leistung gemahnt wurde oder null", example = "null")
-	public String Mahndatum = null;
+	public String mahndatum = null;
 
 	/** Gibt an, ob es sich um ein epochal unterrichtetes Fach handelt oder nicht. */
 	@Schema(description = "gibt an, ob es sich um ein epochal unterrichtetes Fach handelt oder nicht", example = "false")

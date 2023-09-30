@@ -30,7 +30,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	/**
 	 * Gibt an, ob es sich bei der Fachbelegung um ein Abiturfach des Schülers handelt und wenn ja, um welches (NULL, 1, 2, 3, 4)
 	 */
-	public abifach : string | null = null;
+	public abifach : number | null = null;
 
 	/**
 	 * Gibt an, ob es sich um ein Fach der Zentralen Prüfungen 10 handelt oder um ein Fach der Zentralen Klausuren 10 (G8)
@@ -73,6 +73,11 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public note : string | null = null;
 
 	/**
+	 * Das Kürzel der erteilten Qurtalsnote - es können auch Pseudonoten eingetragen werden (z.B. AT).
+	 */
+	public noteQuartal : string | null = null;
+
+	/**
 	 * Gibt an, ob die Leistung gemahnt wurde oder nicht.
 	 */
 	public istGemahnt : boolean = false;
@@ -80,7 +85,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	/**
 	 * Das Datum, wann die Leistung gemahnt wurde oder null.
 	 */
-	public Mahndatum : string | null = null;
+	public mahndatum : string | null = null;
 
 	/**
 	 * Gibt an, ob es sich um ein epochal unterrichtetes Fach handelt oder nicht.
@@ -162,10 +167,11 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			 throw new Error('invalid json format, missing attribute aufZeugnis');
 		result.aufZeugnis = obj.aufZeugnis;
 		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
+		result.noteQuartal = typeof obj.noteQuartal === "undefined" ? null : obj.noteQuartal === null ? null : obj.noteQuartal;
 		if (typeof obj.istGemahnt === "undefined")
 			 throw new Error('invalid json format, missing attribute istGemahnt');
 		result.istGemahnt = obj.istGemahnt;
-		result.Mahndatum = typeof obj.Mahndatum === "undefined" ? null : obj.Mahndatum === null ? null : obj.Mahndatum;
+		result.mahndatum = typeof obj.mahndatum === "undefined" ? null : obj.mahndatum === null ? null : obj.mahndatum;
 		if (typeof obj.istEpochal === "undefined")
 			 throw new Error('invalid json format, missing attribute istEpochal');
 		result.istEpochal = obj.istEpochal;
@@ -196,7 +202,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"fachID" : ' + obj.fachID + ',';
 		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
 		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
-		result += '"abifach" : ' + ((!obj.abifach) ? 'null' : JSON.stringify(obj.abifach)) + ',';
+		result += '"abifach" : ' + ((!obj.abifach) ? 'null' : obj.abifach) + ',';
 		result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10 + ',';
 		result += '"koopSchule" : ' + ((!obj.koopSchule) ? 'null' : obj.koopSchule) + ',';
 		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
@@ -205,8 +211,9 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		result += '"zusatzkraftWochenstunden" : ' + obj.zusatzkraftWochenstunden + ',';
 		result += '"aufZeugnis" : ' + obj.aufZeugnis + ',';
 		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
 		result += '"istGemahnt" : ' + obj.istGemahnt + ',';
-		result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : JSON.stringify(obj.Mahndatum)) + ',';
+		result += '"mahndatum" : ' + ((!obj.mahndatum) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
 		result += '"istEpochal" : ' + obj.istEpochal + ',';
 		result += '"geholtJahrgangAbgeschlossen" : ' + ((!obj.geholtJahrgangAbgeschlossen) ? 'null' : JSON.stringify(obj.geholtJahrgangAbgeschlossen)) + ',';
 		result += '"gewichtungAllgemeinbildend" : ' + obj.gewichtungAllgemeinbildend + ',';
@@ -238,7 +245,7 @@ export class SchuelerLeistungsdaten extends JavaObject {
 			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (typeof obj.abifach !== "undefined") {
-			result += '"abifach" : ' + ((!obj.abifach) ? 'null' : JSON.stringify(obj.abifach)) + ',';
+			result += '"abifach" : ' + ((!obj.abifach) ? 'null' : obj.abifach) + ',';
 		}
 		if (typeof obj.istZP10oderZK10 !== "undefined") {
 			result += '"istZP10oderZK10" : ' + obj.istZP10oderZK10 + ',';
@@ -264,11 +271,14 @@ export class SchuelerLeistungsdaten extends JavaObject {
 		if (typeof obj.note !== "undefined") {
 			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
+		if (typeof obj.noteQuartal !== "undefined") {
+			result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
+		}
 		if (typeof obj.istGemahnt !== "undefined") {
 			result += '"istGemahnt" : ' + obj.istGemahnt + ',';
 		}
-		if (typeof obj.Mahndatum !== "undefined") {
-			result += '"Mahndatum" : ' + ((!obj.Mahndatum) ? 'null' : JSON.stringify(obj.Mahndatum)) + ',';
+		if (typeof obj.mahndatum !== "undefined") {
+			result += '"mahndatum" : ' + ((!obj.mahndatum) ? 'null' : JSON.stringify(obj.mahndatum)) + ',';
 		}
 		if (typeof obj.istEpochal !== "undefined") {
 			result += '"istEpochal" : ' + obj.istEpochal + ',';

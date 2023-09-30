@@ -27,6 +27,12 @@
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel"
+								:model-value="Note.fromKuerzel(row.source.noteQuartal)"
+								@update:model-value="value => patchLeistung({ noteQuartal: ((value === null) || (value === undefined)) ? null : value.kuerzel }, row.source.id)"
+								headless class="w-full" />
+						</div>
+						<div class="svws-ui-td" role="cell">
+							<svws-ui-select title="—" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel"
 								:model-value="Note.fromKuerzel(row.source.note)"
 								@update:model-value="value => patchLeistung({ note: ((value === null) || (value === undefined)) ? null : value.kuerzel }, row.source.id)"
 								headless class="w-full" />
@@ -49,6 +55,7 @@
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: false, minWidth: 14 },
 		{ key: "kursID", label: "Kurs", span: 0.75, sortable: false, minWidth: 14 },
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: false, minWidth: 20 },
+		{ key: "noteQuartal", label: "Quartalsnote", span: 0.25, sortable: false },
 		{ key: "note", label: "Note", span: 0.25, sortable: false },
 	];
 

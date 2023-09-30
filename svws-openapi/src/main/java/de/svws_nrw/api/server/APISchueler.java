@@ -359,6 +359,38 @@ public class APISchueler {
 
 
     /**
+     * Die OpenAPI-Methode für das Patchen von Schülerleistungsdaten.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Schülerleistungsdaten
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/leistungsdaten/{id : \\d+}")
+    @Operation(summary = "Passt die Schülerleistungsdaten mit der angebenen ID an.",
+    description = "Passt die Schülerleistungsdaten mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerleistungsdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Schülerleistungsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).patch(id, is),
+    		request, ServerMode.STABLE,
+    		BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
+    		BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für die Abfrage des Kataloges für die Fahrschülerarten.
      *
      * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
