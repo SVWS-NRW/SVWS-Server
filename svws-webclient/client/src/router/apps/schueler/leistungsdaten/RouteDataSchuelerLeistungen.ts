@@ -10,24 +10,27 @@ import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsda
 
 
 interface RouteStateDataSchuelerLeistungen {
-	idSchueler: number | undefined;
+	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
+	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
-	auswahl: SchuelerLernabschnittListeEintrag | undefined;
-	daten: SchuelerLernabschnittsdaten | undefined;
 	mapFaecher: Map<number, FaecherListeEintrag>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
+	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
+	auswahl: SchuelerLernabschnittListeEintrag | undefined;
+	daten: SchuelerLernabschnittsdaten | undefined;
 	mapKurse: Map<number, KursListeEintrag>;
 }
+
 
 export class RouteDataSchuelerLeistungen {
 
 	private static _defaultState: RouteStateDataSchuelerLeistungen = {
-		idSchueler: undefined,
+		idSchueler: -1,
 		listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
-		auswahl: undefined,
-		daten: undefined,
 		mapFaecher: new Map(),
 		mapLehrer: new Map(),
+		auswahl: undefined,
+		daten: undefined,
 		mapKurse: new Map(),
 	}
 
@@ -45,7 +48,9 @@ export class RouteDataSchuelerLeistungen {
 		this._state.value = { ... this._state.value };
 	}
 
-	get idSchueler(): number | undefined {
+
+
+	get idSchueler(): number {
 		return this._state.value.idSchueler;
 	}
 
@@ -53,7 +58,60 @@ export class RouteDataSchuelerLeistungen {
 		return this._state.value.listAbschnitte;
 	}
 
-	public async ladeListe(idSchueler: number) {
+	get mapFaecher(): Map<number, FaecherListeEintrag> {
+		return this._state.value.mapFaecher;
+	}
+
+	get mapLehrer(): Map<number, LehrerListeEintrag> {
+		return this._state.value.mapLehrer;
+	}
+
+	protected getLernabschnitt(curState : RouteStateDataSchuelerLeistungen, idSchuljahresabschnitt : number, wechselNr : number) : SchuelerLernabschnittListeEintrag | undefined {
+		let found : SchuelerLernabschnittListeEintrag | undefined = undefined;
+		for (const current of curState.listAbschnitte) {
+			if (current.schuljahresabschnitt === idSchuljahresabschnitt) {
+				found = current;
+				if (current.wechselNr === wechselNr)
+					break;
+			}
+		}
+		return found;
+	}
+
+	protected async updateSchuljahresabschnitt(curState : RouteStateDataSchuelerLeistungen, newSchuljahresabschnitt : number | undefined, newWechselNr : number) : Promise<RouteStateDataSchuelerLeistungen> {
+		let found : SchuelerLernabschnittListeEintrag | undefined = undefined;
+		// Prüfe, ob ein alter Schuljahresabschnitt (und ggf. die Wechselnummer) in der Liste der Lernabschnitte existiert
+		if (newSchuljahresabschnitt !== undefined)
+			found = this.getLernabschnitt(curState, newSchuljahresabschnitt, newWechselNr);
+		// Wenn kein passender Lernabschnitt gefunden wurde, dann prüfe, ob ein Lernabschnitt für das aktuelle Halbjahr vorhanden ist.
+		if (found === undefined) {
+			const idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
+			for (const current of curState.listAbschnitte) {
+				if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === 0)) {
+					found = current;
+					break;
+				}
+			}
+		}
+		// Ansonsten nimm einfach den letzten Lernabschnitt der Liste
+		if (found === undefined) {
+			if (curState.listAbschnitte.isEmpty())
+				return curState;
+			found = curState.listAbschnitte.get(curState.listAbschnitte.size()-1);
+		}
+		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
+		const mapKurse = new Map<number, KursListeEintrag>();
+		for (const k of listKurse)
+			mapKurse.set(k.id, k);
+		curState = Object.assign({ ... curState }, { auswahl: found, daten, mapKurse });
+		return curState;
+	}
+
+
+	public async setSchueler(idSchueler: number) : Promise<void> {
+		if (idSchueler == this._state.value.idSchueler)
+			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const mapFaecher = new Map<number, FaecherListeEintrag>();
@@ -63,24 +121,16 @@ export class RouteDataSchuelerLeistungen {
 		const mapLehrer = new Map<number, LehrerListeEintrag>();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
-		// TODO this.setPatchedDefaultState({  });
-		this.setPatchedState({ idSchueler, listAbschnitte, mapFaecher, mapLehrer })
+		let newState = <RouteStateDataSchuelerLeistungen>{ idSchueler, listAbschnitte, mapFaecher, mapLehrer };
+		const alteAuswahl = this._state.value.auswahl;
+		newState = await this.updateSchuljahresabschnitt(newState,
+			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
+			alteAuswahl === undefined ? 0 : alteAuswahl.wechselNr);
+		this.setPatchedDefaultState(newState)
 	}
 
-	public getEntry(idSchuljahresabschnitt: number, wechselNr: number|null) : SchuelerLernabschnittListeEintrag | undefined {
-		for (const current of this.listAbschnitte)
-			if ((current.schuljahresabschnitt === idSchuljahresabschnitt) && (current.wechselNr === wechselNr))
-				return current;
-		return undefined;
-	}
-
-	public getEntryDefault() : SchuelerLernabschnittListeEintrag | undefined {
-		const entry = this.getEntry(routeApp.data.aktAbschnitt.value.id, null);
-		if (entry !== undefined)
-			return entry;
-		if (this.listAbschnitte.size() > 0)
-			return this.listAbschnitte.get(0);
-		return undefined;
+	get hatAuswahl() : boolean {
+		return (this._state.value.auswahl !== undefined);
 	}
 
 	get auswahl(): SchuelerLernabschnittListeEintrag {
@@ -94,31 +144,21 @@ export class RouteDataSchuelerLeistungen {
 			throw new Error("Unerwarteter Fehler: Leistungsdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
-	get mapFaecher(): Map<number, FaecherListeEintrag> {
-		return this._state.value.mapFaecher;
-	}
-
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
-	}
 
 	get mapKurse(): Map<number, KursListeEintrag> {
 		return this._state.value.mapKurse;
 	}
 
-	public async setEintrag(lernabschnitt: SchuelerLernabschnittListeEintrag | undefined) {
-		if (lernabschnitt === undefined)
+	public async setLernabschnitt(idSchuljahresabschnitt : number, wechselNr : number) {
+		const curAuswahl = this._state.value.auswahl;
+		if ((curAuswahl === undefined) || ((idSchuljahresabschnitt === curAuswahl.schuljahresabschnitt)) && (wechselNr === curAuswahl.wechselNr))
 			return;
-		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, lernabschnitt.id);
-		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, lernabschnitt.schuljahresabschnitt);
-		const mapKurse = new Map<number, KursListeEintrag>();
-		for (const k of listKurse)
-			mapKurse.set(k.id, k);
-		this.setPatchedState({ auswahl: lernabschnitt, daten, mapKurse });
+		const newState = await this.updateSchuljahresabschnitt(this._state.value, idSchuljahresabschnitt, wechselNr);
+		this.setPatchedState(newState);
 	}
 
-	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value?.schuelerID, abschnitt: value?.schuljahresabschnitt, wechselNr: value?.wechselNr || undefined } });
+	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag) => {
+		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
 	}
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {

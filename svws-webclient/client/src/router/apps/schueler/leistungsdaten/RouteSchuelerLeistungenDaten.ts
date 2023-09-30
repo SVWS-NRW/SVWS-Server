@@ -26,19 +26,15 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuel
 	}
 
 	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
+		if (to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (to_params.id === undefined)
-			return routeError.getRoute(new Error("Fehler: Keine Schüler-ID in der URL angegeben."));
-		const id = parseInt(to_params.id);
-		if (to_params.abschnitt === undefined) {
-			return routeSchuelerLeistungen.getRoute(id);
-		} else {
-			const abschnitt = parseInt(to_params.abschnitt);
-			const wechselNr = (to_params.wechselNr === undefined) || (to_params.wechselNr === "") ? 0 : parseInt(to_params.wechselNr);
-			const eintrag = routeSchuelerLeistungen.data.getEntry(abschnitt, wechselNr);
-			await routeSchuelerLeistungen.data.setEintrag(eintrag);
-		}
+		if (to_params.abschnitt === undefined)
+			return routeError.getRoute(new Error("Fehler: Kein Schuljahresabschnitt in der URL angegeben."));
+		const idSchuljahresabschnitt = parseInt(to_params.abschnitt);
+		if (to_params.wechselNr === undefined)
+			return routeError.getRoute(new Error("Fehler: Keine Wechsel-Nummer in der URL angegeben."));
+		const wechselNr = parseInt(to_params.wechselNr);
+		await routeSchuelerLeistungen.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr);
 	}
 
 	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
