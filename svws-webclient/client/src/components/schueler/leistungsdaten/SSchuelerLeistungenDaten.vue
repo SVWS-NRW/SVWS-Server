@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card v-if="data">
 		<svws-ui-table :columns="cols" :items="props.data?.leistungsdaten" hasBackground>
-			<template #body={rows}>
+			<template #body="{rows}">
 				<template v-for="row in rows" :key="row.source.id">
 					<div class="svws-ui-tr" role="row" :style="{ '--background-color': bgColor(row.source.fachID) }">
 						<div class="svws-ui-td" role="cell">
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 
 	import { computed, type WritableComputedRef } from "vue";
-	import { SchuelerLeistungsdaten, Note, type FaecherListeEintrag, type LehrerListeEintrag, ZulaessigesFach, DeveloperNotificationException } from "@core";
+	import { type SchuelerLeistungsdaten, Note, type FaecherListeEintrag, type LehrerListeEintrag, ZulaessigesFach, DeveloperNotificationException } from "@core";
 	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
 
 	const props = defineProps<SchuelerLeistungenDatenProps>();
