@@ -245,6 +245,12 @@ export class RouteDataGostKursplanung {
 		return this._state.value.datenmanager;
 	}
 
+	public get ergebnismanager(): GostBlockungsergebnisManager {
+		if (this._state.value.ergebnismanager === undefined)
+			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Ergebnismanager zur Verfügung steht.");
+		return this._state.value.ergebnismanager;
+	}
+
 	public get hatErgebnis(): boolean {
 		return this._state.value.ergebnismanager !== undefined;
 	}
@@ -276,20 +282,14 @@ export class RouteDataGostKursplanung {
 			throw new Error("Es kann keine Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
 		const ergebnis = await api.server.getGostBlockungsergebnis(api.schema, value.id);
-		const ergebnismanager = () => new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
-		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, ergebnismanager, this.faecherManager.faecher(), this.mapSchueler)
+		const ergebnismanager = new GostBlockungsergebnisManager(this.datenmanager, ergebnis);
+		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, () => this.ergebnismanager, this.faecherManager.faecher(), this.mapSchueler)
 		api.status.stop();
 		this.setPatchedState({
 			auswahlErgebnis: value,
-			ergebnismanager: ergebnismanager(),
+			ergebnismanager: ergebnismanager,
 			schuelerFilter: schuelerFilter,
 		});
-	}
-
-	public get ergebnismanager(): GostBlockungsergebnisManager {
-		if (this._state.value.ergebnismanager === undefined)
-			throw new Error("Es wurde noch kein Blockungsergebnis geladen, so dass kein Ergebnis-Manager zur Verfügung steht.");
-		return this._state.value.ergebnismanager;
 	}
 
 	public get schuelerFilter(): GostKursplanungSchuelerFilter {
