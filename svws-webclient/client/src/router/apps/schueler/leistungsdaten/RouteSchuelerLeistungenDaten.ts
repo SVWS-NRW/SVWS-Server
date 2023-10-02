@@ -7,7 +7,6 @@ import { routeError } from "~/router/error/RouteError";
 import type { RouteSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
 import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
 
-import type { SchuelerLeistungenAuswahlProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahlProps";
 import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
 
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
@@ -20,7 +19,6 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuel
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
-		super.setView("lernabschnittauswahl", SSchuelerLeistungenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 		];
 	}
@@ -39,14 +37,6 @@ export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuel
 
 	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
 		return { name: this.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
-	}
-
-	public getAuswahlProps(to: RouteLocationNormalized): SchuelerLeistungenAuswahlProps {
-		return {
-			lernabschnitt: routeSchuelerLeistungen.data.auswahl,
-			lernabschnitte: routeSchuelerLeistungen.data.listAbschnitte,
-			gotoLernabschnitt: routeSchuelerLeistungen.data.gotoLernabschnitt
-		};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLeistungenDatenProps {

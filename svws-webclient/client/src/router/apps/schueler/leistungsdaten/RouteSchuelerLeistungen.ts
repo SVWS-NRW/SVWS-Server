@@ -1,4 +1,4 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -7,6 +7,7 @@ import { routeError } from "~/router/error/RouteError";
 import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 import { RouteDataSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteDataSchuelerLeistungen";
+import type { SchuelerLeistungenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenProps";
 
 const SSchuelerLeistungen = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungen.vue");
 
@@ -16,7 +17,7 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.leistungen", "leistungsdaten", SSchuelerLeistungen, new RouteDataSchuelerLeistungen());
 		super.mode = ServerMode.STABLE;
-		super.propHandler = (route) => this.getNoProps(route);
+		super.propHandler = (route) => this.getProps(route);
 		super.text = "Leistungsdaten";
 		super.children = [
 			routeSchuelerLeistungenDaten
@@ -38,6 +39,14 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id: id }};
+	}
+
+	public getProps(to: RouteLocationNormalized): SchuelerLeistungenProps {
+		return {
+			lernabschnitt: routeSchuelerLeistungen.data.auswahl,
+			lernabschnitte: routeSchuelerLeistungen.data.listAbschnitte,
+			gotoLernabschnitt: routeSchuelerLeistungen.data.gotoLernabschnitt
+		};
 	}
 
 }

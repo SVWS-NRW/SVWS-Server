@@ -13,7 +13,7 @@
 
 	import { GostHalbjahr } from "@core";
 	import type { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
-	import {ref, onMounted} from 'vue';
+	import { ref, onMounted } from 'vue';
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();
 
