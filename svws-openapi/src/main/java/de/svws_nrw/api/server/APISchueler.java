@@ -308,7 +308,7 @@ public class APISchueler {
      * Die OpenAPI-Methode für die Abfrage der Lernabschnittsdaten eines Schülers.
      *
      * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-     * @param abschnitt  die id des Schülerlernabschnitts
+     * @param abschnitt  die ID des Schülerlernabschnitts
      * @param request    die Informationen zur HTTP-Anfrage
      *
      * @return die Lernabschnittsdaten des Schülers
@@ -329,6 +329,38 @@ public class APISchueler {
     		                                        @Context final HttpServletRequest request) {
     	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).get(abschnitt),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen von Schülerlernabschnittsdaten.
+     *
+     * @param schema      das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param abschnitt   die ID des Schülerlernabschnitts
+     * @param is          der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request     die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/lernabschnittsdaten/{abschnitt : \\d+}")
+    @Operation(summary = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an.",
+    description = "Passt die Schülerlernabschnittsdaten mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchSchuelerLernabschnittsdaten(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt,
+    		@RequestBody(description = "Der Patch für die Schülerlernabschnittsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchuelerLernabschnittsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerLernabschnittsdaten(conn).patch(abschnitt, is),
+    		request, ServerMode.STABLE,
+    		BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
+    		BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
     }
 
 

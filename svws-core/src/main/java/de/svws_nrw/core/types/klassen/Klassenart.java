@@ -143,7 +143,7 @@ public enum Klassenart {
 	private static final @NotNull HashMap<@NotNull String, @NotNull Klassenart> _mapKuerzel = new HashMap<>();
 
 	/** Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist */
-	private @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
+	private final @NotNull ArrayList<@NotNull Pair<Schulform, Schulgliederung>> @NotNull[] zulaessig;
 
 
 	/**
@@ -252,12 +252,12 @@ public enum Klassenart {
 	/**
 	 * Bestimmt anhand des Kürzels, die zulässige Klassenart.
 	 *
-	 * @param kursart   das Kürzel
+	 * @param kuerzel   das Kürzel
 	 *
 	 * @return die Klassenart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
-	public static Klassenart getByASDKursart(final String kursart) {
-		return getMapByKuerzel().get(kursart);
+	public static Klassenart getByKuerzel(final String kuerzel) {
+		return getMapByKuerzel().get(kuerzel);
 	}
 
 }

@@ -96,7 +96,7 @@ export class Klassenart extends JavaObject implements JavaEnum<Klassenart> {
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Klassenart zulässig ist
 	 */
-	private zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
 
 	/**
 	 * Erzeugt eine zulässige Klassenart in der Aufzählung.
@@ -201,12 +201,12 @@ export class Klassenart extends JavaObject implements JavaEnum<Klassenart> {
 	/**
 	 * Bestimmt anhand des Kürzels, die zulässige Klassenart.
 	 *
-	 * @param kursart   das Kürzel
+	 * @param kuerzel   das Kürzel
 	 *
 	 * @return die Klassenart oder null, wenn keine Zuordnung für das übergebene Kürzel vorhanden ist
 	 */
-	public static getByASDKursart(kursart : string | null) : Klassenart | null {
-		return Klassenart.getMapByKuerzel().get(kursart);
+	public static getByKuerzel(kuerzel : string | null) : Klassenart | null {
+		return Klassenart.getMapByKuerzel().get(kuerzel);
 	}
 
 	/**

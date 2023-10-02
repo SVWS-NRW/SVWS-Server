@@ -2,19 +2,39 @@ package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
+import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.fach.BilingualeSprache;
+import de.svws_nrw.core.types.klassen.Klassenart;
+import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
+import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.json.JsonDaten;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -177,9 +197,187 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+	private static final Map<String, DataBasicMapper<DTOSchuelerLernabschnittsdaten>> patchMappings = Map.ofEntries(
+		Map.entry("id", (conn, dto, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+				throw OperationError.BAD_REQUEST.exception();
+		}),
+		Map.entry("schuelerID", (conn, dto, value, map) -> {
+			final long idSchueler = JSONMapper.convertToLong(value, false);
+			if (conn.queryByKey(DTOSchueler.class, idSchueler) == null)
+				throw OperationError.CONFLICT.exception();
+			dto.Schueler_ID = idSchueler;
+		}),
+		Map.entry("schuljahresabschnitt", (conn, dto, value, map) -> {
+			final long schuljahresabschnitt = JSONMapper.convertToLong(value, false);
+			if (conn.queryByKey(DTOSchuljahresabschnitte.class, schuljahresabschnitt) == null)
+				throw OperationError.CONFLICT.exception();
+			dto.Schuljahresabschnitts_ID = schuljahresabschnitt;
+		}),
+		Map.entry("wechselNr", (conn, dto, value, map) -> dto.WechselNr = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
+		Map.entry("datumAnfang", (conn, dto, value, map) -> {
+			final String strDatum = JSONMapper.convertToString(value, true, false, null);
+			// TODO Datum validieren
+			dto.DatumVon = strDatum;
+		}),
+		Map.entry("datumEnde", (conn, dto, value, map) -> {
+			final String strDatum = JSONMapper.convertToString(value, true, false, null);
+			// TODO Datum validieren
+			dto.DatumBis = strDatum;
+		}),
+		Map.entry("datumKonferenz", (conn, dto, value, map) -> {
+			final String strDatum = JSONMapper.convertToString(value, true, false, null);
+			// TODO Datum validieren
+			dto.Konferenzdatum = strDatum;
+		}),
+		Map.entry("datumZeugnis", (conn, dto, value, map) -> {
+			final String strDatum = JSONMapper.convertToString(value, true, false, null);
+			// TODO Datum validieren
+			dto.ZeugnisDatum = strDatum;
+		}),
+		Map.entry("anzahlSchulbesuchsjahre", (conn, dto, value, map) -> dto.Schulbesuchsjahre = JSONMapper.convertToIntegerInRange(value, true, 0, 100)),
+		Map.entry("istGewertet", (conn, dto, value, map) -> dto.SemesterWertung = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("istWiederholung", (conn, dto, value, map) -> dto.Wiederholung = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("pruefungsOrdnung", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			// TODO Prüfungsordnung anhand des Schild3-Katalogs validieren
+			dto.PruefOrdnung = str;
+		}),
+		Map.entry("tutorID", (conn, dto, value, map) -> {
+			final Long idLehrer = JSONMapper.convertToLong(value, true);
+			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Tutor_ID = idLehrer;
+		}),
+		Map.entry("klassenID", (conn, dto, value, map) -> {
+			final Long idKlasse = JSONMapper.convertToLong(value, true);
+			if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Klassen_ID = idKlasse;
+		}),
+		Map.entry("folgeklassenID", (conn, dto, value, map) -> {
+			final Long idKlasse = JSONMapper.convertToLong(value, true);
+			if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Folgeklasse_ID = idKlasse;
+		}),
+		Map.entry("schulgliederung", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			dto.Schulgliederung = Schulgliederung.getByKuerzel(str);
+		}),
+		Map.entry("jahrgangID", (conn, dto, value, map) -> {
+			final Long idJahrgang = JSONMapper.convertToLong(value, true);
+			if ((idJahrgang != null) && (conn.queryByKey(DTOJahrgang.class, idJahrgang) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Jahrgang_ID = idJahrgang;
+		}),
+		Map.entry("fachklasseID", (conn, dto, value, map) -> {
+			final Long idFachklasse = JSONMapper.convertToLong(value, true);
+			if (idFachklasse != null) {
+				final var manager = JsonDaten.fachklassenManager;
+				if (manager.getDaten(idFachklasse) == null)
+					throw OperationError.CONFLICT.exception();
+			}
+			dto.Fachklasse_ID = idFachklasse;
+		}),
+		Map.entry("schwerpunktID", (conn, dto, value, map) -> {
+			final Long idSchwerpunkt = JSONMapper.convertToLong(value, true);
+			// TODO Validierung des Schwerpunktes
+			dto.Schwerpunkt_ID = idSchwerpunkt;
+		}),
+		Map.entry("organisationsform", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+			if (str != null) {
+				if ((schule.Schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.getByKuerzel(str) == null))
+					throw OperationError.CONFLICT.exception();
+				if ((AllgemeinbildendOrganisationsformen.getByKuerzel(str) == null) && (BerufskollegOrganisationsformen.getByKuerzel(str) == null))
+					throw OperationError.CONFLICT.exception();
+			}
+			dto.OrgFormKrz = str;
+		}),
+		Map.entry("Klassenart", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			if ((str != null) && (Klassenart.getByKuerzel(str) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Klassenart = str;
+		}),
+		Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.SumFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
+		Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.SumFehlStdU = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
+		Map.entry("fehlstundenGrenzwert", (conn, dto, value, map) -> dto.FehlstundenGrenzwert = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
+		Map.entry("hatSchwerbehinderungsNachweis", (conn, dto, value, map) -> dto.Schwerbehinderung = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatAOSF", (conn, dto, value, map) -> dto.AOSF = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatAutismus", (conn, dto, value, map) -> dto.Autist = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("hatZieldifferentenUnterricht", (conn, dto, value, map) -> dto.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false)),
+		Map.entry("foerderschwerpunkt1ID", (conn, dto, value, map) -> {
+			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
+			if ((idFoerderschwerpunkt != null) && (Foerderschwerpunkt.getByID(idFoerderschwerpunkt) == null))
+					throw OperationError.CONFLICT.exception();
+			dto.Foerderschwerpunkt_ID = idFoerderschwerpunkt;
+		}),
+		Map.entry("foerderschwerpunkt2ID", (conn, dto, value, map) -> {
+			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
+			if ((idFoerderschwerpunkt != null) && (Foerderschwerpunkt.getByID(idFoerderschwerpunkt) == null))
+					throw OperationError.CONFLICT.exception();
+			dto.Foerderschwerpunkt2_ID = idFoerderschwerpunkt;
+		}),
+		Map.entry("sonderpaedagogeID", (conn, dto, value, map) -> {
+			final Long idLehrer = JSONMapper.convertToLong(value, true);
+			if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Sonderpaedagoge_ID = idLehrer;
+		}),
+		Map.entry("bilingualerZweig", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			if ((str != null) && (BilingualeSprache.getByKuerzel(str) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.BilingualerZweig = str;
+		}),
+		Map.entry("istFachpraktischerAnteilAusreichend", (conn, dto, value, map) -> dto.FachPraktAnteilAusr = JSONMapper.convertToBoolean(value, true)),
+		Map.entry("versetzungsvermerk", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			// TODO Prüfung des Versetzungsvermerks
+			//if ((str != null) && (???))
+			//	throw OperationError.CONFLICT.exception();
+			dto.VersetzungKrz = str;
+		}),
+		Map.entry("noteDurchschnitt", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			// TODO Prüfung der Durchschnittsnote
+			dto.DSNote = str;
+		}),
+		Map.entry("noteLernbereichGSbzwAL", (conn, dto, value, map) -> dto.Gesamtnote_GS = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6))),
+		Map.entry("noteLernbereichNW", (conn, dto, value, map) -> dto.Gesamtnote_NW = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6))),
+		Map.entry("abschlussart", (conn, dto, value, map) -> {
+			final Integer abschlussart = JSONMapper.convertToInteger(value, true);
+			// TODO Prüfung der Abschlussart
+			dto.AbschlussArt = abschlussart;
+		}),
+		Map.entry("istAbschlussPrognose", (conn, dto, value, map) -> dto.AbschlIstPrognose = JSONMapper.convertToBoolean(value, true)),
+		Map.entry("abschluss", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			if ((str != null) && (SchulabschlussAllgemeinbildend.getByKuerzel(str) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Abschluss = str;
+		}),
+		Map.entry("abschlussBerufsbildend", (conn, dto, value, map) -> {
+			final String str = JSONMapper.convertToString(value, true, false, null);
+			if ((str != null) && (SchulabschlussBerufsbildend.getByKuerzel(str) == null))
+				throw OperationError.CONFLICT.exception();
+			dto.Abschluss_B = str;
+		}),
+		Map.entry("textErgebnisPruefungsalgorithmus", (conn, dto, value, map) -> dto.PruefAlgoErgebnis = JSONMapper.convertToString(value, true, false, null)),
+		Map.entry("zeugnisart", (conn, dto, value, map) -> dto.Zeugnisart = JSONMapper.convertToString(value, true, false, 5))
+	);
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
+		return super.patchBasic(id, is, DTOSchuelerLernabschnittsdaten.class, patchMappings);
 	}
+
+	// TODO Patch für Fachbemerkungen als getrennte Patch-Methode
+
+	// TODO Patch für Nachprüfungen als getrennte Patch-Methode
 
 }
