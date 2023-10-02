@@ -55,7 +55,7 @@
 				<div role="cell" class="svws-ui-td">
 					<template v-if="allowRegeln">
 						<svws-ui-select :model-value="kurslehrer(kurs).value" @update:model-value="lehrer => setKurslehrer(kurs, lehrer ?? undefined)" autocomplete :item-filter="lehrer_filter" removable headless
-							:items="mapLehrer" :item-text="l=> l.kuerzel" title="Lehrkraft" />
+							:items="kurslehrer_liste(kurs).value" :item-text="l=> l.kuerzel" title="Lehrkraft" />
 					</template>
 					<template v-else>
 						<span :class="{'opacity-25': !kurslehrer(kurs).value?.kuerzel}">{{ kurslehrer(kurs).value?.kuerzel || '—' }}</span>
@@ -194,6 +194,17 @@
 		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id);
 		return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
 	});
+
+	const kurslehrer_liste = (kurs: GostBlockungKurs): ComputedRef<LehrerListeEintrag[]> => computed(() => {
+		const vergeben = new Set();
+		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
+			vergeben.add(l.id);
+		const result = [];
+		for (const l of props.mapLehrer.values())
+			if ((!vergeben.has(l.id)) && (l.istSichtbar))
+				result.push(l);
+		return result;
+	})
 
 	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
 		if (value !== undefined && !props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)) {
