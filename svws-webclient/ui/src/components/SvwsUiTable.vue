@@ -892,11 +892,25 @@
 	.svws-disabled-soft & {
 		@apply text-black dark:text-white;
 
+		.svws-has-background & {
+			@apply text-black/80 dark:text-black/80;
+
+			.button {
+				@apply text-black dark:text-black;
+			}
+		}
+
 		&:before {
 			.svws-has-background & {
 				@apply bg-black/20;
 				box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
 			}
+		}
+	}
+
+	.svws-ui-tr.svws-disabled-soft & {
+		&:before {
+			@apply border-transparent;
 		}
 	}
 

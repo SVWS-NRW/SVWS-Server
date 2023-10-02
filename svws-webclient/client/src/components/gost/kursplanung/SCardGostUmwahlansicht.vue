@@ -19,12 +19,12 @@
 										:draggable="(fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnung(fach.fachID, schueler.id).value?.id, fach.fachID, fachwahlKursart(fach.fachID, schueler.id).value.id)"
 										@dragend="drag_ended()"
-										class="select-none svws-ui-td svws-no-padding group -my-1"
+										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
 										:class="{
 											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)
 										}"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
-										<div v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined" class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 my-0">
+										<div v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined" class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
 											<span class="rounded-sm w-3 -ml-1 -my-0.5 group-hover:bg-white/50">
 												<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-50 group-hover:opacity-100" />
 											</span>
