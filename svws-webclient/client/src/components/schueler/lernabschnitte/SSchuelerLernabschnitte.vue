@@ -28,10 +28,10 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerLeistungenProps } from "./SSchuelerLeistungenProps";
+	import type { SchuelerLernabschnitteProps } from "./SSchuelerLernabschnitteProps";
 	import { ref, onMounted } from 'vue';
 
-	const props = defineProps<SchuelerLeistungenProps>();
+	const props = defineProps<SchuelerLernabschnitteProps>();
 
 	const isMounted = ref(false);
 	onMounted(() => {

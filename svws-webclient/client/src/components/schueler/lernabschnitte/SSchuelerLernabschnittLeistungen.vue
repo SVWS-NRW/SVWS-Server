@@ -47,9 +47,9 @@
 <script setup lang="ts">
 
 	import { Note } from "@core";
-	import type { SchuelerLeistungenDatenProps } from "./SSchuelerLeistungenDatenProps";
+	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
-	const props = defineProps<SchuelerLeistungenDatenProps>();
+	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 
 	const cols = [
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: false, minWidth: 14 },

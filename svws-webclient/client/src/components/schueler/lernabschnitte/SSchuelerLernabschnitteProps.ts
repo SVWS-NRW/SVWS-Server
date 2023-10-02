@@ -1,15 +1,15 @@
 import type { SchuelerLernabschnittListeEintrag, List } from "@core";
 
-export interface SchuelerLernabschnittAuswahlChildData {
+export interface SchuelerLernabschnitteAuswahlChildData {
 	name: string,
 	text: string,
 }
 
-export interface SchuelerLeistungenProps {
+export interface SchuelerLernabschnitteProps {
 	lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;
 	lernabschnitte: List<SchuelerLernabschnittListeEintrag>;
 	gotoLernabschnitt: (value: SchuelerLernabschnittListeEintrag) => Promise<void>;
-	setChild: (value: SchuelerLernabschnittAuswahlChildData) => Promise<void>;
-	child: SchuelerLernabschnittAuswahlChildData;
-	children: SchuelerLernabschnittAuswahlChildData[];
+	setChild: (value: SchuelerLernabschnitteAuswahlChildData) => Promise<void>;
+	child: SchuelerLernabschnitteAuswahlChildData;
+	children: SchuelerLernabschnitteAuswahlChildData[];
 }

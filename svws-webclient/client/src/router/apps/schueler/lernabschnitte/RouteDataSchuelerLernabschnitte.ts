@@ -7,11 +7,11 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { type RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
+import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
 
 
-interface RouteStateDataSchuelerLeistungen {
+interface RouteStateDataSchuelerLernabschnitte {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
 	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
@@ -26,9 +26,9 @@ interface RouteStateDataSchuelerLeistungen {
 }
 
 
-export class RouteDataSchuelerLeistungen {
+export class RouteDataSchuelerLernabschnitte {
 
-	private static _defaultState: RouteStateDataSchuelerLeistungen = {
+	private static _defaultState: RouteStateDataSchuelerLernabschnitte = {
 		idSchueler: -1,
 		listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
 		listFaecher: new ArrayList(),
@@ -36,16 +36,16 @@ export class RouteDataSchuelerLeistungen {
 		auswahl: undefined,
 		daten: undefined,
 		manager: undefined,
-		view: routeSchuelerLeistungenDaten,
+		view: routeSchuelerLernabschnittLeistungen,
 	}
 
-	private _state = shallowRef(RouteDataSchuelerLeistungen._defaultState);
+	private _state = shallowRef(RouteDataSchuelerLernabschnitte._defaultState);
 
-	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerLeistungen>) {
-		this._state.value = Object.assign({ ... RouteDataSchuelerLeistungen._defaultState }, patch);
+	private setPatchedDefaultState(patch: Partial<RouteStateDataSchuelerLernabschnitte>) {
+		this._state.value = Object.assign({ ... RouteDataSchuelerLernabschnitte._defaultState }, patch);
 	}
 
-	private setPatchedState(patch: Partial<RouteStateDataSchuelerLeistungen>) {
+	private setPatchedState(patch: Partial<RouteStateDataSchuelerLernabschnitte>) {
 		this._state.value = Object.assign({ ... this._state.value }, patch);
 	}
 
@@ -69,7 +69,7 @@ export class RouteDataSchuelerLeistungen {
 		return this._state.value.manager;
 	}
 
-	protected getLernabschnitt(curState : RouteStateDataSchuelerLeistungen, idSchuljahresabschnitt : number, wechselNr : number) : SchuelerLernabschnittListeEintrag | undefined {
+	protected getLernabschnitt(curState : RouteStateDataSchuelerLernabschnitte, idSchuljahresabschnitt : number, wechselNr : number) : SchuelerLernabschnittListeEintrag | undefined {
 		let found : SchuelerLernabschnittListeEintrag | undefined = undefined;
 		for (const current of curState.listAbschnitte) {
 			if (current.schuljahresabschnitt === idSchuljahresabschnitt) {
@@ -81,7 +81,7 @@ export class RouteDataSchuelerLeistungen {
 		return found;
 	}
 
-	protected async updateSchuljahresabschnitt(curState : RouteStateDataSchuelerLeistungen, newSchuljahresabschnitt : number | undefined, newWechselNr : number) : Promise<RouteStateDataSchuelerLeistungen> {
+	protected async updateSchuljahresabschnitt(curState : RouteStateDataSchuelerLernabschnitte, newSchuljahresabschnitt : number | undefined, newWechselNr : number) : Promise<RouteStateDataSchuelerLernabschnitte> {
 		let found : SchuelerLernabschnittListeEintrag | undefined = undefined;
 		// Prüfe, ob ein alter Schuljahresabschnitt (und ggf. die Wechselnummer) in der Liste der Lernabschnitte existiert
 		if (newSchuljahresabschnitt !== undefined)
@@ -119,7 +119,7 @@ export class RouteDataSchuelerLeistungen {
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		let newState = <RouteStateDataSchuelerLeistungen>{ idSchueler, listAbschnitte, listFaecher, listLehrer };
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, listFaecher, listLehrer };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
@@ -160,7 +160,7 @@ export class RouteDataSchuelerLeistungen {
 	}
 
 	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag) => {
-		await RouteManager.doRoute({ name: routeSchuelerLeistungenDaten.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
+		await RouteManager.doRoute({ name: routeSchuelerLernabschnittLeistungen.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
 	}
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {

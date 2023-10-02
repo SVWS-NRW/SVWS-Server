@@ -13,7 +13,7 @@ import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbild
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { routeSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
-import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungen";
+import { routeSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 import { routeSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteSchuelerSchulbesuch";
 import { routeSchuelerStundenplan } from "~/router/apps/schueler/stundenplan/RouteSchuelerStundenplan";
 import { routeSchuelerKAoA } from "~/router/apps/schueler/kaoa/RouteSchuelerKAoA";
@@ -43,7 +43,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerSchulbesuch,
 			routeSchuelerAbschnitt,
-			routeSchuelerLeistungen,
+			routeSchuelerLernabschnitte,
 			routeSchuelerKAoA,
 			routeSchuelerLaufbahninfo,
 			routeSchuelerLaufbahnplanung,
