@@ -10,7 +10,6 @@ import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.BilingualeSprache;
 import de.svws_nrw.core.types.klassen.Klassenart;
-import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
 import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
@@ -24,6 +23,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
@@ -312,13 +312,13 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		Map.entry("hatZieldifferentenUnterricht", (conn, dto, value, map) -> dto.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false)),
 		Map.entry("foerderschwerpunkt1ID", (conn, dto, value, map) -> {
 			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
-			if ((idFoerderschwerpunkt != null) && (Foerderschwerpunkt.getByID(idFoerderschwerpunkt) == null))
+			if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
 					throw OperationError.CONFLICT.exception();
 			dto.Foerderschwerpunkt_ID = idFoerderschwerpunkt;
 		}),
 		Map.entry("foerderschwerpunkt2ID", (conn, dto, value, map) -> {
 			final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
-			if ((idFoerderschwerpunkt != null) && (Foerderschwerpunkt.getByID(idFoerderschwerpunkt) == null))
+			if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
 					throw OperationError.CONFLICT.exception();
 			dto.Foerderschwerpunkt2_ID = idFoerderschwerpunkt;
 		}),
