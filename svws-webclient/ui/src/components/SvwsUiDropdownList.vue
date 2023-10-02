@@ -1,32 +1,36 @@
 <template>
-	<div class="multiselect--items-wrapper"
-		:class="{'multiselect--items-wrapper--statistics': statistics, 'multiselect--items-wrapper--tags': tags}"
+	<div class="svws-ui-dropdown-list"
+		:class="{'svws-statistik': statistics, 'svws-type-tags': tags}"
 		:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 		ref="floating">
 		<ul :id="listIdPrefix"
-			class="multiselect--items-list"
-			:class="{'multiselect--items-list--tags' : tags}"
+			class="svws-ui-dropdown-list--items"
 			role="listbox"
 			@mouseenter="activeItemIndex = -1">
-			<li v-if="listEmpty" class="px-1 py-1 text-base opacity-50 inline-block">
-				Keine Ergebnisse
+			<li v-if="listEmpty" class="px-2 py-1.5 text-base opacity-50 inline-block">
+				<template v-if="!searchText">
+					Keine Einträge gefunden
+				</template>
+				<template v-else>
+					Keine Ergebnisse für "{{ searchText }}"
+				</template>
 			</li>
 			<li v-for="(item, index) in filteredList"
 				:id="`${listIdPrefix}-${index}`"
 				:key="index"
 				ref="itemRefs"
 				role="option"
-				class="multiselect--item"
+				class="svws-ui-dropdown-list--item"
 				:class="{
-					active: activeItemIndex === index,
-					selected: selectedItemList.has(item)
+					'svws-active': activeItemIndex === index,
+					'svws-selected': selectedItemList.has(item)
 				}"
 				:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
 				@mousedown.prevent
 				@click="selectItem(item)">
 				<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
-				<span>{{ itemText(item) }}</span>
-				<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
+				<span v-else>{{ itemText(item) }}</span>
+				<i-ri-check-line v-if="selectedItemList.has(item)" class="w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" />
 			</li>
 		</ul>
 	</div>
@@ -50,6 +54,7 @@
 		strategy: Strategy;
 		floatingLeft: string;
 		floatingTop: string;
+		searchText?: string;
 	}>()
 
 	const floating = ref(null);
@@ -80,86 +85,47 @@
 
 <style lang="postcss" scoped>
 
-.multiselect--items-wrapper {
-	@apply absolute z-50 w-full min-w-[11rem];
-	@apply rounded-md border border-black/25 dark:border-white/25 bg-white dark:bg-black;
-	@apply shadow-2xl shadow-black/25 dark:shadow-white/5;
-	@apply overflow-hidden;
+.svws-ui-dropdown-list {
+	@apply w-full z-50 min-w-[11rem];
+	@apply rounded-lg border border-black/25 dark:border-white/25 bg-white dark:bg-black;
+  @apply shadow-xl;
 }
 
-.multiselect--items-list {
-	@apply overflow-y-auto overflow-x-hidden;
-	@apply px-1.5 py-0.5;
-	max-height: 40ex;
-
-	.multiselect--item {
-		@apply text-black dark:text-white bg-white dark:bg-black rounded border border-transparent;
-		@apply text-base;
-		@apply py-1 my-1 px-2;
-
-		.multiselect--check {
-			@apply hidden -mt-0.5;
-		}
-
-		&.active {
-			@apply ring ring-svws/50 border-svws bg-svws text-white;
-		}
-
-		&:hover {
-			@apply cursor-pointer;
-			@apply bg-svws text-white;
-		}
-
-		&.selected {
-			@apply font-bold bg-svws text-white;
-		}
-	}
-
-	&--tags {
-		.multiselect--item .multiselect--check {
-			@apply inline-block;
-		}
-
-		.multiselect--item.selected {
-			@apply bg-transparent text-svws dark:text-svws;
-
-			&.active {
-				@apply ring-svws/25 dark:ring-svws/25;
-			}
-
-			&:hover {
-				@apply bg-svws text-white dark:text-white;
-			}
-		}
-	}
+.svws-ui-dropdown-list--items {
+	@apply overflow-y-auto overflow-x-hidden flex flex-col pt-1 px-1 pb-1;
+	max-height: 24rem;
 }
 
-.multiselect--items-wrapper--statistics {
-	.multiselect--item.active {
-		@apply ring-violet-500/50 border-violet-500 bg-violet-500;
-	}
+.svws-ui-dropdown-list--item {
+  @apply rounded px-2 py-1.5 inline-flex items-start justify-between gap-0.5 text-base font-medium cursor-pointer;
 
-	.multiselect--item:hover {
-		@apply bg-violet-500;
-	}
+  &.svws-selected {
+    @apply bg-svws/5 dark:bg-svws/10 text-svws font-bold;
 
-	.multiselect--item.selected {
-		@apply bg-violet-500;
-	}
+    .svws-statistik & {
+      @apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+    }
+  }
 
-	&.multiselect--items-wrapper--tags {
-		.multiselect--item.selected {
-			@apply bg-transparent text-violet-500 dark:text-violet-500;
+  &:not(.svws-selected) {
+    &.svws-active,
+    &:hover,
+    &:focus-visible {
+      @apply bg-black/10 dark:bg-white/10;
+    }
+  }
 
-			&.active {
-				@apply ring-violet-500/25 dark:ring-violet-500/25;
-			}
+  &.svws-active {
+    @apply ring ring-black/25 dark:ring-white/25;
 
-			&:hover {
-				@apply bg-violet-500 text-white dark:text-white;
-			}
-		}
-	}
+    &.svws-selected {
+      @apply ring-svws/25 dark:ring-svws/25;
+
+      .svws-statistik & {
+        @apply ring-violet-500/25 dark:ring-violet-500/25;
+      }
+    }
+  }
 }
 
 </style>

@@ -202,7 +202,7 @@
 </script>
 
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 	.text-input-component {
 		@apply flex;
 		@apply relative;
@@ -216,6 +216,16 @@
 				@apply text-black dark:text-white;
 			}
 		}
+
+    &:focus {
+      @apply outline-none;
+    }
+
+    input {
+      &:focus {
+        @apply outline-none;
+      }
+    }
 	}
 
 	.text-input-component .icon {

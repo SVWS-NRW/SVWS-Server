@@ -729,21 +729,10 @@
   }
 
   .svws-ui-td {
-    .wrapper,
-    & > .text-input-component {
+    .text-input-component {
       @apply w-full h-[1.7rem];
       margin-top: -0.3rem;
       margin-bottom: -0.3rem;
-    }
-
-    .multiselect-input-component,
-    .input,
-    .wrapper .text-input-component {
-      @apply h-full;
-    }
-
-    .multiselect-input-component .text-input--headless {
-      @apply pr-4;
     }
 
     .text-input--control {
@@ -933,8 +922,12 @@
 	}
 
 	.text-input-component input {
-		@apply h-auto w-full p-0;
+		@apply h-auto w-full py-0;
 	}
+
+  input[type="date"] {
+    @apply px-0;
+  }
 }
 
 .svws-ui-table {

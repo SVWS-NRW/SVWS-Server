@@ -1,57 +1,46 @@
 <template>
-	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--filled': hasSelected() || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
-		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': hasSelected(), 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
-			<div class="input">
-				<svws-ui-text-input ref="inputEl"
-					:model-value="dynModelValue"
-					:readonly="!autocomplete"
-					:placeholder="title"
-					:statistics="statistics"
-					:headless="headless"
-					:disabled="disabled"
-					:removable="removable"
-					role="combobox"
-					:aria-label="placeholder"
-					:aria-expanded="showList"
-					aria-haspopup="listbox"
-					aria-autocomplete="list"
-					:aria-controls="showList ? listIdPrefix : null"
-					:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-					@update:model-value="onInput"
-					@click.stop="toggleListBox"
-					@focus="onInputFocus"
-					@blur="onInputBlur"
-					@keyup.down.prevent
-					@keyup.up.prevent
-					@keydown.down.prevent="onArrowDown"
-					@keydown.up.prevent="onArrowUp"
-					@keydown.right.prevent="onArrowDown"
-					@keydown.left.prevent="onArrowUp"
-					@keydown.enter.prevent="selectCurrentActiveItem"
-					@keydown.backspace="onBackspace"
-					@keydown.esc.prevent="onEscape"
-					@keydown.space="onSpace"
-					@keydown.tab="onTab" />
-			</div>
-			<div v-if="removable && hasSelected()" @click.stop="removeItem" class="remove-icon">
-				<span class="icon">
-					<i-ri-close-line />
-				</span>
-			</div>
-			<div class="dropdown-icon" @click.stop="toggleListBox" @mousedown.prevent>
-				<span class="icon">
-					<i-ri-expand-up-down-fill />
-				</span>
-			</div>
-		</div>
-		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :tags="false" :filtered-list="filteredList" :item-text="itemText"
-				:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
-				:select-item="selectItem" ref="refList" />
-		</Teleport>
+	<div class="svws-ui-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled, 'svws-removable': removable}" v-bind="$attrs">
+		<svws-ui-text-input ref="inputEl"
+			:model-value="dynModelValue"
+			:readonly="!autocomplete"
+			:placeholder="label || title"
+			:statistics="statistics"
+			:headless="headless"
+			:disabled="disabled"
+			:removable="removable"
+			role="combobox"
+			:aria-label="label || title"
+			:aria-expanded="showList"
+			aria-haspopup="listbox"
+			aria-autocomplete="list"
+			:aria-controls="showList ? listIdPrefix : null"
+      :aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
+      @update:model-value="onInput"
+      @click.stop="toggleListBox"
+			@focus="onInputFocus"
+			@blur="onInputBlur"
+			@keyup.down.prevent
+			@keyup.up.prevent
+			@keydown.down.prevent="onArrowDown"
+			@keydown.up.prevent="onArrowUp"
+			@keydown.enter.prevent="selectCurrentActiveItem"
+			@keydown.backspace="onBackspace"
+			@keydown.esc.prevent="onEscape"
+			@keydown.space="onSpace"
+			@keydown.tab="onTab" />
+		<button v-if="removable && hasSelected()" role="button" @click.stop="removeItem" class="svws-remove">
+			<i-ri-close-line />
+		</button>
+		<button role="button" class="svws-dropdown-icon" tabindex="-1">
+			<i-ri-expand-up-down-line v-if="headless" />
+			<i-ri-expand-up-down-fill v-else />
+		</button>
 	</div>
+	<Teleport to="body">
+		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :tags="false" :filtered-list="filteredList" :item-text="itemText"
+			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
+			:select-item="selectItem" ref="refList" :search-text="searchText" />
+	</Teleport>
 </template>
 
 <script setup lang="ts" generic="Item">
@@ -68,7 +57,7 @@
 	type InputDataType = Item | null | undefined;
 
 	const props = withDefaults(defineProps<{
-		placeholder?: string;
+		label?: string;
 		title?: string;
 		autocomplete?: boolean;
 		disabled?: boolean;
@@ -83,21 +72,20 @@
 		headless?: boolean;
 		removable?: boolean;
 		required?: boolean;
-		span?: 'full';
 		indeterminate?: boolean;
 	}>(), {
-		placeholder: '',
+		label: '',
 		title: '',
 		autocomplete: false,
 		disabled: false,
 		statistics: false,
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
-		itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
+		//itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
+		itemFilter: (items: any, search: string) => items.filter((i: any) => i.text.toLowerCase().includes(search.toLowerCase())),
 		useNull: false,
 		headless: false,
 		removable: false,
-		span: undefined,
 		indeterminate: false,
 	})
 
@@ -293,8 +281,10 @@
 	}
 
 	function onArrowUp() {
-		if (refList.value === null)
-			return;
+    if ((!showList.value) || (refList.value === null)) {
+      openListbox();
+      return;
+    }
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
 			refList.value.activeItemIndex = listLength - 1;
@@ -373,129 +363,175 @@
 </script>
 
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 
-	.multiselect-input-component {
-		@apply flex;
-		@apply relative;
-		@apply w-full;
-		@apply inline-block overflow-visible;
+.svws-ui-select {
+	@apply relative w-full cursor-pointer flex;
 
-		&--danger {
-			@apply text-error;
+  .svws-ui-table & {
+    @apply p-0;
+  }
+
+  .svws-dropdown-icon,
+  .svws-remove {
+    @apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded;
+
+    svg {
+      @apply my-auto;
+    }
+  }
+
+  .svws-dropdown-icon {
+    @apply pointer-events-none right-1 bg-light dark:bg-white/5 border border-black/10 dark:border-white/10;
+  }
+
+  &.svws-statistik {
+    .svws-dropdown-icon {
+      @apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+    }
+
+    .text-input-component {
+      &:hover,
+      &:focus-visible,
+      &:focus-within {
+        ~ .svws-dropdown-icon {
+          @apply bg-violet-500/10 dark:bg-violet-500/20;
+        }
+      }
+    }
+  }
+
+  .svws-remove {
+    @apply right-7 text-black/50 dark:text-white/50;
+
+    &:hover {
+      @apply text-error;
+    }
+
+    &:focus,
+    &:focus-visible {
+      @apply outline-none;
+    }
+
+    &:focus-visible {
+      @apply ring ring-error/25 bg-error text-white dark:text-white;
+    }
+  }
+
+  .text-input-component {
+    &:hover,
+    &:focus-visible,
+    &:focus-within {
+      ~ .svws-dropdown-icon {
+        @apply bg-black/10 dark:bg-white/10;
+      }
+    }
+  }
+
+  &.svws-open {
+    @apply z-50;
+  }
+
+  .text-input--control,
+  .text-input--headless {
+    @apply text-ellipsis break-all cursor-pointer;
+  }
+
+	.text-input--control {
+		@apply pr-8;
+	}
+
+  .text-input--headless {
+    @apply pl-4;
+  }
+
+	&.svws-removable&.svws-has-value {
+		.text-input--control {
+			@apply pr-12;
 		}
 
-		&.with-open-list,
-		&:focus-within {
-			.dropdown-icon {
-				@apply opacity-100;
-			}
-		}
-
-		&.with-value:not(:focus-within):not(:hover) .tag-list-wrapper {
-			@apply border-black/25 dark:border-white/25;
-		}
-
-		&.with-value:not(:focus-within):hover .tag-list-wrapper {
-			@apply border-black/50 dark:border-white/50;
+		.text-input--headless {
+			@apply pl-[2.1rem];
 		}
 	}
 
-	.wrapper {
-		@apply relative;
+  &.svws-headless {
+    .svws-dropdown-icon,
+	.svws-remove {
+		@apply right-auto h-5 top-0;
 	}
 
-	.dropdown-icon {
-		@apply absolute p-1;
-		@apply flex;
-		@apply inset-y-0 right-0;
-		@apply items-center justify-center cursor-pointer text-base;
-		@apply opacity-25;
+    .svws-dropdown-icon {
+      @apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
+    }
 
-		&:hover {
-			@apply opacity-100;
+    .svws-remove {
+      @apply right-auto left-4 inline-flex items-center justify-center w-4;
+
+		svg {
+			@apply -m-px;
 		}
+    }
 
-		.icon {
-			@apply py-1;
-			@apply rounded;
-			font-size: 1.1em;
-		}
+	  .text-input-component {
+		  @apply pr-1;
 
-		&:hover .icon {
-			@apply bg-black text-white dark:bg-white dark:text-black;
+		  &:hover,
+		  &:focus-visible,
+		  &:focus-within {
+			  ~ .svws-dropdown-icon {
+				  @apply text-black dark:text-white;
+			  }
+		  }
+	  }
 
-			.multiselect-input-component--statistics:not(.multiselect-input-component--disabled) & {
-				@apply bg-violet-500 dark:bg-violet-800 dark:text-white;
-			}
-		}
+	  &:not(.svws-open) {
+		  .text-input-component {
+			  &:focus-visible,
+			  &:focus-within {
+				  ~ .svws-dropdown-icon {
+					  @apply ring-2 ring-black/25 dark:ring-white/25;
+				  }
+			  }
+		  }
+	  }
 
-		.multiselect-input-component--disabled & {
-			@apply pointer-events-none;
-			@apply opacity-10 !important;
-		}
+	  &.svws-statistik {
+		  .svws-dropdown-icon {
+			  @apply text-violet-500/75 dark:text-violet-500/75;
+		  }
 
-		.data-table &,
-		.svws-ui-table & {
-			@apply p-0;
+		  .text-input-component {
+			  &:hover,
+			  &:focus-visible,
+			  &:focus-within {
+				  ~ .svws-dropdown-icon {
+					  @apply text-violet-500 dark:text-violet-500;
+				  }
+			  }
 
-			.icon {
-				font-size: 0.9em;
-			}
-		}
+			  &:focus-visible,
+			  &:focus-within {
+				  ~ .svws-dropdown-icon {
+					  @apply ring-violet-500/25 dark:ring-violet-500/25;
+				  }
+			  }
+		  }
+	  }
+  }
 
-		.multiselect-input-component--statistics & {
-			@apply text-purple-500;
-		}
-	}
+  &.svws-disabled {
+    @apply cursor-default pointer-events-none;
 
-	.wrapper--tag-list {
-		.input:not(.sr-only) {
-			& + .tag-list-wrapper {
-				@apply border-t-0 rounded-t-none;
-			}
-		}
+    .text-input--headless {
+      @apply opacity-25;
+    }
 
-		&.wrapper--headless {
-			.tag-list-wrapper {
-				@apply border-black/25 dark:border-white/25 bg-white dark:bg-black;
-			}
-		}
-
-		.dropdown-icon {
-			.icon, svg {
-				@apply h-full;
-			}
-		}
-	}
-
-	.tag-remove .icon,
-	.remove-icon .icon {
-		@apply inline-block mt-0 cursor-pointer;
-	}
-
-	.tag-remove .icon:hover,
-	.remove-icon:hover .icon {
-		@apply bg-black dark:bg-white text-white dark:text-black rounded;
-	}
-
-	.remove-icon {
-		@apply absolute inset-y-0;
-		@apply cursor-pointer;
-		@apply flex items-center justify-center;
-		@apply opacity-50;
-		right: 1.7rem;
-		font-size: 1rem;
-
-		.data-table &,
-		.svws-ui-table & {
-			right: 0.9rem;
-			font-size: 0.9rem;
-		}
-
-		&:hover {
-			@apply opacity-100;
-		}
-	}
+    .svws-dropdown-icon,
+    .svws-remove {
+      @apply opacity-25;
+    }
+  }
+}
 
 </style>
