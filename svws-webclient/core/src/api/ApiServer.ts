@@ -3051,6 +3051,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFSchuelerSummenFehlerListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/SchuelerSummenFehlerListe/{abiturjahr : -?\d+}/{detaillevel : \d+}
+	 *
+	 * Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
+	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
+	 *
+	 * @returns Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs
+	 */
+	public async getGostAbiturjahrgangPDFSchuelerSummenFehlerListe(schema : string, abiturjahr : number, detaillevel : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/abiturjahrgang/pdf/SchuelerSummenFehlerListe/{abiturjahr : -?\\d+}/{detaillevel : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{detaillevel\s*(:[^}]+)?}/g, detaillevel.toString());
+		const data : ApiFile = await super.getPDF(path);
+		return data;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFWahlboegen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\d+}
 	 *
 	 * Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.

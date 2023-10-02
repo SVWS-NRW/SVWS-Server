@@ -1,0 +1,16 @@
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+  margin-left: 0em;
+  margin-right: 0em;
+  padding: 0em;
+  }
+
+ul {
+   margin-top: 0.5em;
+   margin-bottom: 0em;
+   margin-left: 1em;
+   margin-right: 0em;
+   padding: 0em;
+   }

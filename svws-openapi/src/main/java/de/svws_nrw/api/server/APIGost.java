@@ -63,6 +63,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
 import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
+import de.svws_nrw.module.pdf.gost.PDFGostSchuelerSummenFehlerListe;
 import de.svws_nrw.module.pdf.gost.PDFGostWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -635,7 +636,39 @@ public class APIGost {
 
 
 
-    /**
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer PDF-Liste mit den Kurs- und Wochenstundensummen sowie den Laufbahnfehlern der Schüler eines Abiturjahrgangs.
+	 *
+	 * @param schema       	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param abiturjahr   	das Abiturjahr, zu welchem die Liste erstellt werden sollen
+	 * @param detaillevel	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
+	 * @param request      	die Informationen zur HTTP-Anfrage
+	 *
+	 * @return das PDF mit der Liste des Abiturjahrgangs
+	 */
+	@GET
+	@Produces("application/pdf")
+	@Path("/abiturjahrgang/pdf/SchuelerSummenFehlerListe/{abiturjahr : -?\\d+}/{detaillevel : \\d+}")
+	@Operation(summary = "Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang.",
+			   description = "Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang. "
+				   		     + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs",
+				 content = @Content(mediaType = "application/pdf",
+				 schema = @Schema(type = "string", format = "binary", description = "PDF-Schueler-Summen-Fehler-Liste")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden")
+	public Response getGostAbiturjahrgangPDFSchuelerSummenFehlerListe(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("detaillevel") final int detaillevel, @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PDFGostSchuelerSummenFehlerListe.queryJahrgang(conn, abiturjahr, detaillevel);
+		}
+	}
+
+
+	/**
      * Die OpenAPI-Methode für die Abfrage der Default-Laufbahnplanungsdaten der gymnasialen Oberstufe für einen
      * Abiturjahrgang.
      *
