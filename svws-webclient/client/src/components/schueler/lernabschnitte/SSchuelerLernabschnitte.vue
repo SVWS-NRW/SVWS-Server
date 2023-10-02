@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page--content h-full w-full">
 		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation">
 			<template #cell="{ rowData: row }">
 				<span>
@@ -45,10 +45,6 @@
 
 	.page--content {
 		grid-template-columns: 8.5rem minmax(50rem, 1fr);
-
-		@media (min-width: 1440px) {
-			grid-template-columns: 8.5rem minmax(62rem, 1fr) minmax(0, 1fr);
-		}
 	}
 
 	.svws-ui-tabs--secondary {

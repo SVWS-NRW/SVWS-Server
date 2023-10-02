@@ -8,7 +8,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeError } from "~/router/error/RouteError";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuelerAbschnitt } from "~/router/apps/schueler/abschnitte/RouteSchuelerAbschnitt";
 import { routeSchuelerAusbildungsbetriebe } from "~/router/apps/schueler/ausbildungsbetriebe/RouteSchuelerAusbildungsbetriebe";
 import { routeSchuelerErziehungsberechtigte } from "~/router/apps/schueler/erziehungsberechtigte/RouteSchuelerErziehungsberechtigte";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
@@ -42,7 +41,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			routeSchuelerErziehungsberechtigte,
 			routeSchuelerAusbildungsbetriebe,
 			routeSchuelerSchulbesuch,
-			routeSchuelerAbschnitt,
 			routeSchuelerLernabschnitte,
 			routeSchuelerKAoA,
 			routeSchuelerLaufbahninfo,

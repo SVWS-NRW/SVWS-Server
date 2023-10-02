@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import de.svws_nrw.core.data.fach.FaecherListeEintrag;
+import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
+import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -28,13 +31,22 @@ public class SchuelerLernabschnittManager {
 	private final @NotNull SchuelerLernabschnittsdaten _lernabschnittsdaten;
 	private final @NotNull Map<@NotNull Long, @NotNull SchuelerLeistungsdaten> _mapLeistungById = new HashMap<>();
 
-	private final @NotNull List<@NotNull FaecherListeEintrag> faecher = new ArrayList<>();
+	private final @NotNull List<@NotNull FaecherListeEintrag> _faecher = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull FaecherListeEintrag> _mapFachByID = new HashMap<>();
 
-	private final @NotNull List<@NotNull KursListeEintrag> kurse = new ArrayList<>();
+	private final @NotNull List<@NotNull FoerderschwerpunktEintrag> _foerderschwerpunkte = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull FoerderschwerpunktEintrag> _mapFoerderschwerpunktByID = new HashMap<>();
+
+	private final @NotNull List<@NotNull JahrgangsListeEintrag> _jahrgaenge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull JahrgangsListeEintrag> _mapJahrgangByID = new HashMap<>();
+
+	private final @NotNull List<@NotNull KlassenListeEintrag> _klassen = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseByID = new HashMap<>();
+
+	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull KursListeEintrag> _mapKursByID = new HashMap<>();
 
-	private final @NotNull List<@NotNull LehrerListeEintrag> lehrer = new ArrayList<>();
+	private final @NotNull List<@NotNull LehrerListeEintrag> _lehrer = new ArrayList<>();
 	private final @NotNull Map<@NotNull Long, @NotNull LehrerListeEintrag> _mapLehrerByID = new HashMap<>();
 
 
@@ -44,6 +56,34 @@ public class SchuelerLernabschnittManager {
 			return cmp;
 		if ((a.kuerzel == null) || (b.kuerzel == null))
 			throw new DeveloperNotificationException("Fachkürzel dürfen nicht null sein");
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
+
+	private static final @NotNull Comparator<@NotNull FoerderschwerpunktEintrag> _compFoerderschwerpunkte = (final @NotNull FoerderschwerpunktEintrag a, final @NotNull FoerderschwerpunktEintrag b) -> {
+		if (a.text == null)
+			return -1;
+		if (b.text == null)
+			return 1;
+		return a.text.compareTo(b.text);
+	};
+
+	private static final @NotNull Comparator<@NotNull JahrgangsListeEintrag> _compJahrgaenge = (final @NotNull JahrgangsListeEintrag a, final @NotNull JahrgangsListeEintrag b) -> {
+		int cmp = a.sortierung - b.sortierung;
+		if (cmp != 0)
+			return cmp;
+		if ((a.kuerzel == null) || (b.kuerzel == null))
+			return Long.compare(a.id, b.id);
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
+
+	private static final @NotNull Comparator<@NotNull KlassenListeEintrag> _compKlassen = (final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) -> {
+		int cmp = a.sortierung - b.sortierung;
+		if (cmp != 0)
+			return cmp;
+		if ((a.kuerzel == null) || (b.kuerzel == null))
+			return Long.compare(a.id, b.id);
 		cmp = a.kuerzel.compareTo(b.kuerzel);
 		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 	};
@@ -81,18 +121,27 @@ public class SchuelerLernabschnittManager {
 	 * @param schueler              Informationen zu dem Schüler
 	 * @param lernabschnittsdaten   die Lernabschnittsdaten
 	 * @param faecher               der Katalog der Fächer
+	 * @param jahrgaenge            der Katalog der Jahrgänge
+	 * @param klassen               der Katalog der Klassen
 	 * @param kurse                 der Katalog der Kurse
 	 * @param lehrer                der Katalog der Lehrer
+	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
 	public SchuelerLernabschnittManager(final @NotNull SchuelerListeEintrag schueler,
 			final @NotNull SchuelerLernabschnittsdaten lernabschnittsdaten,
 			final @NotNull List<@NotNull FaecherListeEintrag> faecher,
+			final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte,
+			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
+			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
 		initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
 		initFaecher(faecher);
+		initFoerderschwerpunkte(foerderschwerpunkte);
+		initJahrgaenge(jahrgaenge);
+		initKlassen(klassen);
 		initKurse(kurse);
 		initLehrer(lehrer);
 	}
@@ -104,32 +153,68 @@ public class SchuelerLernabschnittManager {
 	}
 
 	private void initFaecher(final @NotNull List<@NotNull FaecherListeEintrag> faecher) {
-		this.faecher.clear();
-		this.faecher.addAll(faecher);
-		this.faecher.sort(_compFach);
+		this._faecher.clear();
+		this._faecher.addAll(faecher);
+		this._faecher.sort(_compFach);
 		this._mapFachByID.clear();
-		for (final @NotNull FaecherListeEintrag f: faecher)
+		for (final @NotNull FaecherListeEintrag f : faecher)
 			this._mapFachByID.put(f.id, f);
 	}
 
+	private void initFoerderschwerpunkte(final @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunkte) {
+		this._foerderschwerpunkte.clear();
+		this._foerderschwerpunkte.addAll(foerderschwerpunkte);
+		this._foerderschwerpunkte.sort(_compFoerderschwerpunkte);
+		this._mapFoerderschwerpunktByID.clear();
+		for (final @NotNull FoerderschwerpunktEintrag f : foerderschwerpunkte)
+			this._mapFoerderschwerpunktByID.put(f.id, f);
+	}
+
+	private void initJahrgaenge(final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge) {
+		this._jahrgaenge.clear();
+		this._jahrgaenge.addAll(jahrgaenge);
+		this._jahrgaenge.sort(_compJahrgaenge);
+		this._mapJahrgangByID.clear();
+		for (final @NotNull JahrgangsListeEintrag j : jahrgaenge)
+			this._mapJahrgangByID.put(j.id, j);
+	}
+
+	private void initKlassen(final @NotNull List<@NotNull KlassenListeEintrag> klassen) {
+		this._klassen.clear();
+		this._klassen.addAll(klassen);
+		this._klassen.sort(_compKlassen);
+		this._mapKlasseByID.clear();
+		for (final @NotNull KlassenListeEintrag k : klassen)
+			this._mapKlasseByID.put(k.id, k);
+	}
+
 	private void initKurse(final @NotNull List<@NotNull KursListeEintrag> kurse) {
-		this.kurse.clear();
-		this.kurse.addAll(kurse);
-		this.kurse.sort(_compKurs);
+		this._kurse.clear();
+		this._kurse.addAll(kurse);
+		this._kurse.sort(_compKurs);
 		this._mapKursByID.clear();
-		for (final @NotNull KursListeEintrag k: kurse)
+		for (final @NotNull KursListeEintrag k : kurse)
 			this._mapKursByID.put(k.id, k);
 	}
 
 	private void initLehrer(final @NotNull List<@NotNull LehrerListeEintrag> lehrer) {
-		this.lehrer.clear();
-		this.lehrer.addAll(lehrer);
-		this.lehrer.sort(_compLehrer);
+		this._lehrer.clear();
+		this._lehrer.addAll(lehrer);
+		this._lehrer.sort(_compLehrer);
 		this._mapLehrerByID.clear();
-		for (final @NotNull LehrerListeEintrag l: lehrer)
+		for (final @NotNull LehrerListeEintrag l : lehrer)
 			this._mapLehrerByID.put(l.id, l);
 	}
 
+
+	/**
+	 * Gibt die Lernabschnittsdaten dieses Managers zurück.
+	 *
+	 * @return die Lernabschnittsdaten
+	 */
+	public @NotNull SchuelerLernabschnittsdaten lernabschnittGet() {
+		return this._lernabschnittsdaten;
+	}
 
 
 	/**
@@ -194,6 +279,18 @@ public class SchuelerLernabschnittManager {
 
 
 	/**
+	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return die Fach-Informationen
+	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
+	 */
+	public @NotNull FaecherListeEintrag fachGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapFachByID, id);
+	}
+
+	/**
 	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
@@ -225,9 +322,87 @@ public class SchuelerLernabschnittManager {
 	 * @return die Liste der Fächer
 	 */
 	public @NotNull List<@NotNull FaecherListeEintrag> fachGetMenge() {
-		return this.faecher;
+		return this._faecher;
 	}
 
+
+	/**
+	 * Ermittelt die Informationen zu dem Förderschwerpunkt mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Förderschwerpunktes
+	 *
+	 * @return die Förderschwerpunkt-Informationen
+	 * @throws DeveloperNotificationException falls kein Förderschwerpunkt mit der ID existiert
+	 */
+	public @NotNull FoerderschwerpunktEintrag foerderschwerpunktGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapFoerderschwerpunktByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Förderschwerpunkte zurück.
+	 *
+	 * @return die Liste der Förderschwerpunkte
+	 */
+	public @NotNull List<@NotNull FoerderschwerpunktEintrag> foerderschwerpunktGetMenge() {
+		return this._foerderschwerpunkte;
+	}
+
+
+	/**
+	 * Ermittelt die Informationen zu dem Jahrgang mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Jahrgangs
+	 *
+	 * @return die Jahrgangs-Informationen
+	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
+	 */
+	public @NotNull JahrgangsListeEintrag jahrgangGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapJahrgangByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Jahrgänge zurück.
+	 *
+	 * @return die Liste der Jahrgänge
+	 */
+	public @NotNull List<@NotNull JahrgangsListeEintrag> jahrgangGetMenge() {
+		return this._jahrgaenge;
+	}
+
+
+	/**
+	 * Ermittelt die Informationen zu der Klasse mit der angegebenen ID.
+	 *
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die Klassen-Informationen
+	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
+	 */
+	public @NotNull KlassenListeEintrag klasseGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapKlasseByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Klassen zurück.
+	 *
+	 * @return die Liste der Klassen
+	 */
+	public @NotNull List<@NotNull KlassenListeEintrag> klasseGetMenge() {
+		return this._klassen;
+	}
+
+
+	/**
+	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Kurses
+	 *
+	 * @return die Kurs-Informationen
+	 * @throws DeveloperNotificationException falls kein Kurs mit der ID existiert
+	 */
+	public @NotNull KursListeEintrag kursGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapKursByID, id);
+	}
 
 	/**
 	 * Ermittelt die Informationen zu dem Kurs, sofern einer mit diesen Leistungsdaten verknüpft ist.
@@ -261,7 +436,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Liste der Kurse
 	 */
 	public @NotNull List<@NotNull KursListeEintrag> kursGetMenge() {
-		return this.kurse;
+		return this._kurse;
 	}
 
 	/**
@@ -276,13 +451,25 @@ public class SchuelerLernabschnittManager {
 	public @NotNull List<@NotNull KursListeEintrag> kursGetMengeFilteredByLeistung(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		final @NotNull List<@NotNull KursListeEintrag> result = new ArrayList<>();
-		for (final @NotNull KursListeEintrag k : this.kurse) {
+		for (final @NotNull KursListeEintrag k : this._kurse) {
 			if ((k.idFach == leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
 				result.add(k);
 		}
 		return result;
 	}
 
+
+	/**
+	 * Ermittelt die Informationen zu dem Lehrer mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Lehrers
+	 *
+	 * @return die Lehrer-Informationen
+	 * @throws DeveloperNotificationException falls kein Lehrer mit der ID existiert
+	 */
+	public @NotNull LehrerListeEintrag lehrerGetByIdOrException(final long id) {
+		return DeveloperNotificationException.ifMapGetIsNull(_mapLehrerByID, id);
+	}
 
 	/**
 	 * Ermittelt die Informationen zu dem Lehrer, sofern einer mit diesen Leistungsdaten verknüpft ist.
@@ -317,7 +504,7 @@ public class SchuelerLernabschnittManager {
 	 * @return die Liste der Lehrer
 	 */
 	public @NotNull List<@NotNull LehrerListeEintrag> lehrerGetMenge() {
-		return this.lehrer;
+		return this._lehrer;
 	}
 
 
@@ -332,6 +519,16 @@ public class SchuelerLernabschnittManager {
 	public @NotNull Note noteGetByLeistungIdOrException(final long idLeistung) {
 		final @NotNull SchuelerLeistungsdaten leistung = DeveloperNotificationException.ifMapGetIsNull(_mapLeistungById, idLeistung);
 		return Note.fromKuerzel(leistung.note);
+	}
+
+
+	/**
+	 * Gibt die Informationen des Schülers zurück, zu dem die Lernabschnittsdaten gehören.
+	 *
+	 * @return die Informationen des Schülers
+	 */
+	public @NotNull SchuelerListeEintrag schuelerGet() {
+		return this._schueler;
 	}
 
 }

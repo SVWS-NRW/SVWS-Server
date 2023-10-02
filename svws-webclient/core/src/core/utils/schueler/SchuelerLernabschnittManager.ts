@@ -3,15 +3,18 @@ import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeE
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
+import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
 import { Note } from '../../../core/types/Note';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -24,15 +27,27 @@ export class SchuelerLernabschnittManager extends JavaObject {
 
 	private readonly _mapLeistungById : JavaMap<number, SchuelerLeistungsdaten> = new HashMap();
 
-	private readonly faecher : List<FaecherListeEintrag> = new ArrayList();
+	private readonly _faecher : List<FaecherListeEintrag> = new ArrayList();
 
 	private readonly _mapFachByID : JavaMap<number, FaecherListeEintrag> = new HashMap();
 
-	private readonly kurse : List<KursListeEintrag> = new ArrayList();
+	private readonly _foerderschwerpunkte : List<FoerderschwerpunktEintrag> = new ArrayList();
+
+	private readonly _mapFoerderschwerpunktByID : JavaMap<number, FoerderschwerpunktEintrag> = new HashMap();
+
+	private readonly _jahrgaenge : List<JahrgangsListeEintrag> = new ArrayList();
+
+	private readonly _mapJahrgangByID : JavaMap<number, JahrgangsListeEintrag> = new HashMap();
+
+	private readonly _klassen : List<KlassenListeEintrag> = new ArrayList();
+
+	private readonly _mapKlasseByID : JavaMap<number, KlassenListeEintrag> = new HashMap();
+
+	private readonly _kurse : List<KursListeEintrag> = new ArrayList();
 
 	private readonly _mapKursByID : JavaMap<number, KursListeEintrag> = new HashMap();
 
-	private readonly lehrer : List<LehrerListeEintrag> = new ArrayList();
+	private readonly _lehrer : List<LehrerListeEintrag> = new ArrayList();
 
 	private readonly _mapLehrerByID : JavaMap<number, LehrerListeEintrag> = new HashMap();
 
@@ -42,6 +57,34 @@ export class SchuelerLernabschnittManager extends JavaObject {
 			return cmp;
 		if ((a.kuerzel === null) || (b.kuerzel === null))
 			throw new DeveloperNotificationException("Fachkürzel dürfen nicht null sein")
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	private static readonly _compFoerderschwerpunkte : Comparator<FoerderschwerpunktEintrag> = { compare : (a: FoerderschwerpunktEintrag, b: FoerderschwerpunktEintrag) => {
+		if (a.text === null)
+			return -1;
+		if (b.text === null)
+			return 1;
+		return JavaString.compareTo(a.text, b.text);
+	} };
+
+	private static readonly _compJahrgaenge : Comparator<JahrgangsListeEintrag> = { compare : (a: JahrgangsListeEintrag, b: JahrgangsListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel === null) || (b.kuerzel === null))
+			return JavaLong.compare(a.id, b.id);
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
+
+	private static readonly _compKlassen : Comparator<KlassenListeEintrag> = { compare : (a: KlassenListeEintrag, b: KlassenListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel === null) || (b.kuerzel === null))
+			return JavaLong.compare(a.id, b.id);
 		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
@@ -78,15 +121,21 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @param schueler              Informationen zu dem Schüler
 	 * @param lernabschnittsdaten   die Lernabschnittsdaten
 	 * @param faecher               der Katalog der Fächer
+	 * @param jahrgaenge            der Katalog der Jahrgänge
+	 * @param klassen               der Katalog der Klassen
 	 * @param kurse                 der Katalog der Kurse
 	 * @param lehrer                der Katalog der Lehrer
+	 * @param foerderschwerpunkte   der Katalog der Förderschwerpunkte
 	 */
-	public constructor(schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, faecher : List<FaecherListeEintrag>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
+	public constructor(schueler : SchuelerListeEintrag, lernabschnittsdaten : SchuelerLernabschnittsdaten, faecher : List<FaecherListeEintrag>, foerderschwerpunkte : List<FoerderschwerpunktEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, lehrer : List<LehrerListeEintrag>) {
 		super();
 		this._schueler = schueler;
 		this._lernabschnittsdaten = lernabschnittsdaten;
 		this.initLeistungsdaten(lernabschnittsdaten.leistungsdaten);
 		this.initFaecher(faecher);
+		this.initFoerderschwerpunkte(foerderschwerpunkte);
+		this.initJahrgaenge(jahrgaenge);
+		this.initKlassen(klassen);
 		this.initKurse(kurse);
 		this.initLehrer(lehrer);
 	}
@@ -98,30 +147,66 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	private initFaecher(faecher : List<FaecherListeEintrag>) : void {
-		this.faecher.clear();
-		this.faecher.addAll(faecher);
-		this.faecher.sort(SchuelerLernabschnittManager._compFach);
+		this._faecher.clear();
+		this._faecher.addAll(faecher);
+		this._faecher.sort(SchuelerLernabschnittManager._compFach);
 		this._mapFachByID.clear();
 		for (const f of faecher)
 			this._mapFachByID.put(f.id, f);
 	}
 
+	private initFoerderschwerpunkte(foerderschwerpunkte : List<FoerderschwerpunktEintrag>) : void {
+		this._foerderschwerpunkte.clear();
+		this._foerderschwerpunkte.addAll(foerderschwerpunkte);
+		this._foerderschwerpunkte.sort(SchuelerLernabschnittManager._compFoerderschwerpunkte);
+		this._mapFoerderschwerpunktByID.clear();
+		for (const f of foerderschwerpunkte)
+			this._mapFoerderschwerpunktByID.put(f.id, f);
+	}
+
+	private initJahrgaenge(jahrgaenge : List<JahrgangsListeEintrag>) : void {
+		this._jahrgaenge.clear();
+		this._jahrgaenge.addAll(jahrgaenge);
+		this._jahrgaenge.sort(SchuelerLernabschnittManager._compJahrgaenge);
+		this._mapJahrgangByID.clear();
+		for (const j of jahrgaenge)
+			this._mapJahrgangByID.put(j.id, j);
+	}
+
+	private initKlassen(klassen : List<KlassenListeEintrag>) : void {
+		this._klassen.clear();
+		this._klassen.addAll(klassen);
+		this._klassen.sort(SchuelerLernabschnittManager._compKlassen);
+		this._mapKlasseByID.clear();
+		for (const k of klassen)
+			this._mapKlasseByID.put(k.id, k);
+	}
+
 	private initKurse(kurse : List<KursListeEintrag>) : void {
-		this.kurse.clear();
-		this.kurse.addAll(kurse);
-		this.kurse.sort(SchuelerLernabschnittManager._compKurs);
+		this._kurse.clear();
+		this._kurse.addAll(kurse);
+		this._kurse.sort(SchuelerLernabschnittManager._compKurs);
 		this._mapKursByID.clear();
 		for (const k of kurse)
 			this._mapKursByID.put(k.id, k);
 	}
 
 	private initLehrer(lehrer : List<LehrerListeEintrag>) : void {
-		this.lehrer.clear();
-		this.lehrer.addAll(lehrer);
-		this.lehrer.sort(SchuelerLernabschnittManager._compLehrer);
+		this._lehrer.clear();
+		this._lehrer.addAll(lehrer);
+		this._lehrer.sort(SchuelerLernabschnittManager._compLehrer);
 		this._mapLehrerByID.clear();
 		for (const l of lehrer)
 			this._mapLehrerByID.put(l.id, l);
+	}
+
+	/**
+	 * Gibt die Lernabschnittsdaten dieses Managers zurück.
+	 *
+	 * @return die Lernabschnittsdaten
+	 */
+	public lernabschnittGet() : SchuelerLernabschnittsdaten {
+		return this._lernabschnittsdaten;
 	}
 
 	/**
@@ -184,6 +269,18 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	/**
+	 * Ermittelt die Informationen zu dem Fach mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Faches
+	 *
+	 * @return die Fach-Informationen
+	 * @throws DeveloperNotificationException falls kein Fach mit der ID existiert
+	 */
+	public fachGetByIdOrException(id : number) : FaecherListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapFachByID, id);
+	}
+
+	/**
 	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
@@ -215,7 +312,82 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Liste der Fächer
 	 */
 	public fachGetMenge() : List<FaecherListeEintrag> {
-		return this.faecher;
+		return this._faecher;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Förderschwerpunkt mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Förderschwerpunktes
+	 *
+	 * @return die Förderschwerpunkt-Informationen
+	 * @throws DeveloperNotificationException falls kein Förderschwerpunkt mit der ID existiert
+	 */
+	public foerderschwerpunktGetByIdOrException(id : number) : FoerderschwerpunktEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapFoerderschwerpunktByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Förderschwerpunkte zurück.
+	 *
+	 * @return die Liste der Förderschwerpunkte
+	 */
+	public foerderschwerpunktGetMenge() : List<FoerderschwerpunktEintrag> {
+		return this._foerderschwerpunkte;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Jahrgang mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Jahrgangs
+	 *
+	 * @return die Jahrgangs-Informationen
+	 * @throws DeveloperNotificationException falls kein Jahrgang mit der ID existiert
+	 */
+	public jahrgangGetByIdOrException(id : number) : JahrgangsListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapJahrgangByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Jahrgänge zurück.
+	 *
+	 * @return die Liste der Jahrgänge
+	 */
+	public jahrgangGetMenge() : List<JahrgangsListeEintrag> {
+		return this._jahrgaenge;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu der Klasse mit der angegebenen ID.
+	 *
+	 * @param id   die ID der Klasse
+	 *
+	 * @return die Klassen-Informationen
+	 * @throws DeveloperNotificationException falls keine Klasse mit der ID existiert
+	 */
+	public klasseGetByIdOrException(id : number) : KlassenListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapKlasseByID, id);
+	}
+
+	/**
+	 * Gibt die Liste der Klassen zurück.
+	 *
+	 * @return die Liste der Klassen
+	 */
+	public klasseGetMenge() : List<KlassenListeEintrag> {
+		return this._klassen;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Kurs mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Kurses
+	 *
+	 * @return die Kurs-Informationen
+	 * @throws DeveloperNotificationException falls kein Kurs mit der ID existiert
+	 */
+	public kursGetByIdOrException(id : number) : KursListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapKursByID, id);
 	}
 
 	/**
@@ -250,7 +422,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Liste der Kurse
 	 */
 	public kursGetMenge() : List<KursListeEintrag> {
-		return this.kurse;
+		return this._kurse;
 	}
 
 	/**
@@ -265,11 +437,23 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public kursGetMengeFilteredByLeistung(idLeistung : number) : List<KursListeEintrag> {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		const result : List<KursListeEintrag> = new ArrayList();
-		for (const k of this.kurse) {
+		for (const k of this._kurse) {
 			if ((k.idFach === leistung.fachID) && (k.idJahrgaenge.isEmpty() || k.idJahrgaenge.contains(this._schueler.idJahrgang)))
 				result.add(k);
 		}
 		return result;
+	}
+
+	/**
+	 * Ermittelt die Informationen zu dem Lehrer mit der angegebenen ID.
+	 *
+	 * @param id   die ID des Lehrers
+	 *
+	 * @return die Lehrer-Informationen
+	 * @throws DeveloperNotificationException falls kein Lehrer mit der ID existiert
+	 */
+	public lehrerGetByIdOrException(id : number) : LehrerListeEintrag {
+		return DeveloperNotificationException.ifMapGetIsNull(this._mapLehrerByID, id);
 	}
 
 	/**
@@ -304,7 +488,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 * @return die Liste der Lehrer
 	 */
 	public lehrerGetMenge() : List<LehrerListeEintrag> {
-		return this.lehrer;
+		return this._lehrer;
 	}
 
 	/**
@@ -318,6 +502,15 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public noteGetByLeistungIdOrException(idLeistung : number) : Note {
 		const leistung : SchuelerLeistungsdaten = DeveloperNotificationException.ifMapGetIsNull(this._mapLeistungById, idLeistung);
 		return Note.fromKuerzel(leistung.note);
+	}
+
+	/**
+	 * Gibt die Informationen des Schülers zurück, zu dem die Lernabschnittsdaten gehören.
+	 *
+	 * @return die Informationen des Schülers
+	 */
+	public schuelerGet() : SchuelerListeEintrag {
+		return this._schueler;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

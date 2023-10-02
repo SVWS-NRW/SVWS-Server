@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten} from "@core";
+import type { List, FaecherListeEintrag, LehrerListeEintrag, SchuelerLeistungsdaten, SchuelerLernabschnittListeEintrag, SchuelerLernabschnittsdaten, FoerderschwerpunktEintrag, JahrgangsListeEintrag, SchuelerLernabschnittBemerkungen} from "@core";
 import { ArrayList, SchuelerLernabschnittManager, SchuelerListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
@@ -16,6 +16,8 @@ interface RouteStateDataSchuelerLernabschnitte {
 	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
 	listFaecher: List<FaecherListeEintrag>;
+	listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
+	listJahrgaenge: List<JahrgangsListeEintrag>;
 	listLehrer: List<LehrerListeEintrag>;
 	// Daten, die in Abhängigkeit des ausgewählten Lernabschnitts geladen werden
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
@@ -32,6 +34,8 @@ export class RouteDataSchuelerLernabschnitte {
 		idSchueler: -1,
 		listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
 		listFaecher: new ArrayList(),
+		listFoerderschwerpunkte: new ArrayList(),
+		listJahrgaenge: new ArrayList(),
 		listLehrer: new ArrayList(),
 		auswahl: undefined,
 		daten: undefined,
@@ -104,10 +108,11 @@ export class RouteDataSchuelerLernabschnitte {
 		}
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
+		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt);
 		let schueler = routeSchueler.data.auswahl;
 		if (schueler === undefined)
 			schueler = new SchuelerListeEintrag();
-		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, listKurse, curState.listLehrer);
+		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
 		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager });
 		return curState;
 	}
@@ -118,8 +123,10 @@ export class RouteDataSchuelerLernabschnitte {
 			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
 		const listFaecher = await api.server.getFaecher(api.schema);
+		const listFoerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, listFaecher, listLehrer };
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
@@ -147,7 +154,7 @@ export class RouteDataSchuelerLernabschnitte {
 
 	get daten(): SchuelerLernabschnittsdaten {
 		if (this._state.value.daten === undefined)
-			throw new Error("Unerwarteter Fehler: Leistungsdaten nicht initialisiert");
+			throw new Error("Unerwarteter Fehler: Lernabschnittdaten nicht initialisiert");
 		return this._state.value.daten;
 	}
 
@@ -160,7 +167,13 @@ export class RouteDataSchuelerLernabschnitte {
 	}
 
 	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag) => {
-		await RouteManager.doRoute({ name: routeSchuelerLernabschnittLeistungen.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
+		await RouteManager.doRoute({ name: this._state.value.view.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
+	}
+
+	patchLernabschnitt = async (data : Partial<SchuelerLernabschnittsdaten>) => {
+		await api.server.patchSchuelerLernabschnittsdaten(data, api.schema, this.daten.id);
+		Object.assign(this.daten, data);
+		this.commit();
 	}
 
 	patchLeistung = async (data : Partial<SchuelerLeistungsdaten>, id : number) => {
@@ -168,6 +181,13 @@ export class RouteDataSchuelerLernabschnitte {
 		const leistung = this.manager.leistungGetByIdOrException(id);
 		Object.assign(leistung, data);
 		this.commit();
+	}
+
+	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) : Promise<void> => {
+		// TODO patch and update bemerkungen in daten
+		// await api.server.patchSchuelerLernabschnittBemerkungen(data, api.schema, this.daten.id);
+		// Object.assign(this.daten.bemerkungen, data);
+		// this.commit();
 	}
 
 }

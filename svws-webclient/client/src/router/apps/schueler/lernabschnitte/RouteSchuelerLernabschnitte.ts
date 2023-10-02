@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
+import { routeSchuelerLernabschnittAllgemein } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittAllgemein";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
 import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { RouteManager } from "~/router/RouteManager";
@@ -21,6 +22,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lernabschnitte";
 		super.children = [
+			routeSchuelerLernabschnittAllgemein,
 			routeSchuelerLernabschnittLeistungen
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
@@ -40,7 +42,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			await routeSchuelerLernabschnitte.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr);
 		}
 		if ((to === this) && (this.data.hatAuswahl))
-			return routeSchuelerLernabschnittLeistungen.getRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
+			return this.getChildRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
+	}
+
+	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
+		return { name: this.data.view.name, params: { id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
