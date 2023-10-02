@@ -15,6 +15,12 @@
 				</svws-ui-tooltip>
 			</template>
 		</svws-ui-table>
+		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+			<svws-ui-sub-nav type="tabs">
+				<svws-ui-router-tab-bar-button v-for="c in children" :route="c" :selected="child"
+					:hidden="false" @select="setChild(c)" :key="c.name" />
+			</svws-ui-sub-nav>
+		</Teleport>
 		<router-view :key="$route.hash" />
 	</div>
 </template>
@@ -23,8 +29,14 @@
 <script setup lang="ts">
 
 	import type { SchuelerLeistungenProps } from "./SSchuelerLeistungenProps";
+	import { ref, onMounted } from 'vue';
 
 	const props = defineProps<SchuelerLeistungenProps>();
+
+	const isMounted = ref(false);
+	onMounted(() => {
+		isMounted.value = true;
+	});
 
 </script>
 
@@ -37,6 +49,10 @@
 		@media (min-width: 1440px) {
 			grid-template-columns: 8.5rem minmax(62rem, 1fr) minmax(0, 1fr);
 		}
+	}
+
+	.svws-ui-tabs--secondary {
+		@apply flex gap-1;
 	}
 
 </style>

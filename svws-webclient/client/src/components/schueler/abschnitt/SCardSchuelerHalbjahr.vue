@@ -183,7 +183,7 @@
 
 	const klassenart: WritableComputedRef<Klassenart | undefined> = computed({
 		get: () => {
-			const art = Klassenart.getByASDKursart(props.data.Klassenart);
+			const art = Klassenart.getByKuerzel(props.data.Klassenart);
 			return (art === null) ? undefined : art;
 		},
 		set: (value) => emit('patch', { Klassenart: value === undefined ? null : value.daten.kuerzel })

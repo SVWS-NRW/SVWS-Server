@@ -5,6 +5,7 @@ import { ArrayList, SchuelerLernabschnittManager, SchuelerListeEintrag } from "@
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { type RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 import { routeSchueler } from "../RouteSchueler";
@@ -20,6 +21,8 @@ interface RouteStateDataSchuelerLeistungen {
 	auswahl: SchuelerLernabschnittListeEintrag | undefined;
 	daten: SchuelerLernabschnittsdaten | undefined;
 	manager: SchuelerLernabschnittManager | undefined;
+	// und die ausgewählte View
+	view: RouteNode<any, any>;
 }
 
 
@@ -33,6 +36,7 @@ export class RouteDataSchuelerLeistungen {
 		auswahl: undefined,
 		daten: undefined,
 		manager: undefined,
+		view: routeSchuelerLeistungenDaten,
 	}
 
 	private _state = shallowRef(RouteDataSchuelerLeistungen._defaultState);
@@ -121,6 +125,14 @@ export class RouteDataSchuelerLeistungen {
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,
 			alteAuswahl === undefined ? 0 : alteAuswahl.wechselNr);
 		this.setPatchedDefaultState(newState)
+	}
+
+	public async setView(view: RouteNode<any,any>) {
+		this.setPatchedState({ view: view });
+	}
+
+	public get view(): RouteNode<any,any> {
+		return this._state.value.view;
 	}
 
 	get hatAuswahl() : boolean {

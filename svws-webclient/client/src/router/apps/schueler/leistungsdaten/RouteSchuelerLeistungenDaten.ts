@@ -10,7 +10,6 @@ import { routeSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/R
 import type { SchuelerLeistungenDatenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenDatenProps";
 
 const SSchuelerLeistungenDaten = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenDaten.vue");
-const SSchuelerLeistungenAuswahl = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungenAuswahl.vue")
 
 export class RouteSchuelerLeistungenDaten extends RouteNode<unknown, RouteSchuelerLeistungen> {
 

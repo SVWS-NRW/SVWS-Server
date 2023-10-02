@@ -4,10 +4,11 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { RouteSchueler, routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerLeistungenDaten } from "~/router/apps/schueler/leistungsdaten/RouteSchuelerLeistungenDaten";
 import { RouteDataSchuelerLeistungen } from "~/router/apps/schueler/leistungsdaten/RouteDataSchuelerLeistungen";
-import type { SchuelerLeistungenProps } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenProps";
+import type { SchuelerLeistungenProps, SchuelerLernabschnittAuswahlChildData } from "~/components/schueler/leistungsdaten/SSchuelerLeistungenProps";
+import { RouteManager } from "~/router/RouteManager";
 
 const SSchuelerLeistungen = () => import("~/components/schueler/leistungsdaten/SSchuelerLeistungen.vue");
 
@@ -45,8 +46,36 @@ export class RouteSchuelerLeistungen extends RouteNode<RouteDataSchuelerLeistung
 		return {
 			lernabschnitt: routeSchuelerLeistungen.data.auswahl,
 			lernabschnitte: routeSchuelerLeistungen.data.listAbschnitte,
-			gotoLernabschnitt: routeSchuelerLeistungen.data.gotoLernabschnitt
+			gotoLernabschnitt: routeSchuelerLeistungen.data.gotoLernabschnitt,
+			setChild: this.setChild,
+			child: this.getChild(),
+			children: this.getChildData(),
 		};
+	}
+
+	private getChild(): SchuelerLernabschnittAuswahlChildData {
+		return this.data.view;
+	}
+
+	private getChildData(): SchuelerLernabschnittAuswahlChildData[] {
+		const result: SchuelerLernabschnittAuswahlChildData[] = [];
+		for (const c of this.children)
+			result.push(c);
+		return result;
+	}
+
+	private setChild = async (value: SchuelerLernabschnittAuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new Error("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: {
+			id: routeSchueler.data.auswahl?.id,
+			abschnitt: this.data.auswahl.abschnitt,
+			wechselNr: this.data.auswahl.wechselNr
+		} });
+		await this.data.setView(node);
 	}
 
 }

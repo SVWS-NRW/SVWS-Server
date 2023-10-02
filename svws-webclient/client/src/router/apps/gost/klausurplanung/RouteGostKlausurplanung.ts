@@ -95,7 +95,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			setChild: this.setChild,
 			child: this.getChild(),
 			children: this.getChildData(),
-		}
+		};
 	}
 
 	private getChild(): GostKlausurplanungAuswahlChildData {

@@ -18,7 +18,7 @@ export class RouteSchuelerAbschnitt extends RouteNode<RouteDataSchuelerAbschnitt
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.abschnitt", "abschnitt", SSchuelerAbschnitt, new RouteDataSchuelerAbschnitt());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => routeSchueler.getProps(route);
-		super.text = "Lernabschnitte";
+		super.text = "Lernabschnitte (alt)";
 		super.children = [
 			routeSchuelerAbschnittDaten
 		];

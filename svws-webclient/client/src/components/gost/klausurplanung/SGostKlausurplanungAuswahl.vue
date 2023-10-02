@@ -29,7 +29,9 @@
 </script>
 
 <style lang="postcss">
-.svws-ui-tabs--secondary {
-  @apply flex gap-1;
-}
+
+	.svws-ui-tabs--secondary {
+		@apply flex gap-1;
+	}
+
 </style>
