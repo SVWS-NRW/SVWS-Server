@@ -28,7 +28,7 @@
 <script setup lang="ts">
 
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, LehrerListeEintrag } from "@core";
-	import { computed, ref, type ComputedRef } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -42,7 +42,7 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const kursbezeichnung: ComputedRef<string> = computed(() => props.getDatenmanager().kursGetName(props.kurs.id));
+	const kursbezeichnung = computed<string>(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
 	function toggle_zusatzkraefte_modal() {
 		showModal().value = !showModal().value;

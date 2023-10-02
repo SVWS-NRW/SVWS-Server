@@ -196,12 +196,12 @@
 	});
 
 	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
-		if (value !== undefined) {
+		if (value !== undefined && !props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)) {
 			const lehrer = await props.addKursLehrer(kurs.id, value.id);
 			if (lehrer === undefined)
 				throw new Error("Fehler beim Anlegen des Kurslehrers");
 			await add_lehrer_regel();
-		} else {
+		} else if (value === undefined && kurslehrer(kurs).value !== undefined) {
 			await remove_kurslehrer(kurs);
 		}
 	}

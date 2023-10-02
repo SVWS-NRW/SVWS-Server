@@ -454,7 +454,9 @@ export class RouteDataGostKursplanung {
 		return kurs;
 	}
 
-	combineKurs = async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs) => {
+	combineKurs = async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
+		if (kurs2 === undefined || kurs2 === null)
+			return;
 		api.status.start();
 		await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
 		this.ergebnismanager.setMergeKurseByID(kurs1.id, kurs2.id);

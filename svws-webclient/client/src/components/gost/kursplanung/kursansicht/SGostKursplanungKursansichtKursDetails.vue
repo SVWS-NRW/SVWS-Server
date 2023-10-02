@@ -22,7 +22,7 @@
 			<div class="flex flex-col gap-1 max-w-[12rem] ml-auto">
 				<span class="text-sm font-bold">Zusammenlegen mit</span>
 				<svws-ui-select v-if="kurseMitKursart.size()"
-					:model-value="undefined" @update:model-value="combineKurs(kurs, $event)"
+					:model-value="undefined" @update:model-value="kurs2 => combineKurs(kurs, kurs2)"
 					title="Kurs auswählen" class="text-sm" headless
 					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
 			</div>
@@ -43,7 +43,7 @@
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
 		removeKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
-		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => Promise<void>;
 		splitKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<GostBlockungKursLehrer | undefined>;
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;

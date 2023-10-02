@@ -18,7 +18,7 @@
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
-		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs) => Promise<void>;
+		combineKurs: (kurs1 : GostBlockungKurs, fach2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
