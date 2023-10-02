@@ -133,7 +133,7 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	patchPausenzeit = async (data : Partial<StundenplanPausenaufsicht>, id: number) => {
+	patchPausenzeit = async (data : Partial<StundenplanPausenzeit>, id: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		delete data.id;
