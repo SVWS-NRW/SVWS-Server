@@ -800,6 +800,19 @@ public class GostKursklausurManager {
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingThresholdByTerminAndThreshold(final @NotNull GostKlausurtermin termin, final int threshold) {
+		return klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids enthält, die in der die den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 *
+	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param klausur
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(final @NotNull GostKlausurtermin termin, final GostKursklausur klausur, final int threshold) {
 		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
 		if (termin.datum == null)
 			return ergebnis;
@@ -808,11 +821,25 @@ public class GostKursklausurManager {
 		if (kursklausurmenge_by_schuelerId == null)
 			return ergebnis;
 		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
-			List<@NotNull GostKursklausur> klausuren = entry.getValue();
-			if (klausuren != null && klausuren.size() >= threshold)
+			List<@NotNull GostKursklausur> temp = entry.getValue();
+			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
+			if (klausur != null && klausur.schuelerIds.contains(entry.getKey()))
+				klausuren.add(klausur);
+			if (klausuren.size() >= threshold)
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 *
+	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public GostKlausurtermin terminByKursklausur(final @NotNull GostKursklausur klausur) {
+		return _termin_by_id.get(klausur.idTermin);
 	}
 
 }

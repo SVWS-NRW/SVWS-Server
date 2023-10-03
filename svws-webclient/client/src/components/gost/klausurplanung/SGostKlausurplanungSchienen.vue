@@ -80,7 +80,7 @@
 			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
 				<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin</svws-ui-button>
 				<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = true" :disabled="termine.size() > 0 || props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-				<svws-ui-button type="danger" class="ml-auto" @click="loescheKlausurtermine(termine)" :disabled="termine.size() === 0"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+				<svws-ui-button type="danger" class="ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" :disabled="termine.size() === 0"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
 				<template v-if="termine.size()">
@@ -132,6 +132,19 @@
 					</li>
 				</ul>
 			</div>
+			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-6">
+				<div class="text-headline-sm">Schüler:innen mit drei oder mehr Klausuren in einer KW</div>
+				<ul class="flex flex-col gap-3">
+					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
+						<span class="svws-ui-badge">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+						<div class="leading-tight gap-2">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+								{{ klausur.kursKurzbezeichnung + ' (' + DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum) + ')' }}
+							</span>
+						</div>
+					</li>
+				</ul>
+			</div>
 			<div v-else-if="terminSelected === undefined" class="mt-6 opacity-50 flex flex-col gap-2">
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
@@ -141,8 +154,8 @@
 
 <script setup lang="ts">
 
-	import type { JavaMapEntry, JavaSet} from "@core";
-	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale} from "@core";
+	import type { JavaMapEntry, JavaSet } from "@core";
+	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -179,6 +192,15 @@
 		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
 	}
 
+	const anzahlProKwKonflikte = (threshold: number) => {
+		if (dragData.value !== undefined && terminSelected.value !== undefined) {
+			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
+				return props.kursklausurmanager().klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
+		} else if (terminSelected.value !== undefined)
+			return props.kursklausurmanager().klausurenProSchueleridExceedingThresholdByTerminAndThreshold(terminSelected.value, threshold);
+		return new HashSet<number>();
+	}
+
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur) {
 			const klausur = dragData.value;
@@ -186,8 +208,10 @@
 				await props.patchKursklausur(klausur.id, {idTermin: null});
 			else if (zone instanceof GostKlausurtermin) {
 				const termin = zone;
-				if (termin.id != klausur.idTermin)
+				if (termin.id != klausur.idTermin) {
 					await props.patchKursklausur(klausur.id, {idTermin: termin.id});
+					terminSelected.value = zone;
+				}
 			}
 		}
 	};

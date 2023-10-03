@@ -768,14 +768,27 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Map .
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids enthält, die in der die den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
 	 *
-	 * @param termin die ID des zu prüfenden Klausurtermins
-	 * @param threshold
+	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
 	 *
-	 * @return die Anzahl der Konflikte innerhalb des Termins.
+	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
 	public klausurenProSchueleridExceedingThresholdByTerminAndThreshold(termin : GostKlausurtermin, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		return this.klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids enthält, die in der die den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 *
+	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param klausur
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(termin : GostKlausurtermin, klausur : GostKursklausur | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
 		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
 		if (termin.datum === null)
 			return ergebnis;
@@ -784,11 +797,25 @@ export class GostKursklausurManager extends JavaObject {
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
-			let klausuren : List<GostKursklausur> | null = entry.getValue();
-			if (klausuren !== null && klausuren.size() >= threshold)
+			let temp : List<GostKursklausur> | null = entry.getValue();
+			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
+			if (klausur !== null && klausur.schuelerIds.contains(entry.getKey()))
+				klausuren.add(klausur);
+			if (klausuren.size() >= threshold)
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
+	 *
+	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
+	 *
+	 * @return den Klausurtermin
+	 */
+	public terminByKursklausur(klausur : GostKursklausur) : GostKlausurtermin | null {
+		return this._termin_by_id.get(klausur.idTermin);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

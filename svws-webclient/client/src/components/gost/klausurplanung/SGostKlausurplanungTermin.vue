@@ -8,7 +8,7 @@
 							<i-ri-draggable v-if="dragIcon && !compact" :class="{'text-sm': compact, '-mr-0.5 -ml-2': !compact}" />
 							<span class="line-clamp-1 break-all">{{ termin.bezeichnung === null ? (klausuren().size() ? [...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).join(", ") : 'Neuer Termin') : termin.bezeichnung || 'Klausurtermin' }}</span>
 						</span>
-						<div v-if="compactWithDate && termin.datum" class="mb-1 opacity-50 text-button">{{ new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</div>
+						<div v-if="compactWithDate && termin.datum" class="mb-1 opacity-50 text-button">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
 							<span>{{ kursklausurmanager().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ maximaleDauer }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
@@ -24,7 +24,7 @@
 									<span>...</span>
 								</span>
 							</template>
-							<span v-else class="opacity-50">{{ new Date(termin.datum).toLocaleString("de-DE").split(",")[0] }}</span>
+							<span v-else class="opacity-50">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
 						</slot>
 					</div>
 					<div v-if="$slots.actions" class="flex gap-0.5 items-center -mr-2 -my-1">
@@ -89,7 +89,7 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
-	import {ZulaessigesFach} from "@core";
+	import {ZulaessigesFach, DateUtils } from "@core";
 
 	const props = defineProps<{
 		termin: GostKlausurtermin;
