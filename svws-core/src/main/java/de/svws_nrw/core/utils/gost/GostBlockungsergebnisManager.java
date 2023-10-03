@@ -1817,6 +1817,57 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 */
+	public int getofKursAnzahlSchuelerAbiturLK(final long idKurs) {
+		int summe = 0;
+		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
+			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+			if ((fachwahl.abiturfach == null) && ((fachwahl.abiturfach == 1) || (fachwahl.abiturfach == 2)))
+				summe++;
+		}
+		return summe;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 3 gewählt haben.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 3 gewählt haben.
+	 */
+	public int getofKursAnzahlSchuelerAbitur3(final long idKurs) {
+		int summe = 0;
+		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
+			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+			if ((fachwahl.abiturfach == null) && (fachwahl.abiturfach == 3))
+				summe++;
+		}
+		return summe;
+	}
+
+	/**
+	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 4 gewählt haben.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 4 gewählt haben.
+	 */
+	public int getofKursAnzahlSchuelerAbitur4(final long idKurs) {
+		int summe = 0;
+		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
+			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+			if ((fachwahl.abiturfach == null) && (fachwahl.abiturfach == 4))
+				summe++;
+		}
+		return summe;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Kurs keine Schüler enthält und somit ein Löschen des Kurses erlaubt ist.
 	 *
 	 * @param  idKurs  Die Datenbank-ID des Kurses.
