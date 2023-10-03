@@ -1,5 +1,5 @@
 
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt} from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
 import { shallowRef } from "vue";
@@ -103,11 +103,6 @@ export class RouteDataGostKursplanung {
 			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
 				mapSchueler.set(s.id, s);
 		}
-		// Lade die Fachwahlstatistik des Abiturjahrgangs
-		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, abiturjahr);
-		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
-		for (const fw of listFachwahlStatistik)
-			mapFachwahlStatistik.set(fw.id, fw);
 		// Lade die Lehrerliste
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
@@ -116,12 +111,11 @@ export class RouteDataGostKursplanung {
 		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
-			abiturjahr: abiturjahr,
-			jahrgangsdaten: jahrgangsdaten,
-			mapSchueler: mapSchueler,
-			faecherManager: faecherManager,
-			mapFachwahlStatistik: mapFachwahlStatistik,
-			mapLehrer: mapLehrer,
+			abiturjahr,
+			jahrgangsdaten,
+			mapSchueler,
+			faecherManager,
+			mapLehrer,
 			halbjahr: this._state.value.halbjahr,
 		});
 	}
@@ -179,10 +173,10 @@ export class RouteDataGostKursplanung {
 		const existiertSchuljahresabschnitt = (abschnitt !== undefined);
 		api.status.stop();
 		this.setPatchedState({
-			halbjahr: halbjahr,
-			mapBlockungen: mapBlockungen,
-			existiertSchuljahresabschnitt: existiertSchuljahresabschnitt,
-			auswahlBlockung: auswahlBlockung,
+			halbjahr,
+			mapBlockungen,
+			existiertSchuljahresabschnitt,
+			auswahlBlockung,
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
@@ -228,10 +222,15 @@ export class RouteDataGostKursplanung {
 		const blockungsdaten = await api.server.getGostBlockung(api.schema, value.id);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.ergebnisGetListeSortiertNachBewertung();
+		const listFachwahlStatistik = await api.server.getGostAbiturjahrgangFachwahlstatistik(api.schema, this.abiturjahr);
+		const mapFachwahlStatistik: Map<number, GostStatistikFachwahl> = new Map();
+		for (const fw of listFachwahlStatistik)
+			mapFachwahlStatistik.set(fw.id, fw);
 		api.status.stop();
 		this.setPatchedState({
 			auswahlBlockung: value,
-			datenmanager: datenmanager,
+			datenmanager,
+			mapFachwahlStatistik,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
@@ -335,7 +334,7 @@ export class RouteDataGostKursplanung {
 		const faecherManager = new GostFaecherManager(listFaecher);
 		// Aktualisiere den State
 		this.setPatchedState({
-			faecherManager: faecherManager,
+			faecherManager,
 			mapBlockungen: this.mapBlockungen
 		})
 		await this.gotoBlockung(result);

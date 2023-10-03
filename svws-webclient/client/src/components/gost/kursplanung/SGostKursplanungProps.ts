@@ -34,6 +34,6 @@ export interface GostKursplanungProps {
 	faecherManager: GostFaecherManager;
 	halbjahr: GostHalbjahr;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-	mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
+	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
 }

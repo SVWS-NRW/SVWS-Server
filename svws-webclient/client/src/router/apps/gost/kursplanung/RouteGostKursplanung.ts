@@ -235,7 +235,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			faecherManager: routeGost.data.faecherManager,
 			halbjahr: this.data.halbjahr,
 			mapLehrer: this.data.mapLehrer,
-			mapFachwahlStatistik: this.data.mapFachwahlStatistik,
+			mapFachwahlStatistik: () => this.data.mapFachwahlStatistik,
 			mapSchueler: this.data.mapSchueler
 		}
 	}

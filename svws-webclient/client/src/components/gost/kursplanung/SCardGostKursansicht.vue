@@ -101,7 +101,7 @@
 
 			<template #body>
 				<template v-if="sort_by==='fach_id'">
-					<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
+					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
 								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
@@ -117,7 +117,7 @@
 				</template>
 				<template v-else>
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
-						<template v-for="fachwahlen in mapFachwahlStatistik.values()" :key="fachwahlen.id">
+						<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
 								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
@@ -176,7 +176,7 @@
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
-		mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
+		mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
 		blockungstabelleVisible: boolean;
 		toggleBlockungstabelle: () => void;
 	}>();
