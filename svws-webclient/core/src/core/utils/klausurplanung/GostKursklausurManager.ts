@@ -8,6 +8,7 @@ import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanM
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { DateUtils } from '../../../core/utils/DateUtils';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
@@ -58,6 +59,8 @@ export class GostKursklausurManager extends JavaObject {
 	private readonly _kursklausurmenge_by_quartal_and_idTermin : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
 
 	private readonly _kursklausurmenge_by_quartal_and_kursart_and_idTermin : HashMap3D<number, string, number, List<GostKursklausur>> = new HashMap3D();
+
+	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
 
 	private readonly _termin_by_id : JavaMap<number, GostKlausurtermin> = new HashMap();
 
@@ -121,6 +124,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_terminmenge_by_quartal();
 		this.update_terminmenge_by_datum();
 		this.update_schuelerIds_by_idTermin();
+		this.update_kursklausurmenge_by_kw_and_schuelerId();
 	}
 
 	private update_kursklausurmenge_by_quartal() : void {
@@ -168,6 +172,19 @@ export class GostKursklausurManager extends JavaObject {
 			if (klausurenZuTermin !== null)
 				for (const k of klausurenZuTermin)
 					listSchuelerIds.addAll(k.schuelerIds);
+		}
+	}
+
+	private update_kursklausurmenge_by_kw_and_schuelerId() : void {
+		this._kursklausurmenge_by_kw_and_schuelerId.clear();
+		for (const t of this._terminmenge) {
+			if (t.datum === null)
+				continue;
+			let kw : number = DateUtils.gibKwDesDatumsISO8601(t.datum);
+			for (const kk of DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, t.id)) {
+				for (const sId of kk.schuelerIds)
+					Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
+			}
 		}
 	}
 
@@ -748,6 +765,30 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public konflikteAnzahlGetByTerminid(idTermin : number) : number {
 		return GostKursklausurManager.countKonflikte(this.konflikteMapKursklausurSchueleridsByTerminid(idTermin));
+	}
+
+	/**
+	 * Liefert eine Map .
+	 *
+	 * @param termin die ID des zu prüfenden Klausurtermins
+	 * @param threshold
+	 *
+	 * @return die Anzahl der Konflikte innerhalb des Termins.
+	 */
+	public klausurenProSchueleridExceedingThresholdByTerminAndThreshold(termin : GostKlausurtermin, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
+		if (termin.datum === null)
+			return ergebnis;
+		let kw : number = DateUtils.gibKwDesDatumsISO8601(termin.datum);
+		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		if (kursklausurmenge_by_schuelerId === null)
+			return ergebnis;
+		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
+			let klausuren : List<GostKursklausur> | null = entry.getValue();
+			if (klausuren !== null && klausuren.size() >= threshold)
+				ergebnis.put(entry.getKey(), klausuren);
+		}
+		return ergebnis;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
