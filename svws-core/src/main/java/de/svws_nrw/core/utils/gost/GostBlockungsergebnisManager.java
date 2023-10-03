@@ -1827,7 +1827,7 @@ public class GostBlockungsergebnisManager {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach == null) && ((fachwahl.abiturfach == 1) || (fachwahl.abiturfach == 2)))
+			if ((fachwahl.abiturfach != null) && ((fachwahl.abiturfach == 1) || (fachwahl.abiturfach == 2)))
 				summe++;
 		}
 		return summe;
@@ -1844,7 +1844,7 @@ public class GostBlockungsergebnisManager {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach == null) && (fachwahl.abiturfach == 3))
+			if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 3))
 				summe++;
 		}
 		return summe;
@@ -1861,7 +1861,7 @@ public class GostBlockungsergebnisManager {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach == null) && (fachwahl.abiturfach == 4))
+			if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 4))
 				summe++;
 		}
 		return summe;

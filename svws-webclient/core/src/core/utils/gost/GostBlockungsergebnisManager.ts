@@ -1696,7 +1696,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach === null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
+			if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
 				summe++;
 		}
 		return summe;
@@ -1713,7 +1713,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach === null) && (fachwahl.abiturfach === 3))
+			if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3))
 				summe++;
 		}
 		return summe;
@@ -1730,7 +1730,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach === null) && (fachwahl.abiturfach === 4))
+			if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4))
 				summe++;
 		}
 		return summe;
