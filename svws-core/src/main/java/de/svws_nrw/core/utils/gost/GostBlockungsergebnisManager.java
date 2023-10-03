@@ -1817,11 +1817,11 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 */
 	public int getofKursAnzahlSchuelerAbiturLK(final long idKurs) {
 		int summe = 0;

@@ -1686,11 +1686,11 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 * Liefert die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt haben.
+	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 */
 	public getofKursAnzahlSchuelerAbiturLK(idKurs : number) : number {
 		let summe : number = 0;
