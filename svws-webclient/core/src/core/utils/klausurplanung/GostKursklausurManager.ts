@@ -768,27 +768,27 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids enthält, die in der die den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
 	 *
 	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren in die Map aufgenommen werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingThresholdByTerminAndThreshold(termin : GostKlausurtermin, threshold : number) : JavaMap<number, List<GostKursklausur>> {
-		return this.klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
+	public klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(termin : GostKlausurtermin, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		return this.klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids enthält, die in der die den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert, wenn die übergebene Kursklausur in den Termin integriert würde
 	 *
 	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param klausur
+	 * @param klausur die Klausur, deren Integration in den Termin angenommen wird
 	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(termin : GostKlausurtermin, klausur : GostKursklausur | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+	public klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(termin : GostKlausurtermin, klausur : GostKursklausur | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
 		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
 		if (termin.datum === null)
 			return ergebnis;
@@ -799,7 +799,7 @@ export class GostKursklausurManager extends JavaObject {
 		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
 			let temp : List<GostKursklausur> | null = entry.getValue();
 			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
-			if (klausur !== null && klausur.schuelerIds.contains(entry.getKey()))
+			if (klausur !== null && klausur.idTermin !== termin.id && klausur.schuelerIds.contains(entry.getKey()))
 				klausuren.add(klausur);
 			if (klausuren.size() >= threshold)
 				ergebnis.put(entry.getKey(), klausuren);

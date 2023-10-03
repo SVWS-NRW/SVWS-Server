@@ -139,7 +139,7 @@
 						<span class="svws-ui-badge">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 						<div class="leading-tight gap-2">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-								{{ klausur.kursKurzbezeichnung + ' (' + DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum) + ')' }}
+								{{ klausur.kursKurzbezeichnung + ' (' + DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) + ')' }}
 							</span>
 						</div>
 					</li>
@@ -195,9 +195,9 @@
 	const anzahlProKwKonflikte = (threshold: number) => {
 		if (dragData.value !== undefined && terminSelected.value !== undefined) {
 			if (dragData.value.quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kursklausurmanager().klausurenProSchueleridNeuExceedingThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
+				return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold);
 		} else if (terminSelected.value !== undefined)
-			return props.kursklausurmanager().klausurenProSchueleridExceedingThresholdByTerminAndThreshold(terminSelected.value, threshold);
+			return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold);
 		return new HashSet<number>();
 	}
 
