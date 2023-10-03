@@ -80,7 +80,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 
 		this.filename = dateiname;
 
-		// Ersetze die Felder des Templates mit Grunddaten im Kopf der ersten Seite
+		// Ersetze die Felder des Templates mit Grunddaten im Kopf der ersten Seite.
 		// Da ein ganzer Abiturjahrgang gedruckt wird, verwende ich Daten des ersten Schülers
 		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
 		bodyData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
@@ -201,7 +201,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 						bgColor(summen.kursanzahlQ12,  9,  9), summen.kursanzahlQ12,
 						bgColor(summen.kursanzahlQ21,  9,  9), summen.kursanzahlQ21,
 						bgColor(summen.kursanzahlQ22,  9,  9), summen.kursanzahlQ22,
-						bgColor(summen.kursanzahlQPh, 38, 39), summen.kursanzahlQ22,
+						bgColor(summen.kursanzahlQPh, 38, 39), summen.kursanzahlQPh,
 
 						bgColor(summen.wochenstundenEF1, 32, 32), summen.wochenstundenEF1,
 						bgColor(summen.wochenstundenEF2, 32, 32), summen.wochenstundenEF2,
@@ -305,37 +305,51 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 * eines Schülers der gymnasialen Oberstufe.
 	 *
 	 * @param conn          die Datenbank-Verbindung
-	 * @param schuelerIDs   die IDs der Schüler, deren Wahlbögen in der PDF-Datei enthalten sein sollen.
 	 * @param abiturjahr 	das Abiturjahr
 	 * @param detaillevel 	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
 	 *
 	 * @return 				das Objekt zum Erstellen eines PDFs
 	 *
 	 */
-	private static PDFGostSchuelerSummenFehlerListe getPDFmitSchuelerSummenFehlerListe(final DBEntityManager conn, final List<Long> schuelerIDs, final int abiturjahr, final int detaillevel) throws WebApplicationException {
+	private static PDFGostSchuelerSummenFehlerListe getPDFmitSchuelerSummenFehlerListe(final DBEntityManager conn, final int abiturjahr, final int detaillevel) throws WebApplicationException {
 
-		// Schuldaten sammeln
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Schuldaten sammeln, pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
+		DTOEigeneSchule schule;
+		try {
+			schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		} catch (WebApplicationException ex) {
+			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+		}
 		final String schulnummer = schule.SchulNr.toString();
 		final String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
 
+		// Bestimme alle Schüler des Abiturjahrgangs
+		final List<DTOViewGostSchuelerAbiturjahrgang> queryResult = (abiturjahr == -1)
+			? conn.queryAll(DTOViewGostSchuelerAbiturjahrgang.class)
+			: conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
+
+		if ((queryResult == null) || queryResult.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
+
+		final List<Long> schuelerIDs = queryResult.stream().filter(s -> (s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME)).map(s -> s.ID).toList();
+
 		// Daten auf Validität prüfen und DTO-Objekte in Maps ablegen
-		if (schuelerIDs == null || schuelerIDs.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+		if (schuelerIDs.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
 
 		final Map<Long, DTOSchueler> mapSchueler = conn
 			.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class)
 			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long schuelerID : schuelerIDs)
 			if (mapSchueler.get(schuelerID) == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw OperationError.NOT_FOUND.exception("Es wurden ungültige Schüler-IDs übergeben.");
 
 		final Map<Long, DTOGostSchueler> mapGostSchueler = conn
 			.queryNamed("DTOGostSchueler.schueler_id.multiple", schuelerIDs, DTOGostSchueler.class)
 			.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 		for (final Long schuelerID : schuelerIDs)
 			if (mapGostSchueler.get(schuelerID) == null)
-				throw OperationError.NOT_FOUND.exception();
+				throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 
 		// Datenquellen und zugehörige Objekte initialisieren
 		DataSchildReportingDatenquelle.initMapDatenquellen();
@@ -372,7 +386,6 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 			mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
 			mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace('.', '_'));
 
-
 		// Erstelle die PDF-Datei mit der Liste für den Abiturjahrgang.
 		return new PDFGostSchuelerSummenFehlerListe(dateiname, detaillevel, schulnummer, schulbezeichnung, abiturjahr, sortedSchuelerIDs, mapSchueler, mapGrunddaten, mapSummen, mapFehler, mapHinweise);
 	}
@@ -389,22 +402,9 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
 	public static Response queryJahrgang(final DBEntityManager conn, final int abiturjahr, final int detaillevel) {
-		// Bestimme alle Schüler des Abiturjahrgangs
-		final List<DTOViewGostSchuelerAbiturjahrgang> queryResult = (abiturjahr == -1)
-				? conn.queryAll(DTOViewGostSchuelerAbiturjahrgang.class)
-				: conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
-
-		if ((queryResult == null) || queryResult.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
-
-		final List<Long> schuelerIDs = queryResult.stream().filter(s -> (s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME)).map(s -> s.ID).toList();
-
-		if (schuelerIDs.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
 
 		try {
-
-			final PDFGostSchuelerSummenFehlerListe pdf = getPDFmitSchuelerSummenFehlerListe(conn, schuelerIDs, abiturjahr, Math.min(Math.max(detaillevel, 0), 2));
+			final PDFGostSchuelerSummenFehlerListe pdf = getPDFmitSchuelerSummenFehlerListe(conn, abiturjahr, Math.min(Math.max(detaillevel, 0), 2));
 
 			final byte[] data = pdf.toByteArray();
 			if (data == null)

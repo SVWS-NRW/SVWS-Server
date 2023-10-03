@@ -233,38 +233,64 @@ public final class PDFGostWahlbogen extends PDFCreator {
 
 	/**
 	 * Erstellt ein neues Objekt des Typs PDFGostWahlbogen für den Wahlbogen zu der Laufbahn
-	 * eines Schülers der gymnasialen Oberstufe.
+	 * eines Schülers oder eines Abiturjahrgangs der gymnasialen Oberstufe.
 	 *
 	 * @param conn          die Datenbank-Verbindung
-	 * @param schuelerIDs   die IDs der Schüler, deren Wahlbögen in der PDF-Datei enthalten sein sollen.
+	 * @param schuelerID   	die ID eines Schülers, wenn ein einzelner Wahlbogen gedruckt werden soll. Sofern ein Abiturjahrgang angegeben wird, wird die schuelerID ignoriert.
+	 * @param abiturjahr   	ein Abiturjahrgang, wenn alle dessen Wahlbögen gedruckt werden soll.
 	 *
 	 * @return 				das Objekt zum Erstellen eines PDFs
 	 *
 	 */
-	private static PDFGostWahlbogen getPDFmitWahlboegen(final DBEntityManager conn, final List<Long> schuelerIDs) throws WebApplicationException {
+	private static PDFGostWahlbogen getPDFmitWahlboegen(final DBEntityManager conn, final Long schuelerID, final Integer abiturjahr) throws WebApplicationException {
 
-		// Schuldaten sammeln
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Schuldaten sammeln, pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
+		DTOEigeneSchule schule;
+		try {
+			schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		} catch (WebApplicationException ex) {
+			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+		}
 		final String schulnummer = schule.SchulNr.toString();
 		final String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
 
+		// Die Schüler-IDs für den Druck sammeln: Entweder die eine übergebene ID verwenden, oder die IDs des Abiturjahrgangs ermitteln.
+		if (schuelerID == null && abiturjahr == null)
+			throw OperationError.NOT_FOUND.exception("Keine Schüler-ID oder Abiturjahrgang angegeben.");
+
+		final List<Long> schuelerIDs = new ArrayList<>();
+		if (schuelerID != null && abiturjahr == null)
+			// Übernehme die einzelne, übergebene Schüler-ID
+			schuelerIDs.add(schuelerID);
+		else {
+			// Bestimme alle Schüler des Abiturjahrgangs
+			final List<DTOViewGostSchuelerAbiturjahrgang> queryResult = (abiturjahr == -1)
+				? conn.queryAll(DTOViewGostSchuelerAbiturjahrgang.class)
+				: conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
+
+			if ((queryResult == null) || queryResult.isEmpty())
+				throw OperationError.NOT_FOUND.exception("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
+
+			schuelerIDs.addAll(queryResult.stream().filter(s -> (s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME)).map(s -> s.ID).toList());
+		}
+
 		// Daten auf Validität prüfen und DTO-Objekte in Maps ablegen
-		if (schuelerIDs == null || schuelerIDs.isEmpty())
-			throw OperationError.NOT_FOUND.exception();
+		if (schuelerIDs.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Schüler zum angegebenen Abiturjahrgang gefunden.");
 
 		final Map<Long, DTOSchueler> mapSchueler = conn
 			.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class)
 			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
-		for (final Long schuelerID : schuelerIDs)
-			if (mapSchueler.get(schuelerID) == null)
-				throw OperationError.NOT_FOUND.exception();
+		for (final Long sID : schuelerIDs)
+			if (mapSchueler.get(sID) == null)
+				throw OperationError.NOT_FOUND.exception("Es wurden ungültige Schüler-IDs übergeben.");
 
 		final Map<Long, DTOGostSchueler> mapGostSchueler = conn
 			.queryNamed("DTOGostSchueler.schueler_id.multiple", schuelerIDs, DTOGostSchueler.class)
 			.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
-		for (final Long schuelerID : schuelerIDs)
-			if (mapGostSchueler.get(schuelerID) == null)
-				throw OperationError.NOT_FOUND.exception();
+		for (final Long sID : schuelerIDs)
+			if (mapGostSchueler.get(sID) == null)
+				throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
 
 		// Datenquellen und zugehörige Objekte initialisieren
 		DataSchildReportingDatenquelle.initMapDatenquellen();
@@ -301,33 +327,30 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		// Wird nur ein Schüler übergeben, so wird eine persönliche PDF-Datei erstellt. Werden mehrere Schüler übergeben, so wurde über die API ein ganzer Jahrgang angefordert, für den eine PDF-Gesamtdatei erzeugt wird.
 		String dateiname;
 		if (mapSchueler.size() == 1) {
-			dateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
-				mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
-				mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace(".", ""),
-				mapSchueler.get(schuelerIDs.get(0)).Nachname.replace(' ', '_').replace('.', '_'),
-				mapSchueler.get(schuelerIDs.get(0)).Vorname.replace(' ', '_').replace('.', '_'),
-				mapSchueler.get(schuelerIDs.get(0)).ID);
+			dateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
+								   										 mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace(".", ""),
+																		 mapSchueler.get(schuelerIDs.get(0)).Nachname.replace(' ', '_').replace('.', '_'),
+																		 mapSchueler.get(schuelerIDs.get(0)).Vorname.replace(' ', '_').replace('.', '_'),
+																		 mapSchueler.get(schuelerIDs.get(0)).ID);
 		} else {
-			dateiname = "Laufbahnplanung_%d_%s.pdf".formatted(
-				mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
-				mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace('.', '_'));
+			dateiname = "Laufbahnplanung_%d_%s.pdf".formatted(mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr, mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace('.', '_'));
 		}
 
 		// Erstelle die PDF-Datei, die entweder den Wahlbogen eines Schülers beinhaltet oder alle Wahlbögen eines Abiturjahrgangs.
 		int lfdNr = 0;
 		PDFGostWahlbogen pdf = null;
 		PDFGostWahlbogen pdfAktuelleSeite = null;
-		for (final Long schuelerID : sortedSchuelerIDs) {
+		for (final Long sID : sortedSchuelerIDs) {
 			lfdNr++;
 			final PDFGostWahlbogen pdfNeueSeite = new PDFGostWahlbogen(dateiname,
 					schulnummer, schulbezeichnung,
 					lfdNr,
-					mapSchueler.get(schuelerID),
-					mapGrunddaten.get(schuelerID),
-					mapFachwahlen.get(schuelerID),
-					mapSummen.get(schuelerID),
-					mapFehler.get(schuelerID),
-					mapHinweise.get(schuelerID));
+					mapSchueler.get(sID),
+					mapGrunddaten.get(sID),
+					mapFachwahlen.get(sID),
+					mapSummen.get(sID),
+					mapFehler.get(sID),
+					mapHinweise.get(sID));
 			if (pdfAktuelleSeite == null) {
 				pdf = pdfNeueSeite;
 			} else {
@@ -336,7 +359,10 @@ public final class PDFGostWahlbogen extends PDFCreator {
 			pdfAktuelleSeite = pdfNeueSeite;
 		}
 
-		return pdf;
+		if (pdf != null)
+			return pdf;
+		else
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler bei der Generierung der PDF-Datei.");
 	}
 
 
@@ -350,26 +376,23 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
 	public static Response query(final DBEntityManager conn, final Long schueler_id) {
-		if (schueler_id == null)
-			throw OperationError.NOT_FOUND.exception();
 
-		final List<Long> schuelerIDs = new ArrayList<>();
-		schuelerIDs.add(schueler_id);
+		try {
+			final PDFGostWahlbogen pdf = getPDFmitWahlboegen(conn, schueler_id, null);
 
-		final PDFGostWahlbogen pdf = getPDFmitWahlboegen(conn, schuelerIDs);
+			final byte[] data = pdf.toByteArray();
+			if (data == null)
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
-		if (pdf == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
 
-		final byte[] data = pdf.toByteArray();
-		if (data == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			return Response.ok(data, "application/pdf")
+						   .header("Content-Disposition", "attachment; " + encodedFilename)
+						   .build();
 
-		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
-
-		return Response.ok(data, "application/pdf")
-					   .header("Content-Disposition", "attachment; " + encodedFilename)
-					   .build();
+		} catch (WebApplicationException ex) {
+			return ex.getResponse();
+		}
 	}
 
 
@@ -383,27 +406,22 @@ public final class PDFGostWahlbogen extends PDFCreator {
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
 	public static Response queryJahrgang(final DBEntityManager conn, final int abiturjahr) {
-		// Bestimme alle Schüler des Abiturjahrgangs
-		final List<DTOViewGostSchuelerAbiturjahrgang> queryResult = (abiturjahr == -1)
-				? conn.queryAll(DTOViewGostSchuelerAbiturjahrgang.class)
-				: conn.queryNamed("DTOViewGostSchuelerAbiturjahrgang.abiturjahr", abiturjahr, DTOViewGostSchuelerAbiturjahrgang.class);
 
-		final List<Long> schuelerIDs = queryResult.stream().filter(s -> (s.Status == SchuelerStatus.AKTIV || s.Status == SchuelerStatus.EXTERN || s.Status == SchuelerStatus.NEUAUFNAHME)).map(s -> s.ID).toList();
+		try {
+			final PDFGostWahlbogen pdf = getPDFmitWahlboegen(conn, null, abiturjahr);
 
-		final PDFGostWahlbogen pdf = getPDFmitWahlboegen(conn, schuelerIDs);
+			final byte[] data = pdf.toByteArray();
+			if (data == null)
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
-		if (pdf == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
 
-		final byte[] data = pdf.toByteArray();
-		if (data == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			return Response.ok(data, "application/pdf")
+						   .header("Content-Disposition", "attachment; " + encodedFilename)
+						   .build();
 
-		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
-
-		return Response.ok(data, "application/pdf")
-					   .header("Content-Disposition", "attachment; " + encodedFilename)
-					   .build();
+		} catch (WebApplicationException ex) {
+			return ex.getResponse();
+		}
 	}
-
 }

@@ -70,12 +70,10 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		// Ersetze die Felder des Templates mit Daten
 		bodyData.put("INHALT", "Abitur %d".formatted(datenManager.daten().abijahrgang));
 		bodyData.put("SCHUELERSTATISTIK", "");
-		// TODO: Bug in schuelerGetAnzahl nach Beseitigung prüfen
-		// TODO: Neue Methode notwendig, um alle Externen zu erhalten.
 		bodyData.put("AKTUELLESHALBJAHR", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
 		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 		bodyData.put("SCHULNUMMER", schulnummer);
-		bodyData.put("INFORMATIONEN", "Blockungsergebnis: %s (eID%d)".formatted(ergebnisManager.getErgebnis().name, ergebnisManager.getErgebnis().id));
+		bodyData.put("INFORMATIONEN", "%s (Erg-ID %d)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
 
 		// Die Spalten der Matrix werden gemäß maximale Kurszahl fix gewählt und der evtl. Rest als Spalte zum Füllen angehängt.
 		// Zudem wird die Schriftgröße der Matrix angepasst, wiederum abhängig von der maximalen Kurszahl in einer Schiene.
@@ -133,7 +131,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 			zeilenSchuelerMitKursen.append("</tr>");
 
 			// 2. Zeile erstellen
-			zeilenSchuelerMitKursen.append("<tr style=\"height:0px; border-style:hidden;\">");
+			zeilenSchuelerMitKursen.append("<tr style=\"height:0px;\">");
 			zeilenSchuelerMitKursen.append("<td></td>");
 			zeilenSchuelerMitKursen.append("</tr>");
 
@@ -141,7 +139,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 			zeilenSchuelerMitKursen.append(getKurseZeile(datenManager, ergebnisManager, schuelerID));
 
 			// 4. Zeile erstellen
-			zeilenSchuelerMitKursen.append("<tr style=\"height:0.5em; border-style:hidden;\">");
+			zeilenSchuelerMitKursen.append("<tr style=\"height:0.5em;\">");
 			zeilenSchuelerMitKursen.append("<td></td>");
 			zeilenSchuelerMitKursen.append("</tr>");
 		}
@@ -163,19 +161,26 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		// Kurse mit deren Informationen in eigener Zeile ergänzen.
 		zeileKurse.append("<tr>");
 		for (final GostBlockungsergebnisKurs kurs : ergebnisManager.getOfSchuelerKursmenge(schuelerID)) {
-			String fachFarbeClientRGB = "";
-			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
-			if (fach != null)
-				fachFarbeClientRGB = " style=\"border: 0.5px solid gray; background-color: rgb(" + fach.getHMTLFarbeRGB().replace("rgba(", "").replace(")", "") + ");\"";
 
-			zeileKurse.append("<td%s><b>%s</b>" .formatted(fachFarbeClientRGB, datenManager.kursGetName(kurs.id)));
+			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
+
+			if (fach != null)
+				zeileKurse.append("<td style=\"border: 0.5px solid gray; background-color: %s;\"><b>%s</b>".formatted(fach.getHMTLFarbeRGB().replace("rgba", "rgb"), datenManager.kursGetName(kurs.id)));
+			else
+				zeileKurse.append("<td><b>%s</b>".formatted(datenManager.kursGetName(kurs.id)));
+
+			// Kursbelegung: Schriftlichkeit und evtl. Abiturfach
+			String eintragSchriMuendAbiFach = ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).istSchriftlich ? "s" : "m";
+			if (ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach != null)
+				eintragSchriMuendAbiFach += " (Abifach " + ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach + ")";
+
+			// Lehrkräfte des Kurses als kommaspeparierte Liste darstellen
+			final String eintragLehrkraefte = datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","));
 
 			zeileKurse.append(("<p class=\"tinyfont\">"
-							   + "%s<br/>"
+							   + "%s-%s<br/>"
 							   + "%s</p></td>")
-							   .formatted(ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel,
-										  datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","))));
-			//TODO: Aktuell wird nur die allgemeine Kursart LK, GK usw. ausgegeben. Methode für die individuelle Kursrat LK1, GKS wird noch benötigt.
+							   .formatted(ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel, eintragSchriMuendAbiFach, eintragLehrkraefte));
 		}
 		zeileKurse.append("</tr>");
 		return zeileKurse.toString();
@@ -195,14 +200,26 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 	 */
 	private static PDFGostSchuelerKurseListe getPDFmitSchuelerKurseListe(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) throws WebApplicationException {
 
-		// Schuldaten sammeln
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		if (blockungsergebnisID == null)
+			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+
+		if (schuelerIDs == null || schuelerIDs.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Schüler-IDs übergeben.");
+
+		// Schuldaten sammeln, pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
+		DTOEigeneSchule schule;
+		try {
+			schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		} catch (WebApplicationException ex) {
+			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
+		}
 		final String schulnummer = schule.SchulNr.toString();
 
 		// Hole das Blockungsergebnis über die ID aus der DB.
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, blockungsergebnisID);
 		if (dtoErgebnis == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
+
 		// Im Ergebnis ist auch die ID der Blockung enthalten. Blockungsdatenmanager auf Basis der BlockungsID des Ergebnisses erstellen.
 		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
 		// Bestimme die Daten des Blockungsergebnisses und erstelle damit den Ergebnismanager
@@ -225,12 +242,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		}
 
 		// Variable für den späteren Dateinamen, abhängig davon, ob für ein Blockungsergebnis oder für einen Schüler daraus die PDF-Datei erstellt wird.
-		final String dateiname = "Schüler-Kurse-Liste_%d-%s_(eID%d).pdf"
-			.formatted(datenManager.daten().abijahrgang,
-				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"),
-				blockungsergebnisID);
-
-		// Grundwert für die Liste ermitteln, d. h. die maximale Anzahl an Kursen, die ein Schüler belegt hat. Damit wird die Spaltenbreite später festgelegt.
+		final String dateiname = "Schüler-Kurse-Liste_%d-%s_(Erg-ID%d).pdf".formatted(datenManager.daten().abijahrgang, GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"), blockungsergebnisID);
 
 		// Die Schüler-IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe der Schüler-Kurse-Liste sollten
 		// sie aber in alphabetischer Reihenfolge der Schüler sein.
@@ -260,26 +272,22 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 	 * @return die HTTP-Response mit dem PDF-Dokument
 	 */
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
-		if (blockungsergebnisID == null)
-			return OperationError.NOT_FOUND.getResponse("Ungültige Blockungsergebnis-ID übergeben.");
 
-		if (schuelerIDs == null || schuelerIDs.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("Keine Schüler-IDs übergeben.");
+		try {
+			final PDFGostSchuelerKurseListe pdf = getPDFmitSchuelerKurseListe(conn, blockungsergebnisID,  schuelerIDs);
 
-		final PDFGostSchuelerKurseListe pdf = getPDFmitSchuelerKurseListe(conn, blockungsergebnisID,  schuelerIDs);
+			final byte[] data = pdf.toByteArray();
+			if (data == null)
+				return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
 
-		if (pdf == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
 
-		final byte[] data = pdf.toByteArray();
-		if (data == null)
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse("Fehler bei der Generierung der PDF-Datei.");
+			return Response.ok(data, "application/pdf")
+				.header("Content-Disposition", "attachment; " + encodedFilename)
+				.build();
 
-		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(pdf.filename, StandardCharsets.UTF_8);
-
-		return Response.ok(data, "application/pdf")
-					   .header("Content-Disposition", "attachment; " + encodedFilename)
-					   .build();
+		} catch (WebApplicationException ex) {
+			return ex.getResponse();
+		}
 	}
-
 }
