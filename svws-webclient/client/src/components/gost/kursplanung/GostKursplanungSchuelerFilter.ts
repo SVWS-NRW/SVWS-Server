@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart} from "@core";
+import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart } from "@core";
 import type { Ref } from "vue";
 import { ArrayList } from "@core";
 import { computed, ref } from "vue";
@@ -148,10 +148,7 @@ export class GostKursplanungSchuelerFilter {
 	}
 
 	public alle_toggle = computed({
-		get: () => {
-			if (this._fach.value === undefined && this._kurs.value === undefined) return "alle"
-			else return undefined
-		},
+		get: () => (this._fach.value === undefined && this._kurs.value === undefined) ? "alle" : undefined,
 		set: (value) =>	{
 			if (value === 'alle') {
 				this.setFachFilter(false)
@@ -161,30 +158,19 @@ export class GostKursplanungSchuelerFilter {
 	});
 
 	public fach_toggle = computed({
-		get: () => {
-			if (this._fach.value !== undefined) return "fach"
-			else return undefined
-		},
-		set: (value) =>	{
-			this.setFachFilter(true)
-		}
+		get: () => (this._fach.value !== undefined) ? 'fach' : undefined,
+		set: () => this.setFachFilter(true)
 	});
 
 	public kurs_toggle = computed({
-		get: () => {
-			if (this._kurs.value !== undefined) return "kurs"
-			else return undefined
-		},
-		set: (value) =>	{
-			this.setKursFilter(true)
-		}
+		get: () => (this._kurs.value !== undefined) ? "kurs" : undefined,
+		set: () => this.setKursFilter(true)
 	})
 
 	private setKursFilter(value: boolean) {
 		if (value && (this.faecher.size() > 0)) {
 			this.kurs = this.getKurse().get(0);
 			this.setFachFilter(false);
-			console.log(2, this.kurs)
 		} else
 			this.kurs = undefined;
 	}
