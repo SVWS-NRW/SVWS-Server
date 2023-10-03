@@ -111,6 +111,17 @@ public class HashMap2D<@NotNull K1, @NotNull K2, @NotNull V> {
 	}
 
 	/**
+	 * Liefert für den Schlüssel (key1) die Map (key2 --> V) oder NULL.
+	 *
+	 * @param key1 Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return Für den Schlüssel (key1) die Map (key2 --> V) oder NULL.
+	 */
+	public Map<@NotNull K2, V> getSubMapOrNull(final @NotNull K1 key1) {
+		return _map.get(key1);
+	}
+
+	/**
 	 * Liefert TRUE, falls für den Schlüssel (key1, key2) ein Mapping existiert.
 	 *
 	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
