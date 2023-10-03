@@ -45,30 +45,6 @@ public class GostKursklausur {
 	@Schema(description = "das Kürzel einer verallgemeinerten Kursart", example = "GK")
 	public @NotNull String kursart = "";
 
-	/** Die Dauer der Klausur in Minuten. */
-	@Schema(description = "die Dauer der Klausur in Minuten", example = "135")
-	public int dauer = -1;
-
-	/** Die Auswahlzeit in Minuten, sofern vorhanden. */
-	@Schema(description = "die Auswahlzeit in Minuten, sofern vorhanden", example = "30")
-	public int auswahlzeit = -1;
-
-	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
-	@Schema(description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
-	public boolean istMdlPruefung = false;
-
-	/** Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen. */
-	@Schema(description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
-	public boolean istAudioNotwendig = false;
-
-	/** Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse. */
-	@Schema(description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
-	public boolean istVideoNotwendig = false;
-
-	/** Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden. */
-	@Schema(description = "die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden", example = "Zentrale Vergleichsklausur")
-	public String bemerkungVorgabe = null;
-
 	/** Die ID des Klausurkurses. */
 	@Schema(description = "die ID des Klausurkurses", example = "9876")
 	public long idKurs = -1;

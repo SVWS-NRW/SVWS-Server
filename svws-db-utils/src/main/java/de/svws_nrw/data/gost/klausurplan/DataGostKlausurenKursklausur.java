@@ -181,9 +181,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 			final GostKlausurvorgabe v, final DTOKurs kurs, final List<DTOGostKlausurenSchuelerklausuren> sKlausuren) -> {
 		final GostKursklausur kk = DataGostKlausurenKursklausur.dtoMapper2.apply(k);
 		kk.abijahr = v.abiJahrgang;
-		kk.auswahlzeit = v.auswahlzeit;
-		kk.bemerkungVorgabe = v.bemerkungVorgabe;
-		kk.dauer = v.dauer;
 		kk.kursart = v.kursart;
 		kk.idFach = v.idFach;
 		kk.quartal = v.quartal;
@@ -195,9 +192,6 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			throw OperationError.BAD_REQUEST.exception("Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
 		}
-		kk.istAudioNotwendig = v.istAudioNotwendig;
-		kk.istMdlPruefung = v.istMdlPruefung;
-		kk.istVideoNotwendig = v.istVideoNotwendig;
 		if (sKlausuren != null)
 			kk.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();
 		return kk;

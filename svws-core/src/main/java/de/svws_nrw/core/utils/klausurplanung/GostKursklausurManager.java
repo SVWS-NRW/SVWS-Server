@@ -12,6 +12,7 @@ import java.util.Set;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -30,6 +31,8 @@ import jakarta.validation.constraints.NotNull;
  * werden Kursklausuren eines Gost-Halbjahres eines Abiturjahrgangs verwaltet.
  */
 public class GostKursklausurManager {
+
+	private final @NotNull GostKlausurvorgabenManager _vorgabenManager;
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum == null && b.datum != null)
@@ -76,12 +79,15 @@ public class GostKursklausurManager {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
+	 * @param vorgabenManager der Klausurvorgaben-Manager
 	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public GostKursklausurManager(final @NotNull List<@NotNull GostKursklausur> listKlausuren, final @NotNull List<@NotNull GostKlausurtermin> listTermine) {
+	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren,
+			final @NotNull List<@NotNull GostKlausurtermin> listTermine) {
+		_vorgabenManager = vorgabenManager;
 		initAll(listKlausuren, listTermine);
 	}
 
@@ -89,10 +95,12 @@ public class GostKursklausurManager {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und erzeugt die privaten Attribute.
 	 *
+	 * @param vorgabenManager der Klausurvorgaben-Manager
 	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public GostKursklausurManager(final @NotNull List<@NotNull GostKursklausur> listKlausuren) {
+	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren) {
+		_vorgabenManager = vorgabenManager;
 		initAll(listKlausuren, new ArrayList<>());
 	}
 
@@ -658,6 +666,7 @@ public class GostKursklausurManager {
 		int maxEnd = 0;
 		final GostKlausurtermin termin = DeveloperNotificationException.ifMapGetIsNull(_termin_by_id, idTermin);
 		for (final GostKursklausur kk : DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin)) {
+			@NotNull GostKlausurvorgabe vorgabe = _vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
 			int skStartzeit = -1;
 			if (kk.startzeit != null)
 				skStartzeit = kk.startzeit;
@@ -665,7 +674,7 @@ public class GostKursklausurManager {
 				skStartzeit = termin.startzeit;
 			else
 				throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin);
-			final int endzeit = skStartzeit + kk.dauer + kk.auswahlzeit;
+			final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
@@ -682,8 +691,10 @@ public class GostKursklausurManager {
 	public int maxKlausurdauerGetByTerminid(final long idTermin) {
 		final @NotNull List<@NotNull GostKursklausur> klausuren = DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, idTermin);
 		int maxDauer = -1;
-		for (@NotNull final GostKursklausur klausur : klausuren)
-			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		for (@NotNull final GostKursklausur klausur : klausuren) {
+			@NotNull GostKlausurvorgabe vorgabe = _vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+			maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+		}
 		return maxDauer;
 	}
 
@@ -792,27 +803,38 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
 	 *
-	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren in die Map aufgenommen werden
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(final @NotNull GostKlausurtermin termin, final int threshold) {
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(final @NotNull GostKlausurtermin termin,
+			final int threshold) {
 		return klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert, wenn die übergebene Kursklausur in den Termin integriert würde
+	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine
+	 * Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den
+	 * Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der
+	 * Schwellwert definiert, wenn die übergebene Kursklausur in den Termin
+	 * integriert würde
 	 *
-	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param klausur die Klausur, deren Integration in den Termin angenommen wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param klausur   die Klausur, deren Integration in den Termin angenommen wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren berücksichtigt werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(final @NotNull GostKlausurtermin termin, final GostKursklausur klausur, final int threshold) {
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(final @NotNull GostKlausurtermin termin,
+			final GostKursklausur klausur, final int threshold) {
 		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
 		if (termin.datum == null)
 			return ergebnis;
@@ -840,6 +862,17 @@ public class GostKursklausurManager {
 	 */
 	public GostKlausurtermin terminByKursklausur(final @NotNull GostKursklausur klausur) {
 		return _termin_by_id.get(klausur.idTermin);
+	}
+
+	/**
+	 * Liefert die Klausurvorgabe zu einer Kursklausur.
+	 *
+	 * @param klausur die Kursklausur, zu der die Vorgabe gesucht wird.
+	 *
+	 * @return die Klausurvorgabe
+	 */
+	public @NotNull GostKlausurvorgabe vorgabeByKursklausur(final @NotNull GostKursklausur klausur) {
+		return _vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
 	}
 
 }

@@ -65,7 +65,7 @@
 							</div>
 							<div class="svws-ui-td">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
-							<div class="svws-ui-td svws-align-right">{{ klausur.dauer }}</div>
+							<div class="svws-ui-td svws-align-right">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
 							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
 							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
 						</div>

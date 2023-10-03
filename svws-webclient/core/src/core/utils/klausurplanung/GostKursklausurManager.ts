@@ -4,25 +4,29 @@ import { GostKursklausur } from '../../../core/data/gost/klausurplanung/GostKurs
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { MapUtils } from '../../../core/utils/MapUtils';
 import { DateUtils } from '../../../core/utils/DateUtils';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
-import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
-import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { Wochentag } from '../../../core/types/Wochentag';
-import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../java/util/HashSet';
+import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
+import { MapUtils } from '../../../core/utils/MapUtils';
+import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
+import { GostKlausurvorgabenManager, cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager } from '../../../core/utils/klausurplanung/GostKlausurvorgabenManager';
+import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
+import { Wochentag } from '../../../core/types/Wochentag';
+import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostKursklausurManager extends JavaObject {
+
+	private readonly _vorgabenManager : GostKlausurvorgabenManager;
 
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
 		if (a.datum === null && b.datum !== null)
@@ -77,33 +81,39 @@ export class GostKursklausurManager extends JavaObject {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
+	 * @param vorgabenManager der Klausurvorgaben-Manager
 	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public constructor(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>);
+	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
 	 * und erzeugt die privaten Attribute.
 	 *
+	 * @param vorgabenManager der Klausurvorgaben-Manager
 	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public constructor(listKlausuren : List<GostKursklausur>);
+	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : List<GostKursklausur>, __param1? : List<GostKlausurtermin>) {
+	public constructor(__param0 : GostKlausurvorgabenManager, __param1 : List<GostKursklausur>, __param2? : List<GostKlausurtermin>) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
-			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param0);
-			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param1);
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null))) {
+			const vorgabenManager : GostKlausurvorgabenManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager(__param0);
+			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
+			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param2);
+			this._vorgabenManager = vorgabenManager;
 			this.initAll(listKlausuren, listTermine);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (typeof __param1 === "undefined")) {
-			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param0);
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (typeof __param2 === "undefined")) {
+			const vorgabenManager : GostKlausurvorgabenManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager(__param0);
+			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
+			this._vorgabenManager = vorgabenManager;
 			this.initAll(listKlausuren, new ArrayList());
 		} else throw new Error('invalid method overload');
 	}
@@ -634,6 +644,7 @@ export class GostKursklausurManager extends JavaObject {
 		let maxEnd : number = 0;
 		const termin : GostKlausurtermin | null = DeveloperNotificationException.ifMapGetIsNull(this._termin_by_id, idTermin);
 		for (const kk of DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin)) {
+			let vorgabe : GostKlausurvorgabe = this._vorgabenManager.vorgabeGetByIdOrException(kk.idVorgabe);
 			let skStartzeit : number = -1;
 			if (kk.startzeit !== null)
 				skStartzeit = kk.startzeit.valueOf();
@@ -642,7 +653,7 @@ export class GostKursklausurManager extends JavaObject {
 					skStartzeit = termin.startzeit.valueOf();
 				else
 					throw new DeveloperNotificationException("Startzeit des Termins nicht definiert, Termin-ID: " + idTermin)
-			const endzeit : number = skStartzeit + kk.dauer + kk.auswahlzeit;
+			const endzeit : number = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
@@ -659,8 +670,10 @@ export class GostKursklausurManager extends JavaObject {
 	public maxKlausurdauerGetByTerminid(idTermin : number) : number {
 		const klausuren : List<GostKursklausur> = DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, idTermin);
 		let maxDauer : number = -1;
-		for (const klausur of klausuren)
-			maxDauer = klausur.dauer > maxDauer ? klausur.dauer : maxDauer;
+		for (const klausur of klausuren) {
+			let vorgabe : GostKlausurvorgabe = this._vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+			maxDauer = vorgabe.dauer > maxDauer ? vorgabe.dauer : maxDauer;
+		}
 		return maxDauer;
 	}
 
@@ -768,10 +781,14 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
 	 *
-	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren in die Map aufgenommen werden
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
@@ -780,11 +797,16 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert definiert, wenn die übergebene Kursklausur in den Termin integriert würde
+	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine
+	 * Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den
+	 * Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der
+	 * Schwellwert definiert, wenn die übergebene Kursklausur in den Termin
+	 * integriert würde
 	 *
-	 * @param termin der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param klausur die Klausur, deren Integration in den Termin angenommen wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die Klausuren berücksichtigt werden
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param klausur   die Klausur, deren Integration in den Termin angenommen wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren berücksichtigt werden
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
@@ -816,6 +838,17 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public terminByKursklausur(klausur : GostKursklausur) : GostKlausurtermin | null {
 		return this._termin_by_id.get(klausur.idTermin);
+	}
+
+	/**
+	 * Liefert die Klausurvorgabe zu einer Kursklausur.
+	 *
+	 * @param klausur die Kursklausur, zu der die Vorgabe gesucht wird.
+	 *
+	 * @return die Klausurvorgabe
+	 */
+	public vorgabeByKursklausur(klausur : GostKursklausur) : GostKlausurvorgabe {
+		return this._vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

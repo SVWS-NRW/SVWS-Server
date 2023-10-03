@@ -64,7 +64,7 @@
 								</div>
 								<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)?.schueler.size() || 0 }}</div>
-								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.dauer }}</div>
+								<div class="svws-ui-td svws-align-right" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
 								<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
 								<div v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
 							</div>
@@ -129,7 +129,8 @@
 	const maximaleDauer = computed(() => {
 		let dauer = 0;
 		for (const klausur of klausuren()) {
-			dauer < klausur.dauer ? dauer = klausur.dauer : dauer;
+			const vorgabe = props.kursklausurmanager().vorgabeByKursklausur(klausur);
+			dauer < vorgabe.dauer ? dauer = vorgabe.dauer : dauer;
 		}
 		return dauer;
 	});

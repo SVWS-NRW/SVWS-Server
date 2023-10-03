@@ -40,36 +40,6 @@ export class GostKursklausur extends JavaObject {
 	public kursart : string = "";
 
 	/**
-	 * Die Dauer der Klausur in Minuten.
-	 */
-	public dauer : number = -1;
-
-	/**
-	 * Die Auswahlzeit in Minuten, sofern vorhanden.
-	 */
-	public auswahlzeit : number = -1;
-
-	/**
-	 * Die Information, ob es sich um eine mündliche Prüfung handelt.
-	 */
-	public istMdlPruefung : boolean = false;
-
-	/**
-	 * Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
-	 */
-	public istAudioNotwendig : boolean = false;
-
-	/**
-	 * Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
-	 */
-	public istVideoNotwendig : boolean = false;
-
-	/**
-	 * Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden.
-	 */
-	public bemerkungVorgabe : string | null = null;
-
-	/**
 	 * Die ID des Klausurkurses.
 	 */
 	public idKurs : number = -1;
@@ -137,22 +107,6 @@ export class GostKursklausur extends JavaObject {
 		if (typeof obj.kursart === "undefined")
 			 throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
-		if (typeof obj.dauer === "undefined")
-			 throw new Error('invalid json format, missing attribute dauer');
-		result.dauer = obj.dauer;
-		if (typeof obj.auswahlzeit === "undefined")
-			 throw new Error('invalid json format, missing attribute auswahlzeit');
-		result.auswahlzeit = obj.auswahlzeit;
-		if (typeof obj.istMdlPruefung === "undefined")
-			 throw new Error('invalid json format, missing attribute istMdlPruefung');
-		result.istMdlPruefung = obj.istMdlPruefung;
-		if (typeof obj.istAudioNotwendig === "undefined")
-			 throw new Error('invalid json format, missing attribute istAudioNotwendig');
-		result.istAudioNotwendig = obj.istAudioNotwendig;
-		if (typeof obj.istVideoNotwendig === "undefined")
-			 throw new Error('invalid json format, missing attribute istVideoNotwendig');
-		result.istVideoNotwendig = obj.istVideoNotwendig;
-		result.bemerkungVorgabe = typeof obj.bemerkungVorgabe === "undefined" ? null : obj.bemerkungVorgabe === null ? null : obj.bemerkungVorgabe;
 		if (typeof obj.idKurs === "undefined")
 			 throw new Error('invalid json format, missing attribute idKurs');
 		result.idKurs = obj.idKurs;
@@ -182,12 +136,6 @@ export class GostKursklausur extends JavaObject {
 		result += '"quartal" : ' + obj.quartal + ',';
 		result += '"idFach" : ' + obj.idFach + ',';
 		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
-		result += '"dauer" : ' + obj.dauer + ',';
-		result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
-		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
-		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
-		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
-		result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		result += '"idKurs" : ' + obj.idKurs + ',';
 		result += '"kursKurzbezeichnung" : ' + ((!obj.kursKurzbezeichnung) ? 'null' : JSON.stringify(obj.kursKurzbezeichnung)) + ',';
 		if (!obj.kursSchiene) {
@@ -244,24 +192,6 @@ export class GostKursklausur extends JavaObject {
 		}
 		if (typeof obj.kursart !== "undefined") {
 			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
-		}
-		if (typeof obj.dauer !== "undefined") {
-			result += '"dauer" : ' + obj.dauer + ',';
-		}
-		if (typeof obj.auswahlzeit !== "undefined") {
-			result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
-		}
-		if (typeof obj.istMdlPruefung !== "undefined") {
-			result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
-		}
-		if (typeof obj.istAudioNotwendig !== "undefined") {
-			result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
-		}
-		if (typeof obj.istVideoNotwendig !== "undefined") {
-			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
-		}
-		if (typeof obj.bemerkungVorgabe !== "undefined") {
-			result += '"bemerkungVorgabe" : ' + ((!obj.bemerkungVorgabe) ? 'null' : JSON.stringify(obj.bemerkungVorgabe)) + ',';
 		}
 		if (typeof obj.idKurs !== "undefined") {
 			result += '"idKurs" : ' + obj.idKurs + ',';

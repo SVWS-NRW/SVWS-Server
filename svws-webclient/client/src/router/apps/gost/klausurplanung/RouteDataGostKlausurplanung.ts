@@ -169,13 +169,15 @@ export class RouteDataGostKlausurplanung {
 			api.status.start();
 			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
+			this.setPatchedState({
+				klausurvorgabenmanager: klausurvorgabenmanager,
+			});
 			if (this._state.value.abiturjahr === -1) {
 				this.setPatchedState({
 					abschnitt: undefined,
 					halbjahr: halbjahr,
 					kursklausurmanager: undefined,
 					stundenplanmanager: undefined,
-					klausurvorgabenmanager: klausurvorgabenmanager,
 				});
 				return true;
 			}
@@ -187,7 +189,6 @@ export class RouteDataGostKlausurplanung {
 					halbjahr,
 					kursklausurmanager: undefined,
 					stundenplanmanager: undefined,
-					klausurvorgabenmanager,
 				});
 				return true;
 			}
@@ -200,7 +201,6 @@ export class RouteDataGostKlausurplanung {
 					halbjahr,
 					kursklausurmanager,
 					stundenplanmanager: undefined,
-					klausurvorgabenmanager,
 				});
 				return true;
 			}
@@ -217,7 +217,6 @@ export class RouteDataGostKlausurplanung {
 				halbjahr,
 				kursklausurmanager,
 				stundenplanmanager,
-				klausurvorgabenmanager,
 			});
 			return true;
 		} finally {
@@ -229,7 +228,7 @@ export class RouteDataGostKlausurplanung {
 		//try {
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		return new GostKursklausurManager(listKursklausuren, listKlausurtermine);
+		return new GostKursklausurManager(this.klausurvorgabenmanager, listKursklausuren, listKlausurtermine);
 		/*this.setPatchedState({
 			kursklausurmanager,
 		});*/

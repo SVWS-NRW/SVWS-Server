@@ -23,7 +23,7 @@
 						</div>
 						<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 						<div class="svws-ui-td" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)!.schueler.size() }}</div>
-						<div class="svws-ui-td" role="cell">{{ klausur.dauer }}</div>
+						<div class="svws-ui-td" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-text-input :model-value="klausur.startzeit !== null ? DateUtils.getStringOfUhrzeitFromMinuten(klausur.startzeit) : ''" headless :placeholder="klausur.startzeit === null ? (terminStartzeit + ' Uhr' || 'Startzeit') : 'Individuelle Startzeit'" @change="zeit => patchKlausurbeginn(zeit, klausur.id)" />
 						</div>
