@@ -789,17 +789,25 @@ public class GostKlausurraumManager {
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
 	 * @param idRaum  die Id des Klausurraums
-	 * @param manager der Kursklausurmanager
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByRaumid(final long idRaum) {
 		final List<@NotNull GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
 		if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
 		for (final long idKK : _schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
 			schuelerklausuren.addAll(_schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
 		return schuelerklausuren;
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurOhneRaumGetMenge() {
+		return schuelerklausurGetMengeByRaumid(-1L);
 	}
 
 	/**

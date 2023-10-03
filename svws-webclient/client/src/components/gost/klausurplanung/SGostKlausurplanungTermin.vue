@@ -49,8 +49,8 @@
 								:key="klausur.id"
 								:data="klausur"
 								:draggable="onDragKlausur !== undefined && (draggableKlausur === undefined || draggableKlausur(klausur))"
-								@dragstart="onDragKlausur && onDragKlausur(klausur)"
-								@dragend="onDragKlausur && onDragKlausur(undefined)"
+								@dragstart="onDragKlausur && onDragKlausur(klausur);$event.stopPropagation()"
+								@dragend="onDragKlausur && onDragKlausur(undefined);$event.stopPropagation()"
 								class="svws-ui-tr" role="row" :title="`Kurs, Lehrkraft, Schriftlich, Dauer in Minuten,${kursklausurmanager().quartalGetByTerminid(termin.id) === -1 ? ' Quartal,' : ''} Schiene`"
 								:class="[
 									props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),

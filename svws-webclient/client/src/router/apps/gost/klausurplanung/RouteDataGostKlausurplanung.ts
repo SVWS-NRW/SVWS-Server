@@ -1,5 +1,5 @@
 
-import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
@@ -431,7 +431,9 @@ export class RouteDataGostKlausurplanung {
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
 		if (this._state.value.abschnitt === undefined)
-			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
+			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt');
+		if (sks.isEmpty())
+			return new GostKlausurenCollectionSkrsKrs();
 		api.status.start();
 		const skids = new ArrayList<number>();
 		for (const sk of sks)

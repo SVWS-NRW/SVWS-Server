@@ -146,7 +146,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 */
 	public static GostKlausurenCollectionSkrsKrs transactionSetzeRaumZuSchuelerklausuren(final DBEntityManager conn, final Long _idRaum, final List<Long> idsSchuelerklausuren,
 			final long idAbschnitt) {
-
+		if (idsSchuelerklausuren.isEmpty())
+			throw OperationError.NOTHING_TO_DO.exception();
 		final long idRaum = _idRaum != null ? _idRaum : ermittleRaumidAusSchuelerklausuren(conn, idsSchuelerklausuren);
 		if (idRaum == -1)
 			throw OperationError.CONFLICT.exception("Verschiedene Raumids in Schuelerklausuren gefunden.");

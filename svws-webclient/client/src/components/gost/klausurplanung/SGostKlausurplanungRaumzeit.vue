@@ -17,7 +17,10 @@
 			<ul class="flex flex-col gap-0.5 -mx-3 mt-2">
 				<li v-for="termin in termine()"
 					:key="termin.id"
-					@click="chooseTermin(termin);$event.stopPropagation()"
+					@click="chooseTermin(termin)"
+					:draggable="isDraggable(termin)"
+					@dragstart="onDrag(termin)"
+					@dragend="onDrag(undefined)"
 					:data="termin"
 					:class="{
 						'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': selectedTermin?.id === termin.id,
@@ -29,6 +32,7 @@
 						:kursmanager="kursmanager"
 						:on-drag-klausur="onDrag"
 						:draggable-klausur="isDraggable"
+						drag-icon
 						:on-drop-termin="onDrop"
 						:klausur-css-classes="calculatCssClassesKlausur"
 						:compact-with-date="selectedTermin?.id !== termin.id">
@@ -98,20 +102,29 @@
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
 	function isDraggable(object: any) : boolean {
-		if (selectedTermin.value !== null && object instanceof GostKursklausur && raummanager.value !== null)
+		if (selectedTermin.value !== null && object instanceof GostKursklausur && raummanager.value !== null) {
 			if (object.idTermin === selectedTermin.value.id)
 				return !raummanager.value.isAlleSchuelerklausurenVerplant(object);
+		} else if (selectedTermin.value !== null && object instanceof GostKlausurtermin && raummanager.value !== null) {
+			return object.id === selectedTermin.value.id && raummanager.value.schuelerklausurOhneRaumGetMenge().size() > 0;
+		}
 		return false;
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (dragData.value instanceof GostKursklausur && raummanager.value !== null)
+		if (dragData.value instanceof GostKursklausur && raummanager.value !== null) {
 			if (zone instanceof GostKlausurraum)
 				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value);
 			else if (zone instanceof GostKlausurtermin) {
 				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value.schuelerklausurGetMengeByKursklausurid(dragData.value.id), raummanager.value);
+			}
+		} else if (dragData.value instanceof GostKlausurtermin && raummanager.value !== null)
+			if (zone instanceof GostKlausurraum)
+				await props.setzeRaumZuSchuelerklausuren(zone, raummanager.value.schuelerklausurOhneRaumGetMenge(), raummanager.value);
+			else if (zone instanceof GostKlausurtermin) {
+				await props.setzeRaumZuSchuelerklausuren(null, raummanager.value.schuelerklausurOhneRaumGetMenge(), raummanager.value);
 			}
 	};
 

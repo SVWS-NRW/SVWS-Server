@@ -750,17 +750,25 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
 	 * @param idRaum  die Id des Klausurraums
-	 * @param manager der Kursklausurmanager
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurGetMengeByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostSchuelerklausur> {
+	public schuelerklausurGetMengeByRaumid(idRaum : number) : List<GostSchuelerklausur> {
 		const schuelerklausuren : List<GostSchuelerklausur> | null = new ArrayList();
 		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return schuelerklausuren;
 		for (const idKK of this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum))
 			schuelerklausuren.addAll(this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK));
 		return schuelerklausuren;
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public schuelerklausurOhneRaumGetMenge() : List<GostSchuelerklausur> {
+		return this.schuelerklausurGetMengeByRaumid(-1);
 	}
 
 	/**
