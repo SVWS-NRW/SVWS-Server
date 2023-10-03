@@ -128,6 +128,7 @@ import { Schild3KatalogEintragVersetzungsvermerke } from '../core/data/schild3/S
 import { SchuelerBetriebsdaten } from '../core/data/schueler/SchuelerBetriebsdaten';
 import { SchuelerKAoADaten } from '../core/data/schueler/SchuelerKAoADaten';
 import { SchuelerLeistungsdaten } from '../core/data/schueler/SchuelerLeistungsdaten';
+import { SchuelerLernabschnittBemerkungen } from '../core/data/schueler/SchuelerLernabschnittBemerkungen';
 import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
@@ -7927,6 +7928,32 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
 		const body : string = SchuelerLernabschnittsdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuelerLernabschnittsdatenBemerkungen für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \d+}/bemerkungen
+	 *
+	 * Passt die Bemerkungen von Schülerlernabschnittsdaten mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Schülerlernabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchuelerLernabschnittBemerkungen>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abschnitt - der Pfad-Parameter abschnitt
+	 */
+	public async patchSchuelerLernabschnittsdatenBemerkungen(data : Partial<SchuelerLernabschnittBemerkungen>, schema : string, abschnitt : number) : Promise<void> {
+		const path = "/db/{schema}/schueler/lernabschnittsdaten/{abschnitt : \\d+}/bemerkungen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abschnitt\s*(:[^}]+)?}/g, abschnitt.toString());
+		const body : string = SchuelerLernabschnittBemerkungen.transpilerToJSONPatch(data);
 		return super.patchJSON(path, body);
 	}
 

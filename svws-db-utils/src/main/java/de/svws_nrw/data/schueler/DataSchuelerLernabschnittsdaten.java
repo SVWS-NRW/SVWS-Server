@@ -3,6 +3,7 @@ package de.svws_nrw.data.schueler;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
@@ -376,8 +377,74 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOSchuelerLernabschnittsdaten.class, patchMappings);
 	}
 
-	// TODO Patch für Fachbemerkungen als getrennte Patch-Methode
+	/**
+	 * Für einen Patch für die angegebenen Bemerkungsfelder aus.
+	 *
+	 * @param id   die ID des Lernabschnitts
+	 * @param is   ein Input-Stream mit den JSON-Daten des Patches
+	 *
+	 * @return die HTTP-Response für den Patch
+	 */
+	public Response patchBemerkungen(final Long id, final InputStream is) {
+		if (id == null)
+			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
+		final Map<String, Object> map = JSONMapper.toMap(is);
+		if (map.isEmpty())
+			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
+		final DTOSchuelerLernabschnittsdaten dto = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", id, DTOSchuelerPSFachBemerkungen.class);
+		final DTOSchuelerPSFachBemerkungen dtoFachBem = (dtoListFachBem.isEmpty())
+				? new DTOSchuelerPSFachBemerkungen(conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class), id)
+				: dtoListFachBem.get(0);
+		boolean patchedDTOLernabschitt = false;
+		boolean patchedDTOFachBem = false;
+		for (final Entry<String, Object> entry : map.entrySet()) {
+			final String key = entry.getKey();
+			final Object value = entry.getValue();
+			switch (key) {
+				case "zeugnisAllgemein" -> {
+					dto.ZeugnisBem = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOLernabschitt = true;
+				}
+				case "zeugnisASV" -> {
+					dtoFachBem.ASV = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+				case "zeugnisLELS" -> {
+					dtoFachBem.LELS = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+				case "zeugnisAUE" -> {
+					dtoFachBem.AUE = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+				case "uebergangESF" -> {
+					dtoFachBem.ESF = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+				case "foerderschwerpunkt" -> {
+					dtoFachBem.BemerkungFSP = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+				case "versetzungsentscheidung" -> {
+					dtoFachBem.BemerkungVersetzung = JSONMapper.convertToString(value, true, true, null);
+					patchedDTOFachBem = true;
+				}
+			}
+		}
+		if (patchedDTOLernabschitt) {
+			conn.transactionPersist(dto);
+			conn.transactionFlush();
+		}
+		if (patchedDTOFachBem) {
+			conn.transactionPersist(dtoFachBem);
+			conn.transactionFlush();
+		}
+		return Response.status(Status.OK).build();
+	}
 
-	// TODO Patch für Nachprüfungen als getrennte Patch-Methode
+	// TODO Patch für Nachprüfungen als getrennte Patch-Methode - SchuelerLernabschnittNachpruefungsdaten
 
 }

@@ -184,10 +184,9 @@ export class RouteDataSchuelerLernabschnitte {
 	}
 
 	patchBemerkungen = async (data : Partial<SchuelerLernabschnittBemerkungen>) : Promise<void> => {
-		// TODO patch and update bemerkungen in daten
-		// await api.server.patchSchuelerLernabschnittBemerkungen(data, api.schema, this.daten.id);
-		// Object.assign(this.daten.bemerkungen, data);
-		// this.commit();
+		await api.server.patchSchuelerLernabschnittsdatenBemerkungen(data, api.schema, this.daten.id);
+		Object.assign(this.daten.bemerkungen, data);
+		this.commit();
 	}
 
 }
