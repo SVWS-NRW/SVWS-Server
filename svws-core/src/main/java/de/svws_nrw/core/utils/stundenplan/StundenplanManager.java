@@ -4397,6 +4397,34 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller Dummy-{@link StundenplanZeitraster}-Objekte, welche in diesem Manager noch nicht definiert sind.
+	 *
+	 * @param tagVon     Der erste Tag (inklusive) des Bereichs.
+	 * @param tagBis     Der letzte Tag (inklusive) des Bereichs.
+	 * @param stundeVon  Die erste Stunde (inklusive) des Bereichs.
+	 * @param stundeBis  Die letzt Stunde (inklusive) des Bereichs.
+	 *
+	 * @return eine Liste aller Dummy-{@link StundenplanZeitraster}-Objekte, welche in diesem Manager noch nicht definiert sind.
+	 */
+	public @NotNull List<@NotNull StundenplanZeitraster> zeitrasterGetDummyListe(final int tagVon, final int tagBis, final int stundeVon, final int stundeBis) {
+		final @NotNull List<@NotNull StundenplanZeitraster> listDummies = new ArrayList<>();
+
+		for (int wochentag = tagVon; wochentag <= tagBis; wochentag++)
+			for (int stunde = stundeVon; stunde <= stundeBis; stunde++)
+				if (!_zeitraster_by_wochentag_and_stunde.contains(wochentag, stunde)) {
+					final @NotNull StundenplanZeitraster zeit = new StundenplanZeitraster();
+					zeit.id = -1; // Dummy
+					zeit.wochentag = wochentag;
+					zeit.unterrichtstunde = stunde;
+					zeit.stundenbeginn = null;
+					zeit.stundenende = null;
+					listDummies.add(zeit);
+				}
+
+		return listDummies;
+	}
+
+	/**
 	 * Liefert eine Liste der {@link StundenplanZeitraster}-Objekte zu einem bestimmten Wochentag.
 	 *
 	 * @param wochentag der Wochentag der gewünschten Zeitraster-Objekte
