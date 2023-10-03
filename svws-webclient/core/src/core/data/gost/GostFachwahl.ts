@@ -22,6 +22,11 @@ export class GostFachwahl extends JavaObject {
 	 */
 	public istSchriftlich : boolean = false;
 
+	/**
+	 * Gibt an, ob die Fachwahl als ein Abiturfach geplant ist oder nicht
+	 */
+	public abiturfach : number | null = null;
+
 
 	public constructor() {
 		super();
@@ -46,6 +51,7 @@ export class GostFachwahl extends JavaObject {
 		if (typeof obj.istSchriftlich === "undefined")
 			 throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
+		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		return result;
 	}
 
@@ -55,6 +61,7 @@ export class GostFachwahl extends JavaObject {
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"kursartID" : ' + obj.kursartID + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
+		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,6 +80,9 @@ export class GostFachwahl extends JavaObject {
 		}
 		if (typeof obj.istSchriftlich !== "undefined") {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
+		}
+		if (typeof obj.abiturfach !== "undefined") {
+			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

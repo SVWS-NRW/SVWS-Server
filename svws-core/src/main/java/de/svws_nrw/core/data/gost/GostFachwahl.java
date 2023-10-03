@@ -32,4 +32,8 @@ public class GostFachwahl {
 	@Schema(description = "gibt an, ob die Fachwahl ein schriftlicher Kurs ist oder nicht", example = "true")
 	public boolean istSchriftlich = false;
 
+	/** Gibt an, ob die Fachwahl als ein Abiturfach geplant ist oder nicht */
+	@Schema(description = "gibt an, ob die Fachwahl als ein Abiturfach geplant ist oder nicht", example = "true")
+	public Integer abiturfach = null;
+
 }

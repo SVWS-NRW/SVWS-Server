@@ -226,6 +226,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 		fw.schuelerID = schueler.ID;
 		fw.kursartID = kursart.id;
 		fw.istSchriftlich = istSchriftlich;
+		fw.abiturfach = fachbelegung.AbiturFach;
 		return fw;
 	}
 
