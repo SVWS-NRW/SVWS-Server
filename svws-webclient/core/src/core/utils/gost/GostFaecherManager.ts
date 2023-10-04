@@ -155,7 +155,7 @@ export class GostFaecherManager extends JavaObject {
 	/**
 	 * Fügt die übergebene Fachkombination zu diesem Manager hinzu.
 	 *
-	 * @param fachkombi   die hinzuzufügende Fachkombinationen
+	 * @param fachkombi   die hinzuzufügende Fachkombination
 	 *
 	 * @return true, falls die Fachkombination hinzugefügt wurde
 	 *
@@ -171,8 +171,8 @@ export class GostFaecherManager extends JavaObject {
 		if (JavaString.isBlank(fachkombi.hinweistext)) {
 			const fach1 : GostFach = this.getOrException(fachkombi.fachID1);
 			const fach2 : GostFach = this.getOrException(fachkombi.fachID2);
-			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? " als " + fachkombi.kursart1 : "";
-			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? " als " + fachkombi.kursart2 : "";
+			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? "" : " als " + fachkombi.kursart1;
+			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? "" : " als " + fachkombi.kursart2;
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1! + ((typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) ? " erfordert " : " erlaubt kein ") + fach2.kuerzelAnzeige + kursart2!;
 		}
 		if (typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) {

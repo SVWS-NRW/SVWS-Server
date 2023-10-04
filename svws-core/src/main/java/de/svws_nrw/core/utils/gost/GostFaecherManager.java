@@ -137,14 +137,14 @@ public class GostFaecherManager {
 	/**
 	 * Fügt die übergebene Fachkombination zu diesem Manager hinzu.
 	 *
-	 * @param fachkombi   die hinzuzufügende Fachkombinationen
+	 * @param fachkombi   die hinzuzufügende Fachkombination
 	 *
 	 * @return true, falls die Fachkombination hinzugefügt wurde
 	 *
 	 * @throws DeveloperNotificationException Falls die Fachkombination nicht zu den Fächern des Managers passt.
 	 */
 	private boolean addFachkombinationInternal(final @NotNull GostJahrgangFachkombination fachkombi) throws DeveloperNotificationException {
-		// Füge ddie Fachkombination hinzu, sie noch nicht enthalten ist...
+		// Füge die Fachkombination hinzu, falls sie noch nicht enthalten ist...
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID1", fachkombi.fachID1, 0);
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID2", fachkombi.fachID2, 0);
 		DeveloperNotificationException.ifMapNotContains("_map", _map, fachkombi.fachID1);
@@ -154,8 +154,8 @@ public class GostFaecherManager {
 		if (fachkombi.hinweistext.isBlank()) {
 			final @NotNull GostFach fach1 = getOrException(fachkombi.fachID1);
 			final @NotNull GostFach fach2 = getOrException(fachkombi.fachID2);
-			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? " als " + fachkombi.kursart1 : "";
-			final @NotNull String kursart2 = ((fachkombi.kursart2 == null) || fachkombi.kursart2.isBlank()) ? " als " + fachkombi.kursart2 : "";
+			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? "" : " als " + fachkombi.kursart1;
+			final @NotNull String kursart2 = ((fachkombi.kursart2 == null) || fachkombi.kursart2.isBlank()) ? "" : " als " + fachkombi.kursart2;
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1
 					+ ((typ == GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH) ? " erfordert " : " erlaubt kein ")
 					+ fach2.kuerzelAnzeige + kursart2;
