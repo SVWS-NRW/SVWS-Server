@@ -126,12 +126,10 @@
 	const searchText = ref("");
 
 	function onInputFocus() {
-	console.log("inputfocus")
 		hasFocus.value = true;
 	}
 
 	function onInputBlur() {
-	console.log("Blur")
 		hasFocus.value = false;
 		closeListbox();
 	}
@@ -232,24 +230,25 @@
 
 	function doFocus() {
 		const el: typeof TextInput = inputEl.value!;
-	console.log("doFocus")
 		void nextTick(() => el?.input.focus());
 	}
 
 	function openListbox() {
-	console.log("open", selectedItem.value, refList.value)
 		doFocus();
 		showList.value = true;
-		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null)) {
-			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
-			void nextTick(() => scrollToActiveItem());
-		}
+		void nextTick(() => {
+			if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null)) {
+				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
+				scrollToActiveItem();
+			} else if (refList.value !== null) {
+				refList.value.activeItemIndex = 0;
+				scrollToActiveItem();
+			}
+		});
 	}
 
 	function closeListbox() {
-	console.log("close")
 		showList.value = false;
-		// searchText.value = "";
 		if (refList.value !== null)
 			refList.value.activeItemIndex = -1;
 	}
@@ -363,126 +362,128 @@
 
 
 <style lang="postcss" scoped>
-.multiselect-input-component {
-	@apply flex;
-	@apply relative;
-	@apply w-full;
-	@apply inline-block overflow-visible;
 
-	&--danger {
-		@apply text-error;
+	.multiselect-input-component {
+		@apply flex;
+		@apply relative;
+		@apply w-full;
+		@apply inline-block overflow-visible;
+
+		&--danger {
+			@apply text-error;
+		}
+
+		&.with-open-list,
+		&:focus-within {
+			.dropdown-icon {
+				@apply opacity-100;
+			}
+		}
+
+		&.with-value:not(:focus-within):not(:hover) .tag-list-wrapper {
+			@apply border-black/25 dark:border-white/25;
+		}
+
+		&.with-value:not(:focus-within):hover .tag-list-wrapper {
+			@apply border-black/50 dark:border-white/50;
+		}
 	}
 
-	&.with-open-list,
-	&:focus-within {
+	.wrapper {
+		@apply relative;
+	}
+
+	.dropdown-icon {
+		@apply absolute p-1;
+		@apply flex;
+		@apply inset-y-0 right-0;
+		@apply items-center justify-center cursor-pointer text-base;
+		@apply opacity-25;
+
+		&:hover {
+			@apply opacity-100;
+		}
+
+		.icon {
+			@apply py-1;
+			@apply rounded;
+			font-size: 1.1em;
+		}
+
+		&:hover .icon {
+			@apply bg-black text-white dark:bg-white dark:text-black;
+
+			.multiselect-input-component--statistics:not(.multiselect-input-component--disabled) & {
+				@apply bg-violet-500 dark:bg-violet-800 dark:text-white;
+			}
+		}
+
+		.multiselect-input-component--disabled & {
+			@apply pointer-events-none;
+			@apply opacity-10 !important;
+		}
+
+		.data-table &,
+		.svws-ui-table & {
+			@apply p-0;
+
+			.icon {
+				font-size: 0.9em;
+			}
+		}
+
+		.multiselect-input-component--statistics & {
+			@apply text-purple-500;
+		}
+	}
+
+	.wrapper--tag-list {
+		.input:not(.sr-only) {
+			& + .tag-list-wrapper {
+				@apply border-t-0 rounded-t-none;
+			}
+		}
+
+		&.wrapper--headless {
+			.tag-list-wrapper {
+				@apply border-black/25 dark:border-white/25 bg-white dark:bg-black;
+			}
+		}
+
 		.dropdown-icon {
+			.icon, svg {
+				@apply h-full;
+			}
+		}
+	}
+
+	.tag-remove .icon,
+	.remove-icon .icon {
+		@apply inline-block mt-0 cursor-pointer;
+	}
+
+	.tag-remove .icon:hover,
+	.remove-icon:hover .icon {
+		@apply bg-black dark:bg-white text-white dark:text-black rounded;
+	}
+
+	.remove-icon {
+		@apply absolute inset-y-0;
+		@apply cursor-pointer;
+		@apply flex items-center justify-center;
+		@apply opacity-50;
+		right: 1.7rem;
+		font-size: 1rem;
+
+		.data-table &,
+		.svws-ui-table & {
+			right: 0.9rem;
+			font-size: 0.9rem;
+		}
+
+		&:hover {
 			@apply opacity-100;
 		}
 	}
 
-	&.with-value:not(:focus-within):not(:hover) .tag-list-wrapper {
-		@apply border-black/25 dark:border-white/25;
-	}
-
-	&.with-value:not(:focus-within):hover .tag-list-wrapper {
-		@apply border-black/50 dark:border-white/50;
-	}
-}
-
-.wrapper {
-	@apply relative;
-}
-
-.dropdown-icon {
-	@apply absolute p-1;
-	@apply flex;
-	@apply inset-y-0 right-0;
-	@apply items-center justify-center cursor-pointer text-base;
-	@apply opacity-25;
-
-	&:hover {
-		@apply opacity-100;
-	}
-
-	.icon {
-		@apply py-1;
-		@apply rounded;
-		font-size: 1.1em;
-	}
-
-	&:hover .icon {
-		@apply bg-black text-white dark:bg-white dark:text-black;
-
-		.multiselect-input-component--statistics:not(.multiselect-input-component--disabled) & {
-			@apply bg-violet-500 dark:bg-violet-800 dark:text-white;
-		}
-	}
-
-	.multiselect-input-component--disabled & {
-		@apply pointer-events-none;
-		@apply opacity-10 !important;
-	}
-
-	.data-table &,
-	.svws-ui-table & {
-		@apply p-0;
-
-		.icon {
-			font-size: 0.9em;
-		}
-	}
-
-	.multiselect-input-component--statistics & {
-		@apply text-purple-500;
-	}
-}
-
-.wrapper--tag-list {
-	.input:not(.sr-only) {
-		& + .tag-list-wrapper {
-			@apply border-t-0 rounded-t-none;
-		}
-	}
-
-	&.wrapper--headless {
-		.tag-list-wrapper {
-			@apply border-black/25 dark:border-white/25 bg-white dark:bg-black;
-		}
-	}
-
-	.dropdown-icon {
-		.icon, svg {
-			@apply h-full;
-		}
-	}
-}
-
-.tag-remove .icon,
-.remove-icon .icon {
-	@apply inline-block mt-0 cursor-pointer;
-}
-
-.tag-remove .icon:hover,
-.remove-icon:hover .icon {
-	@apply bg-black dark:bg-white text-white dark:text-black rounded;
-}
-
-.remove-icon {
-	@apply absolute inset-y-0;
-	@apply cursor-pointer;
-	@apply flex items-center justify-center;
-	@apply opacity-50;
-	right: 1.7rem;
-	font-size: 1rem;
-
-	.data-table &,
-	.svws-ui-table & {
-		right: 0.9rem;
-		font-size: 0.9rem;
-	}
-
-	&:hover {
-		@apply opacity-100;
-	}
-}
 </style>

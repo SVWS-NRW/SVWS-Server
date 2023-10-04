@@ -6,12 +6,12 @@
 	"version": "0.7.3-SNAPSHOT",
 	"scripts": {
 		"build": "npm run build-lib && npm run build-dts",
-		"build-lib": "vite build", 
+		"build-lib": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",
 		"lint-tsc": "vue-tsc --noEmit",
 		"lint": "eslint 'src/**/*.{ts,vue}' --cache",
 		"lint-fix": "eslint 'src/**/*.{ts,vue}' --fix --cache",
-		"story:dev": "histoire dev",
+		"dev": "histoire dev",
 		"story:build": "histoire build",
 		"story:preview": "histoire preview",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
