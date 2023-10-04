@@ -81,7 +81,8 @@ export abstract class JavaString {
 	public static compareToIgnoreCase(a: string, b : string | null) : number {
 		if (b === null)
 			return -1;
-		const ca : string[] = a.split('');
+		return a.localeCompare(b, undefined, { sensitivity: 'accent' });
+/*		const ca : string[] = a.split('');
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {
@@ -96,13 +97,14 @@ export abstract class JavaString {
 				return cpa - cpb;
 			}
 		}
-		return ca.length - cb.length;
+		return ca.length - cb.length;*/
 	}
 
 	public static compareTo(a: string, b : string | null) : number {
 		if (b === null)
 			return -1;
-		const ca : string[] = a.split('');
+		return a.localeCompare(b, undefined, { sensitivity: 'variant' });
+/*		const ca : string[] = a.split('');
 		const cb : string[] = b.split('');
 		const len = Math.min(ca.length, cb.length);
 		for (let i : number = 0; i < len; i++) {
@@ -117,7 +119,7 @@ export abstract class JavaString {
 				return cpa - cpb;
 			}
 		}
-		return ca.length - cb.length;
+		return ca.length - cb.length;*/
 	}
 
 
