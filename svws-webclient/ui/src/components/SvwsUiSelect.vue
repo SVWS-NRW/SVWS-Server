@@ -150,7 +150,23 @@
 	}
 
 	function onInput(value: string | number) {
+		if (props.autocomplete && (refList.value === null))
+			openListbox();
+		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
 		searchText.value = "" + value;
+		if (props.autocomplete) {
+			void nextTick(() => {
+				if (refList.value !== null) {
+					let index = 0;
+					if (activeItem !== undefined) {
+						const tmpIndex = filteredList.value.findIndex(item => item === activeItem);
+						if (tmpIndex >= 0)
+							index = tmpIndex;
+					}
+					refList.value.activeItemIndex = index;
+				}
+			});
+		}
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
