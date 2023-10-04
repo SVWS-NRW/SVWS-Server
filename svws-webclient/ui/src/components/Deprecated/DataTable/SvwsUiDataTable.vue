@@ -183,8 +183,7 @@
 
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
-	// import type { DataTableColumn, InputType } from "../../../types";
-	import type { DataTableColumn, InputType } from "src/types";
+	import type { DataTableColumn, InputType } from "../../../types";
 	import type { TableHTMLAttributes } from "vue";
 	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
 	import { useDebounceFn } from "@vueuse/core";
