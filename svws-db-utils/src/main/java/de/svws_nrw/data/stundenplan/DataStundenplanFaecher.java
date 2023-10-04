@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.data.DataManager;
@@ -81,11 +82,14 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		// Bestimme zunächst alle Zeitraster-IDs des Stundenplans
 		final List<Long> zeitrasterIDs = conn.queryNamed("DTOStundenplanZeitraster.stundenplan_id", idStundenplan, DTOStundenplanZeitraster.class)
 				.stream().map(z -> z.ID).toList();
-		if (zeitrasterIDs.isEmpty())
-			return new ArrayList<>();
-		// Bestimme alle Fächer-IDs der Unterrichte für diese Zeitraster-IDs
-		final List<Long> faecherIDs = conn.queryNamed("DTOStundenplanUnterricht.zeitraster_id.multiple", zeitrasterIDs, DTOStundenplanUnterricht.class)
-				.stream().map(u -> u.Fach_ID).filter(f -> f != null).toList();
+		// Bestimme alle zunächst alle Fächer-IDs der Unterrichte ...
+		List<Long> faecherIDs = new ArrayList<>();
+		if (!zeitrasterIDs.isEmpty())
+			faecherIDs.addAll(conn.queryNamed("DTOStundenplanUnterricht.zeitraster_id.multiple", zeitrasterIDs, DTOStundenplanUnterricht.class)
+					.stream().map(u -> u.Fach_ID).filter(f -> f != null).toList());
+		// ... und dann der ggf. noch nicht zugeordneten Kurs- und Klassenunterrichte
+		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
+		faecherIDs = Stream.concat(faecherIDs.stream(), DataStundenplanKurse.getKurse(conn, idStundenplan).stream().map(ku -> ku.idFach).distinct()).distinct().toList();
 		if (faecherIDs.isEmpty())
 			return new ArrayList<>();
 		// Bestimme nun die Fächer-Daten...
