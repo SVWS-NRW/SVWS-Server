@@ -14,8 +14,8 @@
 							</svws-ui-checkbox>
 						</template>
 						<template #filterAdvanced v-if="state.docsWithFilterAdvanced">
-							<svws-ui-multi-select :item-text="(item) => item" v-model="docsMultiselectFilterA" :items="['Option A', 'Option B']" title="Abschluss" removable />
-							<svws-ui-multi-select :item-text="(item) => item" v-model="docsMultiselectFilterB" :items="['Option A', 'Option B']" title="Beispiel-Filter" removable />
+							<svws-ui-select :item-text="(item) => item" v-model="docsMultiselectFilterA" :items="['Option A', 'Option B']" title="Abschluss" removable />
+							<svws-ui-select :item-text="(item) => item" v-model="docsMultiselectFilterB" :items="['Option A', 'Option B']" title="Beispiel-Filter" removable />
 						</template>
 						<template #header(customIcon)>
 							<svws-ui-tooltip>

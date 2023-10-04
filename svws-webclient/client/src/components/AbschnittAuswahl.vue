@@ -2,7 +2,7 @@
 	<div class="inline-flex gap-3 items-center">
 		<svws-ui-tooltip :indicator="false" v-if="aktSchulabschnitt !== aktAbschnitt.id" position="bottom-start">
 			<span class="cursor-pointer" :class="{'text-error text-headline-md -mr-1': aktSchulabschnitt !== aktAbschnitt.id, 'opacity-50 hover:opacity-100 text-base pt-1': aktSchulabschnitt === aktAbschnitt.id}">
-				<i-ri-alert-line class="-mb-1 hover:text-error" />
+				<i-ri-alert-line class="-my-1.5 -mr-1 hover:text-error relative -top-0.5" />
 			</span>
 			<template #content>
 				<span v-if="aktSchulabschnitt === aktAbschnitt.id">
@@ -13,7 +13,7 @@
 				</span>
 			</template>
 		</svws-ui-tooltip>
-		<svws-ui-select :model-value="aktAbschnitt" @update:model-value="setAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" />
+		<svws-ui-select headless :model-value="aktAbschnitt" @update:model-value="setAbschnitt" :items="abschnitte" :item-sort="item_sort" :item-text="item_text" :danger="aktSchulabschnitt !== aktAbschnitt.id" :class="{'opacity-50 hover:opacity-100 focus-within:opacity-100': aktSchulabschnitt === aktAbschnitt.id}" />
 	</div>
 </template>
 

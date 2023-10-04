@@ -120,7 +120,7 @@
   }
 
   &.svws-active {
-    @apply ring ring-black/25 dark:ring-white/25;
+    @apply ring-2 ring-black/25 dark:ring-white/25;
 
     &.svws-selected {
       @apply ring-svws/25 dark:ring-svws/25;

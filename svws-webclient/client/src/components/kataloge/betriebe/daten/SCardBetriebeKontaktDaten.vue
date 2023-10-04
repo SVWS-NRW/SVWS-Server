@@ -3,7 +3,7 @@
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Straße / Hausnummer" :model-value="daten.strassenname" @change="strassenname=>doPatch({strassenname})" type="text" />
 			<svws-ui-text-input placeholder="Zusatz" :model-value="daten.hausnrzusatz" @change="hausnrzusatz=>doPatch({hausnrzusatz})" type="text" />
-			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete span="full" />
+			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete class="col-span-full" />
 			<!-- <svws-ui-select title="Ortsteil" v-model="inputOrtsteilID" :items="mapOrtsteile" :item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''"
             :item-sort="ortsteilSort" :item-filter="ortsteilFilter" /> -->
 			<svws-ui-spacing />

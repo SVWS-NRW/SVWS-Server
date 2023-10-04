@@ -456,20 +456,24 @@
 
   &.svws-headless {
     .svws-dropdown-icon,
-	.svws-remove {
-		@apply right-auto h-5 top-0;
-	}
+    .svws-remove {
+      @apply right-auto h-5 top-0;
+    }
 
     .svws-dropdown-icon {
-      @apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
+      @apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50 -top-px;
+
+      .svws-ui-table .svws-clicked & {
+        @apply text-svws/50 dark:text-svws/50;
+      }
     }
 
     .svws-remove {
       @apply right-auto left-4 inline-flex items-center justify-center w-4;
 
-		svg {
-			@apply -m-px;
-		}
+      svg {
+        @apply -m-px;
+      }
     }
 
 	  .text-input-component {
@@ -486,8 +490,7 @@
 
 	  &:not(.svws-open) {
 		  .text-input-component {
-			  &:focus-visible,
-			  &:focus-within {
+			  &:focus-visible {
 				  ~ .svws-dropdown-icon {
 					  @apply ring-2 ring-black/25 dark:ring-white/25;
 				  }
@@ -509,14 +512,31 @@
 				  }
 			  }
 
-			  &:focus-visible,
-			  &:focus-within {
+			  &:focus-visible {
 				  ~ .svws-dropdown-icon {
 					  @apply ring-violet-500/25 dark:ring-violet-500/25;
 				  }
 			  }
 		  }
 	  }
+  }
+
+  &.svws-danger {
+    @apply text-error;
+
+    .svws-dropdown-icon {
+      @apply text-error;
+    }
+
+    .text-input--headless {
+      @apply font-bold;
+    }
+
+    &.svws-headless {
+      .svws-dropdown-icon {
+        @apply text-error/50;
+      }
+    }
   }
 
   &.svws-disabled {

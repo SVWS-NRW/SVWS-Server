@@ -501,8 +501,7 @@
 
     &:not(.svws-open) {
       .text-input-component {
-        &:focus-visible,
-        &:focus-within {
+        &:focus-visible {
           ~ .svws-dropdown-icon {
             @apply ring-2 ring-black/25 dark:ring-white/25;
           }
@@ -524,8 +523,7 @@
           }
         }
 
-        &:focus-visible,
-        &:focus-within {
+        &:focus-visible {
           ~ .svws-dropdown-icon {
             @apply ring-violet-500/25 dark:ring-violet-500/25;
           }

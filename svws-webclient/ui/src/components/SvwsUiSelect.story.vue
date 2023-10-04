@@ -14,6 +14,7 @@
 						:headless="state.headless"
 						:statistics="state.statistics"
 						:disabled="state.disabled"
+						:danger="state.danger"
 						class="col-span-full" />
 					<svws-ui-spacing :size="2" />
 					<svws-ui-select label="Relevant für die Statistik"
@@ -51,6 +52,7 @@
 				<HstCheckbox v-model="state.headless" title="headless" />
 				<HstCheckbox v-model="state.statistics" title="statistics" />
 				<HstCheckbox v-model="state.disabled" title="disabled" />
+				<HstCheckbox v-model="state.danger" title="danger" />
 			</template>
 		</Variant>
 	</Story>
@@ -67,7 +69,8 @@
 		headless: false,
 		statistics: false,
 		disabled: false,
-		autocomplete: false
+		autocomplete: false,
+		danger: false
 	});
 
 	const items = reactive<{id: number, text: string}[]>([

@@ -67,43 +67,6 @@
 	@apply -mt-0.5;
 }
 
-.input--schule-abschnitte .dropdown-icon {
-	@apply pl-0;
-	font-size: 0.8rem;
-}
-
-.input--schule-abschnitte .dropdown-icon:hover span.icon,
-.input--schule-abschnitte .dropdown-icon:focus span.icon {
-	@apply bg-transparent text-black;
-}
-
-.input--schule-abschnitte input.text-input--control {
-	@apply border-0 p-0 h-auto;
-	@apply font-bold;
-	width: 8ch;
-	padding-right: 1.4rem !important;
-}
-
-.input--schule-abschnitte input.text-input--control,
-.input--schule-abschnitte .text-input--readonly input.text-input--control {
-	@apply cursor-pointer;
-}
-
-.input--schule-abschnitte .multiselect-input-component {
-	@apply cursor-pointer opacity-40;
-
-	&:hover,
-	&.with-open-list,
-	&--danger {
-		@apply opacity-100;
-	}
-}
-
-.input--schule-abschnitte .multiselect--items-wrapper {
-	@apply mt-2;
-	min-width: 14ch;
-}
-
 .secondary-menu--breadcrumbs {
 	@apply flex flex-wrap;
 

@@ -13,7 +13,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full" />
+					<svws-ui-multi-select-2 v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" tags title="Status" class="col-span-full" />
 					<svws-ui-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text" removable autocomplete :item-filter="find" />
 					<svws-ui-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text" removable autocomplete :item-filter="find" />
 					<svws-ui-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text" removable autocomplete :item-filter="find" />
