@@ -21,21 +21,26 @@
 										@dragend="drag_ended()"
 										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
 										:class="{
-											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined)
+											'cursor-grab' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined),
+											'opacity-50' : (fachwahlKurszuordnung(fach.fachID, schueler.id).value !== undefined)
 										}"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID, schueler.id).value }">
-										<div v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined" class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
-											<span class="rounded-sm w-3 -ml-1 -my-0.5 group-hover:bg-white/50">
-												<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-50 group-hover:opacity-100" />
+										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
+											<template v-if="fachwahlKurszuordnung(fach.fachID, schueler.id).value === undefined">
+												<span class="rounded-sm w-3 -my-0.5 group-hover:bg-white/50">
+													<i-ri-draggable class="w-4 -ml-0.5 -mr-1 text-black opacity-50 group-hover:opacity-100" />
+												</span>
+												<span class="ml-0.5">{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
+											</template>
+											<template v-else>
+												<span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span>
+												{{ getFachwahlKursname(fach.fachID, schueler.id) }}
+											</template>
+											<span v-if="getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach !== null">
+												<span class="text-sm ml-2 mr-2">—</span>
+												<span>AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, fach.fachID).abiturfach }}</span>
 											</span>
-											<span class="ml-0.5">{{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
 										</div>
-										<template v-else>
-											<span class="-mx-3 opacity-50 svws-ui-badge w-auto flex-grow my-0 py-0.5"><span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span> {{ getFachwahlKursname(fach.fachID, schueler.id) }}</span>
-										</template>
-										<!--<div class="flex items-center gap-1 cursor-pointer">
-												<svws-ui-tooltip v-if="!fachwahlKurszuordnung(fach.fachID, schueler.id).value"> <i-ri-forbid-2-line /> <template #content> <span>Nichtverteilt</span> </template> </svws-ui-tooltip>
-											</div>-->
 									</div>
 								</div>
 							</template>
@@ -81,8 +86,9 @@
 								:draggable="is_draggable(kurs.id, schueler.id).value"
 								@dragstart="drag_started(kurs.id, kurs.fachID, kurs.kursart)"
 								@dragend="drag_ended()">
-								<div class="w-full h-full flex flex-col justify-center items-center rounded border border-black/10 py-1 px-0.5" :style="{ 'background-color': hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'rgb(var(--color-error))' : bgColor(kurs.id, schueler.id) }"
-									:class="{'text-white': hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value}"
+								<div class="w-full h-full flex flex-col justify-center items-center rounded border border-black/10 py-1 px-0.5"
+									:style="{ 'background-color': hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'rgb(var(--color-error))' : bgColor(kurs.id, schueler.id) }"
+									:class="{ 'text-white' : hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value}"
 									@dragover="if (is_drop_zone(kurs).value) $event.preventDefault();" @drop="drop_aendere_kurszuordnung(kurs, schueler.id)">
 									<span class="rounded-sm w-3 absolute top-1 left-1" v-if="is_draggable(kurs.id, schueler.id).value" :class="[hatSchieneKollisionen(schiene.id, schueler.id).value && is_draggable(kurs.id, schueler.id).value ? 'group-hover:bg-white/25 text-white' : 'group-hover:bg-white/75 text-black']">
 										<i-ri-draggable class="w-4 -ml-0.5 opacity-50 group-hover:opacity-100" />
@@ -92,6 +98,10 @@
 									</span>
 									<span class="py-0.5 font-medium" :class="{'opacity-50': !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)}">{{ getErgebnismanager().getOfKursName(kurs.id) }}</span>
 									<span class="inline-flex items-center gap-1">
+										<span v-if="is_draggable(kurs.id, schueler.id).value && (getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach !== null)">
+											<span class="opacity-75 inline-block w-3 text-sm">&nbsp;</span>
+											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
+										</span>
 										<span v-if="(allow_regeln && fach_gewaehlt(schueler.id, kurs).value)">
 											<span class="icon cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id, schueler.id)" :title="verbieten_regel(kurs.id, schueler.id).value ? 'Verboten' : 'Verbieten'">
 												<i-ri-forbid-fill v-if="verbieten_regel(kurs.id, schueler.id).value" class="inline-block" />
