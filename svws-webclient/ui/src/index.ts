@@ -3,6 +3,7 @@ import "./assets/styles/index.css";
 // Components
 export {
 	SvwsUiButton,
+	SvwsUiButtonMenu,
 	SvwsUiCheckbox,
 	SvwsUiMultiSelect,
 	SvwsUiProgressBar,
@@ -28,8 +29,6 @@ export {
 	SvwsUiRouterTabBarButton,
 	SvwsUiRouterVerticalTabBar,
 	SvwsUiTable,
-	SvwsUiDataTableRow,
-	SvwsUiDataTableCell,
 	SvwsUiSpinner,
 	SvwsUiSubNav,
 	SvwsUiInputWrapper,
@@ -37,6 +36,8 @@ export {
 	SvwsUiDashboardTile,
 	// deprecated
 	SvwsUiDataTable,
+	SvwsUiDataTableRow,
+	SvwsUiDataTableCell,
 	SvwsUiIcon,
 	SvwsUiDropdown,
 	SvwsUiDropdownItem,

@@ -8,7 +8,7 @@
 			:class="{'multiselect--items-list--tags' : tags}"
 			role="listbox"
 			@mouseenter="activeItemIndex = -1">
-			<li v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
+			<li v-if="listEmpty" class="px-1 py-1 text-base opacity-50 inline-block">
 				Keine Ergebnisse
 			</li>
 			<li v-for="(item, index) in filteredList"
@@ -38,11 +38,12 @@
 	import type { Ref } from "vue";
 	import { ref, shallowRef, toRef } from "vue";
 	import { genId } from "../utils";
+	import { computed } from "vue";
 
 	const props = defineProps<{
 		statistics: boolean;
 		tags: boolean;
-		filteredList: Item[];
+		filteredList: Item[] | Iterable<Item>;
 		itemText: (item: Item) => string;
 		selectItem: (item: Item | null | undefined) => void;
 		selectedItemList: Set<Item>;
@@ -58,6 +59,12 @@
 
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const activeItemIndex = ref(-1);
+
+	const listEmpty = computed(()=> {
+		for (const _ of props.filteredList)
+			return false;
+		return true;
+	})
 
 	defineExpose<{
 		activeItemIndex: Ref<number>,

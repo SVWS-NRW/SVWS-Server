@@ -126,10 +126,12 @@
 	const searchText = ref("");
 
 	function onInputFocus() {
+	console.log("inputfocus")
 		hasFocus.value = true;
 	}
 
 	function onInputBlur() {
+	console.log("Blur")
 		hasFocus.value = false;
 		closeListbox();
 	}
@@ -196,6 +198,8 @@
 
 	function selectItem(item: Item | null | undefined) {
 		selectedItem.value = item;
+		if (props.autocomplete)
+			searchText.value = "";
 		closeListbox();
 		doFocus();
 	}
@@ -220,10 +224,7 @@
 
 	const filteredList: ComputedRef<Item[]> = computed(() => {
 		if (props.autocomplete) {
-			if (props.itemFilter)
-				return props.itemFilter(sortedList.value, searchText.value);
-			else
-				return sortedList.value.filter(i => props.itemText(i).startsWith(searchText.value ?? ""));
+			return props.itemFilter(sortedList.value, searchText.value);
 		} else {
 			return sortedList.value;
 		}
@@ -231,26 +232,30 @@
 
 	function doFocus() {
 		const el: typeof TextInput = inputEl.value!;
+	console.log("doFocus")
 		void nextTick(() => el?.input.focus());
 	}
 
 	function openListbox() {
+	console.log("open", selectedItem.value, refList.value)
+		doFocus();
 		showList.value = true;
-		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && refList.value !== null) {
+		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
 	}
 
 	function closeListbox() {
+	console.log("close")
 		showList.value = false;
-		searchText.value = "";
+		// searchText.value = "";
 		if (refList.value !== null)
 			refList.value.activeItemIndex = -1;
 	}
 
 	function selectCurrentActiveItem() {
-		if (!showList.value || refList.value === null)
+		if ((refList.value === null) || (refList.value.activeItemIndex < 0))
 			return;
 		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
