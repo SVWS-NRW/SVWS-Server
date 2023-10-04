@@ -96,7 +96,7 @@
 }
 
 .svws-ui-dropdown-list--items {
-	@apply overflow-y-auto overflow-x-hidden flex flex-col pt-1 px-1 pb-1;
+	@apply overflow-y-auto overflow-x-hidden flex flex-col gap-px pt-1 px-1 pb-1;
 	max-height: 24rem;
 }
 

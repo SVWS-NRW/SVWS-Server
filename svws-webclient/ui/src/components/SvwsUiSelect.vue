@@ -14,9 +14,9 @@
 			aria-haspopup="listbox"
 			aria-autocomplete="list"
 			:aria-controls="showList ? listIdPrefix : null"
-      :aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-      @update:model-value="onInput"
-      @click.stop="toggleListBox"
+			:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
+			@update:model-value="onInput"
+			@click.stop="toggleListBox"
 			@focus="onInputFocus"
 			@blur="onInputBlur"
 			@keyup.down.prevent
@@ -81,7 +81,6 @@
 		statistics: false,
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
-		//itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
 		itemFilter: (items: any, search: string) => items.filter((i: any) => i.text.toLowerCase().includes(search.toLowerCase())),
 		useNull: false,
 		headless: false,
@@ -281,10 +280,10 @@
 	}
 
 	function onArrowUp() {
-    if ((!showList.value) || (refList.value === null)) {
-      openListbox();
-      return;
-    }
+		if ((!showList.value) || (refList.value === null)) {
+			openListbox();
+			return;
+		}
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
 			refList.value.activeItemIndex = listLength - 1;

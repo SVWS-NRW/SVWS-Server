@@ -53,48 +53,13 @@
 				<HstCheckbox v-model="state.disabled" title="disabled" />
 			</template>
 		</Variant>
-		<!--<Variant title="Autocomplete" id="Autocomplete">
-			<div class="p-3">
-				<svws-ui-select v-model="modelValue4"
-					autocomplete
-					label="Autocomplete"
-					:items="items"
-					:item-text="item => item.text"
-					:item-filter="(items: any, search: string) => items.filter((i: any) => i.text.includes(search))"
-					@input="onInput" />
-			</div>
-		</Variant>
-
-		<Variant title="Headless" id="Headless">
-			<div class="p-3">
-				<svws-ui-select v-model="modelValue7"
-					:item-text="item => item.text"
-					headless
-					label="Headless"
-					:items="items"
-					@input="onInput" />
-			</div>
-		</Variant>
-
-		<Variant title="Statistics" id="Statistics">
-			<div class="p-3">
-				<svws-ui-select v-model="modelValue8"
-					:item-text="item => item.text"
-					autocomplete
-					statistics
-					label="Statistics"
-					:items="items"
-					@input="onInput" />
-			</div>
-		</Variant>-->
 	</Story>
 </template>
 
 <script setup lang="ts">
 	import { logEvent } from "histoire/client";
 	import { ref, reactive } from "vue";
-	import SvwsUiContentCard
-		from "./App/SvwsUiContentCard.vue";
+	import SvwsUiContentCard from "./App/SvwsUiContentCard.vue";
 
 	const state = reactive({
 		label: 'Label für die Komponente',
@@ -119,6 +84,7 @@
 	const modelValueDisabled = ref(items[3]);
 	const modelValueHeadless = ref(items[0]);
 	const modelValueHeadlessUndefined = ref(undefined);
+	const modelValue5 = ref([items[0]]);
 
 	function onInput(event: Event) {
 		logEvent("input", event);

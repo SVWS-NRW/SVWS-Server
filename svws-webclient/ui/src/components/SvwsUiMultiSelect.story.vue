@@ -26,7 +26,7 @@
 </script>
 
 <template>
-	<Story title="Multiselect" id="svws-ui-multi-select" :layout="{type: 'grid', width: '45%'}" icon="ri:expand-up-down-fill">
+	<Story title="Multiselect (alt)" id="svws-ui-multi-select" :layout="{type: 'grid', width: '45%'}" icon="">
 		<Variant title="Default" id="Default">
 			<div class="demo-wrapper flex flex-col gap-3">
 				<svws-ui-multi-select v-model="modelValue1"

@@ -23,7 +23,7 @@
 </script>
 
 <template>
-	<Story title="ButtonMenu" id="svws-ui-button-menu" icon="ri:cursor-line" :layout="{type: 'grid', width: '45%'}">
+	<Story title="ButtonMenu" id="svws-ui-button-menu" icon="" :layout="{type: 'grid', width: '45%'}">
 		<Variant v-for="(props, title) of propsVariants" :key="title" :id="title" :title="title">
 			<svws-ui-button-menu v-bind="props" @selected="onClick" :items="items" :item-text="i=>i.text">
 				<template v-if="props.type !== 'icon'">
