@@ -3,10 +3,10 @@
 		:class="{ 'z-50': showList, 'wrapper--filled': hasSelected() || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
 		<div class="multiselect-input-component"
 			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': hasSelected(), 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
-			<div :class="['input', !showInput ? 'sr-only' : '']">
+			<div class="input">
 				<svws-ui-text-input ref="inputEl"
 					:model-value="dynModelValue"
-					:readonly="!autocomplete || !showInput"
+					:readonly="!autocomplete"
 					:placeholder="title"
 					:statistics="statistics"
 					:headless="headless"
@@ -20,7 +20,7 @@
 					:aria-controls="showList ? listIdPrefix : null"
 					:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
 					@update:model-value="onInput"
-					@click.stop="toggleListbox"
+					@click.stop="toggleListBox"
 					@focus="onInputFocus"
 					@blur="onInputBlur"
 					@keyup.down.prevent
@@ -40,7 +40,7 @@
 					<i-ri-close-line />
 				</span>
 			</div>
-			<div class="dropdown-icon" @click.stop="showList ? closeListbox() : openListbox()">
+			<div class="dropdown-icon" @click.stop="toggleListBox" @mousedown.prevent>
 				<span class="icon">
 					<i-ri-expand-up-down-fill />
 				</span>
@@ -111,14 +111,6 @@
 	const showList = ref(false);
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const listIdPrefix = genId();
-	const showInput = computed(() => {
-		switch (true) {
-			// case props.autocomplete && !showList.value:
-			// 	return false;
-			default:
-				return true;
-		}
-	});
 
 	// Input element
 	const inputEl = ref(null);
@@ -160,6 +152,10 @@
 					let index = 0;
 					if (activeItem !== undefined) {
 						const tmpIndex = filteredList.value.findIndex(item => item === activeItem);
+						if (tmpIndex >= 0)
+							index = tmpIndex;
+					} else if ((selectedItem.value !== null) || (selectedItem.value === undefined)) {
+						const tmpIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 						if (tmpIndex >= 0)
 							index = tmpIndex;
 					}
@@ -238,6 +234,9 @@
 
 	const filteredList: ComputedRef<Item[]> = computed(() => {
 		if (props.autocomplete) {
+			const isCurrent : boolean = (selectedItem.value !== null) && (selectedItem.value !== undefined) && (props.itemText(selectedItem.value) === searchText.value);
+			if (isCurrent)
+				return sortedList.value;
 			return props.itemFilter(sortedList.value, searchText.value);
 		} else {
 			return sortedList.value;
@@ -246,7 +245,11 @@
 
 	function doFocus() {
 		const el: typeof TextInput = inputEl.value!;
-		void nextTick(() => el?.input.focus());
+		el?.input.focus();
+	}
+
+	function toggleListBox() {
+		showList.value ? closeListbox() : openListbox();
 	}
 
 	function openListbox() {
@@ -275,14 +278,9 @@
 		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
-	function toggleListbox() {
-		showList.value ? closeListbox() : openListbox();
-		doFocus();
-	}
-
 	// Arrow Navigation
 	function onArrowDown() {
-		if (!showList.value || refList.value === null) {
+		if ((!showList.value) || (refList.value === null)) {
 			openListbox();
 			return;
 		}
@@ -370,9 +368,7 @@
 
 	defineExpose<{
 		content: ComputedRef<InputDataType>,
-	}>({
-		content
-	});
+	}>({ content });
 
 </script>
 
