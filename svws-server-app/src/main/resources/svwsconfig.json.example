@@ -11,7 +11,7 @@
   "TLSKeyAlias" : null,
   "TLSKeystorePath" : ".",
   "TLSKeystorePassword" : "svwskeystore",
-  "ClientPath" : "./SVWS-Server/svws-webclient/build/output",
+  "ClientPath" : "./SVWS-Server/svws-webclient/client/build/output",
   "LoggingEnabled" : true,
   "LoggingPath" : "logs",
   "ServerMode" : "stable",
