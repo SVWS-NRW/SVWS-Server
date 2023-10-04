@@ -57,24 +57,24 @@ publishReleaseAll.dependsOn publishNexusClient
 publishReleaseAll.dependsOn publishNpmClient
 
 project.tasks.withType(PublishToMavenRepository).configureEach {
-	dependsOn 'svws-webclient:core:publishNexusCore'
-	dependsOn 'svws-webclient:ui:publishNexusUi'
-	// dependsOn 'svws-webclient:components:publishNexusComponents'
+	dependsOn ':svws-webclient:core:publishNexusCore'
+	dependsOn ':svws-webclient:ui:publishNexusUi'
+	// dependsOn ':svws-webclient:components:publishNexusComponents'
 	dependsOn publishNexusClient
-	dependsOn 'svws-webclient:core:publishNpmCore'
-	dependsOn 'svws-webclient:ui:publishNpmUi'
-	// dependsOn 'svws-webclient:components:publishNpmComponents'
+	dependsOn ':svws-webclient:core:publishNpmCore'
+	dependsOn ':svws-webclient:ui:publishNpmUi'
+	// dependsOn ':svws-webclient:components:publishNpmComponents'
 	dependsOn publishNpmClient
 }
 
 project.tasks.withType(Sign).configureEach {
-	dependsOn 'svws-webclient:core:publishNexusCore'
-	dependsOn 'svws-webclient:ui:publishNexusUi'
-	// dependsOn 'svws-webclient:components:publishNexusComponents'
+	dependsOn ':svws-webclient:core:publishNexusCore'
+	dependsOn ':svws-webclient:ui:publishNexusUi'
+	// dependsOn ':svws-webclient:components:publishNexusComponents'
 	dependsOn publishNexusClient
-	dependsOn 'svws-webclient:core:publishNpmCore'
-	dependsOn 'svws-webclient:ui:publishNpmUi'
-	// dependsOn 'svws-webclient:components:publishNpmComponents'
+	dependsOn ':svws-webclient:core:publishNpmCore'
+	dependsOn ':svws-webclient:ui:publishNpmUi'
+	// dependsOn ':svws-webclient:components:publishNpmComponents'
 	dependsOn publishNpmClient
 }
 
