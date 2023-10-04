@@ -45,7 +45,10 @@ import java.util.stream.Collectors;
  */
 public final class PDFGostWahlbogen extends PDFCreator {
 
+	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostWahlbogen.html.txt");
+
+	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostWahlbogen.css.txt");
 
 	/** Der Dateiname für die PDF-Datei */
@@ -148,7 +151,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 		 if (listFehler == null || listFehler.isEmpty()) {
 			 bodyData.put("BELEGUNGSFEHLER", "");
 			 if (laufbahnGrunddaten.kommentar == null || laufbahnGrunddaten.kommentar.isEmpty()) {
-                 bodyData.put("BELEGUNGSFEHLER_KOMMENTAR", "- keine -");
+                 bodyData.put("BELEGUNGSFEHLER_KOMMENTAR", "<p><i>- keine -</i></p>");
              } else {
 				 final StringBuilder sb = new StringBuilder();
 				 final List<String> kommentar = new ArrayList<>();
@@ -168,7 +171,7 @@ public final class PDFGostWahlbogen extends PDFCreator {
 
 		// Ersetze die Felder des Templates mit Hinweisen
 		if (listHinweise == null || listHinweise.isEmpty())
-			bodyData.put("BELEGUNGSHINWEISE", "- keine -");
+			bodyData.put("BELEGUNGSHINWEISE", "<p><i>- keine -</i></p>");
 		else {
 			final StringBuilder sb = new StringBuilder();
 			final List<String> hinweise = listHinweise.stream().map(f -> f.belegungshinweis).toList();

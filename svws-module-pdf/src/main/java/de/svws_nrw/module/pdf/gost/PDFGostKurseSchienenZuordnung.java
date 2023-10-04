@@ -39,7 +39,10 @@ import java.util.stream.Collectors;
  */
 public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 
+	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostKurseSchienenZuordnung.html.txt");
+
+	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostKurseSchienenZuordnung.css.txt");
 
 	/** Der Dateiname für die PDF-Datei */
@@ -67,7 +70,6 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 
 		super("Kurse-Schienen-Zuordnung", html, css);
 
-		this.querformat = true;
 		this.filename = dateiname;
 
 		// Definiert, ob die PDF-Datei für einen Schüler (oder einen Abiturjahrgang) erstellt wird.

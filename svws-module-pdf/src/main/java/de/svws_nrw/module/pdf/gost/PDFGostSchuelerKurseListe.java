@@ -38,7 +38,10 @@ import java.util.stream.Collectors;
  */
 public final class PDFGostSchuelerKurseListe extends PDFCreator {
 
+	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerKurseListe.html.txt");
+
+	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerKurseListe.css.txt");
 
 	/** Der Dateiname für die PDF-Datei */
@@ -64,7 +67,6 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 
 		super("Schüler-Kurse-Liste", html, css);
 
-		this.querformat = true;
 		this.filename = dateiname;
 
 		// Ersetze die Felder des Templates mit Daten

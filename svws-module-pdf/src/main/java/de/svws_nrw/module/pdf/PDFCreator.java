@@ -30,62 +30,11 @@ public class PDFCreator {
 	/** Die Daten zum Ersetzen von Platzhaltern im Body */
 	protected HashMap<String, String> bodyData = new HashMap<>();
 
-	/** Default CSS-Definition für die Gestaltung der Seiten im A4 Hochformat */
-	protected String pageCSSA4Hoch = """
-                                     @Page {
-                                         size: A4;
-                                         margin-top: 10mm;
-                                         margin-bottom: 20mm;
-                                         margin-left: 15mm;
-                                         margin-right: 10mm;
-                                         @bottom-left { content: element(footer); }
-                                     }
-                                     .footer {
-                                         position: running(footer);
-                                     }
-                                     """;
-
-	/** Default CSS-Definition für die Gestaltung der Seiten im A4 Querformat */
-	protected String pageCSSA4Quer = """
-                                     @Page {
-                                         size: A4 landscape;
-                                         margin-top: 15mm;
-                                         margin-bottom: 20mm;
-                                         margin-left: 10mm;
-                                         margin-right: 10mm;
-                                         @bottom-left { content: element(footer); }
-                                     }
-                                     .footer {
-                                         position: running(footer);
-                                     }
-                                     """;
-
-	/** Default CSS-Definition für die Gestaltung des Body */
-	protected String bodyCSS = "body { font-family: 'liberation'; font-weight: normal; font-size: 11px; }";
-
-	/** Default CSS-Definition für die Gestaltung von Überschriften h1 */
-	protected String h1CSS = "h1 { font-size: 2em; font-weight: bold; }";
-
-	/** Default CSS-Definition für die Gestaltung von Überschriften h1 */
-	protected String h2CSS = "h2 { font-size: 1.4em; font-weight: bold; }";
-
-	/** Default CSS-Definition für die Gestaltung von Überschriften h1 */
-	protected String h3CSS = "h3 { font-size: 1.2em; font-weight: bold; }";
-
-	/** Default CSS-Definition für die Gestaltung von Überschriften h1 */
-	protected String h4CSS = "h4 { font-size: 1em; font-weight: bold; }";
-
-	/** Default CSS-Class für eine type font */
-	protected String css_class_tinyfont = ".tinyfont { font-size: 0.8em; }";
-
 	/** Der Titel des PDF-Dokuments */
 	private final String title;
 
 	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolger haben. */
 	private PDFCreator next = null;
-
-	/** Definiert, ob eine Seite im Querformat gedruckt werden soll. Standard ist das Hochformat */
-	public boolean querformat = false;
 
 
 	/**
@@ -155,13 +104,6 @@ public class PDFCreator {
 				+ "<head>"
 				+ "<title>" + title + "</title>"
 				+ "<style>"
-				+ (querformat ? pageCSSA4Quer : pageCSSA4Hoch)
-				+ bodyCSS
-				+ h1CSS
-				+ h2CSS
-				+ h3CSS
-				+ h4CSS
-				+ css_class_tinyfont
 				+ css
 				+ "</style>"
 				+ "</head>"

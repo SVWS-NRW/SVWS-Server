@@ -43,7 +43,10 @@ import java.util.stream.Collectors;
  */
 public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 
+	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerSummenFehlerListe.html.txt");
+
+	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
 	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerSummenFehlerListe.css.txt");
 
 	/** Der Dateiname für die PDF-Datei */

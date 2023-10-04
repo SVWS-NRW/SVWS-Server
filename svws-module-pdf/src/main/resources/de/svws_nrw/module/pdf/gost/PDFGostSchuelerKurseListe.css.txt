@@ -1,9 +1,42 @@
+@Page   {
+        size: A4 landscape;
+        margin-top: 15mm;
+        margin-bottom: 20mm;
+        margin-left: 10mm;
+        margin-right: 10mm;
+        @bottom-left { content: element(footer); }
+        }
 
-p {
-	margin: 0em;
-    padding: 0em;
-}
 
-ul {
-   padding-left: 1em;
-}
+.footer { position: running(footer); }
+
+
+body 	{ font-family: 'liberation'; font-weight: normal; font-size: 11px; }
+
+
+h1 	{ font-size: 2em; font-weight: bold; }
+
+h2 	{ font-size: 1.4em; font-weight: bold; }
+
+h3 	{ font-size: 1.2em; font-weight: bold; }
+
+h4 	{ font-size: 1em; font-weight: bold; }
+
+.tinyfont 	{ font-size: 0.8em; }
+
+
+p	{
+ 	margin-top: 0.5em;
+  	margin-bottom: 0em;
+  	margin-left: 0em;
+  	margin-right: 0em;
+  	padding: 0em;
+  	}
+
+ul 	{
+   	margin-top: 0.5em;
+   	margin-bottom: 0em;
+   	margin-left: 1em;
+   	margin-right: 0em;
+   	padding: 0em;
+   	}
