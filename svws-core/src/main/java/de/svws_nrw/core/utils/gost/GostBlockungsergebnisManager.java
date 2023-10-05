@@ -1329,6 +1329,21 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idKurs      Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der Schüler den Kurs als Abiturfach gewählt hat.
+	 */
+	public boolean getOfSchuelerOfKursIstAbiturfach(final long idSchueler, final long idKurs) {
+		final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+		if (fachwahl.abiturfach == null)
+			return false;
+		return fachwahl.abiturfach >= 1;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler im Kurs via Regel gesperrt sein soll.
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
@@ -1537,6 +1552,22 @@ public class GostBlockungsergebnisManager {
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
 				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
 				    list.add(new Pair<>(schueler, kurs));
+
+		return list;
+	}
+
+	/**
+	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 *
+	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 */
+	public @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerAbiturKursPaare() {
+		final @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
+				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)))
+					   list.add(new Pair<>(schueler, kurs));
 
 		return list;
 	}
