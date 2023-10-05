@@ -37,7 +37,7 @@
 		</button>
 	</div>
 	<Teleport to="body">
-		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :tags="false" :filtered-list="filteredList" :item-text="itemText"
+		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :filtered-list="filteredList" :item-text="itemText"
 			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
 			:select-item="selectItem" ref="refList" :search-text="searchText" />
 	</Teleport>

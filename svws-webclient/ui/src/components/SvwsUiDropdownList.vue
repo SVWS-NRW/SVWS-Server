@@ -3,38 +3,38 @@
 		:class="{'svws-statistik': statistics, 'svws-type-tags': tags}"
 		:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 		ref="floating">
-		<slot name="items">
-			<ul :id="listIdPrefix"
-				class="svws-ui-dropdown-list--items"
-				role="listbox"
-				@mouseenter="activeItemIndex = -1">
-				<li v-if="listEmpty" class="px-2 py-1.5 text-base opacity-50 inline-block">
-					<template v-if="!searchText">
-						Keine Einträge gefunden
-					</template>
-					<template v-else>
-						Keine Ergebnisse für "{{ searchText }}"
-					</template>
-				</li>
-				<li v-for="(item, index) in filteredList"
-					:id="`${listIdPrefix}-${index}`"
-					:key="index"
-					ref="itemRefs"
-					role="option"
-					class="svws-ui-dropdown-list--item"
-					:class="{
-						'svws-active': activeItemIndex === index,
-						'svws-selected': selectedItemList?.has(item)
-					}"
-					:aria-selected="selectedItemList?.has(item) ? 'true' : 'false'"
-					@mousedown.prevent
-					@click="selectItem?.(item)">
-					<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
-					<span v-else>{{ itemText?.(item) }}</span>
-					<i-ri-check-line v-if="selectedItemList?.has(item)" class="w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" />
-				</li>
-			</ul>
-		</slot>
+		<ul :id="listIdPrefix"
+			class="svws-ui-dropdown-list--items"
+			role="listbox"
+			@mouseenter="activeItemIndex = -1">
+			<li v-if="listEmpty" class="px-2 py-1.5 text-base opacity-50 inline-block">
+				<template v-if="!searchText">
+					Keine Einträge gefunden
+				</template>
+				<template v-else>
+					Keine Ergebnisse für "{{ searchText }}"
+				</template>
+			</li>
+			<template v-for="(item, index) in filteredList" :key="index">
+				<slot name="item" :item="item" :index="index">
+					<li :id="`${listIdPrefix}-${index}`"
+						ref="itemRefs"
+						role="option"
+						class="svws-ui-dropdown-list--item"
+						:class="{
+							'svws-active': activeItemIndex === index,
+							'svws-selected': selectedItemList.has(item)
+						}"
+						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
+						@mousedown.prevent
+						@click="selectItem(item)">
+						<span v-if="itemText(item).length === 0" class="opacity-25">—</span>
+						<span v-else>{{ itemText(item) }}</span>
+						<i-ri-check-line v-if="selectedItemList.has(item)" class="w-5 flex-shrink-0 -mr-1 -my-1 relative top-1.5" />
+					</li>
+				</slot>
+			</template>
+		</ul>
 	</div>
 </template>
 
@@ -46,19 +46,25 @@
 	import { genId } from "../utils";
 	import { computed } from "vue";
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		statistics?: boolean;
+		selectedItemList?: Set<Item>;
 		tags?: boolean;
-		filteredList?: Item[] | Iterable<Item>;
+		filteredList: Item[] | Iterable<Item>;
 		itemText?: (item: Item) => string;
 		selectItem?: (item: Item | null | undefined) => void;
-		selectedItemList?: Set<Item>;
-		strategy?: Strategy;
-		floatingLeft?: string;
-		floatingTop?: string;
+		strategy: Strategy;
+		floatingLeft: string;
+		floatingTop: string;
 		searchText?: string;
-	}>()
-
+	}>(),{
+		statistics: false,
+		tags: false,
+		itemText: (item: Item) => "",
+		selectItem: (item: Item | undefined | null) => undefined,
+		searchText: "",
+		selectedItemList: () => new Set<Item>(),
+	})
 	const floating = ref(null);
 	const tags = toRef(props, 'tags');
 

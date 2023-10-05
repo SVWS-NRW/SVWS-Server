@@ -9,13 +9,11 @@
 			<i-ri-arrow-up-s-line v-else />
 		</button>
 		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop">
-				<template #items>
-					<ul class="svws-ui-dropdown-list--items" role="listbox">
-						<button v-for="(item, index) in dropdownActions" :key="index" class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
-							{{ item.text }}
-						</button>
-					</ul>
+			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :filtered-list="dropdownActions">
+				<template #item="{ item }">
+					<button class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
+						{{ item.text }}
+					</button>
 				</template>
 			</svws-ui-dropdown-list>
 		</Teleport>
