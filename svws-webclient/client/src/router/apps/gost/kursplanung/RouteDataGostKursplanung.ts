@@ -10,6 +10,7 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
+import { ap } from "vitest/dist/reporters-5f784f42";
 
 interface RouteStateGostKursplanung {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -728,13 +729,33 @@ export class RouteDataGostKursplanung {
 		}
 	}
 
-	getPDFKursSchienenZuordnung = async () : Promise<ApiFile> => {
+	getPDF = async (title: string): Promise<ApiFile> => {
 		if (!this.hatErgebnis)
 			throw new DeveloperNotificationException("Die Kurs-Schienen-Zuordnung kann nur gedruckt werden, wenn ein Ergebnis ausgewählt ist.");
 		try {
-			return await api.server.getGostBlockungPDFKurseSchienenZuordnung(new ArrayList<number>(), api.schema, this.ergebnismanager.getErgebnis().id);
+			const list = new ArrayList<number>();
+			switch (title) {
+				case "Kurse-Schienen-Zuordnung":
+					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kurse-Schienen-Zuordnung markierter Schüler":
+					list.add(this.auswahlSchueler.id);
+					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kurse-Schienen-Zuordnung gefilterte Schüler":
+					for (const schueler of this.schuelerFilter.filtered.value)
+						list.add(schueler.id);
+					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kursbelegung markierter Schülers":
+					list.add(this.auswahlSchueler.id);
+					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kursbelegung gefilterte Schüler":
+					for (const schueler of this.schuelerFilter.filtered.value)
+						list.add(schueler.id);
+					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				default:
+					throw new Error();
+			}
 		} catch(e) {
-			throw new DeveloperNotificationException("Fehler beim Herunterladen der Kurs-Schienen-Zuordnung");
+			throw new DeveloperNotificationException("Es wurde kein gültiges PDF angegeben");
 		}
 	}
 

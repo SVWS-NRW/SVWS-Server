@@ -24,7 +24,7 @@ export interface GostKursplanungProps {
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
-	getPDFKursSchienenZuordnung: () => Promise<ApiFile>;
+	getPDF: (title: string) => Promise<ApiFile>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;

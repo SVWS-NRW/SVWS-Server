@@ -24,16 +24,16 @@
 
 <script lang="ts" setup>
 	import type { ButtonType } from '../types';
-	import {autoUpdate, flip, offset, shift, size, useFloating} from "@floating-ui/vue";
-	import {onClickOutside} from "@vueuse/core";
-	import {ref, computed} from 'vue';
+	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
+	import { onClickOutside } from "@vueuse/core";
+	import { ref, computed } from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	type Item = {
 		text: string;
+		action: () => void | Promise<void>;
 		default?: boolean;
-		action: () => void;
-	};
+	}
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
@@ -65,27 +65,20 @@
 		return true;
 	})
 
-
 	function action(item: Item) {
 		defaultItem.value = item;
-		item.action();
+		void item.action();
 	}
 
-	const {x, y, strategy} = useFloating(
-		inputEl,
-		refList,
-		{
-			placement: 'bottom-start',
-			middleware: [flip(), shift(), offset(2), size({
-				apply({rects, elements}) {
-					Object.assign(elements.floating.style, {
-						width: `${rects.reference.width}px`
-					});
-				}
-			})],
-			whileElementsMounted: autoUpdate,
-		}
-	);
+	const {x, y, strategy} = useFloating( inputEl, refList, {
+		placement: 'bottom-start',
+		middleware: [flip(), shift(), offset(2), size({
+			apply({rects, elements}) {
+				Object.assign(elements.floating.style, {
+					width: `${rects.reference.width}px`
+				})}})],
+		whileElementsMounted: autoUpdate,
+	});
 
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);

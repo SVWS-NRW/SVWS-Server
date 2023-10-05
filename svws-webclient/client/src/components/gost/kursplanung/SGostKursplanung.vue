@@ -1,9 +1,9 @@
 <template>
 	<div class="page--content page--content--full page--content--gost-grid" :class="{'svws-blockungstabelle-hidden': !blockungstabelleVisible}">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button v-if="hatBlockung" type="secondary" @click.prevent="downloadPDFKursSchienenZuordnung" title="Kurs-Schienen-Zuordnung herunterladen">
-				<i-ri-printer-line />Kurs-Schienen-Zuordnung
-			</svws-ui-button>
+			<svws-ui-button-select v-if="hatBlockung" type="secondary" :dropdown-actions="dropdownList">
+				<template #icon> <i-ri-printer-line /> </template>
+			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<template v-if="hatBlockung">
@@ -122,8 +122,16 @@
 	const onToggle = () => collapsed.value = !collapsed.value;
 	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
 
-	async function downloadPDFKursSchienenZuordnung() {
-		const { data, name } = await props.getPDFKursSchienenZuordnung();
+	const dropdownList = [
+		{text: "Kurse-Schienen-Zuordnung", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung"), default: true},
+		{text: "Kurse-Schienen-Zuordnung markierter Schüler", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler")},
+		{text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler")},
+		{text: "Kursbelegung markierter Schülers", action: ()=>downloadPDF("Kursbelegung markierter Schülers")},
+		{text: "Kursbelegung gefilterte Schüler", action: ()=>downloadPDF("Kursbelegung gefilterte Schüler")},
+	]
+
+	async function downloadPDF(title: string) {
+		const { data, name } = await props.getPDF(title);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;
@@ -131,7 +139,6 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
-
 </script>
 
 <style lang="postcss" scoped>
