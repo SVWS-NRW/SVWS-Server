@@ -41,13 +41,10 @@ import java.util.stream.Collectors;
  * Diese Klasse beinhaltet den Code zur Erstellung eines Wahlbogens
  * für die Laufbahnplanung der gymnasialen Oberstufe.
  */
-public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
+public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 
-	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerSummenFehlerListe.html.txt");
-
-	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerSummenFehlerListe.css.txt");
+	/** Das HTML-Dokument mit Platzhaltern, aus der später die PDF-Datei erzeugt wird. */
+	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostErgebnisseLaufbahnpruefung.html");
 
 	/** Der Dateiname für die PDF-Datei */
 	private final String filename;
@@ -68,40 +65,40 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 * @param mapFehler        	Fehler in der Laufbahn des Schülers
 	 * @param mapHinweise      	Hinweise zur Laufbahn des Schülers
 	 */
-	private PDFGostSchuelerSummenFehlerListe(final String dateiname,
-											 final int detaillevel,
-											 final String schulnummer,
-											 final String[] schulbezeichnung,
-											 final int abiturjahr,
-											 final List<Long> schuelerIDs,
-											 final Map<Long, DTOSchueler> mapSchueler,
-											 final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
-											 final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
-											 final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
-											 final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
-		super("Schüler-Summen-Fehler-Liste", html, css);
+	private PDFGostErgebnisseLaufbahnpruefung(final String dateiname,
+											  final int detaillevel,
+											  final String schulnummer,
+											  final String[] schulbezeichnung,
+											  final int abiturjahr,
+											  final List<Long> schuelerIDs,
+											  final Map<Long, DTOSchueler> mapSchueler,
+											  final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
+											  final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
+											  final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
+											  final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
+		super(html);
 
 		this.filename = dateiname;
 
 		// Ersetze die Felder des Templates mit Grunddaten im Kopf der ersten Seite.
 		// Da ein ganzer Abiturjahrgang gedruckt wird, verwende ich Daten des ersten Schülers
-		bodyData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
-		bodyData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
-		bodyData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
-		bodyData.put("ABITURJAHR", String.valueOf(abiturjahr));
-		bodyData.put("AKTUELLESHALBJAHR", mapGrunddaten.get(schuelerIDs.get(0)).aktuellesGOStHalbjahr);
-		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
-		bodyData.put("SCHULNUMMER", schulnummer);
-		bodyData.put("SCHUELERTABELLENMITDATEN", erzeugeSchuelerTabellendaten(detaillevel, schuelerIDs, mapSchueler, mapGrunddaten, mapSummen, mapFehler, mapHinweise));
+		htmlData.put("SCHULNUMMER", schulnummer);
+		htmlData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
+		htmlData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
+		htmlData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
+		htmlData.put("ABITURJAHR", String.valueOf(abiturjahr));
+		htmlData.put("AKTUELLESHALBJAHR", mapGrunddaten.get(schuelerIDs.get(0)).aktuellesGOStHalbjahr);
+		htmlData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+		htmlData.put("SCHUELERTABELLENMITDATEN", getSchuelerTabellendaten(detaillevel, schuelerIDs, mapSchueler, mapGrunddaten, mapSummen, mapFehler, mapHinweise));
 	}
 
-	private String erzeugeSchuelerTabellendaten(final int detaillevel,
-												final List<Long> schuelerIDs,
-												final Map<Long, DTOSchueler> mapSchueler,
-												final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
-												final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
-												final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
-												final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
+	private String getSchuelerTabellendaten(final int detaillevel,
+											final List<Long> schuelerIDs,
+											final Map<Long, DTOSchueler> mapSchueler,
+											final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
+											final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
+											final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
+											final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
 
 		int lfdNr = 0;
 
@@ -132,54 +129,54 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 
 			final String schuelerDatentabelle =
 				"""
-					<table width="100%%" style="table-layout:fixed; border-collapse:collapse; page-break-inside: avoid; font-size: 11px;" cellspacing="0" cellpadding="0">
-					    <tr style="height: 5px; border-top: 0.5px solid gray;">
-					        <td style="width:4%%;"></td>
-					        <td style="width:30%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:4%%;"></td>
-					        <td style="width:1%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:3%%;"></td>
-					        <td style="width:7%%;"></td>
-					        <td style="width:6%%;"></td>
-					        <td style="width:6%%;"></td>
-					        <td style="width:1%%;"></td>
-					        <td style="width:5%%;"></td>
+					<table width="100%%" style="table-layout:fixed; border-collapse: collapse; page-break-inside: avoid; font-size: 9pt;" cellspacing="0" cellpadding="0">
+					    <tr style="height: 5px;">
+					        <td class="btGray" style="width:4%%;"></td>
+					        <td class="btGray" style="width:30%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:4%%;"></td>
+					        <td class="btGray" style="width:1%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:3%%;"></td>
+					        <td class="btGray" style="width:7%%;"></td>
+					        <td class="btGray" style="width:6%%;"></td>
+					        <td class="btGray" style="width:6%%;"></td>
+					        <td class="btGray" style="width:1%%;"></td>
+					        <td class="btGray" style="width:5%%;"></td>
 					    </tr>
-					    <tr>
-					        <td style="font-size: 10px; color: gray">%s</td>
-					        <td style="">%s, %s</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray; font-weight: bold;%s">%d</td>
+					    <tr style="text-align: center;">
+					        <td style="text-align: left; font-size: 8pt; color: gray">%s</td>
+					        <td style="text-align: left;">%s, %s</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style=" font-weight: bold;%s">%d</td>
 					        <td></td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray;%s">%d</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray; font-weight: bold;%s">%.1f</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray; font-weight: bold;%s">%.1f</td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray; font-weight: bold;%s">%.1f</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="%s">%d</td>
+					        <td class="bbGray" style="font-weight: bold;%s">%.1f</td>
+					        <td class="bbGray" style="font-weight: bold;%s">%.1f</td>
+					        <td class="bbGray" style="font-weight: bold;%s">%.1f</td>
 					        <td></td>
-					        <td style="text-align: center; border-bottom: 0.5px solid gray; font-weight: bold;%s">%d</td>
+					        <td class="bbGray" style="font-weight: bold;%s">%d</td>
 					    </tr>
-					    <tr style="font-size: 9px; color: gray;">
+					    <tr style="font-size: 7pt; color: gray;">
 					        <td></td>
 					        <td style="text-align: left;">%s</td>
 					        <td colspan="7" style="text-align: center;">anrechenbare Kurse</td>
@@ -191,28 +188,28 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 					    %s
 					    %s
 					    <tr style="height:5px;">
-					        <td colspan="21" style="border-bottom: 0.5px solid gray;"></td>
+					        <td class="bbGray" colspan="21"></td>
 					    </tr>
 					</table>
 					""".formatted(
 						String.format("%03d" + ".", lfdNr),
 						schueler.Nachname, schueler.Vorname,
 						// RGB-Farbkodierung im Folgenden: 255,0,0 ist rot und 255,255,0 ist gelb.
-						bgColor(summen.kursanzahlEF1, 10, 10), summen.kursanzahlEF1,
-						bgColor(summen.kursanzahlEF2, 10, 10), summen.kursanzahlEF2,
-						bgColor(summen.kursanzahlQ11,  9,  9), summen.kursanzahlQ11,
-						bgColor(summen.kursanzahlQ12,  9,  9), summen.kursanzahlQ12,
-						bgColor(summen.kursanzahlQ21,  9,  9), summen.kursanzahlQ21,
-						bgColor(summen.kursanzahlQ22,  9,  9), summen.kursanzahlQ22,
-						bgColor(summen.kursanzahlQPh, 38, 39), summen.kursanzahlQPh,
+						getBgColor(summen.kursanzahlEF1, 10, 10), summen.kursanzahlEF1,
+						getBgColor(summen.kursanzahlEF2, 10, 10), summen.kursanzahlEF2,
+						getBgColor(summen.kursanzahlQ11,  9,  9), summen.kursanzahlQ11,
+						getBgColor(summen.kursanzahlQ12,  9,  9), summen.kursanzahlQ12,
+						getBgColor(summen.kursanzahlQ21,  9,  9), summen.kursanzahlQ21,
+						getBgColor(summen.kursanzahlQ22,  9,  9), summen.kursanzahlQ22,
+						getBgColor(summen.kursanzahlQPh, 38, 39), summen.kursanzahlQPh,
 
-						bgColor(summen.wochenstundenEF1, 32, 32), summen.wochenstundenEF1,
-						bgColor(summen.wochenstundenEF2, 32, 32), summen.wochenstundenEF2,
-						bgColor(summen.wochenstundenQ11, 31, 33), summen.wochenstundenQ11,
-						bgColor(summen.wochenstundenQ12, 31, 33), summen.wochenstundenQ12,
-						bgColor(summen.wochenstundenQ21, 31, 33), summen.wochenstundenQ21,
-						bgColor(summen.wochenstundenQ22, 31, 33), summen.wochenstundenQ22,
-						bgColor(summen.wochenstundenGesamt, 100, 101.75), summen.wochenstundenGesamt,
+						getBgColor(summen.wochenstundenEF1, 32, 32), summen.wochenstundenEF1,
+						getBgColor(summen.wochenstundenEF2, 32, 32), summen.wochenstundenEF2,
+						getBgColor(summen.wochenstundenQ11, 31, 33), summen.wochenstundenQ11,
+						getBgColor(summen.wochenstundenQ12, 31, 33), summen.wochenstundenQ12,
+						getBgColor(summen.wochenstundenQ21, 31, 33), summen.wochenstundenQ21,
+						getBgColor(summen.wochenstundenQ22, 31, 33), summen.wochenstundenQ22,
+						getBgColor(summen.wochenstundenGesamt, 100, 101.75), summen.wochenstundenGesamt,
 
 						summen.wochenstundenDurchschnittEF 	< 34 ? "background-color: red;" : "", summen.wochenstundenDurchschnittEF,
 						summen.wochenstundenDurchschnittQPh < 34 ? "background-color: red;" : "", summen.wochenstundenDurchschnittQPh,
@@ -220,8 +217,8 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 						anzahlFehler > 0 ? "background-color: red;" : "", anzahlFehler,
 
 						beratungsdatum,
-						(detaillevel > 0 && anzahlFehler > 0) ? ausgabeBelegungsfehler(fehler) : "",
-						(detaillevel > 1 && anzahlHinweise > 0) ? ausgabeBelegungshinweise(hinweise) : ""
+						(detaillevel > 0 && anzahlFehler > 0) ? getAusgabeBelegungsfehler(fehler) : "",
+						(detaillevel > 1 && anzahlHinweise > 0) ? getAusgabeBelegungshinweise(hinweise) : ""
 					);
 
 			schuelerDatentabellen.append(schuelerDatentabelle);
@@ -240,7 +237,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 *
 	 * @return					html-css-style für die Hintergrundfarbe von td. Ist keine Bedingung erfüllt, wird ein leerer String zurückgegeben.
 	 */
-	private String bgColor(final double value, final double limitRed, final double limitYellow) {
+	private String getBgColor(final double value, final double limitRed, final double limitYellow) {
 		if (value < limitRed)
 			return "background-color: red;";
 		else if (value <= limitYellow)
@@ -257,7 +254,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 *
 	 * @return HTML-Tabellenzeile mit der Liste der Belegungsfehler gemäß Gesamtprüfung
 	 */
-	private String ausgabeBelegungsfehler(final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler) {
+	private String getAusgabeBelegungsfehler(final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler) {
 		if (listFehler == null || listFehler.isEmpty()) {
 			return "";
 		} else {
@@ -265,9 +262,9 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 			final List<String> fehler = new ArrayList<>(listFehler.stream().map(f -> f.belegungsfehler).toList());
 			ul(sb, fehler);
 			return """
-                   <tr style="font-size: 9px; color: gray;">
+                   <tr>
                        <td></td>
-                       <td colspan="19" style="text-align: left;"><p><u>Belegungsfehler gemäß Gesamtprüfung:</u></p>
+                       <td colspan="19" style="font-size: 8pt; color: gray; text-align: left;"><p><u>Belegungsfehler gemäß Gesamtprüfung:</u></p>
                            %s
                        </td>
                        <td></td>
@@ -283,7 +280,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 *
 	 * @return HTML-Tabellenzeile mit der Liste der Belegungsfehler gemäß Gesamtprüfung
 	 */
-	private String ausgabeBelegungshinweise(final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise) {
+	private String getAusgabeBelegungshinweise(final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise) {
 		if (listHinweise == null || listHinweise.isEmpty())
 			return "";
 		else {
@@ -291,9 +288,9 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 			final List<String> hinweise = listHinweise.stream().map(f -> f.belegungshinweis).toList();
 			ul(sb, hinweise);
 			return """
-                   <tr style="font-size: 9px; color: gray;">
+                   <tr>
                        <td></td>
-                       <td colspan="19" style="text-align: left;"><p><u>Hinweise gemäß Gesamtprüfung:</u></p>
+                       <td colspan="19" style="font-size: 8pt; color: gray; text-align: left;"><p><u>Hinweise gemäß Gesamtprüfung:</u></p>
                            %s
                        </td>
                        <td></td>
@@ -314,7 +311,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	 * @return 				das Objekt zum Erstellen eines PDFs
 	 *
 	 */
-	private static PDFGostSchuelerSummenFehlerListe getPDFmitSchuelerSummenFehlerListe(final DBEntityManager conn, final int abiturjahr, final int detaillevel) throws WebApplicationException {
+	private static PDFGostErgebnisseLaufbahnpruefung getPDFmitErgebnisseLaufbahnpruefung(final DBEntityManager conn, final int abiturjahr, final int detaillevel) throws WebApplicationException {
 
 		// Schuldaten sammeln, pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 		DTOEigeneSchule schule;
@@ -385,17 +382,17 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 		// Dateinamen erzeugen und übergeben. Dabei gilt:
 		// Wird nur ein Schüler übergeben, so wird eine persönliche PDF-Datei erstellt. Werden mehrere Schüler übergeben, so wurde über die API ein ganzer Jahrgang angefordert, für den eine PDF-Gesamtdatei erzeugt wird.
 		String dateiname;
-		dateiname = "Belegprüfungsergebnisse_%d_%s.pdf".formatted(
+		dateiname = "Laufbahnprüfungsergebnisse_Abitur-%d_%s.pdf".formatted(
 			mapGrunddaten.get(schuelerIDs.get(0)).abiturjahr,
 			mapGrunddaten.get(schuelerIDs.get(0)).beratungsGOStHalbjahr.replace('.', '_'));
 
 		// Erstelle die PDF-Datei mit der Liste für den Abiturjahrgang.
-		return new PDFGostSchuelerSummenFehlerListe(dateiname, detaillevel, schulnummer, schulbezeichnung, abiturjahr, sortedSchuelerIDs, mapSchueler, mapGrunddaten, mapSummen, mapFehler, mapHinweise);
+		return new PDFGostErgebnisseLaufbahnpruefung(dateiname, detaillevel, schulnummer, schulbezeichnung, abiturjahr, sortedSchuelerIDs, mapSchueler, mapGrunddaten, mapSummen, mapFehler, mapHinweise);
 	}
 
 
 	/**
-	 * Erstellt das PDF-Dokument für den Wahlbogen zu den Schüler-Laufbahnen
+	 * Erstellt ein PDF-Dokument mit den Ergebnissen der Laufbahnprüfung
 	 * eines Abiturjahrgangs der gymnasialen Oberstufe.
 	 *
 	 * @param conn         	die Datenbank-Verbindung
@@ -407,7 +404,7 @@ public final class PDFGostSchuelerSummenFehlerListe extends PDFCreator {
 	public static Response queryJahrgang(final DBEntityManager conn, final int abiturjahr, final int detaillevel) {
 
 		try {
-			final PDFGostSchuelerSummenFehlerListe pdf = getPDFmitSchuelerSummenFehlerListe(conn, abiturjahr, Math.min(Math.max(detaillevel, 0), 2));
+			final PDFGostErgebnisseLaufbahnpruefung pdf = getPDFmitErgebnisseLaufbahnpruefung(conn, abiturjahr, Math.min(Math.max(detaillevel, 0), 2));
 
 			final byte[] data = pdf.toByteArray();
 			if (data == null)

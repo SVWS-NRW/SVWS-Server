@@ -1,0 +1,95 @@
+<html lang="de">
+
+<head>
+	<title>Kurse-Schienen-Zuordnung</title>
+	<style>
+		/* Seiteneinstellungen vornehmen, die für alle Seiten gleich sind. */
+		@Page	{
+					size: A4 landscape;
+					margin-top: 17mm;
+					margin-bottom: 12mm;
+					margin-left: 10mm;
+					margin-right: 10mm;
+
+					/* Ab hier werden die Kopf- und Fußzeilen definiert. */
+					@top-left	{
+									padding-top: 2mm;
+									padding-left: 2mm;
+									vertical-align: top;
+									font-family: 'liberation';
+									font-weight: normal;
+									font-size: 7pt;
+									color: gray;
+									content: "@@SCHULBEZEICHNUNG_1@@\A @@SCHULBEZEICHNUNG_2@@\A @@SCHULBEZEICHNUNG_3@@";
+									white-space: pre-wrap;
+								}
+
+					@top-right	{
+									padding-top: 2mm;
+									padding-right: 2mm;
+									vertical-align: top;
+									font-family: 'liberation';
+									font-weight: normal;
+									font-size: 7pt;
+									color: gray;
+									content: "Kurse-Schienen-Zuordnung\A Abitur @@ABITURJAHR@@ - @@AKTUELLESHALBJAHR@@@@SCHUELERSTATISTIK@@\A Schulnummer: @@SCHULNUMMER@@";
+									white-space: pre-wrap;
+								}
+
+					@bottom-left	{
+										padding-bottom: 2mm;
+										padding-left: 2mm;
+										font-family: 'liberation';
+										font-weight: normal;
+										font-size: 7pt;
+										color: gray;
+										content: "Gedruckt am: @@ZEIT@@";
+									}
+
+					@bottom-center	{
+										padding-bottom: 2mm;
+										font-family: 'liberation';
+										font-weight: normal;
+										font-size: 7pt;
+										color: gray;
+										content: "@@INFORMATIONEN@@";
+									}
+
+					@bottom-right	{
+										padding-bottom: 2mm;
+										padding-right: 2mm;
+										font-family: 'liberation';
+										font-weight: normal;
+										font-size: 7pt;
+										color: gray;
+										content: "Seite " counter(page) " von " counter(pages);
+									}
+				}
+
+		body { font-family: 'liberation'; font-weight: normal; font-size: 10pt; }
+
+		h1 	{ font-size: 16pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.5em;}
+		h2 	{ font-size: 14pt; font-weight: bold; margin-top: 0.7em; margin-bottom: 0.4em;}
+		h3 	{ font-size: 12pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.3em;}
+		h4 	{ font-size: 10pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.2em;}
+
+		p	{ margin-top: 0em; margin-bottom: 0em; margin-left: 0em; margin-right: 0em; padding: 0em;	}
+		ul 	{ margin-top: 0.5em; margin-bottom: 0em; margin-left: 1em; margin-right: 0em; padding: 0em;	}
+
+		.tiny 	{ font-size: 0.8em; }
+
+		.bGray { border: 0.5px solid gray; }
+		.btGray { border-top: 0.5px solid gray; }
+		.bbGray { border-bottom: 0.5px solid gray; }
+		.blGray { border-left: 0.5px solid gray; }
+		.brGray { border-right: 0.5px solid gray; }
+	</style>
+</head>
+
+<body>
+
+@@SCHIENENKURSETABELLEN@@
+
+</body>
+
+</html>

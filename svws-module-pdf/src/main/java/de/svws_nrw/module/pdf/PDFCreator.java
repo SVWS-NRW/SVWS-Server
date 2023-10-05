@@ -21,17 +21,12 @@ import com.openhtmltopdf.util.XRLog;
  */
 public class PDFCreator {
 
-	/** Das PDF-Dokument mit Platzhaltern */
-	private final String body;
+	/** Das HTML-Dokument der Vorlage mit Platzhaltern, aus der die PDF-Datei generiert wird */
+	private final String htmlDoc;
 
-	/** CSS-Style-Sheets zum Ergänzen der Default-CSS-Einträge unten */
-	private final String css;
+	/** Die Daten zum Ersetzen von Platzhaltern im HTML-Dokument der Vorlage */
+	protected HashMap<String, String> htmlData = new HashMap<>();
 
-	/** Die Daten zum Ersetzen von Platzhaltern im Body */
-	protected HashMap<String, String> bodyData = new HashMap<>();
-
-	/** Der Titel des PDF-Dokuments */
-	private final String title;
 
 	/** Ein nachfolgender PDF-Creator, der für Folgeseiten genutzt wird (nur body). Dieser kann wiederum einen Nachfolger haben. */
 	private PDFCreator next = null;
@@ -39,16 +34,11 @@ public class PDFCreator {
 
 	/**
 	 * Erstellt einen neuen Manager für PDF-Dokumente.
-	 * Das Default-Layout wird auf DIN A4 und Hochformat gesetzt.
 	 *
-	 * @param title   der Titel des Dokuments
-	 * @param body    der Body des HTML-Dokuments - ohne Ersetzungen
-	 * @param css     weitere CSS-Style-Sheets zum Ergänzen der Default-CSS-Style-Sheets
+	 * @param html	das HTML-Dokument mit Platzhaltern
 	 */
-	public PDFCreator(final String title, final String body, final String css) {
-		this.title = title;
-		this.body = body;
-		this.css = css;
+	public PDFCreator(final String html) {
+		this.htmlDoc = html;
 	}
 
 
@@ -62,67 +52,15 @@ public class PDFCreator {
 	}
 
 
-
-	/**
-	 * Erstellt im Body-Template die Platzhalter und gibt den HTML-Body-String zurück.
-	 *
-	 * @return der HTML-Body-String
-	 *
-	 * @throws IOException wenn der HTML-Body nicht erzeugt werden kann
-	 */
-	private String getBody() throws IOException {
-		final StringBuilder result = new StringBuilder();
-		final String[] parts = body.split("@@");
-		for (int i = 0; i < parts.length; i++) {
-			if (i % 2 == 0) {
-				result.append(parts[i]);
-			} else {
-				final String mapped = bodyData.get(parts[i]);
-				if (mapped != null)
-					result.append(mapped);
-				else
-					throw new IOException("Fehlerhaftes HTML-Template in Klasse " + this.getClass().getCanonicalName());
-			}
-		}
-		if (next != null) {
-			result.append("<div style=\"page-break-after: always;\"></div>");
-			result.append(next.getBody());
-		}
-		return result.toString();
-	}
-
-	/**
-	 * Erstellt den HTML-String für das Erzeugen des PDF-Dokuments
-	 *
-	 * @return der HTML-String
-	 *
-	 * @throws IOException wenn das HTML-Dokument nicht erzeugt werden kann
-	 */
-	private String getHtml() throws IOException {
-
-		return  "<html lang=\"de\">"
-				+ "<head>"
-				+ "<title>" + title + "</title>"
-				+ "<style>"
-				+ css
-				+ "</style>"
-				+ "</head>"
-				+ "<body>"
-				+ getBody()
-				+ "</body>"
-				+ "</html>";
-	}
-
-
 	/**
 	 * Erzeugt das PDF-Dokument und schreibt in den übergebenen Output-Stream.
 	 *
-	 * @param os   the {@link OutputStream} to be used
+	 * @param 	os   			the {@link OutputStream} to be used
 	 *
-	 * @throws IOException   wenn der HTML-Code nicht erzeugt werden kann oder bei einem Fehler beim Rendern (siehe auch {@link PdfRendererBuilder#run()}
+	 * @throws 	IOException   	wenn der HTML-Code nicht erzeugt werden kann oder bei einem Fehler beim Rendern (siehe auch {@link PdfRendererBuilder#run()}
 	 */
 	private void runBuilder(final OutputStream os) throws IOException {
-		final String html = getHtml();
+		final String html = getFinalHtmlDoc();
 		XRLog.listRegisteredLoggers().forEach(logger -> XRLog.setLevel(logger, java.util.logging.Level.WARNING));
 		final Calendar now = Calendar.getInstance();
 		try (PDDocument doc = new PDDocument()) {
@@ -147,23 +85,34 @@ public class PDFCreator {
 
 
 	/**
-	 * Erzeugt eine unordered list (ul) aus der übergebenen String-Liste
-	 * und schreibt das Ergebnis in den übergebenen {@link StringBuilder}.
-	 * Ist die Liste null oder leer, so wird keine unordered list erzeugt.
+	 * Ersetzt im übergebenen HTML-Dokument die vorhandenen Platzhalter und gibt das finale HTML-Dokument mit Daten zurück
 	 *
-	 * @param sb     der StringBuilder
-	 * @param list   die Liste
+	 * @return 	das finale HTML-Dokument, in dem die Platzhalter ersetzt worden sind.
+	 *
+	 * @throws 	IOException, wenn die Platzhalter im HTML-Dokument nicht vollständig und richtig ersetzt werden können.
 	 */
-	public static void ul(final StringBuilder sb, final List<String> list) {
-		if ((list == null) || (list.isEmpty()))
-			return;
-		sb.append("<ul>");
-		for (final String s : list) {
-			sb.append("<li>");
-			sb.append(s);
-			sb.append("</li>");
+	private String getFinalHtmlDoc() throws IOException {
+
+		final StringBuilder result = new StringBuilder();
+		final String[] parts = htmlDoc.split("@@");
+
+		for (int i = 0; i < parts.length; i++) {
+			if (i % 2 == 0) {
+				result.append(parts[i]);
+			} else {
+				final String mapped = htmlData.get(parts[i]);
+				if (mapped != null)
+					result.append(mapped);
+				else
+					throw new IOException("Fehlerhaftes HTML-Template in Klasse " + this.getClass().getCanonicalName());
+			}
 		}
-		sb.append("</ul>");
+
+		if (next != null) {
+			result.append("<div style=\"page-break-after: always;\"></div>");
+			result.append(next.getFinalHtmlDoc());
+		}
+		return result.toString();
 	}
 
 
@@ -199,4 +148,24 @@ public class PDFCreator {
 		}
 	}
 
+
+	/**
+	 * Erzeugt eine unordered list (ul) aus der übergebenen String-Liste
+	 * und schreibt das Ergebnis in den übergebenen {@link StringBuilder}.
+	 * Ist die Liste null oder leer, so wird keine unordered list erzeugt.
+	 *
+	 * @param sb     der StringBuilder
+	 * @param list   die Liste
+	 */
+	public static void ul(final StringBuilder sb, final List<String> list) {
+		if ((list == null) || (list.isEmpty()))
+			return;
+		sb.append("<ul>");
+		for (final String s : list) {
+			sb.append("<li>");
+			sb.append(s);
+			sb.append("</li>");
+		}
+		sb.append("</ul>");
+	}
 }

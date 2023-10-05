@@ -39,10 +39,7 @@ import java.util.stream.Collectors;
 public final class PDFGostSchuelerKurseListe extends PDFCreator {
 
 	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerKurseListe.html.txt");
-
-	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerKurseListe.css.txt");
+	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostSchuelerKurseListe.html");
 
 	/** Der Dateiname für die PDF-Datei */
 	private final String filename;
@@ -53,6 +50,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 	 *
 	 * @param dateiname        	Dateiname der finalen PDF-Datei.
 	 * @param schulnummer      	Schulnummer der Schule, deren Blockungsergebnis verwendet wird.
+	 * @param schulbezeichnung 	Array mit den drei Einträgen der Schulbezeichnung
 	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
 	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
 	 * @param schuelerIDs 		IDs der Schüler, deren Kurse aufgelistet werden sollen.
@@ -60,22 +58,40 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 	 */
 	private PDFGostSchuelerKurseListe(final String dateiname,
                                       final String schulnummer,
+									  final String[] schulbezeichnung,
                                       final GostBlockungsdatenManager datenManager,
                                       final GostBlockungsergebnisManager ergebnisManager,
                                       final List<Long> schuelerIDs,
 									  final int maxKurse) {
 
-		super("Schüler-Kurse-Liste", html, css);
+		super(html);
 
 		this.filename = dateiname;
 
 		// Ersetze die Felder des Templates mit Daten
-		bodyData.put("INHALT", "Abitur %d".formatted(datenManager.daten().abijahrgang));
-		bodyData.put("SCHUELERSTATISTIK", "");
-		bodyData.put("AKTUELLESHALBJAHR", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
-		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
-		bodyData.put("SCHULNUMMER", schulnummer);
-		bodyData.put("INFORMATIONEN", "%s (Erg-ID %d)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
+		htmlData.put("SCHULNUMMER", schulnummer);
+		htmlData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
+		htmlData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
+		htmlData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
+		htmlData.put("ABITURJAHR", String.valueOf(datenManager.daten().abijahrgang));
+		htmlData.put("AKTUELLESHALBJAHR", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
+		htmlData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+		htmlData.put("INFORMATIONEN", "%s (Erg-ID %d)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
+		htmlData.put("SCHUELERKURSETABELLEN", getSchuelerKurseTabellen(datenManager, ergebnisManager, schuelerIDs, maxKurse));
+	}
+
+
+	/**
+	 * Erstellt den HTML-Code für die tabellarische Auflistung der Kurse eines Schülers
+	 *
+	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
+	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
+	 * @param schuelerIDs		ID der Schüler, deren Liste mit Kursen erstellt werden soll.
+	 * @param maxKurse			Maximale Anzahl an Kursen die einer der Schüler in der Liste hat
+	 *
+	 * @return					Der gesamte HTML-Code für die Zeilen der Kurs-Schienen-Matrix
+	 */
+	private static String getSchuelerKurseTabellen(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final List<Long> schuelerIDs, final int maxKurse) {
 
 		// Die Spalten der Matrix werden gemäß maximale Kurszahl fix gewählt und der evtl. Rest als Spalte zum Füllen angehängt.
 		// Zudem wird die Schriftgröße der Matrix angepasst, wiederum abhängig von der maximalen Kurszahl in einer Schiene.
@@ -84,107 +100,105 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 		String spaltenbreiteRest;
 		String schriftgroesse;
 
-		if (maxKurse <= 13) {
-			anzahlSpaltenAnsichtOptimierung = 13;
-			spaltenbreite = "7.5%";
-			spaltenbreiteRest = "2.5%";
-			schriftgroesse = "10px";
+		if (maxKurse <= 12) {
+			anzahlSpaltenAnsichtOptimierung = 12;
+			spaltenbreite = "8.3%";
+			spaltenbreiteRest = "0.4%";
+			schriftgroesse = "7.5pt";
 		} else {
-			anzahlSpaltenAnsichtOptimierung = 15;
-			spaltenbreite = "6.6%";
-			spaltenbreiteRest = "1%";
-			schriftgroesse = "9px";
+			anzahlSpaltenAnsichtOptimierung = 14;
+			spaltenbreite = "7.1%";
+			spaltenbreiteRest = "0.6%";
+			schriftgroesse = "6.5pt";
 		}
 
-		// Erste Zeile der Kurs-Schienen-Matrix für die Spaltenbreiten erzeugen. Die Spalte ist unsichtbar und dient nur der Formatierung.
+		// Zeile der Kurse-Liste für die Spaltenbreiten erzeugen. Die Spalte ist unsichtbar und dient nur der Formatierung.
 		final StringBuilder zeileSpaltenbreiten = new StringBuilder();
 		for (int i = 0; i < anzahlSpaltenAnsichtOptimierung; i++) {
 			zeileSpaltenbreiten.append("<td style=\"width: %s; border-width: 0em;\"></td>".formatted(spaltenbreite));
 		}
 		zeileSpaltenbreiten.append("<td style=\"width: %s; border-width: 0em;\"></td>".formatted(spaltenbreiteRest));
-		bodyData.put("SPALTENDEFINITION", zeileSpaltenbreiten.toString());
-		bodyData.put("SCHRIFTGROESSE", schriftgroesse);
 
-		// Hier wird die eigentliche Kurs-Schienen-Matrix erstellt.
-		bodyData.put("NAMENUNDKURSE", getNamenUndKurseZeilen(datenManager, ergebnisManager, schuelerIDs));
-	}
-
-
-	/**
-	 * Erstellt der HTML-Code für die Kurs-Schienen-Matrix.
-	 *
-	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
-	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
-	 * @param schuelerIDs		ID der Schüler, deren Liste mit Kursen erstellt werden soll.
-	 * @return					Der gesamte HTML-Code für die Zeilen der Kurs-Schienen-Matrix
-	 */
-	private static String getNamenUndKurseZeilen(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final List<Long> schuelerIDs) {
-		// Nun für jeden Schüler eine Liste mit seinen Kursen erzeugen. Dazu werden zwei Tabellenzeilen verwendet
-		// 1. Zeile: Informationen zum Schüler
-		// 2. Zeile: Spacing und Borders sicherstellen
-		// 3. Zeile: seine Kurse
-		// 4. Zeile: Spacing und Borders sicherstellen
-		final StringBuilder zeilenSchuelerMitKursen = new StringBuilder();
+		// Tabellen für die Schüler mit ihren Kursen erzeugen.
+		final StringBuilder tabellenSchuelerMitKursen = new StringBuilder();
 
 		for (final Long schuelerID : schuelerIDs) {
-			// 1. Zeile erstellen
-			zeilenSchuelerMitKursen.append("<tr>");
-			zeilenSchuelerMitKursen.append(("<td colspan=\"%d\" style=\"text-align: left;\"><b>%s, %s</b></td>").formatted(13, datenManager.schuelerGet(schuelerID).nachname, datenManager.schuelerGet(schuelerID).vorname));
-			zeilenSchuelerMitKursen.append("</tr>");
-
-			// 2. Zeile erstellen
-			zeilenSchuelerMitKursen.append("<tr style=\"height:0px;\">");
-			zeilenSchuelerMitKursen.append("<td></td>");
-			zeilenSchuelerMitKursen.append("</tr>");
-
-			// 3. Zeile erstellen
-			zeilenSchuelerMitKursen.append(getKurseZeile(datenManager, ergebnisManager, schuelerID));
-
-			// 4. Zeile erstellen
-			zeilenSchuelerMitKursen.append("<tr style=\"height:0.5em;\">");
-			zeilenSchuelerMitKursen.append("<td></td>");
-			zeilenSchuelerMitKursen.append("</tr>");
+			tabellenSchuelerMitKursen.append(
+                """
+                <table style="width: 100%%; table-layout:fixed; border-collapse:collapse; page-break-inside: avoid; font-size: %s;">
+                    <tbody>
+                        <tr style="height: 0em" cellspacing="0" cellpadding="0">
+                            %s
+                        </tr>
+                        <tr>
+                            <td colspan="%d" style="text-align: left;"><h4>%s, %s</h4></td>
+                        </tr>
+                        <tr style="height:0px;">
+                            <td></td>
+                        </tr>
+                        <tr>
+                            %s
+                        </tr>
+                        <tr style="height:0.5em;">
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                """.formatted(
+					schriftgroesse,
+					zeileSpaltenbreiten,
+					anzahlSpaltenAnsichtOptimierung,
+					datenManager.schuelerGet(schuelerID).nachname,
+					datenManager.schuelerGet(schuelerID).vorname,
+					getKurseZeile(datenManager, ergebnisManager, schuelerID)
+				));
 		}
-		return zeilenSchuelerMitKursen.toString();
+
+		return tabellenSchuelerMitKursen.toString();
 	}
 
 
 	/**
-	 * Erstellt den HTML-Code für die Kurseinträge einer Schiene.
+	 * Erstellt den HTML-Code für die Kurseinträge des Schülers.
 	 *
 	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
 	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
 	 * @param schuelerID		ID des Schülers, dessen Kurse-Zeile erstellt werden soll.
-	 * @return					Der HTML-Code für die Kurse eines Schülers in der Kurs-Schienen-Matrix
-	 */
+	 *
+	 * @return					Der HTML-Code für die Kurse eines Schülers
+	 * */
 	private static String getKurseZeile(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final Long schuelerID) {
 		final StringBuilder zeileKurse = new StringBuilder();
 
 		// Kurse mit deren Informationen in eigener Zeile ergänzen.
-		zeileKurse.append("<tr>");
 		for (final GostBlockungsergebnisKurs kurs : ergebnisManager.getOfSchuelerKursmenge(schuelerID)) {
 
+			// Fach für Hintergrundfarbe ermitteln
 			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
-
-			if (fach != null)
-				zeileKurse.append("<td style=\"border: 0.5px solid gray; background-color: %s;\"><b>%s</b>".formatted(fach.getHMTLFarbeRGB().replace("rgba", "rgb"), datenManager.kursGetName(kurs.id)));
-			else
-				zeileKurse.append("<td><b>%s</b>".formatted(datenManager.kursGetName(kurs.id)));
+			final String eintragFarbe = (fach != null) ? " background-color: " + fach.getHMTLFarbeRGB().replace("rgba", "rgb") + ";" : "";
 
 			// Kursbelegung: Schriftlichkeit und evtl. Abiturfach
-			String eintragSchriMuendAbiFach = ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).istSchriftlich ? "s" : "m";
-			if (ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach != null)
-				eintragSchriMuendAbiFach += " (Abifach " + ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach + ")";
+			final String eintragSchriMuend = ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).istSchriftlich ? "s" : "m";
+			final String eintragAbifach = (ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach != null) ? " (Abifach " + ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach + ")" : "";
 
-			// Lehrkräfte des Kurses als kommaspeparierte Liste darstellen
+			// Lehrkräfte des Kurses als kommaseparierte Liste darstellen
 			final String eintragLehrkraefte = datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","));
 
-			zeileKurse.append(("<p class=\"tinyfont\">"
-							   + "%s-%s<br/>"
-							   + "%s</p></td>")
-							   .formatted(ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel, eintragSchriMuendAbiFach, eintragLehrkraefte));
+			zeileKurse.append(
+            """
+            <td class="bGray" style="%s">
+                <b>%s</b>
+                <p class="tiny">%s-%s%s<br/>%s</p>
+            </td>
+            """.formatted(
+				eintragFarbe,
+				datenManager.kursGetName(kurs.id),
+				ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel,
+				eintragSchriMuend,
+				eintragAbifach,
+				eintragLehrkraefte));
 		}
-		zeileKurse.append("</tr>");
+
 		return zeileKurse.toString();
 	}
 
@@ -216,6 +230,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 		final String schulnummer = schule.SchulNr.toString();
+		final String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
 
 		// Hole das Blockungsergebnis über die ID aus der DB.
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, blockungsergebnisID);
@@ -259,7 +274,7 @@ public final class PDFGostSchuelerKurseListe extends PDFCreator {
 			.map(s -> s.id)
 			.toList();
 
-		return new PDFGostSchuelerKurseListe(dateiname, schulnummer, datenManager, ergebnisManager, sortedSchuelerIDs, maxKurse);
+		return new PDFGostSchuelerKurseListe(dateiname, schulnummer, schulbezeichnung, datenManager, ergebnisManager, sortedSchuelerIDs, maxKurse);
 	}
 
 

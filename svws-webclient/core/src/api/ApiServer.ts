@@ -3052,7 +3052,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFSchuelerSummenFehlerListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/SchuelerSummenFehlerListe/{abiturjahr : -?\d+}/{detaillevel : \d+}
+	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFErgebnisseLaufbahnpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/ergebnisse_laufbahnpruefung/{abiturjahr : -?\d+}/{detaillevel : \d+}
 	 *
 	 * Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
 	 *
@@ -3069,8 +3069,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs
 	 */
-	public async getGostAbiturjahrgangPDFSchuelerSummenFehlerListe(schema : string, abiturjahr : number, detaillevel : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/abiturjahrgang/pdf/SchuelerSummenFehlerListe/{abiturjahr : -?\\d+}/{detaillevel : \\d+}"
+	public async getGostAbiturjahrgangPDFErgebnisseLaufbahnpruefung(schema : string, abiturjahr : number, detaillevel : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/abiturjahrgang/pdf/ergebnisse_laufbahnpruefung/{abiturjahr : -?\\d+}/{detaillevel : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{detaillevel\s*(:[^}]+)?}/g, detaillevel.toString());

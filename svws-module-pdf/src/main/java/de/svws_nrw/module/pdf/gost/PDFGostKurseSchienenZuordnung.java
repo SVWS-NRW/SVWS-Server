@@ -40,10 +40,7 @@ import java.util.stream.Collectors;
 public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 
 	/** Der HTML-Code des body für die HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostKurseSchienenZuordnung.html.txt");
-
-	/** Das CSS für den Header der HTML-Vorlage, aus der später die PDF-Datei erzeugt wird. */
-	private static final String css = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostKurseSchienenZuordnung.css.txt");
+	private static final String html = ResourceUtils.text("de/svws_nrw/module/pdf/gost/PDFGostKurseSchienenZuordnung.html");
 
 	/** Der Dateiname für die PDF-Datei */
 	private final String filename;
@@ -54,47 +51,53 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 	 *
 	 * @param dateiname        	Dateiname der finalen PDF-Datei.
 	 * @param schulnummer      	Schulnummer der Schule, deren Blockungsergebnis verwendet wird.
+	 * @param schulbezeichnung 	Array mit den drei Einträgen der Schulbezeichnung
 	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
 	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Kurse-Schienen-Zuordnung ausgegeben werden soll.
 	 * @param zeigeExterneDummy Legt fest, ob die Anzahlen zu Externen und Dummy in der Übersicht angezeigt werden sollen.
-	 * @param schuelerID 		ID des Schülers, dessen Kurse-Schienen-Zuordnung erstellt werden soll. Ist der Eintrag NULL, so wird die Matrix für den Abiturjahrgang des Blockungsergebnisses erstellt.
-	 * @param lfdNr 			Laufende Nummer der Kurse-Schienen-Zuordnung bei der Ausgabe für mehrere SuS.
+	 * @param schuelerIDs 		IDs der Schüler, deren Kurse-Schienen-Zuordnung aufgelistet werden sollen. Ist der Eintrag NULL, so wird die Matrix für den Abiturjahrgang des Blockungsergebnisses erstellt.
 	 */
 	private PDFGostKurseSchienenZuordnung(final String dateiname,
 										  final String schulnummer,
+										  final String[] schulbezeichnung,
 										  final GostBlockungsdatenManager datenManager,
 										  final GostBlockungsergebnisManager ergebnisManager,
 										  final boolean zeigeExterneDummy,
-										  final Long schuelerID,
-										  final Integer lfdNr) {
-
-		super("Kurse-Schienen-Zuordnung", html, css);
+										  final List<Long> schuelerIDs) {
+		super(html);
 
 		this.filename = dateiname;
 
 		// Definiert, ob die PDF-Datei für einen Schüler (oder einen Abiturjahrgang) erstellt wird.
-		final boolean istSchuelerPDF = (schuelerID != null);
+		final boolean istSchuelerPDF = (schuelerIDs != null);
 
 		// Ersetze die Felder des Templates mit Daten
+		htmlData.put("SCHULNUMMER", schulnummer);
+		htmlData.put("SCHULBEZEICHNUNG_1", schulbezeichnung[0] == null ? "" : schulbezeichnung[0]);
+		htmlData.put("SCHULBEZEICHNUNG_2", schulbezeichnung[1] == null ? "" : schulbezeichnung[1]);
+		htmlData.put("SCHULBEZEICHNUNG_3", schulbezeichnung[2] == null ? "" : schulbezeichnung[2]);
+		htmlData.put("ABITURJAHR", String.valueOf(datenManager.daten().abijahrgang));
+		htmlData.put("AKTUELLESHALBJAHR", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
+		htmlData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+
 		if (istSchuelerPDF) {
-			bodyData.put("INHALT", "%s, %s".formatted(datenManager.schuelerGet(schuelerID).nachname, datenManager.schuelerGet(schuelerID).vorname));
-			bodyData.put("SCHUELERSTATISTIK", "");
+			htmlData.put("SCHUELERSTATISTIK", "");
+			htmlData.put("INFORMATIONEN", "%s (Erg-ID %d)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
 		} else {
-			bodyData.put("INHALT", "Abitur %d".formatted(datenManager.daten().abijahrgang));
-			if (zeigeExterneDummy)
-				bodyData.put("SCHUELERSTATISTIK", "(Gesamt: %d SuS, davon %d/%d Externe/Platzhalter)".formatted(datenManager.schuelerGetAnzahl(), ergebnisManager.getAnzahlSchuelerExterne(), ergebnisManager.getAnzahlSchuelerDummy()));
-			else
-				bodyData.put("SCHUELERSTATISTIK", "(Gesamt: %d SuS)".formatted(datenManager.schuelerGetAnzahl()));
+			if (zeigeExterneDummy) {
+				htmlData.put("SCHUELERSTATISTIK", " - Gesamt: %d SuS, davon %d/%d Externe/Platzhalter".formatted(datenManager.schuelerGetAnzahl(), ergebnisManager.getAnzahlSchuelerExterne(), ergebnisManager.getAnzahlSchuelerDummy()));
+				htmlData.put("INFORMATIONEN", "%s (Erg-ID %d) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach) (Externe, Platzhalter)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
+			} else {
+				htmlData.put("SCHUELERSTATISTIK", " - Gesamt: %d SuS".formatted(datenManager.schuelerGetAnzahl()));
+				htmlData.put("INFORMATIONEN", "%s (Erg-ID %d) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id));
+			}
 		}
 
-		bodyData.put("AKTUELLESHALBJAHR", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
-		bodyData.put("ZEIT", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
-		bodyData.put("SCHULNUMMER", schulnummer);
-		if (lfdNr == null) {
-			bodyData.put("INFORMATIONEN", "%s (Erg-ID %d) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)%s".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id, zeigeExterneDummy ? "(Externe, Platzhalter)" : ""));
+		// Hier wird die eigentliche Kurse-Schienen-Matrix erstellt.
+		htmlData.put("SCHIENENKURSETABELLEN", getSchienenKurseTabellen(datenManager, ergebnisManager, zeigeExterneDummy, schuelerIDs, istSchuelerPDF));
+	}
 
-		} else
-			bodyData.put("INFORMATIONEN", "%s (Erg-ID %d) - Ausdruck lfd. Nr: %03d".formatted(datenManager.daten().name, ergebnisManager.getErgebnis().id, lfdNr));
+	private static String getSchienenKurseTabellen(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final boolean zeigeExterneDummy, final List<Long> schuelerIDs, final boolean istSchuelerPDF) {
 
 		// Grundwerte für die Kurse-Schienen-Matrix ermitteln
 		final List<GostBlockungSchiene> schienen = datenManager.schieneGetListe();
@@ -118,17 +121,17 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 			anzahlSpaltenAnsichtOptimierung = 8;
 			spaltenbreite = "11%";
 			spaltenbreiteRest = "1%";
-			schriftgroesse = "11px";
+			schriftgroesse = "8pt";
 		} else if (maxKurseInSchienen <= 12  && anzahlSchienen <= 16) {
 			anzahlSpaltenAnsichtOptimierung = 12;
 			spaltenbreite = "7.5%";
 			spaltenbreiteRest = "2.5%";
-			schriftgroesse = "10px";
+			schriftgroesse = "7.5pt";
 		} else {
 			anzahlSpaltenAnsichtOptimierung = 16;
 			spaltenbreite = "5.8%";
 			spaltenbreiteRest = "1.4%";
-			schriftgroesse = "9px";
+			schriftgroesse = "7pt";
 		}
 
 		// Erste Zeile der Kurse-Schienen-Matrix für die Spaltenbreiten erzeugen. Die Spalte ist unsichtbar und dient nur der Formatierung.
@@ -137,16 +140,77 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 			zeileSpaltenbreiten.append("<td style=\"width: %s; border-width: 0em;\"></td>".formatted(spaltenbreite));
 		}
 		zeileSpaltenbreiten.append("<td style=\"width: %s; border-width: 0em;\"></td>".formatted(spaltenbreiteRest));
-		bodyData.put("SPALTENDEFINITION", zeileSpaltenbreiten.toString());
-		bodyData.put("SCHRIFTGROESSE", schriftgroesse);
 
-		// Hier wird die eigentliche Kurse-Schienen-Matrix erstellt.
-		bodyData.put("SCHIENENUNDKURSE", getSchienenUndKurseZeilen(datenManager, ergebnisManager, zeigeExterneDummy, schuelerID, schienen, istSchuelerPDF));
+		// Tabellen für die Schüler mit ihren Kursen erzeugen.
+		final StringBuilder tabellenSchienenMitKursen = new StringBuilder();
+
+		if (istSchuelerPDF) {
+			int lfdNr = 0;
+			final int maxSchueler = schuelerIDs.size();
+
+			// Erzeuge für jeden Schüler eine Tabelle mit den Schienen und Kursen
+			for (final Long schuelerID : schuelerIDs) {
+				lfdNr++;
+				tabellenSchienenMitKursen.append(
+					"""
+                    <table style="width: 100%%; table-layout:fixed; border-collapse:collapse; font-size: %s;%s">
+                        <tbody>
+                            <tr style="height: 0em" cellspacing="0" cellpadding="0">
+                                %s
+                            </tr>
+                            <tr>
+                                <td colspan="%d" style="text-align: left;"><h2>Kurse-Schienen-Zuordnung für %s, %s</h2></td>
+                            </tr>
+                            <tr style="height:0px;">
+                                <td></td>
+                            </tr>
+                            %s
+                        </tbody>
+                    </table>
+                    """.formatted(
+						(lfdNr < maxSchueler) ? " page-break-after: always;" : "",  // <<< hier wird für alle Schüler, bis auf den letzten, ein Seitenumbruch eingefügt.
+						schriftgroesse,
+						zeileSpaltenbreiten,
+						anzahlSpaltenAnsichtOptimierung,
+						datenManager.schuelerGet(schuelerID).nachname,
+						datenManager.schuelerGet(schuelerID).vorname,
+						getSchienenUndKurseZeilen(datenManager, ergebnisManager, zeigeExterneDummy, schuelerID, schienen, true)
+				));
+			}
+		} else {
+			// Erzeuge nur eine Tabelle mit den Schienen und Kursen für den ganzen Abiturjahrgang.
+			tabellenSchienenMitKursen.append(
+    		"""
+            <table style="width: 100%%; table-layout:fixed; border-collapse:collapse; font-size: %s;">
+                <tbody>
+                    <tr style="height: 0em" cellspacing="0" cellpadding="0">
+                        %s
+                    </tr>
+                    <tr>
+                        <td colspan="%d" style="text-align: left;"><h2>Kurse-Schienen-Zuordnung Abitur %s - %s</h2></td>
+                    </tr>
+                    <tr style="height:0px;">
+                        <td></td>
+                    </tr>
+                    %s
+                </tbody>
+            </table>
+            """.formatted(
+				schriftgroesse,
+				zeileSpaltenbreiten,
+				anzahlSpaltenAnsichtOptimierung,
+				String.valueOf(datenManager.daten().abijahrgang),
+				GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel,
+				getSchienenUndKurseZeilen(datenManager, ergebnisManager, zeigeExterneDummy, null, schienen, false)
+			));
+		}
+
+		return tabellenSchienenMitKursen.toString();
 	}
 
 
 	/**
-	 * Erstellt der HTML-COde für die Kurse-Schienen-Matrix.
+	 * Erstellt der HTML-Code für die Kurse-Schienen-Matrix.
 	 *
 	 * @param datenManager		Manager für die Blockungsgrunddaten des Blockungsergebnisses
 	 * @param ergebnisManager	Manager für die Daten des Blockungsergebnisses, dessen Kurse-Schienen-Zuordnung ausgegeben werden soll.
@@ -157,31 +221,48 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 	 * @return					Der gesamte HTML-Code für die Zeilen der Kurse-Schienen-Matrix
 	 */
 	private static String getSchienenUndKurseZeilen(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final boolean zeigeExterneDummy, final Long schuelerID, final List<GostBlockungSchiene> schienen, final boolean istSchuelerPDF) {
-		// Nun für jede Schiene eine Zeile ind er Matrix erzeugen.
+
 		final StringBuilder zeileMatrix = new StringBuilder();
+
+		// Nun für jede Schiene eine Zeile in der Matrix erzeugen.
 		for (final GostBlockungSchiene schiene : schienen) {
 			if (!ergebnisManager.getSchieneE(schiene.id).kurse.isEmpty()) {
-				zeileMatrix.append("<tr>");
 
-				// Zeilenkopf für Schiene mit zugehörigen Informationen erstellen.
-				zeileMatrix.append(("<td style=\"text-align: left;%s\"><b>%s</b>").formatted(((ergebnisManager.getOfSchieneHatKollision(schiene.id) && !istSchuelerPDF) ? " background-color: rgb(255,0,0);" : ""), schiene.bezeichnung));
-				if (istSchuelerPDF)
-					zeileMatrix.append("</td>");
-				else {
-					zeileMatrix.append(("<p class=\"tinyfont\">"
-						+ "<b>%d</b> K. mit <b>%d</b> S.")
-						.formatted(ergebnisManager.getSchieneE(schiene.id).kurse.size(), ergebnisManager.getOfSchieneAnzahlSchueler(schiene.id)));
+				if (istSchuelerPDF) {
+					// Zeilenkopf für Schiene mit zugehörigen Informationen erstellen.
+					zeileMatrix.append(
+                        """
+                        <tr style="page-break-inside: avoid;">
+                            <td class="bGray" style="text-align: left;">
+                                <b>%s</b>
+                            </td>
+                        """.formatted(
+							schiene.bezeichnung
+						));
+				} else {
+					final String eintragKollision = (ergebnisManager.getOfSchieneHatKollision(schiene.id)) ? " background-color: rgb(255,0,0);" : "";
+					final String eintragSchienendetails = zeigeExterneDummy ? "<br/>(%d/%d Ext./P.h.)".formatted(ergebnisManager.getOfSchieneAnzahlSchuelerExterne(schiene.id), ergebnisManager.getOfSchieneAnzahlSchuelerDummy(schiene.id)) : "";
 
-					if (zeigeExterneDummy)
-						zeileMatrix.append(("<br/>(%d/%d Ext./P.h.)</p></td>").formatted(ergebnisManager.getOfSchieneAnzahlSchuelerExterne(schiene.id), ergebnisManager.getOfSchieneAnzahlSchuelerDummy(schiene.id)));
-					else
-						zeileMatrix.append("</p></td>");
+					zeileMatrix.append(
+					"""
+                    <tr style="page-break-inside: avoid;">
+                        <td class="bGray" style="text-align: left;%s">
+                            <b>%s</b>
+                            <p class="tiny"><b>%d</b> K. mit <b>%d</b> S.%s</p>
+                        </td>
+                    """.formatted(
+						eintragKollision,
+						schiene.bezeichnung,
+						ergebnisManager.getSchieneE(schiene.id).kurse.size(),
+						ergebnisManager.getOfSchieneAnzahlSchueler(schiene.id),
+						eintragSchienendetails
+					));
 				}
-
 				zeileMatrix.append(getKurseInZeile(datenManager, ergebnisManager, zeigeExterneDummy, schuelerID, schiene, istSchuelerPDF));
 				zeileMatrix.append("</tr>");
 			}
 		}
+
 		return zeileMatrix.toString();
 	}
 
@@ -198,49 +279,66 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 	 * @return					Der HTML-Code für die Kurse einer Schiene in der Kurse-Schienen-Matrix
 	 */
 	private static String getKurseInZeile(final GostBlockungsdatenManager datenManager, final GostBlockungsergebnisManager ergebnisManager, final boolean zeigeExterneDummy, final Long schuelerID, final GostBlockungSchiene schiene, final boolean istSchuelerPDF) {
+
 		final StringBuilder zeileKurse = new StringBuilder();
 
 		// Kurse mit deren Informationen in der aktuellen Zeile der Schiene ergänzen.
 		for (final GostBlockungsergebnisKurs kurs : ergebnisManager.getSchieneE(schiene.id).kurse) {
 
-			// Prüfe, ob der Kurs vom Schüler belegt ist. wenn ja, ermittle die Schriftlichkeit und evtl. welches Abiturfach es ist.
-			final boolean istSchuelerKursbelegung = (kurs.schueler.contains(schuelerID));
-			String eintragSchriMuendAbiFach = "";
-			if (istSchuelerKursbelegung) {
-				eintragSchriMuendAbiFach = ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).istSchriftlich ? "s" : "m";
-				if (ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach != null)
-					eintragSchriMuendAbiFach += " (Abifach " + ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach + ")";
-			}
+			// Fach für Hintergrundfarbe ermitteln
+			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
+			String eintragFarbe = (fach != null) ? " background-color: " + fach.getHMTLFarbeRGB().replace("rgba", "rgb") + ";" : "";
 
 			// Lehrkräfte des Kurses als kommaspeparierte Liste darstellen
 			final String eintragLehrkraefte = datenManager.kursGetLehrkraefteSortiert(kurs.id).isEmpty() ? "----" : datenManager.kursGetLehrkraefteSortiert(kurs.id).stream().map(l -> l.kuerzel).collect(Collectors.joining(","));
 
-			// Farbe des Hintergrundes gemäß Fachfarbe aus dem Client festlegen, wenn allgemeine Darstellung erfolgt oder Schüler den Kurs belegt.
-			final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(datenManager.faecherManager().get(kurs.fachID).kuerzel);
-			if (fach != null && (!istSchuelerPDF || istSchuelerKursbelegung))
-				zeileKurse.append("<td style=\"background-color: %s;\"><b>%s</b>".formatted(fach.getHMTLFarbeRGB().replace("rgba", "rgb"), datenManager.kursGetName(kurs.id)));
-			else
-				zeileKurse.append("<td><b>%s</b>".formatted(datenManager.kursGetName(kurs.id)));
-
-			// Ab hier werden die Detailinfomationen zum Kurs ergänzt.
-			zeileKurse.append("<p class=\"tinyfont\">");
-
+			// Ab hier werden der Kurs und seine Informationen ergänzt, abhängig davon, ob es eine schülerbezogene Ausgabe ist oder für die ganze Stufe.
 			if (istSchuelerPDF) {
+				// Ausgabe für einen Schüler
+				// Prüfe, ob der Kurs vom Schüler belegt ist. wenn ja, ermittle die Schriftlichkeit und evtl. welches Abiturfach es ist.
+				final boolean istSchuelerKursbelegung = (kurs.schueler.contains(schuelerID));
+				final String eintragKursart = istSchuelerKursbelegung ? ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel : "";
+				String eintragSchriMuend = "";
+				String eintragAbifach = "";
 				if (istSchuelerKursbelegung) {
-					zeileKurse.append(("%s-%s<br/>").formatted(ergebnisManager.getOfSchuelerOfFachKursart(schuelerID, kurs.fachID).kuerzel, eintragSchriMuendAbiFach));
+					eintragSchriMuend = ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).istSchriftlich ? "-s" : "-m";
+					eintragAbifach = (ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach != null) ? " (Abifach " + ergebnisManager.getOfSchuelerOfKursFachwahl(schuelerID, kurs.id).abiturfach + ")" : "";
 				} else {
-					zeileKurse.append("<br/>");
+					eintragFarbe = " background-color: rgb(255,255,255);";
 				}
-				zeileKurse.append(("%s</p></td>").formatted(eintragLehrkraefte));
+
+				zeileKurse.append(
+					"""
+                    <td class="bGray" style="%s">
+                        <b>%s</b>
+                        <p class="tiny">%s%s%s<br/>%s</p>
+                    </td>
+                    """.formatted(
+						eintragFarbe,
+						datenManager.kursGetName(kurs.id),
+						eintragKursart,
+						eintragSchriMuend,
+						eintragAbifach,
+						eintragLehrkraefte));
 			} else {
+				// Ausgabe für eine Stufe
 				final int anzahlAbitur = ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id) + ergebnisManager.getOfKursAnzahlSchuelerAbitur3(kurs.id) + ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id);
-				zeileKurse.append(("%s<br/>"
-								   + "<b>%d</b> (%d,%d)")
-								   .formatted(eintragLehrkraefte, ergebnisManager.getOfKursAnzahlSchueler(kurs.id), ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id), anzahlAbitur));
-				if (zeigeExterneDummy)
-					zeileKurse.append(("(%d,%d)</p></td>").formatted(ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id), ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id)));
-				else
-					zeileKurse.append("</p></td>");
+				final String eintragDetailzahlen = zeigeExterneDummy ? "(%d,%d)".formatted(ergebnisManager.getOfKursAnzahlSchuelerExterne(kurs.id), ergebnisManager.getOfKursAnzahlSchuelerDummy(kurs.id)) : "";
+
+				zeileKurse.append(
+					"""
+                    <td class="bGray" style="%s">
+                        <b>%s</b>
+                        <p class="tiny">%s<br/><b>%d</b> (%d,%d)%s</p>
+                    </td>
+                    """.formatted(
+						eintragFarbe,
+						datenManager.kursGetName(kurs.id),
+						eintragLehrkraefte,
+						ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
+						ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
+						anzahlAbitur,
+						eintragDetailzahlen));
 			}
 		}
 		return zeileKurse.toString();
@@ -271,6 +369,7 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 		final String schulnummer = schule.SchulNr.toString();
+		final String[] schulbezeichnung = new String[] {schule.Bezeichnung1, schule.Bezeichnung2, schule.Bezeichnung3};
 
 		// Hole das Blockungsergebnis über die ID aus der DB.
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, blockungsergebnisID);
@@ -292,7 +391,7 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 		if (schuelerIDs == null || schuelerIDs.isEmpty()) {
 			// Allgemeine Kurse-Schienen-Zuordnung eines Blockungsergebnisses
 			dateiname = "Kurse-Schienen-Zuordnung_%d-%s_(Erg-ID%d).pdf".formatted(datenManager.daten().abijahrgang, GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel.replace(".", "-"), blockungsergebnisID);
-			return new PDFGostKurseSchienenZuordnung(dateiname, schulnummer, datenManager, ergebnisManager, zeigeExterneDummy, null, null);
+			return new PDFGostKurseSchienenZuordnung(dateiname, schulnummer, schulbezeichnung, datenManager, ergebnisManager, zeigeExterneDummy, null);
 		}
 
 		// Schüler in der Blockung ermitteln
@@ -332,25 +431,7 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 							 	   blockungsergebnisID);
 		}
 
-		// Erstelle die PDF-Datei, die entweder die Kurse-Schienen-Zuordnung eines Schülers beinhaltet oder die aller Schüler eines Abiturjahrgangs.
-		int lfdNr = 0;
-		PDFGostKurseSchienenZuordnung pdf = null;
-		PDFGostKurseSchienenZuordnung pdfAktuelleSeite = null;
-		for (final Long sID : sortedSchuelerIDs) {
-			lfdNr++;
-			final PDFGostKurseSchienenZuordnung pdfNeueSeite = new PDFGostKurseSchienenZuordnung(dateiname, schulnummer, datenManager, ergebnisManager, zeigeExterneDummy, sID, lfdNr);
-			if (pdfAktuelleSeite == null) {
-				pdf = pdfNeueSeite;
-			} else {
-				pdfAktuelleSeite.setNext(pdfNeueSeite);
-			}
-			pdfAktuelleSeite = pdfNeueSeite;
-		}
-
-		if (pdf != null)
-			return pdf;
-		else
-			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler bei der Generierung der PDF-Datei.");
+		return new PDFGostKurseSchienenZuordnung(dateiname, schulnummer, schulbezeichnung, datenManager, ergebnisManager, zeigeExterneDummy, sortedSchuelerIDs);
 	}
 
 
