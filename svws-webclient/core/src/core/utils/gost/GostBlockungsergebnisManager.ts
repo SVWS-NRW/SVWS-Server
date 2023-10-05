@@ -1809,6 +1809,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
+	 */
+	public getOfKursMengeAllerNichtFixiertenSchueler(idKurs : number) : List<Schueler> {
+		const list : List<Schueler> = new ArrayList();
+		for (const schueler of this.getOfKursSchuelermenge(idKurs))
+			if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+				list.add(schueler);
+		return list;
+	}
+
+	/**
 	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.

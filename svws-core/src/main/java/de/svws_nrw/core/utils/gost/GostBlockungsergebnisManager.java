@@ -1945,6 +1945,23 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind.
+	 */
+	public @NotNull List<@NotNull Schueler> getOfKursMengeAllerNichtFixiertenSchueler(final long idKurs) {
+		final @NotNull List<@NotNull Schueler> list = new ArrayList<>();
+
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+				    list.add(schueler);
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Map, welche jedem Kurs seine Schülermenge zuordnet.
 	 *
 	 * @return Die Map, welche jedem Kurs seine Schülermenge zuordnet.
