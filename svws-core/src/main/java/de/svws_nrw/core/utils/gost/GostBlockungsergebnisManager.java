@@ -2044,6 +2044,23 @@ public class GostBlockungsergebnisManager {
 		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
 	}
 
+	/**
+	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen des übergebenen Kurses.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen des übergebenen Kurses.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDesKurses(final long idKurs) {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+			if (regel.parameter.get(1) == idKurs)
+				list.add(regel);
+
+		return list;
+	}
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich einer Schiene.             ##########
 	// #########################################################################
