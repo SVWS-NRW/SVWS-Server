@@ -1525,6 +1525,23 @@ public class GostBlockungsergebnisManager {
 		return false;
 	}
 
+	/**
+	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
+	 *
+	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
+	 */
+	public @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerKursPaare() {
+		final @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
+				    list.add(new Pair<>(schueler, kurs));
+
+		return list;
+	}
+
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich eines Kurses.              ##########
 	// #########################################################################

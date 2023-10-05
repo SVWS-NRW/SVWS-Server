@@ -1403,6 +1403,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
+	 *
+	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
+	 */
+	public getMengeAllerNichtFixiertenSchuelerKursPaare() : List<Pair<Schueler, GostBlockungsergebnisKurs>> {
+		const list : List<Pair<Schueler, GostBlockungsergebnisKurs>> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
+				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
+					list.add(new Pair(schueler, kurs));
+		return list;
+	}
+
+	/**
 	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
 	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
