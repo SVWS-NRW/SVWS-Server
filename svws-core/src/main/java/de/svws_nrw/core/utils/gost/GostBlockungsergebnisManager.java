@@ -1969,6 +1969,15 @@ public class GostBlockungsergebnisManager {
 		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
 	}
 
+	/**
+	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen.
+	 *
+	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungen() {
+		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
+	}
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich einer Schiene.             ##########
 	// #########################################################################

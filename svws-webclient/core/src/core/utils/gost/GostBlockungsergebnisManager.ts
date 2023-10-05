@@ -1834,6 +1834,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen.
+	 *
+	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
+	 */
+	public regelGetMengeAllerSchuelerKursFixierungen() : List<GostBlockungRegel> {
+		return this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.<br>
 	 * Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.<br>
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
