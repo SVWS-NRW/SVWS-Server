@@ -69,7 +69,7 @@
 
 	const listEmpty = computed(()=> {
 		if (props.filteredList === undefined)
-			return false;
+			return true;
 		for (const _ of props.filteredList)
 			return false;
 		return true;

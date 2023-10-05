@@ -1,9 +1,10 @@
 <template>
 	<div class="svws-ui-button-select" ref="button">
 		<svws-ui-button ref="inputEl" :type="type">
-			<slot name="default" />
+			<span v-if="defaultItem" @click="action(defaultItem)">{{ defaultItem.text }}</span>
+			<i-ri-menu-line v-else />
 		</svws-ui-button>
-		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="!dropdownActions">
+		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
 			<i-ri-arrow-down-s-line v-if="!dropdownOpen" />
 			<i-ri-arrow-up-s-line v-else />
 		</button>
@@ -11,8 +12,8 @@
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop">
 				<template #items>
 					<ul class="svws-ui-dropdown-list--items" role="listbox">
-						<button v-for="(action, index) in dropdownActions" :key="index" class="svws-ui-dropdown-list--item" role="button" @click="action.action">
-							{{ action.text }}
+						<button v-for="(item, index) in dropdownActions" :key="index" class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
+							{{ item.text }}
 						</button>
 					</ul>
 				</template>
@@ -22,37 +23,57 @@
 </template>
 
 <script lang="ts" setup>
-	import type {ComponentExposed} from "vue-component-type-helpers";
-	import type { MaybeElement} from "@floating-ui/vue";
 	import type { ButtonType } from '../types';
-	import type { Ref} from 'vue';
 	import {autoUpdate, flip, offset, shift, size, useFloating} from "@floating-ui/vue";
 	import {onClickOutside} from "@vueuse/core";
 	import {ref, computed} from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
-	import SvwsUiButton from "./SvwsUiButton.vue";
+
+	type Item = {
+		text: string;
+		default?: boolean;
+		action: () => void;
+	};
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		dropdownActions?: {
-			text: string;
-			action: () => void;
-		}[] | null;
+		dropdownActions: Iterable<Item>;
 	}>(),{
 		type: 'primary',
 		disabled: false,
-		dropdownActions: null,
 	});
 
 	const button = ref(null);
-	const dropdownOpen = ref(false);
 	const inputEl = ref(null);
-	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
+	const refList = ref(null);
+	const dropdownOpen = ref(false);
+	const defaultItem = ref<Item | undefined>(undefined);
+
+	for (const item of props.dropdownActions) {
+		if (defaultItem.value === undefined)
+			defaultItem.value = item;
+		if (item.default === true) {
+			defaultItem.value = item;
+			break
+		}
+	}
+
+	const listEmpty = computed(()=> {
+		for (const _ of props.dropdownActions)
+			return false;
+		return true;
+	})
+
+
+	function action(item: Item) {
+		defaultItem.value = item;
+		item.action();
+	}
 
 	const {x, y, strategy} = useFloating(
 		inputEl,
-		refList as Readonly<Ref<MaybeElement<HTMLElement>>>,
+		refList,
 		{
 			placement: 'bottom-start',
 			middleware: [flip(), shift(), offset(2), size({
