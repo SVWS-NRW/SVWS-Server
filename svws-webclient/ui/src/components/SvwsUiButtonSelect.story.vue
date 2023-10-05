@@ -9,9 +9,6 @@
 				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')" :dropdown-actions="dropdownActions">
 					Default Secondary
 				</svws-ui-button-select>
-				<svws-ui-button-select type="secondary" @click="() => console.log('Default Button clicked')">
-					Ohne Optionen
-				</svws-ui-button-select>
 			</div>
 			<template #source>
 				{{ `
