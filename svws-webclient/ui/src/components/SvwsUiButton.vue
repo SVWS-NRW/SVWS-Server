@@ -1,6 +1,27 @@
+<template>
+	<button class="button" :class="{
+		'button--primary': type === 'primary' || !type,
+		'button--secondary': type === 'secondary',
+		'button--danger': type === 'error' || type === 'danger',
+		'button--transparent': type === 'transparent',
+		'button--icon': type === 'icon',
+		'button--trash': type === 'trash',
+		'button--small': size === 'small',
+		'button--big': size === 'big',
+	}" :disabled="disabled" @click="onClick">
+		<slot v-if="type !== 'trash'" />
+		<span v-if="type === 'trash'" class="icon button--trash-icon">
+			<i-ri-delete-bin-line class="icon--line" />
+			<i-ri-delete-bin-fill class="icon--fill" />
+		</span>
+		<span v-if="$slots.badge" class="button--badge">
+			<slot name="badge" />
+		</span>
+	</button>
+</template>
+
 <script lang="ts" setup>
 	import type { ButtonType } from '../types';
-	import { Size } from '../types';
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
@@ -24,28 +45,6 @@
 		}
 	}
 </script>
-
-<template>
-	<button class="button" :class="{
-		'button--primary': type === 'primary' || !type,
-		'button--secondary': type === 'secondary',
-		'button--danger': type === 'error' || type === 'danger',
-		'button--transparent': type === 'transparent',
-		'button--icon': type === 'icon',
-		'button--trash': type === 'trash',
-		'button--small': size === 'small',
-		'button--big': size === 'big',
-	}" :disabled="disabled" @click="onClick">
-		<slot v-if="type !== 'trash'" />
-		<span v-if="type === 'trash'" class="icon button--trash-icon">
-			<i-ri-delete-bin-line class="icon--line" />
-			<i-ri-delete-bin-fill class="icon--fill" />
-		</span>
-		<span v-if="$slots.badge" class="button--badge">
-			<slot name="badge" />
-		</span>
-	</button>
-</template>
 
 <style lang="postcss">
 .button {

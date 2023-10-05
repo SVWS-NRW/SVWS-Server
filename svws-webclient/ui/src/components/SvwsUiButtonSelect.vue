@@ -1,7 +1,9 @@
 <template>
 	<div class="svws-ui-button-select" ref="button">
 		<svws-ui-button ref="inputEl" :type="type">
-			<span v-if="defaultItem" @click="action(defaultItem)">{{ defaultItem.text }}</span>
+			<span v-if="defaultItem" @click="action(defaultItem)" class="flex gap-1">
+				<slot name="icon" />{{ defaultItem.text }}
+			</span>
 			<i-ri-menu-line v-else />
 		</svws-ui-button>
 		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="listEmpty">
