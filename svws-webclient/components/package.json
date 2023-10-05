@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.7.4",
+	"version": "0.7.5",
 	"scripts": {
 		"build": "vite build",
 		"lint-tsc": "vue-tsc --noEmit",
