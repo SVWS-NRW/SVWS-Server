@@ -233,7 +233,7 @@ public final class PDFGostKurseSchienenZuordnung extends PDFCreator {
 				}
 				zeileKurse.append(("%s</p></td>").formatted(eintragLehrkraefte));
 			} else {
-				final int anzahlAbitur = ergebnisManager.getofKursAnzahlSchuelerAbiturLK(kurs.id) + ergebnisManager.getofKursAnzahlSchuelerAbitur3(kurs.id) + ergebnisManager.getofKursAnzahlSchuelerAbitur4(kurs.id);
+				final int anzahlAbitur = ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id) + ergebnisManager.getOfKursAnzahlSchuelerAbitur3(kurs.id) + ergebnisManager.getOfKursAnzahlSchuelerAbitur4(kurs.id);
 				zeileKurse.append(("%s<br/>"
 								   + "<b>%d</b> (%d,%d)")
 								   .formatted(eintragLehrkraefte, ergebnisManager.getOfKursAnzahlSchueler(kurs.id), ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id), anzahlAbitur));

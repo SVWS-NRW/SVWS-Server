@@ -1709,7 +1709,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 */
-	public getofKursAnzahlSchuelerAbiturLK(idKurs : number) : number {
+	public getOfKursAnzahlSchuelerAbiturLK(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
@@ -1726,7 +1726,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 3 gewählt haben.
 	 */
-	public getofKursAnzahlSchuelerAbitur3(idKurs : number) : number {
+	public getOfKursAnzahlSchuelerAbitur3(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
@@ -1743,7 +1743,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 4 gewählt haben.
 	 */
-	public getofKursAnzahlSchuelerAbitur4(idKurs : number) : number {
+	public getOfKursAnzahlSchuelerAbitur4(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
@@ -1808,6 +1808,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				if (!this.getOfKursOfSchieneIstFixiert(kurs.id, schiene.id))
 					list.add(new Pair(kurs, schiene));
 		return list;
+	}
+
+	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 */
+	public regelGetMengeAllerKursSchienenFixierungen() : List<GostBlockungRegel> {
+		return this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
 	}
 
 	/**

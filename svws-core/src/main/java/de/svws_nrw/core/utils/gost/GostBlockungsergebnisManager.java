@@ -1840,7 +1840,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 1 oder 2 gewählt (also LK) haben.
 	 */
-	public int getofKursAnzahlSchuelerAbiturLK(final long idKurs) {
+	public int getOfKursAnzahlSchuelerAbiturLK(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
@@ -1857,7 +1857,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 3 gewählt haben.
 	 */
-	public int getofKursAnzahlSchuelerAbitur3(final long idKurs) {
+	public int getOfKursAnzahlSchuelerAbitur3(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
@@ -1874,7 +1874,7 @@ public class GostBlockungsergebnisManager {
 	 *
 	 * @return die Anzahl an Schülern, die den Kurs mit Abiturfach 4 gewählt haben.
 	 */
-	public int getofKursAnzahlSchuelerAbitur4(final long idKurs) {
+	public int getOfKursAnzahlSchuelerAbitur4(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
 			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
@@ -1941,6 +1941,15 @@ public class GostBlockungsergebnisManager {
 				    list.add(new Pair<>(kurs, schiene));
 
 		return list;
+	}
+
+	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerKursSchienenFixierungen() {
+		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
 	}
 
 	// #########################################################################
