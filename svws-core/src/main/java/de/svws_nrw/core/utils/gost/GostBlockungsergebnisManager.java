@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -1581,6 +1582,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Kurs in der Schiene fixiert ist.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs in der Schiene fixiert ist.
+	 */
+	public boolean getOfKursOfSchieneIstFixiert(final long idKurs, final long idSchiene) {
+		final int nummer = getSchieneG(idSchiene).nummer;
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if ((regel.parameter.get(0) == idKurs) && (regel.parameter.get(1) == nummer))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
@@ -1908,6 +1925,22 @@ public class GostBlockungsergebnisManager {
 			if (getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
+	}
+
+	/**
+	 * Liefert die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
+	 *
+	 * @return die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
+	 */
+	public @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull GostBlockungsergebnisSchiene>> getMengeAllerNichtFixiertenKursSchienenPaare() {
+		final @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull GostBlockungsergebnisSchiene>> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(kurs.id))
+				if (!getOfKursOfSchieneIstFixiert(kurs.id, schiene.id))
+				    list.add(new Pair<>(kurs, schiene));
+
+		return list;
 	}
 
 	// #########################################################################

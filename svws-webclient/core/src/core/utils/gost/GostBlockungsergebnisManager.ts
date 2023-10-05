@@ -18,6 +18,7 @@ import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
+import { Pair } from '../../../core/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
@@ -1454,6 +1455,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der Kurs in der Schiene fixiert ist.
+	 *
+	 * @param  idKurs     Die Datenbank-ID des Kurses.
+	 * @param  idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls der Kurs in der Schiene fixiert ist.
+	 */
+	public getOfKursOfSchieneIstFixiert(idKurs : number, idSchiene : number) : boolean {
+		const nummer : number = this.getSchieneG(idSchiene).nummer;
+		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if ((regel.parameter.get(0) === idKurs) && (regel.parameter.get(1) === nummer))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Liefert zur Kurs-ID die zugehörige Menge aller Schüler-IDs.<br>
 	 * Wirft eine Exception, falls der ID kein Kurs zugeordnet ist.
 	 *
@@ -1777,6 +1794,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
+	}
+
+	/**
+	 * Liefert die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
+	 *
+	 * @return die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
+	 */
+	public getMengeAllerNichtFixiertenKursSchienenPaare() : List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> {
+		const list : List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const schiene of this.getOfKursSchienenmenge(kurs.id))
+				if (!this.getOfKursOfSchieneIstFixiert(kurs.id, schiene.id))
+					list.add(new Pair(kurs, schiene));
+		return list;
 	}
 
 	/**
