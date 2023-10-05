@@ -3,7 +3,7 @@ import "./assets/styles/index.css";
 // Components
 export {
 	SvwsUiButton,
-	SvwsUiButtonMenu,
+	SvwsUiButtonSelect,
 	SvwsUiCheckbox,
 	SvwsUiMultiSelect,
 	SvwsUiProgressBar,

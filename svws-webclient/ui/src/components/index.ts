@@ -1,5 +1,5 @@
 export { default as SvwsUiButton } from "./SvwsUiButton.vue";
-export { default as SvwsUiButtonMenu } from "./SvwsUiButtonMenu.vue";
+export { default as SvwsUiButtonSelect } from "./SvwsUiButtonSelect.vue";
 export { default as SvwsUiAvatar } from "./SvwsUiAvatar.vue";
 export { default as SvwsUiBadge } from "./SvwsUiBadge.vue";
 export { default as SvwsUiTooltip } from "./SvwsUiTooltip.vue";

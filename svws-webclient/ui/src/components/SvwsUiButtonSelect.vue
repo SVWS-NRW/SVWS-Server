@@ -3,12 +3,12 @@
 		<svws-ui-button ref="inputEl" :type="type">
 			<slot name="default" />
 		</svws-ui-button>
-		<button class="svws-toggle button" :class="`button--${type}`" @click="dropdownOpen = !dropdownOpen" :disabled="!dropdownActions">
+		<button class="svws-toggle button" :class="`button--${type}`" @click.stop="dropdownOpen = !dropdownOpen" :disabled="!dropdownActions">
 			<i-ri-arrow-down-s-line v-if="!dropdownOpen" />
 			<i-ri-arrow-up-s-line v-else />
 		</button>
 		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="dropdownOpen" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop">
+			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop">
 				<template #items>
 					<ul class="svws-ui-dropdown-list--items" role="listbox">
 						<button v-for="(action, index) in dropdownActions" :key="index" class="svws-ui-dropdown-list--item" role="button" @click="action.action">
@@ -30,17 +30,19 @@
 	import {onClickOutside} from "@vueuse/core";
 	import {ref, computed} from 'vue';
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
+	import SvwsUiButton from "./SvwsUiButton.vue";
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		dropdownActions: {
+		dropdownActions?: {
 			text: string;
 			action: () => void;
-		}[];
+		}[] | null;
 	}>(),{
 		type: 'primary',
 		disabled: false,
+		dropdownActions: null,
 	});
 
 	const button = ref(null);
