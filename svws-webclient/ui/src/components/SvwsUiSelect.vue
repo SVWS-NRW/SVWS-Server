@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled, 'svws-removable': removable}" v-bind="$attrs">
+	<div class="svws-ui-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected, 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled, 'svws-removable': removable}" v-bind="$attrs">
 		<svws-ui-text-input ref="inputEl"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete"
@@ -28,7 +28,7 @@
 			@keydown.esc.prevent="onEscape"
 			@keydown.space="onSpace"
 			@keydown.tab="onTab" />
-		<button v-if="removable && hasSelected()" role="button" @click.stop="removeItem" class="svws-remove">
+		<button v-if="removable && hasSelected" role="button" @click.stop="removeItem" class="svws-remove">
 			<i-ri-close-line />
 		</button>
 		<button role="button" class="svws-dropdown-icon" tabindex="-1">
@@ -170,9 +170,7 @@
 	}
 
 	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
-		get: () => {
-			return data.value;
-		},
+		get: () => data.value,
 		set: (item) => {
 			if ((item === null) || (item === undefined)) {
 				updateData(item);
@@ -189,9 +187,7 @@
 		return set;
 	});
 
-	function hasSelected(): boolean {
-		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
-	}
+	const hasSelected = computed(() => (selectedItem.value !== null) && (selectedItem.value !== undefined));
 
 	function selectItem(item: Item | null | undefined) {
 		selectedItem.value = item;

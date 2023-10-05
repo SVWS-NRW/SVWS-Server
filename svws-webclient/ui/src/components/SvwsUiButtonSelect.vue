@@ -1,9 +1,9 @@
 <template>
 	<div class="svws-ui-button-select" ref="button">
-		<svws-ui-button @click="onClick" ref="inputEl" :type="type">
+		<svws-ui-button ref="inputEl" :type="type">
 			<slot name="default" />
 		</svws-ui-button>
-		<button class="svws-toggle button" :class="`button--${type}`" @click="() => dropdownOpen = !dropdownOpen" :disabled="!dropdownActions">
+		<button class="svws-toggle button" :class="`button--${type}`" @click="dropdownOpen = !dropdownOpen" :disabled="!dropdownActions">
 			<i-ri-arrow-down-s-line v-if="!dropdownOpen" />
 			<i-ri-arrow-up-s-line v-else />
 		</button>
@@ -22,38 +22,26 @@
 </template>
 
 <script lang="ts" setup>
+	import type {ComponentExposed} from "vue-component-type-helpers";
+	import type { MaybeElement} from "@floating-ui/vue";
 	import type { ButtonType } from '../types';
 	import type { Ref} from 'vue';
-	import {ref, computed} from 'vue';
-	import type { MaybeElement} from "@floating-ui/vue";
 	import {autoUpdate, flip, offset, shift, size, useFloating} from "@floating-ui/vue";
-	import type {ComponentExposed} from "vue-component-type-helpers";
-	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 	import {onClickOutside} from "@vueuse/core";
+	import {ref, computed} from 'vue';
+	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		dropdownActions?: {
-			key: string | number;
+		dropdownActions: {
 			text: string;
 			action: () => void;
 		}[];
 	}>(),{
 		type: 'primary',
 		disabled: false,
-		dropdownActions: undefined
 	});
-
-	const emit = defineEmits<{
-		(e: 'click', event: MouseEvent): void;
-	}>();
-
-	function onClick(event: MouseEvent) {
-		if (!props.disabled) {
-			emit("click", event);
-		}
-	}
 
 	const button = ref(null);
 	const dropdownOpen = ref(false);
