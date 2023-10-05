@@ -1432,9 +1432,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 */
 	public getMengeAllerNichtFixiertenSchuelerAbiturKursPaare() : List<Pair<Schueler, GostBlockungsergebnisKurs>> {
 		const list : List<Pair<Schueler, GostBlockungsergebnisKurs>> = new ArrayList();
@@ -1819,6 +1819,21 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const list : List<Schueler> = new ArrayList();
 		for (const schueler of this.getOfKursSchuelermenge(idKurs))
 			if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+				list.add(schueler);
+		return list;
+	}
+
+	/**
+	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
+	 */
+	public getOfKursMengeAllerNichtFixiertenAbiturSchueler(idKurs : number) : List<Schueler> {
+		const list : List<Schueler> = new ArrayList();
+		for (const schueler of this.getOfKursSchuelermenge(idKurs))
+			if ((!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) && (this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)))
 				list.add(schueler);
 		return list;
 	}

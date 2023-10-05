@@ -1557,9 +1557,9 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1,2,3 oder 4) gewählt hat.
+	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 */
 	public @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerAbiturKursPaare() {
 		final @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> list = new ArrayList<>();
@@ -1954,9 +1954,27 @@ public class GostBlockungsergebnisManager {
 	public @NotNull List<@NotNull Schueler> getOfKursMengeAllerNichtFixiertenSchueler(final long idKurs) {
 		final @NotNull List<@NotNull Schueler> list = new ArrayList<>();
 
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
-				    list.add(schueler);
+		for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
+			if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+			    list.add(schueler);
+
+		return list;
+	}
+
+
+	/**
+	 * Liefert die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Menge aller Schüler eines Kurses, die noch nicht fixiert sind und den Kurs als Abiturfach (1, 2, 3 oder 4) gewählt haben.
+	 */
+	public @NotNull List<@NotNull Schueler> getOfKursMengeAllerNichtFixiertenAbiturSchueler(final long idKurs) {
+		final @NotNull List<@NotNull Schueler> list = new ArrayList<>();
+
+		for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
+			if ((!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) && (getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)))
+				list.add(schueler);
 
 		return list;
 	}
