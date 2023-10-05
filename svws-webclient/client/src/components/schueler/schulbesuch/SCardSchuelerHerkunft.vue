@@ -9,7 +9,7 @@
 			<svws-ui-spacing />
 			<svws-ui-text-input placeholder="Entlassgrund" :model-value="data.vorigeEntlassgrundID" @change="doPatch({ vorigeEntlassgrundID: Number($event) })" type="text" />
 			<svws-ui-text-input placeholder="höchster allg.-bild. Abschluss" :model-value="data.vorigeAbschlussartID" @change="vorigeAbschlussartID=>doPatch({ vorigeAbschlussartID })" type="text" />
-			<svws-ui-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" span="full" />
+			<svws-ui-select title="Versetzung" v-model="vorigeArtLetzteVersetzung" :items="herkunftsarten" :item-text="(h: Herkunftsarten) => getBezeichnung(h) + ' (' + h.daten.kuerzel + ')'" :statistics="showstatistic" class="col-span-full" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>

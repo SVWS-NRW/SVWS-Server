@@ -5,9 +5,11 @@
 			'text-input--invalid': (isValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
-			'text-input--icon': hasIcon,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
+			'text-input--date': type === 'date',
+			'text-input--number': type === 'number',
+			'text-input-component--headless': headless,
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
@@ -54,11 +56,18 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="type !== 'date' && hasIcon" class="icon">
-			<slot />
-		</span>
-		<span v-else-if="type === 'date'" class="icon text-input--calendar-icon">
+		<span v-if="type === 'date'" class="svws-icon">
 			<i-ri-calendar-line />
+		</span>
+		<span v-if="type === 'email'" class="svws-icon">
+			<i-ri-at-line />
+		</span>
+		<span v-if="type === 'tel'" class="svws-icon">
+			<i-ri-phone-line />
+		</span>
+		<span v-if="type === 'number' && input" class="svws-input-stepper">
+			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><i-ri-subtract-line /></button>
+			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><i-ri-add-line /></button>
 		</span>
 	</label>
 </template>
@@ -67,7 +76,7 @@
 <script setup lang="ts">
 
 	import type { InputType, InputDataType } from "../types";
-	import { useSlots, ref, computed, watch, type ComputedRef, type Ref } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref } from "vue";
 	import { genId } from "../utils";
 
 	defineOptions({
@@ -113,9 +122,6 @@
 		"change": [value: string];              // TODO use InputDataType
 		"blur": [value: string];                // TODO use InputDataType
 	}>();
-
-	const slots = useSlots();
-	const hasIcon = computed(() => !!slots.default);
 
 	const vFocus = {
 		mounted: (el: HTMLInputElement) => {
@@ -176,6 +182,18 @@
 			updateData(props.type === "number" ? Number(value) : value);
 	}
 
+	function onInputNumber(stepDirection: string) {
+		if (input.value === null)
+			return;
+
+		if (stepDirection === 'up') {
+			input.value.stepUp();
+		} else if (stepDirection === 'down') {
+			input.value.stepDown();
+		}
+		updateData(Number(input.value.value));
+	}
+
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
 			emit("change", String(data.value));   // TODO do not use String()
@@ -222,33 +240,116 @@
     }
 
     input {
+      @apply cursor-text overflow-ellipsis;
+
+      &[type="email"],
+      &[type="tel"] {
+        @apply pr-[1.6rem];
+      }
+
       &:focus {
         @apply outline-none;
       }
     }
 	}
 
-	.text-input-component .icon {
-		@apply absolute;
-		@apply flex;
-		@apply inset-y-0 right-0;
-		@apply items-center justify-center;
-		@apply opacity-20;
-		@apply pointer-events-none;
-		@apply rounded;
-		@apply w-8;
+	.text-input-component .svws-icon {
+		@apply pointer-events-none absolute top-1 right-1 bottom-1 bg-white dark:bg-black w-5 rounded inline-flex items-center justify-end pr-1 text-base;
 
-		margin-bottom: 1px;
-		margin-right: 1px;
-		margin-top: 1px;
+    svg {
+      @apply opacity-25 -mr-0.5;
+    }
 	}
 
-	.text-input-component:focus-within .icon,
-	.text-input--filled .icon {
-		@apply opacity-100;
-	}
+  .text-input-component {
+    &:hover,
+    &:focus-within {
+      .svws-icon svg {
+        @apply opacity-50;
+      }
+    }
+  }
 
-	.text-input--invalid .icon {
+  .text-input--date {
+    .svws-ui-table & {
+      input {
+        @apply -my-0.5;
+      }
+    }
+
+    .text-input--control {
+      @apply pr-0;
+    }
+
+    .svws-icon {
+      @apply w-7;
+    }
+
+    &.text-input-component--headless,
+    .svws-ui-table .svws-ui-tbody .svws-ui-td & {
+      @apply my-auto -ml-1;
+
+      .svws-icon {
+        @apply w-6 h-6 -top-1 right-0;
+
+        svg {
+          @apply relative top-px;
+        }
+      }
+    }
+
+    &:focus-within {
+      .svws-icon svg {
+        @apply opacity-75;
+      }
+    }
+  }
+
+  .text-input--statistics .svws-icon {
+    @apply text-violet-500;
+
+    svg {
+      @apply opacity-50;
+    }
+  }
+
+  .text-input--number {
+    input {
+      @apply pr-12;
+      appearance: textfield;
+    }
+
+    .svws-input-stepper {
+      @apply absolute top-1 right-1 bottom-1 flex justify-center items-center gap-0.5;
+
+      button {
+        @apply bg-light dark:bg-white/5 border border-black/10 dark:border-white/10 rounded text-base focus:outline-none;
+
+        &:hover,
+        &:focus-visible {
+          @apply bg-black/10 dark:bg-white/10;
+        }
+
+        &:focus-visible {
+          @apply ring-2 ring-offset-1 ring-black/25 dark:ring-white/25;
+        }
+
+        &.svws-disabled {
+          @apply pointer-events-none opacity-25;
+
+          svg {
+            @apply opacity-50;
+          }
+        }
+      }
+    }
+
+    .text-input--placeholder {
+      max-width: calc(100% - 0.7em);
+    }
+  }
+
+	.text-input--invalid .svws-icon {
 		@apply text-error;
 	}
 
@@ -263,10 +364,6 @@
 		&:hover {
 			@apply border-black/25 dark:border-white/25;
 		}
-	}
-
-	.text-input--control[type="number"] {
-		padding-right: 0.5em;
 	}
 
 	.text-input--prefix {
@@ -367,24 +464,6 @@
 		@apply opacity-0;
 	}
 
-	.text-input--control[type="date"] {
-		color: transparent;
-		@apply bg-transparent dark:bg-transparent;
-	}
-
-	.text-input-component:focus-within .text-input--control[type="date"],
-	.text-input--filled .text-input--control[type="date"] {
-		@apply text-black dark:text-white;
-		@apply pr-1;
-	}
-
-	@-moz-document url-prefix() {
-		.text-input-component:focus-within .text-input--calendar-icon,
-		.text-input--filled .text-input--calendar-icon {
-			@apply hidden;
-		}
-	}
-
 	.text-input--readonly .text-input--control {
 		@apply pointer-events-auto cursor-default select-none;
 	}
@@ -479,12 +558,8 @@
 		left: 0.1em;
 	}
 
-	.text-input--icon .text-input--control {
-		@apply pr-8;
-	}
-
 	.text-input--headless,
-	.data-table .text-input--control {
+	.svws-ui-table .text-input--control {
 		@apply w-full whitespace-nowrap border-0 outline-none;
 
 		&:not([class*="bg-"]) {
@@ -500,6 +575,7 @@
 			@apply underline decoration-dotted underline-offset-2;
 		}
 	}
+
 	.text-input--inline {
 		@apply cursor-text underline decoration-dotted underline-offset-2;
 	}

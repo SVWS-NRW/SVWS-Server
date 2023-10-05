@@ -35,13 +35,13 @@
 			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
 				<span class="font-bold col-span-full">Fehlstunden</span>
-				<svws-ui-text-input placeholder="Maximal" type="number"
+				<svws-ui-text-input placeholder="Maximal" type="number" min="0"
 					:model-value="manager().lernabschnittGet().fehlstundenGrenzwert || undefined"
 					@change="patch({ fehlstundenGrenzwert: Number($event) })" />
-				<svws-ui-text-input placeholder="Gesamt" type="number"
+				<svws-ui-text-input placeholder="Gesamt" type="number" min="0"
 					:model-value="manager().lernabschnittGet().fehlstundenGesamt || undefined"
 					@change="patch({ fehlstundenGesamt: Number($event) })" />
-				<svws-ui-text-input placeholder="Unendschuldigt" type="number"
+				<svws-ui-text-input placeholder="Unendschuldigt" type="number" min="0"
 					:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt || undefined"
 					@change="patch({ fehlstundenUnentschuldigt: Number($event) })" />
 			</svws-ui-input-wrapper>

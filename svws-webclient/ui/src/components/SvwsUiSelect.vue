@@ -364,7 +364,7 @@
 	@apply relative w-full cursor-pointer flex;
 
   .svws-ui-table & {
-    @apply p-0;
+    @apply p-0 -my-0.5;
   }
 
   .svws-dropdown-icon,
@@ -473,7 +473,7 @@
     }
 
 	  .text-input-component {
-		  @apply pr-1;
+		  @apply pr-1 my-0;
 
 		  &:hover,
 		  &:focus-visible,

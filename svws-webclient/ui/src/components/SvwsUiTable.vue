@@ -730,9 +730,7 @@
 
   .svws-ui-td {
     .text-input-component {
-      @apply w-full h-[1.7rem];
-      margin-top: -0.3rem;
-      margin-bottom: -0.3rem;
+      @apply w-full h-auto -my-0.5;
     }
 
     .text-input--control {
