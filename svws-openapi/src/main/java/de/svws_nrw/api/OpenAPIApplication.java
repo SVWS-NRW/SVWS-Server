@@ -25,6 +25,7 @@ import de.svws_nrw.api.server.APIGesamtschule;
 import de.svws_nrw.api.server.APIGost;
 import de.svws_nrw.api.server.APIGostDatenaustausch;
 import de.svws_nrw.api.server.APIGostKlausuren;
+import de.svws_nrw.api.server.APIGostKursplanung;
 import de.svws_nrw.api.server.APIJahrgaenge;
 import de.svws_nrw.api.server.APIKAOA;
 import de.svws_nrw.api.server.APIKalender;
@@ -156,6 +157,7 @@ public final class OpenAPIApplication extends Application {
 		this.classes.add(APIGesamtschule.class);
 		this.classes.add(APIGostDatenaustausch.class);
 		this.classes.add(APIGost.class);
+		this.classes.add(APIGostKursplanung.class);
 		this.classes.add(APILehrer.class);
 		this.classes.add(APIErzieher.class);
 		this.classes.add(APIBetrieb.class);
