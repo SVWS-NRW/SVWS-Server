@@ -797,6 +797,25 @@ export class RouteDataGostKursplanung {
 		return result;
 	}
 
+	protected async deleteRegeln(listRegeln: List<GostBlockungRegel>) : Promise<void> {
+		if (!listRegeln.isEmpty()) {
+			const listRegelIDs = new ArrayList<number>();
+			for (const regel of listRegeln)
+				listRegelIDs.add(regel.id);
+			await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
+			this.datenmanager.regelRemoveListe(listRegeln);
+			this.commit();
+		}
+	}
+
+	protected async addRegeln(listRegeln: List<GostBlockungRegel>) : Promise<void> {
+		if (!listRegeln.isEmpty()) {
+			listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
+			this.datenmanager.regelAddListe(listRegeln);
+			this.commit();
+		}
+	}
+
 	updateRegeln = async (typ: string) => {
 		switch (typ) {
 			case "fixiereKurseAlle": {
@@ -805,27 +824,13 @@ export class RouteDataGostKursplanung {
 				break;
 			}
 			case "loeseKurseAlle": {
-				const listRegeln = this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen();
-				if (!listRegeln.isEmpty()) {
-					const listRegelIDs = new ArrayList<number>();
-					for (const regel of listRegeln)
-						listRegelIDs.add(regel.id);
-				 	await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
-					this.datenmanager.regelRemoveListe(listRegeln);
-					this.commit();
-				}
+				await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen());
 				break;
 			}
 			case "fixiereKursauswahl": {
 				const listKursIDs = this.getListeKursauswahl();
-				if (!listKursIDs.isEmpty()) {
-					let listRegeln = this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs);
-					if (!listRegeln.isEmpty()) {
-						listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
-						this.datenmanager.regelAddListe(listRegeln);
-						this.commit();
-					}
-				}
+				if (!listKursIDs.isEmpty())
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseKursauswahl": {
@@ -843,21 +848,14 @@ export class RouteDataGostKursplanung {
 				break;
 			}
 			case "loeseSchuelerAlle": {
-				alert("noch nicht implementiert...");
-				// public List<GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungen()
+				await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungen());
 				break;
 			}
 			case "fixiereSchuelerKursauswahl": {
 				alert("noch nicht implementiert...");
 				// const listKursIDs = this.getListeKursauswahl();
-				// if (!listKursIDs.isEmpty()) {
-				// 	let listRegeln = this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs);
-				// 	if (!listRegeln.isEmpty()) {
-				// 		listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
-				// 		this.datenmanager.regelAddListe(listRegeln);
-				// 		this.commit();
-				// 	}
-				// }
+				// if (!listKursIDs.isEmpty())
+				// 	await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "fixiereSchuelerAbiturkurseKursauswahl": {
@@ -868,17 +866,8 @@ export class RouteDataGostKursplanung {
 			case "loeseSchuelerKursauswahl": {
 				alert("noch nicht implementiert...");
 				// const listKursIDs = this.getListeKursauswahl();
-				// if (!listKursIDs.isEmpty()) {
-				// 	const listRegeln = this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs);
-				// 	if (!listRegeln.isEmpty()) {
-				// 		const listRegelIDs = new ArrayList<number>();
-				// 		for (const regel of listRegeln)
-				// 			listRegelIDs.add(regel.id);
-				// 		await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
-				// 		this.ergebnismanager.setRemoveRegelmenge(listRegeln);
-				// 		this.commit();
-				// 	}
-				// }
+				// if (!listKursIDs.isEmpty())
+				// 	await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			default:
