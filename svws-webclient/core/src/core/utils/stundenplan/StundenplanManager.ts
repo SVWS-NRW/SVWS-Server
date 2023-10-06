@@ -234,8 +234,6 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
-	private readonly _map_idSchiene_zu_kursmenge_by_idZeitraster : HashMap<number, HashMap<number, List<StundenplanKurs>> | null> = new HashMap();
-
 	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap();
 
 	private readonly _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList();

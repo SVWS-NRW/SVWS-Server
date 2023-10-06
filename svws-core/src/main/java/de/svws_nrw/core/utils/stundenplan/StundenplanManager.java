@@ -176,7 +176,6 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idLehrer = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idKlasse = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idJahrgang = new HashMap<>();
-	private final @NotNull HashMap<@NotNull Long, HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>>> _map_idSchiene_zu_kursmenge_by_idZeitraster = new HashMap<>();
 
 	// StundenplanLehrer
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _lehrer_by_id = new HashMap<>();
