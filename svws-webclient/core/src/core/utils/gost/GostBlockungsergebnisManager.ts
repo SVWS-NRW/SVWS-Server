@@ -1418,20 +1418,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
-	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
-	 */
-	public getMengeAllerNichtFixiertenSchuelerKursPaare() : List<Pair<Schueler, GostBlockungsergebnisKurs>> {
-		const list : List<Pair<Schueler, GostBlockungsergebnisKurs>> = new ArrayList();
-		for (const kurs of this._map_kursID_kurs.values())
-			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
-				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
-					list.add(new Pair(schueler, kurs));
-		return list;
-	}
-
-	/**
 	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 *
 	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
@@ -1958,6 +1944,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
 					regel.parameter.add(schienenNr);
+					list.add(regel);
+				}
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
+	 */
+	public regelGetDummyMengeAllerSchuelerKursFixierungen() : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
+				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(kurs.id);
 					list.add(regel);
 				}
 		return list;

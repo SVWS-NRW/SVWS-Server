@@ -1541,22 +1541,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
-	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind.
-	 */
-	public @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerKursPaare() {
-		final @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
-				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))
-				    list.add(new Pair<>(schueler, kurs));
-
-		return list;
-	}
-
-	/**
 	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
 	 *
 	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
@@ -2106,6 +2090,29 @@ public class GostBlockungsergebnisManager {
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
 					regel.parameter.add(schienenNr);
+					list.add(regel);
+				}
+
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAllerSchuelerKursFixierungen() {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(kurs.id);
 					list.add(regel);
 				}
 
