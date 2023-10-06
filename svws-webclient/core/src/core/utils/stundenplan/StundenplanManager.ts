@@ -234,6 +234,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
+	private readonly _map_idSchiene_zu_kursmenge_by_idZeitraster : HashMap<number, HashMap<number, List<StundenplanKurs>> | null> = new HashMap();
+
 	private readonly _lehrer_by_id : HashMap<number, StundenplanLehrer> = new HashMap();
 
 	private readonly _lehrermenge_sortiert : List<StundenplanLehrer> = new ArrayList();
@@ -3211,6 +3213,7 @@ export class StundenplanManager extends JavaObject {
 		const list : List<StundenplanSchiene> = new ArrayList();
 		for (const u of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		list.sort(StundenplanManager._compSchiene);
 		return list;
 	}
 
@@ -3230,6 +3233,7 @@ export class StundenplanManager extends JavaObject {
 		const list : List<StundenplanSchiene> = new ArrayList();
 		for (const u of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		list.sort(StundenplanManager._compSchiene);
 		return list;
 	}
 
@@ -3249,6 +3253,7 @@ export class StundenplanManager extends JavaObject {
 		const list : List<StundenplanSchiene> = new ArrayList();
 		for (const u of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		list.sort(StundenplanManager._compSchiene);
 		return list;
 	}
 
@@ -3268,6 +3273,7 @@ export class StundenplanManager extends JavaObject {
 		const list : List<StundenplanSchiene> = new ArrayList();
 		for (const u of this.unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id));
+		list.sort(StundenplanManager._compSchiene);
 		return list;
 	}
 
@@ -3785,6 +3791,27 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Klasse am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
+	 */
+	public unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idKlasse : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
+			if (this.unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+		return list;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -3803,6 +3830,27 @@ export class StundenplanManager extends JavaObject {
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, z.id))
 				if ((u.wochentyp === wochentyp) || ((u.wochentyp === 0) && inklWoche0))
 					list.add(u);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idLehrer      Die Datenbank-ID der Lehrkraft.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
+	 */
+	public unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idLehrer : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
+			if (this.unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
 		return list;
 	}
 
@@ -3829,6 +3877,27 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idSchueler    Die Datenbank-ID des Schülers.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
+	 */
+	public unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idSchueler : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		for (const u of this.unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
+			if (this.unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+		return list;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -3847,6 +3916,28 @@ export class StundenplanManager extends JavaObject {
 			for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, z.id))
 				if ((u.wochentyp === wochentyp) || ((u.wochentyp === 0) && inklWoche0))
 					list.add(u);
+		list.sort(this._compUnterricht);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idJahrgang    Die Datenbank-ID des Jahrgangs.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
+	 */
+	public unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(idJahrgang : number, wochentag : number, stunde : number, wochentyp : number, idSchiene : number, inklWoche0 : boolean) : List<StundenplanUnterricht> {
+		const list : List<StundenplanUnterricht> = new ArrayList();
+		for (const u of this.unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
+			if (this.unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
 		return list;
 	}
 
@@ -4005,6 +4096,21 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtHatMultiWochen() : boolean {
 		return this._unterrichtHatMultiWochen;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
+	 *
+	 * @param u          Der Unterricht der durchsucht wird.
+	 * @param idSchiene  Die Datenbank-ID der Schiene nach der gesucht wird.
+	 *
+	 * @return TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
+	 */
+	public unterrichtHatSchiene(u : StundenplanUnterricht, idSchiene : number) : boolean {
+		for (const schiene of MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id))
+			if (schiene.id === idSchiene)
+				return true;
+		return idSchiene < 0;
 	}
 
 	/**

@@ -176,6 +176,7 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idLehrer = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idKlasse = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>> _kursmenge_by_idJahrgang = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanKurs>>> _map_idSchiene_zu_kursmenge_by_idZeitraster = new HashMap<>();
 
 	// StundenplanLehrer
 	private final @NotNull HashMap<@NotNull Long, @NotNull StundenplanLehrer> _lehrer_by_id = new HashMap<>();
@@ -3355,6 +3356,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
+		list.sort(_compSchiene);
 		return list;
 	}
 
@@ -3374,6 +3376,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
+		list.sort(_compSchiene);
 		return list;
 	}
 
@@ -3393,6 +3396,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
+		list.sort(_compSchiene);
 		return list;
 	}
 
@@ -3412,6 +3416,7 @@ public class StundenplanManager {
 		final @NotNull List<@NotNull StundenplanSchiene> list = new ArrayList<>();
 		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
 			ListUtils.addAllIfNotExists(list, MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id));
+		list.sort(_compSchiene);
 		return list;
 	}
 
@@ -3977,6 +3982,29 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Klasse am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekten, der Klasse am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idKlasse, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
+
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idKlasse, wochentag, stunde, wochentyp, inklWoche0))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+
+		return list;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -3996,6 +4024,29 @@ public class StundenplanManager {
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idLehrer_and_idZeitraster, idLehrer, z.id))
 				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
+
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idLehrer      Die Datenbank-ID der Lehrkraft.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte der Lehrkraft am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idLehrer, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
+
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idLehrer, wochentag, stunde, wochentyp, inklWoche0))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
 
 		return list;
 	}
@@ -4025,6 +4076,29 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idSchueler    Die Datenbank-ID des Schülers.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Schülers am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idSchueler, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
+
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idSchueler, wochentag, stunde, wochentyp, inklWoche0))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
+
+		return list;
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -4044,6 +4118,30 @@ public class StundenplanManager {
 			for (final @NotNull StundenplanUnterricht u : Map2DUtils.getOrCreateArrayList(_unterrichtmenge_by_idJahrgang_and_idZeitraster, idJahrgang, z.id))
 				if  ((u.wochentyp == wochentyp) || ((u.wochentyp == 0) && inklWoche0))
 					list.add(u);
+
+		list.sort(_compUnterricht);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp" einer bestimmten Schiene.
+	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
+	 *
+	 * @param idJahrgang    Die Datenbank-ID des Jahrgangs.
+	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
+	 * @param stunde        Die Unterrichtsstunde.
+	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
+	 *
+	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Jahrgangs am "wochentag, stunde, wochentyp".
+	 */
+	public @NotNull List<@NotNull StundenplanUnterricht> unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(final long idJahrgang, final int wochentag, final int stunde, final int wochentyp, final long idSchiene, final boolean inklWoche0) {
+		final @NotNull List<@NotNull StundenplanUnterricht> list = new ArrayList<>();
+
+		for (final @NotNull StundenplanUnterricht u : unterrichtGetMengeByJahrgangIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(idJahrgang, wochentag, stunde, wochentyp, inklWoche0))
+			if (unterrichtHatSchiene(u, idSchiene))
+				list.add(u);
 
 		return list;
 	}
@@ -4218,6 +4316,21 @@ public class StundenplanManager {
 	 */
 	public boolean unterrichtHatMultiWochen() {
 		return _unterrichtHatMultiWochen;
+	}
+
+	/**
+	 * Liefert TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
+	 *
+	 * @param u          Der Unterricht der durchsucht wird.
+	 * @param idSchiene  Die Datenbank-ID der Schiene nach der gesucht wird.
+	 *
+	 * @return TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
+	 */
+	public boolean unterrichtHatSchiene(final @NotNull StundenplanUnterricht u, final long idSchiene) {
+		for (final @NotNull StundenplanSchiene schiene : MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id))
+			if (schiene.id == idSchiene)
+				return true;
+		return idSchiene < 0;
 	}
 
 	/**
