@@ -18,7 +18,6 @@ import type { List } from '../../../java/util/List';
 import { Geschlecht } from '../../../core/types/Geschlecht';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
-import { Pair } from '../../../core/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/SchuelerblockungInputKurs';
@@ -1418,20 +1417,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
-	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
-	 */
-	public getMengeAllerNichtFixiertenSchuelerAbiturKursPaare() : List<Pair<Schueler, GostBlockungsergebnisKurs>> {
-		const list : List<Pair<Schueler, GostBlockungsergebnisKurs>> = new ArrayList();
-		for (const kurs of this._map_kursID_kurs.values())
-			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
-				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)))
-					list.add(new Pair(schueler, kurs));
-		return list;
-	}
-
-	/**
 	 * Liefert den {@link GostBlockungKurs} zur übergebenen ID.<br>
 	 * Delegiert den Aufruf an das Eltern-Objekt {@link GostBlockungsdatenManager}.
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
@@ -1960,6 +1945,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const kurs of this._map_kursID_kurs.values())
 			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
 				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(kurs.id);
+					list.add(regel);
+				}
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
+	 */
+	public regelGetDummyMengeAllerSchuelerAbiturKursFixierungen() : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const schueler of this.getOfKursSchuelermenge(kurs.id))
+				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))) {
 					const regel : GostBlockungRegel = new GostBlockungRegel();
 					regel.id = -1;
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;

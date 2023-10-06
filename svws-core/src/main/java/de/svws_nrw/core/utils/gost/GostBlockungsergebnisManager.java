@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -1540,23 +1539,6 @@ public class GostBlockungsergebnisManager {
 		return false;
 	}
 
-	/**
-	 * Liefert die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
-	 *
-	 * @return die Menge aller Schüler-Kurs-Paare, die noch nicht fixiert sind und welche der Schüler als Abiturfach (1, 2, 3 oder 4) gewählt hat.
-	 */
-	public @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerAbiturKursPaare() {
-		final @NotNull List<@NotNull Pair<@NotNull Schueler, @NotNull GostBlockungsergebnisKurs>> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
-			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
-				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)))
-					   list.add(new Pair<>(schueler, kurs));
-
-		return list;
-	}
-
-
 	// #########################################################################
 	// ##########       Anfragen bezüglich eines Kurses.              ##########
 	// #########################################################################
@@ -2108,6 +2090,29 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
 			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
 				if (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id)) {
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(kurs.id);
+					list.add(regel);
+				}
+
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen der Abiturkurse.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAllerSchuelerAbiturKursFixierungen() {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(kurs.id))
+				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, kurs.id)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, kurs.id))) {
 					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
 					regel.id = -1; // Dummy-ID
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
