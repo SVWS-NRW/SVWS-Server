@@ -1173,6 +1173,18 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.regeln.remove(regel);
 	}
 
+	/**
+	 * Entfernt eine Menge von Regeln.
+	 *
+	 * @param regelmenge  Die Menge an Regeln, die entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
+	 */
+	public regelRemoveListe(regelmenge : List<GostBlockungRegel>) : void {
+		for (const regel of regelmenge)
+			this.regelRemoveByID(regel.id);
+	}
+
 	private static regelToMultikey(regel : GostBlockungRegel) : LongArrayKey {
 		const size : number = regel.parameter.size();
 		const keys : Array<number> | null = Array(size + 1).fill(0);

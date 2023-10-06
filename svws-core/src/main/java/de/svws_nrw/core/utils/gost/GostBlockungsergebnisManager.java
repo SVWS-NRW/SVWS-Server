@@ -2061,6 +2061,54 @@ public class GostBlockungsergebnisManager {
 		return list;
 	}
 
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
+	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAnKursSchienenFixierungen(final @NotNull List<@NotNull Long> listeDerKursIDs) {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull Long idKurs : listeDerKursIDs)
+			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs))
+				if (!getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+					regel.parameter.add(idKurs);
+					regel.parameter.add(schiene.id);
+				}
+
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerSchuelerIDs  Die Liste aller Schüler-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAnSchuelerKursFixierungen(final @NotNull List<@NotNull Long> listeDerSchuelerIDs) {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull Long idSchueler : listeDerSchuelerIDs)
+			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler))
+				if (!getOfSchuelerOfKursIstFixiert(idSchueler, kurs.id)) {
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(idSchueler);
+					regel.parameter.add(kurs.id);
+				}
+
+		return list;
+	}
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich einer Schiene.             ##########
 	// #########################################################################
@@ -2387,6 +2435,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Fügt die übergebenen Regeln hinzu.
+	 *
+	 * @param regelmenge  Die Menge der Regeln, welche hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public void setAddRegelmenge(final @NotNull List<@NotNull GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		for (final @NotNull GostBlockungRegel regel : regelmenge)
+			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager hinzugefügt werden!", !_parent.regelGetExistiert(regel.id));
+
+		// Bewertungen aktualisieren
+		stateRevalidateEverything();
+	}
+
+	/**
 	 * Löscht die übergebene Regel.
 	 *
 	 * @param  idRegel  Die Datenbank-ID der Regel.
@@ -2396,6 +2460,22 @@ public class GostBlockungsergebnisManager {
 	public void setRemoveRegelByID(final long idRegel) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", _parent.regelGetExistiert(idRegel));
+
+		// Bewertungen aktualisieren
+		stateRevalidateEverything();
+	}
+
+	/**
+	 * Entfernt die übergebenen Regeln.
+	 *
+	 * @param regelmenge  Die Menge der Regeln, welche entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager entfernt wurde.
+	 */
+	public void setRemoveRegelmenge(final @NotNull List<@NotNull GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+		// Datenkonsistenz überprüfen.
+		for (final @NotNull GostBlockungRegel regel : regelmenge)
+			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager entfernt werden!", _parent.regelGetExistiert(regel.id));
 
 		// Bewertungen aktualisieren
 		stateRevalidateEverything();

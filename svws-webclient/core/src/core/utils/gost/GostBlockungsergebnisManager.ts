@@ -1917,6 +1917,50 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
+	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
+	 */
+	public regelGetDummyMengeAnKursSchienenFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const idKurs of listeDerKursIDs)
+			for (const schiene of this.getOfKursSchienenmenge(idKurs!))
+				if (!this.getOfKursOfSchieneIstFixiert(idKurs!, schiene.id)) {
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+					regel.parameter.add(idKurs);
+					regel.parameter.add(schiene.id);
+				}
+		return list;
+	}
+
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerSchuelerIDs  Die Liste aller Schüler-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 */
+	public regelGetDummyMengeAnSchuelerKursFixierungen(listeDerSchuelerIDs : List<number>) : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const idSchueler of listeDerSchuelerIDs)
+			for (const kurs of this.getOfSchuelerKursmenge(idSchueler!))
+				if (!this.getOfSchuelerOfKursIstFixiert(idSchueler!, kurs.id)) {
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(idSchueler);
+					regel.parameter.add(kurs.id);
+				}
+		return list;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.<br>
 	 * Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.<br>
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.
@@ -2221,6 +2265,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt die übergebenen Regeln hinzu.
+	 *
+	 * @param regelmenge  Die Menge der Regeln, welche hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager hinzugefügt wurde.
+	 */
+	public setAddRegelmenge(regelmenge : List<GostBlockungRegel>) : void {
+		for (const regel of regelmenge)
+			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager hinzugefügt werden!", !this._parent.regelGetExistiert(regel.id));
+		this.stateRevalidateEverything();
+	}
+
+	/**
 	 * Löscht die übergebene Regel.
 	 *
 	 * @param  idRegel  Die Datenbank-ID der Regel.
@@ -2229,6 +2286,19 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 */
 	public setRemoveRegelByID(idRegel : number) : void {
 		DeveloperNotificationException.ifTrue("Die Regel " + idRegel + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(idRegel));
+		this.stateRevalidateEverything();
+	}
+
+	/**
+	 * Entfernt die übergebenen Regeln.
+	 *
+	 * @param regelmenge  Die Menge der Regeln, welche entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls die Regel nicht zuerst im Datenmanager entfernt wurde.
+	 */
+	public setRemoveRegelmenge(regelmenge : List<GostBlockungRegel>) : void {
+		for (const regel of regelmenge)
+			DeveloperNotificationException.ifTrue("Die Regel " + regel.id + " muss erst beim Datenmanager entfernt werden!", this._parent.regelGetExistiert(regel.id));
 		this.stateRevalidateEverything();
 	}
 

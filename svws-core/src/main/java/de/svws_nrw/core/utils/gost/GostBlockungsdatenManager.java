@@ -1190,6 +1190,19 @@ public class GostBlockungsdatenManager {
 		_daten.regeln.remove(regel);
 	}
 
+	/**
+	 * Entfernt eine Menge von Regeln.
+	 *
+	 * @param regelmenge  Die Menge an Regeln, die entfernt werden soll.
+	 *
+	 * @throws DeveloperNotificationException Falls die Daten der Regeln inkonsistent sind.
+	 */
+	public void regelRemoveListe(final @NotNull List<@NotNull GostBlockungRegel> regelmenge) throws DeveloperNotificationException {
+		// Alle Regeln löschen.
+		for (final @NotNull GostBlockungRegel regel : regelmenge)
+			regelRemoveByID(regel.id);
+	}
+
 	private static @NotNull LongArrayKey regelToMultikey(final @NotNull GostBlockungRegel regel) {
 		final int size = regel.parameter.size();
 		final long[] keys = new long[size + 1];
