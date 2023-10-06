@@ -3248,6 +3248,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addGostBlockungRegeln für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/addregeln
+	 *
+	 * Fügt mehrere Regeln zu einer Blockung der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Regeln hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Regeln wurden erfolgreich der Blockung hinzugefügt
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Regeln hinzuzufügen.
+	 *   Code 404: Keine Blockung vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<GostBlockungRegel>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 */
+	public async addGostBlockungRegeln(data : List<GostBlockungRegel>, schema : string, blockungsid : number) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregeln"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
+		const body : string = "[" + (data.toArray() as Array<GostBlockungRegel>).map(d => GostBlockungRegel.transpilerToJSON(d)).join() + "]";
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode addGostBlockungSchiene für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{blockungsid : \d+}/addschiene
 	 *
 	 * Fügt eine Schiene zu einer Blockung der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Schiene hat.
@@ -3702,6 +3728,28 @@ export class ApiServer extends BaseApi {
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
 		const result : ApiFile = await super.postJSONtoPDF(path, body);
 		return result;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostBlockungRegelnByID für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/regeln
+	 *
+	 * Entfernt mehrere Regeln einer Blockung der Gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Regeln wurde wurden erfolgreich gelöscht.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Regeln zu löschen.
+	 *   Code 404: Mindestens eine Regel wurde nicht bei einer Blockung gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async deleteGostBlockungRegelnByID(data : List<number>, schema : string) : Promise<void> {
+		const path = "/db/{schema}/gost/blockungen/regeln"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		await super.deleteJSON(path, body);
+		return;
 	}
 
 
