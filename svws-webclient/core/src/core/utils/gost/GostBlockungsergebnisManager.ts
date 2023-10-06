@@ -2000,6 +2000,29 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
+	 */
+	public regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const idKurs of listeDerKursIDs)
+			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
+				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs!)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!))) {
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(idKurs);
+					list.add(regel);
+				}
+		return list;
+	}
+
+	/**
 	 * Liefert das zur ID zugehörige {@link GostBlockungSchiene}-Objekt.<br>
 	 * Delegiert den Aufruf an den Fächer-Manager des Eltern-Objektes {@link GostBlockungsdatenManager}.<br>
 	 * Wirft eine DeveloperNotificationException, falls die ID unbekannt ist.

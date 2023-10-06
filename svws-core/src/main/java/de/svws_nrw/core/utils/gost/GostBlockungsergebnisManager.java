@@ -2149,6 +2149,31 @@ public class GostBlockungsergebnisManager {
 		return list;
 	}
 
+	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
+	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge, welche als Abiturfach gewählt wurden.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAnAbiturKursSchuelerFixierungen(final @NotNull List<@NotNull Long> listeDerKursIDs) {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull Long idKurs : listeDerKursIDs)
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
+				if ((getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)) &&  (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))) {
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(idKurs);
+					list.add(regel);
+				}
+
+		return list;
+	}
+
 	// #########################################################################
 	// ##########       Anfragen bezüglich einer Schiene.             ##########
 	// #########################################################################
