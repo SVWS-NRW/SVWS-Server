@@ -2,6 +2,7 @@
 	<template v-if="listeDerKurse.isEmpty() && fachwahlenAnzahl !== 0 && allowRegeln">
 		<div role="row" class="svws-ui-tr svws-disabled-soft" :style="{ '--background-color': bgColor }" :key="kursart.id">
 			<div role="cell" class="svws-ui-td" />
+			<div role="cell" class="svws-ui-td" />
 			<div role="cell" class="svws-ui-td text-black/50">{{ fachwahlen.kuerzel }}-{{ kursart.kuerzel }}</div>
 			<div role="cell" class="svws-ui-td">
 				<span />
@@ -29,6 +30,9 @@
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
 			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
+				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
+					<svws-ui-checkbox :model-value="getKursauswahl().has(kurs.id)" @update:model-value="getKursauswahl().has(kurs.id) ? getKursauswahl().delete(kurs.id) : getKursauswahl().add(kurs.id)" headless />
+				</div>
 				<template v-if="allowRegeln">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="toggle_kursdetail_anzeige(kurs.id)"
 						:class="{'text-black/50' : kursdetail_anzeige !== kurs.id}"

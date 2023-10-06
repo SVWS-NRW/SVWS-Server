@@ -1,9 +1,10 @@
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile } from "@core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
 
 export interface GostKursplanungProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
+	getKursauswahl: () => Set<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;

@@ -3,7 +3,7 @@
 		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						<div class="flex items-center justify-between w-full -my-2">
 							<span>Schiene</span>
 							<template v-if="allow_regeln">
@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						Schülerzahl
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
@@ -46,7 +46,7 @@
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr">
-					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-6' : 'col-span-5'">
+					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
 						Kollisionen
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
@@ -57,6 +57,10 @@
 					</div>
 				</div>
 				<div role="row" class="svws-ui-tr">
+					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
+						<svws-ui-checkbox :model-value="getKursauswahl().size === 0 ? false : (getDatenmanager().kursGetAnzahl() === getKursauswahl().size ? true : 'indeterminate')"
+							@update:model-value="updateKursauswahl" headless />
+					</div>
 					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': sort_by === 'kursart'}">
 						<span>Kurs</span>
 						<span class="svws-sorting-icon">
@@ -104,7 +108,7 @@
 					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
+								:config="config" :fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -119,7 +123,7 @@
 					<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 						<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
-								:config="config" :fachwahlen="fachwahlen" :kursart="kursart"
+								:config="config" :fachwahlen="fachwahlen" :kursart="kursart" :get-kursauswahl="getKursauswahl"
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
@@ -140,17 +144,19 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { DataTableColumn } from "@ui";
-	import type { Config } from "~/components/Config";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import { computed, onMounted, ref } from "vue";
+	import type { DataTableColumn } from "@ui";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs,
+		GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
+	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
+	import type { Config } from "~/components/Config";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		getKursauswahl: () => Set<number>,
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
@@ -203,21 +209,18 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [];
-
+		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
 		if (allow_regeln.value) {
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
 		}
-
 		cols.push({ key: "kurs", label: "Kurs", span: 1.75, minWidth: 8 },
 			{ key: "lehrer", label: "Lehrer", span: 1.5, minWidth: 6 },
 			{ key: "koop", label: "Kooperation", align: 'center', fixedWidth: 3.75 },
 			{ key: "FW", label: "Fachwahl", align: 'center', fixedWidth: 3.75 },
 			{ key: "Diff", label: "Diff", align: 'center', fixedWidth: 3.75 });
-
 		for (let i = 0; i < schienen.value.size(); i++) {
 			cols.push({ key: "schiene_" + (i+1), label: "schiene_" + (i+1), fixedWidth: 3.75, align: 'center' });
 		}
-
 		return cols;
 	}
 
@@ -231,6 +234,17 @@
 		if (!props.hatErgebnis)
 			return false;
 		return props.getDatenmanager().schieneGetIsRemoveAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
+	}
+
+	function updateKursauswahl() {
+		const auswahl = props.getKursauswahl();
+		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size);
+		if (allSelected) {
+			auswahl.clear();
+		} else {
+			for (const kurs of props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer())
+				auswahl.add(kurs.id);
+		}
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {

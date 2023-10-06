@@ -6,6 +6,7 @@ export type SGostKursplanungKursansichtDragData = { kurs: GostBlockungKurs; schi
 
 export interface SGostKursplanungKursansichtFachwahlProps {
 	getDatenmanager: () => GostBlockungsdatenManager;
+	getKursauswahl: () => Set<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;

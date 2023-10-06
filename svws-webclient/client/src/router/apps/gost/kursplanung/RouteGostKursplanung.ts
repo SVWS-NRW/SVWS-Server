@@ -208,6 +208,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			jahrgangsdaten: () => this.data.jahrgangsdaten,
 			hatBlockung: this.data.hatBlockung && this.data.hatErgebnis,
 			getDatenmanager: () => this.data.datenmanager,
+			getKursauswahl: () => this.data.kursAuswahl.value,
 			hatErgebnis: this.data.hatErgebnis,
 			getErgebnismanager: () => this.data.ergebnismanager,
 			patchRegel: this.data.patchRegel,

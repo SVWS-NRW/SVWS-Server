@@ -58,7 +58,7 @@
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
-				:get-datenmanager="getDatenmanager" :get-ergebnismanager="getErgebnismanager"
+				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
 				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
 				:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"

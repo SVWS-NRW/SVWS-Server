@@ -1,8 +1,8 @@
 
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
+import { type Ref, ref, shallowRef } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, SchuelerStatus } from "@core";
-import { shallowRef } from "vue";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
+import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -10,7 +10,6 @@ import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKu
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import { ap } from "vitest/dist/reporters-5f784f42";
 
 interface RouteStateGostKursplanung {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -57,6 +56,8 @@ export class RouteDataGostKursplanung {
 	}
 
 	private _state = shallowRef<RouteStateGostKursplanung>(RouteDataGostKursplanung._defaultState);
+
+	private _kursauswahl = ref<Set<number>>(new Set<number>());
 
 	private setPatchedDefaultState(patch: Partial<RouteStateGostKursplanung>) {
 		this._state.value = Object.assign({ ... RouteDataGostKursplanung._defaultState }, patch);
@@ -173,6 +174,7 @@ export class RouteDataGostKursplanung {
 		const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 		const existiertSchuljahresabschnitt = (abschnitt !== undefined);
 		api.status.stop();
+		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			halbjahr,
 			mapBlockungen,
@@ -210,6 +212,7 @@ export class RouteDataGostKursplanung {
 		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
+			this._kursauswahl.value.clear();
 			this.setPatchedState({
 				auswahlBlockung: undefined,
 				datenmanager: undefined,
@@ -228,6 +231,7 @@ export class RouteDataGostKursplanung {
 		for (const fw of listFachwahlStatistik)
 			mapFachwahlStatistik.set(fw.id, fw);
 		api.status.stop();
+		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			auswahlBlockung: value,
 			datenmanager,
@@ -243,6 +247,10 @@ export class RouteDataGostKursplanung {
 		if (this._state.value.datenmanager === undefined)
 			throw new Error("Es wurde noch keine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht.");
 		return this._state.value.datenmanager;
+	}
+
+	public get kursAuswahl(): Ref<Set<number>> {
+		return this._kursauswahl;
 	}
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
