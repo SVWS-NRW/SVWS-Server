@@ -1870,20 +1870,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
-	 *
-	 * @return die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
-	 */
-	public getMengeAllerNichtFixiertenKursSchienenPaare() : List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> {
-		const list : List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> = new ArrayList();
-		for (const kurs of this._map_kursID_kurs.values())
-			for (const schiene of this.getOfKursSchienenmenge(kurs.id))
-				if (!this.getOfKursOfSchieneIstFixiert(kurs.id, schiene.id))
-					list.add(new Pair(kurs, schiene));
-		return list;
-	}
-
-	/**
 	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
 	 *
 	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
@@ -1917,6 +1903,28 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
+	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
+	 */
+	public regelGetDummyMengeAllerKursSchienenFixierungen() : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const kurs of this._map_kursID_kurs.values())
+			for (const schiene of this.getOfKursSchienenmenge(kurs.id))
+				if (!this.getOfKursOfSchieneIstFixiert(kurs.id, schiene.id)) {
+					const schienenNr : number = this._parent.schieneGet(schiene.id).nummer;
+					const regel : GostBlockungRegel = new GostBlockungRegel();
+					regel.id = -1;
+					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+					regel.parameter.add(kurs.id);
+					regel.parameter.add(schienenNr);
+					list.add(regel);
+				}
+		return list;
+	}
+
+	/**
 	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
 	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
 	 *
@@ -1927,17 +1935,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelGetDummyMengeAnKursSchienenFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList();
 		for (const idKurs of listeDerKursIDs)
-			for (const schiene of this.getOfKursSchienenmenge(idKurs!)) {
-				const s : GostBlockungSchiene = this._parent.schieneGet(schiene.id);
+			for (const schiene of this.getOfKursSchienenmenge(idKurs!))
 				if (!this.getOfKursOfSchieneIstFixiert(idKurs!, schiene.id)) {
+					const schienenNr : number = this._parent.schieneGet(schiene.id).nummer;
 					const regel : GostBlockungRegel = new GostBlockungRegel();
 					regel.id = -1;
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
-					regel.parameter.add(s.nummer as number);
+					regel.parameter.add(schienenNr);
 					list.add(regel);
 				}
-			}
 		return list;
 	}
 

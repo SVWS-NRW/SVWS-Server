@@ -2011,22 +2011,6 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
-	 *
-	 * @return die Menge aller Kurs-Schienen-Paare, die noch nicht fixiert sind.
-	 */
-	public @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull GostBlockungsergebnisSchiene>> getMengeAllerNichtFixiertenKursSchienenPaare() {
-		final @NotNull List<@NotNull Pair<@NotNull GostBlockungsergebnisKurs, @NotNull GostBlockungsergebnisSchiene>> list = new ArrayList<>();
-
-		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
-			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(kurs.id))
-				if (!getOfKursOfSchieneIstFixiert(kurs.id, schiene.id))
-				    list.add(new Pair<>(kurs, schiene));
-
-		return list;
-	}
-
-	/**
 	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
 	 *
 	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
@@ -2062,6 +2046,30 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
+	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
+	 *
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAllerKursSchienenFixierungen() {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungsergebnisKurs kurs : _map_kursID_kurs.values())
+			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(kurs.id))
+				if (!getOfKursOfSchieneIstFixiert(kurs.id, schiene.id)) {
+					final long schienenNr = _parent.schieneGet(schiene.id).nummer;
+					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
+					regel.id = -1; // Dummy-ID
+					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
+					regel.parameter.add(kurs.id);
+					regel.parameter.add(schienenNr);
+					list.add(regel);
+				}
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Kurs-Schienen-Fixierungen der übergebenen Kurse.
 	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
 	 *
@@ -2073,17 +2081,17 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
 
 		for (final @NotNull Long idKurs : listeDerKursIDs)
-			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs)) {
-				final @NotNull GostBlockungSchiene s = this._parent.schieneGet(schiene.id);
+			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs))
 				if (!getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
+					final long schienenNr = _parent.schieneGet(schiene.id).nummer;
 					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
 					regel.id = -1; // Dummy-ID
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
-					regel.parameter.add((long) s.nummer);
+					regel.parameter.add(schienenNr);
 					list.add(regel);
 				}
-			}
+
 		return list;
 	}
 
