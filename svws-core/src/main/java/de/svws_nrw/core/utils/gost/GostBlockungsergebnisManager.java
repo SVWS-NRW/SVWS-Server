@@ -2125,24 +2125,24 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
 	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
 	 *
-	 * @param listeDerSchuelerIDs  Die Liste aller Schüler-IDs.
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
 	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
 	 */
-	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAnSchuelerKursFixierungen(final @NotNull List<@NotNull Long> listeDerSchuelerIDs) {
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetDummyMengeAnKursSchuelerFixierungen(final @NotNull List<@NotNull Long> listeDerKursIDs) {
 		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
 
-		for (final @NotNull Long idSchueler : listeDerSchuelerIDs)
-			for (final @NotNull GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler))
-				if (!getOfSchuelerOfKursIstFixiert(idSchueler, kurs.id)) {
+		for (final @NotNull Long idKurs : listeDerKursIDs)
+			for (final @NotNull Schueler schueler : getOfKursSchuelermenge(idKurs))
+				if (!getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)) {
 					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
 					regel.id = -1; // Dummy-ID
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(idSchueler);
-					regel.parameter.add(kurs.id);
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(idKurs);
 					list.add(regel);
 				}
 

@@ -1977,23 +1977,23 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
 	 * <br>Hinweis: Falls ein Schüler bereits fixierte Kurse hat, werden dazu keine Regeln erzeugt.
 	 *
-	 * @param listeDerSchuelerIDs  Die Liste aller Schüler-IDs.
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
 	 *
-	 * @return die Dummy-Regel-Menge (ID=-1) aller Schüler-Kurs-Fixierungen der übergebenen Schüler.
+	 * @return die Dummy-Regel-Menge (ID=-1) aller möglichen Schüler-Kurs-Fixierungen einer bestimmten Kursmenge.
 	 */
-	public regelGetDummyMengeAnSchuelerKursFixierungen(listeDerSchuelerIDs : List<number>) : List<GostBlockungRegel> {
+	public regelGetDummyMengeAnKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList();
-		for (const idSchueler of listeDerSchuelerIDs)
-			for (const kurs of this.getOfSchuelerKursmenge(idSchueler!))
-				if (!this.getOfSchuelerOfKursIstFixiert(idSchueler!, kurs.id)) {
+		for (const idKurs of listeDerKursIDs)
+			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
+				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!)) {
 					const regel : GostBlockungRegel = new GostBlockungRegel();
 					regel.id = -1;
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
-					regel.parameter.add(idSchueler);
-					regel.parameter.add(kurs.id);
+					regel.parameter.add(schueler.id);
+					regel.parameter.add(idKurs);
 					list.add(regel);
 				}
 		return list;
