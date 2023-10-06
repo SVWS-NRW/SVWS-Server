@@ -331,7 +331,7 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
     		throw OperationError.CONFLICT.exception();
     	// Prüfe ggf., ob bereits eine identische Regel von dem Typ existiert und führe ggf. weitere Prüfungen durch
         final List<DTOGostBlockungRegel> regelnVorhanden = mapVorhanden.get(regelTyp.typ);
-		if (!regelnVorhanden.isEmpty()) {
+		if ((regelnVorhanden != null) && (!regelnVorhanden.isEmpty())) {
 			switch (regelTyp) {
 				case KURS_MIT_DUMMY_SUS_AUFFUELLEN -> {
 					final List<Long> regelIDs = regelnVorhanden.stream().map(r -> r.ID).toList();
@@ -389,13 +389,13 @@ public final class DataGostBlockungRegel extends DataManager<Long> {
 		    	conn.transactionFlush();
 		    	// Füge die Parameter zu der Regel hinzu.
 		    	for (int i = 0; i < regel.parameter.size(); i++) {
-		    		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(idRegel, i, regel.parameter.get(i));
+		    		final DTOGostBlockungRegelParameter param = new DTOGostBlockungRegelParameter(regel.id, i, regel.parameter.get(i));
 		    		conn.transactionPersist(param);
 		    	}
 		    	conn.transactionFlush();
-		    	mapVorhanden.get(regel.typ).add(dtoRegel);
+		    	mapVorhanden.computeIfAbsent(regel.typ, r -> new ArrayList<>()).add(dtoRegel);
 	    	}
-			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).build();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(regeln).build();
 		} catch (final Exception exception) {
 			if (exception instanceof final IllegalArgumentException e)
 				throw OperationError.NOT_FOUND.exception(e);

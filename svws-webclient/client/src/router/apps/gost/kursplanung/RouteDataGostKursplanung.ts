@@ -790,4 +790,100 @@ export class RouteDataGostKursplanung {
 			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
 	}
 
+	protected getListeKursauswahl(): List<number> {
+		const result = new ArrayList<number>();
+		for (const idKurs of this.kursAuswahl.value)
+			result.add(idKurs);
+		return result;
+	}
+
+	updateRegeln = async (typ: string) => {
+		switch (typ) {
+			case "fixiereKurseAlle": {
+				alert("noch nicht implementiert...");
+				// public List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> getMengeAllerNichtFixiertenKursSchienenPaare()
+				break;
+			}
+			case "loeseKurseAlle": {
+				const listRegeln = this.ergebnismanager.regelGetMengeAllerKursSchienenFixierungen();
+				if (!listRegeln.isEmpty()) {
+					const listRegelIDs = new ArrayList<number>();
+					for (const regel of listRegeln)
+						listRegelIDs.add(regel.id);
+				 	await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
+					this.datenmanager.regelRemoveListe(listRegeln);
+					this.commit();
+				}
+				break;
+			}
+			case "fixiereKursauswahl": {
+				const listKursIDs = this.getListeKursauswahl();
+				if (!listKursIDs.isEmpty()) {
+					let listRegeln = this.ergebnismanager.regelGetDummyMengeAnKursSchienenFixierungen(listKursIDs);
+					if (!listRegeln.isEmpty()) {
+						listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
+						this.datenmanager.regelAddListe(listRegeln);
+						this.commit();
+					}
+				}
+				break;
+			}
+			case "loeseKursauswahl": {
+				alert("noch nicht implementiert...");
+				break;
+			}
+			case "fixiereSchuelerAlle": {
+				alert("noch nicht implementiert...");
+				// public List<Pair<Schueler, GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerKursPaare()
+				break;
+			}
+			case "fixiereSchuelerAbiturkurseAlle": {
+				alert("noch nicht implementiert...");
+				// public List<Pair<Schueler, GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerAbiturKursPaare()
+				break;
+			}
+			case "loeseSchuelerAlle": {
+				alert("noch nicht implementiert...");
+				// public List<GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungen()
+				break;
+			}
+			case "fixiereSchuelerKursauswahl": {
+				alert("noch nicht implementiert...");
+				// const listKursIDs = this.getListeKursauswahl();
+				// if (!listKursIDs.isEmpty()) {
+				// 	let listRegeln = this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs);
+				// 	if (!listRegeln.isEmpty()) {
+				// 		listRegeln = await api.server.addGostBlockungRegeln(listRegeln, api.schema, this.auswahlBlockung.id);
+				// 		this.datenmanager.regelAddListe(listRegeln);
+				// 		this.commit();
+				// 	}
+				// }
+				break;
+			}
+			case "fixiereSchuelerAbiturkurseKursauswahl": {
+				alert("noch nicht implementiert...");
+				// public List<Schueler> getOfKursMengeAllerNichtFixiertenAbiturSchueler(final long idKurs)
+				break;
+			}
+			case "loeseSchuelerKursauswahl": {
+				alert("noch nicht implementiert...");
+				// const listKursIDs = this.getListeKursauswahl();
+				// if (!listKursIDs.isEmpty()) {
+				// 	const listRegeln = this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs);
+				// 	if (!listRegeln.isEmpty()) {
+				// 		const listRegelIDs = new ArrayList<number>();
+				// 		for (const regel of listRegeln)
+				// 			listRegelIDs.add(regel.id);
+				// 		await api.server.deleteGostBlockungRegelnByID(listRegelIDs, api.schema);
+				// 		this.ergebnismanager.setRemoveRegelmenge(listRegeln);
+				// 		this.commit();
+				// 	}
+				// }
+				break;
+			}
+			default:
+				throw new DeveloperNotificationException("Der Typ " + typ + " für die Aktualisierung von Regeln wird noch nicht unterstützt.");
+		}
+	}
+
 }

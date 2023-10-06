@@ -1,7 +1,10 @@
 <template>
 	<div class="svws-ui-button-select" ref="button">
 		<svws-ui-button ref="inputEl" :type="type">
-			<span v-if="defaultItem" @click="action(defaultItem)" class="flex gap-1">
+			<span v-if="defaultAction !== undefined" @click="noDefault ? dropdownOpen = !dropdownOpen : action(defaultAction)" class="flex gap-1">
+				<slot name="icon" />{{ defaultAction.text }}
+			</span>
+			<span v-else-if="defaultItem" @click="action(defaultItem)" class="flex gap-1">
 				<slot name="icon" />{{ defaultItem.text }}
 			</span>
 			<i-ri-menu-line v-else />
@@ -23,6 +26,7 @@
 </template>
 
 <script lang="ts" setup>
+
 	import type { ButtonType } from '../types';
 	import { autoUpdate, flip, offset, shift, size, useFloating } from "@floating-ui/vue";
 	import { onClickOutside } from "@vueuse/core";
@@ -39,9 +43,13 @@
 		type?: ButtonType;
 		disabled?: boolean;
 		dropdownActions: Iterable<Item>;
+		defaultAction?: Item | undefined;
+		noDefault?: boolean;
 	}>(),{
 		type: 'primary',
 		disabled: false,
+		defaultAction: undefined,
+		noDefault: false,
 	});
 
 	const button = ref(null);
@@ -84,28 +92,33 @@
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
 	onClickOutside(button, ()=> dropdownOpen.value = false);
+
 </script>
 
 <style lang="postcss">
-.svws-ui-button-select {
-  @apply flex gap-px;
 
-  .svws-toggle.button {
-    @apply rounded-l-none rounded-r-md px-0.5;
-  }
-}
+	.svws-ui-button-select {
+		@apply flex gap-px;
+
+		.svws-toggle.button {
+			@apply rounded-l-none rounded-r-md px-0.5;
+		}
+	}
+
 </style>
 
 <style lang="postcss" scoped>
-.button {
-  @apply rounded-r-none z-10 relative;
-}
 
-.svws-ui-dropdown-list {
-  @apply min-w-fit;
-}
+	.button {
+		@apply rounded-r-none z-10 relative;
+	}
 
-.svws-ui-dropdown-list--item {
-  @apply text-button;
-}
+	.svws-ui-dropdown-list {
+		@apply min-w-fit;
+	}
+
+	.svws-ui-dropdown-list--item {
+		@apply text-button;
+	}
+
 </style>

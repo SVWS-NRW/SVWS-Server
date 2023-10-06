@@ -2073,15 +2073,17 @@ public class GostBlockungsergebnisManager {
 		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
 
 		for (final @NotNull Long idKurs : listeDerKursIDs)
-			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs))
+			for (final @NotNull GostBlockungsergebnisSchiene schiene : getOfKursSchienenmenge(idKurs)) {
+				final @NotNull GostBlockungSchiene s = this._parent.schieneGet(schiene.id);
 				if (!getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
 					final @NotNull GostBlockungRegel regel = new GostBlockungRegel();
 					regel.id = -1; // Dummy-ID
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
-					regel.parameter.add(schiene.id);
+					regel.parameter.add((long) s.nummer);
+					list.add(regel);
 				}
-
+			}
 		return list;
 	}
 
@@ -2104,6 +2106,7 @@ public class GostBlockungsergebnisManager {
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 					regel.parameter.add(idSchueler);
 					regel.parameter.add(kurs.id);
+					list.add(regel);
 				}
 
 		return list;

@@ -45,6 +45,7 @@
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()">Ergebnis hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+					<svws-ui-button-select v-if="allowRegeln" type="secondary" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle" class="ml-auto">
 						<template v-if="blockungstabelleVisible">
 							<i-ri-menu-fold-line />
@@ -109,6 +110,8 @@
 
 	const bereits_aktiv = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
 
+	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+
 	const vergangenheit = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id+1]);
 	const persistiert = computed<boolean>(()=> props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id])
 	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value);
@@ -123,11 +126,11 @@
 	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
 
 	const dropdownList = [
-		{text: "Kurse-Schienen-Zuordnung", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung"), default: true},
-		{text: "Kurse-Schienen-Zuordnung markierter Schüler", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler")},
-		{text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: ()=>downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler")},
-		{text: "Kursbelegung markierter Schülers", action: ()=>downloadPDF("Kursbelegung markierter Schülers")},
-		{text: "Kursbelegung gefilterte Schüler", action: ()=>downloadPDF("Kursbelegung gefilterte Schüler")},
+		{ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung"), default: true },
+		{ text: "Kurse-Schienen-Zuordnung markierter Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler") },
+		{ text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler") },
+		{ text: "Kursbelegung markierter Schülers", action: () => downloadPDF("Kursbelegung markierter Schülers") },
+		{ text: "Kursbelegung gefilterte Schüler", action: () => downloadPDF("Kursbelegung gefilterte Schüler") },
 	]
 
 	async function downloadPDF(title: string) {
@@ -139,6 +142,27 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
+
+	const actionsRegeln = computed(() => {
+		const kursauswahl = props.getKursauswahl();
+		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size);
+		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; }> = [];
+		result.push({ text: "Fixiere alle Kurse", action: async () => await props.updateRegeln("fixiereKurseAlle") });
+		result.push({ text: "Löse alle fixierten Kurse", action: async () => await props.updateRegeln("loeseKurseAlle") });
+		if ((props.getKursauswahl().size === 0) || allSelected) {
+			result.push({ text: "Fixiere alle Schüler", action: async () => await props.updateRegeln("fixiereSchuelerAlle") });
+			result.push({ text: "Fixiere alle Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseAlle") });
+			result.push({ text: "Löse alle fixierten Schüler", action: async () => await props.updateRegeln("loeseSchuelerAlle") });
+		} else {
+			result.push({ text: "Kursauswahl: Fixiere Kurse", action: async () => await props.updateRegeln("fixiereKursauswahl") });
+			result.push({ text: "Kursauswahl: Löse fixierte Kurse", action: async () => await props.updateRegeln("loeseKursauswahl") });
+			result.push({ text: "Kursauswahl: Fixiere Schüler", action: async () => await props.updateRegeln("fixiereSchuelerKursauswahl") });
+			result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
+			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
+		}
+		return result;
+	});
+
 </script>
 
 <style lang="postcss" scoped>

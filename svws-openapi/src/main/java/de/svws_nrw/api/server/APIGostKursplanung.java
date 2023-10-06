@@ -807,7 +807,8 @@ public class APIGostKursplanung {
     @Operation(summary = "Fügt mehrere Regeln zu einer Blockung der Gymnasialen Oberstufe hinzu.",
                description = "Fügt mehrere Regeln zu einer Blockung der Gymnasialen Oberstufe hinzu."
     		               + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Regeln hat.")
-    @ApiResponse(responseCode = "204", description = "Die Regeln wurden erfolgreich der Blockung hinzugefügt")
+    @ApiResponse(responseCode = "200", description = "Die Regeln wurden erfolgreich der Blockung hinzugefügt",
+    		content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostBlockungRegel.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Regeln hinzuzufügen.")
     @ApiResponse(responseCode = "404", description = "Keine Blockung vorhanden")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")

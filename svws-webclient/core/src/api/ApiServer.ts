@@ -3253,7 +3253,9 @@ export class ApiServer extends BaseApi {
 	 * Fügt mehrere Regeln zu einer Blockung der Gymnasialen Oberstufe hinzu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen von Regeln hat.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Regeln wurden erfolgreich der Blockung hinzugefügt
+	 *   Code 200: Die Regeln wurden erfolgreich der Blockung hinzugefügt
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostBlockungRegel>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Regeln hinzuzufügen.
 	 *   Code 404: Keine Blockung vorhanden
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -3262,14 +3264,19 @@ export class ApiServer extends BaseApi {
 	 * @param {List<GostBlockungRegel>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} blockungsid - der Pfad-Parameter blockungsid
+	 *
+	 * @returns Die Regeln wurden erfolgreich der Blockung hinzugefügt
 	 */
-	public async addGostBlockungRegeln(data : List<GostBlockungRegel>, schema : string, blockungsid : number) : Promise<void> {
+	public async addGostBlockungRegeln(data : List<GostBlockungRegel>, schema : string, blockungsid : number) : Promise<List<GostBlockungRegel>> {
 		const path = "/db/{schema}/gost/blockungen/{blockungsid : \\d+}/addregeln"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsid\s*(:[^}]+)?}/g, blockungsid.toString());
 		const body : string = "[" + (data.toArray() as Array<GostBlockungRegel>).map(d => GostBlockungRegel.transpilerToJSON(d)).join() + "]";
-		await super.postJSON(path, body);
-		return;
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostBlockungRegel>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostBlockungRegel.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

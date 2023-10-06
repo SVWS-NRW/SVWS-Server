@@ -1927,14 +1927,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public regelGetDummyMengeAnKursSchienenFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList();
 		for (const idKurs of listeDerKursIDs)
-			for (const schiene of this.getOfKursSchienenmenge(idKurs!))
+			for (const schiene of this.getOfKursSchienenmenge(idKurs!)) {
+				const s : GostBlockungSchiene = this._parent.schieneGet(schiene.id);
 				if (!this.getOfKursOfSchieneIstFixiert(idKurs!, schiene.id)) {
 					const regel : GostBlockungRegel = new GostBlockungRegel();
 					regel.id = -1;
 					regel.typ = GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ;
 					regel.parameter.add(idKurs);
-					regel.parameter.add(schiene.id);
+					regel.parameter.add(s.nummer as number);
+					list.add(regel);
 				}
+			}
 		return list;
 	}
 
@@ -1956,6 +1959,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					regel.typ = GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ;
 					regel.parameter.add(idSchueler);
 					regel.parameter.add(kurs.id);
+					list.add(regel);
 				}
 		return list;
 	}
