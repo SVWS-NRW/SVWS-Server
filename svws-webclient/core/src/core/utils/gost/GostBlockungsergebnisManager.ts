@@ -1870,12 +1870,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 * Liefert die Regel-Menge aller aktuellen Kurs-Schienen-Fixierungen.
 	 *
-	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 * @return die Regel-Menge aller aktuellen Kurs-Schienen-Fixierungen.
 	 */
 	public regelGetMengeAllerKursSchienenFixierungen() : List<GostBlockungRegel> {
-		return this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
+		return new ArrayList(this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE));
+	}
+
+	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
+	 */
+	public regelGetMengeAnKursSchienenFixierungenDesKurses(idKurs : number) : List<GostBlockungRegel> {
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if (regel.parameter.get(0) === idKurs)
+				list.add(regel);
+		return list;
 	}
 
 	/**
@@ -1884,7 +1899,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
 	 */
 	public regelGetMengeAllerSchuelerKursFixierungen() : List<GostBlockungRegel> {
-		return this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
+		return new ArrayList(this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
 	}
 
 	/**

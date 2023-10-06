@@ -2011,12 +2011,29 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 * Liefert die Regel-Menge aller aktuellen Kurs-Schienen-Fixierungen.
 	 *
-	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen.
+	 * @return die Regel-Menge aller aktuellen Kurs-Schienen-Fixierungen.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerKursSchienenFixierungen() {
-		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE);
+		return new ArrayList<>(_parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE));
+	}
+
+	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen eines bestimmten Kurses.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAnKursSchienenFixierungenDesKurses(final long idKurs) {
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if (regel.parameter.get(0) == idKurs)
+				list.add(regel);
+
+		return list;
 	}
 
 	/**
@@ -2025,7 +2042,7 @@ public class GostBlockungsergebnisManager {
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungen() {
-		return _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS);
+		return new ArrayList<>(_parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS));
 	}
 
 	/**
