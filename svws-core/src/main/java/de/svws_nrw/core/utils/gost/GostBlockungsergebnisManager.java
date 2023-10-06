@@ -2029,6 +2029,26 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	*
+	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDerKurse(final @NotNull List<@NotNull Long> listeDerKursIDs) {
+		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
+		final @NotNull HashSet<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
+
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
+			if (setKursIDs.contains(regel.parameter.get(1)))
+				list.add(regel);
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Dummy-Regel-Menge (ID=-1) aller möglichen Kurs-Schienen-Fixierungen.
 	 * <br>Hinweis: Falls ein Kurs bereits fixierte Schienen hat, werden dazu keine Regeln erzeugt.
 	 *
