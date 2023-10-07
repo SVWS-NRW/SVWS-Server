@@ -4,13 +4,13 @@ import java.io.InputStream;
 import java.util.List;
 
 import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
-import de.svws_nrw.core.data.benutzer.Credentials;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -244,10 +244,10 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Der Anmeldename zu dem Benutzer sind nicht vorhanden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response setAnmeldename(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    public Response setBenutzername(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setAnmeldename(id, JSONMapper.toString(is)),
+    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setBenutzername(id, JSONMapper.toString(is)),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -653,16 +653,15 @@ public class APIBenutzer {
 
 
     /**
-     * Die OpenAPI-Methode für das Erstellen eines neuen Benutzers.
+     * Die OpenAPI-Methode für das Erstellen eines neuen Benutzers mit seinen Credentials und einem Anzeigenamen.
      *
-     * @param schema                das Datenbankschema, in welchem der Benutzer erstellt wird
-     * @param request                die Informationen zur HTTP-Anfrage
-     * @param daten                         JSON-Objekt mit den Daten
-     * @param anzeigename      Azeigename des neuen Benutzers
-     * @return die HTTP-Antwort mit dem neuen Benutzer
+     * @param schema    das Datenbankschema, in welchem der Benutzer erstellt wird
+     * @param cred      die Benutzer-Credentials mit dem Anzeigenamen des allgemeinen Benutzers
+     * @param request   die Informationen zur HTTP-Anfrage
+     * @return die HTTP-Antwort mit dem Daten-Objekt zum neu angelegten Benutzer
      */
     @POST
-    @Path("/new/{anzeigename}")
+    @Path("/new")
     @Operation(summary = "Erstellt einen neuen Benutzer und gibt ihn zurück.",
     description = "Erstellt einen neuen Benutzer und gibt ihn zurück."
                 + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers "
@@ -673,11 +672,11 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Benutzer anzulegen.")
     @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response createBenutzerAllgemein(@PathParam("schema") final String schema, @PathParam("anzeigename") final String anzeigename,
-            @RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content =
-            @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Credentials.class))) final Credentials daten,
-            @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerAllgemein(daten, anzeigename),
+    public Response createBenutzerAllgemein(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content =
+    		@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerAllgemeinCredentials.class)))
+    		final BenutzerAllgemeinCredentials cred, @Context final HttpServletRequest request) {
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerAllgemein(cred),
     			request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 

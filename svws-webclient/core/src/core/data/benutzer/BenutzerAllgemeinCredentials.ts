@@ -1,6 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class Credentials extends JavaObject {
+export class BenutzerAllgemeinCredentials extends JavaObject {
+
+	/**
+	 * Benutzername des Account-Credentials
+	 */
+	public anzeigename : string = "";
 
 	/**
 	 * Benutzername des Account-Credentials
@@ -18,12 +23,15 @@ export class Credentials extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.benutzer.Credentials'].includes(name);
+		return ['de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): Credentials {
+	public static transpilerFromJSON(json : string): BenutzerAllgemeinCredentials {
 		const obj = JSON.parse(json);
-		const result = new Credentials();
+		const result = new BenutzerAllgemeinCredentials();
+		if (typeof obj.anzeigename === "undefined")
+			 throw new Error('invalid json format, missing attribute anzeigename');
+		result.anzeigename = obj.anzeigename;
 		if (typeof obj.benutzername === "undefined")
 			 throw new Error('invalid json format, missing attribute benutzername');
 		result.benutzername = obj.benutzername;
@@ -33,8 +41,9 @@ export class Credentials extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : Credentials) : string {
+	public static transpilerToJSON(obj : BenutzerAllgemeinCredentials) : string {
 		let result = '{';
+		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
 		result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
 		result += '"password" : ' + JSON.stringify(obj.password!) + ',';
 		result = result.slice(0, -1);
@@ -42,8 +51,11 @@ export class Credentials extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<Credentials>) : string {
+	public static transpilerToJSONPatch(obj : Partial<BenutzerAllgemeinCredentials>) : string {
 		let result = '{';
+		if (typeof obj.anzeigename !== "undefined") {
+			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
+		}
 		if (typeof obj.benutzername !== "undefined") {
 			result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
 		}
@@ -57,6 +69,6 @@ export class Credentials extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_benutzer_Credentials(obj : unknown) : Credentials {
-	return obj as Credentials;
+export function cast_de_svws_nrw_core_data_benutzer_BenutzerAllgemeinCredentials(obj : unknown) : BenutzerAllgemeinCredentials {
+	return obj as BenutzerAllgemeinCredentials;
 }

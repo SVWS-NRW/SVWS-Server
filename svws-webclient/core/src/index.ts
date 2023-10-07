@@ -85,6 +85,7 @@ export { AdressbuchEintrag } from './core/data/adressbuch/AdressbuchEintrag';
 export { AdressbuchKontakt } from './core/data/adressbuch/AdressbuchKontakt';
 export { AdressbuchKontaktListe } from './core/data/adressbuch/AdressbuchKontaktListe';
 export { Telefonnummer } from './core/data/adressbuch/Telefonnummer';
+export { BenutzerAllgemeinCredentials } from './core/data/benutzer/BenutzerAllgemeinCredentials';
 export { BenutzerConfig } from './core/data/benutzer/BenutzerConfig';
 export { BenutzerConfigElement } from './core/data/benutzer/BenutzerConfigElement';
 export { BenutzerDaten } from './core/data/benutzer/BenutzerDaten';
@@ -93,7 +94,6 @@ export { BenutzerKompetenzKatalogEintrag } from './core/data/benutzer/BenutzerKo
 export { BenutzerListeEintrag } from './core/data/benutzer/BenutzerListeEintrag';
 export { BenutzergruppeDaten } from './core/data/benutzer/BenutzergruppeDaten';
 export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeListeEintrag';
-export { Credentials } from './core/data/benutzer/Credentials';
 export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartner';
 export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
 export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';

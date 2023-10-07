@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { BenutzergruppeDaten, BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@core";
-import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, Credentials, ArrayList } from "@core";
+import type { BenutzergruppeListeEintrag, BenutzerKompetenzGruppe, List} from "@core";
+import { BenutzerDaten, BenutzerKompetenz, BenutzerListeEintrag, BenutzerManager, BenutzerAllgemeinCredentials, ArrayList } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -20,6 +20,7 @@ interface RouteStateSchuleBenutzer {
 	daten: BenutzerDaten | undefined;
 	view: RouteNode<any, any>;
 }
+
 export class RouteDataSchuleBenutzer {
 
 	private static _defaultState : RouteStateSchuleBenutzer = {
@@ -137,6 +138,7 @@ export class RouteDataSchuleBenutzer {
 	set listBenutzer(value: List<BenutzerListeEintrag>) {
 		this._state.value.listBenutzer = value;
 	}
+
 	get hatDaten(): boolean {
 		return this._state.value.daten !== undefined;
 	}
@@ -183,35 +185,34 @@ export class RouteDataSchuleBenutzer {
 
 
 	/**
-	 * Setzt den Anzeigenamen eines Benutzernamens
+	 * Setzt den Anzeigenamen eines Benutzers
 	 *
-	 * @param {string} anzeigename
+	 * @param {string} anzeigename   der Anzeigename
 	 *
 	 * @returns {Promise<void>}
 	 */
-	setAnzeigename = async (anzeigename : string) => {
-		if (!this.benutzerManager)
+	setAnzeigename = async (anzeigename : string): Promise<void> => {
+		if (this.benutzerManager === undefined)
 			return;
-		await api.server.setAnzeigename(anzeigename,api.schema,this.benutzerManager.getID());
-		for (const benutzer of this.listBenutzer){
+		await api.server.setAnzeigename(anzeigename, api.schema, this.benutzerManager.getID());
+		for (const benutzer of this.listBenutzer)
 			if (benutzer.id === this.daten.id)
 				benutzer.anzeigename = anzeigename;
-		}
 		this.benutzerManager.setAnzeigename(anzeigename);
 		this.commit();
 	}
 
 	/**
-	 * Setzt den Anmeldenamen eines Benutzernamens
+	 * Setzt den Benutzernamens für die Anmeldung
 	 *
 	 * @param {string} anzeigename
 	 *
 	 * @returns {Promise<void>}
 	 */
-	setAnmeldename =  async (anmeldename: string)=> {
-		if (!this.benutzerManager)
+	setAnmeldename = async (anmeldename: string): Promise<void> => {
+		if (this.benutzerManager === undefined)
 			return;
-		await api.server.setAnmeldename(anmeldename, api.schema, this.benutzerManager.getID());
+		await api.server.setBenutzername(anmeldename, api.schema, this.benutzerManager.getID());
 		this.benutzerManager.setAnmeldename(anmeldename);
 		const neueAuswahl = this.mapBenutzer.get(this.daten.id);
 		this.mapBenutzer.set(this.daten.id,this.daten);
@@ -223,16 +224,16 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	/**
-	 * Setzt, ob die Benutzergruppe eine administrative Gruppe ist oder nicht
+	 * Setzt, ob der Benutzer ein administrativer Benutzer ist oder nicht
 	 *
 	 * @param {boolean} istAdmin
 	 *
 	 * @returns {Promise<void>}
 	 */
-	setIstAdmin = async (istAdmin: boolean) => {
-		if (!this.benutzerManager)
+	setIstAdmin = async (istAdmin: boolean): Promise<void> => {
+		if (this.benutzerManager === undefined)
 			return;
-		if(istAdmin)
+		if (istAdmin)
 			await api.server.addBenutzerAdmin(api.schema, this.benutzerManager.getID());
 		else
 			await api.server.removeBenutzerAdmin(api.schema, this.benutzerManager.getID());
@@ -241,79 +242,78 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	/**
-	 * Setzt das neue Passwort
+	 * Setzt ein neues Kennwort für den aktuell ausgewählten Benutzer
 	 *
-	 * @passwort das neue Passwort
+	 * @passwort das neue Kennwort
 	 */
-
-	setPassword = async( passwort : string ) => {
-		if (!this.benutzerManager)
+	setPassword = async (passwort : string) => {
+		if (this.benutzerManager === undefined)
 			return false;
-		await api.server.setBenutzerPasswort(passwort,api.schema,this.benutzerManager.getID());
-		setTimeout( function ( ) { alert( "Das Kennwort wurde erfolgreich geändert." ); }, 300 );
+		await api.server.setBenutzerPasswort(passwort, api.schema, this.benutzerManager.getID());
+		setTimeout(() => alert("Das Kennwort wurde erfolgreich geändert."), 300);
 	}
 
 	/**
-	 * Fügt den Benutzer in eine Benutzergruppe ein
-	 * Bei bg_id = -1 wird der Benutzer in alle Gruppen eingefügt.
+	 * Fügt den Benutzer in die Benutzergruppe mit der übergebenen ID ein.
+	 * Ist diese ID -1, so wird der Benutzer in alle Gruppen eingefügt.
 	 *
-	 * @param {number} bg_id
+	 * @param {number} idGroup   die ID der Benutzergruppe
 	 *
 	 * @returns {Promise<void>}
 	 */
-	addBenutzerToBenutzergruppe = async(bg_id: number) => {
-		if(bg_id != -1){
-			if (!this.benutzerManager)
-				return;
+	addBenutzerToBenutzergruppe = async (idGroup: number): Promise<void> => {
+		if (this.benutzerManager === undefined)
+			return;
+		if (idGroup != -1) {
 			const bg_ids = new ArrayList<number>();
 			bg_ids.add(this.benutzerManager.getID());
-			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema,bg_id);
+			const result = await api.server.addBenutzergruppeBenutzer(bg_ids, api.schema, idGroup);
 			this.benutzerManager.addToGruppe(result);
-		}else{
+		} else {
 			const benutzer_id = new ArrayList<number>();
-			benutzer_id.add(this.benutzerManager?.getID() ?? null);
-			for(const bg of this.listBenutzergruppen){
-				if (!this.benutzerManager?.istInGruppe(bg.id)) {
+			benutzer_id.add(this.benutzerManager.getID());
+			for (const bg of this.listBenutzergruppen) {
+				if (!this.benutzerManager.istInGruppe(bg.id)) {
 					const result = await api.server.addBenutzergruppeBenutzer(benutzer_id, api.schema, bg.id);
-					this.benutzerManager?.addToGruppe(result);
+					this.benutzerManager.addToGruppe(result);
 				}
 			}
 		}
 		this.setPatchedState({
 			benutzerManager: this._state.value.benutzerManager,
 			listBenutzergruppen: this._state.value.listBenutzergruppen
-		})
+		});
 	}
 
 	/**
-	 * Entfernt den Benutzer aus einer Gruppe mit bg_id
-	 * Bei bg_id = -1 wird der Benutzer aus allen Gruppen eingefügt.
+	 * Entfernt den Benutzer aus der Benutzergruppe mit der übergebenen ID.
+	 * Ist diese ID -1, so wird der Benutzer aus allen Gruppen entfernt.
 	 *
-	 * @param {number} bg_id
+	 * @param {number} idGroup   die ID der Benutzergruppe
 	 *
 	 * @returns {Promise<void>}
 	 */
-	removeBenutzerFromBenutzergruppe = async (bg_id: number): Promise<void> => {
-		if (!this.benutzerManager)
+	removeBenutzerFromBenutzergruppe = async (idGroup: number): Promise<void> => {
+		if (this.benutzerManager === undefined)
 			return;
 		const ids = new ArrayList<number>();
 		ids.add(this.benutzerManager.getID());
-		if (bg_id !== -1) {
-			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,bg_id);
+		if (idGroup !== -1) {
+			const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, idGroup);
 			this.benutzerManager.removeFromGruppe(result);
 		} else {
 			for (const eintrag of this.listBenutzergruppen) {
-				if (this.benutzerManager?.istInGruppe(eintrag.id)) {
-					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema,eintrag.id);
-					this.benutzerManager?.removeFromGruppe(result);
+				if (this.benutzerManager.istInGruppe(eintrag.id)) {
+					const result = await api.server.removeBenutzergruppeBenutzer(ids, api.schema, eintrag.id);
+					this.benutzerManager.removeFromGruppe(result);
 				}
 			}
 		}
 		// TODO Durch eine entpsrechende Gruppenmitgliedschaft wird ein Benutzer administrativ und das wird in BenutzerView festgehalt.
-		// Die Entfernung dieser Mitgliedschaft wird in BenutzerManager nicht richtig umgesetzt. Die Gruppe wird zwar entfernt, jedoch muss auch im
+		// Die Entfernung dieser Mitgliedschaft wird im BenutzerManager nicht richtig umgesetzt. Die Gruppe wird zwar entfernt, jedoch muss auch im
 		// verwalteten Obejkt istAdmin Attribut angepasst werden.
 		const daten = await this.ladeBenutzerDaten(this._state.value.daten);
-		const benutzerManager = daten=== undefined ? undefined : new BenutzerManager(daten);
+		const benutzerManager = (daten === undefined) ? undefined : new BenutzerManager(daten);
 		this.setPatchedState({
 			benutzerManager: benutzerManager,
 			listBenutzergruppen: this._state.value.listBenutzergruppen
@@ -328,7 +328,7 @@ export class RouteDataSchuleBenutzer {
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzerManager)
+		if (this.benutzerManager === undefined)
 			return false;
 		if (this.benutzerManager.hatKompetenz(kompetenz))
 			return false;
@@ -348,7 +348,7 @@ export class RouteDataSchuleBenutzer {
 	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzerManager)
+		if (this.benutzerManager === undefined)
 			return false;
 		if (!this.benutzerManager.hatKompetenz(kompetenz))
 			return false;
@@ -367,7 +367,7 @@ export class RouteDataSchuleBenutzer {
 	 */
 	addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
-		if (!this.benutzerManager)
+		if (this.benutzerManager === undefined)
 			return false;
 		if (!this.benutzerManager.istAdmin()) {
 			//Es werden nur die IDs der Kompetenzen in kids gespreichert, welche dem Benutzer direkt zugordnet sind.
@@ -376,12 +376,12 @@ export class RouteDataSchuleBenutzer {
 				if (this.benutzerManager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
 			}
-			await api.server.addBenutzerKompetenzen(kids,api.schema,this.benutzerManager.getID());
+			await api.server.addBenutzerKompetenzen(kids, api.schema, this.benutzerManager.getID());
 			//Den obigen Schritten entsprechende Anpassung des Client-Objekts mithilfe des Managers
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.benutzerManager.getGruppen(komp).size() === 0) {
-					if (!this.benutzerManager?.hatKompetenz(komp))
-						this.benutzerManager?.addKompetenz(komp);
+					if (!this.benutzerManager.hatKompetenz(komp))
+						this.benutzerManager.addKompetenz(komp);
 				}
 			}
 		}
@@ -396,19 +396,19 @@ export class RouteDataSchuleBenutzer {
 	 *
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
-	 removeBenutzerKompetenzGruppe = async(kompetenzgruppe : BenutzerKompetenzGruppe) => {
+	 removeBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
-		if (!this.benutzerManager)
+		if (this.benutzerManager === undefined)
 			return false;
 		if (!this.benutzerManager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				if (this.benutzerManager.getGruppen(komp).size() === 0)
 					kids.add(komp.daten.id);
-			await api.server.removeBenutzerKompetenzen(kids,api.schema,this.benutzerManager.getID());
+			await api.server.removeBenutzerKompetenzen(kids, api.schema, this.benutzerManager.getID());
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				if (this.benutzerManager.getGruppen(komp).size() === 0) {
-					if (this.benutzerManager?.hatKompetenz(komp))
-						this.benutzerManager?.removeKompetenz(komp);
+					if (this.benutzerManager.hatKompetenz(komp))
+						this.benutzerManager.removeKompetenz(komp);
 				}
 			}
 		}
@@ -419,15 +419,18 @@ export class RouteDataSchuleBenutzer {
 	}
 
 	/**
-	 * Erstellt eine neue Benutzergruppe
-	 * @param bezeichnung die Bezichnung der neuen Benutzergruppe
-	 * @param istAdmin    True, wenn die neue Benutzrgruppe administrativ ist.
+	 * Erstellt einen neuen Benutzer
+	 *
+	 * @param anzeigename    der Name des Benutzer für die Anzeige - kann vom Benutzernamen abweichen
+	 * @param benutzername   der Name des Benutzers
+	 * @param password       das Kennwort des Benutzers
 	 */
-	createBenutzerAllgemein = async (anmeldename: string, benutzername: string, passwort: string) => {
-		const credential = new Credentials();
+	createBenutzerAllgemein = async (anzeigename: string, benutzername: string, passwort: string) => {
+		const credential = new BenutzerAllgemeinCredentials();
+		credential.anzeigename = anzeigename;
 		credential.benutzername = benutzername;
 		credential.password = passwort;
-		const result = await api.server.createBenutzerAllgemein(credential,api.schema,anmeldename);
+		const result = await api.server.createBenutzerAllgemein(credential, api.schema);
 		const ble = new BenutzerListeEintrag();
 		ble.id = result.id;
 		ble.anzeigename = result.anzeigename;
@@ -435,7 +438,7 @@ export class RouteDataSchuleBenutzer {
 		ble.istAdmin= result.istAdmin;
 		ble.idCredentials = result.idCredentials;
 		this.listBenutzer.add(ble);
-		this.mapBenutzer.set(ble.id,ble);
+		this.mapBenutzer.set(ble.id, ble);
 		this.auswahl = ble;
 		this.commit();
 		await this.gotoBenutzer(ble);
@@ -444,23 +447,21 @@ export class RouteDataSchuleBenutzer {
 	/**
 	 * Entfernt die ausgewählten Benutzer
 	 */
-	deleteBenutzerAllgemein = async (selectedItems: BenutzerListeEintrag[]) => {
+	deleteBenutzerAllgemein = async (selectedItems: BenutzerListeEintrag[]): Promise<void> => {
 		const bids = new ArrayList<number>();
 		let auswahl_gewaehlt = false;
-		if(this.auswahl !== undefined)
-			auswahl_gewaehlt= selectedItems.includes(this.auswahl);
-		for (const b of selectedItems) {
+		if (this.auswahl !== undefined)
+			auswahl_gewaehlt = selectedItems.includes(this.auswahl);
+		for (const b of selectedItems)
 			bids.add(b.id)
-		}
-		await api.server.removeBenutzerAllgemein(bids,api.schema);
-		for (const i of bids) {
+		await api.server.removeBenutzerAllgemein(bids, api.schema);
+		for (const i of bids)
 			this.mapBenutzer.delete(i);
-		}
-		//TODO Der Benutzer wird in der Auswahl nicht entfernt, erst beim Reload.
+		// TODO Der Benutzer wird in der Auswahl nicht entfernt, erst beim Reload.
 		this.setPatchedState({
 			mapBenutzer: this._state.value.mapBenutzer,
 		})
-		if(auswahl_gewaehlt)
+		if (auswahl_gewaehlt)
 			 await this.gotoBenutzer(this.listBenutzer.get(0));
 	}
 
@@ -469,10 +470,12 @@ export class RouteDataSchuleBenutzer {
 	 *
 	 * @kompetenz die Kompetenz
 	 */
-	getGruppen4Kompetenz = ( kompetenz : BenutzerKompetenz ) : string =>{
-		let text="";
+	getGruppen4Kompetenz = (kompetenz : BenutzerKompetenz) : string => {
+		if (this.benutzerManager === undefined)
+			return "";
+		let text = "";
 		let i = 0;
-		if (this.benutzerManager?.getGruppen(kompetenz)) {
+		if (this.benutzerManager.getGruppen(kompetenz)) {
 			for (const bg of this.benutzerManager.getGruppen(kompetenz)) {
 				if (i !== 0)
 					text += ", ";

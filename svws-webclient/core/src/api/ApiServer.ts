@@ -4,6 +4,7 @@ import { Abiturdaten } from '../core/data/gost/Abiturdaten';
 import { AllgemeineMerkmaleKatalogEintrag } from '../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
 import { ArrayList } from '../java/util/ArrayList';
 import { Aufsichtsbereich } from '../core/data/schule/Aufsichtsbereich';
+import { BenutzerAllgemeinCredentials } from '../core/data/benutzer/BenutzerAllgemeinCredentials';
 import { BenutzerConfig } from '../core/data/benutzer/BenutzerConfig';
 import { BenutzerDaten } from '../core/data/benutzer/BenutzerDaten';
 import { BenutzergruppeDaten } from '../core/data/benutzer/BenutzergruppeDaten';
@@ -18,7 +19,6 @@ import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpart
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
 import { BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
-import { Credentials } from '../core/data/benutzer/Credentials';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
@@ -420,7 +420,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setAnmeldename für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anmeldename
+	 * Implementierung der POST-Methode setBenutzername für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/anmeldename
 	 *
 	 * Setzt den Anmeldenamen eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Anmeldenamenss besitzt.
 	 *
@@ -435,7 +435,7 @@ export class ApiServer extends BaseApi {
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 */
-	public async setAnmeldename(data : string | null, schema : string, id : number) : Promise<void> {
+	public async setBenutzername(data : string | null, schema : string, id : number) : Promise<void> {
 		const path = "/db/{schema}/benutzer/{id : \\d+}/anmeldename"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
@@ -1000,7 +1000,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createBenutzerAllgemein für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new/{anzeigename}
+	 * Implementierung der POST-Methode createBenutzerAllgemein für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/new
 	 *
 	 * Erstellt einen neuen Benutzer und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Benutzers besitzt.
 	 *
@@ -1012,17 +1012,15 @@ export class ApiServer extends BaseApi {
 	 *   Code 409: Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {Credentials} data - der Request-Body für die HTTP-Methode
+	 * @param {BenutzerAllgemeinCredentials} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {string} anzeigename - der Pfad-Parameter anzeigename
 	 *
 	 * @returns Benutzer wurde erfolgreich angelegt.
 	 */
-	public async createBenutzerAllgemein(data : Credentials, schema : string, anzeigename : string) : Promise<BenutzerDaten> {
-		const path = "/db/{schema}/benutzer/new/{anzeigename}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{anzeigename\s*(:[^}]+)?}/g, anzeigename);
-		const body : string = Credentials.transpilerToJSON(data);
+	public async createBenutzerAllgemein(data : BenutzerAllgemeinCredentials, schema : string) : Promise<BenutzerDaten> {
+		const path = "/db/{schema}/benutzer/new"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = BenutzerAllgemeinCredentials.transpilerToJSON(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return BenutzerDaten.transpilerFromJSON(text);

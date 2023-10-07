@@ -1,15 +1,15 @@
 package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
-import de.svws_nrw.core.data.benutzer.Credentials;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
 import de.svws_nrw.core.types.schule.Schulform;
@@ -24,7 +24,6 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -198,52 +197,48 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      * Erstellt einen neuen Benutzer *
      *
      * @param cred       Das JSON-Objekt mit den Daten für Credentials-Obejkt
-     * @param anzeigename Anzeigename des neuen Benutzers
      *
      * @return Eine Response mit dem neuen Benutzer
      */
-    public Response createBenutzerAllgemein(final Credentials cred, final String anzeigename) {
+    public Response createBenutzerAllgemein(final BenutzerAllgemeinCredentials cred) {
         DTOBenutzerAllgemein benutzer_allg = null;
         DTOBenutzer benutzer = null;
         DTOCredentials credential = null;
-        Long c_ID = (long) 0;
 
-        if (cred.benutzername == null || cred.password == null)
+        if ((cred.benutzername == null) || (cred.password == null))
         	throw OperationError.BAD_REQUEST.exception("Benuzername oder Passwort leer!");
 
         // Bestimme die ID des Benutzers / Credentials / BenutzerAllgemeins
-        final DTOSchemaAutoInkremente ba_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "BenutzerAllgemein");
-        final Long ba_ID = ba_lastID == null ? 1 : ba_lastID.MaxID + 1;
-        final DTOSchemaAutoInkremente c_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Credentials");
-        c_ID = c_lastID == null ? 1 : c_lastID.MaxID + 1;
-        final DTOSchemaAutoInkremente b_lastID = conn.queryByKey(DTOSchemaAutoInkremente.class, "Benutzer");
-        final Long b_ID = b_lastID == null ? 1 : b_lastID.MaxID + 1;
+        final long idBenutzerAllgemein = conn.transactionGetNextID(DTOBenutzerAllgemein.class);
+        final long idCredential = conn.transactionGetNextID(DTOCredentials.class);
+        final long idBenutzer = conn.transactionGetNextID(DTOBenutzer.class);
 
-        // Lege die Objekte an
-        benutzer_allg = new DTOBenutzerAllgemein(ba_ID);
-        benutzer_allg.AnzeigeName = anzeigename;
-
-        benutzer = new DTOBenutzer(b_ID, BenutzerTyp.ALLGEMEIN, false);
-        credential = new DTOCredentials(c_ID, cred.benutzername);
+        // Zuerst die Credentials anlegen ...
+        credential = new DTOCredentials(idCredential, cred.benutzername);
         credential.PasswordHash = Benutzer.erstellePasswortHash(cred.password);
-
-
-        // Objekten miteinander verbinden
-        benutzer.Allgemein_ID = benutzer_allg.ID;
-        benutzer_allg.CredentialID = credential.ID;
-
-        //Credential-Objekt persistieren
         conn.transactionPersist(credential);
         conn.transactionFlush();
 
-        // BenutzerAllg.-Objekt persistieren
+        // ... dann die Informationen zum allgemeinen Benutzer mit den Credentials verknüpft ...
+        benutzer_allg = new DTOBenutzerAllgemein(idBenutzerAllgemein);
+        benutzer_allg.AnzeigeName = cred.anzeigename.isBlank() ? cred.benutzername : cred.anzeigename;
+        benutzer_allg.CredentialID = idCredential;
         conn.transactionPersist(benutzer_allg);
         conn.transactionFlush();
 
-        // Benutzer-Objekt persistieren
+        // ... und dann das Benutzer-Objekt anlegen, welches auf den allgemeinen Benutzer verweist
+        benutzer = new DTOBenutzer(idBenutzer, BenutzerTyp.ALLGEMEIN, false);
+        benutzer.Allgemein_ID = idBenutzerAllgemein;
         conn.transactionPersist(benutzer);
 
-        final BenutzerDaten daten = dtoMapper.apply(getDTO(c_ID));
+        final BenutzerDaten daten = new BenutzerDaten();
+        daten.id = idBenutzer;
+        daten.typ = BenutzerTyp.ALLGEMEIN.id;
+        daten.typID = benutzer_allg.ID;
+        daten.anzeigename = benutzer_allg.AnzeigeName;
+        daten.name = credential.Benutzername;
+        daten.istAdmin = (benutzer.IstAdmin != null) && benutzer.IstAdmin;
+        daten.idCredentials = credential.ID;
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
     }
 
@@ -473,20 +468,20 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 
 
     /**
-     * Setzt für die angegebene Benutzer-ID den Anmeldenamen des Benutzers.
+     * Setzt für die angegebene Benutzer-ID den Name des Benutzers (Anmeldename).
      *
-     * @param id   die ID des Benutzers
-     * @param name der neue Anmeldename
+     * @param id     die ID des Benutzers
+     * @param name   der neue Benutzername für die Anmeldung
      *
      * @return die Response 200 bei Erfolg.
      */
-    public Response setAnmeldename(final Long id, final String name) {
+    public Response setBenutzername(final Long id, final String name) {
         if ((name == null) || "".equals(name))
-            return OperationError.CONFLICT.getResponse("Der Anmeldename muss gültig sein und darf nicht null oder leer sein");
+            return OperationError.CONFLICT.getResponse("Der Name für die Anmeldung muss gültig sein und darf nicht null oder leer sein");
         if (id.equals(conn.getUser().getId()))
-            return OperationError.CONFLICT.getResponse("Der aktuelle User kann seinen Benutzernamen nicht ändern.");
+            return OperationError.CONFLICT.getResponse("Der aktuelle Benutzer darf seinen eigenen Benutzernamen nicht ändern.");
         final DTOViewBenutzerdetails benutzer = getDTO(id);
-        // Der alte Anmeldename wurde übergeben.
+        // der alte Benutzername wurde übergeben...
         if (name.equals(benutzer.Benutzername))
             return Response.status(Status.OK).build();
         final DTOCredentials cred = conn.queryByKey(DTOCredentials.class, benutzer.credentialID);
@@ -496,7 +491,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         final List<DTOCredentials> creds = conn.queryAll(DTOCredentials.class);
         for (final DTOCredentials data : creds) {
             if (name.trim().equals(data.Benutzername))
-                return OperationError.CONFLICT.getResponse("Ein Benutzer mit dem Namen existiert bereits");
+                return OperationError.CONFLICT.getResponse("Ein Benutzer mit dem Namen existiert bereits - die Umbenennung kann nicht durchgeführt werden");
         }
         cred.Benutzername = name;
         conn.transactionPersist(cred);
