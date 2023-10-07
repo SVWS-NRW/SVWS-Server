@@ -819,8 +819,7 @@ export class RouteDataGostKursplanung {
 	updateRegeln = async (typ: string) => {
 		switch (typ) {
 			case "fixiereKurseAlle": {
-				alert("noch nicht implementiert...");
-				// public List<Pair<GostBlockungsergebnisKurs, GostBlockungsergebnisSchiene>> getMengeAllerNichtFixiertenKursSchienenPaare()
+				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerKursSchienenFixierungen());
 				break;
 			}
 			case "loeseKurseAlle": {
@@ -835,16 +834,17 @@ export class RouteDataGostKursplanung {
 			}
 			case "loeseKursauswahl": {
 				alert("noch nicht implementiert...");
+				// const listKursIDs = this.getListeKursauswahl();
+				// if (!listKursIDs.isEmpty())
+				// 	await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			case "fixiereSchuelerAlle": {
-				alert("noch nicht implementiert...");
-				// public List<Pair<Schueler, GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerKursPaare()
+				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerSchuelerKursFixierungen());
 				break;
 			}
 			case "fixiereSchuelerAbiturkurseAlle": {
-				alert("noch nicht implementiert...");
-				// public List<Pair<Schueler, GostBlockungsergebnisKurs>> getMengeAllerNichtFixiertenSchuelerAbiturKursPaare()
+				await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAllerSchuelerAbiturKursFixierungen());
 				break;
 			}
 			case "loeseSchuelerAlle": {
@@ -852,22 +852,21 @@ export class RouteDataGostKursplanung {
 				break;
 			}
 			case "fixiereSchuelerKursauswahl": {
-				alert("noch nicht implementiert...");
-				// const listKursIDs = this.getListeKursauswahl();
-				// if (!listKursIDs.isEmpty())
-				// 	await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
+				const listKursIDs = this.getListeKursauswahl();
+				if (!listKursIDs.isEmpty())
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "fixiereSchuelerAbiturkurseKursauswahl": {
-				alert("noch nicht implementiert...");
-				// public List<Schueler> getOfKursMengeAllerNichtFixiertenAbiturSchueler(final long idKurs)
+				const listKursIDs = this.getListeKursauswahl();
+				if (!listKursIDs.isEmpty())
+					await this.addRegeln(this.ergebnismanager.regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listKursIDs));
 				break;
 			}
 			case "loeseSchuelerKursauswahl": {
-				alert("noch nicht implementiert...");
-				// const listKursIDs = this.getListeKursauswahl();
-				// if (!listKursIDs.isEmpty())
-				// 	await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
+				const listKursIDs = this.getListeKursauswahl();
+				if (!listKursIDs.isEmpty())
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAllerSchuelerKursFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			default:
