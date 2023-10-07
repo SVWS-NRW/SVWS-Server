@@ -2003,6 +2003,25 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
+	 */
+	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAnKursSchienenFixierungenDerKurse(final @NotNull List<@NotNull Long> listeDerKursIDs) {
+		// List<ID> zu Set<ID>, damit man schnell auf Existenz überprüfen kann.
+		final @NotNull HashSet<@NotNull Long> setKursIDs = new HashSet<>(listeDerKursIDs);
+		final @NotNull List<@NotNull GostBlockungRegel> list = new ArrayList<>();
+
+		for (final @NotNull GostBlockungRegel regel : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if (setKursIDs.contains(regel.parameter.get(0)))
+				list.add(regel);
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen.
 	 *
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
@@ -2032,7 +2051,7 @@ public class GostBlockungsergebnisManager {
 	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
 	 *
 	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
-	*
+	 *
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen der übergebenen Kurse.
 	 */
 	public @NotNull List<@NotNull GostBlockungRegel> regelGetMengeAllerSchuelerKursFixierungenDerKurse(final @NotNull List<@NotNull Long> listeDerKursIDs) {

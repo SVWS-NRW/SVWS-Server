@@ -1865,6 +1865,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
+	 *
+	 * @param listeDerKursIDs  Die Liste aller Kurs-IDs.
+	 *
+	 * @return die Regel-Menge aller Kurs-Schienen-Fixierungen einer bestimmten Kursmenge.
+	 */
+	public regelGetMengeAnKursSchienenFixierungenDerKurse(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
+		const setKursIDs : HashSet<number> = new HashSet(listeDerKursIDs);
+		const list : List<GostBlockungRegel> = new ArrayList();
+		for (const regel of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
+			if (setKursIDs.contains(regel.parameter.get(0)))
+				list.add(regel);
+		return list;
+	}
+
+	/**
 	 * Liefert die Regel-Menge aller Schüler-Kurs-Fixierungen.
 	 *
 	 * @return die Regel-Menge aller Schüler-Kurs-Fixierungen.
