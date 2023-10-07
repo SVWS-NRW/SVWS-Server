@@ -146,18 +146,21 @@
 	const actionsRegeln = computed(() => {
 		const kursauswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === kursauswahl.size);
+		const hatAbiturkurse = (props.halbjahr.halbjahr > 1);
 		const result: Array<{ text: string; action: () => Promise<void>; default?: boolean; }> = [];
 		result.push({ text: "Fixiere alle Kurse", action: async () => await props.updateRegeln("fixiereKurseAlle") });
 		result.push({ text: "Löse alle fixierten Kurse", action: async () => await props.updateRegeln("loeseKurseAlle") });
 		if ((props.getKursauswahl().size === 0) || allSelected) {
 			result.push({ text: "Fixiere alle Schüler", action: async () => await props.updateRegeln("fixiereSchuelerAlle") });
-			result.push({ text: "Fixiere alle Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseAlle") });
+			if (hatAbiturkurse)
+				result.push({ text: "Fixiere alle Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseAlle") });
 			result.push({ text: "Löse alle fixierten Schüler", action: async () => await props.updateRegeln("loeseSchuelerAlle") });
 		} else {
 			result.push({ text: "Kursauswahl: Fixiere Kurse", action: async () => await props.updateRegeln("fixiereKursauswahl") });
 			result.push({ text: "Kursauswahl: Löse fixierte Kurse", action: async () => await props.updateRegeln("loeseKursauswahl") });
 			result.push({ text: "Kursauswahl: Fixiere Schüler", action: async () => await props.updateRegeln("fixiereSchuelerKursauswahl") });
-			result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
+			if (hatAbiturkurse)
+				result.push({ text: "Kursauswahl: Fixiere Schüler mit Abiturkursen", action: async () => await props.updateRegeln("fixiereSchuelerAbiturkurseKursauswahl") });
 			result.push({ text: "Kursauswahl: Löse fixierte Schüler", action: async () => await props.updateRegeln("loeseSchuelerKursauswahl") });
 		}
 		return result;
