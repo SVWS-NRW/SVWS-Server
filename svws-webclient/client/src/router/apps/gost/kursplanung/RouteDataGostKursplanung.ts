@@ -833,10 +833,9 @@ export class RouteDataGostKursplanung {
 				break;
 			}
 			case "loeseKursauswahl": {
-				alert("noch nicht implementiert...");
-				// const listKursIDs = this.getListeKursauswahl();
-				// if (!listKursIDs.isEmpty())
-				// 	await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
+				const listKursIDs = this.getListeKursauswahl();
+				if (!listKursIDs.isEmpty())
+					await this.deleteRegeln(this.ergebnismanager.regelGetMengeAnKursSchienenFixierungenDerKurse(listKursIDs));
 				break;
 			}
 			case "fixiereSchuelerAlle": {
