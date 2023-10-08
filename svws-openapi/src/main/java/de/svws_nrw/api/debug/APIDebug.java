@@ -34,7 +34,7 @@ public class APIDebug {
 	private static final String pathSwaggerUIDist = "META-INF/resources/webjars/swagger-ui-dist";
 
 	/** Die Version der Swagger-UI. Diese wird hier benötigt, da die Ressourcen in einem entsprechenden Unterverzeichnis liegen. */
-	private static final String versionSwaggerUIDist = "4.19.0";
+	private static final String versionSwaggerUIDist = "5.9.0";
 	// TODO determine Swagger UI Dist Version automatically...
 
 

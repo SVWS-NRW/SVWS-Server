@@ -98,8 +98,8 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addSwagger() {
-	    def version = "2.2.11";
-	    def versionUI = "4.19.0";
+	    def version = "2.2.16";
+	    def versionUI = "5.9.0";
 		project.configurations.create('swagger');
 	    project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-jaxrs2-jakarta:' + version);
 		project.dependencies.add('swagger', 'io.swagger.core.v3:swagger-annotations-jakarta:' + version);
