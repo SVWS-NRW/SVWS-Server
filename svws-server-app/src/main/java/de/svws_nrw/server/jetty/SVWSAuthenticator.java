@@ -42,17 +42,25 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
     public Authentication validateRequest(final ServletRequest req, final ServletResponse res, final boolean mandatory) throws ServerAuthException {
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
-        String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
+        final String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
         String username = "";
         String password = "";
+        String usernameISO_8859_1 = "";
+        String passwordISO_8859_1 = "";
         if (auth != null) {
             final int space = auth.indexOf(' ');
             if ((space > 0) && ("basic".equalsIgnoreCase(auth.substring(0, space)))) {
-                auth = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.UTF_8);
-                final int colon = auth.indexOf(':');
-                if (colon > 0) {
-                    username = auth.substring(0, colon);
-                    password = auth.substring(colon + 1);
+                final String authUTF_8 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.UTF_8);
+                final int colonUTF8 = authUTF_8.indexOf(':');
+                if (colonUTF8 > 0) {
+                    username = authUTF_8.substring(0, colonUTF8);
+                    password = authUTF_8.substring(colonUTF8 + 1);
+                }
+                final String authISO_8859_1 = new String(Base64.getDecoder().decode(auth.substring(space + 1)), StandardCharsets.ISO_8859_1);
+                final int colonISO_8859_1 = authISO_8859_1.indexOf(':');
+                if (colonISO_8859_1 > 0) {
+                    usernameISO_8859_1 = authISO_8859_1.substring(0, colonISO_8859_1);
+                    passwordISO_8859_1 = authISO_8859_1.substring(colonISO_8859_1 + 1);
                 }
             }
         }
@@ -68,10 +76,12 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         //Workaround Ende
 
         try {
-	        final UserIdentity user = login(username, password, request);
-	        if (user != null) {
+	        UserIdentity user = login(username, password, request);
+	        if (user != null)
 	            return new UserAuthentication(getAuthMethod(), user);
-	        }
+	        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
+	        if (user != null)
+	            return new UserAuthentication(getAuthMethod(), user);
         } catch (final WebApplicationException wae) {
     		try (var r = wae.getResponse(); var writer = response.getWriter()) {
     			response.setStatus(r.getStatus());
