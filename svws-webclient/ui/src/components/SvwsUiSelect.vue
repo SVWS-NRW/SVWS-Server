@@ -129,7 +129,7 @@
 	}
 
 	function onInput(value: string | number) {
-		if (props.autocomplete && (refList.value === null))
+		if (props.autocomplete && (refList.value === null) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
 			openListbox();
 		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
 		searchText.value = "" + value;
