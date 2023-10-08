@@ -5,9 +5,9 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnittLeistungenProps";
+import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungenProps";
 
-const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnittLeistungen.vue");
+const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungen.vue");
 
 export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, RouteSchuelerLernabschnitte> {
 

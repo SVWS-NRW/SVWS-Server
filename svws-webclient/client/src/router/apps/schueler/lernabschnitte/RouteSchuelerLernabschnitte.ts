@@ -2,14 +2,19 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
+import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
 import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
-import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchuelerLernabschnittAllgemein } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittAllgemein";
+import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
+import { routeSchuelerLernabschnittVersetzungAbschluss } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittVersetzungAbschluss";
+import { routeSchuelerLernabschnittKonferenz } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittKonferenz";
+import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittZeugnisdruck";
+import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
+
 import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
-import { RouteManager } from "~/router/RouteManager";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
 
@@ -23,7 +28,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		super.text = "Lernabschnitte";
 		super.children = [
 			routeSchuelerLernabschnittAllgemein,
-			routeSchuelerLernabschnittLeistungen
+			routeSchuelerLernabschnittLeistungen,
+			routeSchuelerLernabschnittVersetzungAbschluss,
+			routeSchuelerLernabschnittKonferenz,
+			routeSchuelerLernabschnittZeugnisdruck,
+			routeSchuelerLernabschnittNachpruefung,
 		];
 		super.defaultChild = routeSchuelerLernabschnittLeistungen;
 	}
