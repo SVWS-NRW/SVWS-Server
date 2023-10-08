@@ -42,12 +42,38 @@
 					</template>
 				</template>
 			</svws-ui-table>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-input-wrapper :grid="2">
+				<span class="font-bold col-span-full">Lernbereichsnoten</span>
+				<svws-ui-select title="Gesellschaftswissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete
+					v-model="lernbereichsnoteGSbzwAL" />
+				<svws-ui-select title="Naturwissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete
+					v-model="lernbereichsnoteNW" />
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing :size="2" />
+			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
+				<span class="font-bold col-span-full">Fehlstunden (Summe)</span>
+				<svws-ui-text-input placeholder="Maximal" type="number" min="0"
+					:model-value="manager().lernabschnittGet().fehlstundenGrenzwert || undefined"
+					@change="patch({ fehlstundenGrenzwert: Number($event) })" />
+				<svws-ui-text-input placeholder="Gesamt" type="number" min="0"
+					:model-value="manager().lernabschnittGet().fehlstundenGesamt || undefined"
+					@change="patch({ fehlstundenGesamt: Number($event) })" />
+				<svws-ui-text-input placeholder="Unendschuldigt" type="number" min="0"
+					:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt || undefined"
+					@change="patch({ fehlstundenUnentschuldigt: Number($event) })" />
+			</svws-ui-input-wrapper>
+			<svws-ui-input-wrapper>
+				<span class="font-bold col-span-full">Fehlzeiten</span>
+				<span>Hier könnte demnächst die Übersicht über die Fehlzeiten implementiert werden.</span>
+			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import { Note } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
@@ -60,6 +86,26 @@
 		{ key: "noteQuartal", label: "Quartalsnote", span: 0.25, sortable: false },
 		{ key: "note", label: "Note", span: 0.25, sortable: false },
 	];
+
+	function getLernbereichsnoten() : Note[] {
+		return [ Note.KEINE, Note.SEHR_GUT, Note.GUT, Note.BEFRIEDIGEND, Note.AUSREICHEND, Note.MANGELHAFT, Note.UNGENUEGEND ];
+	}
+
+	const lernbereichsnoteGSbzwAL = computed<Note | undefined>({
+		get: () => {
+			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichGSbzwAL);
+			return note === null ? undefined : note;
+		},
+		set: (value) => void props.patch({ noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+	});
+
+	const lernbereichsnoteNW = computed<Note | undefined>({
+		get: () => {
+			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichNW);
+			return note === null ? undefined : note;
+		},
+		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+	});
 
 </script>
 

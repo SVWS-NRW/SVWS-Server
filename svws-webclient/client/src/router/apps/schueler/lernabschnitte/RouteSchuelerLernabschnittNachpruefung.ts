@@ -32,8 +32,7 @@ export class RouteSchuelerLernabschnittNachpruefung extends RouteNode<unknown, R
 		return {
 			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
-			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
-			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen
+			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt
 		};
 	}
 

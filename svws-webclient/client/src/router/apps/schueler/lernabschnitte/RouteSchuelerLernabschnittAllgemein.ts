@@ -32,8 +32,7 @@ export class RouteSchuelerLernabschnittAllgemein extends RouteNode<unknown, Rout
 		return {
 			schule: api.schuleStammdaten,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
-			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
-			patchBemerkungen: routeSchuelerLernabschnitte.data.patchBemerkungen
+			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt
 		};
 	}
 

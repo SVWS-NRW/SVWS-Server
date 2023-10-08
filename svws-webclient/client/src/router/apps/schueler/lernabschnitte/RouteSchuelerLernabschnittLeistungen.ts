@@ -30,6 +30,7 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<unknown, Rou
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittLeistungenProps {
 		return {
 			manager: () => routeSchuelerLernabschnitte.data.manager,
+			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchLeistung: routeSchuelerLernabschnitte.data.patchLeistung
 		};
 	}

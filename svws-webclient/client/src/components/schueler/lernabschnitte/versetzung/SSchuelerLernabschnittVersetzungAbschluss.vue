@@ -1,13 +1,48 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		Hier entsteht eine Ansicht für die Versetzungs- bzw. Abschlussberechnung
+		<svws-ui-content-card title="Versetzung">
+			<svws-ui-input-wrapper :grid="2">
+				<div class="opacity-50"> TODO: istAbschlussPrognose </div>
+				<div class="opacity-50"> TODO: versetzungsvermerk </div>
+				<div class="opacity-50"> TODO: abschlussart </div>
+				<svws-ui-select title="Folgeklasse" v-model="folgeklasse" :items="props.manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete />
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper class="opacity-50">
+				<div> TODO: abschluss </div>
+				<div> TODO: abschlussBerufsbildend </div>
+			</svws-ui-input-wrapper>
+			<svws-ui-spacing />
+			<div class="col-span-full flex gap-4">
+				<svws-ui-button type="primary"> Versetzungs-/Abschluss-Berechnung </svws-ui-button>
+			</div>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Abschluss Berechnung">
+			<svws-ui-input-wrapper>
+				<svws-ui-textarea-input placeholder="Text" :model-value="manager().lernabschnittGet().textErgebnisPruefungsalgorithmus"
+					@change="textErgebnisPruefungsalgorithmus => patch({ textErgebnisPruefungsalgorithmus })"
+					resizeable="vertical" :autoresize="true" />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed } from 'vue';
+	import type { KlassenListeEintrag } from "@core";
 	import type { SchuelerLernabschnittVersetzungAbschlussProps } from "./SSchuelerLernabschnittVersetzungAbschlussProps";
 
 	const props = defineProps<SchuelerLernabschnittVersetzungAbschlussProps>();
+
+	const folgeklasse = computed<KlassenListeEintrag | undefined>({
+		get: () => {
+			const id = props.manager().lernabschnittGet().folgeklassenID;
+			if (id === null)
+				return undefined;
+			return props.manager().klasseGetByIdOrException(id);
+		},
+		set: (value) => void props.patch({ folgeklassenID: (value === undefined) ? null : value.id })
+	});
 
 </script>
