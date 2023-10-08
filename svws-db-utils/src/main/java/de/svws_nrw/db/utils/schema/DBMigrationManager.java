@@ -351,7 +351,13 @@ public final class DBMigrationManager {
 
 		try {
 			logger.log("-> Verbinde zur Quell-Datenbank... ");
-			srcManager = getSchemaManager(srcConfig, Benutzer.create(srcConfig), true);
+			try {
+				srcManager = getSchemaManager(srcConfig, Benutzer.create(srcConfig), true);
+			} catch (final PersistenceException e) {
+				if (e.getMessage().startsWith("java.lang.IllegalStateException: Could not determine FileFormat"))
+					throw new DBException("Fehlerhaftes oder zu altes MDB-Datei-Format.");
+				throw e;
+			}
 
 			logger.log("-> Verbinde zum Ziel-Schema...");
 			tgtManager = getSchemaManager(tgtConfig, Benutzer.create(tgtConfig), false);
