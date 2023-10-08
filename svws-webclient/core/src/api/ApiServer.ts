@@ -550,32 +550,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setBenutzerPasswort für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/password
-	 *
-	 * Setzt das Kennwort eines Benutzers.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Das Kennwort wurde erfolgreich gesetzt.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.
-	 *   Code 404: Die Kennwortinformationen zu dem Benutzer sind nicht vorhanden.
-	 *   Code 409: Die übergebenen Daten sind fehlerhaft
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string | null} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 */
-	public async setBenutzerPasswort(data : string | null, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/benutzer/{id : \\d+}/password"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = JSON.stringify(data);
-		await super.postJSON(path, body);
-		return;
-	}
-
-
-	/**
 	 * Implementierung der DELETE-Methode removeBenutzerAdmin für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/{id : \d+}/removeAdmin
 	 *
 	 * Entfernt die Admin-Berechtigung des Benutzers mit der id.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Entfernen  der Admin-Berechtigung hat.

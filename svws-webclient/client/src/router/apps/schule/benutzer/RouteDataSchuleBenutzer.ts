@@ -249,7 +249,7 @@ export class RouteDataSchuleBenutzer {
 	setPassword = async (passwort : string) => {
 		if (this.benutzerManager === undefined)
 			return false;
-		await api.server.setBenutzerPasswort(passwort, api.schema, this.benutzerManager.getID());
+		await api.server.setPassword(passwort, api.schema, this.benutzerManager.getID());
 		setTimeout(() => alert("Das Kennwort wurde erfolgreich geändert."), 300);
 	}
 

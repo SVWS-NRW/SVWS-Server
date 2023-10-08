@@ -387,36 +387,6 @@ public class APIBenutzer {
 
 
     /**
-     * Die OpenAPI-Methode für Setzen eines Benutzerkennwortes.
-     *
-     * @param schema  das Datenbankschema, in welchem die Blockung erstellt wird
-     * @param id      die ID des Benutzers
-     * @param is      der Input-Stream mit dem Kennwort
-     * @param request die Informationen zur HTTP-Anfrage
-     *
-     * @return die HTTP-Antwort
-     */
-    @POST
-    @Path("/{id : \\d+}/password")
-    @Operation(summary = "Setzt das Kennwort eines Benutzers.", description = "Setzt das Kennwort eines Benutzers."
-            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Setzen des Kennwortes besitzt.")
-    @ApiResponse(responseCode = "204", description = "Das Kennwort wurde erfolgreich gesetzt.")
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Kennwort zu setzen.")
-    @ApiResponse(responseCode = "404", description = "Die Kennwortinformationen zu dem Benutzer sind nicht vorhanden.")
-    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
-    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response setBenutzerPasswort(
-            @PathParam("schema") final String schema, @PathParam("id") final long id,
-            @RequestBody(description = "Das Kennwort", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
-            @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setPassword(id, JSONMapper.toString(is)),
-        	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
-    }
-
-
-
-
-    /**
      * Die OpenAPI-Methode für die Abfrage des Katalogs der Benutzerkompetenzen.
      *
      * @param schema  das Datenbankschema, auf welches die Abfrage ausgeführt werden
