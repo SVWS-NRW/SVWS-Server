@@ -54,7 +54,7 @@
 	async function deleteMultipleUser() {
 		const items = selectedItems.value;
 		selectedItems.value = [];
-		await props.deleteBenutzerAllgemein(items);
+		await props.deleteBenutzerMenge(items);
 	}
 
 </script>

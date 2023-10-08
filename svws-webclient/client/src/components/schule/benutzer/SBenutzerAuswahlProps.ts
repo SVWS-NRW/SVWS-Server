@@ -5,6 +5,6 @@ export interface BenutzerAuswahlProps {
 	mapBenutzer: Map<number, BenutzerListeEintrag>;
 	gotoBenutzer: (benutzer: BenutzerListeEintrag) => Promise<void>;
 	createBenutzerAllgemein : (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
-	deleteBenutzerAllgemein : (selectedItems: BenutzerListeEintrag[]) => Promise<void>;
+	deleteBenutzerMenge : (selectedItems: BenutzerListeEintrag[]) => Promise<void>;
 	gotoSchule: () => Promise<void>;
 }

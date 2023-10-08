@@ -108,6 +108,10 @@ export class RouteDataSchuleBenutzer {
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
 
+	gotoBenutzergruppe = async (id: number) => {
+		await RouteManager.doRoute({ name: "benutzergruppe_daten", params: { id }});
+	}
+
 	getBenutzerManager = () => {
 		return this._state.value.benutzerManager;
 	}
@@ -439,30 +443,35 @@ export class RouteDataSchuleBenutzer {
 		ble.idCredentials = result.idCredentials;
 		this.listBenutzer.add(ble);
 		this.mapBenutzer.set(ble.id, ble);
-		this.auswahl = ble;
-		this.commit();
 		await this.gotoBenutzer(ble);
 	}
 
 	/**
 	 * Entfernt die ausgewählten Benutzer
 	 */
-	deleteBenutzerAllgemein = async (selectedItems: BenutzerListeEintrag[]): Promise<void> => {
-		const bids = new ArrayList<number>();
+	deleteBenutzerMenge = async (selectedItems: BenutzerListeEintrag[]): Promise<void> => {
+		// Prüfe, ob die aktuelle Auswahl in der Liste der zu entfernenden Benutzer enthalten ist
 		let auswahl_gewaehlt = false;
 		if (this.auswahl !== undefined)
 			auswahl_gewaehlt = selectedItems.includes(this.auswahl);
-		for (const b of selectedItems)
-			bids.add(b.id)
-		await api.server.removeBenutzerAllgemein(bids, api.schema);
-		for (const i of bids)
-			this.mapBenutzer.delete(i);
-		// TODO Der Benutzer wird in der Auswahl nicht entfernt, erst beim Reload.
-		this.setPatchedState({
-			mapBenutzer: this._state.value.mapBenutzer,
-		})
+		// Rufe die Methode zum Entfernen der Benutzer beim Server auf
+		const benutzerIDs = new ArrayList<number>();
+		for (const benutzerEintrag of selectedItems)
+			benutzerIDs.add(benutzerEintrag.id)
+		await api.server.removeBenutzerMenge(benutzerIDs, api.schema);
+		// Aktualisiere die Liste der Benutzer und die zugehörige Map
+		for (const benutzerID of benutzerIDs) {
+			const benutzer = this.mapBenutzer.get(benutzerID);
+			if (benutzer !== undefined) {
+				this.listBenutzer.removeElementAt(this.listBenutzer.indexOf(benutzer));
+				this.mapBenutzer.delete(benutzerID);
+			}
+		}
+		// Aktualisiere entweder den gewählten Benutzer, falls dieser entfernt wurde oder triggere ein Refresh der Anzeige
 		if (auswahl_gewaehlt)
 			 await this.gotoBenutzer(this.listBenutzer.get(0));
+		else
+			this.commit();
 	}
 
 	/**

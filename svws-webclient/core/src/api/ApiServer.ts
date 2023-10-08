@@ -1002,12 +1002,12 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode removeBenutzerAllgemein für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/remove
+	 * Implementierung der DELETE-Methode removeBenutzerMenge für den Zugriff auf die URL https://{hostname}/db/{schema}/benutzer/remove
 	 *
 	 * Löscht einen oder mehrere Benutzer.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 204: Die Benutzer wurden erfolgreich gelöscht.
+	 *   Code 200: Die Benutzer wurden erfolgreich gelöscht.
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Benutzer zu löschen.
 	 *   Code 404: Benötigte Information zum Benutzer wurden nicht in der DB gefunden.
 	 *   Code 409: Die übergebenen Daten sind fehlerhaft
@@ -1016,7 +1016,7 @@ export class ApiServer extends BaseApi {
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 */
-	public async removeBenutzerAllgemein(data : List<number>, schema : string) : Promise<void> {
+	public async removeBenutzerMenge(data : List<number>, schema : string) : Promise<void> {
 		const path = "/db/{schema}/benutzer/remove"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";

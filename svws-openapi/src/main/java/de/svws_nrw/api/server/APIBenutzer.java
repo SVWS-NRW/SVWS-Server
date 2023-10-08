@@ -663,16 +663,16 @@ public class APIBenutzer {
     @Path("/remove")
     @Operation(summary = "Löscht einen oder mehrere Benutzer.", description = "Löscht einen oder mehrere Benutzer."
             + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen besitzt.")
-    @ApiResponse(responseCode = "204", description = "Die Benutzer wurden erfolgreich gelöscht.")
+    @ApiResponse(responseCode = "200", description = "Die Benutzer wurden erfolgreich gelöscht.")
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzer zu löschen.")
     @ApiResponse(responseCode = "404", description = "Benötigte Information zum Benutzer wurden nicht in der DB gefunden.")
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-    public Response removeBenutzerAllgemein(
+    public Response removeBenutzerMenge(
             @PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeBenutzerAllgemein(bids),
+    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeBenutzerMenge(bids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 

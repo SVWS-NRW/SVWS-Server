@@ -22,6 +22,9 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
+import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -341,47 +344,100 @@ public final class DataBenutzerDaten extends DataManager<Long> {
         return Response.status(Status.OK).build();
     }
 
+
+    private void _removeBenutzerAllgemein(final DTOBenutzer benutzer) {
+		if (benutzer.Allgemein_ID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Benutzer mit der ID %d vom Typ ALLGEMEIN hat keine entsprechende allgemeine ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+		final DTOBenutzerAllgemein benutzerAllgemein = conn.queryByKey(DTOBenutzerAllgemein.class, benutzer.Allgemein_ID);
+		if (benutzerAllgemein == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der allgemeine Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Allgemein_ID));
+		if (benutzerAllgemein.CredentialID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der allgemeine Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerAllgemein.ID));
+		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerAllgemein.CredentialID);
+		if (credential == null)
+			throw OperationError.NOT_FOUND.exception("Die Credentials mit der ID %d für den allgemeinen Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerAllgemein.CredentialID, benutzerAllgemein.ID));
+		conn.transactionRemove(credential);
+		conn.transactionFlush();
+		conn.transactionRemove(benutzerAllgemein);
+		conn.transactionFlush();
+		conn.transactionRemove(benutzer);
+		conn.transactionFlush();
+    }
+
+    private void _removeBenutzerErzieher(final DTOBenutzer benutzer) {
+		if (benutzer.Erzieher_ID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Benutzer mit der ID %d vom Typ ERZIEHER hat keine entsprechende Erzieher-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+		final DTOSchuelerErzieherAdresse benutzerErzieher = conn.queryByKey(DTOSchuelerErzieherAdresse.class, benutzer.Erzieher_ID);
+		if (benutzerErzieher == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Erzieher-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Erzieher_ID));
+		if (benutzerErzieher.CredentialID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Erzieher-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerErzieher.ID));
+		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerErzieher.CredentialID);
+		if (credential == null)
+			throw OperationError.NOT_FOUND.exception("Die Credentials mit der ID %d für den Erzieher-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerErzieher.CredentialID, benutzerErzieher.ID));
+		conn.transactionRemove(credential);
+		conn.transactionFlush();
+		conn.transactionRemove(benutzer);
+		conn.transactionFlush();
+    }
+
+    private void _removeBenutzerLehrer(final DTOBenutzer benutzer) {
+		if (benutzer.Lehrer_ID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Benutzer mit der ID %d vom Typ LEHRER hat keine entsprechende Lehrer-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+		final DTOLehrer benutzerLehrer = conn.queryByKey(DTOLehrer.class, benutzer.Lehrer_ID);
+		if (benutzerLehrer == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Lehrer-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Lehrer_ID));
+		if (benutzerLehrer.CredentialID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Lehrer-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerLehrer.ID));
+		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerLehrer.CredentialID);
+		if (credential == null)
+			throw OperationError.NOT_FOUND.exception("Die Credentials mit der ID %d für den Lehrer-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerLehrer.CredentialID, benutzerLehrer.ID));
+		conn.transactionRemove(credential);
+		conn.transactionFlush();
+		conn.transactionRemove(benutzer);
+		conn.transactionFlush();
+    }
+
+    private void _removeBenutzerSchueler(final DTOBenutzer benutzer) {
+		if (benutzer.Schueler_ID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Benutzer mit der ID %d vom Typ SCHUELER hat keine entsprechende Schüler-ID zugeordnet. Dies ist nicht zulässig.".formatted(benutzer.ID));
+		final DTOSchueler benutzerSchueler = conn.queryByKey(DTOSchueler.class, benutzer.Schueler_ID);
+		if (benutzerSchueler == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Schüler-Benutzer mit der ID %d ist nicht in der Datenbank vorhanden.".formatted(benutzer.Schueler_ID));
+		if (benutzerSchueler.CredentialID == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Der Schüler-Benutzer mit der ID %d hat keine Credentials zugeordnet. Dies ist nicht zulässig.".formatted(benutzerSchueler.ID));
+		final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, benutzerSchueler.CredentialID);
+		if (credential == null)
+			throw OperationError.NOT_FOUND.exception("Die Credentials mit der ID %d für den Schüler-Benutzer mit der ID %d konnten nicht gefunden werden.".formatted(benutzerSchueler.CredentialID, benutzerSchueler.ID));
+		conn.transactionRemove(credential);
+		conn.transactionFlush();
+		conn.transactionRemove(benutzer);
+		conn.transactionFlush();
+    }
+
 	/**
-	 * Löscht die Benutzer mit den IDs
+	 * Entfernt die Benutzer mit den übergebenen IDs
 	 *
-	 * @param bids die IDs der Benutzer
+	 * @param benutzerIDs   die IDs der zu entfernenden Benutzer
 	 *
-	 * @return bei Erfolg eine HTTP-Response 200
+	 * @return die HTTP-Response mit dem Status OK (200)
+	 * @throws WebApplicationException im Fehlerfall
 	 */
-	public Response removeBenutzerAllgemein(final List<Long> bids) {
-		final String strErrorBenutzerCredIDFehler = "Der zu löschende Benutzer mit der ID %d hat keine Credentials zugeordnet.";
-		final String strErrorCredIDFehler = "Der zu löschende Datensatz in DTOCredentials mit der ID %d existiert nicht.";
-		final String strErrorBenutzerIDFehlt = "Der zu löschende Datensatz in DTOBenutzerAllgemein mit der ID %d existiert nicht.";
+	public Response removeBenutzerMenge(final List<Long> benutzerIDs) {
+		final long idSelf = conn.getUser().getId();
+		if (benutzerIDs.contains(idSelf))
+			throw OperationError.CONFLICT.exception("Der aktuelle Benutzer kann sich nicht selber löschen.");
 
-		for (final Long id : bids) {
-			final DTOViewBenutzerdetails v_benutzer = getDTO(id);
-
-			// Ist der angemeldete Benutzer dabei?
-			if (id.equals(conn.getUser().getId()))
-				return OperationError.CONFLICT.getResponse("Der aktuelle User kann sich selber nicht löschen.");
-
-			// Lese credential-ID
-			final Long c_ID = v_benutzer.credentialID;
-			if (c_ID == null)
-				throw OperationError.NOT_FOUND.exception(strErrorBenutzerCredIDFehler.formatted(id));
-			// Credential löschen
-			final DTOCredentials credential = conn.queryByKey(DTOCredentials.class, c_ID);
-			if (credential == null)
-				throw OperationError.NOT_FOUND.exception(strErrorCredIDFehler.formatted(c_ID));
-			conn.transactionRemove(credential);
-			conn.transactionFlush();
-
-			// Lese benutzer-ID
-			final Long b_ID = v_benutzer.ID;
-			// Benutzer löschen.
-			// Damit werden die dazugehörige Datensätze in den Tabenllen DaBenutzerAllgemein, BenutzerKompetenzen und BenutzergruppenMitglieder gelöscht.
-			final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, b_ID);
-			final DTOBenutzerAllgemein allg_benutzer =  conn.queryByKey(DTOBenutzerAllgemein.class, benutzer.Allgemein_ID);
-
-			if (allg_benutzer == null)
-				throw OperationError.NOT_FOUND.exception(strErrorBenutzerIDFehlt.formatted(id));
-			conn.transactionRemove(allg_benutzer);
-			//conn.transactionRemove(benutzer);
+		for (final Long idBenutzer : benutzerIDs) {
+			final DTOBenutzer benutzer = conn.queryByKey(DTOBenutzer.class, idBenutzer);
+			if (benutzer == null)
+				throw OperationError.NOT_FOUND.exception("Ein Benutzer mit der ID %d konnte nicht gefunden werden.".formatted(idBenutzer));
+			switch (benutzer.Typ) {
+				case ALLGEMEIN -> _removeBenutzerAllgemein(benutzer);
+				case ERZIEHER -> _removeBenutzerErzieher(benutzer);
+				case LEHRER -> _removeBenutzerLehrer(benutzer);
+				case SCHUELER -> _removeBenutzerSchueler(benutzer);
+			}
 		}
 		return Response.status(Status.OK).build();
 	}
@@ -395,7 +451,6 @@ public final class DataBenutzerDaten extends DataManager<Long> {
      * @return bei Erfolg eine HTTP-Response 204
      */
     public Response removeKompetenzen(final Long id, final List<Long> kids) {
-
     	// Prüft, die Zulässigkeit der Kompetenzen für die Schulform
         this.istKompetenzZulaessig(kids);
 

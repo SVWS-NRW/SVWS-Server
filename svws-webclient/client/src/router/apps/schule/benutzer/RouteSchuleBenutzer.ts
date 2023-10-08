@@ -65,7 +65,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 			mapBenutzer: this.data.mapBenutzer,
 			gotoBenutzer: this.data.gotoBenutzer,
 			createBenutzerAllgemein: this.data.createBenutzerAllgemein,
-			deleteBenutzerAllgemein: this.data.deleteBenutzerAllgemein,
+			deleteBenutzerMenge: this.data.deleteBenutzerMenge,
 			gotoSchule: routeSchule.gotoSchule
 		};
 	}
