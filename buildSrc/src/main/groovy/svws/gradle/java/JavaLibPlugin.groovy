@@ -30,8 +30,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionPersistenceAPI = '3.1.0';
 		def versionEclipsePersistence = '2.2.3';
 		def versionEclipselink = '4.0.2';
-		def versionMariaDB = '3.1.4';
-		def versionSQLite = '3.42.0.1';
+		def versionMariaDB = '3.2.0';
+		def versionSQLite = '3.43.0.0';
 		def versionUCanAccess = '5.0.1';
 		def versionJackcess = '4.0.5';
 		def versionMySQL = '8.0.33';
@@ -62,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "11.0.15";
+		def version = "11.0.16";
 		def versionServletApi = "5.0.2";
 		project.configurations.create('jetty');
 	    project.dependencies.add('jetty', 'org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:' + versionServletApi);
@@ -88,7 +88,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.4.Final";
+		def version = "6.2.5.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
@@ -117,8 +117,8 @@ class JavaLibPlugin implements Plugin<Project> {
     	this.project = project;
     	project.pluginManager.apply "java"
 
-    	project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.9.3');
-    	project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.9.3');
+    	project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.10.0');
+    	project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.10.0');
 
 		project.java.sourceCompatibility = JavaVersion.VERSION_17
 		project.java.targetCompatibility = JavaVersion.VERSION_17
