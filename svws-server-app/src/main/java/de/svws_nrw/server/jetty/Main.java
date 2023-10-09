@@ -2,7 +2,6 @@ package de.svws_nrw.server.jetty;
 
 import java.util.List;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.api.ResourceFile;
 import de.svws_nrw.api.SVWSVersion;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -105,7 +104,6 @@ public class Main {
 
 		// Initialize the HTTP Server (v1.1 or v2 depending on the current configuration)
 		HttpServer.init();
-		HttpServer.addOpenAPIApplication(OpenAPIApplication.class);
 		HttpServer.start();
 	}
 

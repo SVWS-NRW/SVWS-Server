@@ -36,6 +36,8 @@ import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
+import de.svws_nrw.api.OpenAPIApplication;
+import de.svws_nrw.api.debug.RestAppSwaggerUI;
 import de.svws_nrw.config.SVWSKonfiguration;
 
 
@@ -206,6 +208,7 @@ public class HttpServer {
 		// Add several standard configurations for this application
 		addLoginService();
 		addHTTPConfiguration();
+		addAPIApplications();
 	}
 
 
@@ -221,15 +224,23 @@ public class HttpServer {
 		server.join();
 	}
 
+	/**
+	 * Fügt die angegebene API-Applikation zum Server hinzu.
+	 *
+	 * @param c          die Applikation
+	 * @param pathSpec   die Pfad-Spezifikation
+	 */
+	private static void addApplication(final Class<? extends Application> c, final String pathSpec) {
+		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, pathSpec);
+		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
+	}
 
 	/**
-	 * Fügt eine OpenAPI-Applikation zum Server hinzu.
-	 *
-	 * @param c  die hinzuzufügende OpenAPI-REST-{@link Application}
+	 * Fügt die Rest-Applikationen zum Server hinzu.
 	 */
-	public static void addOpenAPIApplication(final Class<? extends Application> c) {
-		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, "/*");
-		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
+	private static void addAPIApplications() {
+		addApplication(RestAppSwaggerUI.class, "/debug/*");
+		addApplication(OpenAPIApplication.class, "/*");
 	}
 
 }

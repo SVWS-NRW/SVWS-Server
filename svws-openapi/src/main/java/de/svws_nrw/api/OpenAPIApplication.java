@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.svws_nrw.api.client.APISVWSClient;
-import de.svws_nrw.api.debug.APIDebug;
 import de.svws_nrw.api.schema.APISchemaRoot;
 import de.svws_nrw.api.server.APIAdressbuch;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
@@ -131,7 +130,6 @@ public final class OpenAPIApplication extends Application {
 		this.classes.add(OpenAPICorsFilter.class);
 
 		this.classes.add(APIConfig.class);
-		this.classes.add(APIDebug.class);
 		this.classes.add(APISVWSClient.class);
 		this.classes.add(APIAlgoGesamtschuleAbschluss.class);
 		this.classes.add(APIAlgoGostAbschluss.class);
