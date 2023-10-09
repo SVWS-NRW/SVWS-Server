@@ -50,7 +50,7 @@
 			<template v-if="kwAuswahl">
 				<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kw-auswahl="kwAuswahl"
 					:manager="() => stundenplanmanager" :kursmanager="kursmanager" :kursklausurmanager="kursklausurmanager" :wochentyp="() => 0" :kurse-gefiltert="kurseGefiltert" :sum-schreiber="sumSchreiber"
-					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer">
+					:on-drop="onDrop" :on-drag="onDrag" :drag-data="() => dragData" :faecher-manager="faecherManager" :map-lehrer="mapLehrer" :check-drop-zone-zeitraster="checkDropZoneZeitraster">
 					<template #kwAuswahl>
 						<div class="col-span-2 flex gap-0.5 my-auto">
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
@@ -74,6 +74,32 @@
 					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
 			</template>
 		</svws-ui-content-card>
+		<svws-ui-content-card>
+			<template #title>
+				<span class="pt-1 text-headline-md leading-none inline-flex gap-1">
+					<template v-if="anzahlProKwKonflikte(3).isEmpty()">
+						<i-ri-checkbox-circle-fill class="text-success -my-1" />
+						<span>Keine Konflikte</span>
+					</template>
+					<template v-else>
+						<span>Konflikte</span>
+					</template>
+				</span>
+			</template>
+			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-6">
+				<div class="text-headline-sm">Schüler:innen mit drei oder mehr Klausuren in dieser KW</div>
+				<ul class="flex flex-col gap-3">
+					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
+						<span class="svws-ui-badge">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+						<div class="leading-tight gap-2">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+								{{ klausur.kursKurzbezeichnung + ' (' + kursklausurmanager().terminByKursklausur(klausur)!.datum + ')' }}
+							</span>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</svws-ui-content-card>
 	</div>
 </template>
 
@@ -81,7 +107,7 @@
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List} from "@core";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { GostKlausurtermin, StundenplanZeitraster} from "@core";
+	import { GostKlausurtermin, HashSet, StundenplanZeitraster, DateUtils, ZulaessigesFach} from "@core";
 	import { computed, ref, onMounted } from "vue";
 	import { ArrayList} from "@core";
 
@@ -92,6 +118,18 @@
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
 		return props.stundenplanmanager.kalenderwochenzuordnungGetMengeAsList();
 	}
+
+	const dragData = ref<GostKlausurplanungDragData>(undefined);
+	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
+
+	const anzahlProKwKonflikte = (threshold: number) => {
+		if (dragData.value !== undefined && dragData.value instanceof GostKlausurtermin && zeitrasterSelected.value !== undefined)
+			return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(dragData.value, props.stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl.value, zeitrasterSelected.value), threshold);
+		return props.kursklausurmanager().klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kwAuswahl.value.kw, threshold);
+	}
+
+	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0); // TODO: Fachkuerzel für Kursklausur
+
 
 	function navKalenderwoche(by: number) {
 		if (by > 0) {
@@ -108,6 +146,24 @@
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
 		if (dragData.value instanceof GostKlausurtermin && dragData.value?.datum !== null)
 			event.preventDefault();
+	}
+
+	function isDropZoneZeitraster(zeitraster: StundenplanZeitraster) : boolean {
+		return true;
+		// const data = props.dragData();
+		// if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
+		// 	return false;
+		// if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
+		// 	return true;
+		// const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
+		// return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
+	}
+
+	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster) : void {
+		if (isDropZoneZeitraster(zeitraster)) {
+			zeitrasterSelected.value = zeitraster;
+			event.preventDefault();
+		}
 	}
 
 	function kurseGefiltert(day: Wochentag, stunde: number) {
@@ -127,14 +183,14 @@
 		return summe;
 	}
 
-	const dragData = ref<GostKlausurplanungDragData>(undefined);
-
 	function isDraggable(object: any) : boolean {
 		return true;
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		dragData.value = data;
+		if (data === undefined)
+			zeitrasterSelected.value = undefined;
 	};
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
@@ -173,7 +229,7 @@
 <style lang="postcss" scoped>
 .page--content {
   @apply grid;
-  grid-template-columns: minmax(20rem, 0.25fr) 1fr;
+  grid-template-columns: minmax(22rem, 0.2fr) 1fr minmax(22rem, 0.2fr);
 }
 
 .svws-kw-auswahl {

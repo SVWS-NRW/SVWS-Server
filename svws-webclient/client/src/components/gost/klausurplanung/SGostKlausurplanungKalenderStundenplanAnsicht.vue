@@ -48,7 +48,7 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<div class="svws-ui-stundenplan--stunde flex-row relative" :style="posZeitraster(wochentag, stunde)"
-						@dragover="checkDropZoneZeitraster($event, wochentag, stunde)" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
+						@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
 						<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-20">
 							<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 								<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
@@ -246,22 +246,6 @@
 
 	function isDraggable() : boolean {
 		return props.useDragAndDrop && (props.dragData() === undefined);
-	}
-
-	function isDropZoneZeitraster(wochentag: Wochentag, stunde: number) : boolean {
-		return true;
-		// const data = props.dragData();
-		// if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
-		// 	return false;
-		// if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
-		// 	return true;
-		// const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-		// return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
-	}
-
-	function checkDropZoneZeitraster(event: DragEvent, wochentag: Wochentag, stunde: number) : void {
-		if (isDropZoneZeitraster(wochentag, stunde))
-			event.preventDefault();
 	}
 
 	function isDropZonePausenzeit(pause : StundenplanPausenzeit) : boolean {

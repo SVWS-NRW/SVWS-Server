@@ -1,6 +1,5 @@
-import type { GostFaecherManager, GostKlausurtermin, GostKursklausurManager, KursManager, LehrerListeEintrag, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
-import { type StundenplanManager, type StundenplanPausenaufsicht,
-	type StundenplanKurs, type StundenplanKlassenunterricht, type StundenplanUnterricht, type StundenplanZeitraster, type StundenplanPausenzeit } from "@core";
+import type { GostFaecherManager, GostKursklausurManager, KursManager, LehrerListeEintrag, List, StundenplanKalenderwochenzuordnung, Wochentag } from "@core";
+import { type StundenplanManager, type StundenplanZeitraster } from "@core";
 import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 
 export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
@@ -21,5 +20,5 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
 	faecherManager: GostFaecherManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
-
+	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster) => void;
 }

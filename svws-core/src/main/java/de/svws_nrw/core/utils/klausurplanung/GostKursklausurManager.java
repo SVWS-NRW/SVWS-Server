@@ -66,6 +66,7 @@ public class GostKursklausurManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_idTermin = new HashMap2D<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_kursart_and_idTermin = new HashMap3D<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_kw_and_schuelerId = new HashMap2D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_terminId_and_schuelerId = new HashMap2D<>();
 
 	// GostKlausurtermin
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurtermin> _termin_by_id = new HashMap<>();
@@ -124,6 +125,7 @@ public class GostKursklausurManager {
 		update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		update_terminmenge_by_quartal();
 		update_terminmenge_by_datum();
+		update_kursklausurmenge_by_terminId_and_schuelerId();
 
 		update_schuelerIds_by_idTermin(); // benötigt _kursklausurmenge_by_idTermin
 		update_kursklausurmenge_by_kw_and_schuelerId(); // benötigt _kursklausurmenge_by_idTermin
@@ -189,6 +191,15 @@ public class GostKursklausurManager {
 					Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
 			}
 		}
+	}
+
+	private void update_kursklausurmenge_by_terminId_and_schuelerId() {
+		_kursklausurmenge_by_terminId_and_schuelerId.clear();
+		for (final @NotNull GostKursklausur kk : _kursklausurmenge) {
+			for (final @NotNull Long sId : kk.schuelerIds)
+				Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_terminId_and_schuelerId, kk.idTermin, sId).add(kk);
+		}
+
 	}
 
 	// #####################################################################
@@ -817,6 +828,72 @@ public class GostKursklausurManager {
 	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(final @NotNull GostKlausurtermin termin,
 			final int threshold) {
 		return klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(termin, null, threshold);
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param datum		das Datum, auf
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
+			final @NotNull String datum, final int threshold) {
+		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
+		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
+		int kwTermin = termin.datum != null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
+		if (kwDatum == kwTermin)
+			return ergebnis;
+
+		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kwDatum);
+		if (kursklausurmenge_by_schuelerId == null)
+			return ergebnis;
+
+		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
+			List<@NotNull GostKursklausur> temp = entry.getValue();
+			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
+			List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
+			if (klausurenInTermin != null)
+				klausuren.addAll(klausurenInTermin);
+			if (klausuren.size() >= threshold)
+				ergebnis.put(entry.getKey(), klausuren);
+		}
+
+
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param kw    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
+		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
+
+		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		if (kursklausurmenge_by_schuelerId == null)
+			return ergebnis;
+
+		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
+			List<@NotNull GostKursklausur> temp = entry.getValue();
+			if (temp != null && temp.size() >= threshold)
+				ergebnis.put(entry.getKey(), temp);
+		}
+		return ergebnis;
 	}
 
 	/**
