@@ -205,6 +205,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
             daten.id = dto.ID;
             daten.nachname = dto.Nachname;
             daten.vorname = dto.Vorname;
+            daten.status = dto.Status.id;
             daten.geschlecht = dto.Geschlecht.id;
             return daten;
         }).toList();
