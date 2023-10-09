@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Beratung">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-multi-select title="Zuletzt beraten von" :items="mapLehrer.values()" :model-value="getBeratungslehrer()"
+			<svws-ui-select title="Zuletzt beraten von" :items="mapLehrer.values()" :model-value="getBeratungslehrer()"
 				:item-text="(i: LehrerListeEintrag)=>`${i.kuerzel} (${i.vorname} ${i.nachname})`"
 				:item-filter="filter" removable autocomplete ref="refLehrer" />
 			<svws-ui-text-input :model-value="gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14)" type="date"

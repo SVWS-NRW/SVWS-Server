@@ -1,132 +1,68 @@
 <template>
-	<div class="wrapper"
-		:class="{ 'z-50': showList, 'wrapper--tag-list' : tags, 'wrapper--filled': hasSelected() || showList, 'col-span-full': span === 'full', 'wrapper--headless': headless }">
-		<div class="multiselect-input-component"
-			:class="{ 'with-open-list': showList, 'multiselect-input-component--statistics': statistics, 'with-value': hasSelected(), 'multiselect-input-component--danger': danger, 'multiselect-input-component--disabled': disabled }">
-			<div :class="['input', !showInput ? 'sr-only' : '']">
-				<svws-ui-text-input ref="inputEl"
-					:model-value="dynModelValue"
-					:readonly="!autocomplete || !showInput"
-					:placeholder="title"
-					:statistics="statistics"
-					:headless="headless"
-					:disabled="disabled"
-					:removable="removable"
-					:class="{'text-input--control--multiselect-tags': tags}"
-					:debounce-ms="0"
-					role="combobox"
-					:aria-label="placeholder"
-					:aria-expanded="showList"
-					aria-haspopup="listbox"
-					aria-autocomplete="list"
-					:aria-controls="showList ? listIdPrefix : null"
-					:aria-activedescendant="activeItemIndex > -1 ? `${listIdPrefix}-${activeItemIndex}` : null"
-					@update:model-value="onInput"
-					@click="toggleListbox"
-					@focus="onFocus"
-					@blur="onBlur"
-					@keyup.down.prevent
-					@keyup.up.prevent
-					@keydown.down.prevent="onArrowDown"
-					@keydown.up.prevent="onArrowUp"
-					@keydown.right.prevent="onArrowDown"
-					@keydown.left.prevent="onArrowUp"
-					@keydown.enter.prevent="selectCurrentActiveItem"
-					@keydown.backspace="onBackspace"
-					@keydown.esc.prevent="onEscape"
-					@keydown.space="onSpace"
-					@keydown.tab.prevent="onTab" />
-			</div>
-			<div v-if="tags" class="tag-list-wrapper"
-				@click.self="toggleListbox" ref="inputElTags">
-				<div class="tag-list" @click.self="toggleListbox">
-					<slot v-if="(selectedItemList.size === 0) && !showList" name="no-content" />
-					<div class="opacity-50 pl-2 text-sm" v-if="(selectedItemList.size === 0) && showList">
-						Noch nichts ausgewählt.
-					</div>
-					<div v-for="(item, index) in selectedItemList" v-else :key="index" class="tag">
-						<span class="tag-badge">
-							<span :class="{'pr-1': showList}">{{ itemText(item) }}</span>
-							<span class="tag-remove ml-1" @click="removeTag(item)" title="Entfernen" v-if="!showList">
-								<span class="icon">
-									<i-ri-close-line />
-								</span>
-							</span>
-						</span>
-					</div>
-				</div>
-				<span v-if="!showInput" class="multiselect-tags--placeholder">
-					<span>{{ title }}</span>
-					<i-ri-bar-chart-2-line v-if="statistics" class="ml-1" />
-				</span>
-			</div>
-			<div v-if="removable && hasSelected()" @click="removeItem" class="remove-icon">
-				<span class="icon">
+	<div class="svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled}" v-bind="$attrs" ref="inputElTags">
+		<svws-ui-text-input ref="inputEl"
+			:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
+			:readonly="!autocomplete"
+			:placeholder="label || title"
+			:statistics="statistics"
+			:headless="headless"
+			:disabled="disabled"
+			:debounce-ms="0"
+			role="combobox"
+			:aria-label="label || title"
+			:aria-expanded="showList"
+			aria-haspopup="listbox"
+			aria-autocomplete="list"
+			:aria-controls="showList ? listIdPrefix : null"
+			:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
+			@update:model-value="onInput"
+			@click="toggleListBox"
+			@focus="onInputFocus"
+			@blur="onInputBlur"
+			@keyup.down.prevent
+			@keyup.up.prevent
+			@keydown.down.prevent="onArrowDown"
+			@keydown.up.prevent="onArrowUp"
+			@keydown.enter.prevent="selectCurrentActiveItem"
+			@keydown.backspace="onBackspace"
+			@keydown.esc.prevent="onEscape"
+			@keydown.space="onSpace"
+			@keydown.tab.prevent="onTab" />
+		<div v-if="!headless" class="svws-tags">
+			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
+				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
+				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
 					<i-ri-close-line />
-				</span>
-			</div>
-			<div class="dropdown-icon" @click="toggleListbox">
-				<span class="icon">
-					<i-ri-expand-up-down-fill />
-				</span>
-			</div>
+				</button>
+			</span>
 		</div>
-		<Teleport to="body">
-			<div v-if="showList" class="multiselect--items-wrapper"
-				:class="{'multiselect--items-wrapper--statistics': statistics, 'multiselect--items-wrapper--tags': tags}"
-				:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
-				ref="floating">
-				<ul :id="listIdPrefix"
-					class="multiselect--items-list"
-					:class="{'multiselect--items-list--tags' : tags}"
-					role="listbox"
-					@mouseenter="activeItemIndex = -1">
-					<li v-if="filteredList.length === 0" class="px-1 py-1 text-base opacity-50 inline-block">
-						Keine Ergebnisse
-					</li>
-					<li v-for="(item, index) in filteredList"
-						:id="`${listIdPrefix}-${index}`"
-						:key="index"
-						ref="itemRefs"
-						role="option"
-						class="multiselect--item"
-						:class="{
-							active: activeItemIndex === index,
-							selected: selectedItemList.has(item)
-						}"
-						:aria-selected="selectedItemList.has(item) ? 'true' : 'false'"
-						@mousedown.prevent
-						@click="
-							() => {
-								selectItem(item);
-								!tags && closeListbox();
-							}
-						">
-						<span v-if="itemText?.(item).length === 0" class="opacity-25">—</span>
-						<span>{{ itemText(item) }}</span>
-						<i-ri-check-line v-if="selectedItemList.has(item)" class="multiselect--check opacity-75" />
-					</li>
-				</ul>
-			</div>
-		</Teleport>
+		<button role="button" class="svws-dropdown-icon" tabindex="-1">
+			<i-ri-expand-up-down-line v-if="headless" />
+			<i-ri-expand-up-down-fill v-else />
+		</button>
 	</div>
+	<Teleport to="body">
+		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :tags="true" :filtered-list="filteredList" :item-text="itemText"
+			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
+			:select-item="selectItem" ref="refList" />
+	</Teleport>
 </template>
 
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, WritableComputedRef } from "vue";
+	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
+	import type { MaybeElement } from "@floating-ui/vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
-	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRef } from "vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
+	import { computed, nextTick, ref, shallowRef, watch, Teleport } from "vue";
 	import { genId } from "../utils";
-
-	type InputDataType = Item[] | Item | null | undefined;
+	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	const props = withDefaults(defineProps<{
-		placeholder?: string;
+		label?: string;
 		title?: string;
-		tags?: boolean;
 		autocomplete?: boolean;
 		disabled?: boolean;
 		statistics?: boolean;
@@ -135,16 +71,13 @@
 		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
 		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
-		modelValue: InputDataType;
+		modelValue: Item[];
 		useNull?: boolean;
 		headless?: boolean;
-		removable?: boolean;
 		required?: boolean;
-		span?: 'full';
 	}>(), {
-		placeholder: '',
+		label: '',
 		title: '',
-		tags: false,
 		autocomplete: false,
 		disabled: false,
 		statistics: false,
@@ -153,30 +86,19 @@
 		itemFilter: (items: Iterable<Item> | Item[], searchText: string) => Array.isArray(items) ? items : [...items],
 		useNull: false,
 		headless: false,
-		removable: false,
-		span: undefined
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: InputDataType): void;
+		(e: "update:modelValue", items: Item[]): void;
 		(e: "focus", event: Event): void;
 		(e: "blur", event: Event): void;
 	}>();
 
+	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
+
 	const showList = ref(false);
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
-	const activeItemIndex = ref(-1);
 	const listIdPrefix = genId();
-	const showInput = computed(() => {
-		switch (true) {
-			case props.tags && !props.autocomplete:
-				return false;
-			case props.tags && props.autocomplete && !showList.value:
-				return false;
-			default:
-				return true;
-		}
-	});
 
 	// Input element
 	const inputEl = ref(null);
@@ -184,11 +106,11 @@
 	const hasFocus = ref(false);
 	const searchText = ref("");
 
-	function onFocus() {
+	function onInputFocus() {
 		hasFocus.value = true;
 	}
 
-	function onBlur() {
+	function onInputBlur() {
 		hasFocus.value = false;
 		closeListbox();
 	}
@@ -203,13 +125,7 @@
 	});
 
 	function generateInputText() {
-		// Fall 1: Multi-Select möglich
-		if (props.tags)
-			return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
-		// Fall 2: Kein Multi-Select möglich
-		if ((selectedItem.value === null) || (selectedItem.value === undefined))
-			return "";
-		return props.itemText(selectedItem.value);
+		return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
 	}
 
 	function onInput(value: string | number) {
@@ -217,69 +133,38 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const data = shallowRef<InputDataType>(props.modelValue);
+	const data = shallowRef<Item[]>(props.modelValue);
 
-	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value) => updateData(value), { immediate: false });
 
-	function updateData(value: InputDataType) {
+	function updateData(value: Item[]) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
 			return;
-		// Fall 1: Multi-Select möglich
-		if (props.tags) {
-			const a = ((data.value === null) || (data.value === undefined)) ? [] : data.value as Item[];
-			const b = ((value === null) || (value === undefined)) ? [] : value as Item[];
-			if ((a.length === b.length) && (a.every((v, i) => v === b[i])))
-				return;
-			data.value = b;
-			emit("update:modelValue", data.value);
+		const a = ((data.value === null) || (data.value === undefined)) ? [] : data.value;
+		const b = ((value === null) || (value === undefined)) ? [] : value;
+		if ((a.length === b.length) && (a.every((v, i) => v === b[i])))
 			return;
-		}
-		// Fall 2: Kein Multi-Select möglich
-		if (data.value === value)
-			return;
-		data.value = value;
+		data.value = b;
 		emit("update:modelValue", data.value);
+		return;
 	}
 
 	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
 		get: () => {
-			// Fall 1: Multi-Select möglich
-			if (props.tags && Array.isArray(data.value))
-				return data.value[0];
-			// Fall 2: Kein Multi-Select möglich
-			return data.value as Item | null | undefined;
+			return data.value[0];
 		},
 		set: (item) => {
-			// Fall 0: null or undefined (kein Multi-Select möglich)
-			if ((item === null) || (item === undefined)) {
-				updateData(item);
-				return;
+			if (selectedItemList.value.has(item)) {
+				selectedItemList.value.delete(item);
+			} else {
+				selectedItemList.value.add(item);
 			}
-			// Fall 1: Multi-Select möglich
-			if (props.tags) {
-				if (selectedItemList.value.has(item)) {
-					selectedItemList.value.delete(item);
-				} else {
-					selectedItemList.value.add(item);
-				}
-				updateData([...selectedItemList.value]);
-				return;
-			}
-			// Fall 2: Kein Multi-Select möglich
-			updateData(item);
+			updateData([...selectedItemList.value]);
+			return;
 		}
 	});
 
-	const selectedItemList = computed<Set<Item>>(() => {
-		// Fall 1: Multi-Select möglich
-		if (props.tags && Array.isArray(data.value))
-			return new Set<Item>(data.value);
-		// Fall 2: Kein Multi-Select möglich
-		const set = new Set<Item>();
-		if ((data.value !== null) && (data.value !== undefined))
-			set.add(data.value as Item);
-		return set;
-	});
+	const selectedItemList = computed(() => new Set(data.value))
 
 	function hasSelected(): boolean {
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
@@ -287,17 +172,15 @@
 
 	function selectItem(item: Item | null | undefined) {
 		selectedItem.value = item;
-	}
-
-	function removeItem() {
-		selectedItem.value = props.useNull ? null : undefined;
+		if (props.autocomplete)
+			searchText.value = "";
+		doFocus();
 	}
 
 	function removeTag(item: Item) {
 		if (selectedItemList.value.has(item))
 			selectedItem.value = item;
 	}
-
 
 	const sortedList: ComputedRef<Item[]> = computed(() => {
 		let arr
@@ -323,10 +206,19 @@
 		}
 	});
 
+	function doFocus() {
+		const el: typeof TextInput = inputEl.value!;
+		void nextTick(() => el?.input.focus());
+	}
+
+	function toggleListBox() {
+		showList.value ? closeListbox() : openListbox();
+	}
+
 	function openListbox() {
 		showList.value = true;
-		if ((selectedItem.value !== null) && (selectedItem.value !== undefined)) {
-			activeItemIndex.value = filteredList.value.findIndex(item => item === selectedItem.value);
+		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && refList.value !== null) {
+			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
 		const el: typeof TextInput = inputEl.value!;
@@ -335,42 +227,40 @@
 
 	function closeListbox() {
 		showList.value = false;
-		searchText.value = "";
-		activeItemIndex.value = -1;
+		if (refList.value !== null)
+			refList.value.activeItemIndex = -1;
 	}
 
 	function selectCurrentActiveItem() {
-		if (!showList.value)
+		if (!showList.value || refList.value === null)
 			return;
-		selectItem(filteredList.value[activeItemIndex.value]);
-		if (!props.tags)
-			closeListbox();
-	}
-
-	function toggleListbox() {
-		showList.value ? closeListbox() : openListbox();
+		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
 	// Arrow Navigation
 	function onArrowDown() {
-		if (!showList.value) {
+		if ((!showList.value) || (refList.value === null)) {
 			openListbox();
 			return;
 		}
 		const listLength = filteredList.value.length;
-		if (activeItemIndex.value < listLength - 1)
-			activeItemIndex.value++;
+		if (refList.value.activeItemIndex < listLength - 1)
+			refList.value.activeItemIndex++;
 		else
-			activeItemIndex.value = 0;
+			refList.value.activeItemIndex = 0;
 		scrollToActiveItem();
 	}
 
 	function onArrowUp() {
+		if ((!showList.value) || (refList.value === null)) {
+			openListbox();
+			return;
+		}
 		const listLength = filteredList.value.length;
-		if (activeItemIndex.value === 0)
-			activeItemIndex.value = listLength - 1;
-		else if (activeItemIndex.value >= 1)
-			activeItemIndex.value--;
+		if (refList.value.activeItemIndex === 0)
+			refList.value.activeItemIndex = listLength - 1;
+		else if (refList.value.activeItemIndex >= 1)
+			refList.value.activeItemIndex--;
 		scrollToActiveItem();
 	}
 
@@ -399,26 +289,24 @@
 	}
 
 	function onTab(e: InputEvent) {
-		if (props.autocomplete) {
+		if (props.autocomplete && refList.value !== null) {
 			e.preventDefault();
-			activeItemIndex.value = 0;
+			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
 	}
 
 	function scrollToActiveItem() {
-		(itemRefs.value as HTMLElement[])[activeItemIndex.value]?.scrollIntoView({
-			block: "nearest",
-			inline: "nearest"
-		});
+		if (refList.value !== null)
+			(itemRefs.value as HTMLElement[])[refList.value.activeItemIndex]?.scrollIntoView({
+				block: "nearest",
+				inline: "nearest"
+			});
 	}
 
-	const floating = ref(null);
-	const tags = toRef(props, 'tags');
-
-	const {x, y, strategy, placement} = useFloating(
-		tags.value ? inputElTags : inputEl,
-		floating,
+	const {x, y, strategy} = useFloating(
+		inputElTags,
+		refList as Readonly<Ref<MaybeElement<HTMLElement>>>,
 		{
 			placement: 'bottom',
 			middleware: [flip(), shift(), offset(2), size({
@@ -435,376 +323,227 @@
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-
-	const content = computed<InputDataType>(() => {
+	const content = computed<Item[]>(() => {
 		return data.value;
 	});
 
 	defineExpose<{
-		content: ComputedRef<InputDataType>,
-	}>({
-		content
-	});
-
+		content: ComputedRef<Item[]>,
+	}>({content});
 
 </script>
 
 
-<style lang="postcss" scoped>
-.multiselect-input-component {
-	@apply flex;
-	@apply relative;
-	@apply w-full;
-	@apply inline-block overflow-visible;
-
-	&--statistics {
-		.multiselect-tags--placeholder {
-			@apply text-violet-500;
-		}
-
-		.tooltip-trigger--triggered svg {
-			@apply text-violet-800;
-		}
-	}
-
-	&--danger {
-		@apply text-error;
-	}
-
-	&.with-open-list,
-	&.with-value,
-	&:focus-within {
-		.tag-list-wrapper {
-			@apply border-black dark:border-white;
-			@apply outline-none;
-		}
-	}
-
-	&--statistics.with-open-list,
-	&--statistics.with-value,
-	&--statistics:focus-within {
-		.tag-list-wrapper {
-			@apply border-violet-500 dark:border-violet-800;
-		}
-	}
-
-	&.with-open-list,
-	&:focus-within {
-		.dropdown-icon {
-			@apply opacity-100;
-		}
-	}
-
-	&.with-value:not(:focus-within):not(:hover) .tag-list-wrapper {
-		@apply border-black/25 dark:border-white/25;
-	}
-
-	&.with-value:not(:focus-within):hover .tag-list-wrapper {
-		@apply border-black/50 dark:border-white/50;
-	}
-
-	.multiselect-tags--placeholder {
-		@apply absolute;
-		@apply pointer-events-none;
-		@apply opacity-60;
-		@apply transform;
-		@apply flex items-center font-medium;
-
-		top: 0.5em;
-		left: 0.7em;
-		line-height: 1.33;
-	}
-
-	&:not(.with-value) .multiselect-tags--placeholder {
-		@apply font-normal;
-	}
-
-	&:not(.with-open-list):not(.with-value):not(:focus-within):hover .multiselect-tags--placeholder {
-		@apply opacity-100;
-	}
-
-	&.with-value,
-	&:focus-within {
-		.multiselect-tags--placeholder {
-			@apply -translate-y-1/2;
-			@apply bg-white dark:bg-black opacity-100;
-			@apply rounded;
-			@apply px-1;
-
-			top: -0.2em;
-			left: 0.7em;
-			font-size: 0.78rem;
-
-			&:after {
-				content: '';
-			}
-		}
-	}
-
-	.data-table & {
-		.text-input-component {
-			@apply pl-1;
-		}
-	}
-}
-
-.wrapper {
-	@apply relative;
-
-	.data-table & {
-		@apply w-full;
-	}
-
-	.data-table .data-table__td__no-padding & {
-		.text-input-component {
-			padding-left: 0.5rem;
-		}
-	}
-}
-
-.dropdown-icon {
-	@apply absolute p-1;
-	@apply flex;
-	@apply inset-y-0 right-0;
-	@apply items-center justify-center cursor-pointer text-base;
-	@apply opacity-25;
-
-	&:hover {
-		@apply opacity-100;
-	}
-
-	.icon {
-		@apply py-1;
-		@apply rounded;
-		font-size: 1.1em;
-	}
-
-	&:hover .icon {
-		@apply bg-black text-white dark:bg-white dark:text-black;
-
-		.multiselect-input-component--statistics:not(.multiselect-input-component--disabled) & {
-			@apply bg-violet-500 dark:bg-violet-800 dark:text-white;
-		}
-	}
-
-  .wrapper--headless & {
-      @apply hidden;
+<style lang="postcss">
+.svws-ui-multi-select {
+  &.svws-ui-select .svws-dropdown-icon {
+    height: calc(100% - 0.5rem);
   }
 
-	.multiselect-input-component--disabled & {
-		@apply pointer-events-none;
-		@apply opacity-10 !important;
-	}
+  &:not(.svws-headless) {
+    @apply min-h-[2.25rem];
 
-	.data-table &,
-	.svws-ui-table & {
-		@apply p-0;
+    .text-input-component {
+      @apply absolute top-0 left-0 w-full h-full;
+    }
 
-		.icon {
-			font-size: 0.9em;
-		}
-	}
+    .text-input--control {
+      @apply h-full;
+    }
+  }
 
-	.multiselect-input-component--statistics & {
-		@apply text-purple-500;
-	}
+  .svws-tags {
+    @apply relative z-10 flex flex-wrap gap-0.5 pl-1 pt-2 pb-1 pr-7 pointer-events-none;
+
+    .svws-remove {
+      @apply relative top-0 left-0 w-auto h-auto -mx-0.5 text-black/50 dark:text-white/50 hover:text-error text-sm pointer-events-auto;
+    }
+  }
+
+  .svws-tag {
+    @apply inline-flex items-center gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
+  }
+
+  &.svws-disabled {
+    .svws-tags {
+      @apply opacity-25;
+
+      .svws-remove {
+        @apply invisible -mr-3;
+      }
+    }
+  }
+}
+</style>
+
+<!--TODO: Duplicate CSS und JS Functions (identisch zu SvwsUiSelect) entfernen-->
+<style lang="postcss">
+
+.svws-ui-select {
+  @apply relative w-full cursor-pointer flex;
+
+  .svws-ui-table & {
+    @apply p-0;
+  }
+
+  .svws-dropdown-icon,
+  .svws-remove {
+    @apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded;
+
+    svg {
+      @apply my-auto;
+    }
+  }
+
+  .svws-dropdown-icon {
+    @apply pointer-events-none right-1 bg-light dark:bg-white/5 border border-black/10 dark:border-white/10;
+  }
+
+  &.svws-statistik {
+    .svws-dropdown-icon {
+      @apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+    }
+
+    .text-input-component {
+      &:hover,
+      &:focus-visible,
+      &:focus-within {
+        ~ .svws-dropdown-icon {
+          @apply bg-violet-500/10 dark:bg-violet-500/20;
+        }
+      }
+    }
+  }
+
+  .svws-remove {
+    @apply right-7 text-black/50 dark:text-white/50;
+
+    &:hover {
+      @apply text-error;
+    }
+
+    &:focus,
+    &:focus-visible {
+      @apply outline-none;
+    }
+
+    &:focus-visible {
+      @apply ring ring-error/25 bg-error text-white dark:text-white;
+    }
+  }
+
+  .text-input-component {
+    &:hover,
+    &:focus-visible,
+    &:focus-within {
+      ~ .svws-dropdown-icon {
+        @apply bg-black/10 dark:bg-white/10;
+      }
+    }
+  }
+
+  &.svws-open {
+    @apply z-50;
+  }
+
+  .text-input--control,
+  .text-input--headless {
+    @apply text-ellipsis break-all cursor-pointer;
+  }
+
+  .text-input--control {
+    @apply pr-8;
+  }
+
+  .text-input--headless {
+    @apply pl-4;
+  }
+
+  &.svws-removable&.svws-has-value {
+    .text-input--control {
+      @apply pr-12;
+    }
+
+    .text-input--headless {
+      @apply pl-[2.1rem];
+    }
+  }
+
+  &.svws-headless {
+    .svws-dropdown-icon,
+    .svws-remove {
+      @apply right-auto h-5 top-0;
+    }
+
+    .svws-dropdown-icon {
+      @apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
+    }
+
+    .svws-remove {
+      @apply right-auto left-4 inline-flex items-center justify-center w-4;
+
+      svg {
+        @apply -m-px;
+      }
+    }
+
+    .text-input-component {
+      @apply pr-1;
+
+      &:hover,
+      &:focus-visible,
+      &:focus-within {
+        ~ .svws-dropdown-icon {
+          @apply text-black dark:text-white;
+        }
+      }
+    }
+
+    &:not(.svws-open) {
+      .text-input-component {
+        &:focus-visible {
+          ~ .svws-dropdown-icon {
+            @apply ring-2 ring-black/25 dark:ring-white/25;
+          }
+        }
+      }
+    }
+
+    &.svws-statistik {
+      .svws-dropdown-icon {
+        @apply text-violet-500/75 dark:text-violet-500/75;
+      }
+
+      .text-input-component {
+        &:hover,
+        &:focus-visible,
+        &:focus-within {
+          ~ .svws-dropdown-icon {
+            @apply text-violet-500 dark:text-violet-500;
+          }
+        }
+
+        &:focus-visible {
+          ~ .svws-dropdown-icon {
+            @apply ring-violet-500/25 dark:ring-violet-500/25;
+          }
+        }
+      }
+    }
+  }
+
+  &.svws-disabled {
+    @apply cursor-default pointer-events-none;
+
+    .text-input--headless {
+      @apply opacity-25;
+    }
+
+    .svws-dropdown-icon,
+    .svws-remove {
+      @apply opacity-25;
+    }
+  }
 }
 
-.tag-list {
-	@apply flex flex-wrap gap-1 pr-4;
-}
-
-.multiselect--items-wrapper {
-	@apply absolute z-50 w-full min-w-[11rem];
-	@apply rounded-md border border-black/25 dark:border-white/25 bg-white dark:bg-black;
-	@apply shadow-2xl shadow-black/25 dark:shadow-white/5;
-	@apply overflow-hidden;
-}
-
-.multiselect--items-list {
-	@apply overflow-y-auto overflow-x-hidden tabular-nums;
-	@apply px-1.5 py-0.5;
-	max-height: 40ex;
-
-	.multiselect--item {
-		@apply text-black dark:text-white bg-white dark:bg-black rounded border border-transparent;
-		@apply text-base;
-		@apply py-1 my-1 px-2;
-
-		.multiselect--check {
-			@apply hidden -mt-0.5;
-		}
-
-		&.active {
-			@apply ring ring-svws/50 border-svws bg-svws text-white;
-
-			.page--statistik & {
-				@apply ring-violet-500/50 border-violet-500 bg-violet-500;
-			}
-		}
-
-		&:hover {
-			@apply cursor-pointer;
-			@apply bg-svws text-white;
-
-			.page--statistik & {
-				@apply bg-violet-500;
-			}
-		}
-
-		&.selected {
-			@apply font-bold bg-svws text-white;
-
-			.page--statistik & {
-				@apply bg-violet-500;
-			}
-		}
-	}
-
-	&--tags {
-		.multiselect--item .multiselect--check {
-			@apply inline-block;
-		}
-
-		.multiselect--item.selected {
-			@apply bg-transparent text-svws dark:text-svws;
-
-			&.active {
-				@apply ring-svws/25 dark:ring-svws/25;
-			}
-
-			&:hover {
-				@apply bg-svws text-white dark:text-white;
-				/*svg {
-					@apply hidden;
-				}
-
-				&:after {
-					@apply opacity-75 font-normal;
-					content: '\0000a0entfernen';
-				}*/
-			}
-		}
-	}
-}
-
-.multiselect--items-wrapper--statistics {
-	.multiselect--item.active {
-		@apply ring-violet-500/50 border-violet-500 bg-violet-500;
-	}
-
-	.multiselect--item:hover {
-		@apply bg-violet-500;
-	}
-
-	.multiselect--item.selected {
-		@apply bg-violet-500;
-	}
-
-	&.multiselect--items-wrapper--tags {
-		.multiselect--item.selected {
-			@apply bg-transparent text-violet-500 dark:text-violet-500;
-
-			&.active {
-				@apply ring-violet-500/25 dark:ring-violet-500/25;
-			}
-
-			&:hover {
-				@apply bg-violet-500 text-white dark:text-white;
-			}
-		}
-	}
-}
-
-.tag-list-wrapper {
-	@apply flex w-full items-center justify-between overflow-x-auto;
-	@apply bg-white dark:bg-black;
-	@apply rounded-md border border-black/5 dark:border-white/5;
-	@apply w-full;
-	@apply text-base;
-	@apply whitespace-nowrap;
-	@apply h-full;
-	@apply cursor-pointer;
-	padding: 0.3em 1.7em 0.3em 0.35em;
-	min-height: 2.25em;
-
-	&:hover {
-		@apply border-black/25 dark:border-white/25;
-	}
-}
-
-.wrapper--tag-list {
-	.input:not(.sr-only) {
-		& + .tag-list-wrapper {
-			@apply border-t-0 rounded-t-none;
-		}
-	}
-
-	&.wrapper--headless {
-		.tag-list-wrapper {
-			@apply border-black/25 dark:border-white/25 bg-white dark:bg-black;
-		}
-	}
-
-	.dropdown-icon {
-		.icon, svg {
-			@apply h-full;
-		}
-	}
-}
-
-.tag-badge {
-	@apply rounded cursor-auto relative z-10;
-	@apply bg-svws/5 text-svws border-svws/25 border font-medium;
-	@apply flex items-center leading-none;
-	@apply max-w-sm;
-	padding: 0.2em 0.4em 0.2em 0.7em;
-
-	> span:first-child {
-		@apply overflow-ellipsis overflow-hidden whitespace-nowrap;
-	}
-
-	.page--statistik &,
-	.multiselect-input-component--statistics & {
-		@apply bg-violet-500/5 text-violet-500 border-violet-500;
-	}
-
-	.tag-remove {
-		@apply text-sm -mr-0.5;
-		height: 1rem;
-	}
-}
-
-.tag-badge--placeholder {
-	@apply bg-transparent pointer-events-none;
-}
-
-.tag-remove .icon,
-.remove-icon .icon {
-	@apply inline-block mt-0 cursor-pointer;
-}
-
-.tag-remove .icon:hover,
-.remove-icon:hover .icon {
-	@apply bg-black dark:bg-white text-white dark:text-black rounded;
-}
-
-.remove-icon {
-	@apply absolute inset-y-0;
-	@apply cursor-pointer;
-	@apply flex items-center justify-center;
-	@apply opacity-50;
-	right: 1.7rem;
-	font-size: 1rem;
-
-	.data-table &,
-	.svws-ui-table & {
-		right: 0.9rem;
-		font-size: 0.9rem;
-	}
-
-	&:hover {
-		@apply opacity-100;
-	}
-}
 </style>

@@ -6,16 +6,16 @@
 				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '–' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '–' + toKW(stundenplan.gueltigBis) + ')' }}</div>
 			</div>
 			<div class="svws-ui-stundenplan--auswahl--wrapper">
-				<svws-ui-multi-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
+				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
 					class="print:hidden"
 					:disabled="wochentypen().size() <= 0"
 					:item-text="(wt: number) => manager().stundenplanGetWochenTypAsString(wt)" />
-				<svws-ui-multi-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
+				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
 					:class="{'print:hidden': !kwAuswahl}"
 					removable
 					:disabled="wochentypen().size() <= 0"
 					:item-text="(kw: StundenplanKalenderwochenzuordnung | undefined) => getKalenderwochenString(kw)" />
-				<svws-ui-multi-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()"
+				<svws-ui-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()"
 					:disabled="mapStundenplaene.size <= 1"
 					class="print:hidden"
 					:item-text="(s: StundenplanListeEintrag) => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '–' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '–' + toKW(s.gueltigBis) + ')'" />
