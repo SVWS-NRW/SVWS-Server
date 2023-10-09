@@ -2,7 +2,6 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.lehrer.LehrerKatalogAbgangsgrundEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerKatalogAnrechnungsgrundEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerKatalogBeschaeftigungsartEintrag;
@@ -23,6 +22,7 @@ import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerAbgangsgruende;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerAnrechnungsgruende;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerBeschaeftigungsarten;
@@ -91,7 +91,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrer-Einträge gefunden")
     public Response getLehrer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerliste(conn).getAll(),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
     }
 
@@ -118,7 +118,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     public Response getLehrerStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_ANSEHEN);
     }
 
@@ -150,7 +150,7 @@ public class APILehrer {
     		@RequestBody(description = "Der Patch für die Lehrer-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStammdaten(conn).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_AENDERN);
     }
 
@@ -178,7 +178,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
     public Response getLehrerPersonaldaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
     }
 
@@ -209,7 +209,7 @@ public class APILehrer {
     		@RequestBody(description = "Der Patch für die Lehrer-Personaldaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
     }
 
@@ -233,7 +233,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
     public Response getLehrerLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataKatalogLehrerLeitungsfunktionen().getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogLehrerLeitungsfunktionen().getList(),
         	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -255,7 +255,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerZugangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerZugangsgruende()).getList();
     }
 
@@ -277,7 +277,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
     public Response getLehrerAbgangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerAbgangsgruende()).getList();
     }
 
@@ -299,7 +299,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
     public Response getLehrerBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerBeschaeftigungsarten()).getList();
     }
 
@@ -321,7 +321,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
     public Response getLehrerEinsatzstatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerEinsatzstatus()).getList();
     }
 
@@ -343,7 +343,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerFachrichtungen()).getList();
     }
 
@@ -365,7 +365,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerFachrichtungAnerkennungen()).getList();
     }
 
@@ -387,7 +387,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
     public Response getLehrerLehraemter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerLehraemter()).getList();
     }
 
@@ -409,7 +409,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehramtAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerLehramtAnerkennungen()).getList();
     }
 
@@ -431,7 +431,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerLehrbefaehigungen()).getList();
     }
 
@@ -453,7 +453,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
     public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerLehrbefaehigungAnerkennungen()).getList();
     }
 
@@ -475,7 +475,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMehrleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerMehrleistungsarten()).getList();
     }
 
@@ -497,7 +497,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
     public Response getLehrerMinderleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerMinderleistungsarten()).getList();
     }
 
@@ -519,7 +519,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
     public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerRechtsverhaeltnis()).getList();
     }
 
@@ -542,7 +542,7 @@ public class APILehrer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getLehrerAnrechnungsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataKatalogLehrerAnrechnungsgruende()).getList();
     }
 

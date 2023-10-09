@@ -1,11 +1,11 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.klassen.DataKatalogKlassenarten;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.klassen.DataKlassenlisten;
@@ -57,7 +57,7 @@ public class APIKlassen {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klassendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassen-Einträge gefunden")
     public Response getKlassenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataKlassenlisten(conn, abschnitt).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassenlisten(conn, abschnitt).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -84,7 +84,7 @@ public class APIKlassen {
     @ApiResponse(responseCode = "404", description = "Kein Klassen-Eintrag mit der angegebenen ID gefunden")
     public Response getKlasse(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataKlassendaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -107,7 +107,7 @@ public class APIKlassen {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Klassenart-Katalog-Einträge gefunden")
     public Response getKatalogKlassenarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKatalogKlassenarten()).getAll();
     }
 

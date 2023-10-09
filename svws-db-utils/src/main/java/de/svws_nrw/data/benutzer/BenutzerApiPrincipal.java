@@ -1,11 +1,10 @@
-package de.svws_nrw.api;
+package de.svws_nrw.data.benutzer;
 
 import java.io.Serializable;
 import java.security.Principal;
 
 import jakarta.servlet.http.HttpServletRequest;
 import de.svws_nrw.config.SVWSKonfiguration;
-import de.svws_nrw.data.benutzer.DBUtilsBenutzer;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
@@ -18,7 +17,7 @@ import de.svws_nrw.db.utils.OperationError;
  * gewählten HTTP-Server-Implementierung. Eine solche HTTP-Server-Implementierung wird ggf.
  * für den internen Gebrauch weitere {@link Principal}-Objekte anlegen.
  */
-public final class OpenAPIPrincipal implements Principal, Serializable {
+public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 	private static final long serialVersionUID = -6227920753748399662L;
 
@@ -29,7 +28,7 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 	/**
 	 * Erzeugt einen neuen Principal ohne zugeordnetem {@link Benutzer} für den Datenbankzugriff.
 	 */
-	private OpenAPIPrincipal() {
+	private BenutzerApiPrincipal() {
 		user = null;
 	}
 
@@ -39,7 +38,7 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 	 *
 	 * @param user   der {@link Benutzer} für den Datenbankzugriff
 	 */
-	private OpenAPIPrincipal(final Benutzer user) {
+	private BenutzerApiPrincipal(final Benutzer user) {
 		this.user = user;
 	}
 
@@ -85,7 +84,7 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 	 *
 	 * @return der Benutzerprincipal, falls der Login gültig ist, sonst null
 	 */
-	public static OpenAPIPrincipal login(final String username, final String password, final HttpServletRequest request) {
+	public static BenutzerApiPrincipal login(final String username, final String password, final HttpServletRequest request) {
 		// Prüfe, ob die Pfade "/debug/" oder "/openapi.json" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
 		final String path = request.getPathInfo();
 		if (path == null)
@@ -120,7 +119,7 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 
 		// Erzeuge ggf. einen anonymen Principal
 		if (isAnonymous && (!isDBMSRootAuthentication))
-			return new OpenAPIPrincipal();
+			return new BenutzerApiPrincipal();
 
 		// Prüfe, ob ein Zugriff als Root auf das DBMS nötig ist
 		if (isDBMSRootAuthentication) {
@@ -137,13 +136,13 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 				if (conn == null)  // Prüfe, ob eine Verbindung zu DB aufgebaut werden konnte
 					return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
 			}
-			return new OpenAPIPrincipal(benutzer);
+			return new BenutzerApiPrincipal(benutzer);
 		}
 
 		// Existiert keine Konfiguration zu dem Schema so liegt immer einer anonymer Zugriff vor -> anonymer Principal
 		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
 		if (config == null)
-			return new OpenAPIPrincipal();
+			return new BenutzerApiPrincipal();
 
 		// Prüfe, ob das Datenbankschema ggf. gesperrt ist.
 		if (config.getDBSchema() != null) {
@@ -162,13 +161,13 @@ public final class OpenAPIPrincipal implements Principal, Serializable {
 		user.setPassword(password);
 
 		// Prüfe den Passwort-Hash des Benutzer aus der DB
-		if (!DBUtilsBenutzer.pruefePasswort(user, password))
+		if (!DBBenutzerUtils.pruefePasswort(user, password))
 			return null;
 
 		// Lese die Benutzerkompetenzen aus der Datenbank
-		DBUtilsBenutzer.leseKompetenzen(user);
+		DBBenutzerUtils.leseKompetenzen(user);
 
-		return new OpenAPIPrincipal(user);
+		return new BenutzerApiPrincipal(user);
 	}
 
 }

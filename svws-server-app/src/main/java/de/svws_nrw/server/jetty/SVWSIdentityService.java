@@ -9,7 +9,7 @@ import org.eclipse.jetty.security.RoleRunAsToken;
 import org.eclipse.jetty.security.RunAsToken;
 import org.eclipse.jetty.server.UserIdentity;
 
-import de.svws_nrw.api.OpenAPIPrincipal;
+import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 
 
 /**
@@ -42,7 +42,7 @@ public final class SVWSIdentityService implements IdentityService {
 
 	@Override
 	public UserIdentity newUserIdentity(final Subject subject, final Principal userPrincipal, final String[] roles) {
-		if (userPrincipal instanceof OpenAPIPrincipal)
+		if (userPrincipal instanceof BenutzerApiPrincipal)
 			return new SVWSUserIdentity(subject, userPrincipal);
 		return UserIdentity.UNAUTHENTICATED_IDENTITY;
 	}

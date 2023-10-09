@@ -1,11 +1,11 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataKatalogJahrgaenge;
@@ -57,7 +57,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Jahrgangsdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Einträge gefunden")
     public Response getJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataJahrgangsliste(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsliste(conn).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -85,7 +85,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "404", description = "Kein Jahrgangs-Eintrag mit der angegebenen ID gefunden")
     public Response getJahrgang(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                    @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataJahrgangsdaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataJahrgangsdaten(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -108,7 +108,7 @@ public class APIJahrgaenge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Jahrgangs-Katalog-Einträge gefunden")
     public Response getKatalogJahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKatalogJahrgaenge()).getAll();
     }
 

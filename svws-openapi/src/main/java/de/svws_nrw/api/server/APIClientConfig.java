@@ -3,12 +3,12 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.benutzer.BenutzerConfig;
 import de.svws_nrw.core.data.benutzer.BenutzerConfigElement;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationBenutzer;
 import de.svws_nrw.db.dto.current.client.DTOClientKonfigurationGlobal;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,7 +60,7 @@ public class APIClientConfig {
     @ApiResponse(responseCode = "200", description = "Die Key-Value-Paare der Konfigurationseinträge als Liste",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = BenutzerConfig.class)))
     public Response getClientConfig(@PathParam("schema") final String schema, @PathParam("app") final String app, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	final List<DTOClientKonfigurationBenutzer> configUser = conn.queryList("SELECT e FROM DTOClientKonfigurationBenutzer e WHERE e.Benutzer_ID = ?1 AND e.AppName = ?2", DTOClientKonfigurationBenutzer.class, conn.getUser().getId(), app);
 	    	final List<DTOClientKonfigurationGlobal> configGlobal = conn.queryNamed("DTOClientKonfigurationGlobal.appname", app, DTOClientKonfigurationGlobal.class);
 	    	// Ansonsten: Lese aus der globalen Konfiguration
@@ -111,7 +111,7 @@ public class APIClientConfig {
     @ApiResponse(responseCode = "200", description = "Der Wert des Konfigurationseintrags",
                  content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     public Response getClientConfigUserKey(@PathParam("schema") final String schema, @PathParam("app") final String app, @PathParam("key") final String key, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	// Prüfe, ob ein benutzerspezifischer Konfigurationseintrag vorliegt und gebe diesen ggf. zurück
 	    	final DTOClientKonfigurationBenutzer config = conn.queryByKey(DTOClientKonfigurationBenutzer.class, conn.getUser().getId(), app, key);
 	    	if (config != null)
@@ -151,7 +151,7 @@ public class APIClientConfig {
     public Response setClientConfigUserKey(@PathParam("schema") final String schema, @PathParam("app") final String app, @PathParam("key") final String key,
     		                          @RequestBody(description = "Der Wert des Konfigurationseintrags", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream data,
     		                          @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	// Prüfe, ob ein benutzerspezifischer Konfigurationseintrag vorliegt und lege einen neuen an oder aktualisiee den bestehenden Eintrag
 	    	DTOClientKonfigurationBenutzer config = conn.queryByKey(DTOClientKonfigurationBenutzer.class, conn.getUser().getId(), app, key);
 	    	final String strData = JSONMapper.toString(data);
@@ -194,7 +194,7 @@ public class APIClientConfig {
     public Response setClientConfigGlobalKey(@PathParam("schema") final String schema, @PathParam("app") final String app, @PathParam("key") final String key,
     		                                @RequestBody(description = "Der Wert des Konfigurationseintrags", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream data,
     		                                @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
 	    	// Prüfe, ob ein globaler Konfigurationseintrag vorliegt und lege einen neuen an oder aktualisiee den bestehenden Eintrag
 	    	DTOClientKonfigurationGlobal config = conn.queryByKey(DTOClientKonfigurationGlobal.class, app, key);
 	    	final String strData = JSONMapper.toString(data);

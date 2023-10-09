@@ -1,6 +1,5 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag;
 import de.svws_nrw.core.data.kaoa.KAOABerufsfeldEintrag;
 import de.svws_nrw.core.data.kaoa.KAOAEbene4Eintrag;
@@ -9,6 +8,7 @@ import de.svws_nrw.core.data.kaoa.KAOAMerkmalEintrag;
 import de.svws_nrw.core.data.kaoa.KAOAZusatzmerkmalEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kaoa.DataKAoAAnschlussoptionen;
 import de.svws_nrw.data.kaoa.DataKAoABerufsfelder;
 import de.svws_nrw.data.kaoa.DataKAoAEbene4;
@@ -58,7 +58,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAKategorien(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
 		return (new DataKAoAKategorien()).getAll();
     }
 
@@ -80,7 +80,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKAoAMerkmale()).getAll();
     }
 
@@ -103,7 +103,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAZusatzmerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKAoAZusatzmerkmale()).getAll();
     }
 
@@ -125,7 +125,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAEbene4(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKAoAEbene4()).getAll();
     }
 
@@ -147,7 +147,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoAAnschlussoptionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKAoAAnschlussoptionen()).getAll();
     }
 
@@ -169,7 +169,7 @@ public class APIKAOA {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getKatalogKAoABerufsfelder(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKAoABerufsfelder()).getAll();
     }
 

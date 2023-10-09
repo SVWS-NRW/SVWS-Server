@@ -3,7 +3,6 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 import java.util.List;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.benutzer.BenutzerAllgemeinCredentials;
 import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzerKompetenzGruppenKatalogEintrag;
@@ -14,6 +13,7 @@ import de.svws_nrw.core.data.benutzer.BenutzergruppeListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.benutzer.DataBenutzerDaten;
 import de.svws_nrw.data.benutzer.DataBenutzergruppeDaten;
 import de.svws_nrw.data.benutzer.DataBenutzergruppeliste;
@@ -71,7 +71,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Benutzerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Benutzer-Einträge gefunden")
     public Response getBenutzerliste(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerliste(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerliste(conn).getList(),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -94,7 +94,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Benutzerdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag gefunden")
     public Response getBenutzerDatenEigene(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
         	final Benutzer user = conn.getUser();
         	if (user == null)
         		throw OperationError.NOT_FOUND.exception("Kein Benutzer angemeldet.");
@@ -122,7 +122,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzer-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).get(id),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -144,7 +144,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Benutzergruppendaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Benutzergruppen-Einträge gefunden")
     public Response getBenutzergruppenliste(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeliste(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeliste(conn).getList(),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -168,7 +168,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzergruppeDaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).get(id),
 			request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -193,7 +193,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "404", description = "Kein Benutzergruppen-Eintrag mit der angegebenen ID gefunden")
     public Response getBenutzerMitGruppenID(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerliste(conn).getListMitGruppenID(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerliste(conn).getListMitGruppenID(id),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -220,7 +220,7 @@ public class APIBenutzer {
     public Response setAnzeigename(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anzeigename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setAnzeigename(id, JSONMapper.toString(is)),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setAnzeigename(id, JSONMapper.toString(is)),
     		request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -247,7 +247,7 @@ public class APIBenutzer {
     public Response setBenutzername(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setBenutzername(id, JSONMapper.toString(is)),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setBenutzername(id, JSONMapper.toString(is)),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -274,7 +274,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Der Anmeldename", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setPassword(id, JSONMapper.toString(is)),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).setPassword(id, JSONMapper.toString(is)),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -301,7 +301,7 @@ public class APIBenutzer {
     public Response addBenutzerAdmin(
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).addAdmin(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).addAdmin(id),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -325,7 +325,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response removeBenutzerAdmin(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeAdmin(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeAdmin(id),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -352,7 +352,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).addKompetenzen(id, kids),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).addKompetenzen(id, kids),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -381,7 +381,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).removeKompetenzen(id, kids),
+    	return DBBenutzerUtils.runWithTransactionAllowSelf(conn -> new DataBenutzerDaten(conn).removeKompetenzen(id, kids),
         	request, ServerMode.STABLE, id, BenutzerKompetenz.ADMIN);
     }
 
@@ -403,7 +403,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     public Response getKatalogBenutzerkompetenzen(@PathParam("schema") final String schema,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerkompetenzliste().getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerkompetenzliste().getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -425,7 +425,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
     public Response getKatalogBenutzerkompetenzgruppen(@PathParam("schema") final String schema,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerkompetenzGruppenliste().getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerkompetenzGruppenliste().getList(),
         	request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -456,7 +456,7 @@ public class APIBenutzer {
             @RequestBody(description = "Die Bezeichnung der Benutzergruppe.", required = true,
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = String.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).setBezeichnung(id, JSONMapper.toString(is)),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).setBezeichnung(id, JSONMapper.toString(is)),
 			request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -482,7 +482,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addBenutzergruppeAdmin(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addAdmin(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addAdmin(id),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -507,7 +507,7 @@ public class APIBenutzer {
     @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response removeBenutzergruppeAdmin(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeAdmin(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeAdmin(id),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -533,7 +533,7 @@ public class APIBenutzer {
     public Response addBenutzergruppeKompetenzen(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addKompetenzen(id, kids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addKompetenzen(id, kids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -559,7 +559,7 @@ public class APIBenutzer {
     public Response removeBenutzergruppeKompetenzen(@PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Kompetenzen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeKompetenzen(id, kids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeKompetenzen(id, kids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -587,7 +587,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addBenutzer(id, bids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).addBenutzer(id, bids),
     		request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -615,7 +615,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema, @PathParam("id") final long id,
             @RequestBody(description = "Die Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeBenutzer(id, bids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).removeBenutzer(id, bids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -646,7 +646,7 @@ public class APIBenutzer {
     		@RequestBody(description = "Der Post für die Benutzer-Daten", required = true, content =
     		@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerAllgemeinCredentials.class)))
     		final BenutzerAllgemeinCredentials cred, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerAllgemein(cred),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).createBenutzerAllgemein(cred),
     			request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -672,7 +672,7 @@ public class APIBenutzer {
             @PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Benutzer", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeBenutzerMenge(bids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzerDaten(conn).removeBenutzerMenge(bids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -700,7 +700,7 @@ public class APIBenutzer {
             @RequestBody(description = "Der Post für die Benutzergruppe-Daten", required = true, content =
             @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzergruppeDaten.class))) final InputStream is,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).create(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).create(is),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 
@@ -725,7 +725,7 @@ public class APIBenutzer {
     public Response removeBenutzerGruppe(@PathParam("schema") final String schema,
             @RequestBody(description = "Die IDs der Benutzergruppen", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> bgids,
             @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).remove(bgids),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataBenutzergruppeDaten(conn).remove(bgids),
         	request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
     }
 

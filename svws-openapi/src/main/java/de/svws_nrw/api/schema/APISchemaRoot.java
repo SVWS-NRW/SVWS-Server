@@ -10,7 +10,6 @@ import java.util.Random;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
@@ -21,6 +20,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -99,7 +99,7 @@ public class APISchemaRoot {
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     // TODO OpenAPI-Doc: all possible responses...
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context final HttpServletRequest request) {
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	try (DBEntityManager conn = user.getEntityManager()) {
 			// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 			final List<String> all = DTOInformationSchema.queryNames(conn);
@@ -138,7 +138,7 @@ public class APISchemaRoot {
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     // TODO OpenAPI-Doc: all possible responses...
     public List<String> getSchemaListe(@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 			return DTOInformationSchema.queryNames(conn);
     	}
     }
@@ -160,7 +160,7 @@ public class APISchemaRoot {
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     // TODO OpenAPI-Doc: all possible responses...
     public boolean existsSchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final List<String> schemata = DTOInformationSchema.queryNames(conn);
 			return schemata.contains(schemaname.toLowerCase());
     	}
@@ -183,7 +183,7 @@ public class APISchemaRoot {
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
     // TODO OpenAPI-Doc: all possible responses...
     public boolean existsUser(@PathParam("user") final String username, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final List<String> userlist = DTOInformationUser.queryNames(conn);
 			return userlist.contains(username);
     	}
@@ -255,7 +255,7 @@ public class APISchemaRoot {
     						 @PathParam("revision") final long revision,
     						 @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true) final BenutzerKennwort kennwort,
     						 @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
 	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
@@ -337,7 +337,7 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht gelöscht werden.")
     @ApiResponse(responseCode = "404", description = "Das angegebene Schema wurde nicht gefunden.")
     public List<String> destroySchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	// Erzeuge einen Root-Manager zum Löschen des Schemas
 			final DBRootManager root_manager = DBRootManager.create(conn);
 			if (root_manager == null)
@@ -377,7 +377,7 @@ public class APISchemaRoot {
     public SimpleOperationResponse migrateMDB2Schema(@PathParam("schema") final String schemaname,
     		@MultipartForm final DBMultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
 	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
@@ -448,7 +448,7 @@ public class APISchemaRoot {
     public SimpleOperationResponse importSQLite2Schema(@PathParam("schema") final String schemaname,
     		@MultipartForm final DBMultipartBodyWithoutDBPassword multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
 	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);
@@ -690,7 +690,7 @@ public class APISchemaRoot {
      * @return die Antwort auf die Migrationsanfrage, mit der Information, ob die Migration erfolgreich war oder nicht und dem Log zur Migration
      */
 	private static SimpleOperationResponse migrate2Schema(final String schemaname, final DBDriver srcDbDriver, final MigrateBody dbMigrationInfos, @Context final HttpServletRequest request, final Integer schulnummer) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
 	    	final LogConsumerList log = new LogConsumerList();
 	    	logger.addConsumer(log);

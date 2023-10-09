@@ -206,7 +206,6 @@ public class HttpServer {
 		// Add several standard configurations for this application
 		addLoginService();
 		addHTTPConfiguration();
-
 	}
 
 

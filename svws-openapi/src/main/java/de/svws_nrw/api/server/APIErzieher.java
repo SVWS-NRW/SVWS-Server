@@ -2,12 +2,12 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.erzieher.ErzieherListeEintrag;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.erzieher.Erzieherart;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.erzieher.DataErzieherStammdaten;
 import de.svws_nrw.data.erzieher.DataErzieherarten;
 import de.svws_nrw.data.erzieher.DataErzieherliste;
@@ -61,7 +61,7 @@ public class APIErzieher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Erzieherdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieher-Einträge gefunden")
     public Response getErzieher(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherliste(conn).getAll(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherliste(conn).getAll(),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
@@ -84,7 +84,7 @@ public class APIErzieher {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalogdaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Erzieherart-Einträge gefunden")
     public Response getErzieherArten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherarten(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherarten(conn).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -113,7 +113,7 @@ public class APIErzieher {
     @ApiResponse(responseCode = "404", description = "Kein Erzieher-Eintrag mit der angegebenen ID gefunden")
     public Response getErzieherStammdaten(@PathParam("schema") final String schema, @PathParam("id") final long tmpid,
     		                                    @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherStammdaten(conn).get(tmpid),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).get(tmpid),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
@@ -144,7 +144,7 @@ public class APIErzieher {
     		@RequestBody(description = "Der Patch für die Erzieher-Stammdaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ErzieherStammdaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataErzieherStammdaten(conn).patch(tmpid, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataErzieherStammdaten(conn).patch(tmpid, is),
         	request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
     }
 

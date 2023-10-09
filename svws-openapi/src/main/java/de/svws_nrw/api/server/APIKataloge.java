@@ -1,6 +1,5 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrtsteile;
@@ -9,6 +8,7 @@ import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kataloge.DataHaltestellen;
 import de.svws_nrw.data.kataloge.DataKatalogOrte;
 import de.svws_nrw.data.kataloge.DataKatalogOrtsteile;
@@ -60,7 +60,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Straßen-Katalog-Einträge gefunden")
     public Response getKatalogStrassen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	return (new DataStrassen()).getAll();
     }
 
@@ -83,7 +83,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Orts-Katalog-Einträge gefunden")
     public Response getKatalogOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKatalogOrte()).getAll();
     }
 
@@ -109,7 +109,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ort-Katalog-Einträge gefunden")
     public Response getOrte(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataOrte(conn).getAll(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataOrte(conn).getAll(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -132,7 +132,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getKatalogOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-        OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
         return (new DataKatalogOrtsteile()).getAll();
     }
 
@@ -158,7 +158,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Ortsteil-Katalog-Einträge gefunden")
     public Response getOrtsteile(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataOrtsteile(conn).getAll(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataOrtsteile(conn).getAll(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
@@ -184,7 +184,7 @@ public class APIKataloge {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
     public Response getHaltestellen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataHaltestellen(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataHaltestellen(conn).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 

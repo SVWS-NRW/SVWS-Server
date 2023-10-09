@@ -10,7 +10,7 @@ import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.component.AbstractLifeCycle;
 import org.eclipse.jetty.util.security.Password;
 
-import de.svws_nrw.api.OpenAPIPrincipal;
+import de.svws_nrw.data.benutzer.BenutzerApiPrincipal;
 
 
 
@@ -73,7 +73,7 @@ public final class SVWSLoginService extends AbstractLifeCycle implements LoginSe
 		}
 
 		// Prüfe, ob ein Login bei der OpenAPI-Applikation erfolgreich ist
-		final OpenAPIPrincipal principal = OpenAPIPrincipal.login(username, password, req);
+		final BenutzerApiPrincipal principal = BenutzerApiPrincipal.login(username, password, req);
 		if (principal == null)
 			return null;
 

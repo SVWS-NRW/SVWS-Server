@@ -2,11 +2,11 @@ package de.svws_nrw.api.server;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.gost.DataKurs42;
 import de.svws_nrw.data.gost.DataLupo;
 import de.svws_nrw.db.Benutzer;
@@ -67,7 +67,7 @@ public class APIGostDatenaustausch {
     		@Context final HttpServletRequest request) {
     	if (!("all".equals(mode) || "schueler".equals(mode) || "none".equals(mode)))
     		return OperationError.BAD_REQUEST.getResponse("Der Modus zum Ersetzen von Daten muss auf 'none', 'schueler' oder 'all' gesetzt sein");
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
+    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
     	final boolean replaceJahrgang = "all".equals(mode);
     	final boolean replaceSchueler = "all".equals(mode) || "schueler".equals(mode);
     	return DataLupo.importMDB(user, multipart, replaceJahrgang, replaceSchueler);
@@ -97,7 +97,7 @@ public class APIGostDatenaustausch {
     public Response getGostLupoExportMDBFuerJahrgang(@PathParam("schema") final String schemaname,
     		@PathParam("jahrgang") final String jahrgang,
     		@Context final HttpServletRequest request) {
-    	final Benutzer user = OpenAPIApplication.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
+    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.OBERSTUFE_LUPO_IMPORT);
 		return DataLupo.exportMDB(user, jahrgang);
     }
 
@@ -125,7 +125,7 @@ public class APIGostDatenaustausch {
     		@RequestBody(description = "Die Zip-Datei mit den Textdateien der Kurs 42-Blockung", required = true, content =
 			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final SimpleBinaryMultipartBody multipart,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = OpenAPIApplication.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN)) {
 	    	return DataKurs42.importZip(conn, multipart);
     	}
     }

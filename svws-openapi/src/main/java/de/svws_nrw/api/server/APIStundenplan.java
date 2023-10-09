@@ -2,7 +2,6 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
@@ -18,6 +17,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.stundenplan.DataKlasseStundenplan;
 import de.svws_nrw.data.stundenplan.DataLehrerStundenplan;
 import de.svws_nrw.data.stundenplan.DataSchuelerStundenplan;
@@ -83,7 +83,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Stundenplanlisten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenpläne gefunden", content = @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)))
     public Response getStundenplanliste(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanListe(conn).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -109,7 +109,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Stundenplanlisten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenpläne gefunden")
     public Response getStundenplanlisteFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("abschnitt") final long abschnitt, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanListe(conn).get(abschnitt),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).get(abschnitt),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -134,7 +134,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplan(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplan(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -165,7 +165,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für die Stundenplandaten", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Stundenplan.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplan(conn).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplan(conn).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -192,7 +192,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response addStundenplan(@PathParam("schema") final String schema, @PathParam("idSchuljahresabschnitt") final long idSchuljahresabschnitt,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanListe(conn).addEmpty(idSchuljahresabschnitt),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).addEmpty(idSchuljahresabschnitt),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -218,7 +218,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanListe(conn).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -243,7 +243,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um das Zeitraster anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Zeitraster-Einträge gefunden")
     public Response getStundenplanZeitraster(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -269,7 +269,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Zeitraster-Eintrag eines Stundenplans gefunden")
     public Response getStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -300,7 +300,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für den Zeitrastereintrag", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -331,7 +331,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten des zu erstellenden Zeitrastereintrags ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -358,7 +358,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -384,7 +384,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Raum eines Stundenplans gefunden")
     public Response getStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -415,7 +415,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für den Raum", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanRaum.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -447,7 +447,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten des zu erstellenden Raumes ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanRaum.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -474,7 +474,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -500,7 +500,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Aufsichtsbereich eines Stundenplans gefunden")
     public Response getStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -531,7 +531,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für den Aufsichtsbereich", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanAufsichtsbereich.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -563,7 +563,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten des zu erstellenden Aufsichtsbereichs ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanAufsichtsbereich.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -590,7 +590,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanAufsichtsbereich(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -616,7 +616,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Schiene eines Stundenplans gefunden")
     public Response getStundenplanSchiene(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanSchienen(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanSchienen(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -647,7 +647,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für die Schiene", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanSchiene.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanSchienen(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanSchienen(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -673,7 +673,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Pausenzeit eines Stundenplans gefunden")
     public Response getStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -703,7 +703,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für die Pausenzeit", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -734,7 +734,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeit ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -761,7 +761,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanPausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -787,7 +787,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Kalenderwochen-Zuordnung eines Stundenplans gefunden")
     public Response getStundenplanKalenderwochenzuordnung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -818,7 +818,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für die Kalenderwochen-Zuordnung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanKalenderwochenzuordnung.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -844,7 +844,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplanPausenaufsichten(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -870,7 +870,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Pausenaufsicht eines Stundenplans gefunden")
     public Response getStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -901,7 +901,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für die Kalenderwochen-Zuordnung", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -932,7 +932,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenaufsicht ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenaufsicht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -959,7 +959,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanPausenaufsicht(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -984,7 +984,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplanUnterrichte(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, id).getList(),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, id).getList(),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -1010,7 +1010,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Unterricht eines Stundenplans gefunden")
     public Response getStundenplanUnterricht(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -1041,7 +1041,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Der Patch für den Unterricht", required = true, content =
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanUnterricht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).patch(id, is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -1071,7 +1071,7 @@ public class APIStundenplan {
     		@RequestBody(description = "Die Daten des zu erstellenden Unterrichts ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanUnterricht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).add(is),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).add(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -1098,7 +1098,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
     public Response deleteStundenplanUnterricht(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).delete(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).delete(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -1123,7 +1123,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Stundenplandaten anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keine Stundenplandaten gefunden")
     public Response getStundenplanUnterrichtsverteilung(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanUnterrichtsverteilung(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterrichtsverteilung(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -1150,7 +1150,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Kein Raum eines Stundenplans gefunden")
     public Response getStundenplanLehrer(@PathParam("schema") final String schema, @PathParam("idStundenplan") final long idStundenplan, @PathParam("id") final long id, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataStundenplanLehrer(conn, idStundenplan).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanLehrer(conn, idStundenplan).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -1177,7 +1177,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
     public Response getSchuelerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("schueler_id") final long schuelerID, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataSchuelerStundenplan(conn, id).get(schuelerID),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerStundenplan(conn, id).get(schuelerID),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN);
     }
 
@@ -1204,7 +1204,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
     public Response getLehrerStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("lehrer_id") final long lehrerID, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataLehrerStundenplan(conn, id).get(lehrerID),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerStundenplan(conn, id).get(lehrerID),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 
@@ -1230,7 +1230,7 @@ public class APIStundenplan {
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Stundenplan anzusehen.")
     @ApiResponse(responseCode = "404", description = "Keinen Stundenplan gefunden")
     public Response getKlassenStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("klasse_id") final long klasseID, @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataKlasseStundenplan(conn, id).get(klasseID),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKlasseStundenplan(conn, id).get(klasseID),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN);
     }
 

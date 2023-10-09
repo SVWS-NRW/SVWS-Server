@@ -1,9 +1,9 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.api.OpenAPIApplication;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.ge.DataGEAbschlussFaecher;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -52,7 +52,7 @@ public class APIGesamtschule {
     @ApiResponse(responseCode = "404", description = "Kein Schüler-Eintrag mit der angegebenen ID gefunden")
     public Response getGesamtschuleSchuelerPrognoseLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		                                               @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).get(id),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).get(id),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
@@ -82,7 +82,7 @@ public class APIGesamtschule {
     public Response getGesamtschuleSchuelerPrognosLeistungsdatenFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("id") final long id,
     																@PathParam("abschnittID") final long abschnittID,
     		                                                        @Context final HttpServletRequest request) {
-    	return OpenAPIApplication.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).getByAbschnitt(id, abschnittID),
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataGEAbschlussFaecher(conn).getByAbschnitt(id, abschnittID),
     		request, ServerMode.STABLE, BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
     }
 
