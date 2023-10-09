@@ -1,8 +1,8 @@
-package de.svws_nrw.api.debug;
+package de.svws_nrw.api;
 
 import java.util.Set;
 
-import de.svws_nrw.api.OpenAPICorsFilter;
+import de.svws_nrw.api.debug.APIDebug;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
@@ -12,7 +12,7 @@ import jakarta.ws.rs.core.Application;
  * verwendet die openapi.json vom SVWS-Server.
  */
 @ApplicationPath("/debug")
-public final class RestAppSwaggerUI extends Application {
+public final class RestAppDebug extends Application {
 
 	/// Enthält die API-Klasse für den Zugriff auf die Swagger-UI-Dateien
     private final Set<Class<?>> classes = Set.of(

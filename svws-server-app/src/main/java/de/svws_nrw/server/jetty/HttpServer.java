@@ -3,10 +3,7 @@ package de.svws_nrw.server.jetty;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-
-import jakarta.ws.rs.HttpMethod;
-import jakarta.ws.rs.core.Application;
+import java.util.List;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -36,9 +33,12 @@ import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
-import de.svws_nrw.api.OpenAPIApplication;
-import de.svws_nrw.api.debug.RestAppSwaggerUI;
+import de.svws_nrw.api.RestApp;
+import de.svws_nrw.api.RestAppDebug;
+import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.config.SVWSKonfiguration;
+import jakarta.ws.rs.HttpMethod;
+import jakarta.ws.rs.core.Application;
 
 
 /**
@@ -76,7 +76,10 @@ public class HttpServer {
 		final ConstraintMapping oa_mapping = new ConstraintMapping();
 		oa_mapping.setPathSpec("/openapi.json");
 		oa_mapping.setConstraint(oa_constraint);
-		security.setConstraintMappings(Collections.singletonList(oa_mapping));
+		final ConstraintMapping oa_mapping2 = new ConstraintMapping();
+		oa_mapping2.setPathSpec("/api/schema/root/openapi.json");
+		oa_mapping2.setConstraint(oa_constraint);
+		security.setConstraintMappings(List.of(oa_mapping, oa_mapping2));
 
         final Constraint constraint = new Constraint();
         constraint.setName("auth");
@@ -239,8 +242,10 @@ public class HttpServer {
 	 * Fügt die Rest-Applikationen zum Server hinzu.
 	 */
 	private static void addAPIApplications() {
-		addApplication(RestAppSwaggerUI.class, "/debug/*");
-		addApplication(OpenAPIApplication.class, "/*");
+		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
+			addApplication(RestAppSchemaRoot.class, "/api/schema/root/*");
+		addApplication(RestAppDebug.class, "/debug/*");
+		addApplication(RestApp.class, "/*");
 	}
 
 }
