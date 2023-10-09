@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: client",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.7.6-SNAPSHOT",
+	"version": "0.7.6",
 	"main": "./dist/index.js",
 	"type": "module",
 	"types": "./dist/index.d.ts",
