@@ -63,10 +63,9 @@
 					:model-value="manager().lernabschnittGet().fehlstundenUnentschuldigt || undefined"
 					@change="patch({ fehlstundenUnentschuldigt: Number($event) })" />
 			</svws-ui-input-wrapper>
-			<svws-ui-input-wrapper>
-				<span class="font-bold col-span-full">Fehlzeiten</span>
-				<span>Hier könnte demnächst die Übersicht über die Fehlzeiten implementiert werden.</span>
-			</svws-ui-input-wrapper>
+			<svws-ui-todo title="Fehlzeiten" class="mt-10">
+				Hier könnte demnächst die Übersicht über die Fehlzeiten implementiert werden.
+			</svws-ui-todo>
 		</svws-ui-content-card>
 	</div>
 </template>

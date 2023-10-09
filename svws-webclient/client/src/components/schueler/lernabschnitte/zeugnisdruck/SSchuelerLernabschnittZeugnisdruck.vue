@@ -7,9 +7,9 @@
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper class="opacity-50">
-				<div> TODO: nur Anzeige - abschluss </div>
-				<div> TODO: nur Anzeige - abschlussBerufsbildend </div>
-				<div> TODO: zeugnisart </div>
+				<svws-ui-todo> TODO: nur Anzeige - abschluss </svws-ui-todo>
+				<svws-ui-todo> TODO: nur Anzeige - abschlussBerufsbildend </svws-ui-todo>
+				<svws-ui-todo> TODO: zeugnisart </svws-ui-todo>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<svws-ui-input-wrapper>

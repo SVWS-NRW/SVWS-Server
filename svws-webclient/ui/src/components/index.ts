@@ -7,6 +7,7 @@ export { default as SvwsUiTable } from "./SvwsUiTable.vue";
 export { default as SvwsUiSpinner } from "./SvwsUiSpinner.vue";
 export { default as SvwsUiSpacing } from "./SvwsUiSpacing.vue";
 export { default as SvwsUiDashboardTile } from "./SvwsUiDashboardTile.vue";
+export { default as SvwsUiTodo } from "./SvwsUiTodo.vue";
 // Forms
 export { default as SvwsUiInputWrapper } from "./SvwsUiInputWrapper.vue";
 export { default as SvwsUiCheckbox } from "./SvwsUiCheckbox.vue";

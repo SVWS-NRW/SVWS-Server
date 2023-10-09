@@ -2,15 +2,15 @@
 	<div class="h-full w-full grid gap-4 grid-cols-2">
 		<svws-ui-content-card title="Versetzung">
 			<svws-ui-input-wrapper :grid="2">
-				<div class="opacity-50"> TODO: istAbschlussPrognose </div>
-				<div class="opacity-50"> TODO: versetzungsvermerk </div>
-				<div class="opacity-50"> TODO: abschlussart </div>
+				<svws-ui-todo>TODO: istAbschlussPrognose</svws-ui-todo>
+				<svws-ui-todo>TODO: versetzungsvermerk</svws-ui-todo>
+				<svws-ui-todo>TODO: abschlussart</svws-ui-todo>
 				<svws-ui-select title="Folgeklasse" v-model="folgeklasse" :items="props.manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete />
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
-			<svws-ui-input-wrapper class="opacity-50">
-				<div> TODO: abschluss </div>
-				<div> TODO: abschlussBerufsbildend </div>
+			<svws-ui-input-wrapper>
+				<svws-ui-todo> TODO: abschluss </svws-ui-todo>
+				<svws-ui-todo> TODO: abschlussBerufsbildend </svws-ui-todo>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
 			<div class="col-span-full flex gap-4">

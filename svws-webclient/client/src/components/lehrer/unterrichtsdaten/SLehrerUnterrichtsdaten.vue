@@ -1,9 +1,8 @@
 <template>
 	<div class="page--content page--content--flex">
-		<div class="svws-ui-empty">
-			<i-ri-stack-line />
-			<span>Hier werden zukünftig<br>die Unterrichtsdaten angezeigt.</span>
-		</div>
+		<svws-ui-todo title="Unterrichtsdaten">
+			Dieser Bereich ist noch in Entwicklung. Hier werden zukünftig die Unterrichtsdaten angezeigt.
+		</svws-ui-todo>
 	</div>
 </template>
 

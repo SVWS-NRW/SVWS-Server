@@ -1,11 +1,7 @@
 <template>
-	<svws-ui-content-card title="KAoA" class="opacity-50">
-		<svws-ui-input-wrapper>
-			<div class="opacity-50">
-				Hier werden die KAoA-Daten abgelegt
-			</div>
-		</svws-ui-input-wrapper>
-	</svws-ui-content-card>
+	<svws-ui-todo title="KAoA">
+		Dieser Bereich ist noch in Entwicklung. Hier werden die KAoA-Daten abgelegt.
+	</svws-ui-todo>
 </template>
 
 <script setup lang="ts">

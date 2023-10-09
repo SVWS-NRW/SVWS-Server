@@ -1,12 +1,8 @@
 <template>
 	<div class="page--content">
-		<svws-ui-content-card title="Abschlüsse und Berechtigungen an aktueller Schule" class="opacity-50">
-			<svws-ui-input-wrapper>
-				<div class="opacity-50">
-					Hier werden zunkünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt
-				</div>
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
+		<svws-ui-todo title="Abschlüsse und Berechtigungen an aktueller Schule">
+			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
+		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
 			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge">
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
