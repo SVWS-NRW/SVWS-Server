@@ -38,6 +38,7 @@
 				</template>
 				<template #actions>
 					<svws-ui-button type="transparent" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1"><i-ri-upload-2-line />Aus Vorlage importieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="erzeugeDefaultKlausurvorgaben(quartalsauswahl.value)" v-else><i-ri-upload-2-line />Standard-Vorlagen anlegen</svws-ui-button>
 					<svws-ui-button type="icon" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><i-ri-add-line /></svws-ui-button>
 				</template>
 			</svws-ui-table>
@@ -123,7 +124,10 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const vorgaben = () => props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value);
+	const vorgaben = () => {
+		console.log("ping", props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value).size());
+		return props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value);
+	}
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());

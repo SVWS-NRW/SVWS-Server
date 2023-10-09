@@ -1,5 +1,6 @@
 
-import { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurenCollectionSkrsKrs, GostKlausurterminblockungDaten} from "@core";
+import type { GostJahrgangsdaten, GostKursklausur, LehrerListeEintrag, SchuelerListeEintrag, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, List, GostSchuelerklausur, GostKlausurterminblockungDaten} from "@core";
+import { GostKlausurenCollectionSkrsKrs} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { GostKlausurraumManager, StundenplanManager, KursManager, GostFaecherManager, GostHalbjahr, GostKursklausurManager, GostKlausurvorgabenManager, StundenplanListUtils, DeveloperNotificationException } from "@core";
 import { GostKlausurtermin, ArrayList} from "@core";
@@ -333,6 +334,14 @@ export class RouteDataGostKlausurplanung {
 		this.commit();
 		api.status.stop();
 		return result;
+	}
+
+	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
+		api.status.start();
+		const neueVorgaben = await api.server.createDefaultGostKlausurenVorgaben(api.schema, this.halbjahr.id, quartal);
+		this.klausurvorgabenmanager.vorgabeAddAll(neueVorgaben);
+		this.commit();
+		api.status.stop();
 	}
 
 	erzeugeKlausurvorgabe = async (vorgabe: Partial<GostKlausurvorgabe>) => {

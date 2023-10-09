@@ -3,6 +3,8 @@ package de.svws_nrw.data.gost.klausurplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -20,6 +23,7 @@ import de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
@@ -106,7 +110,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
 		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
 		for (final DTOKurs kurs : kurse) {
-			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, kurs.KursartAllg, kurs.Fach_ID);
+			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if ((vorgabe != null) && (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe)))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur++, vorgabe.idVorgabe, kurs.ID);
@@ -339,6 +343,74 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		if (!conn.transactionPersistAll(vorgabenNeu))
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Gost-Klausurvorgaben.");
 		return true;
+	}
+
+	/**
+	 * Legt für alle Jahrgänge die Klausurvorgaben laut APO-GOSt an.
+	 *
+	 * @param conn       die Datenbankverbindung
+	 * @param halbjahr   das Halbjahr der gymnasialen Oberstufe
+	 * @param quartal    das Quartal, 0 für das gesamte Halbjahr
+	 *
+	 * @return die Liste der neuen Klausurvorgaben
+	 */
+	public static List<GostKlausurvorgabe> createDefaultVorgaben(final DBEntityManager conn, final GostHalbjahr halbjahr, final int quartal) {
+		final List<DTOGostKlausurenVorgaben> vorgabenVorlage = conn.queryNamed("DTOGostKlausurenVorgaben.abi_jahrgang", -1, DTOGostKlausurenVorgaben.class);
+		// Prüfe, ob die Vorlage eingelesen werden kann
+		if (vorgabenVorlage == null)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
+		for (GostHalbjahr hj : GostHalbjahr.values())
+			manager.put(hj, new GostKlausurvorgabenManager(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).map(dtoMapper::apply).toList(), null));
+		List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).faecher();
+		List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
+		// Bestimme die ID, für welche der Datensatz eingefügt wird
+		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
+		Set<Integer> quartale = new HashSet<>();
+		if (quartal == 0) {
+			quartale.add(1);
+			quartale.add(2);
+		} else
+			quartale.add(quartal);
+		GostKursart[] arten = halbjahr.istEinfuehrungsphase() ? new GostKursart[] {GostKursart.GK} : new GostKursart[] {GostKursart.GK, GostKursart.LK};
+		for (GostFach fach : faecher) {
+			for (GostKursart ka : arten) {
+				for (int q : quartale) {
+					DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++,
+							-1,
+							halbjahr,
+							q,
+							fach.id,
+							ka,
+							berechneApoKlausurdauer(halbjahr, ka, fach),
+							0,
+							false, false, false);
+					if (manager.get(vorgabeNeu.Halbjahr).vorgabeGetByQuartalAndKursartallgAndFachid(vorgabeNeu.Quartal, vorgabeNeu.Kursart, vorgabeNeu.Fach_ID) == null)
+						neueVorgaben.add(vorgabeNeu);
+				}
+			}
+		}
+		if (!conn.transactionPersistAll(neueVorgaben))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Persistieren der Gost-Klausurvorgaben.");
+		return neueVorgaben.stream().map(dtoMapper::apply).toList();
+
+	}
+
+	private static int berechneApoKlausurdauer(final GostHalbjahr halbjahr, final GostKursart kursart, final GostFach fach) {
+		if (halbjahr.istEinfuehrungsphase())
+			return 90;
+		if (kursart == GostKursart.LK) {
+			if (halbjahr.id <= 3)
+				return 180;
+			if (halbjahr.id == 4)
+				return 225;
+			return fach.istFremdsprache ? 315 : 300;
+		}
+		if (halbjahr.id <= 3)
+			return 135;
+		if (halbjahr.id == 4)
+			return 180;
+		return fach.istFremdsprache ? 285 : 255;
 	}
 
 }

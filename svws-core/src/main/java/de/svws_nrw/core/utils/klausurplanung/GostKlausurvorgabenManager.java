@@ -11,6 +11,7 @@ import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
@@ -242,8 +243,8 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe vorgabeGetByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull String kursartAllg, final long idFach) {
-		return _vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(quartal, kursartAllg, idFach);
+	public GostKlausurvorgabe vorgabeGetByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+		return _vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(quartal, kursartAllg.kuerzel, idFach);
 	}
 
 	/**
@@ -256,7 +257,7 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull String kursartAllg, final long idFach) {
+	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new ArrayList<>();
 			final GostKlausurvorgabe vorgabe = vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
@@ -276,8 +277,8 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByKursartallgAndFachid(final @NotNull String kursartAllg, final long idFach) {
-		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg, idFach);
+	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByKursartallgAndFachid(final @NotNull GostKursart kursartAllg, final long idFach) {
+		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg.kuerzel, idFach);
 		return list != null ? list : new ArrayList<>();
 	}
 

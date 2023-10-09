@@ -7,6 +7,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { GostKursart } from '../../../core/types/gost/GostKursart';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
@@ -218,8 +219,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public vorgabeGetByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : string, idFach : number) : GostKlausurvorgabe | null {
-		return this._vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(quartal, kursartAllg, idFach);
+	public vorgabeGetByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : GostKlausurvorgabe | null {
+		return this._vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(quartal, kursartAllg.kuerzel, idFach);
 	}
 
 	/**
@@ -232,7 +233,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
 		if (quartal > 0) {
 			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
 			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
@@ -252,8 +253,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : string, idFach : number) : List<GostKlausurvorgabe> | null {
-		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg, idFach);
+	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
+		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg.kuerzel, idFach);
 		return list !== null ? list : new ArrayList();
 	}
 
