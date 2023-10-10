@@ -677,6 +677,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
 			}
 		}
+		for (const schiene of this._ergebnis.schienen) {
+			const kursmenge : List<GostBlockungsergebnisKurs> = schiene.kurse;
+			if (this._fachartmenge_sortierung === 1) {
+				kursmenge.sort(this._kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(this._kursComparator_fach_kursart_kursnummer);
+			}
+		}
 	}
 
 	/**
@@ -2356,6 +2364,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			if (this.getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
+	}
+
+	/**
+	 * Liefert die sortierte Menge an Kursen einer bestimmten Schiene.
+	 *
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return die sortierte Menge an Kursen einer bestimmten Schiene.
+	 */
+	public getOfSchieneKursmengeSortiert(idSchiene : number) : List<GostBlockungsergebnisKurs> {
+		return this.getSchieneE(idSchiene).kurse;
 	}
 
 	/**

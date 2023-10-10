@@ -739,6 +739,17 @@ public class GostBlockungsergebnisManager {
 				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
 			}
 		}
+
+		// Kursmenge pro Schiene sortieren.
+		for (@NotNull final GostBlockungsergebnisSchiene schiene : _ergebnis.schienen) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge =  schiene.kurse;
+			if (_fachartmenge_sortierung == 1) {
+				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
+			}
+		}
+
 	}
 
 	/**
@@ -1666,13 +1677,13 @@ public class GostBlockungsergebnisManager {
 
 
 	/**
-	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.<br>
+	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kollision hat.<br>
 	 * Die Methode geht davon aus, dass der Schüler dem Kurs zugeordnet ist.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 *
-	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.
+	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kollision hat.
 	 */
 	public boolean getOfSchuelerOfKursHatKollision(final long idSchueler, final long idKurs) {
 		// Schnelltest, ob der Schüler überhaupt eine Kollision hat.
@@ -2507,6 +2518,17 @@ public class GostBlockungsergebnisManager {
 			if (getOfKursHatKollision(kurs.id))
 				set.add(kurs);
 		return set;
+	}
+
+	/**
+	 * Liefert die sortierte Menge an Kursen einer bestimmten Schiene.
+	 *
+	 * @param idSchiene Die Datenbank-ID der Schiene.
+	 *
+	 * @return die sortierte Menge an Kursen einer bestimmten Schiene.
+	 */
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfSchieneKursmengeSortiert(final long idSchiene) {
+		return getSchieneE(idSchiene).kurse;
 	}
 
 	/**
