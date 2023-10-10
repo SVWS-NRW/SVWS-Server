@@ -205,7 +205,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 */
 	public vorgabeGetMengeByQuartal(quartal : number) : List<GostKlausurvorgabe> {
 		if (quartal === 0)
-			return this.vorgabeGetMengeAsList();
+			return new ArrayList(this.vorgabeGetMengeAsList());
 		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_quartal.get(quartal);
 		return vorgaben !== null ? vorgaben : new ArrayList();
 	}

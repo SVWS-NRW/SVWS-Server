@@ -229,7 +229,7 @@ public class GostKlausurvorgabenManager {
 	 */
 	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartal(final int quartal) {
 		if (quartal == 0)
-			return vorgabeGetMengeAsList();
+			return new ArrayList<>(vorgabeGetMengeAsList()); // new ArrayList als Workaround für DataTable, der sonst nicht aktualisiert
 		List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_quartal.get(quartal);
 		return vorgaben != null ? vorgaben : new ArrayList<>();
 	}
