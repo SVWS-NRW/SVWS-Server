@@ -66,7 +66,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
 				throw new Error("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
-			await this.data.setAbiturjahr(abiturjahr);
 			// Aktualisiere das Halbjahr
 			if (halbjahr === undefined) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
@@ -74,7 +73,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRoute(abiturjahr, hj.id);
 			}
-			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr);
+			const hjChanged = !this.data.hatAbiturjahr || (this.data.abiturjahr !== abiturjahr);
+			await this.data.setAbiturjahr(abiturjahr);
+			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, hjChanged);
 			if ((changedHalbjahr) || (to.name === this.name))
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 		} catch(e: unknown) {
