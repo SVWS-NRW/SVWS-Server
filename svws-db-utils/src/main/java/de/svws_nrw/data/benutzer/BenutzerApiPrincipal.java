@@ -113,7 +113,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		String schema = "";
 		if ((!isAnonymous) && (!isDBMSRootAuthentication)) {
 			final var pathelements = path.split("/");
-			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && ("db".equals(pathelements[1])))
+			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
 				schema = pathelements[2];
 		}
 
