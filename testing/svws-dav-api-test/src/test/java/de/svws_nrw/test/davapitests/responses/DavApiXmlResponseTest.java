@@ -36,7 +36,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 	 */
 	@Test
 	void whenPropfindOnDavRoot_thenMultiStatusWith3Responses() {
-		String davRoot = "db/gymabi/dav";
+		String davRoot = "dav/gymabi";
 		final Response response = given(user, password).when()
 				.body(APITestUtil.readStringFromResourceFile("gymabi/dav/propfind_dav_207.xml", this))
 				.request(PROPFIND, davRoot);
