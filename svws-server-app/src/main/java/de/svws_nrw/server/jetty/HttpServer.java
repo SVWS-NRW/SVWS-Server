@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.List;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -72,18 +71,6 @@ public class HttpServer {
 		server.addBean(loginService);
 		final ConstraintSecurityHandler security = new ConstraintSecurityHandler();
         server.setHandler(security);
-
-		// openapi.json darf durchgelassen werden. Wird zum Erstellen des Client benötigt
-		final Constraint oa_constraint = new Constraint();
-		oa_constraint.setName("pass_openapi.json");
-		oa_constraint.setAuthenticate(false);
-		final ConstraintMapping oa_mapping = new ConstraintMapping();
-		oa_mapping.setPathSpec("/openapi.json");
-		oa_mapping.setConstraint(oa_constraint);
-		final ConstraintMapping oa_mapping2 = new ConstraintMapping();
-		oa_mapping2.setPathSpec("/api/schema/root/openapi.json");
-		oa_mapping2.setConstraint(oa_constraint);
-		security.setConstraintMappings(List.of(oa_mapping, oa_mapping2));
 
         final Constraint constraint = new Constraint();
         constraint.setName("auth");
