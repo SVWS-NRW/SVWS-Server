@@ -322,7 +322,7 @@ public final class DateUtils {
 	/**
 	 * Liefert das Kalenderwochenjahr zu einem bestimmten Datum.
 	 *
-	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
 	 * @return die Kalenderwochenjahr zu einem bestimmten Datum.
 	 */
@@ -333,12 +333,60 @@ public final class DateUtils {
 	/**
 	 * Liefert den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
 	 *
-	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
 	 * @return den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
 	 */
 	public static int gibWochentagDesDatumsISO8601(final @NotNull String datumISO8601) {
 		return extractFromDateISO8601(datumISO8601)[3];
 	}
+
+	/**
+	 * Liefert das Schuljahr zu einem bestimmten Datum. Dabei wird von dem Stichtag des
+	 * 1.8. für den Beginn des neuen Schuljahres ausgegangen. Da das Schuljahr immer in
+	 * zwei Kalendejahren liegt, wird immer das erste Kalenderjahr als Schuljahr angegeben.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Schuljahr
+	 */
+	public static int getSchuljahrFromDateISO8601(final @NotNull String datumISO8601) {
+		final int[] iso8601 = extractFromDateISO8601(datumISO8601);
+		return (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
+	}
+
+	/**
+	 * Liefert das Halbjahr zu einem bestimmten Datum. Dabei wird zum Einen von dem Stichtag des
+	 * 1.8. für den Beginn des neuen Schuljahres ausgegangen und zum Anderen wird vereinfacht (!)
+	 * vom 1.2. als Beginn des neuen Halbjahres ausgegangen.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Halbjahr anhand des vereinfachten Kriteriums
+	 */
+	public static int getHalbjahrFromDateISO8601(final @NotNull String datumISO8601) {
+		final int[] iso8601 = extractFromDateISO8601(datumISO8601);
+		return (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+	}
+
+
+	/**
+	 * Liefert das Schuljahr und das Halbjahr zu einem bestimmten Datum.
+	 * Dabei wird zum Einen von dem Stichtag des 1.8. für den Beginn des neuen Schuljahres
+	 * ausgegangen und zum Anderen wird vereinfacht (!) vom 1.2. als Beginn des neuen
+	 * Halbjahres ausgegangen.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Schuljahr (Index 0) und das Halbjahr (Index 1) anhand des vereinfachten Kriteriums
+	 */
+	public static int[] getSchuljahrUndHalbjahrFromDateISO8601(final @NotNull String datumISO8601) {
+		final int[] iso8601 = extractFromDateISO8601(datumISO8601);
+		final int[] result = new int[2];
+		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
+		result[1] = (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		return result;
+	}
+
 
 }

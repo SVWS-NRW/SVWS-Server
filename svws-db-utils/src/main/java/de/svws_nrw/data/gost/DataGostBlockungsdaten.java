@@ -21,12 +21,14 @@ import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
+import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.utils.gost.GostFachwahlManager;
@@ -45,15 +47,16 @@ import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchiene;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnisKursSchueler;
+import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
-import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -133,10 +136,16 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	 * @return der Blockungsdaten-Manager
 	 */
 	public GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
+		// Bestimme den aktuellen Schuljahresabschnitt
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOSchuljahresabschnitte schuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuleSchuljahresabschnitt == null)
+			throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
+
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
-			throw OperationError.NOT_FOUND.exception();
+			throw OperationError.NOT_FOUND.exception("Keine Blockung mit der ID %d gefunden.".formatted(id));
 
 		// Fächer hinzufügen.
 		final GostFaecherManager faecherManager = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
@@ -200,16 +209,37 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		}
 
 		// Schüler-Menge hinzufügen.
-        final List<Schueler> schueler = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs().stream().map((final DTOSchueler dto) -> {
-            final Schueler daten = new Schueler();
-            daten.id = dto.ID;
-            daten.nachname = dto.Nachname;
-            daten.vorname = dto.Vorname;
-            daten.status = dto.Status.id;
-            daten.geschlecht = dto.Geschlecht.id;
-            return daten;
-        }).toList();
-        manager.schuelerAddListe(schueler);
+		final List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
+		final List<Schueler> schuelerListe = new ArrayList<>();
+		for (final DTOSchueler dto : schuelerDTOs) {
+			// Überspringe Schüler, welche keinen aktuellen bzw. letzten Schuljahresabschnitt zugewiesen haben
+			if (dto.Schuljahresabschnitts_ID == null)
+				continue;
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt == null)
+				continue;
+			if ((dto.Status == SchuelerStatus.ABGANG) || (dto.Status == SchuelerStatus.ABSCHLUSS)) {
+				final int blockungSchuljahr = blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang);
+				final int[] entlassung = (dto.Entlassdatum == null) ? null : DateUtils.getSchuljahrUndHalbjahrFromDateISO8601(dto.Entlassdatum);
+				if (entlassung == null) {
+					// Prüfe, ob der aktuelle Schuljahresabschnitt des Schülers < dem Schuljahresabschnitt der Blockung ist -> dann muss der Schüler ignoriert werden
+					if ((schuljahresabschnitt.Jahr < blockungSchuljahr) || ((schuljahresabschnitt.Jahr == blockungSchuljahr) && (schuljahresabschnitt.Abschnitt < blockung.Halbjahr.halbjahr)))
+						continue;
+				} else {
+					// Prüfe, ob der Schuljahresabschnitt der Entlassung des Schülers < dem Schuljahresabschnitt der Blockung ist -> dann muss der Schüler ignoriert werden
+					if ((entlassung[0] < blockungSchuljahr) || ((entlassung[0] == blockungSchuljahr) && (entlassung[1] < blockung.Halbjahr.halbjahr)))
+						continue;
+				}
+			}
+			final Schueler daten = new Schueler();
+			daten.id = dto.ID;
+			daten.nachname = dto.Nachname;
+			daten.vorname = dto.Vorname;
+			daten.status = dto.Status.id;
+			daten.geschlecht = dto.Geschlecht.id;
+			schuelerListe.add(daten);
+		}
+		manager.schuelerAddListe(schuelerListe);
 
         // Schüler-Fachwahl-Menge hinzufügen.
         final List<GostFachwahl> fachwahlen = (new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlenHalbjahr(blockung.Halbjahr).fachwahlen;

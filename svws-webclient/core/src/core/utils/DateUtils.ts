@@ -291,7 +291,7 @@ export class DateUtils extends JavaObject {
 	/**
 	 * Liefert das Kalenderwochenjahr zu einem bestimmten Datum.
 	 *
-	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
 	 * @return die Kalenderwochenjahr zu einem bestimmten Datum.
 	 */
@@ -302,12 +302,58 @@ export class DateUtils extends JavaObject {
 	/**
 	 * Liefert den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
 	 *
-	 * @param datumISO8601 Das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
 	 *
 	 * @return den Wochentag (Mo=1...So=7) zu einem bestimmten Datum.
 	 */
 	public static gibWochentagDesDatumsISO8601(datumISO8601 : string) : number {
 		return DateUtils.extractFromDateISO8601(datumISO8601)[3];
+	}
+
+	/**
+	 * Liefert das Schuljahr zu einem bestimmten Datum. Dabei wird von dem Stichtag des
+	 * 1.8. für den Beginn des neuen Schuljahres ausgegangen. Da das Schuljahr immer in
+	 * zwei Kalendejahren liegt, wird immer das erste Kalenderjahr als Schuljahr angegeben.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Schuljahr
+	 */
+	public static getSchuljahrFromDateISO8601(datumISO8601 : string) : number {
+		const iso8601 : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		return (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
+	}
+
+	/**
+	 * Liefert das Halbjahr zu einem bestimmten Datum. Dabei wird zum Einen von dem Stichtag des
+	 * 1.8. für den Beginn des neuen Schuljahres ausgegangen und zum Anderen wird vereinfacht (!)
+	 * vom 1.2. als Beginn des neuen Halbjahres ausgegangen.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Halbjahr anhand des vereinfachten Kriteriums
+	 */
+	public static getHalbjahrFromDateISO8601(datumISO8601 : string) : number {
+		const iso8601 : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		return (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+	}
+
+	/**
+	 * Liefert das Schuljahr und das Halbjahr zu einem bestimmten Datum.
+	 * Dabei wird zum Einen von dem Stichtag des 1.8. für den Beginn des neuen Schuljahres
+	 * ausgegangen und zum Anderen wird vereinfacht (!) vom 1.2. als Beginn des neuen
+	 * Halbjahres ausgegangen.
+	 *
+	 * @param datumISO8601   das Datum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return das Schuljahr (Index 0) und das Halbjahr (Index 1) anhand des vereinfachten Kriteriums
+	 */
+	public static getSchuljahrUndHalbjahrFromDateISO8601(datumISO8601 : string) : Array<number> | null {
+		const iso8601 : Array<number> | null = DateUtils.extractFromDateISO8601(datumISO8601);
+		const result : Array<number> | null = Array(2).fill(0);
+		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
+		result[1] = (iso8601[1] > 1) && (iso8601[1] < 8) ? 2 : 1;
+		return result;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
