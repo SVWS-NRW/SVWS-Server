@@ -89,7 +89,7 @@ public class PropfindDavRootDispatcher extends DavDispatcher {
 
 		if (dynamicPropUtil.getIsFieldRequested(CalendarHomeSet.class)) {
 			// Kalenderanfragen auf unserer Wurzel benötigen den Link zur Kalendersammlung
-			// unter db/schema/dav/kalender
+			// unter dav/schema/kalender
 			final CalendarHomeSet calendarHomeSet = new CalendarHomeSet();
 			calendarHomeSet.getHref().add(DavUriBuilder.getCalendarCollectionUri(uriParameter));
 			prop200.setCalendarHomeSet(calendarHomeSet);

@@ -86,7 +86,7 @@ public class PropfindCalendarDispatcher extends DavDispatcher {
 
 	/**
 	 * Generiert das Responseobjekt für die Kalendersammlung unter
-	 * db/schema/dav/kalender Thunderbird erwartet den resourcetype collection. Dies
+	 * dav/schema/kalender Thunderbird erwartet den resourcetype collection. Dies
 	 * ist dem client als calendar-home-set bekannt und er wird versuchen hier
 	 * weitere kalender zu suchen.
 	 *
