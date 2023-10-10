@@ -37,7 +37,7 @@ public class APIDebug {
 	private static final String versionSwaggerUIDist = "5.9.0";
 	// TODO determine Swagger UI Dist Version automatically...
 
-	private static final String pathToOpenapiJson = "/";
+	private static final String pathToOpenapiJson = "/openapi/";
 
 	/**
 	 * Diese Methode dient als Hilfsmethode, um auf die einzelnen Ressourcen der Swagger-UI zuzugreifen. Die
@@ -56,7 +56,7 @@ public class APIDebug {
     		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
 	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
 	    		if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
-	    			final String openapi_file = isYAML ? "openapi.yaml" : "openapi.json";
+	    			final String openapi_file = isYAML ? "server.yaml" : "server.json";
 	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
 	    			data = data.replace(
     					"\"https://petstore.swagger.io/v2/swagger.json\",",

@@ -35,7 +35,7 @@ import jakarta.ws.rs.core.UriInfo;
  * Stellt die OpenAPI-Schnittstelle für die Schema-Root-Applikation zur Verfügung
  */
 @Path("")
-public class OpenApiMain extends BaseOpenApiResource {
+public class OpenApiServer extends BaseOpenApiResource {
 
 	/** Die Servlet-Konfiguration */
     @Context ServletConfig config;
@@ -44,14 +44,14 @@ public class OpenApiMain extends BaseOpenApiResource {
     @Context Application app;
 
     private final Info info = new Info()
-			.title("SVWS-Server")
+			.title("SVWS Open-API Server")
 			.version(SVWSVersion.version())
 			.description(
 					"""
 					Die Open-API-Schnittstellenbeschreibungen des SVWS-Servers: <br>
 					<ul>
-					  <li> <a href="/debug/index.html?url=/openapi.json"> API SVWS-Server </a> </li>
-					  <li> <a href="/debug/index.html?url=/api/schema/root/openapi.json"> API SVWS-Server - Schemaverwaltung </a> </li>
+					  <li> <a href="/debug/index.html?url=/openapi/server.json"> API SVWS-Server </a> </li>
+					  <li> <a href="/debug/index.html?url=/openapi/schemaroot.json"> API SVWS-Server - Schemaverwaltung </a> </li>
 					</ul>
 					""")
 			.license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html"));
@@ -92,7 +92,7 @@ public class OpenApiMain extends BaseOpenApiResource {
      * @throws Exception im Fehlerfall
      */
     @GET
-    @Path("/openapi.{type:json|yaml}")
+    @Path("/openapi/server.{type:json|yaml}")
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
     @Operation(hidden = true)
     public Response getOpenApi(@Context final HttpHeaders headers,

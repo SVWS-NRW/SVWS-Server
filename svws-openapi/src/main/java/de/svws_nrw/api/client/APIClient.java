@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  */
 @Path("")
 @Tag(name = "SVWSClient")
-public class APISVWSClient {
+public class APIClient {
 
 
 	/**

@@ -3,6 +3,7 @@ package de.svws_nrw.server.jetty;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
@@ -26,6 +27,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.ServletMapping;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
@@ -33,9 +35,10 @@ import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
-import de.svws_nrw.api.RestApp;
+import de.svws_nrw.api.RestAppClient;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
+import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Application;
@@ -230,11 +233,15 @@ public class HttpServer {
 	/**
 	 * Fügt die angegebene API-Applikation zum Server hinzu.
 	 *
-	 * @param c          die Applikation
-	 * @param pathSpec   die Pfad-Spezifikation
+	 * @param c           die Applikation
+	 * @param pathSpecs   die Pfad-Spezifikationen
 	 */
-	private static void addApplication(final Class<? extends Application> c, final String pathSpec) {
-		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, pathSpec);
+	private static void addApplication(final Class<? extends Application> c, final String... pathSpecs) {
+		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, pathSpecs[0]);
+		final ServletMapping mapping = servlet.getServletHandler().getServletMapping(pathSpecs[0]);
+		mapping.setPathSpecs(pathSpecs);
+		// TODO user Logger instead of System.out
+		System.out.println("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
 		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
 	}
 
@@ -242,10 +249,11 @@ public class HttpServer {
 	 * Fügt die Rest-Applikationen zum Server hinzu.
 	 */
 	private static void addAPIApplications() {
-		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
-			addApplication(RestAppSchemaRoot.class, "/api/schema/root/*");
+		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
+		addApplication(RestAppClient.class, "/*");
 		addApplication(RestAppDebug.class, "/debug/*");
-		addApplication(RestApp.class, "/*");
+		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
+			addApplication(RestAppSchemaRoot.class, "/api/schema/root/*", "/openapi/schemaroot.json", "/openapi/schemaroot.yaml");
 	}
 
 }

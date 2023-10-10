@@ -2,7 +2,6 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
-import de.svws_nrw.api.client.APISVWSClient;
 import de.svws_nrw.api.server.APIAdressbuch;
 import de.svws_nrw.api.server.APIAlgoGesamtschuleAbschluss;
 import de.svws_nrw.api.server.APIAlgoGostAbschluss;
@@ -31,24 +30,18 @@ import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStundenplan;
-import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
 
 /**
- * Diese Klasse dient als Grundlage für einen OpenAPI-Server und dient der Initialisierung
- * der OpenAPI-Schnittstelle auf Basis der zugeordneten OpenAPI-Klassen. Zunächst können
- * OpenAPI-Klassen über die Methode addAPI hinzugefügt werden, bevor das
- * Servlet später mit dem zugehörigen Init-Parameter (jakarta.ws.rs.Application)
- * und dieser Klasse initialisiert wird.
+ * Diese Klasse stellt die API-Klassen für die OpenAPI-Schnittstelle des Servers
+ * zur Verfügung.
  */
-@ApplicationPath("/")
-public final class RestApp extends Application {
+public final class RestAppServer extends Application {
 
 	/// Enthält alle Klassen, die für die OpenAPI eingebunden werden
 	private final Set<Class<?>> classes = Set.of(
 		APIConfig.class,
-		APISVWSClient.class,
 		APIAlgoGesamtschuleAbschluss.class,
 		APIAlgoGostAbschluss.class,
 		APIBenutzer.class,
@@ -78,7 +71,7 @@ public final class RestApp extends Application {
 		APIGostKlausuren.class,
 
 		OpenAPICorsFilter.class,
-		OpenApiMain.class
+		OpenApiServer.class
 	);
 
 	@Override

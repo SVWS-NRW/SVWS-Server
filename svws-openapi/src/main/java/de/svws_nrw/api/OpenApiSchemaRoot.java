@@ -44,14 +44,14 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource {
     @Context Application app;
 
     private final Info info = new Info()
-            .title("SVWS OpenAPI SchemaRoot")
+            .title("SVWS Open-API Datenbank-Schema (root)")
             .version(SVWSVersion.version())
 			.description(
 					"""
 					Die Open-API-Schnittstellenbeschreibungen des SVWS-Servers: <br>
 					<ul>
-					  <li> <a href="/debug/index.html?url=/openapi.json"> API SVWS-Server </a> </li>
-					  <li> <a href="/debug/index.html?url=/api/schema/root/openapi.json"> API SVWS-Server - Schemaverwaltung </a> </li>
+					  <li> <a href="/debug/index.html?url=/openapi/server.json"> API SVWS-Server </a> </li>
+					  <li> <a href="/debug/index.html?url=/openapi/schemaroot.json"> API SVWS-Server - Schemaverwaltung </a> </li>
 					</ul>
 					""")
             .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html"));
@@ -92,7 +92,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource {
      * @throws Exception im Fehlerfall
      */
     @GET
-    @Path("/api/schema/root/openapi.{type:json|yaml}")
+    @Path("/openapi/schemaroot.{type:json|yaml}")
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
     @Operation(hidden = true)
     public Response getOpenApi(@Context final HttpHeaders headers,
