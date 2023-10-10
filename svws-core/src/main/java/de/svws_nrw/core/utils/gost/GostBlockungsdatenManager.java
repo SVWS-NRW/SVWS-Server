@@ -1674,4 +1674,22 @@ public class GostBlockungsdatenManager {
 		return this._daten;
 	}
 
+	/**
+	 * Liefert den Kurs-Comparator der nach (KURSART, FACH, KURSNUMMER) sortiert.
+	 *
+	 * @return den Kurs-Comparator der nach (KURSART, FACH, KURSNUMMER) sortiert.
+	 */
+	public @NotNull Comparator<@NotNull GostBlockungKurs> getComparatorKurs_kursart_fach_kursnummer() {
+		return _compKurs_kursart_fach_kursnummer;
+	}
+
+	/**
+	 * Liefert den Kurs-Comparator der nach (FACH, KURSART, KURSNUMMER) sortiert.
+	 *
+	 * @return den Kurs-Comparator der nach (FACH, KURSART, KURSNUMMER) sortiert.
+	 */
+	public @NotNull Comparator<@NotNull GostBlockungKurs> getComparatorKurs_fach_kursart_kursnummer() {
+		return _compKurs_fach_kursart_kursnummer;
+	}
+
 }

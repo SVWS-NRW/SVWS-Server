@@ -1628,6 +1628,24 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return this._daten;
 	}
 
+	/**
+	 * Liefert den Kurs-Comparator der nach (KURSART, FACH, KURSNUMMER) sortiert.
+	 *
+	 * @return den Kurs-Comparator der nach (KURSART, FACH, KURSNUMMER) sortiert.
+	 */
+	public getComparatorKurs_kursart_fach_kursnummer() : Comparator<GostBlockungKurs> {
+		return this._compKurs_kursart_fach_kursnummer;
+	}
+
+	/**
+	 * Liefert den Kurs-Comparator der nach (FACH, KURSART, KURSNUMMER) sortiert.
+	 *
+	 * @return den Kurs-Comparator der nach (FACH, KURSART, KURSNUMMER) sortiert.
+	 */
+	public getComparatorKurs_fach_kursart_kursnummer() : Comparator<GostBlockungKurs> {
+		return this._compKurs_fach_kursart_kursnummer;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}

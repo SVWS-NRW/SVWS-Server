@@ -4270,7 +4270,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param tagVon     Der erste Tag (inklusive) des Bereichs.
 	 * @param tagBis     Der letzte Tag (inklusive) des Bereichs.
 	 * @param stundeVon  Die erste Stunde (inklusive) des Bereichs.
-	 * @param stundeBis  Die letzt Stunde (inklusive) des Bereichs.
+	 * @param stundeBis  Die letzte Stunde (inklusive) des Bereichs.
 	 *
 	 * @return eine Liste aller Dummy-{@link StundenplanZeitraster}-Objekte, welche in diesem Manager noch nicht definiert sind.
 	 */

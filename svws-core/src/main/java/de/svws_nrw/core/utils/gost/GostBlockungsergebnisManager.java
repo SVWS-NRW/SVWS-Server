@@ -2,6 +2,7 @@ package de.svws_nrw.core.utils.gost;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -94,11 +95,29 @@ public class GostBlockungsergebnisManager {
 	/** Fach-ID --> ArrayList<GostBlockungsergebnisKurs> */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachID_kurse = new HashMap<>();
 
+	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
+	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
+
+	/** Menge aller Fachart-IDs sortiert nach der aktuellen Sortiervariante. */
+	private final @NotNull List<@NotNull Long> _fachartmenge_sortiert = new ArrayList<>();
+
+	/** Entscheidet, welcher Comparator verwendet wird mit 1 = (KURSART, FACH) andernfalls (FACH, KURSART). */
+	private int _fachartmenge_sortierung = 1;
+
+	/** Comparator für die Facharten nach (KURSART, FACH). */
+	private final @NotNull Comparator<@NotNull Long> _fachartComparator_kursart_fach;
+
+	/** Comparator für die Facharten nach (FACH, KURSART). */
+	private final @NotNull Comparator<@NotNull Long> _fachartComparator_fach_kursart;
+
 	/** Fachart-ID --> ArrayList<GostBlockungsergebnisKurs> = Alle Kurse der selben Fachart. */
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostBlockungsergebnisKurs>> _map_fachartID_kurse = new HashMap<>();
 
-	/** Fachart-ID --> Integer = Kursdifferenz der Fachart. */
-	private final @NotNull Map<@NotNull Long, @NotNull Integer> _map_fachartID_kursdifferenz = new HashMap<>();
+	/** Ein Comparator für Kurse der Blockung (KURSART, FACH, KURSNUMMER) */
+	private final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> _kursComparator_kursart_fach_kursnummer;
+
+	/** Ein Comparator für Kurse der Blockung (FACH, KURSART, KURSNUMMER). */
+	private final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> _kursComparator_fach_kursart_kursnummer;
 
 	/**
 	 * Erstellt einen leeren GostBlockungsergebnisManager in Bezug auf GostBlockungsdatenManager. Die ID des leeren
@@ -110,6 +129,10 @@ public class GostBlockungsergebnisManager {
 	 */
 	public GostBlockungsergebnisManager(final @NotNull GostBlockungsdatenManager pParent, final long pGostBlockungsergebnisID) {
 		_parent = pParent;
+		_fachartComparator_kursart_fach = createComparatorFachartKursartFach();
+		_fachartComparator_fach_kursart = createComparatorFachartFachKursart();
+		_kursComparator_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
+		_kursComparator_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 		stateClear(new GostBlockungsergebnis(), pGostBlockungsergebnisID);
 	}
 
@@ -121,7 +144,80 @@ public class GostBlockungsergebnisManager {
 	 */
 	public GostBlockungsergebnisManager(final @NotNull GostBlockungsdatenManager pParent, final @NotNull GostBlockungsergebnis pErgebnis) {
 		_parent = pParent;
+		_fachartComparator_kursart_fach = createComparatorFachartKursartFach();
+		_fachartComparator_fach_kursart = createComparatorFachartFachKursart();
+		_kursComparator_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
+		_kursComparator_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
 		stateClear(pErgebnis, pErgebnis.id);
+	}
+
+	private @NotNull Comparator<@NotNull Long> createComparatorFachartKursartFach() {
+		final @NotNull Comparator<@NotNull Long> comp = (final @NotNull Long a, final @NotNull Long b) -> {
+			final long aKursartID = GostKursart.getKursartID(a);
+			final long bKursartID = GostKursart.getKursartID(b);
+			if (aKursartID < bKursartID) return -1;
+			if (aKursartID > bKursartID) return +1;
+
+			final long aFachID = GostKursart.getFachID(a);
+			final long bFachID = GostKursart.getFachID(b);
+			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(aFachID);
+			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(bFachID);
+			return GostFaecherManager.comp.compare(aFach, bFach);
+		};
+
+		return comp;
+	}
+
+	private @NotNull Comparator<@NotNull Long> createComparatorFachartFachKursart() {
+		final @NotNull Comparator<@NotNull Long> comp = (final @NotNull Long a, final @NotNull Long b) -> {
+			final long aFachID = GostKursart.getFachID(a);
+			final long bFachID = GostKursart.getFachID(b);
+			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(aFachID);
+			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(bFachID);
+			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
+			if (cmpFach != 0) return cmpFach;
+
+			final long aKursartID = GostKursart.getKursartID(a);
+			final long bKursartID = GostKursart.getKursartID(b);
+			if (aKursartID < bKursartID) return -1;
+			if (aKursartID > bKursartID) return +1;
+			return 0;
+		};
+		return comp;
+	}
+
+	private @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> createComparatorKursFachKursartNummer() {
+		final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> comp = (final @NotNull GostBlockungsergebnisKurs a, final @NotNull GostBlockungsergebnisKurs b) -> {
+			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(a.fachID);
+			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(b.fachID);
+			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
+			if (cmpFach != 0) return cmpFach;
+
+			if (a.kursart < b.kursart) return -1;
+			if (a.kursart > b.kursart) return +1;
+
+			final @NotNull GostBlockungKurs aKurs = _parent.kursGet(a.id);
+			final @NotNull GostBlockungKurs bKurs = _parent.kursGet(b.id);
+			return Integer.compare(aKurs.nummer, bKurs.nummer);
+		};
+		return comp;
+	}
+
+	private @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> createComparatorKursKursartFachNummer() {
+		final @NotNull Comparator<@NotNull GostBlockungsergebnisKurs> comp = (final @NotNull GostBlockungsergebnisKurs a, final @NotNull GostBlockungsergebnisKurs b) -> {
+			if (a.kursart < b.kursart) return -1;
+			if (a.kursart > b.kursart) return +1;
+
+			final @NotNull GostFach aFach = _parent.faecherManager().getOrException(a.fachID);
+			final @NotNull GostFach bFach = _parent.faecherManager().getOrException(b.fachID);
+			final int cmpFach = GostFaecherManager.comp.compare(aFach, bFach);
+			if (cmpFach != 0) return cmpFach;
+
+			final @NotNull GostBlockungKurs aKurs = _parent.kursGet(a.id);
+			final @NotNull GostBlockungKurs bKurs = _parent.kursGet(b.id);
+			return Integer.compare(aKurs.nummer, bKurs.nummer);
+		};
+		return comp;
 	}
 
 	/**
@@ -254,6 +350,9 @@ public class GostBlockungsergebnisManager {
 						setSchuelerKurs(schuelerID, kursOld.id, true);
 			}
 
+		// _fachartmenge_sortiert erzeugen.
+		_fachartmenge_sortiert.addAll(_map_fachartID_kurse.keySet());
+
 		// Regelverletzungen überprüfen.
 		stateRegelvalidierung();
 	}
@@ -296,6 +395,8 @@ public class GostBlockungsergebnisManager {
 
 		// Die Bewertung im DatenManager aktualisieren.
 		_parent.ergebnisUpdateBewertung(_ergebnis);
+
+		updateAll();
 	}
 
 	private void stateRegelvalidierung1_kursart_sperren_in_schiene_von_bis(final @NotNull GostBlockungRegel r, final @NotNull List<@NotNull Long> regelVerletzungen) {
@@ -621,6 +722,25 @@ public class GostBlockungsergebnisManager {
 	// ##########           Allgemeine Anfragen                       ##########
 	// #########################################################################
 
+	private void updateAll() {
+		// _fachartmenge_sortiert sortieren.
+		if (_fachartmenge_sortierung == 1) {
+			_fachartmenge_sortiert.sort(_fachartComparator_kursart_fach);
+		} else {
+			_fachartmenge_sortiert.sort(_fachartComparator_fach_kursart);
+		}
+
+		// _map_fachartID_kurse: Zugeordnete Listen sortieren.
+		for (final @NotNull Long idFachart : _map_fachartID_kurse.keySet()) {
+			final @NotNull List<@NotNull GostBlockungsergebnisKurs> kursmenge = DeveloperNotificationException.ifMapGetIsNull(_map_fachartID_kurse, idFachart);
+			if (_fachartmenge_sortierung == 1) {
+				kursmenge.sort(_kursComparator_kursart_fach_kursnummer);
+			} else {
+				kursmenge.sort(_kursComparator_fach_kursart_kursnummer);
+			}
+		}
+	}
+
 	/**
 	 * Liefert die Anzahl an externen SuS.
 	 *
@@ -903,7 +1023,8 @@ public class GostBlockungsergebnisManager {
 
 	/**
 	 * Liefert die Kursmenge, die zur Fachart gehört. Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.<br>
-	 * Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
+	 * <br>Hinweis: Die Kursmenge pro Fachart ist sortiert nach {@link #kursSetSortierungFachKursartNummer()} oder {@link #kursSetSortierungKursartFachNummer()}.
+	 * <br>Hinweis: Wirft eine {@link DeveloperNotificationException} falls die Fachart-ID unbekannt ist.
 	 *
 	 * @param  idFachart  Die Fachart-ID wird berechnet über: {@link GostKursart#getFachartID(long, int)}.
 	 *
@@ -999,6 +1120,34 @@ public class GostBlockungsergebnisManager {
 	 */
 	public int getOfFachartAnzahlSchuelerMuendlich(final long idFach, final int idKursart) {
 		return getOfSchuelerAnzahlGefiltert(-1, idFach, idKursart, 0, "", null, GostSchriftlichkeit.MUENDLICH);
+	}
+
+	/**
+	 * Liefert die Menge aller Facharten (Fach + Kursart) sortiert nach der aktuellen Sortiervariante.
+	 * <br>Hinweis: Die Sortierung lässt sich mit {@link #kursSetSortierungFachKursartNummer()} und {@link #kursSetSortierungKursartFachNummer()} ändern.
+	 *
+	 * @return die Menge aller Facharten (Fach + Kursart) sortiert nach der aktuellen Sortiervariante.
+	 */
+	public @NotNull List<@NotNull Long> getOfFachartMengeSortiert() {
+		return _fachartmenge_sortiert;
+	}
+
+	/**
+	 * Ändert die aktuelle Sortierung von Facharten und Kursen.
+	 * <br>Hinweis: Sortiert zuerst nach LK/GK, dann nach der Fachsortierung, zuletzt nach der Kursnummer.
+	 */
+	public void kursSetSortierungKursartFachNummer() {
+		_fachartmenge_sortierung = 1;
+		updateAll();
+	}
+
+	/**
+	 * Ändert die aktuelle Sortierung von Facharten und Kursen.
+	 * <br>Hinweis: Sortiert zuerst nach der Fachsortierung, dann nach LK/GK, zuletzt nach der Kursnummer.
+	 */
+	public void kursSetSortierungFachKursartNummer() {
+		_fachartmenge_sortierung = 2;
+		updateAll();
 	}
 
 	// #########################################################################
