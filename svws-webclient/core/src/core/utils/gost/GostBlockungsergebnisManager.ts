@@ -1567,13 +1567,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.<br>
+	 * Liefert TRUE, falls der Schüler in einer Schiene des Kurses eine Kollision hat.<br>
 	 * Die Methode geht davon aus, dass der Schüler dem Kurs zugeordnet ist.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.
 	 * @param  idKurs     Die Datenbank-ID des Kurses.
 	 *
-	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kolision hat.
+	 * @return TRUE, falls der Schüler in einer Schiene des Kurses eine Kollision hat.
 	 */
 	public getOfSchuelerOfKursHatKollision(idSchueler : number, idKurs : number) : boolean {
 		if (!this.getOfSchuelerHatKollision(idSchueler))
