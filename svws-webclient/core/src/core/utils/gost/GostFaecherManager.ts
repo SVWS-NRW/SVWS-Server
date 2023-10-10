@@ -319,6 +319,22 @@ export class GostFaecherManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Liste der Fächer, die nur die schriftlich möglichen Fächer enthält.
+	 *
+	 * @return die Liste der schriftlich möglichen Fächer
+	 */
+	public getFaecherSchriftlichMoeglich() : List<GostFach> {
+		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList();
+		for (let f of this._faecher) {
+			let zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
+			if (zf as unknown === ZulaessigesFach.PX as unknown || zf as unknown === ZulaessigesFach.VX as unknown || zf as unknown === ZulaessigesFach.VO as unknown || zf as unknown === ZulaessigesFach.IN as unknown)
+				continue;
+			faecherSchriftlichMoeglich.add(f);
+		}
+		return faecherSchriftlichMoeglich;
+	}
+
+	/**
 	 * Liefert die interne Liste mit den Leitfächern zurück.
 	 *
 	 * @return die interne Liste mit den Leitfächern

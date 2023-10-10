@@ -303,6 +303,21 @@ public class GostFaecherManager {
 		return _faecher;
 	}
 
+	/**
+	 * Liefert die Liste der Fächer, die nur die schriftlich möglichen Fächer enthält.
+	 *
+	 * @return die Liste der schriftlich möglichen Fächer
+	 */
+	public @NotNull List<@NotNull GostFach> getFaecherSchriftlichMoeglich() {
+		final @NotNull List<@NotNull GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
+		for (@NotNull GostFach f : _faecher) {
+			ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
+			if (zf == ZulaessigesFach.PX || zf == ZulaessigesFach.VX || zf == ZulaessigesFach.VO || zf == ZulaessigesFach.IN)
+				continue;
+			faecherSchriftlichMoeglich.add(f);
+		}
+		return faecherSchriftlichMoeglich;
+	}
 
 	/**
 	 * Liefert die interne Liste mit den Leitfächern zurück.
