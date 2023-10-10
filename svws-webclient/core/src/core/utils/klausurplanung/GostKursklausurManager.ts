@@ -11,7 +11,6 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../java/util/Comparator';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import type { List } from '../../../java/util/List';
-import { cast_java_util_List } from '../../../java/util/List';
 import { GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../java/util/HashSet';
@@ -19,7 +18,7 @@ import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanM
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
-import { GostKlausurvorgabenManager, cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager } from '../../../core/utils/klausurplanung/GostKlausurvorgabenManager';
+import { GostKlausurvorgabenManager } from '../../../core/utils/klausurplanung/GostKlausurvorgabenManager';
 import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { Wochentag } from '../../../core/types/Wochentag';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -89,40 +88,15 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
 	 *                      und Gost-Halbjahres
 	 */
-	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>);
-
-	/**
-	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
-	 * und erzeugt die privaten Attribute.
-	 *
-	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
-	 */
-	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>);
-
-	/**
-	 * Implementation for method overloads of 'constructor'
-	 */
-	public constructor(__param0 : GostKlausurvorgabenManager, __param1 : List<GostKursklausur>, __param2? : List<GostKlausurtermin>) {
+	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null))) {
-			const vorgabenManager : GostKlausurvorgabenManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager(__param0);
-			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
-			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param2);
-			this._vorgabenManager = vorgabenManager;
-			this.initAll(listKlausuren, listTermine);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (typeof __param2 === "undefined")) {
-			const vorgabenManager : GostKlausurvorgabenManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKlausurvorgabenManager(__param0);
-			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
-			this._vorgabenManager = vorgabenManager;
-			this.initAll(listKlausuren, new ArrayList());
-		} else throw new Error('invalid method overload');
+		this._vorgabenManager = vorgabenManager;
+		this.initAll(listKlausuren, listTermine);
 	}
 
-	private initAll(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>) : void {
+	private initAll(listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null) : void {
 		this.kursklausurAddAll(listKlausuren);
-		this.terminAddAll(listTermine);
+		this.terminAddAll(listTermine !== null ? listTermine : new ArrayList());
 		this.update_all();
 	}
 
@@ -194,10 +168,12 @@ export class GostKursklausurManager extends JavaObject {
 			if (t.datum === null)
 				continue;
 			let kw : number = DateUtils.gibKwDesDatumsISO8601(t.datum);
-			for (const kk of DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, t.id)) {
-				for (const sId of kk.schuelerIds)
-					Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
-			}
+			let klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idTermin.get(t.id);
+			if (klausuren !== null)
+				for (const kk of klausuren) {
+					for (const sId of kk.schuelerIds)
+						Map2DUtils.getOrCreateArrayList(this._kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
+				}
 		}
 	}
 

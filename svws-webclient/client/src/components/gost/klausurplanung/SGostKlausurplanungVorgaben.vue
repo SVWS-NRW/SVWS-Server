@@ -124,10 +124,7 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const vorgaben = () => {
-		console.log("ping", props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value).size());
-		return props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value);
-	}
+	const vorgaben = () => props.klausurvorgabenmanager().vorgabeGetMengeByQuartal(props.quartalsauswahl.value);
 
 	const selectedVorgabeRow = ref<GostKlausurvorgabe>();
 	const activeVorgabe: Ref<GostKlausurvorgabe> = ref(new GostKlausurvorgabe());

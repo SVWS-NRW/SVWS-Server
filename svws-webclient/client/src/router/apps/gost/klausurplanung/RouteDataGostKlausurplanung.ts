@@ -170,39 +170,29 @@ export class RouteDataGostKlausurplanung {
 			api.status.start();
 			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
 			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
-			this.setPatchedState({
+			const result: Partial<RouteStateGostKlausurplanung> = {
 				klausurvorgabenmanager: klausurvorgabenmanager,
-			});
+				abschnitt: undefined,
+				halbjahr: halbjahr,
+				kursklausurmanager: undefined,
+				stundenplanmanager: undefined,
+			};
 			if (this._state.value.abiturjahr === -1) {
-				this.setPatchedState({
-					abschnitt: undefined,
-					halbjahr: halbjahr,
-					kursklausurmanager: undefined,
-					stundenplanmanager: undefined,
-				});
+				this.setPatchedState(result);
 				return true;
 			}
 			const schuljahr = halbjahr.getSchuljahrFromAbiturjahr(this._state.value.abiturjahr);
 			const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 			if (abschnitt === undefined) {
-				this.setPatchedState({
-					abschnitt: undefined,
-					halbjahr,
-					kursklausurmanager: undefined,
-					stundenplanmanager: undefined,
-				});
+				this.setPatchedState(result);
 				return true;
 			}
-			//				throw new Error("Schuljahresabschnitt konnte nicht ermittelt werden.");
-			const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr);
+			Object.assign(result, {abschnitt});
+			const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr, klausurvorgabenmanager);
+			Object.assign(result, {kursklausurmanager});
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
-				this.setPatchedState({
-					abschnitt,
-					halbjahr,
-					kursklausurmanager,
-					stundenplanmanager: undefined,
-				});
+				this.setPatchedState(result);
 				return true;
 			}
 			const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
@@ -213,26 +203,19 @@ export class RouteDataGostKlausurplanung {
 			const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
 			const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 			const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
-			this.setPatchedState({
-				abschnitt,
-				halbjahr,
-				kursklausurmanager,
+			this.setPatchedState(Object.assign(result, {
 				stundenplanmanager,
-			});
+			}));
 			return true;
 		} finally {
 			api.status.stop();
 		}
 	}
 
-	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null) : Promise<GostKursklausurManager> {
-		//try {
+	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
 		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		return new GostKursklausurManager(this.klausurvorgabenmanager, listKursklausuren, listKlausurtermine);
-		/*this.setPatchedState({
-			kursklausurmanager,
-		});*/
+		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine);
 	}
 
 	public get hatStundenplanManager(): boolean {
@@ -458,7 +441,7 @@ export class RouteDataGostKlausurplanung {
 		api.status.start();
 		await api.server.blockenGostKursklausuren(blockungDaten, api.schema);
 		this.setPatchedState({
-			kursklausurmanager: await this.reloadKursklausurmanager(null),
+			kursklausurmanager: await this.reloadKursklausurmanager(null, this.klausurvorgabenmanager),
 		});
 		this.commit();
 		api.status.stop();

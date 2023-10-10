@@ -362,7 +362,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		EnumMap<GostHalbjahr, GostKlausurvorgabenManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (GostHalbjahr hj : GostHalbjahr.values())
 			manager.put(hj, new GostKlausurvorgabenManager(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).map(dtoMapper::apply).toList(), null));
-		List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).faecher();
+		List<GostFach> faecher = DBUtilsFaecherGost.getFaecherListeGost(conn, null).getFaecherSchriftlichMoeglich();
 		List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
 		long idNMK = conn.transactionGetNextID(DTOGostKlausurenVorgaben.class);
@@ -375,6 +375,8 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		GostKursart[] arten = halbjahr.istEinfuehrungsphase() ? new GostKursart[] {GostKursart.GK} : new GostKursart[] {GostKursart.GK, GostKursart.LK};
 		for (GostFach fach : faecher) {
 			for (GostKursart ka : arten) {
+				if (ka == GostKursart.LK && !fach.istMoeglichAbiLK || halbjahr == GostHalbjahr.Q22 && !(fach.istMoeglichAbiGK || fach.istMoeglichAbiLK))
+					continue;
 				for (int q : quartale) {
 					DTOGostKlausurenVorgaben vorgabeNeu = new DTOGostKlausurenVorgaben(idNMK++,
 							-1,

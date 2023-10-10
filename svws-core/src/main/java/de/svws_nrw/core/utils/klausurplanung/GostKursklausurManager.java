@@ -87,28 +87,28 @@ public class GostKursklausurManager {
 	 *                      und Gost-Halbjahres
 	 */
 	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren,
-			final @NotNull List<@NotNull GostKlausurtermin> listTermine) {
+			final List<@NotNull GostKlausurtermin> listTermine) {
 		_vorgabenManager = vorgabenManager;
 		initAll(listKlausuren, listTermine);
 	}
 
-	/**
-	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
-	 * und erzeugt die privaten Attribute.
-	 *
-	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
-	 */
-	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren) {
-		_vorgabenManager = vorgabenManager;
-		initAll(listKlausuren, new ArrayList<>());
-	}
+//	/**
+//	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
+//	 * und erzeugt die privaten Attribute.
+//	 *
+//	 * @param vorgabenManager der Klausurvorgaben-Manager
+//	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
+//	 *                      und Gost-Halbjahres
+//	 */
+//	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren) {
+//		_vorgabenManager = vorgabenManager;
+//		initAll(listKlausuren, new ArrayList<>());
+//	}
 
-	private void initAll(final @NotNull List<@NotNull GostKursklausur> listKlausuren, final @NotNull List<@NotNull GostKlausurtermin> listTermine) {
+	private void initAll(final @NotNull List<@NotNull GostKursklausur> listKlausuren, final List<@NotNull GostKlausurtermin> listTermine) {
 
 		kursklausurAddAll(listKlausuren);
-		terminAddAll(listTermine);
+		terminAddAll(listTermine != null ? listTermine : new ArrayList<>());
 
 		update_all();
 
@@ -186,10 +186,12 @@ public class GostKursklausurManager {
 			if (t.datum == null)
 				continue;
 			int kw = DateUtils.gibKwDesDatumsISO8601(t.datum);
-			for (final @NotNull GostKursklausur kk : DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, t.id)) {
-				for (final @NotNull Long sId : kk.schuelerIds)
-					Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
-			}
+			List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idTermin.get(t.id);
+			if (klausuren != null)
+				for (final @NotNull GostKursklausur kk : klausuren) {
+					for (final @NotNull Long sId : kk.schuelerIds)
+						Map2DUtils.getOrCreateArrayList(_kursklausurmenge_by_kw_and_schuelerId, kw, sId).add(kk);
+				}
 		}
 	}
 
