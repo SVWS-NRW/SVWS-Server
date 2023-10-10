@@ -13,13 +13,7 @@ dependencies {
     
     javacore fileTree(dir: "$rootDir/svws-core/src/main/java", includes: ['**/svws_nrw/core/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])
     
-    javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/*/*.java'], 
-                     excludes: [ '**/svws_nrw/api/schema/**/*.java',
-                                 '**/svws_nrw/api/client/**/*.java', 
-                                 '**/svws_nrw/api/debug/**/*.java',
-                                 '**/svws_nrw/api/webdav/**/*.java',
-                                 '**/svws_nrw/api/server/APIAdressbuch.java',
-                                 '**/svws_nrw/api/server/APIKalender.java']) 
+    javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java']) 
 }
 
 task removeTranspiledCode(type: Delete) {

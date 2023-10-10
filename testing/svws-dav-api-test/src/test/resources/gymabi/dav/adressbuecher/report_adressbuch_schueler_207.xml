@@ -6,6 +6,6 @@
 		<d:getetag/>
 		<card:address-data/>
 	</d:prop>
-	<d:href>/db/gymabi/dav/adressbuecher/schueler/Schueler_1001.vcf</d:href>
-	<d:href>/db/gymabi/dav/adressbuecher/schueler/Schueler_1002.vcf</d:href>
+	<d:href>/dav/gymabi/adressbuecher/schueler/Schueler_1001.vcf</d:href>
+	<d:href>/dav/gymabi/adressbuecher/schueler/Schueler_1002.vcf</d:href>
 </card:addressbook-multiget>

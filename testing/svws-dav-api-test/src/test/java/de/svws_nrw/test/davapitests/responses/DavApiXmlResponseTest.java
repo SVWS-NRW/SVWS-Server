@@ -120,7 +120,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		 */
 		@Test
 		void whenPropfindOnAddressbooks_thenMultistatusWith3Addressbooks() {
-			String adressbuecher = "db/gymabi/dav/adressbuecher";
+			String adressbuecher = "dav/gymabi/adressbuecher";
 			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/propfind_adressbuecher_207.xml", this))
@@ -168,7 +168,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		 */
 		@Test
 		void givenPropfindOnAddressbook_thenMultistatus() {
-			String adressbuchHref = "db/gymabi/dav/adressbuecher/schueler";
+			String adressbuchHref = "dav/gymabi/adressbuecher/schueler";
 			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/propfind_adressbuch_schueler_207.xml", this))
@@ -223,7 +223,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		 */
 		@Test
 		void givenReportOnAddressbook_thenMultistatusAndVcf() {
-			String adressbuchHref = "db/gymabi/dav/adressbuecher/schueler";
+			String adressbuchHref = "dav/gymabi/adressbuecher/schueler";
 			final Response response = given(user, password).when()
 					.body(APITestUtil.readStringFromResourceFile(
 							"gymabi/dav/adressbuecher/report_adressbuch_schueler_207.xml", this))
@@ -236,8 +236,8 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			for (int i = 0; i < 2; i++) {
 				path.up().get("response[" + i + "]");
 				assertThat(path.getStringAndUp("href"),
-						anyOf(equalTo("/db/gymabi/dav/adressbuecher/schueler/Schueler_1001.vcf"),
-								equalTo("/db/gymabi/dav/adressbuecher/schueler/Schueler_1002.vcf")));
+						anyOf(equalTo("/dav/gymabi/adressbuecher/schueler/Schueler_1001.vcf"),
+								equalTo("/dav/gymabi/adressbuecher/schueler/Schueler_1002.vcf")));
 				assertThat(path.getStringAndUp("propstat.prop.address-data"),
 						allOf(startsWith("BEGIN:VCARD"), endsWith("END:VCARD")));
 				assertThat("getetag", path.nodeExists());
@@ -263,7 +263,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 					  </prop>
 					</sync-collection>
 					""";
-			given(user, password).when().body(body).request(PROPFIND, "db/gymabi/dav/adressbuecher/schueler").then()
+			given(user, password).when().body(body).request(PROPFIND, "dav/gymabi/adressbuecher/schueler").then()
 					.statusCode(207);
 		}
 	}
@@ -279,7 +279,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		 */
 		@Test
 		void givenPropfindOnCalendarCollection_then207() {
-			String kalender = "db/gymabi/dav/kalender";
+			String kalender = "dav/gymabi/kalender";
 			final String body = APITestUtil
 					.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml", this);
 

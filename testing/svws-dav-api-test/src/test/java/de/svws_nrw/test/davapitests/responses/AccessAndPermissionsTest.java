@@ -24,24 +24,24 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 * erwarten.
 	 */
 	private final BiConsumer<RequestSpecification, Integer> givenGiven_thenStatusCode = (given, expectedStatusCode) -> {
-		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/").then().statusCode(expectedStatusCode);
-		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/benutzer/-1").then().statusCode(expectedStatusCode);
-		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/adressbuecher").then().statusCode(expectedStatusCode);
-		given.when().body("a").request(PROPFIND, "/db/gymabi/dav/adressbuecher/-1").then()
+		given.when().body("a").request(PROPFIND, "/dav/gymabi/").then().statusCode(expectedStatusCode);
+		given.when().body("a").request(PROPFIND, "/dav/gymabi/benutzer/-1").then().statusCode(expectedStatusCode);
+		given.when().body("a").request(PROPFIND, "/dav/gymabi/adressbuecher").then().statusCode(expectedStatusCode);
+		given.when().body("a").request(PROPFIND, "/dav/gymabi/adressbuecher/-1").then()
 				.statusCode(expectedStatusCode);
-		given.when().body("a").request(REPORT, "/db/gymabi/dav/adressbuecher/-1").then().statusCode(expectedStatusCode);
-		given.when().body("a").request(REPORT, "/db/gymabi/dav/adressbuecher/-1/-1.vcf").then()
+		given.when().body("a").request(REPORT, "/dav/gymabi/adressbuecher/-1").then().statusCode(expectedStatusCode);
+		given.when().body("a").request(REPORT, "/dav/gymabi/adressbuecher/-1/-1.vcf").then()
 				.statusCode(expectedStatusCode);
-		given.when().body("").request(PROPFIND, "/db/gymabi/dav/kalender").then().statusCode(expectedStatusCode);
-		given.when().body("").request(PROPFIND, "/db/gymabi/dav/kalender/-1").then().statusCode(expectedStatusCode);
-		given.when().body("").request(REPORT, "/db/gymabi/dav/kalender/-1").then().statusCode(expectedStatusCode);
+		given.when().body("").request(PROPFIND, "/dav/gymabi/kalender").then().statusCode(expectedStatusCode);
+		given.when().body("").request(PROPFIND, "/dav/gymabi/kalender/-1").then().statusCode(expectedStatusCode);
+		given.when().body("").request(REPORT, "/dav/gymabi/kalender/-1").then().statusCode(expectedStatusCode);
 		given.when().contentType("Text/Calendar").body("a").header("If-None-Match", "")
-				.put("/db/gymabi/dav/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
+				.put("/dav/gymabi/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
 		given.when().contentType("Text/Calendar").body("a").header("If-Match", "*")
-				.put("/db/gymabi/dav/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
+				.put("/dav/gymabi/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
 		given.when().contentType("Text/Calendar").header("If-Match", "*")
-				.delete("/db/gymabi/dav/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
-		given.when().contentType("Text/Calendar").delete("/db/gymabi/dav/kalender/-1").then()
+				.delete("/dav/gymabi/kalender/-1/something-something.ics").then().statusCode(expectedStatusCode);
+		given.when().contentType("Text/Calendar").delete("/dav/gymabi/kalender/-1").then()
 				.statusCode(expectedStatusCode);
 	};
 
@@ -74,7 +74,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenPrivilegedUserAccessingOtherUsersData() {
-		final String kalender = "db/gymabi/dav/kalender";
+		final String kalender = "dav/gymabi/kalender";
 		String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 		Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
@@ -98,7 +98,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	@Test
 	void givenUserReadOnlyCalendar_thenNoWritePermission() {
 		// check: Nutzer hat nur Leserechte auf den Gemeinsamen Kalender:
-		final String kalender = "db/gymabi/dav/kalender";
+		final String kalender = "dav/gymabi/kalender";
 		final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 
@@ -128,7 +128,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 */
 	@Test
 	void givenUserNoPermissionCalendar_thenCalendarNotShown() {
-		final String kalender = "db/gymabi/dav/kalender";
+		final String kalender = "dav/gymabi/kalender";
 		final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_collection_207.xml",
 				this);
 

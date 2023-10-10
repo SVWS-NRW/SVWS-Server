@@ -30,7 +30,7 @@ public class DavUriBuilderTest {
 	@Test
 	void getAddressbookUri_returnsExpectedUri() {
 		final String result = DavUriBuilder.getAddressbookUri(createParameter());
-		assertEquals("/db/SSS/dav/adressbuecher/AAA", result);
+		assertEquals("/dav/SSS/adressbuecher/AAA", result);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class DavUriBuilderTest {
 	@Test
 	void getAddressbookCollectionUri_returnsExpectedUri() {
 		final String result = DavUriBuilder.getAddressbookCollectionUri(createParameter());
-		assertEquals("/db/SSS/dav/adressbuecher", result);
+		assertEquals("/dav/SSS/adressbuecher", result);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class DavUriBuilderTest {
 	@Test
 	void getContactUri_returnsExpectedUri() {
 		final String result = DavUriBuilder.getAddressEntryUri(createParameter());
-		assertEquals("/db/SSS/dav/adressbuecher/AAA/KKK.vcf", result);
+		assertEquals("/dav/SSS/adressbuecher/AAA/KKK.vcf", result);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class DavUriBuilderTest {
 	@Test
 	void getPrincipalUri_returnsExpectedUri() {
 		final String result = DavUriBuilder.getPrincipalUri(createParameter());
-		assertEquals("/db/SSS/dav/benutzer/BBB", result);
+		assertEquals("/dav/SSS/benutzer/BBB", result);
 	}
 
 }

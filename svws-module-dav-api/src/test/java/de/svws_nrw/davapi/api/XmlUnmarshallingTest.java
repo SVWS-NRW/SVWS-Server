@@ -164,7 +164,7 @@ public class XmlUnmarshallingTest {
 
 			// mit calendar-multiget
 			inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-					+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/db/gymabi/dav/kalender/5/6.ics</D:href><D:href>/db/gymabi/dav/kalender/5/5.ics</D:href><D:href>/db/gymabi/dav/kalender/5/4.ics</D:href><D:href>/db/gymabi/dav/kalender/5/3.ics</D:href><D:href>/db/gymabi/dav/kalender/5/2.ics</D:href><D:href>/db/gymabi/dav/kalender/5/1.ics</D:href></C:calendar-multiget>";
+					+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/dav/gymabi/kalender/5/6.ics</D:href><D:href>/dav/gymabi/kalender/5/5.ics</D:href><D:href>/dav/gymabi/kalender/5/4.ics</D:href><D:href>/dav/gymabi/kalender/5/3.ics</D:href><D:href>/dav/gymabi/kalender/5/2.ics</D:href><D:href>/dav/gymabi/kalender/5/1.ics</D:href></C:calendar-multiget>";
 		}
 		try (InputStream inputStream = stringToInputStream(inputString)) {
 			multiget = XmlUnmarshallingUtil.tryUnmarshal(inputStream, CalendarMultiget.class);
@@ -196,7 +196,7 @@ public class XmlUnmarshallingTest {
 
 		// mit calendar-multiget
 		inputString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-				+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/db/gymabi/dav/kalender/5/6.ics</D:href><D:href>/db/gymabi/dav/kalender/5/5.ics</D:href><D:href>/db/gymabi/dav/kalender/5/4.ics</D:href><D:href>/db/gymabi/dav/kalender/5/3.ics</D:href><D:href>/db/gymabi/dav/kalender/5/2.ics</D:href><D:href>/db/gymabi/dav/kalender/5/1.ics</D:href></C:calendar-multiget>";
+				+ "<C:calendar-multiget xmlns:D=\"DAV:\" xmlns:C=\"urn:ietf:params:xml:ns:caldav\"><D:prop><D:getetag/><C:calendar-data/></D:prop><D:href>/dav/gymabi/kalender/5/6.ics</D:href><D:href>/dav/gymabi/kalender/5/5.ics</D:href><D:href>/dav/gymabi/kalender/5/4.ics</D:href><D:href>/dav/gymabi/kalender/5/3.ics</D:href><D:href>/dav/gymabi/kalender/5/2.ics</D:href><D:href>/dav/gymabi/kalender/5/1.ics</D:href></C:calendar-multiget>";
 		multiget = XmlUnmarshallingUtil.tryUnmarshal(inputString, CalendarMultiget.class);
 		assertTrue(multiget.isPresent());
 

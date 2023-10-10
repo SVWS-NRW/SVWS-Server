@@ -36,6 +36,7 @@ import org.eclipse.jetty.util.thread.ThreadPool;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
 import de.svws_nrw.api.RestAppClient;
+import de.svws_nrw.api.RestAppDav;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
@@ -251,6 +252,7 @@ public class HttpServer {
 	private static void addAPIApplications() {
 		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
 		addApplication(RestAppClient.class, "/*");
+		addApplication(RestAppDav.class, "/dav/*");
 		addApplication(RestAppDebug.class, "/debug/*");
 		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
 			addApplication(RestAppSchemaRoot.class, "/api/schema/root/*", "/openapi/schemaroot.json", "/openapi/schemaroot.yaml");

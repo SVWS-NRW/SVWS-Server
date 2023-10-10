@@ -15,7 +15,7 @@ public final class DavUriBuilder {
 //TODO Schuljahresabschintt als URI param ergänzen
 
 	/** URI-Pattern der Basis URI für das DAV-API */
-	public static final String DAV_BASE_URI_PATTERN = "/db/{schema}/dav";
+	public static final String DAV_BASE_URI_PATTERN = "/dav/{schema}";
 	/**
 	 * URI-Pattern für die Resource Princial. Muss der Basis-URI angehängt werden.
 	 */

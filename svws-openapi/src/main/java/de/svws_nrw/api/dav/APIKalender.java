@@ -1,4 +1,4 @@
-package de.svws_nrw.api.server;
+package de.svws_nrw.api.dav;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

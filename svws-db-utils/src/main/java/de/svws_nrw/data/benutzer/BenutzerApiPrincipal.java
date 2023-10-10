@@ -93,8 +93,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if (path.startsWith("/index.php"))
 			return null;
 
-		// Prüfe, ob die Pfade "/debug/" oder "/openapi.json" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
-		boolean isAnonymous = (path.matches("/debug/.*") || "/openapi.json".equals(path) || "/api/schema/root/openapi.json".equals(path));
+		// Prüfe, ob die Pfade "/debug/" oder "/openapi/" angefragt werden. Hier erfolgt immer ein anonymer Zugriff und keine Überprüfung über die DB
+		boolean isAnonymous = path.matches("/debug/.*") || path.matches("/openapi/.*");
 		// Prüfe, ob aufgrund der Konfiguration ein anonymer Zugriff auf den SVWS-Client ermöglicht werden soll
 		if ((!SVWSKonfiguration.get().isEnableClientProtection())
 				&& (path.matches("/") || path.matches("/.*\\.html")
@@ -107,7 +107,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		}
 
 		// Spezieller DB-Zugriff für "/api/schema/root/" - Hier muss eine Anmeldung mit einem DB-Passwort erfolgen, da Operationen direkt das Schema manipulieren
-		final boolean isDBMSRootAuthentication = path.matches("/api/schema/root/.*") && (!"/api/schema/root/openapi.json".equals(path));
+		final boolean isDBMSRootAuthentication = path.matches("/api/schema/root/.*");
 
 		// Bestimme das Schema, auf welches zugegriffen wird anhand des aktuellen Pfades - gehe zunächst davon aus, dass kein Schema gewählt ist
 		String schema = "";
