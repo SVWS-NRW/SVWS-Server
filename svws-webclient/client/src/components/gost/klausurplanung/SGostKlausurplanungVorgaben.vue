@@ -7,7 +7,7 @@
 			<template #title>
 				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
 			</template>
-			<svws-ui-table :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
+			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
 				</template>
@@ -43,7 +43,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
+		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
 			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
@@ -209,6 +209,11 @@
 	];
 
 	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
+
+	window.addEventListener('click', function(e) {
+		if (!document.getElementById('vorgabenTable')!.contains(e.target as Node) && !document.getElementById('vorgabenEdit')!.contains(e.target as Node))
+			activeVorgabe.value = new GostKlausurvorgabe();
+	});
 
 </script>
 
