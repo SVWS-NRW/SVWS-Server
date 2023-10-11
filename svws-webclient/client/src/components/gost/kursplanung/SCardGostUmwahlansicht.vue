@@ -80,7 +80,7 @@
 							</div>
 
 							<!-- Die Liste der Schüler-Kurse (von links nach rechts), welche der Schiene zugeordnet sind (stehen ggf. für drag und/oder drop zur Verfügung). -->
-							<div role="cell" v-for="kurs of schiene.kurse" :key="kurs.id"
+							<div role="cell" v-for="kurs of getErgebnismanager().getOfSchieneKursmengeSortiert(schiene.id)" :key="kurs.id"
 								class="svws-ui-td svws-align-center svws-no-padding select-none group relative !p-[2px] svws-divider last:!border-r-0"
 								:class="{ 'is-drop-zone': is_drop_zone(kurs).value, 'cursor-grab': is_draggable(kurs.id, schueler.id).value }"
 								:draggable="is_draggable(kurs.id, schueler.id).value"

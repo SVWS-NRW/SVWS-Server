@@ -189,12 +189,14 @@
 
 	const edit_schienenname: Ref<number|undefined> = ref()
 
+	// TODO Verschieben dieser Konfiguration in die Daten der Route und verwenden des Commit, um die Raktivität in der Umwahlansicht zu triggern
 	const sort_by: WritableComputedRef<string> = computed({
 		get: () => props.config.getValue('gost.kursansicht.sortierung'),
 		set: (value) => {
 			if (value === undefined)
 				value = 'kursart'
 			void props.config.setValue('gost.kursansicht.sortierung', value);
+			(value === 'kursart') ? props.getErgebnismanager().kursSetSortierungKursartFachNummer() : props.getErgebnismanager().kursSetSortierungFachKursartNummer();
 		}
 	});
 
