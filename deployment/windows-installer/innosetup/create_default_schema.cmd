@@ -1,0 +1,1 @@
+curl\bin\curl.exe --user "%1:%2" -k -X POST "https://localhost/api/schema/root/create/%3" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"user\":\"%4\", \"password\":\"%5\"}"

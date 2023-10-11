@@ -1,0 +1,1181 @@
+BSD 3-Clause License
+
+Copyright (c) 2019 - 2022 Ministerium f�r Schule und Bildung des Landes NRW
+Referat 133, V�lklingerstra�e 49, 40221 D�sseldorf
+E-Mail: svws@schule.nrw.de
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------
+
+The MariaDB server is available under the terms of the GNU General Public License, version 2. 
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+https://mariadb.com/kb/en/mariadb-license/
+
+-------------------------------
+
+Java Open JDK 12 is published under
+
+GNU General Public License, version 2,
+with the Classpath Exception
+
+The GNU General Public License (GPL)
+
+Version 2, June 1991
+
+Copyright (C) 1989, 1991 Free Software Foundation, Inc.
+59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+Everyone is permitted to copy and distribute verbatim copies of this license
+document, but changing it is not allowed.
+
+http://openjdk.java.net/legal/gplv2+ce.html
+
+
+-------------------------------
+
+Curl is published under this license
+
+COPYRIGHT AND PERMISSION NOTICE
+
+Copyright (c) 1996 - 2020, Daniel Stenberg, <daniel@haxx.se>, and many
+contributors, see the THANKS file.
+
+All rights reserved.
+
+Permission to use, copy, modify, and distribute this software for any purpose
+with or without fee is hereby granted, provided that the above copyright
+notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of a copyright holder shall not
+be used in advertising or otherwise to promote the sale, use or other dealings
+in this Software without prior written authorization of the copyright holder.
+
+https://github.com/curl/curl
+
+
+-------------------------------
+
+Windows-Service-Wrapper is published under
+
+MIT License
+
+Copyright (c) 2008-2020 Kohsuke Kawaguchi, Sun Microsystems, Inc., CloudBees, Inc., Oleg Nenashev and other contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+https://github.com/winsw/winsw
+
+
+-------------------------------
+
+**********************************************************************
+**
+**       The following libraries are used under these licenses:
+**
+**********************************************************************
+
+
+moduleLicense: Apache 2
+moduleName: org.jsweet.ext:typescript.java-ts.core
+
+
+moduleLicense: Apache 2.0
+moduleName: com.google.code.gson:gson
+
+
+moduleLicense: Apache 2.0
+moduleName: com.google.errorprone:error_prone_annotations
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.core:jackson-annotations
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.fasterxml.jackson.core:jackson-core
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.core:jackson-core
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.fasterxml.jackson.core:jackson-databind
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.core:jackson-databind
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.fasterxml.jackson.dataformat:jackson-dataformat-csv
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.dataformat:jackson-dataformat-csv
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.fasterxml.jackson.dataformat:jackson-dataformat-xml
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.dataformat:jackson-dataformat-xml
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.datatype:jackson-datatype-jsr310
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.jaxrs:jackson-jaxrs-base
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.fasterxml.jackson.module:jackson-module-jaxb-annotations
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.jackson.module:jackson-module-jaxb-annotations
+
+
+moduleLicense: The Apache License Version 2.0
+moduleName: com.fasterxml.woodstox:woodstox-core
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.fasterxml.woodstox:woodstox-core
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.github.stephenc.jcip:jcip-annotations
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.google.guava:failureaccess
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.google.guava:guava
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.google.guava:listenablefuture
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.google.j2objc:j2objc-annotations
+
+
+moduleLicense: 3-Clause BSD License
+moduleName: com.google.protobuf:protobuf-java
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.google.protobuf:protobuf-java
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: com.healthmarketscience.jackcess:jackcess
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: com.ibm.async:asyncutil
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: commons-codec:commons-codec
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: commons-io:commons-io
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: commons-lang:commons-lang
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: commons-lang:commons-lang
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: commons-logging:commons-logging
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: commons-logging:commons-logging
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: io.smallrye.config:smallrye-config
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: io.smallrye.config:smallrye-config-common
+
+
+moduleLicense: Apache License 2.0
+moduleName: io.swagger.core.v3:swagger-annotations
+
+
+moduleLicense: Apache License 2.0
+moduleName: io.swagger.core.v3:swagger-core
+
+
+moduleLicense: Apache License 2.0
+moduleName: io.swagger.core.v3:swagger-integration
+
+
+moduleLicense: Apache License 2.0
+moduleName: io.swagger.core.v3:swagger-jaxrs2
+
+
+moduleLicense: Apache License 2.0
+moduleName: io.swagger.core.v3:swagger-models
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: log4j:log4j
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: log4j:log4j
+
+
+moduleLicense: Apache Software License Version 1.1
+moduleName: mysql:mysql-connector-java
+
+
+moduleLicense: The GNU General Public License v2 with FOSS exception
+moduleName: mysql:mysql-connector-java
+
+
+moduleLicense: Apache 2.0
+moduleName: net.sf.ucanaccess:ucanaccess
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: net.sf.ucanaccess:ucanaccess
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.commons:commons-configuration2
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.commons:commons-lang3
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.commons:commons-text
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.httpcomponents:httpclient
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.httpcomponents:httpcore
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.james:apache-mime4j-core
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.james:apache-mime4j-dom
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.apache.james:apache-mime4j-storage
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.microprofile.config:microprofile-config-api
+
+
+moduleLicense: Apache License
+moduleName: org.javassist:javassist
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.javassist:javassist
+
+
+moduleLicense: LGPL 2.1
+moduleName: org.javassist:javassist
+
+
+moduleLicense: MPL 1.1
+moduleName: org.javassist:javassist
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.jsweet.ext:sourcemap-builder
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.jsweet:jsweet-core
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.jsweet:jsweet-transpiler
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.osgi:org.osgi.core
+
+
+moduleLicense: \n        Apache License Version 2.0\n      
+moduleName: org.osgi:org.osgi.core
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.osgi:org.osgi.core
+
+
+moduleLicense: Apache-2.0
+moduleName: org.webjars.npm:swagger-ui-dist
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.xerial:sqlite-jdbc
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.xerial:sqlite-jdbc
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.yaml:snakeyaml
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.fge:btf
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.fge:btf
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.fge:jackson-coreutils
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.fge:jackson-coreutils
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.fge:json-patch
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.fge:json-patch
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.fge:msg-simple
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.fge:msg-simple
+
+
+moduleLicense: LGPL
+moduleName: com.martiansoftware:jsap
+
+
+moduleLicense: LGPL-2.1
+moduleName: org.mariadb.jdbc:mariadb-java-client
+
+
+moduleLicense: ISC
+moduleName: org.mindrot:jbcrypt
+
+
+moduleLicense: CDDL + GPLv2 with classpath exception
+moduleName: javax.servlet:javax.servlet-api
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: javax.servlet:javax.servlet-api
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty.http2:http2-common
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-common
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-common
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-common
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-common
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty.http2:http2-hpack
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-hpack
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-hpack
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-hpack
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-hpack
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty.http2:http2-server
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-server
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty.http2:http2-server
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-server
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty.http2:http2-server
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-java-server
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-java-server
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-java-server
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-alpn-java-server
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-alpn-java-server
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-server
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-server
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-alpn-server
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-alpn-server
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-alpn-server
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-continuation
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-continuation
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-continuation
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-continuation
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-continuation
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-http
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-http
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-http
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-http
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-http
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-io
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-io
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-io
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-io
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-io
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-jaas
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-jaas
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-jaas
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-jaas
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-jaas
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-security
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-security
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-security
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-security
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-security
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-server
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-server
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-server
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-server
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-server
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-servlet
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-servlet
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-servlet
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-servlet
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-servlet
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-servlets
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-servlets
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-servlets
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-servlets
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-servlets
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.eclipse.jetty:jetty-util
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty:jetty-util
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty:jetty-util
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty:jetty-util
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty:jetty-util
+
+
+moduleLicense: EDL 1.0
+moduleName: com.sun.activation:jakarta.activation
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: com.sun.activation:jakarta.activation
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: com.sun.activation:jakarta.activation
+
+
+moduleLicense: Eclipse Distribution License - v 1.0
+moduleName: com.sun.istack:istack-commons-runtime
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: com.sun.istack:istack-commons-runtime
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: com.sun.istack:istack-commons-runtime
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: EDL 1.0
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: EPL 2.0
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: GPL2 w/ CPE
+moduleName: com.sun.mail:jakarta.mail
+
+
+moduleLicense: EDL 1.0
+moduleName: jakarta.activation:jakarta.activation-api
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: jakarta.activation:jakarta.activation-api
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: jakarta.activation:jakarta.activation-api
+
+
+moduleLicense: Apache License 2.0
+moduleName: jakarta.validation:jakarta.validation-api
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: jakarta.validation:jakarta.validation-api
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: jakarta.validation:jakarta.validation-api
+
+
+moduleLicense: Eclipse Distribution License - v 1.0
+moduleName: jakarta.xml.bind:jakarta.xml.bind-api
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: jakarta.xml.bind:jakarta.xml.bind-api
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: jakarta.xml.bind:jakarta.xml.bind-api
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.codehaus.woodstox:stax2-api
+
+
+moduleLicense: The BSD License
+moduleName: org.codehaus.woodstox:stax2-api
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:jakarta.persistence
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:jakarta.persistence
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.antlr
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.antlr
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.eclipse.persistence:org.eclipse.persistence.antlr
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.asm
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.asm
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.eclipse.persistence:org.eclipse.persistence.asm
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.core
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.core
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.eclipse.persistence:org.eclipse.persistence.core
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa.jpql
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa.jpql
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.eclipse.persistence:org.eclipse.persistence.jpa.jpql
+
+
+moduleLicense: Eclipse Distribution License - v 1.0
+moduleName: org.glassfish.jaxb:jaxb-runtime
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.glassfish.jaxb:jaxb-runtime
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.glassfish.jaxb:jaxb-runtime
+
+
+moduleLicense: Eclipse Distribution License - v 1.0
+moduleName: org.glassfish.jaxb:txw2
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: org.glassfish.jaxb:txw2
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: org.glassfish.jaxb:txw2
+
+
+moduleLicense: HSQLDB License a BSD open source license
+moduleName: org.hsqldb:hsqldb
+
+
+moduleLicense: MIT License
+moduleName: com.eclipsesource.minimal-json:minimal-json
+
+
+moduleLicense: MIT License
+moduleName: com.microsoft.sqlserver:mssql-jdbc
+
+
+moduleLicense: The MIT License (MIT)
+moduleName: io.github.classgraph:classgraph
+
+
+moduleLicense: The MIT License
+moduleName: org.checkerframework:checker-qual
+
+
+moduleLicense: MIT license
+moduleName: org.codehaus.mojo:animal-sniffer-annotations
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.codehaus.mojo:animal-sniffer-annotations
+
+
+moduleLicense: MIT License
+moduleName: org.slf4j:slf4j-api
+
+
+moduleLicense: MIT License
+moduleName: org.slf4j:slf4j-log4j12
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.jboss.logging:jboss-logging
+
+
+moduleLicense: Apache License version 2.0
+moduleName: org.jboss.logging:jboss-logging
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.logging:jboss-logging
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-client
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-client
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-client-api
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-client-api
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-core
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-core
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-core-spi
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-core-spi
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-jackson2-provider
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-jackson2-provider
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-jaxb-provider
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-jaxb-provider
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-jaxrs
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-jaxrs
+
+
+moduleLicense: Apache License 2.0
+moduleName: org.jboss.resteasy:resteasy-multipart-provider
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.resteasy:resteasy-multipart-provider
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.1
+moduleName: org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec
+
+
+moduleLicense: EPL 2.0
+moduleName: org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec
+
+
+moduleLicense: GPL2 w/ CPE
+moduleName: org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec
+
+
+moduleLicense: EPL 2.0
+moduleName: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec
+
+
+moduleLicense: GPL2 w/ CPE
+moduleName: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec
+
+
+moduleLicense: Eclipse Distribution License - v 1.0
+moduleName: org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec
+
+
+moduleLicense: Public Domain
+moduleName: org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec
+
+
+moduleLicense: CC0
+moduleName: org.reactivestreams:reactive-streams
+
+
+moduleLicense: Public Domain
+moduleName: org.tukaani:xz
+
+
+moduleLicense: MIT License
+moduleName: jbcrypt:jbcrypt
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.java-json-tools:btf
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.java-json-tools:btf
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.java-json-tools:jackson-coreutils
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.java-json-tools:jackson-coreutils
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.java-json-tools:json-patch
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.java-json-tools:json-patch
+
+
+moduleLicense: Apache Software License version 2.0
+moduleName: com.github.java-json-tools:msg-simple
+
+
+moduleLicense: Lesser General Public License version 3 or greater
+moduleName: com.github.java-json-tools:msg-simple
+
+
+moduleLicense: MIT License
+moduleName: de.svws__nrw.client:svws-client
+
+
+moduleLicense: ISC license
+moduleName: de.nrw.schule.svws.external.jbcrypt:jbcrypt
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: jakarta.persistence:jakarta.persistence-api
+
+
+moduleLicense: Eclipse Distribution License v. 1.0
+moduleName: jakarta.persistence:jakarta.persistence-api
+
+
+moduleLicense: Eclipse Public License v. 2.0
+moduleName: jakarta.persistence:jakarta.persistence-api
+
+
+moduleLicense: GNU General Public License version 2 with the GNU Classpath Exception
+moduleName: jakarta.persistence:jakarta.persistence-api
+
+
+moduleLicense: Apache License Version 2.0
+moduleName: org.eclipse.jetty.toolchain:jetty-servlet-api
+
+
+moduleLicense: Apache Software License - Version 2.0
+moduleName: org.eclipse.jetty.toolchain:jetty-servlet-api
+
+
+moduleLicense: COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+moduleName: org.eclipse.jetty.toolchain:jetty-servlet-api
+
+
+moduleLicense: Eclipse Public License - Version 1.0
+moduleName: org.eclipse.jetty.toolchain:jetty-servlet-api
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.jsweet.v3:jsweet-core
+
+
+moduleLicense: The Apache Software License Version 2.0
+moduleName: org.jsweet.v3:jsweet-transpiler
+
+
+moduleLicense: MIT License
+moduleName: org.slf4j:slf4j-simple
+
+
+

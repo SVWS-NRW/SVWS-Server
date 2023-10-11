@@ -23,12 +23,12 @@ githubRelease {
 	repo "SVWS-Server"
 	tagName "v${project.version}"
 	targetCommitish "dev"
-	releaseName "v${project.version}"
+	releaseName "Release v${project.version}"
 	generateReleaseNotes false
 	body  "v${project.version}"
 	draft true
 	prerelease true
-	releaseAssets  "./linux-installer/build/distributions/install-${project.version}.sh", "./linux-installer/build/distributions/linux-installer-${project.version}.tar.gz"
+	releaseAssets  "/builds/svws/SVWS-Server/artifacts_linux/distributions/install-${project.version}.sh", "/builds/svws/SVWS-Server/artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "/builds/svws/SVWS-Server/artifacts_windows/SVWS-Server-Installer-win.zip"
 	allowUploadToExisting.set true
 	overwrite true
 	dryRun false
