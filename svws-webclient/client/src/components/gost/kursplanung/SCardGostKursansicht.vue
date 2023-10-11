@@ -61,11 +61,11 @@
 						<svws-ui-checkbox :model-value="getKursauswahl().size === 0 ? false : (getDatenmanager().kursGetAnzahl() === getKursauswahl().size ? true : 'indeterminate')"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
-					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': sort_by === 'kursart'}">
+					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': kurssortierung.value === 'kursart'}">
 						<span>Kurs</span>
 						<span class="svws-sorting-icon">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sort_by === 'kursart'}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sort_by === 'kursart'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
 						</span>
 					</div>
 					<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
@@ -104,7 +104,7 @@
 			</template>
 
 			<template #body>
-				<template v-if="sort_by==='fach_id'">
+				<template v-if="kurssortierung.value === 'fach'">
 					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
@@ -175,6 +175,7 @@
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 		existiertSchuljahresabschnitt: boolean;
 		config: Config;
 		hatErgebnis: boolean;
@@ -188,17 +189,6 @@
 	}>();
 
 	const edit_schienenname: Ref<number|undefined> = ref()
-
-	// TODO Verschieben dieser Konfiguration in die Daten der Route und verwenden des Commit, um die Raktivität in der Umwahlansicht zu triggern
-	const sort_by: WritableComputedRef<string> = computed({
-		get: () => props.config.getValue('gost.kursansicht.sortierung'),
-		set: (value) => {
-			if (value === undefined)
-				value = 'kursart'
-			void props.config.setValue('gost.kursansicht.sortierung', value);
-			(value === 'kursart') ? props.getErgebnismanager().kursSetSortierungKursartFachNummer() : props.getErgebnismanager().kursSetSortierungFachKursartNummer();
-		}
-	});
 
 	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : ComputedRef<boolean> => computed(() => {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();

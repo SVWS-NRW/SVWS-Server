@@ -1,5 +1,5 @@
 
-import { type Ref, ref, shallowRef } from "vue";
+import { type Ref, ref, shallowRef, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
@@ -110,6 +110,7 @@ export class RouteDataGostKursplanung {
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
+		// Bestimme die Kurssortierung
 		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
@@ -789,6 +790,25 @@ export class RouteDataGostKursplanung {
 		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
 			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
 	}
+
+	public kurssortierung = computed<'fach' | 'kursart'>({
+		get: () => {
+			const value = api.config.getValue('gost.kursansicht.sortierung');
+			if ((value === undefined) || ((value !== 'kursart') && (value !== 'fach')))
+				return 'kursart';
+			return value;
+		},
+		set: (value) => {
+			void api.config.setValue('gost.kursansicht.sortierung', value);
+			if (this._state.value.ergebnismanager !== undefined) {
+				if (value === 'kursart')
+					this.ergebnismanager.kursSetSortierungKursartFachNummer();
+				else
+					this.ergebnismanager.kursSetSortierungFachKursartNummer();
+			}
+			this.commit();
+		}
+	});
 
 	protected getListeKursauswahl(): List<number> {
 		const result = new ArrayList<number>();

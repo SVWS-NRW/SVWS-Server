@@ -231,6 +231,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			ergebnisHochschreiben: this.data.ergebnisHochschreiben,
 			ergebnisAktivieren: this.data.ergebnisAktivieren,
 			ergebnisSynchronisieren: this.data.ergebnisSynchronisieren,
+			kurssortierung: this.data.kurssortierung,
 			getPDF: this.data.getPDF,
 			existiertSchuljahresabschnitt: this.data.existiertSchuljahresabschnitt,
 			schuelerFilter: this.data.hatErgebnis ? this.data.schuelerFilter : undefined,

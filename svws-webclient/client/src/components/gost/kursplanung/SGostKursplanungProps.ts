@@ -1,3 +1,4 @@
+import { type WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
@@ -28,6 +29,7 @@ export interface GostKursplanungProps {
 	ergebnisSynchronisieren: () => Promise<void>;
 	getPDF: (title: string) => Promise<ApiFile>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
+	kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;
 	hatBlockung: boolean;
