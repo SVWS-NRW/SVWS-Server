@@ -887,17 +887,14 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
+	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
 			final @NotNull String datum, final int threshold) {
 		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		int kwTermin = termin.datum != null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
-		if (kwDatum == kwTermin)
-			return new HashMap<>();
 		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
 	}
 
-	private @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold) {
-		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
+	private @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold) {
+		Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
 
 		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId == null)
@@ -905,7 +902,7 @@ public class GostKursklausurManager {
 
 		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
 			List<@NotNull GostKursklausur> temp = entry.getValue();
-			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
+			HashSet<@NotNull GostKursklausur> klausuren = temp != null ? new HashSet<>(temp) : new HashSet<>();
 			if (termin != null) {
 				List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
 				if (klausurenInTermin != null)
@@ -929,7 +926,7 @@ public class GostKursklausurManager {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
+	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
 		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
 	}
 

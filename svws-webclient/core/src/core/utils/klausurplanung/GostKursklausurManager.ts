@@ -838,22 +838,19 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
 		let kwDatum : number = DateUtils.gibKwDesDatumsISO8601(datum);
-		let kwTermin : number = termin.datum !== null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
-		if (kwDatum === kwTermin)
-			return new HashMap();
 		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
 	}
 
-	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
-		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
+	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
+		let ergebnis : JavaMap<number, HashSet<GostKursklausur>> | null = new HashMap();
 		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId === null)
 			return ergebnis;
 		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
 			let temp : List<GostKursklausur> | null = entry.getValue();
-			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
+			let klausuren : HashSet<GostKursklausur> | null = temp !== null ? new HashSet(temp) : new HashSet();
 			if (termin !== null) {
 				let klausurenInTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
 				if (klausurenInTermin !== null)
@@ -877,7 +874,7 @@ export class GostKursklausurManager extends JavaObject {
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
 		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
 	}
 
