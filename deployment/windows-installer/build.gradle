@@ -1,0 +1,425 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'com.github.jk1:gradle-license-report:2.0'
+	}
+}
+
+plugins {
+	id 'maven-publish'
+	id 'distribution'
+	id 'java'
+}
+
+
+println "Version " + project.ext.svwsArtifactVersion
+
+group = 'de.svws-nrw'
+version = project.ext.svwsArtifactVersion
+sourceCompatibility = 17
+targetCompatibility = 17
+
+ext.svws_version = version
+
+ext.base_url = "https://svws.nrw.de/uploads/media/svws-server-downloads/"
+
+ext.jdk_version = "17.0.5"
+//ext.jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
+//ext.jdk_win_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.5%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.5_8.zip"
+ext.jdk_win_url = "${base_url}jdk/${jdk_version}/jdk-${jdk_version}-win.zip"
+
+ext.mariadb_version = "10.6.10"
+//ext.mariadb_win_url = "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
+ext.mariadb_win_url = "${base_url}mariadb/${mariadb_version}/mariadb-${mariadb_version}-win.zip"
+
+ext.innosetup_version = "6.0.5"
+//ext.innosetup_win_url = "https://files.jrsoftware.org/is/6/innosetup-${innosetup_version}.exe"
+ext.innosetup_win_url = "${base_url}innosetup/${innosetup_version}/innosetup-${innosetup_version}.exe"
+
+ext.innoextract_version = "1.9"
+//ext.innoextract_win_url = "https://constexpr.org/innoextract/files/innoextract-${innoextract_version}-windows.zip"
+ext.innoextract_win_url = "${base_url}innoextract/${innoextract_version}/innoextract-${innoextract_version}-windows.zip"
+
+ext.windowsservicewrapper_version = "2.10.3"
+//ext.windowsservicewrapper_win_url = "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
+ext.windowsservicewrapper_win_url = "${base_url}winsw/${windowsservicewrapper_version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
+
+ext.curl_version = "7.72.0"
+//ext.curl_win_url = "https://curl.haxx.se/windows/dl-${curl_version}_4/curl-${curl_version}_4-win64-mingw.zip"
+ext.curl_win_url = "${base_url}curl/${curl_version}/curl-${curl_version}-windows.zip"
+
+ext.getSchild2AccessPassword = { ->
+	if (properties.containsKey('schild2_access_password'))
+		return schild2_access_password;
+	def pw = System.getenv("SCHILD2_ACCESS_PASSWORD")
+	if (pw != null)
+		return pw;
+	println 'Fehler: Das Schild2-Kennwort für die Access-Datenbanken wurde weder in USERHOME/.gradle/gradle.properties als schild2_access_password, noch als Umgebungsvariable SCHILD2_ACCESS_PASSWORD festgelegt!'
+	return '';
+}
+
+ext.getGithubActor = { ->
+	if (properties.containsKey('github_actor'))
+		return github_actor;
+	def username = System.getenv("GITHUB_ACTOR")
+	if (username != null)
+		return username;
+	throw new GradleException('Fehler: Der Github benutzer wurde weder in USERHOME/.gradle/gradle.properties als github_actor, noch als Umgebungsvariable GITHUB_ACTOR festgelegt!')
+}
+
+ext.getGithubToken = { ->
+	if (properties.containsKey('github_token'))
+		return github_token;
+	def token = System.getenv("GITHUB_TOKEN")
+	if (token != null)
+		return token;
+	throw new GradleException('Fehler: Der Github-Token wurde weder in USERHOME/.gradle/gradle.properties als github_token, noch als Umgebungsvariable GITHUB_TOKEN festgelegt!')
+}
+
+
+repositories {
+	maven {
+		name = "GitHubPackagesServer"
+		url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
+		credentials {
+			username = getGithubActor()
+			password = getGithubToken()
+		}
+	}
+	mavenCentral()
+}
+
+
+dependencies {
+	implementation 'de.svws-nrw:svws-server-app:' + svws_version
+	implementation 'de.svws-nrw:svws-client:' + svws_version
+}
+
+
+publishing {
+	repositories {
+		maven {
+			name = "GitHubPackagesSVWSInstaller"
+			url = "https://maven.pkg.github.com/SVWS-NRW/SVWS-Server"
+			credentials {
+				username = getGithubActor()
+				password = getGithubToken()
+			}
+		}
+	}
+	publications {
+		mavenZipWin(MavenPublication) {
+			artifact  'build/SVWS-Server-Installer-win.zip'
+			artifactId = 'svws-server-installer-win'
+			pom {
+				name = 'SVWS-Server-Installer Windows Version'
+				description = 'Stellt den SVWS-Server-Installer für Windows zur Verfügung.'
+				url = 'http://www.svws.nrw.de'
+				licenses {
+					license {
+						name = 'The BSD-3-Clause License'
+						url = 'https://opensource.org/licenses/BSD-3-Clause'
+					}
+				}
+				scm {
+					connection = 'scm:git@github.com/SVWS-NRW/SVWS-Server'
+					developerConnection = 'scm:git@github.com/SVWS-NRW/SVWS-Server.git'
+					url = 'https://github.com/SVWS-NRW/SVWS-Server.git'
+				}
+			}
+		}
+	}
+}
+
+
+task printDependencies2 {
+	group = 'svws'
+	doLast {
+		println "Dependencies for Java:";
+		configurations.runtimeClasspath.each { println it }
+	}
+}
+
+
+task downloadJarsAll(type: Copy) {
+	dependsOn "downloadJarsSources"
+	dependsOn "downloadJarsJavadocs"
+	dependsOn "downloadSVWSClient"
+	from configurations.runtimeClasspath
+	into "download/svws-" + project.version + "/jar/"
+	include "*.jar"
+
+}
+
+
+task downloadSVWSClient(type: Copy) {
+	from configurations.runtimeClasspath
+	into "download/svws-" + project.version + "/"
+	include "svws-client-${svws_version}.zip"
+}
+
+
+task downloadJarsSources( type: Copy ) {
+	def sources = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
+		artifact -> project.dependencies.create(
+			[ group: artifact.moduleVersion.id.group, name: artifact.moduleVersion.id.name, version: artifact.moduleVersion.id.version, classifier: 'sources' ]
+		)
+	}
+	from configurations.detachedConfiguration( sources as Dependency[] ).resolvedConfiguration.lenientConfiguration.getFiles( Specs.SATISFIES_ALL )
+	into "download/svws-" + project.version + "/jar-source/"
+}
+
+
+task downloadJarsJavadocs( type: Copy ) {
+	def sources = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
+		artifact -> project.dependencies.create(
+			[ group: artifact.moduleVersion.id.group, name: artifact.moduleVersion.id.name, version: artifact.moduleVersion.id.version, classifier: 'javadoc' ]
+		)
+	}
+	from configurations.detachedConfiguration( sources as Dependency[] ).resolvedConfiguration.lenientConfiguration.getFiles( Specs.SATISFIES_ALL )
+	into "download/svws-" + project.version + "/jar-javadoc/"
+}
+
+
+task downloadJDK {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/jdk-${jdk_version}-win.zip")
+		if (file.exists()) {
+			println "Datei jdk-${jdk_version}-win.zip wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(jdk_win_url)
+			println "Downloading jdk-${jdk_version}-win.zip from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+task downloadMariaDB {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-win.zip")
+		if (file.exists()) {
+			println "Datei mariadb-${mariadb_version}-win.zip wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(mariadb_win_url)
+			println "Downloading mariadb-${mariadb_version}-win.zip from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+
+task downloadInnosetup {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe")
+		if (file.exists()) {
+			println "Datei innosetup-${innosetup_version}.exe wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(innosetup_win_url)
+			println "Downloading innosetup-${innosetup_version}.exe from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+task downloadInnoextract {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/innoextract-${innoextract_version}-windows.zip")
+		if (file.exists()) {
+			println "Datei innoextract-${innoextract_version}-windows.zip wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(innoextract_win_url)
+			println "Downloading innoextract-${innoextract_version}-windows.zip from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+task downloadWindowsServiceWrapper {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
+		if (file.exists()) {
+			println "Datei servicewrapper-v${windowsservicewrapper_version}-windows.exe wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(windowsservicewrapper_win_url)
+			println "Downloading servicewrapper-v${windowsservicewrapper_version}-windows.exe from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+task downloadCurl {
+	doLast {
+		def file = new File("${projectDir}/download/svws-${project.version}/curl-${curl_version}-windows.zip")
+		if (file.exists()) {
+			println "Datei curl-${curl_version}-windows.zip wurde bereits heruntergeladen, skipping download"
+		} else {
+			mkdir "download/svws-${project.version}"
+			def url = new URL(curl_win_url)
+			println "Downloading curl-${curl_version}-windows.zip from $url..."
+			url.withInputStream { i -> file.withOutputStream { it << i } }
+		}
+	}
+}
+
+
+task download {
+	group 'build'
+	dependsOn "downloadJarsAll"
+	dependsOn "downloadCurl"
+	dependsOn "downloadWindowsServiceWrapper"
+	dependsOn "downloadInnoextract"
+	dependsOn "downloadInnosetup"
+	dependsOn "downloadJarsAll"
+	dependsOn "downloadMariaDB"
+	dependsOn "downloadJDK"
+}
+
+task copyJARs(type:Copy) {
+	dependsOn "download"
+	from "download/svws-" + project.version + "/jar/"
+	into "${buildDir}/installer/files/jar/"
+}
+
+
+task extract(type:Copy) {
+	dependsOn "copyJARs"
+	dependsOn "download"
+	from(zipTree("${projectDir}/download/svws-${project.version}/mariadb-${mariadb_version}-win.zip")) {
+		include "mariadb-${mariadb_version}-winx64/bin/mysqld.exe"
+		include "mariadb-${mariadb_version}-winx64/bin/server.dll"
+		include "mariadb-${mariadb_version}-winx64/bin/mariadb-install-db.exe"
+		include "mariadb-${mariadb_version}-winx64/COPYING"
+		include "mariadb-${mariadb_version}-winx64/CREDITS"
+		include "mariadb-${mariadb_version}-winx64/EXCEPTIONS-CLIENT"
+		include "mariadb-${mariadb_version}-winx64/README.md"
+		include "mariadb-${mariadb_version}-winx64/THIRDPARTY"
+		includeEmptyDirs = false
+	}
+	from(zipTree(file("${projectDir}/download/svws-${project.version}/jdk-${jdk_version}-win.zip"))) {
+		exclude "jdk-${jdk_version}/lib/src.zip"
+		includeEmptyDirs = false
+	}
+	from(zipTree(file("${projectDir}/download/svws-${project.version}/curl-${curl_version}-windows.zip"))) {
+		include "curl-${curl_version}-win64-mingw/*"
+		include "curl-${curl_version}-win64-mingw/bin/*"
+		includeEmptyDirs = false
+	}
+	from file("${projectDir}/download/svws-${project.version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe")
+	from file("${projectDir}/download/svws-${project.version}/run_server.cmd")
+	from file("${projectDir}/download/svws-${project.version}/config_writer.cmd")
+	into "${buildDir}/installer/files/"
+}
+
+
+task extractClient(type:Copy) {
+	dependsOn "extract"
+	from zipTree(file("${projectDir}/download/svws-${project.version}/svws-client-${svws_version}.zip"))
+	into "${buildDir}/installer/files/client/"
+}
+
+
+
+task copyInstallerScript(type:Copy) {
+	dependsOn "download"
+	inputs.files "buildconfig.json", "build.gradle", fileTree(dir: "${projectDir}/innosetup", includes: ["**/*"])
+	outputs.files fileTree(dir: "${buildDir}/installer", includes: ["**/*"])
+	from("${projectDir}/innosetup/") {
+		exclude "*.iss"
+	}
+	from("${projectDir}/innosetup/") {
+		include "*.iss"
+		filteringCharset = 'ISO-8859-1'
+		if (System.getenv("SVWS_SIGNTOOL_PATH") && System.getenv("SVWS_CERTIFICATE_PATH") && System.getenv("SVWS_CERTIFICATE_PASSWORD")) {
+			filter(ReplaceTokens, tokens: [
+				version: project.version,
+				svws_client_version: svws_version,
+				svws_server_version: svws_version,
+				mariadb_version: mariadb_version,
+				jdk_version: jdk_version,
+				windowsservicewrapper_version: windowsservicewrapper_version,
+				curl_version: curl_version,
+				schild2_access_password: getSchild2AccessPassword(),
+				signtool: 'SignTool=signtool \$f',
+				signuninstaller: 'SignedUninstaller=yes'
+			])
+		} else {
+			filter(ReplaceTokens, tokens: [
+				version: project.version,
+				svws_client_version: svws_version,
+				svws_server_version: svws_version,
+				mariadb_version: mariadb_version,
+				jdk_version: jdk_version,
+				windowsservicewrapper_version: windowsservicewrapper_version,
+				curl_version: curl_version,
+				schild2_access_password: getSchild2AccessPassword(),
+				signtool: '',
+				signuninstaller: ''
+			])
+		}
+	}
+	into "${buildDir}/installer/"
+}
+
+
+task copyInnoExtractor(type: Copy) {
+	dependsOn "download"
+	from zipTree(file("${projectDir}/download/svws-${project.version}/innoextract-${innoextract_version}-windows.zip"))
+	into "${buildDir}/inno"
+	include "innoextract.exe"
+}
+
+
+task extractInnoSetup(type:Exec) {
+	dependsOn "copyInnoExtractor"
+	workingDir file("${buildDir}/inno")
+	commandLine "cmd", "/c", "innoextract.exe", "--output-dir", "${buildDir}/inno/", "${projectDir}/download/svws-${project.version}/innosetup-${innosetup_version}.exe"
+}
+
+
+task buildPrepare {
+	group 'build'
+	dependsOn "extract"
+	dependsOn "extractClient"
+	dependsOn "copyInnoExtractor"
+	dependsOn "extractInnoSetup"
+	dependsOn "copyInstallerScript"
+}
+
+
+task buildCreateInstaller(type:Exec) {
+	if (System.getenv("SVWS_SIGNTOOL_PATH") && System.getenv("SVWS_CERTIFICATE_PATH") && System.getenv("SVWS_CERTIFICATE_PASSWORD")) {
+		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + System.getenv("SVWS_CERTIFICATE_PATH")  + " /p " + System.getenv("SVWS_CERTIFICATE_PASSWORD") + ' -tr http://timestamp.digicert.com -td sha256 \$f'
+	} else {
+		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
+	}
+	dependsOn "buildPrepare"
+	doFirst {
+		mkdir "$buildDir/output"
+	}
+	workingDir file("${buildDir}/installer")
+}
+
+
+task doZip(type: Zip) {
+	archiveFileName = "SVWS-Server-Installer-win.zip"
+	destinationDirectory = file("$buildDir")
+	from "$buildDir/output/SetupSVWSServer_v${version}.exe"
+}
+
+doZip.dependsOn buildCreateInstaller
+
+

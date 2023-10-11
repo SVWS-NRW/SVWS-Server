@@ -1,0 +1,1 @@
+curl\bin\curl --user "%1:%2" -k -X POST "https://localhost/api/schema/root/migrate/mdb/%3" -H  "accept: application/json" -H  "Content-Type: multipart/form-data" -F "databasePassword=%4" -F "schemaUsername=%5" -F "schemaUserPassword=%6" -F "database=@%7"

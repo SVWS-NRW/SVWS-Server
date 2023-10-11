@@ -5,6 +5,7 @@ rootProject.children.find{ it.name == "buildSrc" }.name = "gradle-build-src"
 include 'deployment'
 include 'deployment:docker'
 include 'deployment:linux-installer'
+include 'deployment:windows-installer'
 
 include 'svws-core'
 include 'svws-db'

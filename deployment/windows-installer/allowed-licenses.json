@@ -1,0 +1,1364 @@
+{
+  "allowedLicenses": [
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.jsweet.ext:typescript.java-ts.core"
+    },
+    {
+        "moduleLicense": "Apache 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.code.gson:gson"
+    },
+    {
+        "moduleLicense": "Apache 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.errorprone:error_prone_annotations"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.core:jackson-annotations"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.core:jackson-core"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.core:jackson-core"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.core:jackson-databind"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.core:jackson-databind"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+    },
+    {
+        "moduleLicense": "The Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.woodstox:woodstox-core"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.woodstox:woodstox-core"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.stephenc.jcip:jcip-annotations"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.guava:failureaccess"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.guava:guava"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.guava:listenablefuture"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.j2objc:j2objc-annotations"
+    },
+    {
+        "moduleLicense": "3-Clause BSD License",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.protobuf:protobuf-java"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.google.protobuf:protobuf-java"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.healthmarketscience.jackcess:jackcess"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.ibm.async:asyncutil"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-codec:commons-codec"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-io:commons-io"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-lang:commons-lang"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-lang:commons-lang"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-logging:commons-logging"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "commons-logging:commons-logging"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.config:smallrye-config"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.config:smallrye-config-common"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.swagger.core.v3:swagger-annotations"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.swagger.core.v3:swagger-core"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.swagger.core.v3:swagger-integration"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.swagger.core.v3:swagger-jaxrs2"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.swagger.core.v3:swagger-models"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "log4j:log4j"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "log4j:log4j"
+    },
+    {
+        "moduleLicense": "Apache Software License, Version 1.1",
+        "moduleVersion": ".*",
+        "moduleName": "mysql:mysql-connector-java"
+    },
+    {
+        "moduleLicense": "The GNU General Public License, v2 with FOSS exception",
+        "moduleVersion": ".*",
+        "moduleName": "mysql:mysql-connector-java"
+    },
+    {
+        "moduleLicense": "Apache 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "net.sf.ucanaccess:ucanaccess"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "net.sf.ucanaccess:ucanaccess"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.commons:commons-configuration2"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.commons:commons-lang3"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.commons:commons-text"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.httpcomponents:httpclient"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.httpcomponents:httpcore"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.james:apache-mime4j-core"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.james:apache-mime4j-dom"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.apache.james:apache-mime4j-storage"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.microprofile.config:microprofile-config-api"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.javassist:javassist"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.javassist:javassist"
+    },
+    {
+        "moduleLicense": "LGPL 2.1",
+        "moduleVersion": ".*A",
+        "moduleName": "org.javassist:javassist"
+    },
+    {
+        "moduleLicense": "MPL 1.1",
+        "moduleVersion": ".*",
+        "moduleName": "org.javassist:javassist"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jsweet.ext:sourcemap-builder"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jsweet:jsweet-core"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jsweet:jsweet-transpiler"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.osgi:org.osgi.core"
+    },
+    {
+        "moduleLicense": "\n        Apache License, Version 2.0\n      ",
+        "moduleVersion": ".*",
+        "moduleName": "org.osgi:org.osgi.core"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.osgi:org.osgi.core"
+    },
+    {
+        "moduleLicense": "Apache-2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.webjars.npm:swagger-ui-dist"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.xerial:sqlite-jdbc"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.xerial:sqlite-jdbc"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.yaml:snakeyaml"
+    },
+    {
+        "moduleLicense": "Apache Software License, version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:btf"
+    },
+    {
+        "moduleLicense": "Lesser General Public License, version 3 or greater",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:btf"
+    },
+    {
+        "moduleLicense": "Apache Software License, version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:jackson-coreutils"
+    },
+    {
+        "moduleLicense": "Lesser General Public License, version 3 or greater",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:jackson-coreutils"
+    },
+    {
+        "moduleLicense": "Apache Software License, version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:json-patch"
+    },
+    {
+        "moduleLicense": "Lesser General Public License, version 3 or greater",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:json-patch"
+    },
+    {
+        "moduleLicense": "Apache Software License, version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:msg-simple"
+    },
+    {
+        "moduleLicense": "Lesser General Public License, version 3 or greater",
+        "moduleVersion": ".*",
+        "moduleName": "com.github.fge:msg-simple"
+    },
+    {
+        "moduleLicense": "LGPL",
+        "moduleVersion": ".*",
+        "moduleName": "com.martiansoftware:jsap"
+    },
+    {
+        "moduleLicense": "LGPL-2.1",
+        "moduleVersion": ".*",
+        "moduleName": "org.mariadb.jdbc:mariadb-java-client"
+    },
+    {
+        "moduleLicense": "ISC",
+        "moduleVersion": ".*",
+        "moduleName": "org.mindrot:jbcrypt"
+    },
+    {
+        "moduleLicense": "CDDL + GPLv2 with classpath exception",
+        "moduleVersion": ".*",
+        "moduleName": "javax.servlet:javax.servlet-api"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "javax.servlet:javax.servlet-api"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-common"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-common"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-common"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-common"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-common"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-hpack"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-hpack"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-hpack"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-hpack"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-hpack"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-server"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-server"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-server"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-server"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty.http2:http2-server"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-java-server"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-java-server"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-java-server"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-java-server"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-java-server"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-server"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-server"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-server"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-server"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-alpn-server"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-continuation"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-continuation"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-continuation"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-continuation"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-continuation"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-http"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-http"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-http"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-http"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-http"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-io"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-io"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-io"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-io"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-io"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-jaas"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-jaas"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-jaas"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-jaas"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-jaas"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-security"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-security"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-security"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-security"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-security"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-server"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-server"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-server"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-server"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-server"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlet"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlet"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlet"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlet"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlet"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlets"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlets"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlets"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlets"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-servlets"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-util"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-util"
+    },
+    {
+        "moduleLicense": "Apache Software License - Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-util"
+    },
+    {
+        "moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-util"
+    },
+    {
+        "moduleLicense": "Eclipse Public License - Version 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.jetty:jetty-util"
+    },
+    {
+        "moduleLicense": "EDL 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.activation:jakarta.activation"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.activation:jakarta.activation"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.activation:jakarta.activation"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License - v 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.istack:istack-commons-runtime"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.istack:istack-commons-runtime"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.istack:istack-commons-runtime"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "EDL 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "EPL 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "GPL2 w/ CPE",
+        "moduleVersion": ".*",
+        "moduleName": "com.sun.mail:jakarta.mail"
+    },
+    {
+        "moduleLicense": "EDL 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.activation:jakarta.activation-api"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.activation:jakarta.activation-api"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.activation:jakarta.activation-api"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.validation:jakarta.validation-api"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.validation:jakarta.validation-api"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.validation:jakarta.validation-api"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License - v 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.xml.bind:jakarta.xml.bind-api"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.xml.bind:jakarta.xml.bind-api"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "jakarta.xml.bind:jakarta.xml.bind-api"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.codehaus.woodstox:stax2-api"
+    },
+    {
+        "moduleLicense": "The BSD License",
+        "moduleVersion": ".*",
+        "moduleName": "org.codehaus.woodstox:stax2-api"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:jakarta.persistence"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:jakarta.persistence"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.antlr"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.antlr"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.antlr"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.asm"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.asm"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.asm"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.core"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.core"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.core"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License v. 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa.jpql"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa.jpql"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.eclipse.persistence:org.eclipse.persistence.jpa.jpql"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License - v 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:jaxb-runtime"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:jaxb-runtime"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:jaxb-runtime"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License - v 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:txw2"
+    },
+    {
+        "moduleLicense": "Eclipse Public License v. 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:txw2"
+    },
+    {
+        "moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+        "moduleVersion": ".*",
+        "moduleName": "org.glassfish.jaxb:txw2"
+    },
+    {
+        "moduleLicense": "HSQLDB License, a BSD open source license",
+        "moduleVersion": ".*",
+        "moduleName": "org.hsqldb:hsqldb"
+    },
+    {
+        "moduleLicense": "MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "com.eclipsesource.minimal-json:minimal-json"
+    },
+    {
+        "moduleLicense": "MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "com.microsoft.sqlserver:mssql-jdbc"
+    },
+    {
+        "moduleLicense": "The MIT License (MIT)",
+        "moduleVersion": ".*",
+        "moduleName": "io.github.classgraph:classgraph"
+    },
+    {
+        "moduleLicense": "The MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "org.checkerframework:checker-qual"
+    },
+    {
+        "moduleLicense": "MIT license",
+        "moduleVersion": ".*",
+        "moduleName": "org.codehaus.mojo:animal-sniffer-annotations"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.codehaus.mojo:animal-sniffer-annotations"
+    },
+    {
+        "moduleLicense": "MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "org.slf4j:slf4j-api"
+    },
+    {
+        "moduleLicense": "MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "org.slf4j:slf4j-log4j12"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.logging:jboss-logging"
+    },
+    {
+        "moduleLicense": "Apache License, version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.logging:jboss-logging"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.logging:jboss-logging"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-client"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": "4.*",
+        "moduleName": "org.jboss.resteasy:resteasy-client"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-client-api"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-client-api"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-core"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-core"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-core-spi"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-core-spi"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jackson2-provider"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jackson2-provider"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jaxb-provider"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jaxb-provider"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jaxrs"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-jaxrs"
+    },
+    {
+        "moduleLicense": "Apache License 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-multipart-provider"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.resteasy:resteasy-multipart-provider"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec"
+    },
+    {
+        "moduleLicense": "EPL 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec"
+    },
+    {
+        "moduleLicense": "GPL2 w/ CPE",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.annotation:jboss-annotations-api_1.3_spec"
+    },
+    {
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec"
+    },
+    {
+        "moduleLicense": "EPL 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec"
+    },
+    {
+        "moduleLicense": "GPL2 w/ CPE",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec"
+    },
+    {
+        "moduleLicense": "Eclipse Distribution License - v 1.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec"
+    },
+    {
+        "moduleLicense": "CC0",
+        "moduleVersion": ".*",
+        "moduleName": "org.reactivestreams:reactive-streams"
+    },
+    {
+        "moduleLicense": "Public Domain",
+        "moduleVersion": ".*",
+        "moduleName": "org.tukaani:xz"
+    },
+    {
+        "moduleLicense": "MIT License",
+        "moduleVersion": ".*",
+        "moduleName": "jbcrypt:jbcrypt"
+    },
+	{
+		"moduleLicense": "Apache Software License, version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:btf"
+	},
+	{
+		"moduleLicense": "Lesser General Public License, version 3 or greater",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:btf"
+	},
+	{
+		"moduleLicense": "Apache Software License, version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:jackson-coreutils"
+	},
+	{
+		"moduleLicense": "Lesser General Public License, version 3 or greater",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:jackson-coreutils"
+	},
+	{
+		"moduleLicense": "Apache Software License, version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:json-patch"
+	},
+	{
+		"moduleLicense": "Lesser General Public License, version 3 or greater",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:json-patch"
+	},
+	{
+		"moduleLicense": "Apache Software License, version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:msg-simple"
+	},
+	{
+		"moduleLicense": "Lesser General Public License, version 3 or greater",
+		"moduleVersion": ".*",
+		"moduleName": "com.github.java-json-tools:msg-simple"
+	},
+	{
+		"moduleLicense": "MIT License",
+		"moduleVersion": ".*",
+		"moduleName": "de.nrw.schule.svws.client:svws-client"
+	},
+	{
+		"moduleLicense": "ISC license",
+		"moduleVersion": ".*",
+		"moduleName": "de.nrw.schule.svws.ext.jbcrypt:jbcrypt"
+	},
+	{
+		"moduleLicense": null,
+		"moduleVersion": ".*",
+		"moduleName": "jakarta.persistence:jakarta.persistence-api"
+	},
+	{
+		"moduleLicense": "Eclipse Distribution License v. 1.0",
+		"moduleVersion": ".*",
+		"moduleName": "jakarta.persistence:jakarta.persistence-api"
+	},
+	{
+		"moduleLicense": "Eclipse Public License v. 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "jakarta.persistence:jakarta.persistence-api"
+	},
+	{
+		"moduleLicense": "GNU General Public License, version 2 with the GNU Classpath Exception",
+		"moduleVersion": ".*",
+		"moduleName": "jakarta.persistence:jakarta.persistence-api"
+	},
+	{
+		"moduleLicense": "Apache License, Version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api"
+	},
+	{
+		"moduleLicense": "Apache Software License - Version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api"
+	},
+	{
+		"moduleLicense": "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api"
+	},
+	{
+		"moduleLicense": "Eclipse Public License - Version 1.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.eclipse.jetty.toolchain:jetty-servlet-api"
+	},
+	{
+		"moduleLicense": "The Apache Software License, Version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.jsweet.v3:jsweet-core"
+	},
+	{
+		"moduleLicense": "The Apache Software License, Version 2.0",
+		"moduleVersion": ".*",
+		"moduleName": "org.jsweet.v3:jsweet-transpiler"
+	},
+	{
+		"moduleLicense": "MIT License",
+		"moduleVersion": ".*",
+		"moduleName": "org.slf4j:slf4j-simple"
+	},
+	{
+        "moduleLicense": null,
+        "moduleVersion": ".*",
+        "moduleName": "com.fasterxml.jackson:jackson-bom"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.common:smallrye-common-annotation"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.common:smallrye-common-classloader"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.common:smallrye-common-constraint"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.common:smallrye-common-expression"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.common:smallrye-common-function"
+    },
+    {
+        "moduleLicense": "Apache License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "io.smallrye.config:smallrye-config-core"
+    },
+    {
+        "moduleLicense": "BSD-3-Clause",
+        "moduleVersion": ".*",
+        "moduleName": "org.ow2.asm:asm"
+    },
+    {
+        "moduleLicense": "BSD-3-Clause;link=https://asm.ow2.io/LICENSE.txt",
+        "moduleVersion": ".*",
+        "moduleName": "org.ow2.asm:asm"
+    },
+    {
+        "moduleLicense": "The Apache Software License, Version 2.0",
+        "moduleVersion": ".*",
+        "moduleName": "org.ow2.asm:asm"
+    }    
+  ]
+}
