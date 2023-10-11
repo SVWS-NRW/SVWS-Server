@@ -1,5 +1,5 @@
 <template>
-	<button @click="select()" :class="[isSelected ? 'router-tab-bar-button--active' : '', props.hidden ? 'hidden' : 'router-tab-bar-button']">
+	<button v-if="text" @click="select()" class="svws-ui-tab-button" :class="{'svws-active': isSelected}" :disabled="hidden">
 		<span>{{ text }}</span>
 		<!--<i-ri-loader-4-line v-if="isSelected" class="svws-ui-spinner" />-->
 	</button>
@@ -42,14 +42,14 @@
 
 
 <style lang="postcss">
-.router-tab-bar-button {
+.svws-ui-tab-button {
   @apply inline-flex items-center justify-center;
-  @apply py-2 px-3.5;
-  @apply rounded-md;
+  @apply py-1.5 px-2.5;
+  @apply rounded;
   @apply select-none;
   @apply text-sm font-bold text-black dark:text-white;
   @apply whitespace-nowrap;
-  @apply relative;
+  @apply relative border border-transparent;
 
   .router-tab-bar--subnav & {
     @apply py-1.5 px-2.5;
@@ -60,7 +60,7 @@
   }
 
   &:hover {
-    @apply bg-light dark:bg-white/5;
+    @apply bg-black/10 dark:bg-white/10;
   }
 
   &:focus-visible {
@@ -72,53 +72,32 @@
   }
 
   &:focus,
-  &--active,
-  &--active:hover {
+  &.svws-active,
+  &.svws-active:hover {
     @apply outline-none;
-    @apply text-svws bg-svws/5 dark:bg-svws/10;
+    @apply text-svws bg-white dark:bg-black shadow;
 
     .router-tab-bar--subnav & {
-      @apply text-svws bg-svws/5 dark:bg-svws/10;
+      @apply text-svws bg-svws/10 dark:bg-svws/10;
     }
 
     .page--statistik & {
-      @apply text-violet-500 bg-violet-500/5 dark:bg-violet-500/10;
-    }
-  }
-}
-
-.router-tab-bar-button--active {
-  @apply relative;
-
-  &:hover {
-    @apply bg-svws/5 dark:bg-svws/10;
-  }
-
-  .svws-api--pending & {
-    span {
-      @apply animate-pulse;
+      @apply text-violet-500;
     }
   }
 
-  &:after {
-    @apply absolute w-full;
-    @apply -bottom-2 inset-x-0;
-    @apply border-b-2 border-svws z-10;
-    content: '';
-
-    .router-tab-bar--subnav & {
-      @apply border-svws;
-    }
-
-    .page--statistik & {
-      @apply border-violet-500;
+  &.svws-active {
+    .svws-api--pending & {
+      span {
+        @apply animate-pulse;
+      }
     }
   }
-}
 
-.router-tab-bar-button:disabled {
-  @apply bg-black/25 dark:bg-white/25 border-black/50 dark:border-white/50 text-black dark:text-white;
-  @apply opacity-20;
-  @apply cursor-not-allowed pointer-events-none;
+  &:disabled {
+    @apply bg-transparent dark:bg-transparent text-black dark:text-white;
+    @apply opacity-20;
+    @apply cursor-not-allowed pointer-events-none;
+  }
 }
 </style>

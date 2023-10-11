@@ -67,7 +67,7 @@
 								</div>
 							</div>
 						</svws-ui-header>
-						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton" />
+						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton opacity-50" />
 					</template>
 					<template v-else>
 						<router-view :key="app.name" />
@@ -96,8 +96,8 @@
 	const pendingSetApp = ref('');
 
 	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden…' } },
-		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
+		{ path: '/', name: '', component: { render: () => null }, meta: { text: '' } },
+		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: 'Daten laden…' } },
 	];
 	const selectedRoute = loadingSkeletonRoutes[0];
 

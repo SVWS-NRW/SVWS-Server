@@ -137,11 +137,11 @@
 		scrollbar-width: none;
 		/* Remove Scrollbar in Firefox */
 
-		.router-tab-bar-button {
+		.svws-ui-tab-button {
 			@apply w-full;
 		}
 
-		.router-tab-bar-button--active {
+		.svws-ui-tab-button.svws-active {
 			@apply overflow-hidden bg-white;
 
 			&:after {

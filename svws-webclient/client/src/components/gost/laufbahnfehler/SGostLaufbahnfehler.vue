@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>

@@ -120,7 +120,7 @@
 		@apply bg-white dark:bg-black;
 	}
 
-	.page--wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .router-tab-bar--panel {
+	.page--wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .svws-ui-tab-content {
 		@apply overflow-hidden;
 	}
 </style>

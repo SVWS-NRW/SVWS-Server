@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-download-2-line />Exportieren</svws-ui-button>
 				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-upload-2-line /> Importieren…</svws-ui-button>

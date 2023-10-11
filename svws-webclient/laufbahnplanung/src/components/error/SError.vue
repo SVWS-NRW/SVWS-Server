@@ -38,8 +38,8 @@
 						</div>
 					</div>
 				</svws-ui-header>
-				<div class="router-tab-bar--area" v-if="error !== undefined">
-					<div class="router-tab-bar--panel">
+				<div class="svws-ui-page" v-if="error !== undefined">
+					<div class="svws-ui-tab-content">
 						<div class="page--content">
 							<svws-ui-content-card :title="error?.message">
 								<pre>{{ error.stack }}</pre>

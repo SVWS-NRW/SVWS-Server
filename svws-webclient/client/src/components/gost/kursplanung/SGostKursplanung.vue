@@ -7,16 +7,16 @@
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<template v-if="hatBlockung">
-			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
 						<template v-if="blockungstabelleVisible">
 							<i-ri-menu-fold-line />
-							Kursplanung ausblenden
+							Tabelle ausblenden
 						</template>
 						<template v-else>
 							<i-ri-menu-unfold-line />
-							Kursplanung einblenden
+							Tabelle einblenden
 						</template>
 					</svws-ui-button>
 					<div class="font-bold ml-8">Ergebnis:</div>
@@ -44,7 +44,7 @@
 						<i-ri-settings3-line /> anzeigen
 						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 					</svws-ui-button>
-					<svws-ui-button-select v-if="allowRegeln" type="secondary" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
+					<svws-ui-button-select v-if="allowRegeln" type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
@@ -161,7 +161,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-8 lg:gap-x-12;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-3 lg:gap-x-12;
 		grid-auto-rows: 100%;
 		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;

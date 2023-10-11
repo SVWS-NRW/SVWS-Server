@@ -43,7 +43,7 @@
 }
 
 .router--tab--gost\.kursplanung {
-	.router-tab-bar--panel {
+	.svws-ui-tab-content {
 		@apply h-full overflow-hidden;
 	}
 }
