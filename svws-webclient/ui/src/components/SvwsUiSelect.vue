@@ -66,7 +66,7 @@
 		items: Iterable<Item> | Map<number, Item>;
 		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
-		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
+		itemFilter?: (items: Item[], searchText: string) => Item[];
 		modelValue: InputDataType;
 		useNull?: boolean;
 		headless?: boolean;
@@ -81,7 +81,7 @@
 		statistics: false,
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
-		itemFilter: (items: any, search: string) => items.filter((i: any) => i.text.toLowerCase().includes(search.toLowerCase())),
+		itemFilter: (items: Item[]) => items,
 		useNull: false,
 		headless: false,
 		removable: false,
