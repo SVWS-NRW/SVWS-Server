@@ -5,6 +5,7 @@ import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
+import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
 /**
  * Diese Klasse beinhaltet die Schema-Definition für die Tabelle Gost_Jahrgangsdaten.
@@ -45,6 +46,13 @@ public class Tabelle_Gost_Jahrgangsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte TextMailversand */
 	public SchemaTabelleSpalte col_TextMailversand = add("TextMailversand", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2000)
 		.setJavaComment("Text, welcher in einer Mail beim Versenden von Beratungsdateien verwendet wird");
+
+
+	/** Die Definition des Unique-Index Gost_Jahrgangsdaten_UC_Abi_Jahrgang */
+	public SchemaTabelleUniqueIndex unique_Gost_Jahrgangsdaten_UC_Abi_Jahrgang = addUniqueIndex("Gost_Jahrgangsdaten_UC_Abi_Jahrgang",
+		col_Abi_Jahrgang
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

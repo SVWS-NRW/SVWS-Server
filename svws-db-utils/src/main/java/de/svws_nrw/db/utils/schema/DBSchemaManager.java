@@ -178,7 +178,7 @@ public final class DBSchemaManager {
 	private boolean createAllIndizes(final DBEntityManager conn, final long revision) {
 		boolean result = true;
 		for (final SchemaTabelle tab : Schema.getTabellen(revision)) {
-			for (final SchemaTabelleIndex idx : tab.indizes()) {
+			for (final SchemaTabelleIndex idx : tab.indizes(revision)) {
 				logger.logLn(idx.name());
 				final String script = idx.getSQL();
 				if (conn.transactionNativeUpdate(script) == Integer.MIN_VALUE) {

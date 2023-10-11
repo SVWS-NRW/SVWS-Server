@@ -7,6 +7,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -73,6 +74,20 @@ public class Tabelle_Gost_Jahrgang_Fachwahlen extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
+
+
+	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang */
+	public SchemaTabelleIndex index_Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang",
+		col_Abi_Jahrgang
+	)
+	.setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang_Fach_ID */
+	public SchemaTabelleIndex index_Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang_Fach_ID = addIndex("Gost_Jahrgang_Fachwahlen_IDX_Abi_Jahrgang_Fach_ID",
+		col_Abi_Jahrgang,
+		col_Fach_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

@@ -8,6 +8,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -39,6 +40,12 @@ public class Tabelle_Gost_Blockung_Regeln extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Blockung_ID, Schema.tab_Gost_Blockung.col_ID)
 		);
+
+	/** Die Definition des Non-Unique-Index Gost_Blockung_Regeln_IDX_Blockung_ID */
+	public SchemaTabelleIndex index_Gost_Blockung_Regeln_IDX_Blockung_ID = addIndex("Gost_Blockung_Regeln_IDX_Blockung_ID",
+		col_Blockung_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

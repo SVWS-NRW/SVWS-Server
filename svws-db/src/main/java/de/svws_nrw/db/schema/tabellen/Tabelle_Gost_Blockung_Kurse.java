@@ -9,6 +9,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -82,6 +83,13 @@ public class Tabelle_Gost_Blockung_Kurse extends SchemaTabelle {
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
 		);
+
+
+	/** Die Definition des Non-Unique-Index Gost_Blockung_Kurse_IDX_Blockung_ID */
+	public SchemaTabelleIndex index_Gost_Blockung_Kurse_IDX_Blockung_ID = addIndex("Gost_Blockung_Kurse_IDX_Blockung_ID",
+		col_Blockung_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**
