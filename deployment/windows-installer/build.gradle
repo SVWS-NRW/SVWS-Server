@@ -1,5 +1,4 @@
 import org.apache.tools.ant.filters.ReplaceTokens
-
 buildscript {
 	repositories {
 		mavenCentral()
@@ -15,6 +14,7 @@ plugins {
 	id 'java'
 }
 
+def downloadDir = "$projectDir/download"
 
 println "Version " + project.ext.svwsArtifactVersion
 
@@ -451,4 +451,6 @@ task doZip(type: Zip) {
 
 doZip.dependsOn buildCreateInstaller
 
-
+clean.doLast {
+	file("${downloadDir}").deleteDir()
+}
