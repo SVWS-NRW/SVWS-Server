@@ -63,6 +63,7 @@ public class GostKursklausurManager {
 	private final @NotNull List<@NotNull GostKursklausur> _kursklausurmenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idTermin = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idVorgabe = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_idTermin = new HashMap2D<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_kursart_and_idTermin = new HashMap3D<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_kw_and_schuelerId = new HashMap2D<>();
@@ -121,6 +122,7 @@ public class GostKursklausurManager {
 
 		update_kursklausurmenge_by_quartal();
 		update_kursklausurmenge_by_idTermin();
+		update_kursklausurmenge_by_idVorgabe();
 		update_kursklausurmenge_by_quartal_and_idTermin();
 		update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		update_terminmenge_by_quartal();
@@ -141,6 +143,12 @@ public class GostKursklausurManager {
 		_kursklausurmenge_by_idTermin.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
 			MapUtils.getOrCreateArrayList(_kursklausurmenge_by_idTermin, kk.idTermin != null ? kk.idTermin : -1).add(kk);
+	}
+
+	private void update_kursklausurmenge_by_idVorgabe() {
+		_kursklausurmenge_by_idVorgabe.clear();
+		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
+			MapUtils.getOrCreateArrayList(_kursklausurmenge_by_idVorgabe, kk.idVorgabe).add(kk);
 	}
 
 	private void update_kursklausurmenge_by_quartal_and_idTermin() {
@@ -952,6 +960,18 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull GostKlausurvorgabe vorgabeByKursklausur(final @NotNull GostKursklausur klausur) {
 		return _vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+	}
+
+	/**
+	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur verwendet wird.
+	 *
+	 * @param vorgabe die Klausurvorgabe, die auf Verwendung geprüft werden soll.
+	 *
+	 * @return true oder false
+	 */
+	public boolean istVorgabeVerwendetByVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
+		List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
+		return klausuren != null && !klausuren.isEmpty();
 	}
 
 }

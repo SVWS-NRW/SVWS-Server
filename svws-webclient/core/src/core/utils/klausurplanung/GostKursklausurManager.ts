@@ -59,6 +59,8 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _kursklausurmenge_by_idTermin : JavaMap<number, List<GostKursklausur>> = new HashMap();
 
+	private readonly _kursklausurmenge_by_idVorgabe : JavaMap<number, List<GostKursklausur>> = new HashMap();
+
 	private readonly _kursklausurmenge_by_quartal_and_idTermin : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
 
 	private readonly _kursklausurmenge_by_quartal_and_kursart_and_idTermin : HashMap3D<number, string, number, List<GostKursklausur>> = new HashMap3D();
@@ -105,6 +107,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_terminmenge();
 		this.update_kursklausurmenge_by_quartal();
 		this.update_kursklausurmenge_by_idTermin();
+		this.update_kursklausurmenge_by_idVorgabe();
 		this.update_kursklausurmenge_by_quartal_and_idTermin();
 		this.update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		this.update_terminmenge_by_quartal();
@@ -124,6 +127,12 @@ export class GostKursklausurManager extends JavaObject {
 		this._kursklausurmenge_by_idTermin.clear();
 		for (const kk of this._kursklausurmenge)
 			MapUtils.getOrCreateArrayList(this._kursklausurmenge_by_idTermin, kk.idTermin !== null ? kk.idTermin : -1).add(kk);
+	}
+
+	private update_kursklausurmenge_by_idVorgabe() : void {
+		this._kursklausurmenge_by_idVorgabe.clear();
+		for (const kk of this._kursklausurmenge)
+			MapUtils.getOrCreateArrayList(this._kursklausurmenge_by_idVorgabe, kk.idVorgabe).add(kk);
 	}
 
 	private update_kursklausurmenge_by_quartal_and_idTermin() : void {
@@ -895,6 +904,18 @@ export class GostKursklausurManager extends JavaObject {
 	 */
 	public vorgabeByKursklausur(klausur : GostKursklausur) : GostKlausurvorgabe {
 		return this._vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+	}
+
+	/**
+	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur verwendet wird.
+	 *
+	 * @param vorgabe die Klausurvorgabe, die auf Verwendung geprüft werden soll.
+	 *
+	 * @return true oder false
+	 */
+	public istVorgabeVerwendetByVorgabe(vorgabe : GostKlausurvorgabe) : boolean {
+		let klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
+		return klausuren !== null && !klausuren.isEmpty();
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

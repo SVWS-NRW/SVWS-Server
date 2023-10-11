@@ -4,12 +4,14 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurvorgabe,
 	GostKlausurvorgabenManager,
+	GostKursklausurManager,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungVorgabenProps {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	klausurvorgabenmanager: () => GostKlausurvorgabenManager;
+	kursklausurmanager?: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;
 	erzeugeKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>) => Promise<void>;
 	patchKlausurvorgabe: (vorgabe: Partial<GostKlausurvorgabe>, id: number) => Promise<void>;

@@ -31,6 +31,7 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<unknown, RouteGos
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			klausurvorgabenmanager: () => { return routeGostKlausurplanung.data.hatKlausurvorgabenManager ? routeGostKlausurplanung.data.klausurvorgabenmanager : new GostKlausurvorgabenManager(new ArrayList(), routeGostKlausurplanung.data.faecherManager)},
+			kursklausurmanager: () => routeGostKlausurplanung.data.kursklausurmanager,
 			erzeugeKlausurvorgabe: routeGostKlausurplanung.data.erzeugeKlausurvorgabe,
 			patchKlausurvorgabe: routeGostKlausurplanung.data.patchKlausurvorgabe,
 			loescheKlausurvorgabe: routeGostKlausurplanung.data.loescheKlausurvorgabe,

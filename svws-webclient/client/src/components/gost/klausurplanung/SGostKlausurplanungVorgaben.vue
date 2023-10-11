@@ -45,7 +45,7 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
 			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
-				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1"><i-ri-delete-bin-line />Löschen</svws-ui-button>
+				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
 				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <i-ri-add-line class="inline-block text-button -mt-1" /> eine neue erstellen.</span>
