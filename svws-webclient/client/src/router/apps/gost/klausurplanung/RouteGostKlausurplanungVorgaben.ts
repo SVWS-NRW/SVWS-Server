@@ -14,7 +14,7 @@ export class RouteGostKlausurplanungVorgaben extends RouteNode<unknown, RouteGos
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.vorgaben", "vorgaben", SGostKlausurplanungVorgaben);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klausurvorgaben";
+		super.text = "Vorgaben";
 	}
 
 	public checkHidden(params?: RouteParams) {

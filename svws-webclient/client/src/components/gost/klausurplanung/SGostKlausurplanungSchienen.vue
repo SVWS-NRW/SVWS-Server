@@ -2,6 +2,9 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-schienen-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
+	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+	</Teleport>
 	<svws-ui-modal :show="showModalAutomatischBlocken" size="small">
 		<template #modalTitle>
 			Automatisch blocken
@@ -26,12 +29,8 @@
 	</svws-ui-modal>
 
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card>
-			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
-			</template>
+		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<div class="text-headline-md mb-2">Planung</div>
 				<svws-ui-table :items="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
@@ -60,7 +59,7 @@
 							@dragend="onDrag(undefined)"
 							:class="klausurCssClasses(klausur, undefined)">
 							<div class="svws-ui-td">
-								<i-ri-draggable class="-m-0.5 -ml-3" />
+								<i-ri-draggable class="-m-0.5 -ml-4 -mr-1" />
 								<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
 							</div>
 							<div class="svws-ui-td">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
@@ -77,12 +76,23 @@
 			</div>
 		</svws-ui-content-card>
 		<svws-ui-content-card>
-			<div class="flex flex-wrap gap-1 mb-5 py-1 w-full">
-				<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin</svws-ui-button>
-				<svws-ui-button type="secondary" @click="showModalAutomatischBlocken().value = true" :disabled="termine.size() > 0 || props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-				<svws-ui-button type="danger" class="ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" :disabled="termine.size() === 0"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+			<div class="flex justify-between items-start mb-5">
+				<div>
+					<template v-if="termine.size()">
+						<div class="text-headline-md">{{ termine.size() }} {{ termine.size() === 1 ? 'Termin' : 'Termine' }}</div>
+						<div class="text-headline-md leading-none opacity-50 hidden">
+							<template v-if="quartalsauswahl.value">im {{ quartalsauswahl.value }}. Quartal</template>
+							<template v-else>in beiden Quartalen</template>
+						</div>
+					</template>
+				</div>
+				<div class="flex flex-wrap items-center gap-0.5">
+					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="transparent" class="hover--danger" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+				</div>
 			</div>
-			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
+			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
@@ -93,36 +103,41 @@
 						@dragover="terminSelected=termin"
 						:on-drag="onDrag"
 						:on-drop="onDrop"
-						@click="terminSelected=termin;$event.stopPropagation()"
+						:termin-selected="terminSelected?.id===termin.id"
+						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
 						:loesche-klausurtermine="loescheKlausurtermine"
 						:patch-klausurtermin="patchKlausurtermin"
 						:klausur-css-classes="klausurCssClasses"
 						:kursmanager="kursmanager" />
 				</template>
 				<template v-else>
-					<div class="h-48 border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
-						<span class="opacity-50">Noch keine Termine angelegt.</span>
-					</div>
+					<div class="shadow-inner rounded-lg h-48" />
+					<div class="shadow-inner rounded-lg h-48" />
+					<div class="shadow-inner rounded-lg h-48" />
 				</template>
 			</div>
 		</svws-ui-content-card>
-		<svws-ui-content-card>
+		<svws-ui-content-card class="-ml-4">
 			<template #title>
-				<span class="pt-1 text-headline-md leading-none inline-flex gap-1">
+				<span class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="klausurKonflikte().size() > 0">
-						<i-ri-alert-fill class="text-error -my-1" />
+						<i-ri-alert-fill class="text-error -my-0.5" />
 						<span>{{ klausurKonflikte().size() }} Kurse mit Konflikten</span>
+					</template>
+					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
+						<i-ri-alert-fill class="text-error -my-0.5" />
+						<span> Konflikte</span>
 					</template>
 					<template v-else-if="terminSelected !== undefined || dragData !== undefined">
 						<i-ri-checkbox-circle-fill class="text-success -my-1" />
 						<span>Keine Konflikte</span>
 					</template>
 					<template v-else>
-						<span>Konflikte</span>
+						<span class="opacity-50">Konflikte</span>
 					</template>
 				</span>
 			</template>
-			<div v-if="klausurKonflikte().size() > 0" class="mt-6">
+			<div v-if="klausurKonflikte().size() > 0" class="mt-5" :class="{'mb-16': anzahlProKwKonflikte(3).size() > 0}">
 				<ul class="flex flex-col gap-3">
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
 						<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.getKey().kursKurzbezeichnung.split('-')[0])};`">{{ klausur.getKey().kursKurzbezeichnung }}</span>
@@ -132,20 +147,24 @@
 					</li>
 				</ul>
 			</div>
-			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-6">
-				<div class="text-headline-sm">Schüler:innen mit drei oder mehr Klausuren in einer KW</div>
-				<ul class="flex flex-col gap-3">
+			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-5">
+				<div class="text-headline-md leading-tight mb-3">
+					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler:innen</div>
+					<div class="opacity-50">Drei oder mehr Klausuren in einer KW</div>
+				</div>
+				<ul class="flex flex-col gap-4">
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
-						<span class="svws-ui-badge">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
-						<div class="leading-tight gap-2">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-								{{ klausur.kursKurzbezeichnung + ' (' + DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) + ')' }}
+						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
+								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
 							</span>
 						</div>
 					</li>
 				</ul>
 			</div>
-			<div v-else-if="terminSelected === undefined" class="mt-6 opacity-50 flex flex-col gap-2">
+			<div v-else-if="terminSelected === undefined" class="mt-5 opacity-50 flex flex-col gap-2">
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>

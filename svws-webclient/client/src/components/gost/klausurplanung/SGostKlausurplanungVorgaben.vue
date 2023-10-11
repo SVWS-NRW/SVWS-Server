@@ -2,11 +2,11 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
+	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+	</Teleport>
 	<div class="page--content page--content--full">
 		<svws-ui-content-card>
-			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
-			</template>
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
@@ -22,7 +22,7 @@
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
 				<template #cell(istMdlPruefung)="{ value }">
-					<i-ri-speak-line v-if="value" class="-my-0.5" />
+					<i-ri-chat1-line v-if="value" class="-my-0.5" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(istAudioNotwendig)="{ value }">
@@ -43,7 +43,7 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
+		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : ''" class="sticky top-0">
 			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
@@ -68,7 +68,7 @@
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<i-ri-speak-line v-if="value.name === 'Ja'" />
+									<i-ri-chat1-line v-if="value.name === 'Ja'" />
 									<template v-else>
 										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
 										<i-ri-checkbox-circle-line class="radio--indicator-icon--checked" />

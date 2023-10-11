@@ -2,35 +2,33 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
+	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+	</Teleport>
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card>
-			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
-			</template>
+		<svws-ui-content-card title="In Planung">
 			<div class="flex flex-col">
 				<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 					@drop="onDrop(undefined)"
 					@dragover="checkDropZoneTerminAuswahl"
 					class="h-full">
-					<div class="mb-2">
-						<div class="text-headline-md">Planung</div>
-						<!--Klicke auf einen Termin, um Details zu den Klausuren anzuzeigen. Die aktive Auswahl zeigt eine Übersicht aller Stunden, in denen das jeweilige Fach unterrichtet wird.-->
-						<div class="leading-tight flex flex-col gap-0.5 mt-5" v-if="termineOhne.length === 0">
+					<div>
+						<div class="leading-tight flex flex-col gap-0.5" v-if="termineOhne.length === 0">
 							<span>Aktuell keine Klausuren zu planen.</span>
 							<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
 						</div>
 					</div>
-					<ul class="flex flex-col gap-0.5 -mx-3 mt-2">
+					<ul class="flex flex-col gap-0.5 -mx-3">
 						<li v-for="termin in termineOhne"
 							:key="termin.id"
 							:data="termin"
 							:draggable="isDraggable(termin)"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)"
-							@click="onDrag(termin);$event.stopPropagation()"
+							@click="dragData?.id === termin.id ? onDrag(undefined) : onDrag(termin);$event.stopPropagation()"
 							:class="{
 								'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': dragData !== undefined && dragData.id === termin.id,
-								'cursor-pointer': dragData !== undefined && dragData.id !== termin.id || dragData === undefined,
+								'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': dragData !== undefined && dragData.id !== termin.id || dragData === undefined,
 							}">
 							<s-gost-klausurplanung-termin :termin="termin"
 								:kursklausurmanager="kursklausurmanager"
@@ -54,14 +52,14 @@
 					<template #kwAuswahl>
 						<div class="col-span-2 flex gap-0.5 my-auto">
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
-							<div class="relative svws-kw-auswahl flex-grow bg-svws/5 text-svws rounded-md h-7 -my-1">
+							<div class="relative svws-kw-auswahl flex-grow bg-svws text-white rounded-md h-7 -my-1 group">
 								<div class="absolute top-0 left-0 w-[20rem] cursor-pointer">
 									<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-										headless
+										class="opacity-0 w-72"
 										:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
 								</div>
 								<span class="w-full h-full inline-flex items-center justify-center pointer-events-none z-50 relative">
-									<span class="inline-flex items-center gap-0.5"><i-ri-expand-up-down-line class="text-button opacity-50 -ml-2" />KW {{ kwAuswahl?.kw || '–' }}</span>
+									<span class="inline-flex items-center gap-0.5"><i-ri-expand-up-down-line class="text-button opacity-50 -ml-3 group-hover:opacity-100" />KW {{ kwAuswahl?.kw || '–' }}</span>
 								</span>
 							</div>
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><i-ri-arrow-right-s-line class="-m-0.5" /></svws-ui-button>
@@ -74,26 +72,34 @@
 					:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
 			</template>
 		</svws-ui-content-card>
-		<svws-ui-content-card>
+		<svws-ui-content-card class="-ml-4">
 			<template #title>
-				<span class="pt-1 text-headline-md leading-none inline-flex gap-1">
+				<span class="text-headline-md leading-none inline-flex gap-1">
 					<template v-if="anzahlProKwKonflikte(3).isEmpty()">
 						<i-ri-checkbox-circle-fill class="text-success -my-1" />
 						<span>Keine Konflikte</span>
 					</template>
+					<template v-else-if="anzahlProKwKonflikte(3).size() > 0">
+						<i-ri-alert-fill class="text-error -my-0.5" />
+						<span> Konflikte</span>
+					</template>
 					<template v-else>
-						<span>Konflikte</span>
+						<span class="opacity-50">Konflikte</span>
 					</template>
 				</span>
 			</template>
-			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-6">
-				<div class="text-headline-sm">Schüler:innen mit drei oder mehr Klausuren in dieser KW</div>
-				<ul class="flex flex-col gap-3">
+			<div v-if="anzahlProKwKonflikte(3).size() > 0" class="mt-5">
+				<div class="text-headline-md leading-tight mb-3">
+					<div class="inline-flex gap-1">{{ anzahlProKwKonflikte(3).size() }} Schüler:innen</div>
+					<div class="opacity-50">Drei oder mehr Klausuren in dieser KW</div>
+				</div>
+				<ul class="flex flex-col gap-5">
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
-						<span class="svws-ui-badge">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
-						<div class="leading-tight gap-2">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
-								{{ klausur.kursKurzbezeichnung + ' (' + kursklausurmanager().terminByKursklausur(klausur)!.datum + ')' }}
+						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
+						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
+								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
 							</span>
 						</div>
 					</li>

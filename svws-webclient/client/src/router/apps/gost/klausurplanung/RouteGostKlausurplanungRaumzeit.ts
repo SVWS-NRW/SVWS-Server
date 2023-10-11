@@ -14,7 +14,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.raumzeit", "raumzeit", SGostKlausurplanungRaumzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klausurräume und -startzeiten";
+		super.text = "Räume und Startzeiten";
 	}
 
 	public checkHidden(params?: RouteParams) {

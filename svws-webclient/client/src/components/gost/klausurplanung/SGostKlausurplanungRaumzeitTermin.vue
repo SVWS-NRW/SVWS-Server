@@ -8,7 +8,7 @@
 			</div>
 		</template>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
-			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><i-ri-add-line class="-ml-1" /> Klausurraum</svws-ui-button>
+			<svws-ui-button @click="createKlausurraum({idTermin: termin.id}, raummanager())"><i-ri-add-line class="-ml-1" /> {{ raummanager()?.raumGetMengeAsList().size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<template v-if="raummanager()?.raumGetMengeAsList().size()">
@@ -30,9 +30,7 @@
 					:on-drop="onDrop" />
 			</template>
 			<template v-else>
-				<div class="h-48 border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
-					<span class="opacity-50">Noch kein Raum für diesen Termin angelegt.</span>
-				</div>
+				<div class="shadow-inner rounded-lg h-48" />
 			</template>
 		</div>
 	</svws-ui-content-card>
