@@ -211,7 +211,9 @@
 	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
 
 	window.addEventListener('click', function(e) {
-		if (!document.getElementById('vorgabenTable')!.contains(e.target as Node) && !document.getElementById('vorgabenEdit')!.contains(e.target as Node))
+		const vT = document.getElementById('vorgabenTable');
+		const vE = document.getElementById('vorgabenEdit');
+		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node))
 			activeVorgabe.value = new GostKlausurvorgabe();
 	});
 
