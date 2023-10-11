@@ -82,10 +82,10 @@ public class GostKursklausurManager {
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
 	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
-	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
+	 * @param listKlausuren   die Liste der GostKursklausuren eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
+	 * @param listTermine     die Liste der GostKlausurtermine eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
 	 */
 	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren,
 			final List<@NotNull GostKlausurtermin> listTermine) {
@@ -841,72 +841,6 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param datum		das Datum, auf
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
-			final @NotNull String datum, final int threshold) {
-		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
-		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		int kwTermin = termin.datum != null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
-		if (kwDatum == kwTermin)
-			return ergebnis;
-
-		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kwDatum);
-		if (kursklausurmenge_by_schuelerId == null)
-			return ergebnis;
-
-		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
-			List<@NotNull GostKursklausur> temp = entry.getValue();
-			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
-			List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
-			if (klausurenInTermin != null)
-				klausuren.addAll(klausurenInTermin);
-			if (klausuren.size() >= threshold)
-				ergebnis.put(entry.getKey(), klausuren);
-		}
-
-
-		return ergebnis;
-	}
-
-	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param kw    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
-		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
-
-		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
-		if (kursklausurmenge_by_schuelerId == null)
-			return ergebnis;
-
-		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
-			List<@NotNull GostKursklausur> temp = entry.getValue();
-			if (temp != null && temp.size() >= threshold)
-				ergebnis.put(entry.getKey(), temp);
-		}
-		return ergebnis;
-	}
-
-	/**
 	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine
 	 * Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den
 	 * Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der
@@ -941,6 +875,65 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param datum     das Datum, auf
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
+			final @NotNull String datum, final int threshold) {
+		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
+		int kwTermin = termin.datum != null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
+		if (kwDatum == kwTermin)
+			return new HashMap<>();
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
+	}
+
+	private @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold) {
+		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
+
+		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		if (kursklausurmenge_by_schuelerId == null)
+			return ergebnis;
+
+		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
+			List<@NotNull GostKursklausur> temp = entry.getValue();
+			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
+			if (termin != null) {
+				List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
+				if (klausurenInTermin != null)
+					klausuren.addAll(klausurenInTermin);
+			}
+			if (klausuren.size() >= threshold)
+				ergebnis.put(entry.getKey(), klausuren);
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param kw        der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
+	}
+
+	/**
 	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
 	 *
 	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
@@ -963,7 +956,8 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur verwendet wird.
+	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur
+	 * verwendet wird.
 	 *
 	 * @param vorgabe die Klausurvorgabe, die auf Verwendung geprüft werden soll.
 	 *

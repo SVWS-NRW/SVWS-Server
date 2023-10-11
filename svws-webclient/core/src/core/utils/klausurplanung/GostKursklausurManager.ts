@@ -85,10 +85,10 @@ export class GostKursklausurManager extends JavaObject {
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
 	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
-	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
+	 * @param listKlausuren   die Liste der GostKursklausuren eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
+	 * @param listTermine     die Liste der GostKlausurtermine eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
 	 */
 	public constructor(vorgabenManager : GostKlausurvorgabenManager, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin> | null) {
 		super();
@@ -793,65 +793,6 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param datum		das Datum, auf
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number) : JavaMap<number, List<GostKursklausur>> {
-		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
-		let kwDatum : number = DateUtils.gibKwDesDatumsISO8601(datum);
-		let kwTermin : number = termin.datum !== null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
-		if (kwDatum === kwTermin)
-			return ergebnis;
-		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kwDatum);
-		if (kursklausurmenge_by_schuelerId === null)
-			return ergebnis;
-		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
-			let temp : List<GostKursklausur> | null = entry.getValue();
-			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
-			let klausurenInTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
-			if (klausurenInTermin !== null)
-				klausuren.addAll(klausurenInTermin);
-			if (klausuren.size() >= threshold)
-				ergebnis.put(entry.getKey(), klausuren);
-		}
-		return ergebnis;
-	}
-
-	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param kw    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number) : JavaMap<number, List<GostKursklausur>> {
-		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
-		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
-		if (kursklausurmenge_by_schuelerId === null)
-			return ergebnis;
-		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
-			let temp : List<GostKursklausur> | null = entry.getValue();
-			if (temp !== null && temp.size() >= threshold)
-				ergebnis.put(entry.getKey(), temp);
-		}
-		return ergebnis;
-	}
-
-	/**
 	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine
 	 * Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den
 	 * Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der
@@ -885,6 +826,62 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param datum     das Datum, auf
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		let kwDatum : number = DateUtils.gibKwDesDatumsISO8601(datum);
+		let kwTermin : number = termin.datum !== null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
+		if (kwDatum === kwTermin)
+			return new HashMap();
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
+	}
+
+	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		let ergebnis : JavaMap<number, List<GostKursklausur>> | null = new HashMap();
+		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		if (kursklausurmenge_by_schuelerId === null)
+			return ergebnis;
+		for (let entry of kursklausurmenge_by_schuelerId.entrySet()) {
+			let temp : List<GostKursklausur> | null = entry.getValue();
+			let klausuren : List<GostKursklausur> | null = temp !== null ? new ArrayList(temp) : new ArrayList();
+			if (termin !== null) {
+				let klausurenInTermin : List<GostKursklausur> | null = this._kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
+				if (klausurenInTermin !== null)
+					klausuren.addAll(klausurenInTermin);
+			}
+			if (klausuren.size() >= threshold)
+				ergebnis.put(entry.getKey(), klausuren);
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param kw        der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number) : JavaMap<number, List<GostKursklausur>> {
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
+	}
+
+	/**
 	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
 	 *
 	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
@@ -907,7 +904,8 @@ export class GostKursklausurManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur verwendet wird.
+	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur
+	 * verwendet wird.
 	 *
 	 * @param vorgabe die Klausurvorgabe, die auf Verwendung geprüft werden soll.
 	 *
