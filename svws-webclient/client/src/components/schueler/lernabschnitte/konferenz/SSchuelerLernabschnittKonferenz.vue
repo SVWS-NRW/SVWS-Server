@@ -1,11 +1,9 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card title="Daten zur Konferenz">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" @change="datumKonferenz=>patch({ datumKonferenz })" type="date" />
-			</svws-ui-input-wrapper>
-			<svws-ui-spacing />
+		<svws-ui-content-card>
 			<svws-ui-input-wrapper>
+				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" @change="datumKonferenz=>patch({ datumKonferenz })" type="date" />
+				<svws-ui-spacing />
 				<svws-ui-textarea-input placeholder="Zeugnisbemerkungen" :model-value="manager().lernabschnittGet().bemerkungen.zeugnisAllgemein"
 					@change="zeugnisAllgemein => patchBemerkungen({ zeugnisAllgemein: zeugnisAllgemein === null ? '' : zeugnisAllgemein })" resizeable="vertical" :autoresize="true" />
 				<svws-ui-textarea-input placeholder="Arbeits- und Sozialverhalten" :model-value="manager().lernabschnittGet().bemerkungen.zeugnisASV"

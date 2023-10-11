@@ -1,6 +1,6 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card title="Nachprüfungen">
+		<svws-ui-content-card>
 			<svws-ui-todo />
 			<div v-if="manager().lernabschnittGet().nachpruefungen !== null">
 				<div>mögliche Nachprüfungsfächer</div>

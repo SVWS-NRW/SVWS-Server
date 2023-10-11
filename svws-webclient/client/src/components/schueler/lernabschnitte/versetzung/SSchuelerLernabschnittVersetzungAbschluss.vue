@@ -1,6 +1,6 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card title="Versetzung">
+		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-todo>TODO: istAbschlussPrognose</svws-ui-todo>
 				<svws-ui-todo>TODO: versetzungsvermerk</svws-ui-todo>
@@ -13,16 +13,13 @@
 				<svws-ui-todo> TODO: abschlussBerufsbildend </svws-ui-todo>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing />
+			<svws-ui-textarea-input placeholder="Text für Abschluss-Berechnung" :model-value="manager().lernabschnittGet().textErgebnisPruefungsalgorithmus"
+				@change="textErgebnisPruefungsalgorithmus => patch({ textErgebnisPruefungsalgorithmus })"
+				resizeable="vertical" :autoresize="true" />
+			<svws-ui-spacing :size="2" />
 			<div class="col-span-full flex gap-4">
 				<svws-ui-button type="primary"> Versetzungs-/Abschluss-Berechnung </svws-ui-button>
 			</div>
-		</svws-ui-content-card>
-		<svws-ui-content-card title="Abschluss Berechnung">
-			<svws-ui-input-wrapper>
-				<svws-ui-textarea-input placeholder="Text" :model-value="manager().lernabschnittGet().textErgebnisPruefungsalgorithmus"
-					@change="textErgebnisPruefungsalgorithmus => patch({ textErgebnisPruefungsalgorithmus })"
-					resizeable="vertical" :autoresize="true" />
-			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>
 </template>

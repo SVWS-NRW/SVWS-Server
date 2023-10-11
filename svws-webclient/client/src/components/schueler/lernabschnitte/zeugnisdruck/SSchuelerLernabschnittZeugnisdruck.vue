@@ -1,6 +1,6 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card title="Zeugnisdruck">
+		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Konferenz-Datum" :model-value="manager().lernabschnittGet().datumKonferenz" type="date" disabled />
 				<svws-ui-text-input placeholder="Zeugnis-Datum" :model-value="manager().lernabschnittGet().datumZeugnis" @change="datumZeugnis=>patch({ datumZeugnis })" type="date" />

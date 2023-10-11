@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content h-full w-full">
-		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation">
+		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" disable-header>
 			<template #cell="{ rowData: row }">
 				<span>
 					{{ row.schuljahr + "." + row.abschnitt }}
@@ -15,13 +15,17 @@
 				</svws-ui-tooltip>
 			</template>
 		</svws-ui-table>
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav type="tabs">
-				<svws-ui-router-tab-bar-button v-for="c in children" :route="c" :selected="child"
-					:hidden="false" @select="setChild(c)" :key="c.name" />
-			</svws-ui-sub-nav>
-		</Teleport>
-		<router-view :key="$route.hash" />
+		<div class="flex flex-col items-start">
+			<nav class="svws-ui-title-tabs">
+				<template v-for="c in children" :key="c.name">
+					<button role="link" :class="[ 'svws-ui-title-tab', { 'svws-active': child === c } ]" @click="setChild(c)">
+						<span class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">{{ c.text }}</span>
+						<span class="font-bold opacity-0">{{ c.text }}</span>
+					</button>
+				</template>
+			</nav>
+			<router-view :key="$route.hash" />
+		</div>
 	</div>
 </template>
 
@@ -47,8 +51,10 @@
 		grid-template-columns: 8.5rem minmax(50rem, 1fr);
 	}
 
-	.svws-ui-tabs--secondary {
-		@apply flex gap-1;
-	}
+</style>
 
+<style lang="postcss">
+.svws-select-lernabschnitt .text-input-component {
+	@apply text-headline-md w-fit;
+}
 </style>

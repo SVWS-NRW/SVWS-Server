@@ -82,7 +82,7 @@
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: false, minWidth: 14 },
 		{ key: "kursID", label: "Kurs", span: 0.75, sortable: false, minWidth: 14 },
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: false, minWidth: 20 },
-		{ key: "noteQuartal", label: "Quartalsnote", span: 0.25, sortable: false },
+		{ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", span: 0.25, sortable: false },
 		{ key: "note", label: "Note", span: 0.25, sortable: false },
 	];
 

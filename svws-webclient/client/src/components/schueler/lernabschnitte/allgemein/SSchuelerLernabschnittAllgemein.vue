@@ -1,6 +1,6 @@
 <template>
 	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card title="Allgemeine Angaben">
+		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
 					:model-value="klasse" @update:model-value="value => patch({ klassenID: (value == undefined) ? null : value.id })" />
@@ -13,24 +13,21 @@
 					:model-value="manager().lernabschnittGet().datumEnde || undefined"
 					@change="datumEnde => patch({datumEnde})" />
 				<svws-ui-spacing />
-				<div class="col-span-full flex flex-wrap gap-3" :class="{'opacity-50': !klassenlehrer.length}">
-					<span class="font-bold">Klassenlehrer:</span>
+				<div>
+					<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}">Klassenlehrer</span>
 					<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
-					<div v-else class="separate-items--custom">
+					<div v-else class="flex flex-col leading-tight text-base">
 						<span v-for="kl in klassenlehrer" :key="kl.id">
-							<svws-ui-tooltip>
-								{{ getLehrerKuerzel(kl) }}
-								<template #content>
-									{{ getLehrerText(kl) }}
-								</template>
-							</svws-ui-tooltip>
+							{{ getLehrerText(kl) }}
 						</span>
 					</div>
 				</div>
-				<svws-ui-select title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-					:model-value="tutor" @update:model-value="value => patch({ tutorID: (value == undefined) ? null : value.id })" />
-				<svws-ui-select title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-					:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: (value == undefined) ? null : value.id })" />
+				<div class="flex flex-col gap-3">
+					<svws-ui-select title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
+						:model-value="tutor" @update:model-value="value => patch({ tutorID: (value == undefined) ? null : value.id })" />
+					<svws-ui-select title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
+						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: (value == undefined) ? null : value.id })" />
+				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-select title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete
