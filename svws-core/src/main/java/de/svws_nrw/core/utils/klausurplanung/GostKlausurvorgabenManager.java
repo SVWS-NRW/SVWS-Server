@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurvorgabenManager {
 
-	private @NotNull GostFaecherManager _faecherManager = new GostFaecherManager();
+	private GostFaecherManager _faecherManager;
 
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
 		if (_faecherManager != null) {
@@ -60,7 +60,7 @@ public class GostKlausurvorgabenManager {
 	 *                      und Gost-Halbjahres
 	 * @param faecherManager   der Fächermanager
 	 */
-	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben, final @NotNull GostFaecherManager faecherManager) {
+	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben, final GostFaecherManager faecherManager) {
 		_faecherManager = faecherManager;
 		initAll(listVorgaben);
 	}

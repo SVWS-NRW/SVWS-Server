@@ -18,7 +18,7 @@ import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
-	private _faecherManager : GostFaecherManager = new GostFaecherManager();
+	private _faecherManager : GostFaecherManager | null = null;
 
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
 		if (this._faecherManager !== null) {
@@ -57,7 +57,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *                      und Gost-Halbjahres
 	 * @param faecherManager   der Fächermanager
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager) {
+	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager | null) {
 		super();
 		this._faecherManager = faecherManager;
 		this.initAll(listVorgaben);
