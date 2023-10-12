@@ -1,7 +1,9 @@
 package de.svws_nrw.core.utils.stundenplan;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +11,9 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
-import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse testet den {@link StundenplanManager}.
@@ -20,9 +23,6 @@ import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 class TestStundenplanManagerRandomized {
 
 	private static final long _SEED = 1L;
-	private static final int _ANZAHL_TESTS = 1000;
-
-	private final StundenplanLehrer[] aLehrer = new StundenplanLehrer[50];
 
 	/**
 	 * Diese Klasse testet den {@link StundenplanManager} mit randomisierten Daten.
@@ -30,36 +30,141 @@ class TestStundenplanManagerRandomized {
 	@DisplayName("testStundenplanManager")
 	@Test
 	void testManagerRandom() {
-		final Random random = new Random(_SEED);
-		final StundenplanKomplett komplett = new StundenplanKomplett();
+		testManagerModifications(1);
+		testManagerModifications(2);
+		testManagerModifications(4);
+		testManagerModifications(8);
+		testManagerModifications(16);
+		testManagerModifications(32);
+		testManagerModifications(64);
+		testManagerModifications(128);
+		testManagerModifications(256);
+	}
 
+	private static void testManagerModifications(final int runden) {
+		System.out.println("\nRunden = " + runden);
+		final @NotNull Random rnd = new Random(_SEED);
+
+		final @NotNull StundenplanKomplett komplett = new StundenplanKomplett();
 		komplett.daten.gueltigAb = "2022-03-15";
 		komplett.daten.gueltigBis = "2022-09-25";
 
-		final StundenplanManager manager = new StundenplanManager(komplett);
-		for (int i = 0; i < _ANZAHL_TESTS; i++)
-			subTestManagerZufaellig(random, manager);
+		final @NotNull StundenplanManager m1 = new StundenplanManager(komplett);
+		final @NotNull StundenplanManagerDummy m2 = new StundenplanManagerDummy();
+
+		for (int i = 0; i < runden; i++)
+			testManagerModification(rnd, m1, m2);
 	}
 
-	private void subTestManagerZufaellig(final Random random, final StundenplanManager manager) {
-		lehrerAdd(random, manager);
+	private static void testManagerModification(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		// kalenderwochenzuordnung
+		// fach
+		// jahrgang
+		// zeitraster
+		// raum
+		// pausenzeit
+		// aufsichtsbereich
+		// lehrer
+		// schueler
+		// klasse
+		// schiene
+		// klassenunterricht
+		// pausenaufsicht
+		// kurs
+		// unterricht
+
+		testManagerModificationFach(rnd, m1, m2);
+
 	}
 
-	private void lehrerAdd(final Random random, final StundenplanManager manager) {
-		final int rnd = random.nextInt(aLehrer.length);
+	private static void testManagerModificationFach(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testManagerModificationFachAdd(rnd, m1, m2);
+		testManagerModificationFachAddAll(rnd, m1, m2);
+		testManagerModificationFachGetByIdOrException(rnd, m1, m2);
+		testManagerModificationFachGetMengeAsList(m1, m2);
+	}
 
-		if (aLehrer[rnd] == null) {
-			aLehrer[rnd] = new StundenplanLehrer();
-			aLehrer[rnd].id = rnd;
-			aLehrer[rnd].kuerzel = "LEHR_KÜRZ" + rnd;
-			aLehrer[rnd].nachname = "LEHR_NACH" + rnd;
-			aLehrer[rnd].vorname = "LEHR_VORN" + rnd;
-			manager.lehrerAdd(aLehrer[rnd]);
-			assertSame(manager.lehrerGetByIdOrException(rnd), aLehrer[rnd]); // expected, actual
-		} else {
-			// TODO Auto-generated method stub
+	private static void testManagerModificationFachGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final long idFach = rnd.nextLong(StundenplanManagerDummy.FACH_MAX_ID);
+
+		StundenplanFach fach1 = null;
+		try {
+			fach1 = m1.fachGetByIdOrException(idFach);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			fach1 = null;
+		}
+
+		StundenplanFach fach2 = null;
+		try {
+			fach2 = m2.fachGetByIdOrException(idFach);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			fach2 = null;
+		}
+
+		if ((fach1 != null) && (fach2 != null))
+			assertEquals(true, fach1.id == fach2.id);
+		else
+			assertEquals(true, (fach1 == null) && (fach2 == null));
+
+	}
+
+	private static void testManagerModificationFachGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.fachGetMengeAsList().size(), m2.fachGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanFach> i1 = m1.fachGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanFach> i2 = m2.fachGetMengeAsList().iterator();
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.hasNext(), i2.hasNext());
+			assertEquals(i1.next().id, i2.next().id);
 		}
 	}
 
+	private static void testManagerModificationFachAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanFach fach = StundenplanManagerDummy.fachCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.fachAdd(fach);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.fachAdd(fach);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationFachAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanFach> fachList = StundenplanManagerDummy.fachListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.fachAddAll(fachList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.fachAddAll(fachList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	@SuppressWarnings("unused")
+	private static String fachListToString(@NotNull final List<@NotNull StundenplanFach> fachList) {
+		String s = "";
+		for (final StundenplanFach fach : fachList)
+			s = s + ", " + fach.id;
+		return s;
+	}
 
 }

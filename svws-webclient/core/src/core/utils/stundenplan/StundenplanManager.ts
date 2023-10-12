@@ -19,6 +19,7 @@ import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
+import { HashSet } from '../../../java/util/HashSet';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanPausenaufsicht } from '../../../core/data/stundenplan/StundenplanPausenaufsicht';
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
@@ -1330,6 +1331,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private fachAddAllOhneUpdate(listFach : List<StundenplanFach>) : void {
+		const fachIDs : HashSet<number> = new HashSet();
+		for (const fach of listFach) {
+			if (this._fach_by_id.containsKey(fach.id))
+				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Fach-ID existiert bereits!")
+			if (!fachIDs.add(fach.id))
+				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Doppelte Fach-ID in der Liste!")
+		}
 		for (const fach of listFach)
 			this.fachAddOhneUpdate(fach);
 	}
@@ -1362,10 +1370,10 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}.
 	 * <br>Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}.
 	 */
 	public fachGetMengeAsList() : List<StundenplanFach> {
 		return this._fachmenge_sortiert;

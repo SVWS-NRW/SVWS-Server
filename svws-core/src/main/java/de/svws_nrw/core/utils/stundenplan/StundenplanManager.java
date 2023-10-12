@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.stundenplan;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
@@ -1318,6 +1319,15 @@ public class StundenplanManager {
 	}
 
 	private void fachAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanFach> listFach) {
+		// check
+		final @NotNull HashSet<@NotNull Long> fachIDs = new HashSet<>();
+		for (final @NotNull StundenplanFach fach : listFach) {
+			if (_fach_by_id.containsKey(fach.id))
+				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Fach-ID existiert bereits!");
+			if (!fachIDs.add(fach.id))
+				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Doppelte Fach-ID in der Liste!");
+		}
+
 		for (final @NotNull StundenplanFach fach : listFach)
 			fachAddOhneUpdate(fach);
 	}
@@ -1351,10 +1361,10 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte.
+	 * Liefert eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}.
 	 * <br>Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link StundenplanFach}-Objekte.
+	 * @return eine Liste aller {@link StundenplanFach}-Objekte, sortiert nach {@link StundenplanFach#sortierung}.
 	 */
 	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
 		return _fachmenge_sortiert;
