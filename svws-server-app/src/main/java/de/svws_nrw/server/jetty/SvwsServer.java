@@ -40,6 +40,8 @@ import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.LogConsumerConsole;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Application;
 
@@ -48,16 +50,41 @@ import jakarta.ws.rs.core.Application;
  * Diese Klasse repräsentiert den Http-Server des SVWS-Server-Projektes,
  * welcher auf einer Embedded-Version des Jetty-Servers basiert.
  */
-public class HttpServer {
+public final class SvwsServer {
+
+	/** Die Instanz dieses SVWS-Servers */
+	private static SvwsServer _instance = null;
+
+	/** Die Instanzdes globalen Loggers */
+	private final Logger _logger;
 
 	/** Die Instanz des Jetty-Servers (siehe {@link Server}) */
-	private static Server server;
-
-	/** Die Sammlung der im Server verwendeten Context-Handler (siehe {@link ContextHandlerCollection}) */
-	private static ContextHandlerCollection contexts;
+	private final Server server;
 
 	/** Der im Server verwendete {@link ServletContextHandler} */
-	private static ServletContextHandler context_handler;
+	private ServletContextHandler context_handler;
+
+
+
+	/**
+	 * Gibt die Instanz des SVWS-Servers zurück.
+	 *
+	 * @return die SVWS-Server-Instanz
+	 */
+	public static SvwsServer instance() {
+		if (_instance == null)
+			_instance = new SvwsServer();
+		return _instance;
+	}
+
+	/**
+	 * Gibt den Logger zurück, der dem Server zugeordnet ist.
+	 *
+	 * @return der Logger
+	 */
+	public Logger logger() {
+		return _logger;
+	}
 
 
 
@@ -65,7 +92,7 @@ public class HttpServer {
 	 * Fügt einen neuen {@link SVWSLoginService} zum Server hinzu und konfiguriert diesen basierend
 	 * auf der {@link SVWSKonfiguration}.
 	 */
-	private static void addLoginService() {
+	private void addLoginService() {
 		// Login Service
 		final LoginService loginService = new SVWSLoginService("Authentifizierung bei dem SVWS-Server");
 		server.addBean(loginService);
@@ -88,7 +115,7 @@ public class HttpServer {
 
 		// Handler Structure
 		final HandlerCollection handlers = new HandlerCollection();
-		contexts = new ContextHandlerCollection();
+		final ContextHandlerCollection contexts = new ContextHandlerCollection();
 		handlers.setHandlers(new Handler[] { contexts, new DefaultHandler() });
 		security.setHandler(handlers);
 
@@ -123,7 +150,7 @@ public class HttpServer {
 	 * Erzeugt eine neue HTTP- bzw. HTTPS-Konfiguration basierend auf der {@link SVWSKonfiguration}
 	 * und fügt diese zum Jetty-Server hinzu.
 	 */
-	private static void addHTTPConfiguration() {
+	private void addHTTPConfiguration() {
 		final boolean disableTLS = SVWSKonfiguration.get().isTLSDisabled();
 
 		// HTTP Configuration
@@ -187,7 +214,11 @@ public class HttpServer {
 	 * Initialisiert den Jetty-Http-Server und fügt den Login-Service {@link SVWSLoginService}
 	 * und die Http-Konfiguration basieren auf der {@link SVWSKonfiguration} hinzu.
 	 */
-	public static void init() {
+	private SvwsServer() {
+		// Erstelle den Logger
+		_logger = new Logger();
+		_logger.addConsumer(new LogConsumerConsole(false, false));
+
 		// Create a server with a threadpool of max. 500 threads
 		final QueuedThreadPool threadPool = new QueuedThreadPool();
 		threadPool.setMaxThreads(500);
@@ -198,11 +229,6 @@ public class HttpServer {
 		server.setDumpAfterStart(false);
 		server.setDumpBeforeStop(false);
 		server.setStopAtShutdown(true);
-
-		// Add several standard configurations for this application
-		addLoginService();
-		addHTTPConfiguration();
-		addAPIApplications();
 	}
 
 
@@ -212,7 +238,12 @@ public class HttpServer {
 	 *
 	 * @throws Exception   eine Exception beim Starten des Servers wird zurückgemeldet
 	 */
-	public static void start() throws Exception {
+	public void start() throws Exception {
+		// Add several standard configurations for this application
+		addLoginService();
+		addHTTPConfiguration();
+		addAPIApplications();
+
 		// Start the server
 		server.start();
 		server.join();
@@ -224,19 +255,18 @@ public class HttpServer {
 	 * @param c           die Applikation
 	 * @param pathSpecs   die Pfad-Spezifikationen
 	 */
-	private static void addApplication(final Class<? extends Application> c, final String... pathSpecs) {
+	private void addApplication(final Class<? extends Application> c, final String... pathSpecs) {
 		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, pathSpecs[0]);
 		final ServletMapping mapping = servlet.getServletHandler().getServletMapping(pathSpecs[0]);
 		mapping.setPathSpecs(pathSpecs);
-		// TODO user Logger instead of System.out
-		System.out.println("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
+		_logger.logLn("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
 		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
 	}
 
 	/**
 	 * Fügt die Rest-Applikationen zum Server hinzu.
 	 */
-	private static void addAPIApplications() {
+	private void addAPIApplications() {
 		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
 		addApplication(RestAppClient.class, "/*");
 		addApplication(RestAppDav.class, "/dav/*");

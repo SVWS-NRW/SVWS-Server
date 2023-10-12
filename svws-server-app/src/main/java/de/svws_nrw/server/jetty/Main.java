@@ -6,7 +6,6 @@ import de.svws_nrw.api.ResourceFile;
 import de.svws_nrw.api.SVWSVersion;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
@@ -39,9 +38,9 @@ public class Main {
 		System.setProperty("stdout.encoding", "UTF-8");
 		System.setProperty("stderr.encoding", "UTF-8");
 
-		// Der Logger zur Ausgabe der Informationen beim Serverstart
-		final Logger logger = new Logger();
-		logger.addConsumer(new LogConsumerConsole(false, false));
+		// Erstelle den SVWS-Server und nimm dessen Logger zur Ausgabe der Informationen beim Serverstart
+		final SvwsServer server = SvwsServer.instance();
+		final Logger logger = server.logger();
 
 		// Gebe ein paar Status-Informationen beim Start des Servers aus
 		logger.logLn("SVWS-Server Version " + SVWSVersion.version());
@@ -102,9 +101,8 @@ public class Main {
 			logger.modifyIndent(-2);
 		}
 
-		// Initialize the HTTP Server (v1.1 or v2 depending on the current configuration)
-		HttpServer.init();
-		HttpServer.start();
+		// Starte den SVWS-HTTP-Server (v1.1 or v2 in Abhängigkeit von der SVWS-Konfiguration)
+		server.start();
 	}
 
 }
