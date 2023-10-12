@@ -446,6 +446,27 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/**
+	 * Gibt an, ob ein getrennter HTTP-Port beim Servers für den priviligierten Zugriff auf die SVWS-Datenbank genutzter wird oder nicht.
+	 *
+	 * @return true, falls ein getrennter HTTP-Port genutzt wird, und ansonsten false
+	 */
+	public boolean hatPortHTTPPrivilegedAccess() {
+		return (dto != null) && (this.dto.portHTTPPrivilegedAccess != null);
+	}
+
+	/**
+	 * Gibt den HTTP-Port des Servers für den priviligierten Zugriff auf die SVWS-Datenbank zurück
+	 *
+	 * @return der HTTP-Port des Servers für den priviligierten Zugriff
+	 */
+	public int getPortHTTPPrivilegedAccess() {
+		if ((dto == null) || (this.dto.portHTTPPrivilegedAccess == null))
+			throw new NullPointerException("Es ist kein zweiter Port für den priviligierten Zugriff auf die SVWS-Datenbank definiert.");
+		return  this.dto.portHTTPPrivilegedAccess;
+	}
+
+
 	/** Gibt an, das CORS-Header als Default verwendet werden, wenn nichts dazu in der Konfiguration angegeben ist. */
 	public static final boolean default_use_cors_header = true;
 

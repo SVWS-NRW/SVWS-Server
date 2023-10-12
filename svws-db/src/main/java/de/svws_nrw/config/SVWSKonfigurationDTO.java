@@ -42,7 +42,7 @@ class SVWSKonfigurationDTO {
 	@JsonProperty("DisableTLS")
 	Boolean disableTLS;
 
-	/** Gibt den HTTP-Port des Servers an, sofern TLS dekativiert wurde */
+	/** Gibt den HTTP-Port des Servers an, sofern TLS deaktiviert wurde */
 	@JsonProperty("PortHTTP")
 	Integer portHTTP;
 
@@ -53,6 +53,10 @@ class SVWSKonfigurationDTO {
 	/** Gibt den HTTPS-Port des Servers an */
 	@JsonProperty("PortHTTPS")
 	Integer portHTTPS;
+
+	/** Gibt einen zweiten Port für den Servers an, falls für den priviligierten Datenbank-Zugriff (z.B. mit dem root-Benutzer) ein extra Verbindung genutzt wird */
+	@JsonProperty("PortHTTPPrivilegedAccess")
+	Integer portHTTPPrivilegedAccess;
 
 	/** Gibt an, ob bei dem OpenAPI-Server der CORS-Header gesetzt wird. */
 	@JsonProperty("UseCORSHeader")

@@ -6,6 +6,7 @@
   "PortHTTP" : null,
   "UseHTTPDefaultv11" : false,
   "PortHTTPS" : null,
+  "PortHTTPPrivilegedAccess" : null,
   "UseCORSHeader" : true,
   "TempPath" : "./Temp",
   "TLSKeyAlias" : null,

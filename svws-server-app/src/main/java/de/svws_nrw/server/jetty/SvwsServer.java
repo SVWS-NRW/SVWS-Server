@@ -25,6 +25,7 @@ import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
 import org.eclipse.jetty.util.security.Constraint;
@@ -211,13 +212,14 @@ public final class SvwsServer {
 	 * @param disableTLS         gibt an, ob TLS deaktiviert sein soll
 	 * @param preferHTTPv1_1     gibt an, ob HTTP-Verbindungen mit v1.1 gegenüber v2 bevorzugt werden sollen
 	 * @param port               der Port, auf dem gelauscht werden soll
+	 * @param name               der eindeutige Name der dem Connector zugeordnet wird.
 	 * @param keyStorePath       der Pfad zum Java-Key-Store für TLS-Verbindungen
 	 * @param keyStorePassword   das Kennwort für den Java-Key-Store
 	 *
 	 * @return der konfigurierte ServerConnector
 	 */
 	private ServerConnector getHttpServerConnector(final boolean disableTLS, final boolean preferHTTPv1_1, final int port,
-			final String keyStorePath, final String keyStorePassword) {
+			final String name, final String keyStorePath, final String keyStorePassword) {
 		// HTTP Configuration
 		final HttpConfiguration http_config = new HttpConfiguration();
 		if (!disableTLS) {
@@ -259,12 +261,14 @@ public final class SvwsServer {
 			final ServerConnector connector = preferHTTPv1_1
 				? new ServerConnector(server, connFactoryHTTPv1_1, connFactoryHTTPv2)
 				: new ServerConnector(server, connFactoryHTTPv2, connFactoryHTTPv1_1);
+			connector.setName(name);
 			connector.setPort(port);
 			return connector;
 		}
 		final ServerConnector connector = preferHTTPv1_1
 			? new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv1_1, connFactoryHTTPv2)
 			: new ServerConnector(server, sslContextFactory, alpn, connFactoryHTTPv2, connFactoryHTTPv1_1);
+		connector.setName(name);
 		connector.setPort(port);
 		return connector;
 	}
@@ -276,13 +280,24 @@ public final class SvwsServer {
 	 */
 	@SuppressWarnings("resource")
 	private void addHTTPServerConnections() {
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		server.addConnector(getHttpServerConnector(
-			SVWSKonfiguration.get().isTLSDisabled(),
-			SVWSKonfiguration.get().useHTTPDefaultv11(),
-			SVWSKonfiguration.get().isTLSDisabled() ? SVWSKonfiguration.get().getPortHTTP() : SVWSKonfiguration.get().getPortHTTPS(),
-			SVWSKonfiguration.get().getTLSKeystorePath(),
-			SVWSKonfiguration.get().getTLSKeystorePassword()
+			config.isTLSDisabled(),
+			config.useHTTPDefaultv11(),
+			config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS(),
+			"Server",
+			config.getTLSKeystorePath(),
+			config.getTLSKeystorePassword()
 		));
+		if (!config.isDBRootAccessDisabled() && config.hatPortHTTPPrivilegedAccess())
+			server.addConnector(getHttpServerConnector(
+				config.isTLSDisabled(),
+				config.useHTTPDefaultv11(),
+				config.getPortHTTPPrivilegedAccess(),
+				"Privileged",
+				config.getTLSKeystorePath(),
+				config.getTLSKeystorePassword()
+			));
 	}
 
 
@@ -293,9 +308,9 @@ public final class SvwsServer {
 		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
 		addApplication(RestAppClient.class, "/*");
 		addApplication(RestAppDav.class, "/dav/*");
-		addApplication(RestAppDebug.class, "/debug/*");
+		addApplication(RestAppDebug.class, RestAppDebug.getPathSpecification());
 		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
-			addApplication(RestAppSchemaRoot.class, "/api/schema/root/*", "/openapi/schemaroot.json", "/openapi/schemaroot.yaml");
+			addApplication(RestAppSchemaRoot.class, RestAppSchemaRoot.getPathSpecification());
 	}
 
 
@@ -306,8 +321,9 @@ public final class SvwsServer {
 	 * @param pathSpecs   die Pfad-Spezifikationen
 	 */
 	private void addApplication(final Class<? extends Application> c, final String... pathSpecs) {
-		final ServletHolder servlet = context_handler.addServlet(HttpServletDispatcher.class, pathSpecs[0]);
-		final ServletMapping mapping = servlet.getServletHandler().getServletMapping(pathSpecs[0]);
+		final ServletHandler servletHandler = context_handler.getServletHandler();
+		final ServletHolder servlet = servletHandler.addServletWithMapping(HttpServletDispatcher.class, pathSpecs[0]);
+		final ServletMapping mapping = servletHandler.getServletMapping(pathSpecs[0]);
 		mapping.setPathSpecs(pathSpecs);
 		_logger.logLn("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
 		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());

@@ -18,6 +18,7 @@ import jakarta.ws.rs.core.UriBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
@@ -56,7 +57,10 @@ public class APIDebug {
     		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
 	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
 	    		if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
-	    			final String openapi_file = isYAML ? "server.yaml" : "server.json";
+	    			final SVWSKonfiguration config = SVWSKonfiguration.get();
+	    			final boolean isApiPrivileged = (config.hatPortHTTPPrivilegedAccess() && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()));
+	    			final String openapi_file_base = isApiPrivileged ? "schemaroot" : "server";
+	    			final String openapi_file = openapi_file_base + (isYAML ? ".yaml" : ".json");
 	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
 	    			data = data.replace(
     					"\"https://petstore.swagger.io/v2/swagger.json\",",
