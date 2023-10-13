@@ -11,6 +11,7 @@ import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanu
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
+import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungDetailAnsicht";
 
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteDataGostKlausurplanung";
 
@@ -34,6 +35,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			routeGostKlausurplanungSchienen,
 			routeGostKlausurplanungKalender,
 			routeGostKlausurplanungRaumzeit,
+			routeGostKlausurplanungDetailAnsicht,
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		this.isHidden = (params?: RouteParams) => {

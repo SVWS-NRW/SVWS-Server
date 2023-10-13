@@ -11,7 +11,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
-import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
+import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungDetailAnsicht";
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 
@@ -262,7 +262,7 @@ export class RouteDataGostKlausurplanung {
 			(view !== routeGostKlausurplanungSchienen) &&
 			(view !== routeGostKlausurplanungKalender) &&
 			(view !== routeGostKlausurplanungRaumzeit) &&
-			(view !== routeGostKlausurplanungKonflikte))
+			(view !== routeGostKlausurplanungDetailAnsicht))
 			throw new Error("Die gewählte Ansicht für die Klausurplanung wird nicht unterstützt. ");
 		this.setPatchedState({ view: view });
 	}
