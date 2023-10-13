@@ -2,8 +2,8 @@ package de.svws_nrw.api.server;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.api.schema.DBMultipartBodyDataOnly;
-import de.svws_nrw.api.schema.DBMultipartBodyDefaultSchema;
+import de.svws_nrw.api.privileged.DBMultipartBodyDataOnly;
+import de.svws_nrw.api.privileged.DBMultipartBodyDefaultSchema;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.types.ServerMode;

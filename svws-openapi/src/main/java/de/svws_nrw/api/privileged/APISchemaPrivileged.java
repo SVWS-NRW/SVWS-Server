@@ -1,4 +1,4 @@
-package de.svws_nrw.api.schema;
+package de.svws_nrw.api.privileged;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,6 +13,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -21,6 +22,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.privileged.DBUtilsPrivileged;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -61,8 +63,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "SchemaRoot")
-public class APISchemaRoot {
+@Tag(name = "SchemaPrivileged")
+public class APISchemaPrivileged {
 
 	private static final Random random = new Random();
 
@@ -97,7 +99,6 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "200", description = "Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas",
     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchemaListeEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    // TODO OpenAPI-Doc: all possible responses...
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context final HttpServletRequest request) {
     	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	try (DBEntityManager conn = user.getEntityManager()) {
@@ -135,8 +136,9 @@ public class APISchemaRoot {
     @Path("/api/schema/root/liste")
     @Operation(summary = "Liefert eine Liste der Schemata.",
     description = "Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+    @ApiResponse(responseCode = "200", description = "Die Liste mit allen sichtbaren Schema-Namen in der Datenbank",
+    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    // TODO OpenAPI-Doc: all possible responses...
     public List<String> getSchemaListe(@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 			return DTOInformationSchema.queryNames(conn);
@@ -153,18 +155,19 @@ public class APISchemaRoot {
      *
      * @return              Rückmeldung, ob das angegebene Schema existiert
      */
-    @GET
-    @Path("/api/schema/root/exists/{schema}")
-    @Operation(summary = "Liefert die Information, ob ein Schema existiert.",
-    description = "Liefert die Information, ob ein Schema existiert. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+	@GET
+	@Path("/api/schema/root/exists/{schema}")
+	@Operation(summary = "Liefert die Information, ob ein Schema existiert.",
+		description = "Liefert die Information, ob ein Schema existiert. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+	@ApiResponse(responseCode = "200", description = "true, wenn das Schema existiert",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    // TODO OpenAPI-Doc: all possible responses...
-    public boolean existsSchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+	public boolean existsSchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final List<String> schemata = DTOInformationSchema.queryNames(conn);
 			return schemata.contains(schemaname.toLowerCase());
     	}
-    }
+	}
 
 
 
@@ -180,8 +183,9 @@ public class APISchemaRoot {
     @Path("/api/schema/root/user/{user}/exists")
     @Operation(summary = "Liefert die Information, ob ein DBMS-User existiert.",
     description = "Liefert die Information, ob ein DBMS-User existiert. Hierfür werden root-Rechte auf der Datenbank benötigt.")
+    @ApiResponse(responseCode = "200", description = "true, wenn der Benutzer existiert",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    // TODO OpenAPI-Doc: all possible responses...
     public boolean existsUser(@PathParam("user") final String username, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final List<String> userlist = DTOInformationUser.queryNames(conn);
@@ -197,35 +201,17 @@ public class APISchemaRoot {
      *
      * @return            Rückmeldung, ob das angegebene Kennwort korrekt ist
      */
-    @POST
-    @Path("/api/schema/root/user/checkpwd")
-    @Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
-    description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
+	@POST
+	@Path("/api/schema/root/user/checkpwd")
+	@Operation(summary = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist.",
+		description = "Prüft, ob das übergebene Kennwort für den Datenbankbenutzer gültig ist. Zur Prüfung werden root-Rechte auf der Datenbank benötigt")
+	@ApiResponse(responseCode = "200", description = "true, wenn das Kennwort und der Benutzername korrekt sind und den priviligierten Zugriff auf die Datenbankschema erlauben.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class)))
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt")
-    // TODO OpenAPI-Doc: all possible responses...
-    public boolean checkDBPassword(@RequestBody(description = "Der Benutzername und das Kennwort für den Datenbankbenutzer", required = true) final BenutzerKennwort kennwort,
-					    		   @Context final HttpServletRequest request) {
-    	if (kennwort == null)
-    		return false;
-    	DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(kennwort.user, kennwort.password);
-    	switch (dbconfig.getDBDriver()) {
-    		case MYSQL, MARIA_DB:
-				dbconfig = dbconfig.switchSchema("information_schema");
-				break;
-			case MDB:
-				dbconfig = dbconfig.switchSchema("PUBLIC");
-				break;
-			case MSSQL:
-				dbconfig = dbconfig.switchSchema("master");
-				break;
-			case SQLITE:
-				dbconfig = dbconfig.switchSchema("");
-				break;
-    	}
-    	final Benutzer user = Benutzer.create(dbconfig);
-    	try (DBEntityManager em = user.getEntityManager()) {
-	    	return (em != null);
-    	}
+    public boolean checkDBPassword(@RequestBody(description = "Der Benutzername und das Kennwort für den Datenbankbenutzer", required = true, content =
+			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
+    		@Context final HttpServletRequest request) {
+    	return DBUtilsPrivileged.checkDBPassword(kennwort);
     }
 
 
@@ -243,17 +229,18 @@ public class APISchemaRoot {
     @POST
     @Path("/api/schema/root/create/{schema}/{revision : \\d+}")
     @Operation(summary = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen.",
-		       description = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls keine Schema mit dem angebenen Namen bereits existiert.")
+		description = "Erstellt ein neues Schema der angegebenen Revision und dem angegebenen Namen, falls keine Schema mit dem angebenen Namen bereits existiert.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Anlegen des Schemas",
-    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
 	@ApiResponse(responseCode = "400", description = "Es wurde ein nicht erlaubter Schema-Name, Benutzername oder eine ungültige Revision angegeben.")
 	@ApiResponse(responseCode = "403", description = "Der angemeldete Benutzer verfügt nicht über die notwendigen Rechte zum Anlegen eines Schemas.")
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der Revision konnte nicht angelegt werden.",
-	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse createSchema(@PathParam("schema") final String schemaname,
     						 @PathParam("revision") final long revision,
-    						 @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true) final BenutzerKennwort kennwort,
+    						 @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true, content =
+    									@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
     						 @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
@@ -285,9 +272,8 @@ public class APISchemaRoot {
 			logger.modifyIndent(-2);
 
 			final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
-			if (!DBSchemaManager.createNewSchema(dbconfig, conn.getUser().getUsername(), conn.getUser().getPassword(), revision, logger))
-				return simpleResponse(false, log);
-			return simpleResponse(true, log);
+			final boolean success = DBSchemaManager.createNewSchema(dbconfig, conn.getUser().getUsername(), conn.getUser().getPassword(), revision, logger);
+			return simpleResponse(success, log);
     	}
     }
 
@@ -313,7 +299,8 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der aktuellen Revision konnte nicht angelegt werden.")
     public SimpleOperationResponse createSchemaCurrent(@PathParam("schema") final String schemaname,
-    						        @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true) final BenutzerKennwort kennwort,
+    						        @RequestBody(description = "Der Benutzername und das Kennwort für den administrativen Zugang zum Schema", required = true, content =
+    						    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
     						        @Context final HttpServletRequest request) {
     	return createSchema(schemaname, -1, kennwort, request);
     }
@@ -375,7 +362,8 @@ public class APISchemaRoot {
 				 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     public SimpleOperationResponse migrateMDB2Schema(@PathParam("schema") final String schemaname,
-    		@MultipartForm final DBMultipartBody multipart,
+    		@RequestBody(description = "Die MDB-Datei", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBody multipart,
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
@@ -446,7 +434,8 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Fehler bei dem Import der SQLite-Datenbank mit dem Log des fehlgeschlagenen Imports.",
 	 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse importSQLite2Schema(@PathParam("schema") final String schemaname,
-    		@MultipartForm final DBMultipartBodyWithoutDBPassword multipart,
+    		@RequestBody(description = "Die SQLite-Datei", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final DBMultipartBodyWithoutDBPassword multipart,
     		@Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	final Logger logger = new Logger();
@@ -530,7 +519,8 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse migrateMariaDB2Schema(@PathParam("schema") final String schemaname,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MARIA_DB, dbMigrationInfos, request, null);
     }
@@ -558,8 +548,9 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-    public SimpleOperationResponse migrateMariaDB2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final Integer schulnummer,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    public SimpleOperationResponse migrateMariaDB2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MARIA_DB, dbMigrationInfos, request, schulnummer);
     }
@@ -585,7 +576,8 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse migrateMySQL2Schema(@PathParam("schema") final String schemaname,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MYSQL, dbMigrationInfos, request, null);
     }
@@ -613,8 +605,9 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-    public SimpleOperationResponse migrateMySQL2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final Integer schulnummer,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    public SimpleOperationResponse migrateMySQL2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MYSQL, dbMigrationInfos, request, schulnummer);
     }
@@ -640,7 +633,8 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public SimpleOperationResponse migrateMSSQL2Schema(@PathParam("schema") final String schemaname,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MSSQL, dbMigrationInfos, request, null);
     }
@@ -669,8 +663,9 @@ public class APISchemaRoot {
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht migriert werden.")
     @ApiResponse(responseCode = "500", description = "Fehler bei der Migration mit dem Log der fehlgeschlagenen Migration.",
 	 			 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
-    public SimpleOperationResponse migrateMSSQL2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final Integer schulnummer,
-    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true) final MigrateBody dbMigrationInfos,
+    public SimpleOperationResponse migrateMSSQL2SchemaSchulnummer(@PathParam("schema") final String schemaname, @PathParam("schulnummer") final int schulnummer,
+    		@RequestBody(description = "Die Informationen zum Zugriff auf die Quell- und Zieldatenbank bei der Migration", required = true, content =
+    				@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = MigrateBody.class))) final MigrateBody dbMigrationInfos,
     		@Context final HttpServletRequest request) {
     	return migrate2Schema(schemaname, DBDriver.MSSQL, dbMigrationInfos, request, schulnummer);
     }

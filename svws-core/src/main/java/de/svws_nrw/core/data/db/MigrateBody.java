@@ -1,11 +1,16 @@
-package de.svws_nrw.api.schema;
+package de.svws_nrw.core.data.db;
 
+import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie beschreibt, wie die Zugangsdaten für die Migrationsprozesse übergeben werden.
  */
+@XmlRootElement
+@Schema(description = "Die Zugangsdaten für einen Migrationsprozess.")
+@TranspilerDTO
 public class MigrateBody {
 
 	/** Gibt den Benutzernamen für die Quelldatenbank an. */

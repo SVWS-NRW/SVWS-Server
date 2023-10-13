@@ -1,4 +1,5 @@
 export { ApiSchema } from './api/ApiSchema';
+export { ApiSchemaPrivileged } from './api/ApiSchemaPrivileged';
 export { ApiServer } from './api/ApiServer';
 export { ApiServerAlgorithmen } from './api/ApiServerAlgorithmen';
 export { BaseApi, type ApiFile } from './api/BaseApi';
@@ -98,6 +99,7 @@ export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartn
 export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
 export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';
 export { DBSchemaListeEintrag } from './core/data/db/DBSchemaListeEintrag';
+export { MigrateBody } from './core/data/db/MigrateBody';
 export { SchemaListeEintrag } from './core/data/db/SchemaListeEintrag';
 export { ENMBKAbschluss } from './core/data/enm/ENMBKAbschluss';
 export { ENMBKFach } from './core/data/enm/ENMBKFach';

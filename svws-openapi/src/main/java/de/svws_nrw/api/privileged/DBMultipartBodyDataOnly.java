@@ -1,4 +1,4 @@
-package de.svws_nrw.api.schema;
+package de.svws_nrw.api.privileged;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.core.MediaType;

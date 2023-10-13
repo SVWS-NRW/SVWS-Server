@@ -1,4 +1,4 @@
-package de.svws_nrw.api.schema;
+package de.svws_nrw.api.privileged;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.core.MediaType;
@@ -10,10 +10,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * Diese Klasse wird als Multipart-Body eines Open-API-Aufrufs verwendet,
  * um eine Datenbank mit einem zugehörigen Kennwort zu übertragen.
- * Zusätzlich kann ein Benutzer und ein Kennwort für das Schema übergeben werden,
- * in welches die Quelldatenbank migriert bzw. importiert wird.
+ * Es wird kein Benutzer mit Kennwort für das Schema übergeben,
+ * in welches die Quelldatenbank migriert bzw. importiert wird. Stattdessen
+ * werden Default-Werte gesetzt. Diese Variante sollte nur für Testdatenbanken
+ * verwendet werden!
  */
-public class DBMultipartBody {
+public class DBMultipartBodyDefaultSchema {
+
 
 	/** Die Quelldatenbank als Binärdatei. */
     @PartType(MediaType.APPLICATION_OCTET_STREAM)
@@ -26,17 +29,5 @@ public class DBMultipartBody {
 	@Schema(implementation = String.class)
     @FormParam("databasePassword")
     public String databasePassword;
-
-    /** Der Benutzername für das Schema, in welches migriert bzw. importiert werden soll. */
-    @PartType(MediaType.TEXT_PLAIN)
-	@Schema(implementation = String.class)
-    @FormParam("schemaUsername")
-    public String schemaUsername;
-
-    /** Das Kennwort des Benutzer für das Schema, in welches migriert bzw. importiert werden soll. */
-    @PartType(MediaType.TEXT_PLAIN)
-	@Schema(implementation = String.class)
-    @FormParam("schemaUserPassword")
-    public String schemaUserPassword;
 
 }

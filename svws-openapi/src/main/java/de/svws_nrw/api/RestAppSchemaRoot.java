@@ -2,7 +2,7 @@ package de.svws_nrw.api;
 
 import java.util.Set;
 
-import de.svws_nrw.api.schema.APISchemaRoot;
+import de.svws_nrw.api.privileged.APISchemaPrivileged;
 import jakarta.ws.rs.core.Application;
 
 
@@ -18,7 +18,7 @@ public final class RestAppSchemaRoot extends Application {
 	/// Enthält die API-Klassen für diese Applikation
     private final Set<Class<?>> classes = Set.of(
     	OpenAPICorsFilter.class,
-    	APISchemaRoot.class,
+    	APISchemaPrivileged.class,
     	OpenApiSchemaRoot.class
     );
 
