@@ -202,6 +202,12 @@
 		doFocus();
 	}
 
+	function reset() {
+		selectedItem.value = props.useNull ? null : undefined;
+		const el: typeof TextInput = inputEl.value!;
+		el?.input.blur();
+	}
+
 	const sortedList: ComputedRef<Item[]> = computed(() => {
 		let arr
 		if (Array.isArray(props.items))
@@ -353,7 +359,8 @@
 
 	defineExpose<{
 		content: ComputedRef<InputDataType>,
-	}>({ content });
+		reset: () => void,
+	}>({ content, reset });
 
 </script>
 

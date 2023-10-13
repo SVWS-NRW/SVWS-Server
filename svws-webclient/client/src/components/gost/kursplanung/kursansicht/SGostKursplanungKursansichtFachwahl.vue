@@ -211,21 +211,15 @@
 	})
 
 	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
-		if (value !== undefined && !props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)) {
-			const lehrer = await props.addKursLehrer(kurs.id, value.id);
-			if (lehrer === undefined)
-				throw new Error("Fehler beim Anlegen des Kurslehrers");
-			await add_lehrer_regel();
-		} else if (value === undefined && kurslehrer(kurs).value !== undefined) {
-			await remove_kurslehrer(kurs);
-		}
-	}
-
-	async function remove_kurslehrer(kurs : GostBlockungKurs) {
-		const lehrer = kurslehrer(kurs).value;
-		if (lehrer === undefined)
+		const lehrer = kurslehrer(kurs).value
+		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)))
 			return;
-		await props.removeKursLehrer(kurs.id, lehrer.id);
+		if (lehrer !== undefined)
+			await props.removeKursLehrer(kurs.id, lehrer.id);
+		if (value !== undefined) {
+			await props.addKursLehrer(kurs.id, value.id);
+			await add_lehrer_regel();
+		}
 	}
 
 	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
