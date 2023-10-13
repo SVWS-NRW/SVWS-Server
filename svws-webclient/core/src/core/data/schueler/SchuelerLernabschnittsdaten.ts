@@ -68,9 +68,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public pruefungsOrdnung : string = "";
 
 	/**
-	 * Die ID der Klasse des Schülers.
+	 * Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist.
 	 */
-	public klassenID : number = -1;
+	public klassenID : number | null = null;
 
 	/**
 	 * Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist
@@ -88,9 +88,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public schulgliederung : string | null = null;
 
 	/**
-	 * Die ID des Jahrgangs des Schülers
+	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
 	 */
-	public jahrgangID : number = -1;
+	public jahrgangID : number | null = null;
 
 	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
@@ -275,15 +275,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		if (typeof obj.pruefungsOrdnung === "undefined")
 			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
 		result.pruefungsOrdnung = obj.pruefungsOrdnung;
-		if (typeof obj.klassenID === "undefined")
-			 throw new Error('invalid json format, missing attribute klassenID');
-		result.klassenID = obj.klassenID;
+		result.klassenID = typeof obj.klassenID === "undefined" ? null : obj.klassenID === null ? null : obj.klassenID;
 		result.tutorID = typeof obj.tutorID === "undefined" ? null : obj.tutorID === null ? null : obj.tutorID;
 		result.folgeklassenID = typeof obj.folgeklassenID === "undefined" ? null : obj.folgeklassenID === null ? null : obj.folgeklassenID;
 		result.schulgliederung = typeof obj.schulgliederung === "undefined" ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
-		if (typeof obj.jahrgangID === "undefined")
-			 throw new Error('invalid json format, missing attribute jahrgangID');
-		result.jahrgangID = obj.jahrgangID;
+		result.jahrgangID = typeof obj.jahrgangID === "undefined" ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
 		result.fachklasseID = typeof obj.fachklasseID === "undefined" ? null : obj.fachklasseID === null ? null : obj.fachklasseID;
 		result.schwerpunktID = typeof obj.schwerpunktID === "undefined" ? null : obj.schwerpunktID === null ? null : obj.schwerpunktID;
 		result.organisationsform = typeof obj.organisationsform === "undefined" ? null : obj.organisationsform === null ? null : obj.organisationsform;
@@ -352,11 +348,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
-		result += '"klassenID" : ' + obj.klassenID + ',';
+		result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
 		result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
 		result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID) + ',';
 		result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
-		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
+		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
 		result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID) + ',';
 		result += '"schwerpunktID" : ' + ((!obj.schwerpunktID) ? 'null' : obj.schwerpunktID) + ',';
 		result += '"organisationsform" : ' + ((!obj.organisationsform) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
@@ -441,7 +437,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		}
 		if (typeof obj.klassenID !== "undefined") {
-			result += '"klassenID" : ' + obj.klassenID + ',';
+			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
 		}
 		if (typeof obj.tutorID !== "undefined") {
 			result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
@@ -453,7 +449,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		}
 		if (typeof obj.jahrgangID !== "undefined") {
-			result += '"jahrgangID" : ' + obj.jahrgangID + ',';
+			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
 		}
 		if (typeof obj.fachklasseID !== "undefined") {
 			result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID) + ',';
