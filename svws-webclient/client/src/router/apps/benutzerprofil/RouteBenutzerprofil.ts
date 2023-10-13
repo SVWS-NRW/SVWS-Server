@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import type { BenutzerprofilAuswahlProps } from "~/components/kurse copy/SBenutzerprofilAuswahlProps";
-import type { BenutzerprofilAppProps } from "~/components/kurse copy/SBenutzerprofilAppProps";
+import type { BenutzerprofilAuswahlProps } from "~/components/benutzerprofil/SBenutzerprofilAuswahlProps";
+import type { BenutzerprofilAppProps } from "~/components/benutzerprofil/SBenutzerprofilAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
