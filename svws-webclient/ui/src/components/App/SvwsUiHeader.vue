@@ -14,7 +14,12 @@
 	.page--header {
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
 		@apply py-2 gap-2;
-		@apply flex-shrink-0;
+		@apply flex-shrink-0 flex flex-col justify-center;
+		min-height: 6.5rem;
+
+		@media (min-width: 1280px) or (orientation: portrait) {
+			min-height: 8rem;
+		}
 
 		.svws-ui-avatar {
 			@apply w-20;

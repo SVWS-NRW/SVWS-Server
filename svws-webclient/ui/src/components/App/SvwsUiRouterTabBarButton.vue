@@ -44,16 +44,16 @@
 <style lang="postcss">
 .svws-ui-tab-button {
   @apply inline-flex items-center justify-center;
-  @apply py-1.5 px-2.5;
+  @apply py-1 px-2;
   @apply rounded;
   @apply select-none;
   @apply text-sm font-bold text-black dark:text-white;
   @apply whitespace-nowrap;
   @apply relative border border-transparent;
 
-  .router-tab-bar--subnav & {
-    @apply py-1.5 px-2.5;
-  }
+	.svws-ui-tabs--vertical & {
+		@apply py-1.5 px-2.5;
+	}
 
   .svws-ui-spinner {
     @apply w-4 h-4 absolute top-1.5 right-0.5;
@@ -61,30 +61,66 @@
 
   &:hover {
     @apply bg-black/10 dark:bg-white/10;
+
+	  &:active {
+		  @apply bg-black/20 dark:bg-white/20;
+	  }
   }
 
   &:focus-visible {
-    @apply ring-svws/50;
+    @apply ring-2 ring-svws/50;
 
     .page--statistik & {
       @apply ring-violet-500/50;
     }
   }
 
-  &:focus,
+  &:focus {
+	  @apply outline-none;
+  }
+
   &.svws-active,
   &.svws-active:hover {
-    @apply outline-none;
-    @apply text-svws bg-white dark:bg-black shadow;
+    @apply outline-none text-svws;
 
-    .router-tab-bar--subnav & {
-      @apply text-svws bg-svws/10 dark:bg-svws/10;
-    }
+	  .svws-ui-tabs--vertical & {
+		  @apply bg-white dark:bg-black shadow;
+	  }
+
+	  .svws-ui-tabs &,
+	  .router-tab-bar--subnav & {
+		  &:before {
+			  @apply absolute left-2 right-2 -bottom-2 h-[2px] bg-svws;
+			  content: '';
+
+			  .page--statistik & {
+				  @apply bg-violet-500;
+			  }
+		  }
+	  }
+
+	  .router-tab-bar--subnav & {
+		  @apply bg-white dark:bg-black;
+
+		  &:before {
+			  @apply -bottom-1;
+		  }
+	  }
 
     .page--statistik & {
       @apply text-violet-500;
     }
   }
+
+	&.svws-active:hover {
+		.svws-ui-tabs & {
+			@apply bg-svws/5 dark:bg-svws/10;
+
+			.page--statistik & {
+				@apply bg-violet-500/5 dark:bg-violet-500/10;
+			}
+		}
+	}
 
   &.svws-active {
     .svws-api--pending & {

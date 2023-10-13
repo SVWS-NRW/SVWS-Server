@@ -1,5 +1,5 @@
 <template>
-	<div class="router-vertical-tab-bar--area">
+	<div class="svws-ui-tabs--vertical">
 		<div class="router-vertical-tab-bar--wrapper print:hidden">
 			<div v-if="state.scrolled" class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-up">
 				<button class="router-vertical-tab-bar--scroll-button" @click="scroll('up')">
@@ -109,7 +109,7 @@
 
 
 <style lang="postcss">
-    .router-vertical-tab-bar--area {
+    .svws-ui-tabs--vertical {
         @apply flex flex-row flex-grow items-start;
 		@apply w-full;
     }
@@ -126,11 +126,11 @@
     }
 
     .router-vertical-tab-bar--content {
-		@apply bg-light rounded-lg p-1;
+		@apply bg-light rounded-md p-[2px];
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
 		@apply relative;
-		@apply gap-1;
+		@apply gap-[2px];
 
 		-ms-overflow-style: none;
 		/* Remove Scrollbar in IE and Edge */

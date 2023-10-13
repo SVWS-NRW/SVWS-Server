@@ -2,7 +2,7 @@
 	<div class="svws-ui-page" :class="{'svws-single-route': props.routes.length === 1}">
 		<div class="svws-ui-tabs">
 			<div class="svws-ui-tabs--wrapper">
-				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button left-0 pl-1 bg-gradient-to-l" @click="scroll('left')">
+				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
 						<i-ri-arrow-left-s-line />
 					</svws-ui-button>
@@ -11,7 +11,7 @@
 					<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
 						:hidden="isHidden(index)" @select="select(route)" :key="index" />
 				</div>
-				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button right-0 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
+				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
 					<svws-ui-button type="icon">
 						<i-ri-arrow-right-s-line />
 					</svws-ui-button>
@@ -116,12 +116,8 @@
         @apply flex flex-col items-start overflow-hidden h-full;
 
       &.svws-single-route {
-        .svws-ui-tabs {
-          @apply hidden;
-        }
-
-        .svws-ui-tab-content .page--content {
-          @apply pt-0;
+        .svws-ui-tabs--list {
+			@apply invisible
         }
       }
     }
@@ -136,7 +132,7 @@
 
     .svws-ui-tabs,
     .svws-sub-nav-target {
-        @apply px-6 lg:px-9 3xl:px-12 4xl:px-20 max-w-full;
+        @apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
         @apply print:hidden;
     }
 
@@ -145,12 +141,17 @@
 	}
 
     .svws-ui-tabs--wrapper {
-        @apply flex items-center -mx-3 rounded-md w-auto relative z-30 flex-shrink-0 overflow-hidden;
-        @apply bg-light dark:bg-white/5;
+        @apply flex items-center -mx-3 px-0.5 w-auto relative z-30 flex-shrink-0 overflow-hidden;
+        @apply bg-white dark:bg-black;
+
+		&:before {
+			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-px;
+			content: '';
+		}
     }
 
     .svws-ui-tabs--list {
-        @apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll;
+        @apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2;
         -ms-overflow-style: none;
         scrollbar-width: none;
 
@@ -164,11 +165,16 @@
     }
 
     .svws-ui-tabs--scroll-button {
-      @apply absolute z-20 top-0 text-base h-full flex items-center w-12 py-1 cursor-pointer;
-      @apply from-light/0 via-60% via-light to-light;
+      @apply absolute z-20 -top-0.5 text-base h-8 flex items-center w-12 py-1 cursor-pointer;
+      @apply from-white/0 via-50% via-white to-white dark:from-black/0 dark:via-50% dark:via-black dark:to-black;
 
       .button {
-        @apply w-4 h-full p-0 rounded;
+        @apply w-5 h-full p-0 rounded bg-light dark:bg-white/5 border border-black/5 dark:border-white/5;
+
+		  &:hover,
+		  &:focus-visible {
+			  @apply brightness-95;
+		  }
       }
     }
 
@@ -177,31 +183,10 @@
     }
 
     .svws-ui-title-tabs {
-      @apply text-headline-md flex flex-wrap gap-5 mb-7 -mt-1 leading-none rounded-md;
-    }
+      @apply text-button flex gap-[2px];
 
-    /*.svws-ui-title-tab {
-      @apply cursor-pointer py-1.5 px-3 rounded-md relative focus:outline-none focus-visible:ring-2 whitespace-nowrap;
-
-      &:not(.svws-active) {
-        @apply hover:bg-black/10 dark:hover:bg-white/10 focus-visible:bg-black/10 dark:focus-visible:bg-white/25 focus-visible:ring-black/25 text-black dark:text-white font-medium;
-      }
-
-      &.svws-active {
-        @apply bg-white dark:bg-black text-svws shadow focus-visible:ring-svws/25;
-      }
-    }*/
-
-    .svws-ui-title-tab {
-      @apply cursor-pointer py-1 relative focus:outline-none focus-visible:ring focus-visible:rounded-md ring-offset-1 whitespace-nowrap border-b-2 border-transparent leading-tight;
-
-      &:not(.svws-active) {
-        @apply hover:border-black/10 dark:hover:border-white/10 focus-visible:ring-black/25 text-black dark:text-white font-medium;
-      }
-
-      &.svws-active {
-        @apply border-svws text-svws focus-visible:border-transparent;
-      }
+		.svws-sub-nav-target & {
+		}
     }
 
 </style>

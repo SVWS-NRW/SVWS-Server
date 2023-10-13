@@ -161,7 +161,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-3 lg:gap-x-12;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
 		grid-auto-rows: 100%;
 		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;

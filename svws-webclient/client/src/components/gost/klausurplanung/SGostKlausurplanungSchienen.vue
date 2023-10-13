@@ -77,19 +77,10 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
-				<div>
-					<template v-if="termine.size()">
-						<div class="text-headline-md">{{ termine.size() }} {{ termine.size() === 1 ? 'Termin' : 'Termine' }}</div>
-						<div class="text-headline-md leading-none opacity-50 hidden">
-							<template v-if="quartalsauswahl.value">im {{ quartalsauswahl.value }}. Quartal</template>
-							<template v-else>in beiden Quartalen</template>
-						</div>
-					</template>
-				</div>
-				<div class="flex flex-wrap items-center gap-0.5">
+				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value)"><i-ri-add-line class="-ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kursklausurmanager().kursklausurOhneTerminGetMengeByQuartal(props.quartalsauswahl.value).size() === 0"><i-ri-sparkling-line />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" class="hover--danger" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
+					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><i-ri-delete-bin-line />Alle löschen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4 pt-2 -mt-2">
@@ -156,7 +147,7 @@
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
 						<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
-							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
+							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
 								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
 								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
 							</span>

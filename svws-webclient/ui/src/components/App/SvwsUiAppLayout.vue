@@ -52,11 +52,11 @@
 			</template>
 		</div>
 		<div v-if="($slots.secondaryMenu && !fullwidthContent) || skeleton" class="app--sidebar">
-			<div class="s-toggle" v-if="!skeleton">
+			<div class="s-toggle" v-if="!skeleton" :class="sidebarExpanded ? '' : 'mt-8'">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
-						<i-ri-skip-left-line v-if="sidebarExpanded" />
-						<i-ri-expand-right-line v-else />
+						<i-ri-menu-fold-line v-if="sidebarExpanded" />
+						<i-ri-menu-unfold-line v-else />
 					</button>
 					<template #content>
 						Sidebar {{ !sidebarExpanded ? 'einblenden' : 'ausblenden' }}

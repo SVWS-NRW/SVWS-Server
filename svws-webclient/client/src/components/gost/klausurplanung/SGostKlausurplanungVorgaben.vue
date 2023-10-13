@@ -6,7 +6,7 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 	<div class="page--content page--content--full">
-		<svws-ui-content-card>
+		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
@@ -43,8 +43,8 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : ''" class="sticky top-0">
-			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
+		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-0 -ml-2">
+			<template #actions v-if="activeVorgabe.idVorgabe > 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
@@ -105,9 +105,9 @@
 					</svws-ui-input-wrapper>
 				</div>
 				<div v-if="activeVorgabe.idVorgabe === 0" class="flex gap-1 flex-wrap justify-start mt-9">
+					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mb-3 leading-tight opacity-50"><i-ri-information-line class="inline align-text-top mr-0.5" />Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1">Speichern</svws-ui-button>
-					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mt-2 leading-tight opacity-50">Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 				</div>
 			</template>
 		</svws-ui-content-card>
