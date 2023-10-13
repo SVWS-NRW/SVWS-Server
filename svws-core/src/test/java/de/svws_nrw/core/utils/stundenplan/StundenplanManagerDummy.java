@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,9 @@ public final class StundenplanManagerDummy {
 	/** Größtmögliche Raum-ID */
 	public static final long RAUM_MAX_ID = 50;
 
+	/** Größtmögliche Lehrer-ID */
+	public static final long LEHRER_MAX_ID = 50;
+
 	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
 		if (a.sortierung < b.sortierung) return -1;
 		if (a.sortierung > b.sortierung) return +1;
@@ -39,13 +43,20 @@ public final class StundenplanManagerDummy {
 		if (result != 0) return result;
 		return Long.compare(a.id, b.id);
 	};
-
+	private static final @NotNull Comparator<@NotNull StundenplanLehrer> _compLehrer = (final @NotNull StundenplanLehrer a, final @NotNull StundenplanLehrer b) -> {
+		final int result = a.kuerzel.compareTo(b.kuerzel);
+		if (result != 0) return result;
+		return Long.compare(a.id, b.id);
+	};
 
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanFach> _fachmap = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanFach> _fachmenge = new ArrayList<>();
 
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanRaum> _raummap = new HashMap<>();
 	private final @NotNull List<@NotNull StundenplanRaum> _raummenge = new ArrayList<>();
+
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanLehrer> _lehrermap = new HashMap<>();
+	private final @NotNull List<@NotNull StundenplanLehrer> _lehrermenge = new ArrayList<>();
 
 	/**
 	 * Der Manager ist anfangs leer.
@@ -61,7 +72,7 @@ public final class StundenplanManagerDummy {
 	 *
 	 * @return ein zufällig erzeugtes Dummy-Fach.
 	 */
-	public static @NotNull StundenplanFach fachCreateRandom(final Random rnd) {
+	public static @NotNull StundenplanFach fachCreateRandom(final @NotNull Random rnd) {
 		final @NotNull StundenplanFach fach = new StundenplanFach();
 		fach.id = rnd.nextLong(FACH_MAX_ID);
 		fach.kuerzel = "Fach Nr. " + fach.id;
@@ -150,7 +161,7 @@ public final class StundenplanManagerDummy {
 	 *
 	 * @return einen zufällig erzeugten Dummy-Raum.
 	 */
-	public static @NotNull StundenplanRaum raumCreateRandom(final Random rnd) {
+	public static @NotNull StundenplanRaum raumCreateRandom(final @NotNull Random rnd) {
 		final @NotNull StundenplanRaum raum = new StundenplanRaum();
 		raum.id = rnd.nextLong(RAUM_MAX_ID);
 		raum.kuerzel = "Raum Nr. " + raum.id;
@@ -272,6 +283,157 @@ public final class StundenplanManagerDummy {
 		// add
 		for (final @NotNull StundenplanRaum raum : list)
 			raumRemoveById(raum.id);
+	}
+
+	/**
+	 * Liefert einen zufällig erzeugten Dummy-Lehrer.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return einen zufällig erzeugten Dummy-Lehrer.
+	 */
+	public static @NotNull StundenplanLehrer lehrerCreateRandom(final @NotNull Random rnd) {
+		final @NotNull StundenplanLehrer lehrer = new StundenplanLehrer();
+		lehrer.id = rnd.nextLong(LEHRER_MAX_ID);
+		lehrer.kuerzel = "Raum Nr. " + lehrer.id;
+		lehrer.nachname = "Nachname " + lehrer.id;
+		lehrer.vorname = "Vorname " + lehrer.id;
+
+		final int nFaecher = rnd.nextInt(3);
+		for (int i = 0; i < nFaecher; i++)
+			lehrer.faecher.add(rnd.nextLong(FACH_MAX_ID));
+
+		return lehrer;
+	}
+
+	/**
+	 * Fügt einen neuen Lehrer hinzu.
+	 *
+	 * @param lehrer  Der neue Lehrer, welcher hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls der Lehrer bereits existiert.
+	 */
+	public void lehrerAdd(final @NotNull StundenplanLehrer lehrer) throws DeveloperNotificationException {
+		// check
+		for (final @NotNull Long idFach : lehrer.faecher)
+			DeveloperNotificationException.ifMapNotContains("_fachmap", _fachmap, idFach);
+
+		// add
+		DeveloperNotificationException.ifMapPutOverwrites(_lehrermap, lehrer.id, lehrer);
+		_lehrermenge.add(lehrer);
+		_lehrermenge.sort(_compLehrer);
+	}
+
+	/**
+	 * Liefert eine Liste mit erzeugten Lehrern.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine Liste mit erzeugten Lehrern.
+	 */
+	public static List<@NotNull StundenplanLehrer> lehrerListCreateRandom(final @NotNull Random rnd) {
+		final List<@NotNull @NotNull StundenplanLehrer> lehrerList = new ArrayList<>();
+
+		final int size = rnd.nextInt(5);
+		for (int i = 0; i < size; i++)
+			lehrerList.add(lehrerCreateRandom(rnd));
+
+		return lehrerList;
+	}
+
+	/**
+	 * Fügt alle Lehrer hinzu.
+	 *
+	 * @param list  Die Menge der Lehrer, welche hinzugefügt werden soll.
+	 */
+	public void lehrerAddAll(final @NotNull List<@NotNull StundenplanLehrer> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanLehrer lehrer : list) {
+			if (_lehrermap.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAll: Lehrer-ID existiert bereits!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAll: Doppelte Lehrer-ID in 'list'!");
+			for (final @NotNull Long idFach : lehrer.faecher)
+				if (!_fachmap.containsKey(idFach))
+					throw new DeveloperNotificationException("lehrerAddAll: Fach-ID der Lehrkraft existiert nicht!");
+		}
+
+		// add
+		for (final @NotNull StundenplanLehrer lehrer : list)
+			lehrerAdd(lehrer);
+	}
+
+	/**
+	 * Liefert die Lehrkraft mit der übergebenen ID.
+	 *
+	 * @param idLehrer  Die Datenbank-ID der Lehrkraft.
+	 *
+	 * @return die Lehrkraft mit der übergebenen ID.
+	 * @throws DeveloperNotificationException falls die Lehrkraft mit der ID nicht existiert.
+	 */
+	public StundenplanLehrer lehrerGetByIdOrException(final long idLehrer) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_lehrermap, idLehrer);
+	}
+
+	/**
+	 * Aktualisiert das vorhandene Lehrer-Objekt durch das neue Objekt.
+	 * <br>Hinweis: Die ID kann nicht gepatched werden.
+	 *
+	 * @param lehrer  Das neue Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void lehrerPatchAttributes(final @NotNull StundenplanLehrer lehrer) {
+		// check
+		if (!_lehrermap.containsKey(lehrer.id))
+			throw new DeveloperNotificationException("lehrerPatchAttributes: Lehrer-ID existiert nicht!");
+		for (final @NotNull Long idFach : lehrer.faecher)
+			if (!_fachmap.containsKey(idFach))
+				throw new DeveloperNotificationException("lehrerPatchAttributes: Fach-ID der Lehrkraft existiert nicht!");
+
+		lehrerRemoveById(lehrer.id);
+		lehrerAdd(lehrer);
+	}
+
+	/**
+	 * Entfernt das existierende Lehrer-Objekt.
+	 *
+	 * @param id  Die ID der Lehrkraft.
+	 */
+	public void lehrerRemoveById(final long id) {
+		DeveloperNotificationException.ifMapRemoveFailes(_lehrermap, id);
+
+		for (final @NotNull Iterator<@NotNull StundenplanLehrer> i = _lehrermenge.iterator(); i.hasNext();)
+			if (i.next().id == id)
+				i.remove();
+	}
+
+	/**
+	 * Entfernt alle Lehrkräfte.
+	 *
+	 * @param list  Die Menge der Lehrkräfte, welche entfernt werden soll.
+	 */
+	public void lehrerRemoveAll(final @NotNull List<@NotNull StundenplanLehrer> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanLehrer lehrer : list) {
+			if (!_lehrermap.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!");
+		}
+
+		// add
+		for (final @NotNull StundenplanLehrer lehrer : list)
+			lehrerRemoveById(lehrer.id);
+	}
+
+	/**
+	 * Liefert eine Liste aller Lehrer-Objekte, sortiert nach dem {@link #_compLehrer}.
+	 *
+	 * @return eine Liste aller Lehrer-Objekte, sortiert nach dem {@link #_compLehrer}.
+	 */
+	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeAsList() {
+		return _lehrermenge;
 	}
 
 }

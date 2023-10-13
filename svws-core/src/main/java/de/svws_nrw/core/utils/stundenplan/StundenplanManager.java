@@ -2507,6 +2507,19 @@ public class StundenplanManager {
 	}
 
 	private void lehrerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanLehrer lehrer : listLehrer) {
+			if (_lehrer_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Lehrer-ID existiert bereits!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Doppelte Lehrer-ID in 'list'!");
+			for (final @NotNull Long idFach : lehrer.faecher)
+				if (!_fach_by_id.containsKey(idFach))
+					throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Fach-ID der Lehrkraft existiert nicht!");
+		}
+
+		// add
 		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
 			lehrerAddOhneUpdate(lehrer);
 	}
@@ -2628,6 +2641,16 @@ public class StundenplanManager {
 	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
 	 */
 	public void lehrerRemoveAll(final @NotNull List<@NotNull StundenplanLehrer> listLehrer) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanLehrer lehrer : listLehrer) {
+			if (!_lehrer_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!");
+		}
+
+		// remove
 		for (final @NotNull StundenplanLehrer lehrer : listLehrer)
 			lehrerRemoveOhneUpdateById(lehrer.id);
 

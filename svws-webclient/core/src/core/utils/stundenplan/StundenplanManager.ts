@@ -2421,6 +2421,16 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private lehrerAddAllOhneUpdate(listLehrer : List<StundenplanLehrer>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const lehrer of listLehrer) {
+			if (this._lehrer_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Lehrer-ID existiert bereits!")
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Doppelte Lehrer-ID in 'list'!")
+			for (const idFach of lehrer.faecher)
+				if (!this._fach_by_id.containsKey(idFach))
+					throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Fach-ID der Lehrkraft existiert nicht!")
+		}
 		for (const lehrer of listLehrer)
 			this.lehrerAddOhneUpdate(lehrer);
 	}
@@ -2531,6 +2541,13 @@ export class StundenplanManager extends JavaObject {
 	 * @param listLehrer  Die Liste der zu entfernenden {@link StundenplanLehrer}-Objekte.
 	 */
 	public lehrerRemoveAll(listLehrer : List<StundenplanLehrer>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const lehrer of listLehrer) {
+			if (!this._lehrer_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Lehrer-ID existiert nicht!")
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("lehrerRemoveAll: Doppelte Lehrer-ID in der Liste!")
+		}
 		for (const lehrer of listLehrer)
 			this.lehrerRemoveOhneUpdateById(lehrer.id);
 		this.update_all();
