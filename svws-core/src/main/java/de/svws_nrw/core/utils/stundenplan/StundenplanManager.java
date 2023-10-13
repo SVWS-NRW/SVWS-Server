@@ -1328,6 +1328,7 @@ public class StundenplanManager {
 				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Doppelte Fach-ID in der Liste!");
 		}
 
+		// add
 		for (final @NotNull StundenplanFach fach : listFach)
 			fachAddOhneUpdate(fach);
 	}
@@ -3200,6 +3201,16 @@ public class StundenplanManager {
 	}
 
 	private void raumAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanRaum raum : listRaum) {
+			if (_raum_by_id.containsKey(raum.id))
+				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Raum-ID existiert bereits!");
+			if (!setOfIDs.add(raum.id))
+				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Doppelte Raum-ID in 'list'!");
+		}
+
+		// add
 		for (final @NotNull StundenplanRaum raum : listRaum)
 			raumAddOhneUpdate(raum);
 	}
@@ -3291,6 +3302,15 @@ public class StundenplanManager {
 	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
 	 */
 	public void raumRemoveAll(final @NotNull List<@NotNull StundenplanRaum> listRaum) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanRaum raum : listRaum) {
+			if (!_raum_by_id.containsKey(raum.id))
+				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!");
+			if (!setOfIDs.add(raum.id))
+				throw new DeveloperNotificationException("raumRemoveAll: Doppelte Raum-ID in der Liste!");
+		}
+
 		for (final @NotNull StundenplanRaum raum : listRaum)
 			raumRemoveOhneUpdateById(raum.id);
 

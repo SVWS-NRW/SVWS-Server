@@ -3068,6 +3068,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private raumAddAllOhneUpdate(listRaum : List<StundenplanRaum>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const raum of listRaum) {
+			if (this._raum_by_id.containsKey(raum.id))
+				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Raum-ID existiert bereits!")
+			if (!setOfIDs.add(raum.id))
+				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Doppelte Raum-ID in 'list'!")
+		}
 		for (const raum of listRaum)
 			this.raumAddOhneUpdate(raum);
 	}
@@ -3151,6 +3158,13 @@ export class StundenplanManager extends JavaObject {
 	 * @param listRaum  Die Liste der zu entfernenden {@link StundenplanRaum}-Objekte.
 	 */
 	public raumRemoveAll(listRaum : List<StundenplanRaum>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const raum of listRaum) {
+			if (!this._raum_by_id.containsKey(raum.id))
+				throw new DeveloperNotificationException("raumRemoveAll: Raum-ID existiert nicht!")
+			if (!setOfIDs.add(raum.id))
+				throw new DeveloperNotificationException("raumRemoveAll: Doppelte Raum-ID in der Liste!")
+		}
 		for (const raum of listRaum)
 			this.raumRemoveOhneUpdateById(raum.id);
 		this.update_all();
