@@ -3340,6 +3340,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private schuelerAddAllOhneUpdate(listSchueler : List<StundenplanSchueler>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const lehrer of listSchueler) {
+			if (this._schueler_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Schüler-ID existiert bereits!")
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Doppelte Schüler-ID in 'list'!")
+		}
 		for (const schueler of listSchueler)
 			this.schuelerAddOhneUpdate(schueler);
 	}
@@ -3358,6 +3365,40 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idSchueler Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
+	 */
+	public schuelerGetByIdOrException(idSchueler : number) : StundenplanSchueler {
+		return DeveloperNotificationException.ifMapGetIsNull(this._schueler_by_id, idSchueler);
+	}
+
+	/**
+	 * Liefert die Datenbank-ID des Schülers.<br>
+	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
+	 *
+	 * @return  Die Datenbank-ID des Schülers.
+	 */
+	public schuelerGetIDorException() : number {
+		const size : number = this._schuelermenge.size();
+		DeveloperNotificationException.ifTrue("getSchuelerID() geht nicht bei " + size + " Schülern!", size !== 1);
+		return this._schuelermenge.get(0).id;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchueler}-Objekte, sortiert nach {@link #_compSchueler}.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchueler}-Objekte, sortiert nach {@link #_compSchueler}.
+	 */
+	public schuelerGetMengeAsList() : List<StundenplanSchueler> {
+		return this._schuelermenge;
 	}
 
 	/**
@@ -3419,7 +3460,7 @@ export class StundenplanManager extends JavaObject {
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 */
-	public schuelerRemoveOhneUpdateById(idSchueler : number) : void {
+	private schuelerRemoveOhneUpdateById(idSchueler : number) : void {
 		for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idSchueler, idSchueler))
 			klasse.schueler.remove(idSchueler);
 		for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idSchueler, idSchueler))
@@ -3427,6 +3468,17 @@ export class StundenplanManager extends JavaObject {
 		for (const ku of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idSchueler, idSchueler))
 			ku.schueler.remove(idSchueler);
 		DeveloperNotificationException.ifMapRemoveFailes(this._schiene_by_id, idSchueler);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanSchueler}-Objekt.
+	 * <br>Hinweis: Entfernt kaskadierend auch aus {@link StundenplanKlasse}, {@link StundenplanKurs} und {@link StundenplanKlassenunterricht}.
+	 *
+	 * @param idSchueler  Die ID des {@link StundenplanSchueler}-Objekts.
+	 */
+	public schuelerRemoveById(idSchueler : number) : void {
+		this.schuelerRemoveOhneUpdateById(idSchueler);
+		this.update_all();
 	}
 
 	/**
@@ -3476,18 +3528,6 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public getWochenTypModell() : number {
 		return this._stundenplanWochenTypModell;
-	}
-
-	/**
-	 * Liefert die Datenbank-ID des Schülers.<br>
-	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
-	 *
-	 * @return  Die Datenbank-ID des Schülers.
-	 */
-	public schuelerGetIDorException() : number {
-		const size : number = this._schuelermenge.size();
-		DeveloperNotificationException.ifTrue("getSchuelerID() geht nicht bei " + size + " Schülern!", size !== 1);
-		return this._schuelermenge.get(0).id;
 	}
 
 	/**

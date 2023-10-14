@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
+import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -85,13 +87,14 @@ class TestStundenplanManagerRandomized {
 		testManagerModificationFach(rnd, m1, m2);
 		testManagerModificationRaum(rnd, m1, m2);
 		testManagerModificationLehrer(rnd, m1, m2);
+		testManagerModificationSchueler(rnd, m1, m2);
+		testManagerModificationKlasse(rnd, m1, m2);
 
 		// kalenderwochenzuordnung
 		// jahrgang
 		// zeitraster
 		// pausenzeit
 		// aufsichtsbereich
-		// schueler
 		// klasse
 		// schiene
 		// klassenunterricht
@@ -473,4 +476,141 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
+	private static void testManagerModificationSchueler(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testManagerModificationSchuelerAdd(rnd, m1, m2);
+		testManagerModificationSchuelerAddAll(rnd, m1, m2);
+		testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(m1, m2);
+		// schuelerGetAnzahlByKursIdAsListOrException
+		// schuelerGetIDorException
+		testManagerModificationSchuelerGetByIdOrException(rnd, m1, m2);
+		// schuelerGetMengeByKlasseIdAsListOrException
+		// schuelerGetMengeByKursIdAsListOrException
+		// schuelerRemoveById
+
+		testManagerModificationSchuelerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testManagerModificationSchuelerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanSchueler schueler = StundenplanManagerDummy.schuelerCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.schuelerAdd(schueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.schuelerAdd(schueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationSchuelerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanSchueler> schuelerList = StundenplanManagerDummy.schuelerListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.schuelerAddAll(schuelerList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.schuelerAddAll(schuelerList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
+
+		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
+		while (i1.hasNext() || i2.hasNext()) {
+			final int klassengroesse1 = m1.schuelerGetAnzahlByKlasseIdOrException(i1.next().id);
+			final int klassengroesse2 = m2.schuelerGetAnzahlByKlasseIdOrException(i2.next().id);
+			assertEquals(klassengroesse1, klassengroesse2);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
+	private static void testManagerModificationSchuelerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final long idSchueler = rnd.nextLong(StundenplanManagerDummy.SCHUELER_MAX_ID);
+
+		StundenplanSchueler schueler1 = null;
+		try {
+			schueler1 = m1.schuelerGetByIdOrException(idSchueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			schueler1 = null;
+		}
+
+		StundenplanSchueler schueler2 = null;
+		try {
+			schueler2 = m2.schuelerGetByIdOrException(idSchueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			schueler2 = null;
+		}
+
+		if ((schueler1 != null) && (schueler2 != null))
+			assertEquals(true, schueler1.id == schueler2.id);
+		else
+			assertEquals(true, (schueler1 == null) && (schueler2 == null));
+	}
+
+	private static void testManagerModificationSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanSchueler> i1 = m1.schuelerGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanSchueler> i2 = m2.schuelerGetMengeAsList().iterator();
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.next().id, i2.next().id);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
+	private static void testManagerModificationKlasse(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testManagerModificationKlasseAdd(rnd, m1, m2);
+		testManagerModificationKlasseGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testManagerModificationKlasseAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanKlasse klasse = StundenplanManagerDummy.klasseCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.klasseAdd(klasse);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.klasseAdd(klasse);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationKlasseGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.klasseGetMengeAsList().size(), m2.klasseGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
+		assertEquals(i1.hasNext(), i2.hasNext());
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.hasNext(), i2.hasNext());
+			assertEquals(i1.next().id, i2.next().id);
+		}
+	}
 }

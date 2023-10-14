@@ -2569,7 +2569,6 @@ public class StundenplanManager {
 		return DeveloperNotificationException.ifMapGetIsNull(_lehrer_by_id, idLehrer);
 	}
 
-
 	/**
 	 * Liefert eine Liste aller {@link StundenplanLehrer}-Objekte.
 	 * <br>Laufzeit: O(1)
@@ -3509,6 +3508,17 @@ public class StundenplanManager {
 	}
 
 	private void schuelerAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanSchueler> listSchueler) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanSchueler lehrer : listSchueler) {
+			if (_schueler_by_id.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Schüler-ID existiert bereits!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Doppelte Schüler-ID in 'list'!");
+			// Hinweis: Kein check der Klassenreferenz, der Check wird umgekehrt gemacht.
+		}
+
+		// add
 		for (final @NotNull StundenplanSchueler schueler : listSchueler)
 			schuelerAddOhneUpdate(schueler);
 	}
@@ -3528,6 +3538,40 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
 		// schueler.idKlasse nicht nötig, ein Schüler kann auch keine Klasse haben. Die Zuordnung erfolgt über StundenplanKlasse.
+	}
+
+	/**
+	 * Liefert das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @param idSchueler Die ID des angefragten-Objektes.
+	 *
+	 * @return das zur ID zugehörige {@link StundenplanSchueler}-Objekt.
+	 */
+	public @NotNull StundenplanSchueler schuelerGetByIdOrException(final long idSchueler) {
+		return DeveloperNotificationException.ifMapGetIsNull(_schueler_by_id, idSchueler);
+	}
+
+	/**
+	 * Liefert die Datenbank-ID des Schülers.<br>
+	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
+	 *
+	 * @return  Die Datenbank-ID des Schülers.
+	 */
+	public long schuelerGetIDorException() {
+		final int size = _schuelermenge.size();
+		DeveloperNotificationException.ifTrue("getSchuelerID() geht nicht bei " + size + " Schülern!", size != 1);
+		return _schuelermenge.get(0).id;
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanSchueler}-Objekte, sortiert nach {@link #_compSchueler}.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine Liste aller {@link StundenplanSchueler}-Objekte, sortiert nach {@link #_compSchueler}.
+	 */
+	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeAsList() {
+		return _schuelermenge;
 	}
 
 	/**
@@ -3589,7 +3633,7 @@ public class StundenplanManager {
 	 *
 	 * @param idSchueler  Die Datenbank-ID des Schülers.
 	 */
-	public void schuelerRemoveOhneUpdateById(final long idSchueler) {
+	private void schuelerRemoveOhneUpdateById(final long idSchueler) {
 		// Kaskade: StundenplanKlasse
 		// Folgende zwei Zeilen nicht mehr nötig, sobald aus DTO entfernt.
 		for (final @NotNull StundenplanKlasse klasse : MapUtils.getOrCreateArrayList(_klassenmenge_by_idSchueler, idSchueler))
@@ -3605,6 +3649,18 @@ public class StundenplanManager {
 
 		// Remove
 		DeveloperNotificationException.ifMapRemoveFailes(_schiene_by_id, idSchueler);
+	}
+
+	/**
+	 * Entfernt aus dem Stundenplan eine existierendes {@link StundenplanSchueler}-Objekt.
+	 * <br>Hinweis: Entfernt kaskadierend auch aus {@link StundenplanKlasse}, {@link StundenplanKurs} und {@link StundenplanKlassenunterricht}.
+	 *
+	 * @param idSchueler  Die ID des {@link StundenplanSchueler}-Objekts.
+	 */
+	public void schuelerRemoveById(final long idSchueler) {
+		schuelerRemoveOhneUpdateById(idSchueler);
+
+		update_all();
 	}
 
 	// #####################################################################
@@ -3658,18 +3714,6 @@ public class StundenplanManager {
 	 */
 	public int getWochenTypModell() {
 		return _stundenplanWochenTypModell;
-	}
-
-	/**
-	 * Liefert die Datenbank-ID des Schülers.<br>
-	 * Wirft eine Exception, falls in den Daten nicht genau ein Schüler geladen wurde.
-	 *
-	 * @return  Die Datenbank-ID des Schülers.
-	 */
-	public long schuelerGetIDorException() {
-		final int size = _schuelermenge.size();
-		DeveloperNotificationException.ifTrue("getSchuelerID() geht nicht bei " + size + " Schülern!", size != 1);
-		return _schuelermenge.get(0).id;
 	}
 
 	/**
