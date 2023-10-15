@@ -1203,6 +1203,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const aufsichtsbereich of listAufsichtsbereich) {
+			if (this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Aufsichtsbereich-ID existiert bereits!")
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Doppelte Aufsichtsbereich-ID in 'list'!")
+		}
 		for (const aufsichtsbereich of listAufsichtsbereich)
 			this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
 	}
@@ -1285,6 +1292,13 @@ export class StundenplanManager extends JavaObject {
 	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public aufsichtsbereichRemoveAll(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const aufsichtsbereich of listAufsichtsbereich) {
+			if (!this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!")
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Doppelte Aufsichtsbereich-ID in der Liste!")
+		}
 		for (const aufsichtsbereich of listAufsichtsbereich)
 			this.aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
 		this.update_all();
@@ -1396,6 +1410,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private jahrgangAddAllOhneUpdate(listJahrgang : List<StundenplanJahrgang>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const jahrgang of listJahrgang) {
+			if (this._jahrgang_by_id.containsKey(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Jahrgang-ID existiert bereits!")
+			if (!setOfIDs.add(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Doppelte Jahrgang-ID in 'list'!")
+		}
 		for (const jahrgang of listJahrgang)
 			this.jahrgangAddOhneUpdate(jahrgang);
 	}

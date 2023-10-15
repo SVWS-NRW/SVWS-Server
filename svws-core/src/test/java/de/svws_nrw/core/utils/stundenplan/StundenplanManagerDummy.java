@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
@@ -23,22 +24,6 @@ import jakarta.validation.constraints.NotNull;
  * @author Benjamin A. Bartsch
  */
 public final class StundenplanManagerDummy {
-
-	/** Größtmögliche Fach-ID */
-	public static final long FACH_MAX_ID = 60;
-
-	/** Größtmögliche Raum-ID */
-	public static final long RAUM_MAX_ID = 50;
-
-	/** Größtmögliche Lehrer-ID */
-	public static final long LEHRER_MAX_ID = 50;
-
-	/** Größtmögliche Schüler-ID */
-	public static final long SCHUELER_MAX_ID = 700;
-
-	/** Größtmögliche Klasse-ID */
-	public static final long KLASSE_MAX_ID = 40;
-
 
 	private static final @NotNull Comparator<@NotNull StundenplanFach> _compFach = (final @NotNull StundenplanFach a, final @NotNull StundenplanFach b) -> {
 		if (a.sortierung < b.sortierung) return -1;
@@ -71,21 +56,45 @@ public final class StundenplanManagerDummy {
 		if (cmpVorname != 0) return cmpVorname;
 		return Long.compare(a.id, b.id);
 	};
+	private static final @NotNull Comparator<@NotNull StundenplanJahrgang> _compJahrgang = (final @NotNull StundenplanJahrgang a, final @NotNull StundenplanJahrgang b) -> {
+		final int result = a.kuerzel.compareTo(b.kuerzel);
+		if (result != 0) return result;
+		return Long.compare(a.id, b.id);
+	};
+	private static final @NotNull Comparator<@NotNull StundenplanAufsichtsbereich> _compAufsichtsbereich = (final @NotNull StundenplanAufsichtsbereich a, final @NotNull StundenplanAufsichtsbereich b) -> {
+		final int result = a.kuerzel.compareTo(b.kuerzel);
+		if (result != 0) return result;
+		return Long.compare(a.id, b.id);
+	};
+
+	/** Größtmögliche Fach-ID */
+	public static final long FACH_MAX_ID = 60;
+
+	/** Größtmögliche Raum-ID */
+	public static final long RAUM_MAX_ID = 50;
+
+	/** Größtmögliche Lehrer-ID */
+	public static final long LEHRER_MAX_ID = 50;
+
+	/** Größtmögliche Schüler-ID */
+	public static final long SCHUELER_MAX_ID = 700;
+
+	/** Größtmögliche Klasse-ID */
+	public static final long KLASSE_MAX_ID = 40;
+
+	/** Größtmögliche Jahrgang-ID */
+	public static final long JAHRGANG_MAX_ID = 13;
+
+	/** Größtmögliche Aufsichtsbereich-ID */
+	public static final long AUFSICHTSBEREICH_MAX_ID = 30;
 
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanFach> _fachmap = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanFach> _fachmenge = new ArrayList<>();
-
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanRaum> _raummap = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanRaum> _raummenge = new ArrayList<>();
-
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanLehrer> _lehrermap = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanLehrer> _lehrermenge = new ArrayList<>();
-
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanKlasse> _klassemap = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanKlasse> _klassemenge = new ArrayList<>();
-
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanSchueler> _schuelermap = new HashMap<>();
-	private final @NotNull List<@NotNull StundenplanSchueler> _schuelermenge = new ArrayList<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanJahrgang> _jahrgangmap = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereichmap = new HashMap<>();
 
 	/**
 	 * Der Manager ist anfangs leer.
@@ -138,8 +147,6 @@ public final class StundenplanManagerDummy {
 	 */
 	public void fachAdd(final @NotNull StundenplanFach fach) throws DeveloperNotificationException {
 		DeveloperNotificationException.ifMapPutOverwrites(_fachmap, fach.id, fach);
-		_fachmenge.add(fach);
-		_fachmenge.sort(_compFach);
 	}
 
 	/**
@@ -180,7 +187,9 @@ public final class StundenplanManagerDummy {
 	 * @return eine Liste aller Fach-Objekte, sortiert nach {@link #_compFach}.
 	 */
 	public @NotNull List<@NotNull StundenplanFach> fachGetMengeAsList() {
-		return _fachmenge;
+		final @NotNull List<@NotNull StundenplanFach> list = new ArrayList<>(_fachmap.values());
+		list.sort(_compFach);
+		return list;
 	}
 
 	/**
@@ -207,9 +216,10 @@ public final class StundenplanManagerDummy {
 	 * @throws DeveloperNotificationException  falls der Raum bereits existiert.
 	 */
 	public void raumAdd(final @NotNull StundenplanRaum raum) throws DeveloperNotificationException {
+		// Check nicht nötig.
+
+		// Add
 		DeveloperNotificationException.ifMapPutOverwrites(_raummap, raum.id, raum);
-		_raummenge.add(raum);
-		_raummenge.sort(_compRaum);
 	}
 
 	/**
@@ -267,7 +277,9 @@ public final class StundenplanManagerDummy {
 	 * @return eine Liste aller Raum-Objekte, sortiert nach dem {@link #_compRaum}.
 	 */
 	public @NotNull List<@NotNull StundenplanRaum> raumGetMengeAsList() {
-		return _raummenge;
+		final @NotNull List<@NotNull StundenplanRaum> list = new ArrayList<>(_raummap.values());
+		list.sort(_compRaum);
+		return list;
 	}
 
 	/**
@@ -288,10 +300,6 @@ public final class StundenplanManagerDummy {
 	 */
 	public void raumRemoveById(final long id) {
 		DeveloperNotificationException.ifMapRemoveFailes(_raummap, id);
-
-		for (final @NotNull Iterator<@NotNull StundenplanRaum> i = _raummenge.iterator(); i.hasNext();)
-			if (i.next().id == id)
-				i.remove();
 	}
 
 	/**
@@ -312,6 +320,371 @@ public final class StundenplanManagerDummy {
 		// add
 		for (final @NotNull StundenplanRaum raum : list)
 			raumRemoveById(raum.id);
+	}
+
+	/**
+	 * Liefert einen zufällig erzeugten Dummy-Schueler.
+	 * <br>Hinweis: Ein neuer Schüler hat zunächst keine Klasse.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return einen zufällig erzeugten Dummy-Schueler.
+	 */
+	public static @NotNull StundenplanSchueler schuelerCreateRandom(final @NotNull Random rnd) {
+		final @NotNull StundenplanSchueler schueler = new StundenplanSchueler();
+		schueler.id = rnd.nextLong(SCHUELER_MAX_ID);
+		schueler.nachname = "Nachname " + schueler.id;
+		schueler.vorname = "Vorname " + schueler.id;
+		schueler.idKlasse = -1;
+		return schueler;
+	}
+
+	/**
+	 * Liefert eine Liste mit erzeugten Schülern.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine Liste mit erzeugten Schülern.
+	 */
+	public static @NotNull List<@NotNull StundenplanSchueler> schuelerListCreateRandom(final @NotNull Random rnd) {
+		final @NotNull List<@NotNull @NotNull StundenplanSchueler> schuelerList = new ArrayList<>();
+
+		final int size = rnd.nextInt(5);
+		for (int i = 0; i < size; i++)
+			schuelerList.add(schuelerCreateRandom(rnd));
+
+		return schuelerList;
+	}
+
+	/**
+	 * Fügt einen neuen Schüler hinzu.
+	 *
+	 * @param schueler  Der neue Schüler, welcher hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls der Schüler bereits existiert.
+	 */
+	public void schuelerAdd(final @NotNull StundenplanSchueler schueler) throws DeveloperNotificationException {
+		// Check: Klassenreferenz nicht prüfen, da Prüfung umgekehrt stattfindet.
+
+		// add
+		DeveloperNotificationException.ifMapPutOverwrites(_schuelermap, schueler.id, schueler);
+	}
+
+	/**
+	 * Fügt alle Schüler hinzu.
+	 *
+	 * @param list  Die Menge der Schüler, welche hinzugefügt werden soll.
+	 */
+	public void schuelerAddAll(final @NotNull List<@NotNull StundenplanSchueler> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanSchueler lehrer : list) {
+			if (_schuelermap.containsKey(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAll: Schüler-ID existiert bereits!");
+			if (!setOfIDs.add(lehrer.id))
+				throw new DeveloperNotificationException("schuelerAddAll: Doppelte Schüler-ID in 'list'!");
+			// Hinweis: Kein check der Klassenreferenz, der Check wird umgekehrt gemacht.
+		}
+
+		// add
+		for (final @NotNull StundenplanSchueler schueler : list)
+			schuelerAdd(schueler);
+	}
+
+	/**
+	 * Liefert die Anzahl der SuS der Klasse.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return die Anzahl der SuS der Klasse.
+	 */
+	public int schuelerGetAnzahlByKlasseIdOrException(final long idKlasse) {
+		return DeveloperNotificationException.ifMapGetIsNull(_klassemap, idKlasse).schueler.size();
+	}
+
+	/**
+	 * Liefert die Menge der Schüler der Klasse, sortiert nach {@link #_compSchueler}.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return die Menge der Schüler der Klasse, sortiert nach {@link #_compSchueler}.
+	 */
+	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeByKlasseIdAsListOrException(final long idKlasse) {
+		final @NotNull List<@NotNull StundenplanSchueler> listSchueler = new ArrayList<>();
+
+		for (final @NotNull Long idSchueler : DeveloperNotificationException.ifMapGetIsNull(_klassemap, idKlasse).schueler)
+			listSchueler.add(DeveloperNotificationException.ifMapGetIsNull(_schuelermap, idSchueler));
+
+		listSchueler.sort(_compSchueler);
+		return listSchueler;
+	}
+
+	/**
+	 * Liefert den Schüler mit der übergebenen ID.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return den Schüler mit der übergebenen ID.
+	 * @throws DeveloperNotificationException falls der Schüler mit der ID nicht existiert.
+	 */
+	public StundenplanSchueler schuelerGetByIdOrException(final long idSchueler) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_schuelermap, idSchueler);
+	}
+
+	/**
+	 * Liefert eine Liste aller Schüler-Objekte, sortiert nach dem {@link #_compSchueler}.
+	 *
+	 * @return eine Liste aller Schüler-Objekte, sortiert nach dem {@link #_compSchueler}.
+	 */
+	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeAsList() {
+		final @NotNull List<@NotNull StundenplanSchueler> list = new ArrayList<>(_schuelermap.values());
+		list.sort(_compSchueler);
+		return list;
+	}
+
+	/**
+	 * Liefert einen zufällig erzeugten Dummy-Jahrgang.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return einen zufällig erzeugten Dummy-Jahrgang.
+	 */
+	public static @NotNull StundenplanJahrgang jahrgangCreateRandom(final @NotNull Random rnd) {
+		final @NotNull StundenplanJahrgang jahrgang = new StundenplanJahrgang();
+		jahrgang.id = rnd.nextLong(JAHRGANG_MAX_ID);
+		jahrgang.kuerzel = "" + (jahrgang.id + 1);
+		if (jahrgang.id == JAHRGANG_MAX_ID - 1)
+			jahrgang.kuerzel = "Q2";
+		if (jahrgang.id == JAHRGANG_MAX_ID - 2)
+			jahrgang.kuerzel = "Q1";
+		if (jahrgang.id == JAHRGANG_MAX_ID - 3)
+			jahrgang.kuerzel = "EF";
+		jahrgang.bezeichnung = "Bezeichung von " + jahrgang.kuerzel;
+		return jahrgang;
+	}
+
+	/**
+	 * Liefert eine Liste mit erzeugten Jahrgängen.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine Liste mit erzeugten Jahrgängen.
+	 */
+	public static @NotNull List<@NotNull StundenplanJahrgang> jahrgangListCreateRandom(final @NotNull Random rnd) {
+		final @NotNull List<@NotNull @NotNull StundenplanJahrgang> jahrgangList = new ArrayList<>();
+
+		final int size = rnd.nextInt(5);
+		for (int i = 0; i < size; i++)
+			jahrgangList.add(jahrgangCreateRandom(rnd));
+
+		return jahrgangList;
+	}
+
+	/**
+	 * Fügt einen neuen Jahrgang hinzu.
+	 *
+	 * @param jahrgang  Der neue Jahrgang, welcher hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls der Jahrgang bereits existiert.
+	 */
+	public void jahrgangAdd(final @NotNull StundenplanJahrgang jahrgang) throws DeveloperNotificationException {
+		// Check nicht nötig, da keine Referenzen vorhanden.
+
+		// add
+		DeveloperNotificationException.ifMapPutOverwrites(_jahrgangmap, jahrgang.id, jahrgang);
+	}
+
+	/**
+	 * Fügt alle Jahrgänge hinzu.
+	 *
+	 * @param list  Die Menge der Jahrgänge, welche hinzugefügt werden soll.
+	 */
+	public void jahrgangAddAll(final @NotNull List<@NotNull StundenplanJahrgang> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanJahrgang jahrgang : list) {
+			if (_jahrgangmap.containsKey(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Jahrgang-ID existiert bereits!");
+			if (!setOfIDs.add(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Doppelte Jahrgang-ID in 'list'!");
+		}
+
+		// add
+		for (final @NotNull StundenplanJahrgang jahrgang : list)
+			jahrgangAdd(jahrgang);
+	}
+
+	/**
+	 * Liefert den Jahrgang mit der übergebenen ID.
+	 *
+	 * @param idJahrgang  Die Datenbank-ID des Jahrgangs.
+	 *
+	 * @return den Jahrgang mit der übergebenen ID.
+	 * @throws DeveloperNotificationException falls der Jahrgang mit der ID nicht existiert.
+	 */
+	public StundenplanJahrgang jahrgangGetByIdOrException(final long idJahrgang) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_jahrgangmap, idJahrgang);
+	}
+
+	/**
+	 * Aktualisiert das vorhandene Jahrgang-Objekt durch das neue Objekt.
+	 * <br>Hinweis: Die ID kann nicht gepatched werden.
+	 *
+	 * @param jahrgang  Das neue Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void jahrgangPatchAttributes(final @NotNull StundenplanJahrgang jahrgang) {
+		// check
+		if (!_jahrgangmap.containsKey(jahrgang.id))
+			throw new DeveloperNotificationException("jahrgangPatchAttributes: Jahrgang-ID existiert nicht!");
+
+		// Altes Objekt durch neues Objekt ersetzen
+		DeveloperNotificationException.ifMapRemoveFailes(_jahrgangmap, jahrgang.id);
+		DeveloperNotificationException.ifMapPutOverwrites(_jahrgangmap, jahrgang.id, jahrgang);
+	}
+
+	/**
+	 * Liefert eine Liste aller Jahrgang-Objekte, sortiert nach dem {@link #_compJahrgang}.
+	 *
+	 * @return eine Liste aller Jahrgang-Objekte, sortiert nach dem {@link #_compJahrgang}.
+	 */
+	public @NotNull List<@NotNull StundenplanJahrgang> jahrgangGetMengeAsList() {
+		final @NotNull List<@NotNull StundenplanJahrgang> list = new ArrayList<>(_jahrgangmap.values());
+		list.sort(_compJahrgang);
+		return list;
+	}
+
+	/**
+	 * Fügt einen neuen Aufsichtsbereich hinzu.
+	 *
+	 * @param aufsichtsbereich  Der neue Aufsichtsbereich, welcher hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls der Aufsichtsbereich bereits existiert.
+	 */
+	public void aufsichtsbereichAdd(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) throws DeveloperNotificationException {
+		// Check nicht nötig, da keine Referenzen vorhanden.
+
+		// add
+		DeveloperNotificationException.ifMapPutOverwrites(_aufsichtsbereichmap, aufsichtsbereich.id, aufsichtsbereich);
+	}
+
+	/**
+	 * Fügt alle Aufsichtsbereiche hinzu.
+	 *
+	 * @param list  Die Menge der Aufsichtsbereiche, welche hinzugefügt werden soll.
+	 */
+	public void aufsichtsbereichAddAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
+			if (_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAll: Aufsichtsbereich-ID existiert bereits!");
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAll: Doppelte Aufsichtsbereich-ID in 'list'!");
+		}
+
+		// add
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list)
+			aufsichtsbereichAdd(aufsichtsbereich);
+	}
+
+	/**
+	 * Liefert einen zufällig erzeugten Dummy-Aufsichtsbereich.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return einen zufällig erzeugten Dummy-Aufsichtsbereich.
+	 */
+	public static @NotNull StundenplanAufsichtsbereich aufsichtsbereichCreateRandom(final @NotNull Random rnd) {
+		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = new StundenplanAufsichtsbereich();
+		aufsichtsbereich.id = rnd.nextLong(AUFSICHTSBEREICH_MAX_ID);
+		aufsichtsbereich.kuerzel = "aufsichtsbereich.kuerzel " + aufsichtsbereich.id;
+		aufsichtsbereich.beschreibung = "aufsichtsbereich.beschreibung " + aufsichtsbereich.beschreibung;
+		return aufsichtsbereich;
+	}
+
+	/**
+	 * Liefert eine Liste mit erzeugten Aufsichtsbereichen.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine Liste mit erzeugten Aufsichtsbereichen.
+	 */
+	public static @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichListCreateRandom(final @NotNull Random rnd) {
+		final @NotNull List<@NotNull @NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = new ArrayList<>();
+
+		final int size = rnd.nextInt(5);
+		for (int i = 0; i < size; i++)
+			aufsichtsbereichList.add(aufsichtsbereichCreateRandom(rnd));
+
+		return aufsichtsbereichList;
+	}
+
+	/**
+	 * Liefert den Aufsichtsbereich mit der übergebenen ID.
+	 *
+	 * @param idAufsichtsbereich  Die Datenbank-ID des Aufsichtsbereichs.
+	 *
+	 * @return den Aufsichtsbereich mit der übergebenen ID.
+	 * @throws DeveloperNotificationException falls der Aufsichtsbereich mit der ID nicht existiert.
+	 */
+	public StundenplanAufsichtsbereich aufsichtsbereichGetByIdOrException(final long idAufsichtsbereich) throws DeveloperNotificationException {
+		return DeveloperNotificationException.ifMapGetIsNull(_aufsichtsbereichmap, idAufsichtsbereich);
+	}
+
+	/**
+	 * Aktualisiert das vorhandene Aufsichtsbereich-Objekt durch das neue Objekt.
+	 * <br>Hinweis: Die ID kann nicht gepatched werden.
+	 *
+	 * @param aufsichtsbereich  Das neue Objekt, welches das alte Objekt ersetzt.
+	 */
+	public void aufsichtsbereichPatchAttributes(final @NotNull StundenplanAufsichtsbereich aufsichtsbereich) {
+		// check
+		if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+			throw new DeveloperNotificationException("aufsichtsbereichPatchAttributes: Aufsichtsbereich-ID existiert nicht!");
+
+		// Altes Objekt durch neues Objekt ersetzen
+		DeveloperNotificationException.ifMapRemoveFailes(_aufsichtsbereichmap, aufsichtsbereich.id);
+		DeveloperNotificationException.ifMapPutOverwrites(_aufsichtsbereichmap, aufsichtsbereich.id, aufsichtsbereich);
+	}
+
+	/**
+	 * Entfernt das existierende Aufsichtsbereich-Objekt.
+	 *
+	 * @param id  Die ID des Aufsichtsbereichs.
+	 */
+	public void aufsichtsbereichRemoveById(final long id) {
+		DeveloperNotificationException.ifMapRemoveFailes(_aufsichtsbereichmap, id);
+	}
+
+	/**
+	 * Entfernt alle Aufsichtsbereiche.
+	 *
+	 * @param list  Die Menge der Aufsichtsbereiche, welche entfernt werden soll.
+	 */
+	public void aufsichtsbereichRemoveAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list) {
+			if (!_aufsichtsbereichmap.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!");
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Doppelte Aufsichtsbereich-ID in der Liste!");
+		}
+
+		// add
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : list)
+			aufsichtsbereichRemoveById(aufsichtsbereich.id);
+	}
+
+	/**
+	 * Liefert eine Liste aller Aufsichtsbereich-Objekte, sortiert nach dem {@link #_compAufsichtsbereich}.
+	 *
+	 * @return eine Liste aller Aufsichtsbereich-Objekte, sortiert nach dem {@link #_compAufsichtsbereich}.
+	 */
+	public @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichGetMengeAsList() {
+		final @NotNull List<@NotNull StundenplanAufsichtsbereich> list = new ArrayList<>(_aufsichtsbereichmap.values());
+		list.sort(_compAufsichtsbereich);
+		return list;
 	}
 
 	/**
@@ -366,8 +739,6 @@ public final class StundenplanManagerDummy {
 
 		// add
 		DeveloperNotificationException.ifMapPutOverwrites(_lehrermap, lehrer.id, lehrer);
-		_lehrermenge.add(lehrer);
-		_lehrermenge.sort(_compLehrer);
 	}
 
 	/**
@@ -430,10 +801,6 @@ public final class StundenplanManagerDummy {
 	 */
 	public void lehrerRemoveById(final long id) {
 		DeveloperNotificationException.ifMapRemoveFailes(_lehrermap, id);
-
-		for (final @NotNull Iterator<@NotNull StundenplanLehrer> i = _lehrermenge.iterator(); i.hasNext();)
-			if (i.next().id == id)
-				i.remove();
 	}
 
 	/**
@@ -462,110 +829,9 @@ public final class StundenplanManagerDummy {
 	 * @return eine Liste aller Lehrer-Objekte, sortiert nach dem {@link #_compLehrer}.
 	 */
 	public @NotNull List<@NotNull StundenplanLehrer> lehrerGetMengeAsList() {
-		return _lehrermenge;
-	}
-
-	/**
-	 * Liefert einen zufällig erzeugten Dummy-Schueler.
-	 * <br>Hinweis: Ein neuer Schüler hat zunächst keine Klasse.
-	 *
-	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
-	 *
-	 * @return einen zufällig erzeugten Dummy-Schueler.
-	 */
-	public static @NotNull StundenplanSchueler schuelerCreateRandom(final @NotNull Random rnd) {
-		final @NotNull StundenplanSchueler schueler = new StundenplanSchueler();
-		schueler.id = rnd.nextLong(SCHUELER_MAX_ID);
-		schueler.nachname = "Nachname " + schueler.id;
-		schueler.vorname = "Vorname " + schueler.id;
-		schueler.idKlasse = -1;
-		return schueler;
-	}
-
-	/**
-	 * Liefert eine Liste mit erzeugten Schülern.
-	 *
-	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
-	 *
-	 * @return eine Liste mit erzeugten Schülern.
-	 */
-	public static @NotNull List<@NotNull StundenplanSchueler> schuelerListCreateRandom(final @NotNull Random rnd) {
-		final @NotNull List<@NotNull @NotNull StundenplanSchueler> schuelerList = new ArrayList<>();
-
-		final int size = rnd.nextInt(5);
-		for (int i = 0; i < size; i++)
-			schuelerList.add(schuelerCreateRandom(rnd));
-
-		return schuelerList;
-	}
-
-	/**
-	 * Fügt einen neuen Schüler hinzu.
-	 *
-	 * @param schueler  Der neue Schüler, welcher hinzugefügt werden soll.
-	 *
-	 * @throws DeveloperNotificationException  falls der Schüler bereits existiert.
-	 */
-	public void schuelerAdd(final @NotNull StundenplanSchueler schueler) throws DeveloperNotificationException {
-		// check (Klassenreferenz nicht prüfen, da Prüfung umgekehrt stattfindet)
-
-		// add
-		DeveloperNotificationException.ifMapPutOverwrites(_schuelermap, schueler.id, schueler);
-		_schuelermenge.add(schueler);
-		_schuelermenge.sort(_compSchueler);
-	}
-
-	/**
-	 * Fügt alle Schüler hinzu.
-	 *
-	 * @param list  Die Menge der Schüler, welche hinzugefügt werden soll.
-	 */
-	public void schuelerAddAll(final @NotNull List<@NotNull StundenplanSchueler> list) {
-		// check
-		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
-		for (final @NotNull StundenplanSchueler lehrer : list) {
-			if (_schuelermap.containsKey(lehrer.id))
-				throw new DeveloperNotificationException("schuelerAddAll: Schüler-ID existiert bereits!");
-			if (!setOfIDs.add(lehrer.id))
-				throw new DeveloperNotificationException("schuelerAddAll: Doppelte Schüler-ID in 'list'!");
-			// Hinweis: Kein check der Klassenreferenz, der Check wird umgekehrt gemacht.
-		}
-
-		// add
-		for (final @NotNull StundenplanSchueler schueler : list)
-			schuelerAdd(schueler);
-	}
-
-	/**
-	 * Liefert die Anzahl der SuS der Klasse.
-	 *
-	 * @param idKlasse  Die Datenbank-ID der Klasse.
-	 *
-	 * @return die Anzahl der SuS der Klasse.
-	 */
-	public int schuelerGetAnzahlByKlasseIdOrException(final long idKlasse) {
-		return DeveloperNotificationException.ifMapGetIsNull(_klassemap, idKlasse).schueler.size();
-	}
-
-	/**
-	 * Liefert den Schüler mit der übergebenen ID.
-	 *
-	 * @param idSchueler  Die Datenbank-ID des Schülers.
-	 *
-	 * @return den Schüler mit der übergebenen ID.
-	 * @throws DeveloperNotificationException falls die Lehrkraft mit der ID nicht existiert.
-	 */
-	public StundenplanSchueler schuelerGetByIdOrException(final long idSchueler) throws DeveloperNotificationException {
-		return DeveloperNotificationException.ifMapGetIsNull(_schuelermap, idSchueler);
-	}
-
-	/**
-	 * Liefert eine Liste aller Schüler-Objekte, sortiert nach dem {@link #_compSchueler}.
-	 *
-	 * @return eine Liste aller Schüler-Objekte, sortiert nach dem {@link #_compSchueler}.
-	 */
-	public @NotNull List<@NotNull StundenplanSchueler> schuelerGetMengeAsList() {
-		return _schuelermenge;
+		final @NotNull List<@NotNull StundenplanLehrer> list = new ArrayList<>(_lehrermap.values());
+		list.sort(_compLehrer);
+		return list;
 	}
 
 	/**
@@ -614,8 +880,6 @@ public final class StundenplanManagerDummy {
 
 		// add
 		DeveloperNotificationException.ifMapPutOverwrites(_klassemap, klasse.id, klasse);
-		_klassemenge.add(klasse);
-		_klassemenge.sort(_compKlasse);
 	}
 
 	/**
@@ -624,6 +888,9 @@ public final class StundenplanManagerDummy {
 	 * @return eine Liste aller Klasse-Objekte, sortiert nach dem {@link #_compKlasse}.
 	 */
 	public @NotNull List<@NotNull StundenplanKlasse> klasseGetMengeAsList() {
-		return _klassemenge;
+		final @NotNull List<@NotNull StundenplanKlasse> list = new ArrayList<>(_klassemap.values());
+		list.sort(_compKlasse);
+		return list;
 	}
+
 }

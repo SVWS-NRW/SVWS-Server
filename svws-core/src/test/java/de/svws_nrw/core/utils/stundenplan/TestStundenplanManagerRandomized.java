@@ -11,13 +11,18 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.core.data.stundenplan.StundenplanAufsichtsbereich;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
+import de.svws_nrw.core.data.stundenplan.StundenplanJahrgang;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import jakarta.validation.constraints.NotNull;
+
+// TODO check implementation aller patch --> ohne remove/add
+// TODO check implementation aller remove --> Kaskaden?
 
 /**
  * Diese Klasse testet den {@link StundenplanManager}.
@@ -86,22 +91,22 @@ class TestStundenplanManagerRandomized {
 	private static void testManagerModification(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		testManagerModificationFach(rnd, m1, m2);
 		testManagerModificationRaum(rnd, m1, m2);
-		testManagerModificationLehrer(rnd, m1, m2);
 		testManagerModificationSchueler(rnd, m1, m2);
+		testManagerModificationJahrgang(rnd, m1, m2);
+		testManagerModificationAufsichtsbereich(rnd, m1, m2);
+
+		testManagerModificationLehrer(rnd, m1, m2);
 		testManagerModificationKlasse(rnd, m1, m2);
 
 		// kalenderwochenzuordnung
-		// jahrgang
 		// zeitraster
 		// pausenzeit
 		// aufsichtsbereich
-		// klasse
 		// schiene
 		// klassenunterricht
 		// pausenaufsicht
 		// kurs
 		// unterricht
-
 	}
 
 	private static void testManagerModificationFach(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
@@ -331,6 +336,379 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
+	private static void testManagerModificationSchueler(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testManagerModificationSchuelerAdd(rnd, m1, m2);
+		testManagerModificationSchuelerAddAll(rnd, m1, m2);
+		testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(m1, m2);
+		// schuelerGetIDorException
+		testManagerModificationSchuelerGetByIdOrException(rnd, m1, m2);
+		testManagerModificationSchuelerGetMengeByKlasseIdAsListOrException(m1, m2);
+		// schuelerGetAnzahlByKursIdAsListOrException
+		// schuelerGetMengeByKursIdAsListOrException
+		// schuelerRemoveById
+		testManagerModificationSchuelerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testManagerModificationSchuelerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanSchueler schueler = StundenplanManagerDummy.schuelerCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.schuelerAdd(schueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.schuelerAdd(schueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationSchuelerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanSchueler> schuelerList = StundenplanManagerDummy.schuelerListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.schuelerAddAll(schuelerList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.schuelerAddAll(schuelerList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationSchuelerGetMengeByKlasseIdAsListOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
+
+		// Über Klassen iterieren ...
+		assertEquals(m1.klasseGetMengeAsList().size(), m2.klasseGetMengeAsList().size());
+		while (i1.hasNext() || i2.hasNext()) {
+			// Klasse extrahieren
+			final long idKlasse1 = i1.next().id;
+			final long idKlasse2 = i2.next().id;
+			assertEquals(i1.hasNext(), i2.hasNext());
+			assertEquals(idKlasse1, idKlasse2);
+
+			// Schüler der Klasse vergleichen ...
+			final @NotNull Iterator<@NotNull StundenplanSchueler> si1 = m1.schuelerGetMengeByKlasseIdAsListOrException(idKlasse1).iterator();
+			final @NotNull Iterator<@NotNull StundenplanSchueler> si2 = m2.schuelerGetMengeByKlasseIdAsListOrException(idKlasse2).iterator();
+			assertEquals(m1.schuelerGetMengeByKlasseIdAsListOrException(idKlasse1).size(), m2.schuelerGetMengeByKlasseIdAsListOrException(idKlasse2).size());
+			while (si1.hasNext() || si2.hasNext()) {
+				assertEquals(si1.next().id, si2.next().id);
+				assertEquals(si1.hasNext(), si2.hasNext());
+			}
+		}
+
+	}
+
+	private static void testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
+
+		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
+		while (i1.hasNext() || i2.hasNext()) {
+			final int klassengroesse1 = m1.schuelerGetAnzahlByKlasseIdOrException(i1.next().id);
+			final int klassengroesse2 = m2.schuelerGetAnzahlByKlasseIdOrException(i2.next().id);
+			assertEquals(klassengroesse1, klassengroesse2);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
+	private static void testManagerModificationSchuelerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final long idSchueler = rnd.nextLong(StundenplanManagerDummy.SCHUELER_MAX_ID);
+
+		StundenplanSchueler schueler1 = null;
+		try {
+			schueler1 = m1.schuelerGetByIdOrException(idSchueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			schueler1 = null;
+		}
+
+		StundenplanSchueler schueler2 = null;
+		try {
+			schueler2 = m2.schuelerGetByIdOrException(idSchueler);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			schueler2 = null;
+		}
+
+		if ((schueler1 != null) && (schueler2 != null))
+			assertEquals(true, schueler1.id == schueler2.id);
+		else
+			assertEquals(true, (schueler1 == null) && (schueler2 == null));
+	}
+
+	private static void testManagerModificationSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanSchueler> i1 = m1.schuelerGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanSchueler> i2 = m2.schuelerGetMengeAsList().iterator();
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.next().id, i2.next().id);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
+	private static void testManagerModificationJahrgang(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+			testManagerModificationJahrgangAdd(rnd, m1, m2);
+			testManagerModificationJahrgangAddAll(rnd, m1, m2);
+			testManagerModificationJahrgangGetByIdOrException(rnd, m1, m2);
+			testManagerModificationJahrgangPatchAttributes(rnd, m1, m2);
+//			m1.jahrgangRemoveAll
+//			m1.jahrgangRemoveById
+			testManagerModificationJahrgangGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testManagerModificationJahrgangAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanJahrgang jahrgang = StundenplanManagerDummy.jahrgangCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.jahrgangAdd(jahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.jahrgangAdd(jahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationJahrgangAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanJahrgang> jahrgangList = StundenplanManagerDummy.jahrgangListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.jahrgangAddAll(jahrgangList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.jahrgangAddAll(jahrgangList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationJahrgangGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final long idJahrgang = rnd.nextLong(StundenplanManagerDummy.JAHRGANG_MAX_ID);
+
+		StundenplanJahrgang jahrgang1 = null;
+		try {
+			jahrgang1 = m1.jahrgangGetByIdOrException(idJahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			jahrgang1 = null;
+		}
+
+		StundenplanJahrgang jahrgang2 = null;
+		try {
+			jahrgang2 = m2.jahrgangGetByIdOrException(idJahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			jahrgang2 = null;
+		}
+
+		if ((jahrgang1 != null) && (jahrgang2 != null))
+			assertEquals(true, jahrgang1.id == jahrgang2.id);
+		else
+			assertEquals(true, (jahrgang1 == null) && (jahrgang2 == null));
+	}
+
+	private static void testManagerModificationJahrgangPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanJahrgang jahrgang = StundenplanManagerDummy.jahrgangCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.jahrgangPatchAttributes(jahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.jahrgangPatchAttributes(jahrgang);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationJahrgangGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.jahrgangGetMengeAsList().size(), m2.jahrgangGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanJahrgang> i1 = m1.jahrgangGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanJahrgang> i2 = m2.jahrgangGetMengeAsList().iterator();
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.next().id, i2.next().id);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
+	private static void testManagerModificationAufsichtsbereich(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testManagerModificationAufsichtsbereichAdd(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichAddAll(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichGetByIdOrException(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichPatchAttributes(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichRemoveById(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichRemoveAll(rnd, m1, m2);
+		testManagerModificationAufsichtsbereichGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testManagerModificationAufsichtsbereichAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.aufsichtsbereichAdd(aufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.aufsichtsbereichAdd(aufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationAufsichtsbereichAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = StundenplanManagerDummy.aufsichtsbereichListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.aufsichtsbereichAddAll(aufsichtsbereichList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.aufsichtsbereichAddAll(aufsichtsbereichList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationAufsichtsbereichGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final long idAufsichtsbereich = rnd.nextLong(StundenplanManagerDummy.AUFSICHTSBEREICH_MAX_ID);
+
+		StundenplanAufsichtsbereich aufsichtsbereich1 = null;
+		try {
+			aufsichtsbereich1 = m1.aufsichtsbereichGetByIdOrException(idAufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			aufsichtsbereich1 = null;
+		}
+
+		StundenplanAufsichtsbereich aufsichtsbereich2 = null;
+		try {
+			aufsichtsbereich2 = m2.aufsichtsbereichGetByIdOrException(idAufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			aufsichtsbereich2 = null;
+		}
+
+		if ((aufsichtsbereich1 != null) && (aufsichtsbereich2 != null))
+			assertEquals(true, aufsichtsbereich1.id == aufsichtsbereich2.id);
+		else
+			assertEquals(true, (aufsichtsbereich1 == null) && (aufsichtsbereich2 == null));
+	}
+
+	private static void testManagerModificationAufsichtsbereichPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.aufsichtsbereichPatchAttributes(aufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.aufsichtsbereichPatchAttributes(aufsichtsbereich);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationAufsichtsbereichRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.aufsichtsbereichRemoveById(aufsichtsbereich.id);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.aufsichtsbereichRemoveById(aufsichtsbereich.id);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationAufsichtsbereichRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = StundenplanManagerDummy.aufsichtsbereichListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.aufsichtsbereichRemoveAll(aufsichtsbereichList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.aufsichtsbereichRemoveAll(aufsichtsbereichList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
+	}
+
+	private static void testManagerModificationAufsichtsbereichGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		assertEquals(m1.aufsichtsbereichGetMengeAsList().size(), m2.aufsichtsbereichGetMengeAsList().size());
+
+		final @NotNull Iterator<@NotNull StundenplanAufsichtsbereich> i1 = m1.aufsichtsbereichGetMengeAsList().iterator();
+		final @NotNull Iterator<@NotNull StundenplanAufsichtsbereich> i2 = m2.aufsichtsbereichGetMengeAsList().iterator();
+		while (i1.hasNext() || i2.hasNext()) {
+			assertEquals(i1.next().id, i2.next().id);
+			assertEquals(i1.hasNext(), i2.hasNext());
+		}
+	}
+
 	private static void testManagerModificationLehrer(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		testManagerModificationLehrerAdd(rnd, m1, m2);
 		testManagerModificationLehrerAddAll(rnd, m1, m2);
@@ -476,107 +854,6 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testManagerModificationSchueler(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testManagerModificationSchuelerAdd(rnd, m1, m2);
-		testManagerModificationSchuelerAddAll(rnd, m1, m2);
-		testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(m1, m2);
-		// schuelerGetAnzahlByKursIdAsListOrException
-		// schuelerGetIDorException
-		testManagerModificationSchuelerGetByIdOrException(rnd, m1, m2);
-		// schuelerGetMengeByKlasseIdAsListOrException
-		// schuelerGetMengeByKursIdAsListOrException
-		// schuelerRemoveById
-
-		testManagerModificationSchuelerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
-	}
-
-	private static void testManagerModificationSchuelerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		final @NotNull StundenplanSchueler schueler = StundenplanManagerDummy.schuelerCreateRandom(rnd);
-
-		boolean ex1 = false;
-		try {
-			m1.schuelerAdd(schueler);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			ex1 = true;
-		}
-
-		boolean ex2 = false;
-		try {
-			m2.schuelerAdd(schueler);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			ex2 = true;
-		}
-
-		assertEquals(true, ex1 == ex2);
-	}
-
-	private static void testManagerModificationSchuelerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		final @NotNull List<@NotNull StundenplanSchueler> schuelerList = StundenplanManagerDummy.schuelerListCreateRandom(rnd);
-
-		boolean ex1 = false;
-		try {
-			m1.schuelerAddAll(schuelerList);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			ex1 = true;
-		}
-
-		boolean ex2 = false;
-		try {
-			m2.schuelerAddAll(schuelerList);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			ex2 = true;
-		}
-
-		assertEquals(true, ex1 == ex2);
-	}
-
-	private static void testManagerModificationSchuelerGetAnzahlByKlasseIdOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
-		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
-
-		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
-		while (i1.hasNext() || i2.hasNext()) {
-			final int klassengroesse1 = m1.schuelerGetAnzahlByKlasseIdOrException(i1.next().id);
-			final int klassengroesse2 = m2.schuelerGetAnzahlByKlasseIdOrException(i2.next().id);
-			assertEquals(klassengroesse1, klassengroesse2);
-			assertEquals(i1.hasNext(), i2.hasNext());
-		}
-	}
-
-	private static void testManagerModificationSchuelerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		final long idSchueler = rnd.nextLong(StundenplanManagerDummy.SCHUELER_MAX_ID);
-
-		StundenplanSchueler schueler1 = null;
-		try {
-			schueler1 = m1.schuelerGetByIdOrException(idSchueler);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			schueler1 = null;
-		}
-
-		StundenplanSchueler schueler2 = null;
-		try {
-			schueler2 = m2.schuelerGetByIdOrException(idSchueler);
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			schueler2 = null;
-		}
-
-		if ((schueler1 != null) && (schueler2 != null))
-			assertEquals(true, schueler1.id == schueler2.id);
-		else
-			assertEquals(true, (schueler1 == null) && (schueler2 == null));
-	}
-
-	private static void testManagerModificationSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
-
-		final @NotNull Iterator<@NotNull StundenplanSchueler> i1 = m1.schuelerGetMengeAsList().iterator();
-		final @NotNull Iterator<@NotNull StundenplanSchueler> i2 = m2.schuelerGetMengeAsList().iterator();
-		while (i1.hasNext() || i2.hasNext()) {
-			assertEquals(i1.next().id, i2.next().id);
-			assertEquals(i1.hasNext(), i2.hasNext());
-		}
-	}
-
 	private static void testManagerModificationKlasse(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		testManagerModificationKlasseAdd(rnd, m1, m2);
 		testManagerModificationKlasseGetMengeAsList(m1, m2); // Mengen-Check zuletzt
@@ -607,10 +884,9 @@ class TestStundenplanManagerRandomized {
 
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
-		assertEquals(i1.hasNext(), i2.hasNext());
 		while (i1.hasNext() || i2.hasNext()) {
-			assertEquals(i1.hasNext(), i2.hasNext());
 			assertEquals(i1.next().id, i2.next().id);
+			assertEquals(i1.hasNext(), i2.hasNext());
 		}
 	}
 }

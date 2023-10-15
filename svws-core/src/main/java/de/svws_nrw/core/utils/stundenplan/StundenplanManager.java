@@ -1173,6 +1173,16 @@ public class StundenplanManager {
 	}
 
 	private void aufsichtsbereichAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich) {
+			if (_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Aufsichtsbereich-ID existiert bereits!");
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Doppelte Aufsichtsbereich-ID in 'list'!");
+		}
+
+		// add
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
 			aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
 	}
@@ -1263,6 +1273,16 @@ public class StundenplanManager {
 	 * @param listAufsichtsbereich  Die Liste der zu entfernenden {@link StundenplanAufsichtsbereich}-Objekte.
 	 */
 	public void aufsichtsbereichRemoveAll(final @NotNull List<@NotNull StundenplanAufsichtsbereich> listAufsichtsbereich) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich) {
+			if (!_aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Aufsichtsbereich-ID existiert nicht!");
+			if (!setOfIDs.add(aufsichtsbereich.id))
+				throw new DeveloperNotificationException("aufsichtsbereichRemoveAll: Doppelte Aufsichtsbereich-ID in der Liste!");
+		}
+
+		// remove
 		for (final @NotNull StundenplanAufsichtsbereich aufsichtsbereich : listAufsichtsbereich)
 			aufsichtsbereichRemoveOhneUpdateById(aufsichtsbereich.id);
 
@@ -1392,6 +1412,16 @@ public class StundenplanManager {
 	}
 
 	private void jahrgangAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanJahrgang> listJahrgang) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang) {
+			if (_jahrgang_by_id.containsKey(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Jahrgang-ID existiert bereits!");
+			if (!setOfIDs.add(jahrgang.id))
+				throw new DeveloperNotificationException("jahrgangAddAll: Doppelte Jahrgang-ID in 'list'!");
+		}
+
+		// add
 		for (final @NotNull StundenplanJahrgang jahrgang : listJahrgang)
 			jahrgangAddOhneUpdate(jahrgang);
 	}
