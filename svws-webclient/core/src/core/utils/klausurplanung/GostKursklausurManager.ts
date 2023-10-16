@@ -46,7 +46,7 @@ export class GostKursklausurManager extends JavaObject {
 			return a.quartal - b.quartal;
 		if (a.idFach !== b.idFach)
 			return a.idFach > b.idFach ? +1 : -1;
-		if (a.kursart as unknown !== b.kursart as unknown)
+		if (!JavaObject.equalsTranspiler(a.kursart, (b.kursart)))
 			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
 		return a.id > b.id ? +1 : -1;
 	} };

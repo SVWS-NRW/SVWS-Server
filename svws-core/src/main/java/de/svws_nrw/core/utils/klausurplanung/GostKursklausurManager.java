@@ -53,7 +53,7 @@ public class GostKursklausurManager {
 			return a.quartal - b.quartal;
 		if (a.idFach != b.idFach)
 			return a.idFach > b.idFach ? +1 : -1;
-		if (a.kursart != b.kursart)
+		if (!a.kursart.equals(b.kursart))
 			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
 		return a.id > b.id ? +1 : -1;
 	};
