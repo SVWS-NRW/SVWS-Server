@@ -1,3 +1,23 @@
+<template>
+	<div class="inline-flex">
+		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
+			<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-headless': headless && type !== 'toggle'}">
+			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
+			<span class="svws-ui-checkbox--label" v-if="$slots.default">
+				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
+					<svws-ui-tooltip position="right">
+						<i-ri-bar-chart-2-line class="pointer-events-auto" />
+						<template #content>
+							Relevant für die Statistik
+						</template>
+					</svws-ui-tooltip>
+				</span>
+				<slot />
+			</span>
+		</label>
+	</div>
+</template>
+
 <script lang="ts" setup>
 
 	import { computed, ref, watch } from 'vue';
@@ -24,47 +44,29 @@
 		headless: false
 	});
 
-	const loading = ref(false);
-
-	const value = computed({
-		get: () => props.modelValue,
-		set: (value) =>	{
-			loading.value = true;
-			emit("update:modelValue", value);
-
-			if (value !== props.modelValue) {
-				watch(() => props.modelValue, () => {
-					loading.value = false;
-				});
-			}
-		}
-	})
-
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: ModelValue): void;
 	}>();
 
-</script>
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const data = ref<ModelValue>(props.modelValue);
 
-<template>
-	<div class="inline-flex">
-		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-loading': loading, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
-			<input type="checkbox" v-model="value" :value="value" :disabled="disabled" :indeterminate="value === 'indeterminate'" :class="{'svws-headless': headless && type !== 'toggle'}">
-			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
-			<span class="svws-ui-checkbox--label" v-if="$slots.default">
-				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
-					<svws-ui-tooltip position="right">
-						<i-ri-bar-chart-2-line class="pointer-events-auto" />
-						<template #content>
-							Relevant für die Statistik
-						</template>
-					</svws-ui-tooltip>
-				</span>
-				<slot />
-			</span>
-		</label>
-	</div>
-</template>
+	watch(() => props.modelValue, (value: ModelValue) => updateData(value), { immediate: false });
+	const loading = computed(() => data.value !== props.modelValue);
+
+	const value = computed({
+		get: () => props.modelValue,
+		set: (value) =>	updateData(value)
+	})
+
+	function updateData(value: ModelValue) {
+		if (data.value !== value) {
+			data.value = value;
+			emit("update:modelValue", data.value);
+		}
+	}
+
+</script>
 
 <style lang="postcss">
 .svws-ui-checkbox {
