@@ -73,10 +73,12 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, type List, type StundenplanKlasse, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster } from "@core";
-	import { type StundenplanKlasseProps } from "./SStundenplanKlasseProps";
-	import { ref, computed, type WritableComputedRef } from "vue";
-	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone } from "@comp";
+	import type { List, StundenplanKlasse } from "@core";
+	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster } from "@core";
+	import { ref, computed } from "vue";
+	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
 	const props = defineProps<StundenplanKlasseProps>();
 
@@ -88,7 +90,7 @@
 		return list;
 	})
 
-	const klasse: WritableComputedRef<StundenplanKlasse> = computed({
+	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
 			if (_klasse.value !== undefined)
 				try {
@@ -132,16 +134,24 @@
 
 	const onDrop = async (zone: StundenplanAnsichtDropZone) => {
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster)) {
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster))
 			await props.patchUnterricht(dragData.value, zone);
+		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
+		if (dragData.value?.isTranspiledInstanceOf("java.util.List") && (zone instanceof StundenplanZeitraster)) {
+			const casted : List<StundenplanUnterricht> = cast_java_util_List(dragData.value);
+			for (const unterricht of casted)
+				await props.patchUnterricht(unterricht, zone);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
+		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster))
 			await props.addUnterrichtKlasse({ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach });
-		}
 		// Fall StundenplanUnterricht -> undefined
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
 			await props.removeUnterrichtKlasse([dragData.value]);
+		// Fall List<StundenplanUnterricht> -> undefined
+		if (dragData.value?.isTranspiledInstanceOf("java.util.List") && (zone === undefined)) {
+			const casted : List<StundenplanUnterricht> = cast_java_util_List(dragData.value);
+			await props.removeUnterrichtKlasse(casted);
 		}
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		// TODO Fall StundenplanZeitraster -> undefined
@@ -167,7 +177,7 @@
 
 	const _wochentyp = ref<number>(0);
 
-	const wochentypAuswahl : WritableComputedRef<number> = computed({
+	const wochentypAuswahl = computed<number>({
 		get: () : number => _wochentyp.value,
 		set: (value : number) => _wochentyp.value = value
 	});

@@ -56,9 +56,9 @@
 						<!-- Passe die Darstellung je nach ausgewähltem Wochentyp an... -->
 						<template v-if="(wochentyp() !== 0)">
 							<!-- Spezieller Wochentyp ausgewählt: Darstellung des allgemeinen und des speziellen Unterrichts eines Wochentyps -->
-							<div v-for="unterricht in getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp())" :key="unterricht.id"
+							<div v-for="unterricht in getUnterricht(wochentag, stunde, wochentyp(), -1)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:class="{'flex-grow': getUnterrichtWochentypSpeziell(wochentag, stunde, wochentyp()).size() === 1}"
+								:class="{'flex-grow': getUnterricht(wochentag, stunde, wochentyp(), -1).size() === 1}"
 								:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 								:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div v-if="unterricht.wochentyp !== 0" class="col-span-full text-sm mb-0.5 hidden"> {{ manager().stundenplanGetWochenTypAsString(unterricht.wochentyp) }} </div>
@@ -70,35 +70,58 @@
 						<template v-else>
 							<!-- Allgemeiner Wochentyp ausgewählt -->
 							<!-- zunächst die Darstellung des allgemeinen Unterrichtes -->
-							<template v-for="schiene in getSchienenWochentypAllgemein(wochentag, stunde, 0)" :key="schiene.nummer">
-								<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ schiene.bezeichnung }}</div>
-							</template>
-							<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, 0)" :key="unterricht.id"
+							<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, -1)" :key="unterricht.id"
 								class="svws-ui-stundenplan--unterricht"
-								:class="{'flex-grow': getUnterrichtWochentypAllgemein(wochentag, stunde, 0).size() === 1}"
+								:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).size() === 1}"
 								:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
 								:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 								<div class="font-bold" :class="`${mode === 'lehrer' ? 'col-span-3' : 'col-span-2'}`" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 								<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 								<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 							</div>
+							<template v-for="schiene in getSchienen(wochentag, stunde, 0)" :key="schiene.nummer">
+								<div :draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.nummer))" @dragend="onDrag(undefined)">
+									<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ schiene.bezeichnung }}</div>
+									<div v-for="unterricht in getUnterricht(wochentag, stunde, 0, schiene.nummer)" :key="unterricht.id"
+										class="svws-ui-stundenplan--unterricht"
+										:class="{'flex-grow': getUnterricht(wochentag, stunde, 0, -1).size() === 1}"
+										:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)}`"
+										:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
+										<div class="font-bold" :class="`${mode === 'lehrer' ? 'col-span-3' : 'col-span-2'}`" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+										<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+										<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+									</div>
+								</div>
+							</template>
 							<!-- dann die Darstellung des speziellen Unterrichtes der Wochentypen -->
-							<div v-if="zeitrasterHatUnterricht(wochentag.id, stunde)"
-								class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
+							<div v-if="zeitrasterHatUnterrichtMitWochentyp(wochentag.id, stunde)" class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
 								<template v-for="wt in manager().getWochenTypModell()" :key="wt">
 									<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
-										<template v-if="getUnterrichtWochentypAllgemein(wochentag, stunde, wt).size() > 0">
+										<template v-if="getUnterricht(wochentag, stunde, wt, -1).size() > 0">
 											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
 										</template>
-										<div v-for="unterricht in getUnterrichtWochentypAllgemein(wochentag, stunde, wt)" :key="unterricht.id"
+										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, -1)" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht svws-compact"
-											:class="{'flex-grow': getUnterrichtWochentypAllgemein(wochentag, stunde, wt).size() === 1}"
+											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, -1).size() === 1}"
 											:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
 											:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
 											<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
 											<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 											<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
 										</div>
+										<template v-for="schiene in getSchienen(wochentag, stunde, 0)" :key="schiene.nummer">
+											<div :draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, 0, schiene.nummer))" @dragend="onDrag(undefined)">
+												<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, schiene.nummer)" :key="unterricht.id"
+													class="svws-ui-stundenplan--unterricht svws-compact"
+													:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, -1).size() === 1}"
+													:style="`background-color: ${getBgColor(manager().fachGetByIdOrException(unterricht.idFach).kuerzelStatistik)};`"
+													:draggable="isDraggable()" @dragstart="onDrag(unterricht)" @dragend="onDrag(undefined)">
+													<div class="font-bold col-span-2" title="Unterricht"> {{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }} </div>
+													<div v-if="mode !== 'lehrer'" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
+													<div title="Raum"> {{ manager().unterrichtGetByIDStringOfRaeume(unterricht.id) }} </div>
+												</div>
+											</div>
+										</template>
 									</div>
 								</template>
 							</div>
@@ -153,10 +176,10 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanSchiene, Wochentag} from "@core";
-	import { type List, StundenplanPausenaufsicht, type StundenplanPausenzeit, ZulaessigesFach, type StundenplanUnterricht, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException } from "@core";
+	import type { StundenplanSchiene, Wochentag, StundenplanPausenzeit, List} from "@core";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone, StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
+	import { StundenplanPausenaufsicht, ZulaessigesFach, StundenplanKurs, StundenplanKlassenunterricht, DeveloperNotificationException, StundenplanZeitraster, StundenplanUnterricht } from "@core";
 	import { computed } from "vue";
-	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone, type StundenplanAnsichtProps } from "./StundenplanAnsichtProps";
 
 	const wochentage = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag' ];
 
@@ -204,7 +227,7 @@
 		throw new DeveloperNotificationException("const pausenzeiten: Unbekannter Mode " + props.mode);
 	});
 
-	function zeitrasterHatUnterricht(wochentag: number, stunde: number): boolean {
+	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
 		switch (props.mode) {
 			case 'klasse':
 				return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByKlasseIdWochentagAndStunde(props.id, wochentag, stunde);
@@ -244,17 +267,7 @@
 		return result;
 	}
 
-	function getSchienenWochentypSpeziell(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
-		if (props.mode === 'schueler')
-			return props.manager().schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
-		if (props.mode === 'lehrer')
-			return props.manager().schieneGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
-		if (props.mode === 'klasse')
-			return props.manager().schieneGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
-		throw new DeveloperNotificationException("function getSchienenWochentypSpeziell: Unbekannter Mode " + props.mode);
-	}
-
-	function getSchienenWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
+	function getSchienen(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		if (props.mode === 'schueler')
 			return props.manager().schieneGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
 		if (props.mode === 'lehrer')
@@ -264,23 +277,13 @@
 		throw new DeveloperNotificationException("function getSchienenWochentypAllgemein: Unbekannter Mode " + props.mode);
 	}
 
-	function getUnterrichtWochentypSpeziell(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
+	function getUnterricht(wochentag: Wochentag, stunde: number, wochentyp: number, schiene: number) : List<StundenplanUnterricht> {
 		if (props.mode === 'schueler')
-			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
+			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
 		if (props.mode === 'lehrer')
-			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
+			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
 		if (props.mode === 'klasse')
-			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, true);
-		throw new DeveloperNotificationException("function getUnterrichtWochentypSpeziell: Unbekannter Mode " + props.mode);
-	}
-
-	function getUnterrichtWochentypAllgemein(wochentag: Wochentag, stunde: number, wochentyp: number) : List<StundenplanUnterricht> {
-		if (props.mode === 'schueler')
-			return props.manager().unterrichtGetMengeBySchuelerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
-		if (props.mode === 'lehrer')
-			return props.manager().unterrichtGetMengeByLehrerIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
-		if (props.mode === 'klasse')
-			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, false);
+			return props.manager().unterrichtGetMengeByKlasseIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag.id, stunde, wochentyp, schiene, false);
 		throw new DeveloperNotificationException("function getUnterrichtWochentypAllgemein: Unbekannter Mode " + props.mode);
 	}
 
@@ -367,7 +370,14 @@
 			return false;
 		if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
 			return true;
-		const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
+		let z = new StundenplanZeitraster();
+		if (data instanceof StundenplanUnterricht)
+			z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
+		else
+			for (const d of data) {
+				z = props.manager().zeitrasterGetByIdOrException(d.idZeitraster);
+				break;
+			}
 		return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
 	}
 

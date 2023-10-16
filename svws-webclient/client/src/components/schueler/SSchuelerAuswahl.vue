@@ -82,7 +82,7 @@
 	const filtered: Ref<boolean> = ref(false);
 	const search: Ref<string> = ref("");
 	const cols = [
-		{ key: "idKlasse", label: "Klasse", tooltip: "Klasse", sortable: true, span: 1 },
+		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
