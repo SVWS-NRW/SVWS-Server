@@ -3,11 +3,9 @@
 		<svws-ui-content-card title="Allgemeine Angaben">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="manager().klasseGetByIdOrException(manager().lernabschnittGet().klassenID)"
-					@update:model-value="value => patch({ klassenID: (value == undefined) ? -1 : value.id })" />
+					:model-value="klasse" @update:model-value="value => patch({ klassenID: (value == undefined) ? null : value.id })" />
 				<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="manager().jahrgangGetByIdOrException(manager().lernabschnittGet().jahrgangID)"
-					@update:model-value="value => patch({ jahrgangID: (value == undefined) ? -1 : value.id })" />
+					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: (value == undefined) ? null : value.id })" />
 				<svws-ui-text-input placeholder="Datum von" type="date"
 					:model-value="manager().lernabschnittGet().datumAnfang || undefined"
 					@change="datumAnfang => patch({datumAnfang})" />
@@ -59,7 +57,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { FoerderschwerpunktEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
+	import type { FoerderschwerpunktEintrag, JahrgangsListeEintrag, KlassenListeEintrag, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
 	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
@@ -73,6 +71,20 @@
 	function getLehrerKuerzel(lehrer: LehrerListeEintrag) : string {
 		return lehrer.kuerzel;
 	}
+
+	const klasse = computed<KlassenListeEintrag | undefined>(() => {
+		const id = props.manager().lernabschnittGet().klassenID;
+		if (id === null)
+			return undefined;
+		return props.manager().klasseGetByIdOrException(id);
+	});
+
+	const jahrgang = computed<JahrgangsListeEintrag | undefined>(() => {
+		const id = props.manager().lernabschnittGet().jahrgangID;
+		if (id === null)
+			return undefined;
+		return props.manager().jahrgangGetByIdOrException(id);
+	});
 
 	const sonderpaedagoge = computed<LehrerListeEintrag | undefined>(() => {
 		const id = props.manager().lernabschnittGet().sonderpaedagogeID;
@@ -89,7 +101,7 @@
 	});
 
 	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
-		const k = props.manager().klasseGetByIdOrException(props.manager().lernabschnittGet().klassenID);
+		const k = klasse.value;
 		if ((k === undefined) || (k.klassenLehrer === null))
 			return [];
 		const result: LehrerListeEintrag[] = [];
