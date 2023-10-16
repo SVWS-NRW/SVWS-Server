@@ -73,15 +73,15 @@
 <script setup lang="ts">
 
 	import type { LoginProps } from "./SLoginProps";
-	import type { DBSchemaListeEintrag, List} from "@core";
-	import {computed, ref, watch} from "vue";
+	import type { DBSchemaListeEintrag, List } from "@core";
+	import { computed, ref, shallowRef, watch } from "vue";
 	import { ArrayList } from "@core";
 	import { version } from '../../version';
 
 	const props = defineProps<LoginProps>();
 
 	const firstauth = ref(true);
-	const schema = ref<DBSchemaListeEintrag | undefined>();
+	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
 	const username = ref("Admin");
 	const password = ref("");
 
@@ -92,7 +92,7 @@
 	const connection_failed = ref(false);
 	const authentication_success = ref(false);
 
-	const inputDBSchemata = ref<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
+	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,

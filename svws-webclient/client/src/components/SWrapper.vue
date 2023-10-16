@@ -29,23 +29,28 @@
 </template>
 
 <script setup lang="ts">
+
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
-	import { onErrorCaptured, ref } from 'vue';
+	import { onErrorCaptured, shallowRef } from 'vue';
 	import { api } from '~/router/Api';
 
-	const errors = ref<Error[]>([]);
+	const errors = shallowRef<Error[]>([]);
 	window.addEventListener("unhandledrejection", function (event) {
 		api.status.stop();
-		errors.value.push(new Error(event.reason))
+		const tmp = errors.value;
+		tmp.push(new Error(event.reason))
+		errors.value = [ ...tmp ];
 		event.preventDefault();
 	});
 
 	onErrorCaptured((e) => {
-		if (e.name === 'resetAllErrors')
+		if (e.name === 'resetAllErrors') {
 			errors.value = [];
-		else {
+		} else {
 			console.warn(e)
-			errors.value.push(e);
+			const tmp = errors.value;
+			tmp.push(e)
+			errors.value = [ ...tmp ];
 		}
 		api.status.stop();
 		return false;

@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang='ts'>
+
 	import {ref} from "vue";
 
 	const props = withDefaults(defineProps<{
@@ -75,92 +76,94 @@
 		isOpen,
 		stackOpen,
 	});
+
 </script>
 
 <style lang="postcss">
-.notification {
-	@apply flex flex-col flex-shrink-0;
-	@apply w-full;
-	@apply relative z-40;
-	@apply rounded-lg overflow-hidden;
-	@apply shadow-lg shadow-black/10;
-	@apply text-base pointer-events-auto;
-	@apply bg-primary text-white font-bold;
-	transition: transform 0.2s ease-out;
 
-	.button:not(.button--secondary), .button--icon {
-		@apply rounded-md;
+	.notification {
+		@apply flex flex-col flex-shrink-0;
+		@apply w-full;
+		@apply relative z-40;
+		@apply rounded-lg overflow-hidden;
+		@apply shadow-lg shadow-black/10;
+		@apply text-base pointer-events-auto;
+		@apply bg-primary text-white font-bold;
+		transition: transform 0.2s ease-out;
 
-		&:hover {
-			@apply ring-0 bg-white/25;
+		.button:not(.button--secondary), .button--icon {
+			@apply rounded-md;
+
+			&:hover {
+				@apply ring-0 bg-white/25;
+			}
 		}
-	}
 
-	&--error {
-		@apply bg-error text-white;
+		&--error {
+			@apply bg-error text-white;
 
-		.notification--icon {
-			@apply animate-pulse;
+			.notification--icon {
+				@apply animate-pulse;
+			}
 		}
-	}
 
-	&--success {
-		@apply bg-success text-white;
+		&--success {
+			@apply bg-success text-white;
 
-		.button, .button--icon {
-			&:hover,
-			&:focus {
-				@apply bg-black/10;
+			.button, .button--icon {
+				&:hover,
+				&:focus {
+					@apply bg-black/10;
+				}
 			}
 		}
 	}
-}
 
-.notification--content-wrapper {
-	@apply h-full overflow-y-auto w-full;
-	-webkit-overflow-scrolling: touch;
-}
-
-.notification--wrapper {
-	@apply fixed inset-0 z-50;
-	@apply overflow-y-auto;
-}
-
-.notification--content {
-	@apply flex-grow flex flex-wrap;
-	@apply px-4 py-2 overflow-hidden;
-
-	.notification--icon {
-		@apply inline-block mr-1 text-base leading-none -mb-1;
+	.notification--content-wrapper {
+		@apply h-full overflow-y-auto w-full;
+		-webkit-overflow-scrolling: touch;
 	}
 
-	.notification--text {
-		@apply text-base font-bold;
-	};
+	.notification--wrapper {
+		@apply fixed inset-0 z-50;
+		@apply overflow-y-auto;
+	}
 
-	&--has-header {
-		@apply py-3;
+	.notification--content {
+		@apply flex-grow flex flex-wrap;
+		@apply px-4 py-2 overflow-hidden;
 
 		.notification--icon {
-			@apply text-headline-sm;
-		}
-
-		.notification--header {
-			@apply w-auto text-headline-sm font-bold mb-1;
+			@apply inline-block mr-1 text-base leading-none -mb-1;
 		}
 
 		.notification--text {
-			@apply w-full font-medium break-words;
+			@apply text-base font-bold;
+		};
+
+		&--has-header {
+			@apply py-3;
+
+			.notification--icon {
+				@apply text-headline-sm;
+			}
+
+			.notification--header {
+				@apply w-auto text-headline-sm font-bold mb-1;
+			}
+
+			.notification--text {
+				@apply w-full font-medium break-words;
+			}
+		}
+
+		.notification--stack {
+			@apply whitespace-pre-wrap bg-black mt-4 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-md;
 		}
 	}
 
-	.notification--stack {
-		@apply whitespace-pre-wrap bg-black mt-4 -mb-2 -mx-3 p-3 font-mono overflow-auto min-w-full rounded-md;
+	.notification--close-button {
+		@apply w-7 h-7;
 	}
-}
-
-.notification--close-button {
-	@apply w-7 h-7;
-}
 
 </style>
