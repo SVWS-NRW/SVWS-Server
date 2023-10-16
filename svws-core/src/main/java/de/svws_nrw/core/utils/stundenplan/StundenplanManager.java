@@ -4455,7 +4455,7 @@ public class StundenplanManager {
 	public boolean unterrichtHatSchiene(final @NotNull StundenplanUnterricht u, final long idSchiene) {
 		for (final @NotNull StundenplanSchiene schiene : MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id))
 			if (schiene.id == idSchiene)
-				return true;
+				return idSchiene >= 0;
 		return idSchiene < 0;
 	}
 

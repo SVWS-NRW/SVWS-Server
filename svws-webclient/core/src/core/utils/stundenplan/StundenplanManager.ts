@@ -4207,7 +4207,7 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtHatSchiene(u : StundenplanUnterricht, idSchiene : number) : boolean {
 		for (const schiene of MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id))
 			if (schiene.id === idSchiene)
-				return true;
+				return idSchiene >= 0;
 		return idSchiene < 0;
 	}
 
