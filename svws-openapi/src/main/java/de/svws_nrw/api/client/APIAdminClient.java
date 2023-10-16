@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 /**
  * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Admin-Client.
  */
-@Path("")
+@Path("/admin")
 @Tag(name = "SVWSAdminClient")
 public class APIAdminClient {
 
