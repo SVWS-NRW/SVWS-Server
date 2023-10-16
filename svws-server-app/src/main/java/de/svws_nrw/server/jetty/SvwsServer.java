@@ -35,6 +35,7 @@ import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
 import org.eclipse.jetty.util.thread.ThreadPool;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
+import de.svws_nrw.api.RestAppAdminClient;
 import de.svws_nrw.api.RestAppClient;
 import de.svws_nrw.api.RestAppDav;
 import de.svws_nrw.api.RestAppDebug;
@@ -305,12 +306,16 @@ public final class SvwsServer {
 	 * Fügt die Rest-Applikationen zum Server hinzu.
 	 */
 	private void addAPIApplications() {
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
 		addApplication(RestAppClient.class, "/*");
 		addApplication(RestAppDav.class, "/dav/*");
 		addApplication(RestAppDebug.class, RestAppDebug.getPathSpecification());
-		if (!SVWSKonfiguration.get().isDBRootAccessDisabled())
+		if (!config.isDBRootAccessDisabled()) {
 			addApplication(RestAppSchemaRoot.class, RestAppSchemaRoot.getPathSpecification());
+			if ((config.getAdminClientPath() != null) && (!config.getAdminClientPath().isBlank()))
+				addApplication(RestAppAdminClient.class, RestAppAdminClient.getPathSpecification());
+		}
 	}
 
 

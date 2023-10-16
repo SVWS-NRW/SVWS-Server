@@ -82,6 +82,10 @@ class SVWSKonfigurationDTO {
 	@JsonProperty("ClientPath")
 	String clientPath;
 
+	/** Gibt den Pfad an, wo die Dateien des Admin-Web-Clients liegen, null, falls kein solcher Client zur Verfügung steht */
+	@JsonProperty("AdminClientPath")
+	String adminClientPath;
+
 	/** Gibt an, ob Logging in Dateien aktiviert werden soll. */
 	@JsonProperty("LoggingEnabled")
 	Boolean loggingEnabled;

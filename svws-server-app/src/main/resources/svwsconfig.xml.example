@@ -24,7 +24,10 @@
 	<UseCORSHeader>true</UseCORSHeader>
 	
 	<!-- Gibt den Pfad an, wo die Dateien des Web-Clients liegen -->
-	<ClientPath>webclient/build</ClientPath>
+	<ClientPath>webclient/client/build</ClientPath>
+	
+	<!-- Gibt den Pfad an, wo die Dateien des Admin Web-Clients liegen -->
+	<AdminClientPath>webclient/admin/build</AdminClientPath>
 	
 	<!-- Gibt an, ob Logging in Dateien aktiviert werden soll. -->
 	<LoggingEnabled>true</LoggingEnabled>

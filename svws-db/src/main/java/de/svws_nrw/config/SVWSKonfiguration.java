@@ -352,6 +352,17 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/**
+	 * Gibt den Pfad zu den Admin-Web-Client-Dateien zurück. Ist kein Admin-Client vorhanden,
+	 * so wird null zurückgegeben.
+	 *
+	 * @return der Pfad zu den Admin-Web-Client-Dateien zurück.
+	 */
+	public String getAdminClientPath() {
+		return ((dto == null) || (dto.adminClientPath == null) || ("".equals(dto.adminClientPath))) ? null : dto.adminClientPath;
+	}
+
+
 	private static final boolean default_enableClientProtection = false;
 
 	/**

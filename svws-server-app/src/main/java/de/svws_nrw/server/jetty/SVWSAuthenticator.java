@@ -20,6 +20,7 @@ import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.util.security.Constraint;
 
+import de.svws_nrw.api.RestAppAdminClient;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.config.SVWSKonfiguration;
@@ -51,7 +52,8 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         if (config.hatPortHTTPPrivilegedAccess()) {
         	final String pathInfo = request.getPathInfo();
         	final boolean isDebugAccess = RestAppDebug.checkIsInPathSpecification(pathInfo);
-        	final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo);
+        	final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
+        			|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
         	if (!isDebugAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
         		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
         	if (!isDebugAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))

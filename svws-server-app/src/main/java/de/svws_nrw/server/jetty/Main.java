@@ -2,7 +2,7 @@ package de.svws_nrw.server.jetty;
 
 import java.util.List;
 
-import de.svws_nrw.api.ResourceFile;
+import de.svws_nrw.api.ResourceFileManager;
 import de.svws_nrw.api.SVWSVersion;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
@@ -53,8 +53,9 @@ public class Main {
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
 		final boolean devMode = svwsconfig.getServerMode() != ServerMode.STABLE;
 
-		// Read all HTML, CSS and Javascript resource files from the Web-Client
-		ResourceFile.add(svwsconfig.getClientPath());
+		// Lese alle HTML, CSS and Javascript Ressourcen für den Web-Client und den Admin-Web-Client
+		ResourceFileManager.client();
+		ResourceFileManager.admin();
 
 		// Prüfe alle Datenbankverbindungen beim Server-Start
 		if (svwsconfig.isAutoUpdatesDisabled()) {

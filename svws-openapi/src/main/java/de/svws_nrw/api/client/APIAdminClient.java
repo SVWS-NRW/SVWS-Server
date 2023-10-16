@@ -12,16 +12,16 @@ import de.svws_nrw.api.ResourceFileManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Client.
+ * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Admin-Client.
  */
 @Path("")
-@Tag(name = "SVWSClient")
-public class APIClient {
+@Tag(name = "SVWSAdminClient")
+public class APIAdminClient {
 
 
 	/**
-	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Client zurück. Diese
-	 * Resourcen wurden beim Start des SVWS-Server gecacht und stehen über die Klasse
+	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Admin-Clients zurück.
+	 * Diese Resourcen wurden beim Start des SVWS-Server gecacht und stehen über die Klasse
 	 * {@link ResourceFile} zur Verfügung.
 	 *
 	 * @param filename   der Name der zurückzugebenden Datei
@@ -30,7 +30,7 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
     private static Response getFile(final String filename) {
-    	final byte[] data = ResourceFileManager.client().getData(filename);
+    	final byte[] data = ResourceFileManager.admin().getData(filename);
     	if ((data == null) || (data.length == 0))
     		return Response.status(Status.NOT_FOUND).build();
         return Response.ok(data).build();
