@@ -4453,10 +4453,17 @@ public class StundenplanManager {
 	 * @return TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
 	 */
 	public boolean unterrichtHatSchiene(final @NotNull StundenplanUnterricht u, final long idSchiene) {
-		for (final @NotNull StundenplanSchiene schiene : MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id))
+		final @NotNull List<@NotNull StundenplanSchiene> schienen = MapUtils.getOrCreateArrayList(_schienenmenge_by_idUnterricht, u.id);
+
+		// Ist Unterricht ohne Schienen gesucht?
+		if (schienen.isEmpty() && (idSchiene < 0))
+			return true;
+
+		// Wir suchen Unterricht mit Schienen.
+		for (final @NotNull StundenplanSchiene schiene : schienen)
 			if (schiene.id == idSchiene)
-				return idSchiene >= 0;
-		return idSchiene < 0;
+				return true;
+		return false;
 	}
 
 	/**
@@ -4585,6 +4592,11 @@ public class StundenplanManager {
 	// #####################################################################
 
 	private void zeitrasterAddOhneUpdate(final @NotNull StundenplanZeitraster zeitraster) {
+		for (final @NotNull StundenplanZeitraster z : _zeitraster_by_id.values())
+			if ((z.wochentag == zeitraster.wochentag) && (z.unterrichtstunde == zeitraster.unterrichtstunde))
+				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!");
+
+
 		zeitrasterCheck(zeitraster);
 		DeveloperNotificationException.ifMapPutOverwrites(_zeitraster_by_id, zeitraster.id, zeitraster);
 	}

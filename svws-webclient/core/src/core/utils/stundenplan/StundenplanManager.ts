@@ -4205,10 +4205,13 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls der Unterricht in der übergebenen Schiene liegt, oder falls er in keiner Schiene liegt und idSchiene negativ ist.
 	 */
 	public unterrichtHatSchiene(u : StundenplanUnterricht, idSchiene : number) : boolean {
-		for (const schiene of MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id))
+		const schienen : List<StundenplanSchiene> = MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id);
+		if (schienen.isEmpty() && (idSchiene < 0))
+			return true;
+		for (const schiene of schienen)
 			if (schiene.id === idSchiene)
-				return idSchiene >= 0;
-		return idSchiene < 0;
+				return true;
+		return false;
 	}
 
 	/**
@@ -4315,6 +4318,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {
+		for (const z of this._zeitraster_by_id.values())
+			if ((z.wochentag === zeitraster.wochentag) && (z.unterrichtstunde === zeitraster.unterrichtstunde))
+				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!")
 		StundenplanManager.zeitrasterCheck(zeitraster);
 		DeveloperNotificationException.ifMapPutOverwrites(this._zeitraster_by_id, zeitraster.id, zeitraster);
 	}

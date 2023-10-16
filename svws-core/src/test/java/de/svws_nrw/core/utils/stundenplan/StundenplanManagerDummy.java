@@ -15,6 +15,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
+import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -88,6 +89,9 @@ public final class StundenplanManagerDummy {
 	/** Größtmögliche Aufsichtsbereich-ID */
 	public static final long AUFSICHTSBEREICH_MAX_ID = 30;
 
+	/** Größtmögliche Zeitraster-ID */
+	public static final long ZEITRASTER_MAX_ID = 5 * 11;
+
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanFach> _fachmap = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanRaum> _raummap = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanLehrer> _lehrermap = new HashMap<>();
@@ -95,6 +99,7 @@ public final class StundenplanManagerDummy {
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanSchueler> _schuelermap = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanJahrgang> _jahrgangmap = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull StundenplanAufsichtsbereich> _aufsichtsbereichmap = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull StundenplanZeitraster> _zeitrastermap = new HashMap<>();
 
 	/**
 	 * Der Manager ist anfangs leer.
@@ -685,6 +690,46 @@ public final class StundenplanManagerDummy {
 		final @NotNull List<@NotNull StundenplanAufsichtsbereich> list = new ArrayList<>(_aufsichtsbereichmap.values());
 		list.sort(_compAufsichtsbereich);
 		return list;
+	}
+
+	/**
+	 * Liefert ein zufällig erzeugtes Dummy-Zeitraster.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return ein zufällig erzeugtes Dummy-Zeitraster.
+	 */
+	public static @NotNull StundenplanZeitraster zeitrasterCreateRandom(final @NotNull Random rnd) {
+		final @NotNull StundenplanZeitraster zeitraster = new StundenplanZeitraster();
+		zeitraster.id = rnd.nextLong(ZEITRASTER_MAX_ID);
+		zeitraster.wochentag = rnd.nextInt(7) + 1; // 1 ... 7
+		zeitraster.unterrichtstunde = rnd.nextInt(30) + 1; // 0 ... 29
+		zeitraster.stundenbeginn = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
+		zeitraster.stundenende = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
+		return zeitraster;
+	}
+
+	/**
+	 * Fügt ein neues Zeitraster hinzu.
+	 *
+	 * @param zeitraster  Das neue Zeitraster, welches hinzugefügt werden soll.
+	 *
+	 * @throws DeveloperNotificationException  falls das Zeitraster bereits existiert.
+	 */
+	public void zeitrasterAdd(final @NotNull StundenplanZeitraster zeitraster) throws DeveloperNotificationException {
+		// check
+		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
+		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
+			final int beginn = zeitraster.stundenbeginn;
+			final int ende = zeitraster.stundenende;
+			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+		}
+		for (final @NotNull StundenplanZeitraster z : _zeitrastermap.values())
+			if ((z.wochentag == zeitraster.wochentag) && (z.unterrichtstunde == zeitraster.unterrichtstunde))
+				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!");
+
+		// add
+		DeveloperNotificationException.ifMapPutOverwrites(_zeitrastermap, zeitraster.id, zeitraster);
 	}
 
 	/**
