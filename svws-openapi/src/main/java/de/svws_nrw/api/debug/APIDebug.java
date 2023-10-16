@@ -2,8 +2,15 @@ package de.svws_nrw.api.debug;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import de.svws_nrw.config.SVWSKonfiguration;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -15,16 +22,10 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriBuilder;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import de.svws_nrw.config.SVWSKonfiguration;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die Debug-API.
  * Die Debug-API stellt die einzelnen HTML-, CSS- und JS-Dateien für die Swagger-UI zur
- * Verfügung. Diese werden automatisiert so angepasst, dass doe OpenAPI-Spezifikation genutzt
+ * Verfügung. Diese werden automatisiert so angepasst, dass die OpenAPI-Spezifikation genutzt
  * wird, die von diesem SVWS-Server generiert wurde.
  */
 @Path("")
@@ -40,31 +41,76 @@ public class APIDebug {
 
 	private static final String pathToOpenapiJson = "/openapi/";
 
+	/** Die Liste der zulässigen Dateien */
+	private static final Map<String, String> mapMediaType = Map.ofEntries(
+	    Map.entry("index.html", MediaType.TEXT_HTML),
+	    Map.entry("swagger-initializer.js", "text/javascript"),
+	    Map.entry("swagger-ui.js", "text/javascript"),
+	    Map.entry("swagger-ui-bundle.js", "text/javascript"),
+	    Map.entry("swagger-ui-standalone-preset.js", "text/javascript"),
+	    Map.entry("index.css", "text/css"),
+	    Map.entry("swagger-ui.css", "text/css"),
+	    Map.entry("swagger-ui.js.map", MediaType.TEXT_PLAIN),
+	    Map.entry("swagger-ui-bundle.js.map", MediaType.TEXT_PLAIN),
+	    Map.entry("swagger-ui-standalone-preset.js.map", MediaType.TEXT_PLAIN),
+	    Map.entry("swagger-ui.css.map", MediaType.TEXT_PLAIN),
+	    Map.entry("favicon-16x16.png", "image/png"),
+	    Map.entry("favicon-32x32.png", "image/png")
+	);
+
+	/** Die Lister der verfügbaren APIs */
+	private static final Map<String, Boolean> mapApiIsPrivileged = Map.ofEntries(
+		Map.entry("server", false),
+		Map.entry("privileged", true)
+	);
+
+
 	/**
 	 * Diese Methode dient als Hilfsmethode, um auf die einzelnen Ressourcen der Swagger-UI zuzugreifen. Die
 	 * index.html-Datei wird dabei angepasst, damit die OpenAPI-Datei des SVWS-Servers verwendet wird.
 	 *
-	 * @param filename   der Dateiname, der angefragt wird.
-	 * @param request    der HTTP-Request zur automatischen Bestimmung der URL des SVWS-Servers
-	 * @param isYAML     gibt an, ob auf die YAML- oder die JSON-Variante der OpenAPI-Schnittstellenbeschreibung zugegriffen wird
+	 * @param filename    der Dateiname, der angefragt wird.
+	 * @param request     der HTTP-Request zur automatischen Bestimmung der URL des SVWS-Servers
+	 * @param isYAML      gibt an, ob auf die YAML- oder die JSON-Variante der OpenAPI-Schnittstellenbeschreibung zugegriffen wird
+	 * @param api         gibt die API, di ausgewählt wurde
 	 *
 	 * @return die HTTP-Response für die Ressource
 	 */
-	private static Response getResource(final String filename, final HttpServletRequest request, final boolean isYAML) {
+	private static Response getResource(final String filename, final HttpServletRequest request, final boolean isYAML, final String api) {
+		// Prüfe, ob der Dateiname und die Api gültig sind.
+		final String mediaType = mapMediaType.get(filename);
+		if ((mediaType == null) || (!mapApiIsPrivileged.containsKey(api)))
+			return Response.status(Status.NOT_FOUND).build();
+		// Prüfe, ob für die API ein priviligierter Zugriff benötigt wird und ob dieser so zulässig ist.
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		final boolean apiIsPrivileged = mapApiIsPrivileged.get(api);
+		if (config.isDBRootAccessDisabled() && apiIsPrivileged)
+			return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.").type(MediaType.TEXT_PLAIN).build();
+		if (config.hatPortHTTPPrivilegedAccess()) {
+			final boolean portIsPrivileged = (request.getServerPort() == config.getPortHTTPPrivilegedAccess());
+			if (apiIsPrivileged && (!portIsPrivileged))
+				return Response.status(Status.FORBIDDEN).entity("Der Zugriff auf die API für priviligierte Anfragen wurde beim Server gesperrt.").type(MediaType.TEXT_PLAIN).build();
+			if (!apiIsPrivileged && (portIsPrivileged)) { // Redirect
+				final URI uri = UriBuilder.fromPath(request.getServletPath() + request.getPathInfo())
+						.scheme(request.getScheme())
+						.host(request.getServerName())
+						.port(config.isTLSDisabled() ? config.getPortHTTP() : config.getPortHTTPS())
+						.build();
+				return Response.temporaryRedirect(uri).build();
+			}
+		}
+		// Lese die zugehörige Datei aus der Swagger-UI ein
 		String data = null;
     	try {
     		final String resourceName = pathSwaggerUIDist + "/" + versionSwaggerUIDist + "/" + filename;
     		try (InputStream in = ClassLoader.getSystemResourceAsStream(resourceName)) {
 	    		data = IOUtils.toString(in, StandardCharsets.UTF_8);
 	    		if ("swagger-initializer.js".equalsIgnoreCase(filename)) {
-	    			final SVWSKonfiguration config = SVWSKonfiguration.get();
-	    			final boolean isApiPrivileged = (config.hatPortHTTPPrivilegedAccess() && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()));
-	    			final String openapi_file_base = isApiPrivileged ? "schemaroot" : "server";
-	    			final String openapi_file = openapi_file_base + (isYAML ? ".yaml" : ".json");
+	    			final String openapi_file = api + (isYAML ? ".yaml" : ".json");
 	    			final String openapi_url = StringUtils.removeEnd(request.getRequestURL().toString(), request.getRequestURI()) + pathToOpenapiJson + openapi_file;
 	    			data = data.replace(
-    					"\"https://petstore.swagger.io/v2/swagger.json\",",
-    					"\"" + openapi_url + "\", queryConfigEnabled: true,"
+    					"\"https://petstore.swagger.io/v2/swagger.json\"",
+    					"\"" + openapi_url + "\""
 	    			);
 	    		}
     		}
@@ -73,7 +119,7 @@ public class APIDebug {
     	}
     	if (data == null)
     		return Response.status(Status.NOT_FOUND).build();
-        return Response.ok(data).build();
+        return Response.ok(data).type(mediaType).build();
 	}
 
 
@@ -97,199 +143,24 @@ public class APIDebug {
 
 
 	/**
-	 * Diese Methode gibt die für den SVWS-Server angepasste "index.html"-Datei der Swagger-UI zurück.
+	 * Diese Methode gibt die für den SVWS-Server angepasste Datei der Swagger-UI zurück.
 	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 * @param request   der HTTP-Request
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces(MediaType.TEXT_HTML)
-    @Path("/debug{yaml : (/yaml)?}/index.html")
-    public Response debugFileIndexHTML(@PathParam("yaml") final String yaml, @Context final HttpServletRequest request) {
-        return getResource("index.html", request, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-initializer.js"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 * @param request   der HTTP-Request
+	 * @param yaml       ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
+	 * @param api        die api, auf welche zugegriffen werden soll
+	 * @param filename   der Dateiname
+	 * @param request    der HTTP-Request
 	 *
 	 * @return die HTTP-Response
 	 */
     @GET
-    @Produces("text/javascript")
-    @Path("/debug{yaml : (/yaml)?}/swagger-initializer.js")
-    public Response debugFileSwaggerInitializerJS(@PathParam("yaml") final String yaml, @Context final HttpServletRequest request) {
-        return getResource("swagger-initializer.js", request, "/yaml".equals(yaml));
+    @Produces({ MediaType.TEXT_HTML, "text/javascript", "text/css", MediaType.TEXT_PLAIN })
+    @Path("/debug{yaml : (/yaml)?}{api : (/\\w+)?}/{filename}")
+    public Response debugFile(@PathParam("yaml") final String yaml, @PathParam("api") final String api,
+    		@PathParam("filename") final String filename, @Context final HttpServletRequest request) {
+        return getResource(filename, request, "/yaml".equals(yaml), (api == null || api.isBlank()) ? "server" : api.substring(1));
     }
 
 
-	/**
-	 * Diese Methode gibt die "swagger-ui.js"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("text/javascript")
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui.js")
-    public Response debugFileSwaggerUIJS(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui.js", null, "/yaml".equals(yaml));
-    }
 
-
-	/**
-	 * Diese Methode gibt die "swagger-ui-bundle.js"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("text/javascript")
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui-bundle.js")
-    public Response debugFileSwaggerUIBundleJS(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui-bundle.js", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui-standalone-preset.js"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("text/javascript")
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui-standalone-preset.js")
-    public Response debugFileSwaggerUIStandalonePresetJS(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui-standalone-preset.js", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "index.css"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("text/css")
-    @Path("/debug{yaml : (/yaml)?}/index.css")
-    public Response debugFileIndexCSS(@PathParam("yaml") final String yaml) {
-        return getResource("index.css", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui.css"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("text/css")
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui.css")
-    public Response debugFileSwaggerUICSS(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui.css", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui.js.map"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui.js.map")
-    public Response debugFileSwaggerUIJSMap(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui.js.map", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui-bundle.js.map"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui-bundle.js.map")
-    public Response debugFileSwaggerUIBundleJSMap(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui-bundle.js.map", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui-standalone-preset.js.map"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui-standalone-preset.js.map")
-    public Response debugFileSwaggerUIStandalonePresetJSMap(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui-standalone-preset.js.map", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "swagger-ui.css.map"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("/debug{yaml : (/yaml)?}/swagger-ui.css.map")
-    public Response debugFileSwaggerUICSSMap(@PathParam("yaml") final String yaml) {
-        return getResource("swagger-ui.css.map", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "favicon-16x16.png"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("image/png")
-    @Path("/debug{yaml : (/yaml)?}/favicon-16x16.png")
-    public Response debugFileFavicon16x16PNG(@PathParam("yaml") final String yaml) {
-        return getResource("favicon-16x16.png", null, "/yaml".equals(yaml));
-    }
-
-
-	/**
-	 * Diese Methode gibt die "favicon-32x32.png"-Datei der Swagger-UI zurück.
-	 *
-	 * @param yaml      ist auf "/yaml" gesetzt, wenn auf die Debug-API mithilfe der yaml-OpenAPI-Datei zugegriffen wird.
-	 *
-	 * @return die HTTP-Response
-	 */
-    @GET
-    @Produces("image/png")
-    @Path("/debug{yaml : (/yaml)?}/favicon-32x32.png")
-    public Response debugFileFavicon32x32PNG(@PathParam("yaml") final String yaml) {
-        return getResource("favicon-32x32.png", null, "/yaml".equals(yaml));
-    }
 
 }

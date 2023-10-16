@@ -51,12 +51,12 @@ public class OpenApiServer extends BaseOpenApiResource {
 					"""
 					Die Open-API-Schnittstellenbeschreibungen des SVWS-Servers: <br>
 					<ul>
-					  <li> <a href="/debug/index.html?url=/openapi/server.json"> API SVWS-Server </a> </li>
+					  <li> <a href="/debug/server/index.html"> API SVWS-Server </a> </li>
 					  %s
 					</ul>
 					""".formatted(SVWSKonfiguration.get().isDBRootAccessDisabled() || SVWSKonfiguration.get().hatPortHTTPPrivilegedAccess()
 							? ""
-							: "<li> <a href=\"/debug/index.html?url=/openapi/schemaroot.json\"> API SVWS-Server - Schemaverwaltung </a> </li>"
+							: "<li> <a href=\"/debug/privileged/index.html\"> API SVWS-Server - Schemaverwaltung </a> </li>"
 					))
 			.license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html"));
 

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.jaxrs2.integration.resources.BaseOpenApiResource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,13 +50,10 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource {
 					"""
 					Die Open-API-Schnittstellenbeschreibungen des SVWS-Servers: <br>
 					<ul>
-					  %s
-					  <li> <a href="/debug/index.html?url=/openapi/schemaroot.json"> API SVWS-Server - Schemaverwaltung </a> </li>
+					  <li> <a href="/debug/server/index.html"> API SVWS-Server </a> </li>
+					  <li> <a href="/debug/privileged/index.html"> API SVWS-Server - Schemaverwaltung </a> </li>
 					</ul>
-					""".formatted(SVWSKonfiguration.get().isDBRootAccessDisabled() || SVWSKonfiguration.get().hatPortHTTPPrivilegedAccess()
-							? ""
-							: "<li> <a href=\"/debug/index.html?url=/openapi/server.json\"> API SVWS-Server </a> </li>"
-					))
+					""")
             .license(new License().name("Apache 2.0").url("http://www.apache.org/licenses/LICENSE-2.0.html"));
 
     private final OpenAPI openApi = new OpenAPI()
@@ -96,7 +92,7 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource {
      * @throws Exception im Fehlerfall
      */
     @GET
-    @Path("/openapi/schemaroot.{type:json|yaml}")
+    @Path("/openapi/privileged.{type:json|yaml}")
     @Produces({MediaType.APPLICATION_JSON, "application/yaml"})
     @Operation(hidden = true)
     public Response getOpenApi(@Context final HttpHeaders headers,
