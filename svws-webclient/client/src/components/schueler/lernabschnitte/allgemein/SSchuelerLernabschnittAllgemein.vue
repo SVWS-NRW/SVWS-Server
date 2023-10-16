@@ -48,6 +48,9 @@
 					<svws-ui-select title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete
 						v-model="foerderschwerpunkt2" />
 					<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="autismus" span="full"> Autismus </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="aosf" span="full"> AOSF </svws-ui-checkbox>
+					<svws-ui-checkbox v-model="zieldifferentesLernen" span="full"> zieldifferentes Lernen </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -130,9 +133,24 @@
 		set: (value) => void props.patch({ foerderschwerpunkt2ID: value === undefined ? null : value.id })
 	});
 
+	const aosf = computed<boolean>({
+		get: () => props.manager().lernabschnittGet().hatAOSF,
+		set: (value) => void props.patch({ hatAOSF: value })
+	});
+
+	const autismus = computed<boolean>({
+		get: () => props.manager().lernabschnittGet().hatAutismus,
+		set: (value) => void props.patch({ hatAutismus: value })
+	});
+
 	const schwerbehinderung = computed<boolean>({
 		get: () => props.manager().lernabschnittGet().hatSchwerbehinderungsNachweis,
 		set: (value) => void props.patch({ hatSchwerbehinderungsNachweis: value })
+	});
+
+	const zieldifferentesLernen = computed<boolean>({
+		get: () => props.manager().lernabschnittGet().hatZieldifferentenUnterricht,
+		set: (value) => void props.patch({ hatZieldifferentenUnterricht: value })
 	});
 
 	const klassenarten = computed<List<Klassenart>>(() => {
