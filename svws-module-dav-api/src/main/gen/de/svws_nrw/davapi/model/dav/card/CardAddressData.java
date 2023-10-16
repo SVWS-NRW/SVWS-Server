@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlMixed;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
@@ -41,7 +42,9 @@ public class CardAddressData {
 	@XmlMixed
 	private List<String> content;
 
-	@XmlAttribute(name = "content-type")
+//	@XmlElement
+//	@XmlAttribute(name = "content-type")
+	@XmlAttribute(name = "Content-Type")
 	private String contentType;
 
 	@XmlAttribute(name = "version")
@@ -74,7 +77,7 @@ public class CardAddressData {
 	 *
 	 * <p>
 	 * For example, to add a new item, do as follows:
-	 * 
+	 *
 	 * <pre>
 	 * getContent().add(newItem);
 	 * </pre>

@@ -266,6 +266,17 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			given(user, password).when().body(body).request(PROPFIND, "dav/gymabi/adressbuecher/schueler").then()
 					.statusCode(207);
 		}
+
+		/**
+		 * Test zum Issue 1283 - Unmarshalling funktionierte nicht, wenn das
+		 * ContentType-Attribute im CardAddressData großgeschrieben wurde.
+		 */
+		void givenPropfindOnAdressbook_then_207() {
+			final var body = APITestUtil.readStringFromResourceFile(
+					"gymabi/dav/adressbuecher/1283_PROPFIND_Adressbuecher_Erzieher.xml", this);
+			given(user, password).when().body(body).request(PROPFIND, "dav /gymabi/adressbuecher/schueler").then()
+					.statusCode(207);
+		}
 	}
 
 	/**
@@ -362,7 +373,8 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 			if (hrefGemeinsamerKalender.indexOf('/') == 0) {
 				kalender = hrefGemeinsamerKalender.substring(1);
 			}
-			final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_207.xml", this);
+			final String body = APITestUtil.readStringFromResourceFile("gymabi/dav/kalender/propfind_kalender_207.xml",
+					this);
 
 			final Response response = given("ANDE", "password").when().body(body).request(PROPFIND, kalender);
 			final String responseString = response.asString();
