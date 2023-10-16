@@ -25,8 +25,8 @@
 			@keydown.up.prevent="onArrowUp"
 			@keydown.enter.prevent="selectCurrentActiveItem"
 			@keydown.backspace="onBackspace"
-			@keydown.esc.prevent="onEscape"
-			@keydown.space="onSpace"
+			@keydown.esc.prevent="toggleListBox"
+			@keydown.space.prevent="onSpace"
 			@keydown.tab.prevent="onTab" />
 		<div v-if="!headless" class="svws-tags">
 			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
@@ -51,7 +51,7 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { ComputedRef, Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
@@ -97,7 +97,6 @@
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
 
 	const showList = ref(false);
-	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const listIdPrefix = genId();
 
 	// Input element
@@ -149,18 +148,15 @@
 		return;
 	}
 
-	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
-		get: () => {
-			return data.value[0];
-		},
+	const selectedItem = computed<Item | null | undefined>({
+		get: () => data.value[0],
 		set: (item) => {
-			if (selectedItemList.value.has(item)) {
-				selectedItemList.value.delete(item);
-			} else {
-				selectedItemList.value.add(item);
-			}
+			if (item !== null && item !== undefined)
+				if (selectedItemList.value.has(item))
+					selectedItemList.value.delete(item);
+				else
+					selectedItemList.value.add(item);
 			updateData([...selectedItemList.value]);
-			return;
 		}
 	});
 
@@ -182,7 +178,7 @@
 			selectedItem.value = item;
 	}
 
-	const sortedList: ComputedRef<Item[]> = computed(() => {
+	const sortedList = computed<Item[]>(() => {
 		let arr
 		if (Array.isArray(props.items))
 			arr = props.items;
@@ -195,15 +191,13 @@
 		return arr;
 	});
 
-	const filteredList: ComputedRef<Item[]> = computed(() => {
-		if (props.autocomplete) {
+	const filteredList = computed<Item[]>(() => {
+		if (props.autocomplete)
 			if (props.itemFilter)
 				return props.itemFilter(sortedList.value, searchText.value);
 			else
 				return sortedList.value.filter(i => props.itemText(i).startsWith(searchText.value ?? ""));
-		} else {
-			return sortedList.value;
-		}
+		return sortedList.value;
 	});
 
 	function doFocus() {
@@ -232,17 +226,14 @@
 	}
 
 	function selectCurrentActiveItem() {
-		if (!showList.value || refList.value === null)
-			return;
-		selectItem(filteredList.value[refList.value.activeItemIndex]);
+		if (showList.value && refList.value !== null)
+			selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
 	// Arrow Navigation
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex < listLength - 1)
 			refList.value.activeItemIndex++;
@@ -252,10 +243,8 @@
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
 			refList.value.activeItemIndex = listLength - 1;
@@ -269,39 +258,20 @@
 			openListbox();
 	}
 
-	function onEscape() {
-		if (showList.value) {
-			closeListbox();
-		} else {
-			openListbox();
-		}
-	}
-
 	function onSpace(e: InputEvent) {
-		if (!props.autocomplete) {
-			e.preventDefault();
-			if (!showList.value) {
-				openListbox();
-			} else {
-				selectCurrentActiveItem();
-			}
-		}
+		if (!props.autocomplete)
+			showList.value ? selectCurrentActiveItem() : openListbox();
 	}
 
 	function onTab(e: InputEvent) {
 		if (props.autocomplete && refList.value !== null) {
-			e.preventDefault();
 			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
 	}
 
 	function scrollToActiveItem() {
-		if (refList.value !== null)
-			(itemRefs.value as HTMLElement[])[refList.value.activeItemIndex]?.scrollIntoView({
-				block: "nearest",
-				inline: "nearest"
-			});
+		refList.value?.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 	}
 
 	const {x, y, strategy} = useFloating(
@@ -323,9 +293,7 @@
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-	const content = computed<Item[]>(() => {
-		return data.value;
-	});
+	const content = computed<Item[]>(() => data.value);
 
 	defineExpose<{
 		content: ComputedRef<Item[]>,

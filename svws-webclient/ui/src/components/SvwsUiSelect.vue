@@ -25,9 +25,9 @@
 			@keydown.up.prevent="onArrowUp"
 			@keydown.enter.prevent="selectCurrentActiveItem"
 			@keydown.backspace="onBackspace"
-			@keydown.esc.prevent="onEscape"
-			@keydown.space="onSpace"
-			@keydown.tab="onTab" />
+			@keydown.esc.prevent="toggleListBox"
+			@keydown.space.prevent="onSpace"
+			@keydown.tab.prevent="onTab" />
 		<button v-if="removable && hasSelected" role="button" @click.stop="removeItem" class="svws-remove">
 			<i-ri-close-line />
 		</button>
@@ -45,7 +45,7 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { ComputedRef, Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
@@ -94,15 +94,11 @@
 	}>();
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
-
 	const showList = ref(false);
-	const itemRefs = shallowRef<HTMLLIElement[]>([]);
-	const listIdPrefix = genId();
-
-	// Input element
 	const inputEl = ref(null);
 	const hasFocus = ref(false);
 	const searchText = ref("");
+	const listIdPrefix = genId();
 
 	function onInputFocus() {
 		hasFocus.value = true;
@@ -114,12 +110,7 @@
 	}
 
 	const dynModelValue = computed<string>(() => {
-		switch (true) {
-			case showList.value && props.autocomplete:
-				return searchText.value;
-			default:
-				return generateInputText() ?? '';
-		}
+		return (showList.value && props.autocomplete) ? searchText.value : generateInputText();
 	});
 
 	function generateInputText() {
@@ -164,20 +155,13 @@
 			return;
 		data.value = value;
 		emit("update:modelValue", data.value);
-		if (props.indeterminate === true) {
+		if (props.indeterminate === true)
 			data.value = undefined;
-		}
 	}
 
-	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
+	const selectedItem = computed<Item | null | undefined>({
 		get: () => data.value,
-		set: (item) => {
-			if ((item === null) || (item === undefined)) {
-				updateData(item);
-				return;
-			}
-			updateData(item);
-		}
+		set: (item) => updateData(item)
 	});
 
 	const selectedItemList = computed<Set<Item>>(() => {
@@ -208,7 +192,7 @@
 		el?.input.blur();
 	}
 
-	const sortedList: ComputedRef<Item[]> = computed(() => {
+	const sortedList = computed<Item[]>(() => {
 		let arr
 		if (Array.isArray(props.items))
 			arr = props.items;
@@ -221,15 +205,14 @@
 		return arr;
 	});
 
-	const filteredList: ComputedRef<Item[]> = computed(() => {
+	const filteredList = computed<Item[]>(() => {
 		if (props.autocomplete) {
 			const isCurrent : boolean = (selectedItem.value !== null) && (selectedItem.value !== undefined) && (props.itemText(selectedItem.value) === searchText.value);
 			if (isCurrent)
 				return sortedList.value;
 			return props.itemFilter(sortedList.value, searchText.value);
-		} else {
-			return sortedList.value;
 		}
+		return sortedList.value;
 	});
 
 	function doFocus() {
@@ -245,13 +228,11 @@
 		doFocus();
 		showList.value = true;
 		void nextTick(() => {
-			if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null)) {
+			if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null))
 				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
-				scrollToActiveItem();
-			} else if (refList.value !== null) {
+			else if (refList.value !== null)
 				refList.value.activeItemIndex = 0;
-				scrollToActiveItem();
-			}
+			refList.value?.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 		});
 	}
 
@@ -267,31 +248,26 @@
 		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
-	// Arrow Navigation
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex < listLength - 1)
 			refList.value.activeItemIndex++;
 		else
 			refList.value.activeItemIndex = 0;
-		scrollToActiveItem();
+		refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
 			refList.value.activeItemIndex = listLength - 1;
 		else if (refList.value.activeItemIndex >= 1)
 			refList.value.activeItemIndex--;
-		scrollToActiveItem();
+		refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 	}
 
 	function onBackspace() {
@@ -299,63 +275,31 @@
 			openListbox();
 	}
 
-	function onEscape() {
-		if (showList.value) {
-			closeListbox();
-		} else {
-			openListbox();
-		}
-	}
-
-	function onSpace(e: InputEvent) {
-		if (!props.autocomplete) {
-			e.preventDefault();
-			if (!showList.value) {
+	function onSpace() {
+		if (!props.autocomplete)
+			if (!showList.value)
 				openListbox();
-			} else {
+			else
 				selectCurrentActiveItem();
-			}
-		}
 	}
 
-	function onTab(e: InputEvent) {
+	function onTab() {
 		if (props.autocomplete && refList.value !== null) {
-			e.preventDefault();
 			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
 	}
 
-	function scrollToActiveItem() {
-		if (refList.value !== null)
-			(itemRefs.value as HTMLElement[])[refList.value.activeItemIndex]?.scrollIntoView({
-				block: "nearest",
-				inline: "nearest"
-			});
-	}
-
-	const {x, y, strategy} = useFloating(
-		inputEl,
-		refList as Readonly<Ref<MaybeElement<HTMLElement>>>,
-		{
-			placement: 'bottom',
-			middleware: [flip(), shift(), offset(2), size({
-				apply({rects, elements}) {
-					Object.assign(elements.floating.style, {
-						width: `${rects.reference.width}px`
-					});
-				}
-			})],
-			whileElementsMounted: autoUpdate,
-		}
-	);
+	const {x, y, strategy} = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
+		placement: 'bottom',
+		middleware: [flip(), shift(), offset(2), size({ apply({rects, elements}) { Object.assign(elements.floating.style, { width: `${rects.reference.width}px` }); } })],
+		whileElementsMounted: autoUpdate,
+	});
 
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-	const content = computed<InputDataType>(() => {
-		return data.value;
-	});
+	const content = computed<InputDataType>(() => data.value);
 
 	defineExpose<{
 		content: ComputedRef<InputDataType>,
