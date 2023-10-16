@@ -86,6 +86,12 @@ class JavaLibPlugin implements Plugin<Project> {
 	}
 
 
+	void addThymeleafConfiguration() {
+		def version = "3.1.2.RELEASE";
+		project.configurations.create('thymeleaf');
+		project.dependencies.add('thymeleaf', 'org.thymeleaf:thymeleaf:' + version);
+	}
+
 
 	void addRestEasyConfiguration() {
 		def version = "6.2.5.Final";
@@ -137,6 +143,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addJacksonConfiguration();
 		this.addJettyConfiguration();
 		this.addPdfConfiguration();
+		this.addThymeleafConfiguration();
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();
