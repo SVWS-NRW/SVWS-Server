@@ -44,20 +44,33 @@
 						</div>
 					</template>
 				</svws-ui-table>
-				<svws-ui-table :items="kursliste" :columns="colsKursunterricht">
+				<svws-ui-table :items="stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKursunterricht">
 					<template #body>
-						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="svws-ui-tr"
+						<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
 							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
 							<div role="cell" class="select-none svws-ui-td">
-								<span :id="`kurs-${kurs.id}`" class="svws-ui-badge cursor-grab group relative" :class="{ 'cursor-grabbing': dragData !== undefined }">
+								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }}</span>
+							</div>
+							<div role="cell" class="select-none svws-ui-td">
+								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+									:class="{ 'cursor-grabbing': dragData !== undefined }">
 									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
 									</span>
-									<span class="pl-2">{{ kurs.bezeichnung }}</span>
-								</span>
+									<span class="pl-2">Allgemein</span>
+								</div>
+								<template v-if="stundenplanManager().getWochenTypModell() > 0">
+									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" @dragend="wochentyp = -1" class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+										:class="{ 'cursor-grabbing': dragData !== undefined }">
+										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+										</span>
+										<span class="px-3">{{ String.fromCharCode(64 + i) }}</span>
+									</div>
+								</template>
 							</div>
 							<div role="cell" class="select-none svws-ui-td svws-align-center">
-								{{ kurs.wochenstunden }}
+								{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}
 							</div>
 						</div>
 					</template>
@@ -84,11 +97,6 @@
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
 	const wochentyp = ref<number>(-1);
-
-	const kursliste = computed(()=>{
-		const list = props.stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.value.id);
-		return list;
-	})
 
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
@@ -191,7 +199,8 @@
 	];
 
 	const colsKursunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Kursunterricht", span: 2 },
+		{ key: "bezeichnung", label: "Kursunterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "irgendwas", label: "Wochentyp", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 
