@@ -124,6 +124,8 @@
 			id = `klasse-${data.idFach}-${data.idKlasse}`
 		else if (data instanceof StundenplanKurs)
 			id = `kurs-${data.id}`
+		else if (dragData.value?.isTranspiledInstanceOf("java.util.List"))
+			id = `schiene-${dragData.value.hashCode().toString()}`
 		if (id) {
 			const img = document.getElementById(id);
 			if (img && event?.dataTransfer)
