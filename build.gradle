@@ -148,6 +148,8 @@ fileTree(dir: './', include: '**/package.json', exclude: '**/node_modules/**').f
 }
 def fileVersionTS = new File("${rootDir}/svws-webclient/client/version.ts")
 fileVersionTS.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
+def fileVersionTSAdminClient = new File("${rootDir}/svws-webclient/admin/version.ts")
+fileVersionTSAdminClient.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 def fileVersionTSLaufbahnplanung = new File("${rootDir}/svws-webclient/laufbahnplanung/version.ts")
 fileVersionTSLaufbahnplanung.withWriter { w -> w << 'export const version = "' + config.project.version + '"' }
 

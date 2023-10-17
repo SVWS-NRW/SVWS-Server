@@ -10,6 +10,7 @@
 		"svws-webclient/ui",
 		"svws-webclient/components",
 		"svws-webclient/client",
+		"svws-webclient/admin",
 		"svws-webclient/browser-test"
 	],
 	"devDependencies": {

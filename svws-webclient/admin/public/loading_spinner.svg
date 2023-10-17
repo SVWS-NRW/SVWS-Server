@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="100mm"
+   height="100mm"
+   viewBox="0 0 100 100"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="loading_spinner.svg">
+  <title
+     id="title4689">Ladeanzeige</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4029915"
+     inkscape:cx="410"
+     inkscape:cy="164.2583"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-center="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Ladeanzeige</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-197)">
+    <g
+       id="g4687"
+       transform="matrix(0.98735109,0,0,0.98745758,1.3141637,190.3174)">
+      <rect
+         inkscape:transform-center-y="0.56575541"
+         y="6.7674766"
+         x="45.449017"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(90)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="-18.093269"
+         x="53.536579"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1"
+         style="fill:#000000;fill-opacity:0.7254902;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(90)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="-99.950096"
+         x="53.536579"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1-5"
+         style="fill:#000000;fill-opacity:0.23921569;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-y="0.56575541"
+         y="88.61338"
+         x="45.449017"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-2"
+         style="fill:#000000;fill-opacity:0.48627451;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(-30)"
+         inkscape:transform-center-y="0.56575541"
+         y="24.014647"
+         x="10.631468"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-7"
+         style="fill:#000000;fill-opacity:0.88627451;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(60)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="16.724279"
+         x="70.783752"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1-4"
+         style="fill:#000000;fill-opacity:0.64705882;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(60)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="-65.132545"
+         x="70.783752"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1-5-4"
+         style="fill:#000000;fill-opacity:0.16078431;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(-30)"
+         inkscape:transform-center-y="0.56575541"
+         y="105.86055"
+         x="10.631468"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-2-1"
+         style="fill:#000000;fill-opacity:0.40392157;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(30)"
+         inkscape:transform-center-y="0.56575541"
+         y="-25.577784"
+         x="67.544075"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-4"
+         style="fill:#000000;fill-opacity:0.08038587;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(120)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="-40.188324"
+         x="21.19132"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1-6"
+         style="fill:#000000;fill-opacity:0.80784314;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         inkscape:transform-center-x="0.5657568"
+         transform="rotate(120)"
+         inkscape:transform-center-y="-3.2951392e-06"
+         y="-122.04515"
+         x="21.19132"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-1-5-0"
+         style="fill:#000000;fill-opacity:0.32156863;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         transform="rotate(30)"
+         inkscape:transform-center-y="0.56575541"
+         y="56.26812"
+         x="67.544075"
+         height="19.424269"
+         width="7.7319908"
+         id="rect4518-2-19"
+         style="fill:#000000;fill-opacity:0.56862745;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>

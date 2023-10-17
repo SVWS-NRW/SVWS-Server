@@ -93,21 +93,25 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         }
         //Workaround Ende
 
-        try {
-	        UserIdentity user = login(username, password, request);
-	        if (user != null)
-	            return new UserAuthentication(getAuthMethod(), user);
-	        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
-	        if (user != null)
-	            return new UserAuthentication(getAuthMethod(), user);
-        } catch (final WebApplicationException wae) {
-    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
-    			response.setStatus(r.getStatus());
-    			writer.print(r.getEntity());
-        		return Authentication.SEND_FAILURE;
-            } catch (final IOException e) {
-                throw new ServerAuthException(e);
-            }
+        if (((username == null) || (username.isBlank())) && (request.getPathInfo().startsWith("/api/schema/root/"))) {
+        	// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
+        } else {
+	        try {
+		        UserIdentity user = login(username, password, request);
+		        if (user != null)
+		            return new UserAuthentication(getAuthMethod(), user);
+		        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
+		        if (user != null)
+		            return new UserAuthentication(getAuthMethod(), user);
+	        } catch (final WebApplicationException wae) {
+	    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
+	    			response.setStatus(r.getStatus());
+	    			writer.print(r.getEntity());
+	        		return Authentication.SEND_FAILURE;
+	            } catch (final IOException e) {
+	                throw new ServerAuthException(e);
+	            }
+	        }
         }
         try {
             response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");
