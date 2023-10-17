@@ -165,13 +165,15 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	patchUnterricht = async (data: StundenplanUnterricht, zeitraster: StundenplanZeitraster) => {
-		if (data.idZeitraster === zeitraster.id)
-			return;
+	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster) => {
 		api.status.start();
-		await api.server.patchStundenplanUnterricht({ idZeitraster: zeitraster.id }, api.schema, data.id);
-		data.idZeitraster = zeitraster.id;
-		this.stundenplanManager.unterrichtPatchAttributes(data);
+		for (const datum of data) {
+			if (datum.idZeitraster !== zeitraster.id) {
+				await api.server.patchStundenplanUnterricht({ idZeitraster: zeitraster.id }, api.schema, datum.id);
+				datum.idZeitraster = zeitraster.id;
+				this.stundenplanManager.unterrichtPatchAttributes(datum);
+			}
+		}
 		this.commit();
 		api.status.stop();
 	}
@@ -266,10 +268,14 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	addUnterrichtKlasse = async (data: Partial<StundenplanUnterricht>) => {
+	addUnterrichtKlasse = async (data: Iterable<Partial<StundenplanUnterricht>>) => {
 		api.status.start();
-		const unterricht = await api.server.addStundenplanUnterricht(data, api.schema);
-		this.stundenplanManager.unterrichtAdd(unterricht);
+		const list = new ArrayList<StundenplanUnterricht>();
+		for (const datum of data) {
+			const unterricht = await api.server.addStundenplanUnterricht(datum, api.schema);
+			list.add(unterricht);
+		}
+		this.stundenplanManager.unterrichtAddAll(list);
 		this.commit();
 		api.status.stop();
 	}
@@ -281,7 +287,6 @@ export class RouteDataStundenplan {
 		this.commit();
 		api.status.stop();
 	}
-
 
 	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
 		api.status.start();
