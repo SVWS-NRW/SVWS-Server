@@ -1,57 +1,55 @@
 <template>
-	<div class="h-full w-full grid gap-4 grid-cols-2">
-		<svws-ui-content-card>
+	<svws-ui-content-card>
+		<svws-ui-input-wrapper :grid="2">
+			<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
+				:model-value="klasse" @update:model-value="value => patch({ klassenID: (value == undefined) ? null : value.id })" />
+			<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
+				:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: (value == undefined) ? null : value.id })" />
+			<svws-ui-text-input placeholder="Datum von" type="date"
+				:model-value="manager().lernabschnittGet().datumAnfang || undefined"
+				@change="datumAnfang => patch({datumAnfang})" />
+			<svws-ui-text-input placeholder="Datum bis" type="date"
+				:model-value="manager().lernabschnittGet().datumEnde || undefined"
+				@change="datumEnde => patch({datumEnde})" />
+			<svws-ui-spacing />
+			<div>
+				<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}">Klassenlehrer</span>
+				<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
+				<div v-else class="flex flex-col leading-tight text-base">
+					<span v-for="kl in klassenlehrer" :key="kl.id">
+						{{ getLehrerText(kl) }}
+					</span>
+				</div>
+			</div>
+			<div class="flex flex-col gap-3">
+				<svws-ui-select title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
+					:model-value="tutor" @update:model-value="value => patch({ tutorID: (value == undefined) ? null : value.id })" />
+				<svws-ui-select title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
+					:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: (value == undefined) ? null : value.id })" />
+			</div>
+			<svws-ui-spacing :size="2" />
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="klasse" @update:model-value="value => patch({ klassenID: (value == undefined) ? null : value.id })" />
-				<svws-ui-select title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete
-					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: (value == undefined) ? null : value.id })" />
-				<svws-ui-text-input placeholder="Datum von" type="date"
-					:model-value="manager().lernabschnittGet().datumAnfang || undefined"
-					@change="datumAnfang => patch({datumAnfang})" />
-				<svws-ui-text-input placeholder="Datum bis" type="date"
-					:model-value="manager().lernabschnittGet().datumEnde || undefined"
-					@change="datumEnde => patch({datumEnde})" />
-				<svws-ui-spacing />
-				<div>
-					<span class="font-bold" :class="{'opacity-50': !klassenlehrer.length}">Klassenlehrer</span>
-					<span v-if="!klassenlehrer.length">Keine Daten vorhanden.</span>
-					<div v-else class="flex flex-col leading-tight text-base">
-						<span v-for="kl in klassenlehrer" :key="kl.id">
-							{{ getLehrerText(kl) }}
-						</span>
-					</div>
-				</div>
-				<div class="flex flex-col gap-3">
-					<svws-ui-select title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-						:model-value="tutor" @update:model-value="value => patch({ tutorID: (value == undefined) ? null : value.id })" />
-					<svws-ui-select title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
-						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: (value == undefined) ? null : value.id })" />
-				</div>
-				<svws-ui-spacing :size="2" />
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete
-						v-model="gliederung" />
-					<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
-					<svws-ui-select title="Organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete
-						v-model="organisationsform" />
-					<svws-ui-select title="Klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete
-						v-model="klassenart" />
-				</svws-ui-input-wrapper>
-				<svws-ui-spacing />
-				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text " autocomplete
-						v-model="foerderschwerpunkt" />
-					<svws-ui-select title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete
-						v-model="foerderschwerpunkt2" />
-					<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="autismus" span="full"> Autismus </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="aosf" span="full"> AOSF </svws-ui-checkbox>
-					<svws-ui-checkbox v-model="zieldifferentesLernen" span="full"> zieldifferentes Lernen </svws-ui-checkbox>
-				</svws-ui-input-wrapper>
+				<svws-ui-select title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete
+					v-model="gliederung" />
+				<svws-ui-text-input placeholder="Prüfungsordnung" :model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
+				<svws-ui-select title="Organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete
+					v-model="organisationsform" />
+				<svws-ui-select title="Klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete
+					v-model="klassenart" />
 			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
-	</div>
+			<svws-ui-spacing />
+			<svws-ui-input-wrapper :grid="2">
+				<svws-ui-select title="Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text " autocomplete
+					v-model="foerderschwerpunkt" />
+				<svws-ui-select title="Weiterer Förderschwerpunkt" :items="manager().foerderschwerpunktGetMenge()" :item-text="i => ((i === undefined) || (i.text === undefined)) ? '—' : i.text" autocomplete
+					v-model="foerderschwerpunkt2" />
+				<svws-ui-checkbox v-model="schwerbehinderung" span="full"> Schwerstbehinderung </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="autismus" span="full"> Autismus </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="aosf" span="full"> AOSF </svws-ui-checkbox>
+				<svws-ui-checkbox v-model="zieldifferentesLernen" span="full"> zieldifferentes Lernen </svws-ui-checkbox>
+			</svws-ui-input-wrapper>
+		</svws-ui-input-wrapper>
+	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">

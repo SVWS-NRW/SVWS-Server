@@ -1,5 +1,5 @@
 <template>
-	<button v-if="text" @click="select()" class="svws-ui-tab-button" :class="{'svws-active': isSelected}" :disabled="hidden">
+	<button v-if="text" @click="select()" class="svws-ui-tab-button" :class="{'svws-active': isSelected, 'hidden': hidden}">
 		<span>{{ text }}</span>
 		<!--<i-ri-loader-4-line v-if="isSelected" class="svws-ui-spinner" />-->
 	</button>
@@ -88,7 +88,7 @@
 	  }
 
 	  .svws-ui-tabs &,
-	  .router-tab-bar--subnav & {
+	  .svws-ui-secondary-tabs & {
 		  &:before {
 			  @apply absolute left-2 right-2 -bottom-2 h-[2px] bg-svws;
 			  content: '';
@@ -99,7 +99,7 @@
 		  }
 	  }
 
-	  .router-tab-bar--subnav & {
+	  .svws-ui-secondary-tabs & {
 		  @apply bg-white dark:bg-black;
 
 		  &:before {
@@ -113,7 +113,8 @@
   }
 
 	&.svws-active:hover {
-		.svws-ui-tabs & {
+		.svws-ui-tabs &,
+		.svws-ui-secondary-tabs & {
 			@apply bg-svws/5 dark:bg-svws/10;
 
 			.page--statistik & {

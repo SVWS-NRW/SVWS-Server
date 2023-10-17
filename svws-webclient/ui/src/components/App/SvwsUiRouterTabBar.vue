@@ -137,7 +137,7 @@
     }
 
 	.svws-sub-nav-target {
-		@apply w-full;
+		@apply w-full relative z-30;
 	}
 
     .svws-ui-tabs--wrapper {
@@ -145,13 +145,17 @@
         @apply bg-white dark:bg-black;
 
 		&:before {
-			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-px;
+			@apply h-[2px] bg-light dark:bg-white/10 absolute left-0 right-0 bottom-0;
 			content: '';
+
+			.svws-has-sub-nav & {
+				@apply rounded-md h-[10px] bottom-[-8px];
+			}
 		}
     }
 
     .svws-ui-tabs--list {
-        @apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2;
+        @apply flex flex-row items-center relative w-full gap-x-[2px] p-[2px] overflow-x-scroll pb-2 -mb-px;
         -ms-overflow-style: none;
         scrollbar-width: none;
 
@@ -182,11 +186,8 @@
       @apply overflow-x-auto flex-shrink-0;
     }
 
-    .svws-ui-title-tabs {
-      @apply text-button flex gap-[2px];
-
-		.svws-sub-nav-target & {
-		}
+    .svws-ui-secondary-tabs {
+      @apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
     }
 
 </style>

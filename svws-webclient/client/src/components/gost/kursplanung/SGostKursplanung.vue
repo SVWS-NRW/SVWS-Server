@@ -19,32 +19,38 @@
 							Tabelle einblenden
 						</template>
 					</svws-ui-button>
-					<div class="font-bold ml-8">Ergebnis:</div>
-					<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
-						<i-ri-stackshare-line /> Ableiten
-					</svws-ui-button>
-					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
-							<i-ri-pulse-line /> Aktivieren
+					<div class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
+						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
+							<i-ri-file-copy-line /> Ableiten
 						</svws-ui-button>
-					</s-card-gost-kursansicht-blockung-aktivieren-modal>
-					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
-							<i-ri-loop-left-line /> Synchronisieren
+						<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
+								<i-ri-checkbox-circle-line /> Aktivieren
+							</svws-ui-button>
+						</s-card-gost-kursansicht-blockung-aktivieren-modal>
+						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
+								<i-ri-loop-left-line /> Synchronisieren
+							</svws-ui-button>
+						</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
+						<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
+								<i-ri-corner-right-up-line /> Hochschreiben
+							</svws-ui-button>
+						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+					</div>
+					<div class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen"
+							:disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
+							<i-ri-settings3-line />
+							Regeln anzeigen
+							<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 						</svws-ui-button>
-					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
-					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
-							<i-ri-corner-up-right-line /> Hochschreiben
-						</svws-ui-button>
-					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-					<div class="font-bold ml-8">Regeln: </div>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen"
-						:disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
-						<i-ri-settings3-line /> anzeigen
-						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
-					</svws-ui-button>
-					<svws-ui-button-select v-if="allowRegeln" type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
+						<svws-ui-button-select v-if="allowRegeln" type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"

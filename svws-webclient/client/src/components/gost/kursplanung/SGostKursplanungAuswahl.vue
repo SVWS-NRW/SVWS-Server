@@ -7,7 +7,7 @@
 					<div class="flex w-fit">
 						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
 							<svws-ui-button type="transparent" @click="openModal()" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten">
-								<i-ri-share-forward-box-line class="-mb-0.5" /> Wiederherstellen
+								<i-ri-arrow-turn-back-line class="-mb-0.5" /> Wiederherstellen
 							</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
 					</div>

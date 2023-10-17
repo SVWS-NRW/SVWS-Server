@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content h-full w-full">
-		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" disable-header>
+		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 			<template #cell="{ rowData: row }">
 				<span>
 					{{ row.schuljahr + "." + row.abschnitt }}
@@ -16,12 +16,10 @@
 			</template>
 		</svws-ui-table>
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
-				<nav class="svws-ui-title-tabs">
-					<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
-						:hidden="false" @select="setChild(c)" :key="index" />
-				</nav>
-			</svws-ui-sub-nav>
+			<nav class="svws-ui-secondary-tabs">
+				<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
+					:hidden="false" @select="setChild(c)" :key="index" />
+			</nav>
 		</Teleport>
 		<router-view :key="$route.hash" />
 	</div>
@@ -46,7 +44,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		grid-template-columns: 8.5rem minmax(50rem, 1fr);
+		grid-template-columns: 7rem minmax(50rem, 1fr) minmax(50rem, 1fr);
 	}
 
 </style>
