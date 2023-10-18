@@ -51,7 +51,7 @@
 							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
 							:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
-								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }} {{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) }}</span>
+								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }}</span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
