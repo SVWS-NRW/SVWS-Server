@@ -82,6 +82,16 @@ export class SchuleStammdaten extends JavaObject {
 	public idSchuljahresabschnitt : number = 0;
 
 	/**
+	 * Der Schuljahresabschnittes, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen).
+	 */
+	public textSchuljahresabschnitt : string = "";
+
+	/**
+	 * Das Schuljahr, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen).
+	 */
+	public textSchuljahr : string = "";
+
+	/**
 	 * Die Anzahl der Abschnitte pro Jahrgangsstufe.
 	 */
 	public anzJGS_Jahr : number = 0;
@@ -136,6 +146,12 @@ export class SchuleStammdaten extends JavaObject {
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
+		if (typeof obj.textSchuljahresabschnitt === "undefined")
+			 throw new Error('invalid json format, missing attribute textSchuljahresabschnitt');
+		result.textSchuljahresabschnitt = obj.textSchuljahresabschnitt;
+		if (typeof obj.textSchuljahr === "undefined")
+			 throw new Error('invalid json format, missing attribute textSchuljahr');
+		result.textSchuljahr = obj.textSchuljahr;
 		if (typeof obj.anzJGS_Jahr === "undefined")
 			 throw new Error('invalid json format, missing attribute anzJGS_Jahr');
 		result.anzJGS_Jahr = obj.anzJGS_Jahr;
@@ -170,6 +186,8 @@ export class SchuleStammdaten extends JavaObject {
 		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"webAdresse" : ' + ((!obj.webAdresse) ? 'null' : JSON.stringify(obj.webAdresse)) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+		result += '"textSchuljahresabschnitt" : ' + JSON.stringify(obj.textSchuljahresabschnitt!) + ',';
+		result += '"textSchuljahr" : ' + JSON.stringify(obj.textSchuljahr!) + ',';
 		result += '"anzJGS_Jahr" : ' + obj.anzJGS_Jahr + ',';
 		result += '"schuleAbschnitte" : ' + SchuleAbschnitte.transpilerToJSON(obj.schuleAbschnitte) + ',';
 		result += '"dauerUnterrichtseinheit" : ' + obj.dauerUnterrichtseinheit + ',';
@@ -236,6 +254,12 @@ export class SchuleStammdaten extends JavaObject {
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+		}
+		if (typeof obj.textSchuljahresabschnitt !== "undefined") {
+			result += '"textSchuljahresabschnitt" : ' + JSON.stringify(obj.textSchuljahresabschnitt!) + ',';
+		}
+		if (typeof obj.textSchuljahr !== "undefined") {
+			result += '"textSchuljahr" : ' + JSON.stringify(obj.textSchuljahr!) + ',';
 		}
 		if (typeof obj.anzJGS_Jahr !== "undefined") {
 			result += '"anzJGS_Jahr" : ' + obj.anzJGS_Jahr + ',';

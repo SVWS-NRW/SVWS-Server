@@ -24,6 +24,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
 import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
+import de.svws_nrw.module.pdf.gost.kursplanung.PDFDateiGostKursplanungKurseMitKursschuelern;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1044,6 +1045,40 @@ public class APIGostKursplanung {
 		}
 	}
 
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Liste von Kursen mit deren Schülern zu einem Blockungsergebnis als PDF-Datei.
+	 *
+	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param blockungsergebnisid 	ID des Blockungsergebnisses, dessen Schüler-Kurse-Liste ausgegeben werden soll.
+	 * @param kursids           	Liste der IDs der Kurse, deren Liste der Schüler erstellt werden soll.
+	 * @param request     			die Informationen zur HTTP-Anfrage
+	 *
+	 * @return 						Die zu den übergebenen IDs zugehörige Liste der Kurse mit ihren Schülern.
+	 */
+	@POST
+	@Produces("application/pdf")
+	@Path("/blockungen/pdf/kurs_schueler_liste/{blockungsergebnisid : \\d+}")
+	@Operation(summary = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern für das angegebene Blockungsergebnis.",
+		description = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung."
+			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung",
+		content = @Content(mediaType = "application/pdf",
+			schema = @Schema(type = "string", format = "binary", description = "Kurs-Schüler-Liste")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(responseCode = "404", description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
+	public Response getGostKursplanungKursSchuelerListe(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+														 @RequestBody(description = "Kurs-IDs, deren Schüler-Liste erstellt werden soll.", required = true, content =
+														 @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kursids,
+														 @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PDFDateiGostKursplanungKurseMitKursschuelern.query(conn, blockungsergebnisid, kursids);
+		}
+	}
 
 	/**
      * Die OpenAPI-Methode für das Aktivieren bzw. Persistieren eines Blockungsergebnisses

@@ -101,6 +101,8 @@ export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';
 export { DBSchemaListeEintrag } from './core/data/db/DBSchemaListeEintrag';
 export { MigrateBody } from './core/data/db/MigrateBody';
 export { SchemaListeEintrag } from './core/data/db/SchemaListeEintrag';
+export { DruckGostKursplanungKurs } from './core/data/druck/DruckGostKursplanungKurs';
+export { DruckGostKursplanungKursSchueler } from './core/data/druck/DruckGostKursplanungKursSchueler';
 export { ENMBKAbschluss } from './core/data/enm/ENMBKAbschluss';
 export { ENMBKFach } from './core/data/enm/ENMBKFach';
 export { ENMDaten } from './core/data/enm/ENMDaten';
