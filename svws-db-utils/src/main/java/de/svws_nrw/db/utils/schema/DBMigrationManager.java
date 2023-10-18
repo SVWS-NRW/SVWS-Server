@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -803,12 +804,13 @@ public final class DBMigrationManager {
 				final MigrationDTOKursarten daten = entities.get(i);
 				final boolean isNotSchule = (daten.SchulnrEigner == null) || (schulNummer == null) || (Integer.compare(daten.SchulnrEigner, schulNummer) != 0);
 				if (isNotSchule) {
-					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer des Kursarten nicht mit der Schulnummer aus EigeneSchule übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
+					logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz, da die Schulnummer der Kursarten nicht mit der Schulnummer aus EigeneSchule übereinstimmt. Die Quell-Datenbank sollte überprüft werden.");
 					entities.remove(i);
 				}
 			}
 		}
-		for (int i = 0; i < entities.size(); i++) {
+		final Set<String> set = new HashSet<>();
+		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOKursarten daten = entities.get(i);
 			if (daten.Kursart != null)
 				daten.Kursart = mapKursart(daten.Kursart);
@@ -816,6 +818,13 @@ public final class DBMigrationManager {
 				daten.KursartAllg = mapKursart(daten.KursartAllg);
 			if (daten.Kursart != null)
 				daten.InternBez = mapKursart(daten.InternBez);
+			final String tmpID = daten.Kursart + "-" + daten.KursartAllg;
+			if (set.contains(tmpID)) {
+				logger.logLn(LogLevel.ERROR, "Entferne doppelten Datensatz für die Kursart '%s'.".formatted(daten.Kursart));
+				entities.remove(i);
+			} else {
+				set.add(tmpID);
+			}
 		}
 		return true;
 	}
