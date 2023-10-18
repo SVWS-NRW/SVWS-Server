@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
-			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @change="bezeichnung=>doPatch({bezeichnung})" type="text" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @change="bezeichnung => patch({ bezeichnung })" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>
@@ -13,7 +13,7 @@
 			</div>
 		</template>
 		<svws-ui-input-wrapper>
-			<svws-ui-text-input placeholder="Bezeichnung in Statistik" :model-value="data.kuerzelStatistik" @change="kuerzelStatistik=>doPatch({kuerzelStatistik})" type="text" />
+			<svws-ui-text-input placeholder="Bezeichnung in Statistik" :model-value="data.kuerzelStatistik" @change="kuerzelStatistik => patch({ kuerzelStatistik })" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -24,14 +24,7 @@
 
 	const props = defineProps<{
 		data: FachDaten;
+		patch: (data : Partial<FachDaten>) => Promise<void>;
 	}>();
-
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<FachDaten>): void;
-	}>()
-
-	function doPatch(data: Partial<FachDaten>) {
-		emit('patch', data);
-	}
 
 </script>

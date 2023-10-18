@@ -33,9 +33,23 @@ public final class DataFachdaten extends DataManager<Long> {
 	private final Function<DTOFach, FachDaten> dtoMapperFach = (final DTOFach f) -> {
 		final FachDaten daten = new FachDaten();
 		daten.id = f.ID;
-		daten.kuerzel = f.Kuerzel;
-		daten.bezeichnung = f.Bezeichnung;
+		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
 		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
+		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
+		daten.istOberstufenFach = f.IstOberstufenFach;
+		daten.sortierung = f.SortierungAllg;
+		daten.istSichtbar = f.Sichtbar;
+		daten.aufgabenfeld = f.Aufgabenfeld;
+		daten.bilingualeSprache = f.Unterichtssprache;
+		daten.istNachpruefungErlaubt = f.IstNachpruefungErlaubt;
+		daten.aufZeugnis = f.AufZeugnis;
+		daten.bezeichnungZeugnis = (f.BezeichnungZeugnis == null) ? "" : f.BezeichnungZeugnis;
+		daten.bezeichnungUeberweisungszeugnis = (f.BezeichnungUeberweisungsZeugnis == null) ? "" : f.BezeichnungUeberweisungsZeugnis;
+		daten.maxZeichenInFachbemerkungen = (f.MaxBemZeichen == null) ? Integer.MAX_VALUE : f.MaxBemZeichen;
+		daten.istSchriftlichZK = f.IstSchriftlichZK;
+		daten.istSchriftlichBA = f.IstSchriftlichBA;
+		daten.holeAusAltenLernabschnitten = f.AbgeschlFaecherHolen;
+		daten.istFHRFach = ((f.GewichtungFHR != null) && (f.GewichtungFHR != 0));
 		return daten;
 	};
 

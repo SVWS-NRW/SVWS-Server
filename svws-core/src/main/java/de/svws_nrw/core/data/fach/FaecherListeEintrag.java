@@ -1,5 +1,6 @@
 package de.svws_nrw.core.data.fach;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,34 +16,30 @@ public class FaecherListeEintrag {
 
 	/** Die ID des Faches. */
 	@Schema(description = "die ID des Faches", example = "4711")
-	public long id;
+	public long id = -1;
 
 	/** Das Kürzel des Faches. */
 	@Schema(description = "das Kürzel des Faches", example = "BI")
-	public String kuerzel;
+	public @NotNull String kuerzel = "";
 
 	/** Das dem Fach zugeordnete Statistik-Kürzel. */
 	@Schema(description = "das dem Fach zugeordnete Statistik-Kürzel", example = "BI")
-	public String kuerzelStatistik;
+	public @NotNull String kuerzelStatistik = "";
 
 	/** Der Name / die Bezeichnung des Faches. */
 	@Schema(description = "der Name / die Bezeichnung des Faches", example = "Biologie")
-	public String bezeichnung;
+	public @NotNull String bezeichnung = "";
 
 	/** Die Sortierreihenfolge des Fächerlisten-Eintrags. */
 	@Schema(description = "die Sortierreihenfolge des Fächerlisten-Eintrags", example = "1")
-	public int sortierung;
+	public int sortierung = 32000;
 
 	/** Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht. */
 	@Schema(description = "gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht", example = "true")
-	public boolean istOberstufenFach;
+	public boolean istOberstufenFach = false;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
-	public boolean istSichtbar;
-
-	/** Gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht. */
-	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
-	public boolean istAenderbar;
+	public boolean istSichtbar = false;
 
 }

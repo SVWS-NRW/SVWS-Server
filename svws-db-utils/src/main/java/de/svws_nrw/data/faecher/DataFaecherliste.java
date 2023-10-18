@@ -32,16 +32,15 @@ public final class DataFaecherliste extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FaecherListeEintrag}.
 	 */
 	private final Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (final DTOFach f) -> {
-		final FaecherListeEintrag eintrag = new FaecherListeEintrag();
-		eintrag.id = f.ID;
-		eintrag.kuerzel = f.Kuerzel;
-		eintrag.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
-		eintrag.bezeichnung = f.Bezeichnung;
-		eintrag.istOberstufenFach = f.IstOberstufenFach;
-		eintrag.sortierung = f.SortierungAllg;
-		eintrag.istSichtbar = f.Sichtbar;
-		eintrag.istAenderbar = f.Aenderbar;
-		return eintrag;
+		final FaecherListeEintrag daten = new FaecherListeEintrag();
+		daten.id = f.ID;
+		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
+		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
+		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
+		daten.istOberstufenFach = f.IstOberstufenFach;
+		daten.sortierung = f.SortierungAllg;
+		daten.istSichtbar = f.Sichtbar;
+		return daten;
 	};
 
 	@Override
