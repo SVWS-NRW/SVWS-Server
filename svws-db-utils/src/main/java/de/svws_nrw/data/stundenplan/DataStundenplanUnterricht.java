@@ -162,7 +162,7 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 				throw OperationError.NOT_FOUND.exception("Zeitraster mit der ID %d nicht gefunden.".formatted((Long) value));
 			dto.Zeitraster_ID = zeitraster.ID;
 		}),
-		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)),
+		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToIntegerInRange(value, false, 0, 100)),
 		Map.entry("idKurs", (conn, dto, value, map) -> {
 			if (value == null) {
 				dto.Kurs_ID = null;
