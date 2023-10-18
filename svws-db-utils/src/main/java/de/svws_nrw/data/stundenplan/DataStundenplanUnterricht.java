@@ -164,10 +164,14 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		}),
 		Map.entry("wochentyp", (conn, dto, value, map) -> dto.Wochentyp = JSONMapper.convertToInteger(value, false)),
 		Map.entry("idKurs", (conn, dto, value, map) -> {
-			final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
-			if (kurs == null)
-				throw OperationError.NOT_FOUND.exception("Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
-			dto.Kurs_ID = kurs.ID;
+			if (value == null) {
+				dto.Kurs_ID = null;
+			} else {
+				final DTOKurs kurs = conn.queryByKey(DTOKurs.class, value);
+				if (kurs == null)
+					throw OperationError.NOT_FOUND.exception("Kurs mit der ID %d nicht gefunden.".formatted((Long) value));
+				dto.Kurs_ID = kurs.ID;
+			}
 		}),
 		Map.entry("idFach", (conn, dto, value, map) -> {
 			final DTOFach fach = conn.queryByKey(DTOFach.class, value);
