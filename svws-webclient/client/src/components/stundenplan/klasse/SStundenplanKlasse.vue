@@ -16,7 +16,8 @@
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
+							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)"
+							:style="`--background-color: ${stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
@@ -47,9 +48,10 @@
 				<svws-ui-table :items="stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKursunterricht">
 					<template #body>
 						<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
-							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
+							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
+							:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
-								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }}</span>
+								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }} {{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) }}</span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
@@ -70,7 +72,7 @@
 								</template>
 							</div>
 							<div role="cell" class="select-none svws-ui-td svws-align-center">
-								{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}
+								<span :class="{'rounded-sm bg-red-400': stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) < 0}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
 							</div>
 						</div>
 					</template>
@@ -149,9 +151,24 @@
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster))
 			return await props.patchUnterricht([dragData.value], zone);
 		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
-		if (dragData.value.isTranspiledInstanceOf("java.util.List") && (zone instanceof StundenplanZeitraster)) {
-			const casted: List<StundenplanUnterricht> = cast_java_util_List(dragData.value);
-			return await props.patchUnterricht(casted, zone);
+		// Fall List<StundenplanKurs> -> StundenplanZeitraster
+		// Fall List<StundenplanUnterricht> -> undefined
+		if (dragData.value.isTranspiledInstanceOf("java.util.List")) {
+			const listStundenplanUnterricht = new ArrayList<StundenplanUnterricht>();
+			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
+			const casted: List<unknown> = cast_java_util_List(dragData.value);
+			for (const item of casted)
+				if (item instanceof StundenplanUnterricht)
+					listStundenplanUnterricht.add(item);
+				else if (item instanceof StundenplanKurs)
+					listStundenplanKurs.add(item);
+			if (listStundenplanKurs.size() > 0)
+				return await props.addUnterrichtKlasse(listStundenplanKurs);
+			if (listStundenplanUnterricht.size() > 0)
+				if (zone instanceof StundenplanZeitraster)
+					return await props.patchUnterricht(listStundenplanUnterricht, zone);
+				else if (zone === undefined)
+					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster))
@@ -159,11 +176,6 @@
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
 			return await props.removeUnterrichtKlasse([dragData.value]);
-		// Fall List<StundenplanUnterricht> -> undefined
-		if (dragData.value.isTranspiledInstanceOf("java.util.List") && (zone === undefined)) {
-			const casted: List<StundenplanUnterricht> = cast_java_util_List(dragData.value);
-			return await props.removeUnterrichtKlasse(casted);
-		}
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster))
 			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach }]);
