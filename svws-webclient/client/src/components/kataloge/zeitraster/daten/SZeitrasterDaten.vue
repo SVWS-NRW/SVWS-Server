@@ -8,9 +8,8 @@
 
 <script setup lang="ts">
 
+	import type { Wochentag, StundenplanZeitraster, StundenplanPausenzeit } from "@core";
 	import type { ZeitrasterDatenProps } from "./SZeitrasterDatenProps";
-	import type { StundenplanPausenzeit} from "@core";
-	import type { Wochentag, StundenplanZeitraster } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<ZeitrasterDatenProps>();

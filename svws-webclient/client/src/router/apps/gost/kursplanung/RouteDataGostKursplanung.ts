@@ -744,7 +744,7 @@ export class RouteDataGostKursplanung {
 		try {
 			const list = new ArrayList<number>();
 			switch (title) {
-				case "Schülerliste der markierten Kurse":
+				case "Schülerliste markierte Kurse":
 					for (const kurs of this.kursAuswahl.value)
 						list.add(kurs);
 					return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
