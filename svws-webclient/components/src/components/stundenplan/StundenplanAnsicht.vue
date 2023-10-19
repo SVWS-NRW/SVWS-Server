@@ -165,7 +165,7 @@
 		ignoreEmpty: false,
 		useDragAndDrop: false,
 		dragData: () => undefined,
-		onDrag: (data: StundenplanAnsichtDragData) => {},
+		onDrag: (data: StundenplanAnsichtDragData, event?: DragEvent) => {},
 		onDrop: (zone: StundenplanAnsichtDropZone) => {},
 	});
 

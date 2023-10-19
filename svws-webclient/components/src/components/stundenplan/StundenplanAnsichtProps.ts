@@ -16,6 +16,6 @@ export interface StundenplanAnsichtProps {
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
 	dragData?: () => StundenplanAnsichtDragData;
-	onDrag?: (data: StundenplanAnsichtDragData, event?: Event) => void;
+	onDrag?: (data: StundenplanAnsichtDragData, event?: DragEvent) => void;
 	onDrop?: (zone: StundenplanAnsichtDropZone) => void;
 }

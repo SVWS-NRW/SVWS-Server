@@ -49,7 +49,7 @@
 					<template #body>
 						<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
 							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
-							:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
+							:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
 								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }}</span>
 							</div>
@@ -72,7 +72,7 @@
 								</template>
 							</div>
 							<div role="cell" class="select-none svws-ui-td svws-align-center">
-								<span :class="{'rounded-sm bg-red-400': stundenplanManager().kursGetWochenstundenSOLL(kurs.id) - stundenplanManager().kursGetWochenstundenIST(kurs.id) < 0}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
+								<span :class="{'rounded-sm bg-red-400': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
 							</div>
 						</div>
 					</template>
