@@ -3739,7 +3739,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostKursplanungKursSchuelerListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurs_schueler_liste/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode pdfGostKursplanungKurseMitKursschuelern für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
 	 *
@@ -3756,8 +3756,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostKursplanungKursSchuelerListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/kurs_schueler_liste/{blockungsergebnisid : \\d+}"
+	public async pdfGostKursplanungKurseMitKursschuelern(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
@@ -3767,7 +3767,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode pdfGostKursplanungKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.
 	 *
@@ -3784,7 +3784,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+	public async pdfGostKursplanungKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
@@ -3795,7 +3795,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFSchuelerKurseListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode pdfGostKursplanungSchuelerMitKursen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
 	 *
@@ -3812,8 +3812,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFSchuelerKurseListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \\d+}"
+	public async pdfGostKursplanungSchuelerMitKursen(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";

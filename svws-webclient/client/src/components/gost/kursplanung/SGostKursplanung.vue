@@ -126,10 +126,11 @@
 	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
 
 	const dropdownList = [
+		{ text: "Schülerliste der markierten Kurse", action: () => downloadPDF("Schülerliste der markierten Kurse") },
 		{ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung"), default: true },
 		{ text: "Kurse-Schienen-Zuordnung markierter Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler") },
 		{ text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler") },
-		{ text: "Kursbelegung markierter Schülers", action: () => downloadPDF("Kursbelegung markierter Schülers") },
+		{ text: "Kursbelegung markierter Schüler", action: () => downloadPDF("Kursbelegung markierter Schüler") },
 		{ text: "Kursbelegung gefilterte Schüler", action: () => downloadPDF("Kursbelegung gefilterte Schüler") },
 	]
 

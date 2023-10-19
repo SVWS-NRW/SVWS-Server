@@ -744,22 +744,26 @@ export class RouteDataGostKursplanung {
 		try {
 			const list = new ArrayList<number>();
 			switch (title) {
+				case "Schülerliste der markierten Kurse":
+					for (const kurs of this.kursAuswahl.value)
+						list.add(kurs);
+					return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung":
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung markierter Schüler":
 					list.add(this.auswahlSchueler.id);
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 					for (const schueler of this.schuelerFilter.filtered.value)
 						list.add(schueler.id);
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kursbelegung markierter Schülers":
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kursbelegung markierter Schüler":
 					list.add(this.auswahlSchueler.id);
-					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kursbelegung gefilterte Schüler":
 					for (const schueler of this.schuelerFilter.filtered.value)
 						list.add(schueler.id);
-					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				default:
 					throw new Error();
 			}
