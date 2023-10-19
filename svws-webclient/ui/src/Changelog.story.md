@@ -10,6 +10,8 @@ icon: 'carbon:bookmark'
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
 
+## ab 0.7.8
+* Die Checkbox verwendet nun das Attribut `indeterminate`, um den Zustzand von `undefined` oder `null`, unabhängig vom verwendeten `v-model` bzw. `model-value` anzuzeigen. `model-value` muss nun ein Boolean-Wert sein. Dazu wurde ein `readonly` Attribut hinzugefügt, das Eingaben verhindert.
 ## ab 0.7.3
 * Modal wurde überarbeitet und stellt nicht mehr die Funktionen openModal, closeModal und isOpen zur Verfügung. Das Öffnen erfolgt nun über die Property show, mit der eine Funktion übergeben wird, welche eine vue-Ref auf einen boolean zurückgibt
 * Das MultiSelect kann nur noch die Variante mit Tags übernehmen, ohne Tags wird mit Select verwendet. Da sich bis auf das `tags`-Prop nichts ändert, kann mit Suchen und Ersetzen diese Komponente relativ problemlos ausgetauscht werden.

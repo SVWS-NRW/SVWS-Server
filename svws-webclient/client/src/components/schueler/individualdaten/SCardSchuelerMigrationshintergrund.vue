@@ -59,7 +59,7 @@
 		set: (value) => doPatch({ verkehrspracheFamilie: value.daten.kuerzel })
 	});
 
-	const hatMigrationshintergrund: WritableComputedRef<boolean | undefined> = computed({
+	const hatMigrationshintergrund: WritableComputedRef<boolean> = computed({
 		get: () => props.data().hatMigrationshintergrund,
 		set: (value) => doPatch({ hatMigrationshintergrund: value })
 	});

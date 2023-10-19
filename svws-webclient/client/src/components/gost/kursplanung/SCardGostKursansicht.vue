@@ -58,7 +58,7 @@
 				</div>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="getKursauswahl().size === 0 ? false : (getDatenmanager().kursGetAnzahl() === getKursauswahl().size ? true : 'indeterminate')"
+						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size" :indeterminate="getKursauswahl().size > 0 && getKursauswahl().size < getDatenmanager().kursGetAnzahl()"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': kurssortierung.value === 'kursart'}">

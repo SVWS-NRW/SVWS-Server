@@ -67,7 +67,7 @@
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-for="column in columnsComputed" class="svws-ui-td" role="columnheader" :key="column.key" :title="column.tooltip ? '' : column.label" @click.exact="column.sortable && toggleSorting(column)" @keyup.enter="column.sortable && toggleSorting(column)"
 						:class="[
@@ -147,7 +147,7 @@
 			<slot name="footer" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
 				<div class="svws-ui-tr" role="row">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td" role="cell">
 						<span v-if="allRowsSelected && modelValue" class="font-medium">

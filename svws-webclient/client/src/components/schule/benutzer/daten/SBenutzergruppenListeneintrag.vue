@@ -34,7 +34,7 @@
 		istAlle: false
 	});
 
-	const selected: WritableComputedRef<boolean | undefined> = computed({
+	const selected: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzerManager().istInGruppe(props.row.id),
 		set: (value) => {
 			if (value)

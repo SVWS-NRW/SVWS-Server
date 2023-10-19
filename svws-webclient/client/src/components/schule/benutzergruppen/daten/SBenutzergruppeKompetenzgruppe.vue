@@ -8,7 +8,7 @@
 						<i-ri-arrow-down-s-line v-else />
 					</template>
 				</svws-ui-button>
-				<svws-ui-checkbox v-model="selected" :disabled="istAdmin">
+				<svws-ui-checkbox v-model="selected" :indeterminate="indeterminate" :disabled="istAdmin">
 					{{ kompetenzgruppe.daten.bezeichnung }}
 				</svws-ui-checkbox>
 			</div>
@@ -42,10 +42,12 @@
 
 	const hatSubKompetenzen = computed<number>(() =>  props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
+	const selectedHatAlle = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
 	const selectedMindestensEine = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
+	const indeterminate = computed<boolean>(() => !selectedHatAlle.value && selectedMindestensEine.value);
 
-	const selected = computed<'indeterminate' | boolean>({
-		get: () => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)) || (selectedMindestensEine.value ? 'indeterminate' : false),
+	const selected = computed<boolean>({
+		get: () => selectedHatAlle.value,
 		set: (value) => {
 			if (value)
 				void props.addBenutzerKompetenzGruppe(props.kompetenzgruppe);
