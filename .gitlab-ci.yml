@@ -9,6 +9,7 @@
 # https://gradle.org/
 # https://github.com/gradle/gradle
 
+
 image: svwsnrw/dockerrunner
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
