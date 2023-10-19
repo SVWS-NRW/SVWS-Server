@@ -4,9 +4,11 @@
 		<template #modalTitle>Abiturjahr hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-checkbox v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id" :model-value="jahrgaenge.get(jahrgang.id)" @update:model-value="updateMap(jahrgang.id, $event)" :value="jahrgang.id">
-					Abitur {{ props.getAbiturjahrFuerJahrgang(jahrgang.id) }} (Jahrgang {{ jahrgang.kuerzel }})
-				</svws-ui-checkbox>
+				<template v-for="jahrgang in mapJahrgaengeOhneAbiJahrgang.values()" :key="jahrgang.id">
+					<svws-ui-checkbox :model-value="jahrgaenge.get(jahrgang.id)" @update:model-value="updateMap(jahrgang.id, $event)" :value="jahrgang.id">
+						Abitur {{ props.getAbiturjahrFuerJahrgang(jahrgang.id) }} (Jahrgang {{ jahrgang.kuerzel }})
+					</svws-ui-checkbox>
+				</template>
 			</div>
 		</template>
 		<template #modalActions>
