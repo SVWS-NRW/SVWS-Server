@@ -10,10 +10,14 @@
 			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
 					<div class="font-bold">Ergebnis:</div>
-					<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white"> Ableiten </svws-ui-button>
+					<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
+						<i-ri-file-copy2-line />
+					</svws-ui-button>
 					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="aktivieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
+							<svws-ui-button type="transparent" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
+								<i-ri-pulse-line />
+							</svws-ui-button>
 						</template>
 						<template v-else>
 							<svws-ui-tooltip>
@@ -28,7 +32,9 @@
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="synchronisieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()">Synchronisieren</svws-ui-button>
+							<svws-ui-button type="transparent" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
+								<i-ri-loop-left-line />
+							</svws-ui-button>
 						</template>
 						<template v-else>
 							<svws-ui-tooltip>
@@ -40,7 +46,9 @@
 						</template>
 					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
+						<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
+							<i-ri-share-forward-line />
+						</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
 					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
 						<i-ri-settings3-line />

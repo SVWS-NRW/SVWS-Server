@@ -6,7 +6,9 @@
 					<span>{{ row.kuerzel }}</span>
 					<div class="flex w-fit">
 						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(row)" v-slot="{ openModal }" :restore-blockung="restoreBlockung">
-							<svws-ui-button type="transparent" @click="openModal()" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten"><i-ri-share-forward-line class="-mb-0.5" /></svws-ui-button>
+							<svws-ui-button type="transparent" @click="openModal()" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten">
+								<i-ri-download-line class="-mb-0.5" />
+							</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-recover>
 					</div>
 				</div>
@@ -14,7 +16,7 @@
 		</svws-ui-table>
 		<s-gost-kursplanung-blockung-auswahl :halbjahr="halbjahr" :patch-blockung="patchBlockung" :remove-blockung="removeBlockung"
 			:set-auswahl-blockung="setAuswahlBlockung" :auswahl-blockung="auswahlBlockung" :map-blockungen="mapBlockungen" :api-status="apiStatus"
-			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+			:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse"
 			:set-auswahl-ergebnis="setAuswahlErgebnis" :hat-blockung="hatBlockung" :auswahl-ergebnis="auswahlErgebnis" :rechne-gost-blockung="rechneGostBlockung"
 			:restore-blockung="restoreBlockung" :ist-blockung-persistiert="istBlockungPersistiert(halbjahr)">
 			<template #blockungAuswahlActions>
