@@ -1,27 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`java.util.ArrayList, getestet mit 'LehrerListeEintrag' > toArray: returns given array with elements 1`] = `
-[
-  LehrerListeEintrag {
-    "id": 0,
-    "istAenderbar": false,
-    "istRelevantFuerStatistik": false,
-    "istSichtbar": false,
-    "kuerzel": "",
-    "nachname": "",
-    "personTyp": "",
-    "sortierung": 0,
-    "titel": null,
-    "vorname": "",
-  },
-  2,
-  3,
-]
-`;
-
 exports[`java.util.ArrayList, getestet mit 'Number' > toArray: returns given array with elements 1`] = `
 [
-  Number {},
+  1,
   2,
   3,
 ]
@@ -29,9 +10,7 @@ exports[`java.util.ArrayList, getestet mit 'Number' > toArray: returns given arr
 
 exports[`java.util.ArrayList, getestet mit 'String' > toArray: returns given array with elements 1`] = `
 [
-  String {
-    "0": "a",
-  },
+  "a",
   2,
   3,
 ]
