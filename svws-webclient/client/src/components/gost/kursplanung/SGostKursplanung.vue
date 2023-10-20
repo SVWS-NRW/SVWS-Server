@@ -9,6 +9,7 @@
 		<template v-if="hatBlockung">
 			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
+					<div class="font-bold">Ergebnis:</div>
 					<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white"> Ableiten </svws-ui-button>
 					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="aktivieren_moeglich">
@@ -39,9 +40,9 @@
 						</template>
 					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">Ergebnis hochschreiben</svws-ui-button>
+						<svws-ui-button type="transparent" @click="openModal()">Hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1" :class="{'mr-2': regelzahl > 0}">
+					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
 						<i-ri-settings3-line />
 						<span class="pr-1">Regeln zur Blockung</span>
 						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
@@ -182,7 +183,7 @@
 			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
 
 			.s-gost-kursplanung-schueler-auswahl {
-			@apply -ml-8 lg:-ml-12;
+				@apply -ml-8 lg:-ml-12;
 			}
 		}
 	}
