@@ -49,9 +49,6 @@
 			</div>
 		</template>
 		<template #actions>
-			<div class="mr-auto -ml-3">
-				<slot name="blockungRecoverAction" />
-			</div>
 			<slot name="blockungAuswahlActions" />
 		</template>
 	</svws-ui-table>

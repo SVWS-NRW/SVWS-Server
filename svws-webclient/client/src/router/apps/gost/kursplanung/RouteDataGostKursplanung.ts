@@ -327,6 +327,8 @@ export class RouteDataGostKursplanung {
 	}
 
 	addBlockung = async () => {
+		if ((this._state.value.abiturjahr === undefined) || (this._state.value.abiturjahr === -1))
+			return;
 		api.status.start();
 		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
 		this.mapBlockungen.set(result.id, result);
