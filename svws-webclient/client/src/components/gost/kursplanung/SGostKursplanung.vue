@@ -9,11 +9,6 @@
 		<template v-if="hatBlockung">
 			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1" :class="{'mr-2': regelzahl > 0}">
-						<i-ri-settings3-line />
-						<span class="pr-1">Regeln zur Blockung</span>
-						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
-					</svws-ui-button>
 					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="aktivieren_moeglich">
 							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
@@ -45,6 +40,11 @@
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()">Ergebnis hochschreiben</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1" :class="{'mr-2': regelzahl > 0}">
+						<i-ri-settings3-line />
+						<span class="pr-1">Regeln zur Blockung</span>
+						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+					</svws-ui-button>
 					<svws-ui-button-select v-if="allowRegeln" type="secondary" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
 					<svws-ui-button type="transparent" @click="toggleBlockungstabelle" class="ml-auto">
 						<template v-if="blockungstabelleVisible">

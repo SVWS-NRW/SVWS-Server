@@ -1,7 +1,8 @@
 <template>
 	<template v-if="!getErgebnisse().isEmpty()">
 		<svws-ui-table clickable :clicked="auswahlErgebnis" @update:clicked="setAuswahlErgebnis" v-model="selected_ergebnisse" :selectable="getErgebnisse().size() > 1" class="z-20 relative"
-			:columns="[{ key: 'id', label: 'ID', fixedWidth: getErgebnisse().size() > 1 ? 3 : 4.75, align: 'left'}, { key: 'bewertung', label: 'Ergebnis' }]" :items="getErgebnisse()" :count="getErgebnisse().size() > 1">
+			:columns="[{ key: 'id', label: 'ID', fixedWidth: getErgebnisse().size() > 1 ? 3 : 4.75, align: 'left'}, { key: 'bewertung', label: 'Ergebnis' }]"
+			:items="getErgebnisse()" :count="getErgebnisse().size() > 1">
 			<template #header(id)>
 				<span class="font-mono">ID</span>
 			</template>
@@ -32,7 +33,7 @@
 					<div v-if="auswahlErgebnis === row || row.istVorlage" class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
 							<svws-ui-button type="transparent" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white"> Ableiten </svws-ui-button>
-							<svws-ui-button type="icon" class="text-black dark:text-white" @click.stop="remove_ergebnis" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" title="Ergebnis löschen">
+							<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
 								<i-ri-delete-bin-line class="-mx-0.5" />
 							</svws-ui-button>
 						</template>
