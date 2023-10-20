@@ -1,0 +1,116 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Kursplanung - Kurs mit Teilnehmern</title>
+		<link rel="stylesheet" href="KursMitKursschuelern.css" />
+	</head>
+
+	<body>
+		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Kursplanungskurse}">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.Bezeichnung} + '<br/>Lehrkräfte: ' + ${Kurs.Lehrkraefte} + '<br/>Schulnummer: ' + ${Schule.schulNr}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
+			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(Kursplanungskurse)}">Gesamtdruck Kurs 13/57</span></div>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table class="fixed-layout-100 no-space-pad">
+				<colgroup>
+					<col style="width: 14%;" />
+					<col style="width: 2%;" />
+					<col style="width: 14%;" />
+					<col style="width: 2%;" />
+					<col style="width: 7%;" />
+					<col style="width: 20%;" />
+					<col style="width: 12%;" />
+					<col style="width: 1%;" />
+					<col style="width: 10%;" />
+					<col style="width: 1%;" />
+					<col style="width: 5%;" />
+					<col style="width: 1%;" />
+					<col style="width: 5%;" />
+					<col style="width: 1%;" />
+					<col style="width: 5%;" />
+				</colgroup>
+				<thead>
+					<tr>
+						<td colspan="15" class="bob-grey"><h2 th:text="'Kursplanung ' + ${Kurs.GostHalbjahr} + ' - Kursliste'">Kursplanung Q2.1 - Kursliste</h2></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td colspan="15" class="pad-top"></td></tr>
+					<tr>
+						<td class="fb" th:text="${Kurs.Bezeichnung}">GE-GK2</td>
+						<td></td>
+						<td class="fb" th:text="${Kurs.Lehrkraefte}">ABCD</td>
+						<td></td>
+						<td class="fb" th:text="${Kurs.Kursart}">GK</td>
+						<td></td>
+						<td class="small ta-c" th:text="(${Kurs.AnzahlExterneTeilnehmer} == 0) ? ${Kurs.AnzahlTeilnehmer} : ${Kurs.AnzahlTeilnehmer} + ' (Ext. ' + ${Kurs.AnzahlExterneTeilnehmer} + ')'">23 (Ext. 08)</td>
+						<td></td>
+						<td class="small ta-c" th:text="${Kurs.AnzahlKlausurteilnehmer}">12</td>
+						<td></td>
+						<td class="small ta-c" th:text="${Kurs.AnzahlAB12}">0</td>
+						<td></td>
+						<td class="small ta-c" th:text="${Kurs.AnzahlAB3}">5</td>
+						<td></td>
+						<td class="small ta-c" th:text="${Kurs.AnzahlAB4}">3</td>
+					</tr>
+					<tr>
+						<td class="beschriftung">Kursbezeichnung</td>
+						<td></td>
+						<td class="beschriftung">Lehrkräfte</td>
+						<td></td>
+						<td class="beschriftung">Kursart</td>
+						<td></td>
+						<td class="beschriftung ta-c">Anzahl SuS.</td>
+						<td></td>
+						<td class="beschriftung ta-c">Klausurschr.</td>
+						<td></td>
+						<td class="beschriftung ta-c">AB1/2</td>
+						<td></td>
+						<td class="beschriftung ta-c">AB3</td>
+						<td></td>
+						<td class="beschriftung ta-c">AB4</td>
+					</tr>
+					<tr><td colspan="15" class="pad-bot"></td></tr>
+				</tbody>
+			</table>
+
+			<table class="fixed-layout-100 no-space-pad">
+				<colgroup>
+					<col style="width: 5%;" />
+					<col th:style="(${Kurs.AnzahlExterneTeilnehmer} != 0) ? 'width: 38%;' : 'width: 50%;'" />
+					<col th:if="(${Kurs.AnzahlExterneTeilnehmer} != 0)" style="width: 12%;" />
+					<col style="width: 11%;" />
+					<col style="width: 11%" />
+					<col style="width: 15%" />
+					<col style="width: 8%" />
+				</colgroup>
+				<thead>
+					<tr>
+						<th class="kurschueler ta-l">Nr.</th>
+						<th class="kurschueler ta-l">Name, Vorname</th>
+						<th th:if="(${Kurs.AnzahlExterneTeilnehmer} != 0)" class="kurschueler ta-c">Ext. Schule</th>
+						<th class="kurschueler ta-c">Belegung</th>
+						<th class="kurschueler ta-c">Abiturfach</th>
+						<th class="kurschueler ta-c">Geburtsdatum</th>
+						<th class="kurschueler ta-c">Geschl.</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="Schueler,itStatSchueler : ${Kurs.Kursschueler}" th:classappend="${itStatSchueler.odd} ? 'bg-lightgrey'">
+						<td class="bob-grey tc-grey" th:text="${#numbers.formatInteger(itStatSchueler.count,2)} + '.'">Nr.</td>
+						<td class="bob-grey" th:text="${Schueler.Nachname} + ', ' + ${Schueler.Vorname}">Mustermann, Max</td>
+						<td th:if="(${Kurs.AnzahlExterneTeilnehmer} != 0)" class="bob-grey ta-c" th:text="${Schueler.ExterneSchulnummer}">123456</td>
+						<td class="bob-grey ta-c" th:text="${Schueler.Belegung}">s</td>
+						<td class="bob-grey ta-c" th:text="${Schueler.Abiturfach}">3</td>
+						<td class="bob-grey ta-c" th:text="${Schueler.Geburtsdatum}">22.08.2008</td>
+						<td class="bob-grey ta-c" th:text="${Schueler.Geschlecht}">w</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

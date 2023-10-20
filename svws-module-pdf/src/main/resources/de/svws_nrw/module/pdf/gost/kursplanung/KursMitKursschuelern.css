@@ -1,9 +1,12 @@
 @Page {
 	size: A4 portrait;
 	margin-top: 17mm;
-	margin-bottom: 12mm;
 	margin-left: 15mm;
 	margin-right: 10mm;
+	margin-bottom: 12mm;
+
+	/*noinspection CssNoGenericFontName*/
+	font-family: "liberation";
 
 	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
 	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
@@ -33,55 +36,55 @@
 	}
 }
 
+
 /* Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der html-Datei ein div definiert,
    die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
 ############################################################################################################### */
 .pageTopLeft {
 	position: running(pageTopLeft);
 	text-align: left;
-	padding: 0mm;
-	margin: 0mm;
-	font-family: 'liberation';
+	padding: 0;
+	margin: 0;
 	font-weight: normal;
 	font-size: 7pt;
-	color: gray;
+	color: grey;
 }
 
 .pageTopRight {
 	position: running(pageTopRight);
 	text-align: right;
-	padding: 0mm;
-	margin: 0mm;
-	font-family: 'liberation';
+	padding: 0;
+	margin: 0;
 	font-weight: normal;
 	font-size: 7pt;
-	color: gray;
+	color: grey;
 }
 
 .pageBottomLeft {
 	position: running(pageBottomLeft);
 	text-align: left;
-	padding: 0mm;
-	margin: 0mm;
-	font-family: 'liberation';
+	padding: 0;
+	margin: 0;
 	font-weight: normal;
 	font-size: 7pt;
-	color: gray;
+	color: grey;
 }
 
 .pageBottomRight {
 	position: running(pageBottomRight);
 	text-align: right;
-	padding: 0mm;
-	margin: 0mm;
-	font-family: 'liberation';
+	padding: 0;
+	margin: 0;
 	font-weight: normal;
 	font-size: 7pt;
-	color: gray;
+	color: grey;
 }
+
+
 /* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
-span.counter-print { padding: 0em; margin: 0em; }
+span.counter-print { padding: 0; margin: 0; }
 span.counter-print:after { content: ''; }
+
 
 /* Seitenumbrüche: Wenn Style angewendet wird, wird davor ein Seitenumbruch eingefügt.
    Ausnahme ist die erste Seite.
@@ -89,11 +92,16 @@ span.counter-print:after { content: ''; }
 .start-new-page { page-break-before: always; }
 .start-new-page:first-child { page-break-before: avoid; }
 
+
 /* Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
 ############################################################################################################### */
 body {
-	font-family: 'liberation'; font-weight: normal; font-size: 10pt;
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	font-weight: normal;
+	font-size: 10pt;
 }
+
 
 /* Definitionen für Text-Elemente
 ############################################################################################################### */
@@ -101,18 +109,22 @@ h1 { font-size: 14pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.1em;}
 h2 { font-size: 13pt; font-weight: bold; margin-top: 0.8em; margin-bottom: 0.1em;}
 h3 { font-size: 12pt; font-weight: bold; margin-top: 0.6em; margin-bottom: 0.1em;}
 h4 { font-size: 11pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.1em;}
+p	{ margin-top: 0.5em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
+ul 	{ margin-top: 0.5em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
 
-p	{ margin-top: 0.5em; margin-bottom: 0em; margin-left: 0em; margin-right: 0em; padding: 0em;	}
+.fb { font-weight: bold; }
+.fi { font-style: italic; }
 
-ul 	{ margin-top: 0.5em; margin-bottom: 0em; margin-left: 1em; margin-right: 0em; padding: 0em;	}
-
-.c { text-align: center; }
-.b { font-weight: bold; }
 .small { font-size: 0.9em; }
 .tiny { font-size: 0.8em; }
 .very-tiny { font-size: 0.7em; }
-.t-gray { color: gray }
-.t-white { color: white }
+
+.tc-grey { color: grey }
+
+.ta-l { text-align: left; }
+.ta-c { text-align: center; }
+.ta-r { text-align: right; }
+
 
 /* Definitionen für Tabellen
 ############################################################################################################### */
@@ -132,18 +144,33 @@ tr {
 	page-break-inside: avoid;
 }
 
+
+th.kurschueler {
+	font-size: 0.8em;
+	font-weight: normal;
+	color: white;
+	background-color: #808080;
+	border-top: 0.5px solid grey;
+	border-bottom: 0.5px solid grey;
+}
+
+td.beschriftung {
+	font-size: 0.8em;
+	color: grey;
+	border-top: 0.5px solid grey;
+}
+
 .fixed-layout-100 { width: 100%; table-layout:fixed; }
 .no-space-pad { border-spacing: 0; padding: 0; border-collapse: collapse; }
-.zero-height { height: 0em; }
+.zero-height { height: 0; }
 
-.bo-gray { border: 0.5px solid gray; }
-.bot-gray { border-top: 0.5px solid gray; }
-.bob-gray { border-bottom: 0.5px solid gray; }
-.bol-gray { border-left: 0.5px solid gray; }
-.bor-gray { border-right: 0.5px solid gray; }
+.bo-grey { border: 0.5px solid grey; }
+.bot-grey { border-top: 0.5px solid grey; }
+.bob-grey { border-bottom: 0.5px solid grey; }
+.bol-grey { border-left: 0.5px solid grey; }
+.bor-grey { border-right: 0.5px solid grey; }
 
-.bg-lightgray { background-color: #DADADA; }
-.bg-darkgray { background-color: #808080; }
+.bg-lightgrey { background-color: #DADADA; }
 
-.top-pad { padding-top: 16px; }
-.bot-pad { padding-bottom: 16px; }
+.pad-top { padding-top: 1.25em; }
+.pad-bot { padding-bottom: 1.25em; }

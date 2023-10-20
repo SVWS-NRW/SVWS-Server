@@ -26,10 +26,10 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
  */
 public final class PDFDateiGostKursplanungKurseMitKursschuelern extends PDFBuilder {
 	/** Der Inhalt der html-Dokumentvorlage mit Schleifen und Variablen, aus der später die PDF-Datei erzeugt wird. */
-	private static final String htmlTemplate = ResourceUtils.text("de/svws_nrw/module/pdf/gost_kursplanung/KursMitKursschuelern.html");
+	private static final String htmlTemplate = ResourceUtils.text("de/svws_nrw/module/pdf/gost/kursplanung/KursMitKursschuelern.html");
 
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
-	private static final String cssDateipfad = "de/svws_nrw/module/pdf/gost_kursplanung/KursMitKursschuelern.css";
+	private static final String cssDateipfad = "de/svws_nrw/module/pdf/gost/kursplanung/KursMitKursschuelern.css";
 
 	/** Der Dateiname für die PDF-Datei. */
 	private final String pdfDateiname;
