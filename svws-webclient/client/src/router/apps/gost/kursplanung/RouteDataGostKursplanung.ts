@@ -682,9 +682,11 @@ export class RouteDataGostKursplanung {
 		return liste;
 	}
 
-	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
+	ergebnisAbleiten = async () => {
+		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
+			return;
 		api.status.start();
-		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, idErgebnis);
+		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, this.auswahlErgebnis.id);
 		this.mapBlockungen.set(result.id, result);
 		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		api.status.stop();

@@ -9,6 +9,7 @@
 		<template v-if="hatBlockung">
 			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
+					<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white"> Ableiten </svws-ui-button>
 					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
 						<template v-if="aktivieren_moeglich">
 							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>

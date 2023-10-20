@@ -32,7 +32,6 @@
 					</span>
 					<div v-if="auswahlErgebnis === row || row.istVorlage" class="ml-auto inline-flex">
 						<template v-if="auswahlErgebnis === row">
-							<svws-ui-button type="transparent" @click.stop="derive_blockung" :disabled="apiStatus.pending" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white"> Ableiten </svws-ui-button>
 							<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
 								<i-ri-delete-bin-line class="-mx-0.5" />
 							</svws-ui-button>
@@ -65,7 +64,6 @@
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;
 		halbjahr: GostHalbjahr;
@@ -89,12 +87,6 @@
 		if (!props.auswahlErgebnis)
 			return;
 		await props.removeErgebnisse([props.auswahlErgebnis]);
-	}
-
-	async function derive_blockung() {
-		if (!props.auswahlErgebnis)
-			return;
-		await props.ergebnisZuNeueBlockung(props.auswahlErgebnis.id);
 	}
 
 	function color1(ergebnis: GostBlockungsergebnisListeneintrag): string {

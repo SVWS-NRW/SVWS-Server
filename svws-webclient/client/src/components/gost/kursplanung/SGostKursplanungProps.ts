@@ -24,6 +24,7 @@ export interface GostKursplanungProps {
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 	addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+	ergebnisAbleiten: () => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
