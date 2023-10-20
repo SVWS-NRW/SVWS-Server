@@ -14,45 +14,24 @@
 						<i-ri-file-copy2-line />
 					</svws-ui-button>
 					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<template v-if="aktivieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
-								<i-ri-pulse-line />
-							</svws-ui-button>
-						</template>
-						<template v-else>
-							<svws-ui-tooltip>
-								<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
-								<template #content>
-									<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
-									<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
-									<span v-else />
-								</template>
-							</svws-ui-tooltip>
-						</template>
+						<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
+							<i-ri-pulse-line />
+						</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-aktivieren-modal>
 					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<template v-if="synchronisieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
-								<i-ri-loop-left-line />
-							</svws-ui-button>
-						</template>
-						<template v-else>
-							<svws-ui-tooltip>
-								<svws-ui-button disabled type="transparent" size="small">Synchronisieren</svws-ui-button>
-								<template #content>
-									<span>Nur aktuelle und zukünftige, bereits aktivierte und persistierte Blockungen können synchronisiert werden</span>
-								</template>
-							</svws-ui-tooltip>
-						</template>
+						<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
+							<i-ri-loop-left-line />
+						</svws-ui-button>
 					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
 					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
 						<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
 							<i-ri-share-forward-line />
 						</svws-ui-button>
 					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
+					<div class="font-bold ml-8">Regeln: </div>
+					<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen"
+						:disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
 						<i-ri-settings3-line />
-						<span class="pr-1">Regeln zur Blockung</span>
 						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
 					</svws-ui-button>
 					<svws-ui-button-select v-if="allowRegeln" type="secondary" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
