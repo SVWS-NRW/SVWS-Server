@@ -178,7 +178,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
 			if (gostFach != null && !gostFach.kuerzel.equals("")) {
 				// Prüfe, ob dieses Fach vorher nicht bereits als Sprache vom Schüler belegt wurde
-				if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
+				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					// Prüfe, ob diese Sprache gemäß den Vorgaben des Jahrgangs durchgängig belegt werden kann UND schriftlich belegt wurde.
 					if (manager.pruefeBelegungDurchgehendBelegbar(abiFachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 						// Die Sprache wurde gültig belegt
@@ -504,7 +504,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			final GostFach gostFach = manager.getFach(abiFachbelegung);
 			if (gostFach != null && !gostFach.kuerzel.equals("")) {
 				// Prüfe, ob dieses Fach vorher nicht bereits als Sprache vom Schüler belegt wurde
-				if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
+				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					// Prüfe, ob diese Sprache durchgängig belegt wurde.
 					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 						anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt += 1;

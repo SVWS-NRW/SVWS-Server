@@ -128,7 +128,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			gefundenFremdsprachenbelegung = true;
 			const gostFach : GostFach | null = this.manager.getFach(abiFachbelegung);
 			if (gostFach !== null && !JavaObject.equalsTranspiler(gostFach.kuerzel, (""))) {
-				if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
+				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(this.manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					if (this.manager.pruefeBelegungDurchgehendBelegbar(abiFachbelegung, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1)) {
 						anzahlNeueinsetzendeFremdsprachenDurchgehendBelegbar += 1;
 					} else
@@ -337,7 +337,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				continue;
 			const gostFach : GostFach | null = this.manager.getFach(abiFachbelegung);
 			if (gostFach !== null && !JavaObject.equalsTranspiler(gostFach.kuerzel, (""))) {
-				if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(this.manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
+				if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(this.manager.getSprachendaten(), gostFach.kuerzel.substring(0, 1))) {
 					if (this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 						anzahlNeueinsetzendeFremdsprachenDurchgehendBelegt += 1;
 					}

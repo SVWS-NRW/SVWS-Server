@@ -206,7 +206,7 @@ public final class SprachendatenUtils {
      * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
      * @param sprache das einstellige Kürzel der Sprache
      *
-     * @return true, falls die Sprache als fortgeführte Fremdsprache als EF belegt werden kann, andernfalls false
+     * @return true, falls die Sprache als fortgeführte Fremdsprache ab EF belegt werden kann, andernfalls false
      */
     public static boolean istFortfuehrbareSpracheInGOSt(final Sprachendaten sprachendaten, final String sprache) {
 
@@ -229,17 +229,14 @@ public final class SprachendatenUtils {
                     continue;
                 }
 
-                // Prüfe auf erfolgreiche HSU Prüfung auf HA10/MSA-Niveau
-                if (pruefung.istHSUPruefung && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)) {
+                // Prüfe auf erfolgreiche HSU Prüfung auf EESA/MSA-Niveau
+                if (pruefung.istHSUPruefung && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)) {
                     return true;
                 }
 
-                // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
-                if (pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4)
-                    && ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
-                         || ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)))) {
+                // Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
+                if (istFeststellungspruefungEESAMSABestanden(pruefung))
                     return true;
-                }
             }
         }
 
@@ -247,8 +244,49 @@ public final class SprachendatenUtils {
     }
 
 
+	/**
+	 * Prüft, ob die übergebene Sprache als eine neueinsetzende Fremdsprache in der gymnasialen Oberstufe
+	 * gemäß APO-GOSt ab EF belegt werden kann. Dazu zählen alle bisher nicht belegten Sprachen oder Sprachen,
+	 * die nur im Rahmen des HSU belegt oder geprüft wurden.
+	 *
+	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 * @param sprache das einstellige Kürzel der Sprache
+	 *
+	 * @return true, falls die Sprache als neu einsetzende Fremdsprache ab EF belegt werden kann, andernfalls false
+	 */
+	public static boolean istNeueinsetzbareSpracheInGOSt(final Sprachendaten sprachendaten, final String sprache) {
 
-    /**
+		if (sprachendaten == null || sprache == null || sprache.equals("")) {
+			return false;
+		}
+
+		if (hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
+			return false;
+		}
+
+		// Sofern bisher keine fortgeführte Fremdsprache zur übergebenen Sprache gefunden wurde,
+		// durchsuche nun die Sprachprüfungen.
+		final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
+		if (pruefungen != null) {
+			for (final Sprachpruefung pruefung : pruefungen) {
+
+				// Prüfe, ob die Sprachprüfung, die gesuchte Sprache hat bzw. diese ersetzen kann
+				if (!sprache.equals(pruefung.sprache) && !sprache.equals(pruefung.ersetzteSprache)) {
+					continue;
+				}
+
+				// Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
+				if (istFeststellungspruefungEESAMSABestanden(pruefung))
+					return false;
+			}
+		}
+
+		// Die Sprache wurde in den Sprachendaten nicht gefunden, gebe daher true zurück.
+		return true;
+	}
+
+
+	/**
      * Sammelt alle Sprachen, die in der GOSt als fortgeführte Sprachen belegt werden können, sei
      * es aufgrund einer Belegung von mindestens zwei Jahren oder aufgrund einer Sprachprüfung.
      *
@@ -307,7 +345,7 @@ public final class SprachendatenUtils {
         final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (final Sprachpruefung pruefung : pruefungen) {
-                // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
+                // Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann
                 if (kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung))
                     return true;
             }
@@ -341,7 +379,7 @@ public final class SprachendatenUtils {
             final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
             if (pruefungen != null) {
                 for (final Sprachpruefung pruefung : pruefungen) {
-                    // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
+                    // Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau, die eine vierjährige Sprachen ersetzen kann, prüfe zudem auf evtl. doppelte Eintragungen bei Belegung und Prüfung
                     if ((kannFeststellungspruefungErsteSpracheErsetzen(pruefung) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefung)) && (!belegungen.get(0).sprache.equals(pruefung.sprache)))
                     	return true;
                 }
@@ -412,7 +450,7 @@ public final class SprachendatenUtils {
         final @NotNull List<@NotNull Sprachpruefung> pruefungen = sprachendaten.pruefungen;
         if (pruefungen != null) {
             for (final Sprachpruefung pruefungS1 : pruefungen) {
-                // Prüfe auf erfolgreiche Feststellungsprüfung auf HA10/MSA-Niveau
+                // Prüfe auf erfolgreiche Feststellungsprüfung auf EESA/MSA-Niveau
                 if (kannFeststellungspruefungErsteSpracheErsetzen(pruefungS1) || kannFeststellungspruefungZweiteSpracheErsetzen(pruefungS1)) {
                     for (final Sprachpruefung pruefungEF : pruefungen) {
                         // Prüfe auf erfolgreiche Feststellungsprüfung auf EF-Niveau zur gefundenen Prüfungssprache
@@ -518,7 +556,7 @@ public final class SprachendatenUtils {
 	 * @return True, wenn die Sprache der Prüfung die erste Pflichtfremdsprache ersetzen kann, sonst false
 	 */
 	private static boolean kannFeststellungspruefungErsteSpracheErsetzen(final Sprachpruefung pruefung) {
-		return (pruefung != null && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4) && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
+		return (pruefung != null && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4) && pruefung.kannErstePflichtfremdspracheErsetzen && (pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
 	}
 
 
@@ -530,8 +568,23 @@ public final class SprachendatenUtils {
 	 * @return True, wenn die Sprache der Prüfung die zweite Pflichtfremdsprache bzw. eine Wahlpflichtsprache ersetzen kann, sonst false
 	 */
 	private static boolean kannFeststellungspruefungZweiteSpracheErsetzen(final Sprachpruefung pruefung) {
-		return (pruefung != null && pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.HA10.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
+		return (pruefung != null && pruefung.istFeststellungspruefung  && (pruefung.note != null) && (pruefung.note <= 4) && (pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id));
 	}
+
+
+	/**
+	 * Hilfsfunktion, die prüft, ob die Sprache der übergebenen Feststellungsprüfung mit einer erfolgreichen Feststellungsprüfung auf EESA/MSA Niveau abgeschlossen wurde.
+	 *
+	 * @param pruefung	Feststellungsprüfung, die geprüft werden soll.
+	 *
+	 * @return True, wenn die Sprache erfolgreich auf Niveau EESA/MSA geprüft wurde, sonst false
+	 */
+	private static boolean istFeststellungspruefungEESAMSABestanden(final Sprachpruefung pruefung) {
+		return (pruefung != null) && pruefung.istFeststellungspruefung && (pruefung.note != null) && (pruefung.note <= 4)
+			&& ((pruefung.kannBelegungAlsFortgefuehrteSpracheErlauben && pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)
+				|| ((pruefung.kannErstePflichtfremdspracheErsetzen || pruefung.kannZweitePflichtfremdspracheErsetzen || pruefung.kannWahlpflichtfremdspracheErsetzen) && (pruefung.anspruchsniveauId == Sprachpruefungniveau.EESA.daten.id || pruefung.anspruchsniveauId == Sprachpruefungniveau.MSA.daten.id)));
+	}
+
 
     /**
      * Hilfsfunktion, die einen ASDJahrgang nach APO-SI und APO-GOSt und in einen numerischen Wert für Vergleiche umwandelt.

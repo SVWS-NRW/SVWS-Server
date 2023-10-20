@@ -257,7 +257,7 @@ public class AbiturdatenManager {
 
 
 	/**
-	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übegebenen ID
+	 * Bestimmt die Schüler-Fachwahl für das Fach mit der übergebenen ID
 	 *
 	 * @param fachID   die ID des Faches
 	 *
@@ -892,7 +892,7 @@ public class AbiturdatenManager {
 	 * Ist keine Fachbelegung gegeben, so schlägt die Prüfung fehl. Wird bei einer gültigen Fachbelegung kein Halbjahr
 	 * angegeben, so ist die Prüfung erfolgreich, da kein Halbjahr geprüft werden muss.
 	 *
-	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param fachbelegungen    die zu prüfenden Fachbelegungen
 	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
 	 * @param halbjahre         die zu prüfenden Halbjahre
 	 *
@@ -917,7 +917,7 @@ public class AbiturdatenManager {
 	 * angegeben, so ist die Prüfung erfolgreich sofern das Fach durchgängig belegt wurde, da kein Halbjahr auf die
 	 * Schriftlichkeit geprüft werden muss.
 	 *
-	 * @param fachbelegungen    die zu prüfenden Fachnbelegungen
+	 * @param fachbelegungen    die zu prüfenden Fachbelegungen
 	 * @param schriftlichkeit   die zu prüfende Schriftlichkeit
 	 * @param halbjahre         die zu prüfenden Halbjahre
 	 *
@@ -1674,7 +1674,7 @@ public class AbiturdatenManager {
 			final GostFach fach = getFach(fs);
 			if ((fach == null) || (!fach.istFremdsprache))
 				continue;
-			if (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
+			if (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(abidaten.sprachendaten, GostFachUtils.getFremdsprache(fach))) {
 				return true;
 			}
 		}
@@ -1685,12 +1685,12 @@ public class AbiturdatenManager {
 	/**
 	 * Prüft, ob die Belegung seit der EF1 vorhanden ist. Hierbei werden
 	 * Zusatz-, Vertiefungs- und Projektkurse auch als später einsetzend akzeptiert.
-	 * Dies gilt auch für Literatur, instrumental- und vokalpraktische Kurse sowie
+	 * Dies gilt auch für Literatur, instrumental- und vokal-praktische Kurse sowie
 	 * für Religion und Philosophie.
 	 *
 	 * @param fachbelegung   die Abiturfachbelegungen, die geprüft werden
 	 *
-	 * @return true, falls das Fach seit EF1 durchgängig belegt wurde oder eine der Ausnahmen zutrifft, sonsta false
+	 * @return true, falls das Fach seit EF1 durchgängig belegt wurde oder eine der Ausnahmen zutrifft, sonst false
 	 */
 	public boolean istBelegtSeitEF(final @NotNull AbiturFachbelegung fachbelegung) {
 		final GostFach fach = getFach(fachbelegung);

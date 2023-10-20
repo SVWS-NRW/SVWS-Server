@@ -185,7 +185,7 @@ public final class DBUtilsGost {
 				// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
 				final String fremdsprache = GostFachUtils.getFremdsprache(gostFach);
 				if (fremdsprache != null)
-					fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
+					fach.istFSNeu = (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(sprachendaten, fremdsprache));
 
 				final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 				fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
@@ -318,7 +318,7 @@ public final class DBUtilsGost {
 					// Prüfe ggf., ob eine Sprache fortgeführt wurde oder nicht
 					final String fremdsprache = GostFachUtils.getFremdsprache(gostFach);
 					if (fremdsprache != null)
-						fach.istFSNeu = (!SprachendatenUtils.istFortfuehrbareSpracheInGOSt(sprachendaten, fremdsprache));
+						fach.istFSNeu = (SprachendatenUtils.istNeueinsetzbareSpracheInGOSt(sprachendaten, fremdsprache));
 
 					final GostAbiturFach tmpAbiFach = GostAbiturFach.fromIDString(leistung.AbiFach);
 					fach.abiturfach = (tmpAbiFach == null) ? null : tmpAbiFach.id;
