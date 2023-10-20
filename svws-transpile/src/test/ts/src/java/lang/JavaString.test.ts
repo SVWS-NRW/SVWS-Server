@@ -31,7 +31,7 @@ describe("java.util.StringBuilder", () => {
 		expect(JavaString.compareTo("Bielefeld", "Herford")).toBeLessThan(0);
 		expect(JavaString.compareTo("Bielefeld", null)).toBeLessThan(0);
 	})
-	test.skip("compareToIgnoreCase: compares two strings", ()=>{
+	test("compareToIgnoreCase: compares two strings", ()=>{
 		expect(JavaString.compareToIgnoreCase("a", "b")).toBeLessThan(0);
 		expect(JavaString.compareToIgnoreCase("A", "b")).toBeLessThan(0);
 		expect(JavaString.compareToIgnoreCase("b", "A")).toBeGreaterThan(0);
