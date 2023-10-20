@@ -60,7 +60,8 @@ assemble.dependsOn transpile
 
 task testTranspilerCore(type: NpmRun) {
 	group "svws"
-	dependsOn rootProject.npmPrepare, transpile
+	dependsOn rootProject.npmPrepare, test
+	mustRunAfter test
 	workingDir file("$projectDir/src/test/ts")
 	inputs.files fileTree(dir: "$projectDir/src/main/resources/typescript", includes: ["**/*.ts"]), 
 		fileTree(dir: "$projectDir/src/test/ts/src", includes: ["**/*.test.ts", "**/*.bench.ts"]),
@@ -72,6 +73,6 @@ task testTranspilerCore(type: NpmRun) {
 	}
 }
 
-test.dependsOn testTranspilerCore
+check.dependsOn testTranspilerCore
 
 
