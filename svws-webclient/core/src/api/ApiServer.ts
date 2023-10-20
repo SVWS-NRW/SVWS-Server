@@ -5189,6 +5189,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Log vom Import der Laufbahndaten
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
 	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
 	 *     - Mime-Type: application/json

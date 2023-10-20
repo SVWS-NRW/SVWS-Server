@@ -19,7 +19,7 @@ export class OpenApiError extends Error {
 	public get error() : Error | null {
 		return this._error;
 	}
-	
+
 	public get response() : Response | null {
 		return this._response;
 	}
