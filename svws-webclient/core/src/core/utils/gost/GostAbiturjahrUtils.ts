@@ -3,8 +3,26 @@ import { IllegalStateException } from '../../../java/lang/IllegalStateException'
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { JavaString } from '../../../java/lang/JavaString';
+import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostAbiturjahrUtils extends JavaObject {
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von Abiturjahrgängen in Abiturjahrgangslisten.
+	 */
+	public static readonly comparator : Comparator<GostJahrgang> = { compare : (a: GostJahrgang, b: GostJahrgang) => {
+		const cmp : number = a.abiturjahr - b.abiturjahr;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.jahrgang === null) || (b.jahrgang === null)) {
+			if ((a.jahrgang === null) && (b.jahrgang === null))
+				return 0;
+			return (a.jahrgang === null) ? -1 : 1;
+		}
+		return JavaString.compareTo(a.jahrgang, b.jahrgang);
+	} };
 
 
 	private constructor() {

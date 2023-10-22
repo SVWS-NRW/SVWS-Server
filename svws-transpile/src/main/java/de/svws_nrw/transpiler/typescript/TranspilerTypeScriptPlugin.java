@@ -1397,30 +1397,28 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			// replace String methods...
 			if (type.isString()) {
 				final String expression = convertExpression(ms.getExpression());
-				if ("contains".equals(ms.getIdentifier().toString()))
-					return "JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("indexOf".equals(ms.getIdentifier().toString()))
-					return "JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("compareTo".equals(ms.getIdentifier().toString()))
-					return "JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("compareToIgnoreCase".equals(ms.getIdentifier().toString()))
-					return "JavaString.compareToIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("equalsIgnoreCase".equals(ms.getIdentifier().toString()))
-					return "JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("replaceAll".equals(ms.getIdentifier().toString()))
-					return "JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("replaceFirst".equals(ms.getIdentifier().toString()))
-					return "JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("formatted".equals(ms.getIdentifier().toString()))
-					return "JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("format".equals(ms.getIdentifier().toString()))
-					return "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
-				if ("length".equals(ms.getIdentifier().toString()))
-					return expression + ".length"; // in typescript it is not a method...
-				if ("isBlank".equals(ms.getIdentifier().toString()))
-					return "JavaString.isBlank(" + expression + ")";
-				if ("isEmpty".equals(ms.getIdentifier().toString()))
-					return "JavaString.isEmpty(" + expression + ")";
+				final Set<String> strMethods = Set.of(
+					"contains", "indexOf", "compareTo", "compareToIgnoreCase", "equalsIgnoreCase",
+					"replaceAll", "replaceFirst", "formatted", "format", "length", "isBlank", "isEmpty"
+				);
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					transpiler.getTranspilerUnit(node).imports.put("String", "java.lang");
+					return switch (ms.getIdentifier().toString()) {
+						case "contains" -> "JavaString.contains(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "indexOf" -> "JavaString.indexOf(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "compareTo" -> "JavaString.compareTo(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "compareToIgnoreCase" -> "JavaString.compareToIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "equalsIgnoreCase" -> "JavaString.equalsIgnoreCase(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "replaceAll" -> "JavaString.replaceAll(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "replaceFirst" -> "JavaString.replaceFirst(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "formatted" -> "JavaString.format(" + expression + ", " + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "format" -> "JavaString.format(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						case "length" -> expression + ".length"; // in typescript it is not a method...
+						case "isBlank" -> "JavaString.isBlank(" + expression + ")";
+						case "isEmpty" -> "JavaString.isEmpty(" + expression + ")";
+						default -> throw new TranspilerException("TranspilerError: Unhandled String method");
+					};
+				}
 			}
 			// replace reflective Array commands
 			if ((type instanceof final ExpressionClassType classType) && ("java.lang.reflect.Array".equals(classType.getFullQualifiedName()))) {

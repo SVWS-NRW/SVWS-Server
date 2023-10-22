@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { HashMap } from '../../../java/util/HashMap';
+import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { FaecherListeEintrag } from '../../../core/data/fach/FaecherListeEintrag';
@@ -9,6 +10,7 @@ import { DeveloperNotificationException } from '../../../core/exceptions/Develop
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
+import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
@@ -17,6 +19,7 @@ import { JavaLong } from '../../../java/lang/JavaLong';
 import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../java/util/List';
+import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class SchuelerLernabschnittManager extends JavaObject {
@@ -67,34 +70,6 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		if (b.text === null)
 			return 1;
 		return JavaString.compareTo(a.text, b.text);
-	} };
-
-	private static readonly _compJahrgaenge : Comparator<JahrgangsListeEintrag> = { compare : (a: JahrgangsListeEintrag, b: JahrgangsListeEintrag) => {
-		let cmp : number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
-			return cmp;
-		if ((a.kuerzel === null) || (b.kuerzel === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
-	} };
-
-	private static readonly _compKlassen : Comparator<KlassenListeEintrag> = { compare : (a: KlassenListeEintrag, b: KlassenListeEintrag) => {
-		let cmp : number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
-			return cmp;
-		if ((a.kuerzel === null) || (b.kuerzel === null))
-			return JavaLong.compare(a.id, b.id);
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
-	} };
-
-	private static readonly _compKurs : Comparator<KursListeEintrag> = { compare : (a: KursListeEintrag, b: KursListeEintrag) => {
-		let cmp : number = a.sortierung - b.sortierung;
-		if (cmp !== 0)
-			return cmp;
-		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 
 	private static readonly _compLehrer : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => {
@@ -167,7 +142,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initJahrgaenge(jahrgaenge : List<JahrgangsListeEintrag>) : void {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(SchuelerLernabschnittManager._compJahrgaenge);
+		this._jahrgaenge.sort(JahrgangsUtils.comparator);
 		this._mapJahrgangByID.clear();
 		for (const j of jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);
@@ -176,7 +151,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initKlassen(klassen : List<KlassenListeEintrag>) : void {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
-		this._klassen.sort(SchuelerLernabschnittManager._compKlassen);
+		this._klassen.sort(KlassenUtils.comparator);
 		this._mapKlasseByID.clear();
 		for (const k of klassen)
 			this._mapKlasseByID.put(k.id, k);
@@ -185,7 +160,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	private initKurse(kurse : List<KursListeEintrag>) : void {
 		this._kurse.clear();
 		this._kurse.addAll(kurse);
-		this._kurse.sort(SchuelerLernabschnittManager._compKurs);
+		this._kurse.sort(KursUtils.comparator);
 		this._mapKursByID.clear();
 		for (const k of kurse)
 			this._mapKursByID.put(k.id, k);
