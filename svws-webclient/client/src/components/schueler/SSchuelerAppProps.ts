@@ -1,10 +1,10 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag } from "@core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, SchuelerListeManager } from "@core";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchuelerAppProps {
-	auswahl: SchuelerListeEintrag | undefined;
-	stammdaten: () => SchuelerStammdaten | undefined;
-	mapKlassen: Map<number, KlassenListeEintrag>;
+	auswahl: SchuelerListeEintrag | null;
+	stammdaten: () => SchuelerStammdaten | null;
+	schuelerListeManager: () => SchuelerListeManager;
 	setTab: (value: AuswahlChildData) => Promise<void>;
 	tab: AuswahlChildData;
 	tabs: AuswahlChildData[];

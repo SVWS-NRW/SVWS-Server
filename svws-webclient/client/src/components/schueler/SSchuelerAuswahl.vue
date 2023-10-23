@@ -7,24 +7,24 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :filter-open="true" :filtered="filtered" :filterReset="filterReset" scroll-into-view scroll>
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
+				:columns="cols" clickable selectable count :filter-open="true" filtered :filterReset="filterReset" scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterStatus" :items="SchuelerStatus.values()" :item-text="text_status" title="Status" class="col-span-full" />
-					<svws-ui-select v-model="filterKlassen" title="Klasse" :items="mapKlassenFiltered" :item-text="text" removable autocomplete :item-filter="find" />
-					<svws-ui-select v-model="filterJahrgaenge" title="Jahrgang" :items="mapJahrgaenge" :item-text="text" removable autocomplete :item-filter="find" />
-					<svws-ui-select v-model="filterKurse" title="Kurs" :items="mapKurse" :item-text="text" removable autocomplete :item-filter="find" />
-					<svws-ui-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schulgliederungen" :item-text="text_schulgliederung" removable />
+					<svws-ui-multi-select v-model="filterStatus" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="text" autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="text" autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="text" autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<i-ri-filter-line />
 						Erweiterte Filter
 					</svws-ui-button>-->
 				</template>
 				<template #cell(idKlasse)="{ value }">
-					{{ value === null ? "–" : mapKlassen.get(value)?.kuerzel }}
+					{{ value === null ? "–" : schuelerListeManager().klassen.get(value)?.kuerzel }}
 				</template>
 				<template #actions>
 					<svws-ui-button v-if="selectedItems.length" type="transparent" @click="showModalGruppenaktionen().value = true">
@@ -67,116 +67,95 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung } from "@core";
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung, SchuelerStatus } from "@core";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 	import { computed, ref, watch } from "vue";
-	import { SchuelerStatus } from "@core";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 
 	const _showModalGruppenaktionen = ref<boolean>(false);
 	const showModalGruppenaktionen = () => _showModalGruppenaktionen;
 
-	// TODO Speichere in einem speziellen Filter-Objekt
-	const filtered: Ref<boolean> = ref(false);
-	const search: Ref<string> = ref("");
+	const search = ref<string>("");
+
 	const cols = [
 		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
 
-	const rows = computed(() =>
-		[...props.mapSchueler.values()]
-			.filter(s => !props.filter.status.length || props.filter.status.map(s => s.id).includes(s.status))
-			.filter(s => !props.filter.jahrgang || s.jahrgang === props.filter.jahrgang.kuerzel)
-			.filter(s => !props.filter.klasse || s.idKlasse === props.filter.klasse.id)
-			.filter(s => !props.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(props.filter.kurs.id))
-			.filter(s => !props.filter.schulgliederung || s.schulgliederung === props.filter.schulgliederung.daten.kuerzel)
-	);
-
-	watch(()=>rows.value, async (neu)=> {
-		if (props.auswahl && neu.includes(props.auswahl) === false)
-			await props.gotoSchueler(neu[0]);
+	watch(()=>props.schuelerListeManager().filtered(), async (neu)=> {
+		if (props.auswahl && neu.contains(props.auswahl) === false)
+			await props.gotoSchueler(neu.get(0));
 	})
 
-	const rowsFiltered = computed(() => rows.value.filter((e: any) =>
-		e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
-		e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
-	));
+	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {
+		const arr = [];
+		for (const e of props.schuelerListeManager().filtered())
+			if (e.nachname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()) ||
+				e.vorname.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+				arr.push(e);
+		return arr;
+	});
 
-	const filterStatus: WritableComputedRef<Array<SchuelerStatus>> =
-		computed({
-			get(): Array<SchuelerStatus> {
-				return props.filter.status;
-			},
-			set(value: Array<SchuelerStatus>) {
-				const filter = props.filter;
-				filter.status = value || [];
-				props.setFilter(filter);
-				filtered.value = true;
-			}
-		});
-
-	const filterSchulgliederung: WritableComputedRef<Schulgliederung | undefined> = computed({
-		get(): Schulgliederung | undefined {
-			return props.filter.schulgliederung;
-		},
-		set(value: Schulgliederung | undefined) {
-			const filter = props.filter;
-			filter.schulgliederung = value;
-			props.setFilter(filter);
-			filtered.value = true;
+	const filterStatus = computed<SchuelerStatus[]>({
+		get: () => [...props.schuelerListeManager().schuelerstatus.filterList()],
+		set: (value) => {
+			props.schuelerListeManager().schuelerstatus.filterClear();
+			for (const v of value)
+				props.schuelerListeManager().schuelerstatus.filterAdd(v);
+			void props.setFilter();
 		}
 	});
 
-	const filterJahrgaenge: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
-		get(): JahrgangsListeEintrag | undefined {
-			return props.filter.jahrgang;
-		},
-		set(value: JahrgangsListeEintrag | undefined) {
-			const filter = props.filter;
-			filter.jahrgang = value;
-			filter.klasse = undefined;
-			filter.kurs = undefined;
-			props.setFilter(filter);
-			filtered.value = true;
+	const filterSchulgliederung = computed<Schulgliederung[]>({
+		get: () => [...props.schuelerListeManager().schulgliederungen.filterList()],
+		set: (value) => {
+			props.schuelerListeManager().schulgliederungen.filterClear();
+			for (const v of value)
+				props.schuelerListeManager().schulgliederungen.filterAdd(v);
+			void props.setFilter();
 		}
 	});
 
-	const mapKlassenFiltered: ComputedRef<Map<number, KlassenListeEintrag>> = computed(() => {
-		const result: Map<number, KlassenListeEintrag> = new Map();
-		const jahrgang = props.filter.jahrgang;
-		for (const kl of props.mapKlassen.values())
-			if ((jahrgang === undefined) || (kl.idJahrgang === jahrgang.id))
-				result.set(kl.id, kl);
-		return result;
-	});
-
-	const filterKlassen: WritableComputedRef<KlassenListeEintrag | undefined> = computed({
-		get(): KlassenListeEintrag | undefined {
-			return props.filter.klasse;
-		},
-		set(value: KlassenListeEintrag | undefined) {
-			const filter = props.filter;
-			filter.klasse = value;
-			props.setFilter(filter);
-			filtered.value = true;
+	const filterJahrgaenge = computed<JahrgangsListeEintrag[]>({
+		get: () => [...props.schuelerListeManager().jahrgaenge.filterList()],
+		set: (value) => {
+			props.schuelerListeManager().jahrgaenge.filterClear();
+			for (const v of value)
+				props.schuelerListeManager().jahrgaenge.filterAdd(v);
+			void props.setFilter();
 		}
 	});
 
-	const filterKurse: WritableComputedRef<KursListeEintrag | undefined> = computed({
-		get(): KursListeEintrag | undefined {
-			return props.filter.kurs;
-		},
-		set(value: KursListeEintrag | undefined) {
-			const filter = props.filter;
-			filter.kurs = value;
-			props.setFilter(filter);
-			filtered.value = true;
+	const filterKlassen = computed<KlassenListeEintrag[]>({
+		get: () => [...props.schuelerListeManager().klassen.filterList()],
+		set: (value) => {
+			props.schuelerListeManager().klassen.filterClear();
+			for (const v of value)
+				props.schuelerListeManager().klassen.filterAdd(v);
+			void props.setFilter();
 		}
 	});
+
+	const filterKurse = computed<KursListeEintrag[]>({
+		get: () => [...props.schuelerListeManager().kurse.filterList()],
+		set: (value) => {
+			props.schuelerListeManager().kurse.filterClear();
+			for (const v of value)
+				props.schuelerListeManager().kurse.filterAdd(v);
+			void props.setFilter();
+		}
+	});
+
+	async function filterReset() {
+		props.schuelerListeManager().schulgliederungen.filterClear();
+		props.schuelerListeManager().schuelerstatus.filterClear();
+		props.schuelerListeManager().jahrgaenge.filterClear();
+		props.schuelerListeManager().klassen.filterClear();
+		props.schuelerListeManager().kurse.filterClear();
+		await props.setFilter();
+	}
 
 	function text_status(status: SchuelerStatus): string {
 		if (status instanceof Array) return "";
@@ -199,9 +178,9 @@
 		return schulgliederung.daten.kuerzel;
 	}
 
-	const selectedItems: WritableComputedRef<SchuelerListeEintrag[]> = computed({
+	const selectedItems = computed<SchuelerListeEintrag[]>({
 		get: () => props.auswahlGruppe,
-		set: (items: SchuelerListeEintrag[]) => props.setAuswahlGruppe(items)
+		set: (items) => props.setAuswahlGruppe(items)
 	});
 
 	function onAction(action: string, item: SchuelerListeEintrag) {
@@ -228,18 +207,6 @@
 	function addLine() {
 		// TODO: Funktion implementieren
 		console.log('addLine geklickt');
-	}
-
-	function filterReset() {
-		search.value = "";
-		const filter = props.filter;
-		filter.jahrgang = undefined;
-		filter.klasse = undefined;
-		filter.kurs = undefined;
-		filter.schulgliederung = undefined;
-		filter.status = [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ];
-		props.setFilter(filter);
-		filtered.value = false;
 	}
 
 </script>

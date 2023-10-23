@@ -79,7 +79,7 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 	 * @return der Wert oder null, falls kein Wert enthalten ist.
 	 */
 	public V get(@NotNull final K key) {
-		return this.get(key);
+		return this._mapValuesByKey.get(key);
 	}
 
 

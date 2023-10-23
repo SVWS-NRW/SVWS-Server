@@ -58,7 +58,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		const eintrag = (id !== undefined) ? this.data.mapSchueler.get(id) : undefined;
+		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.schueler.get(id) : null;
 		await this.data.setSchueler(eintrag);
 		if (!this.data.hatStammdaten) {
 			if (to.name === this.name)
@@ -87,12 +87,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		return {
 			auswahl: this.data.auswahl,
 			auswahlGruppe: this.data.auswahlGruppe,
-			filter: this.data.filter,
-			mapSchueler: this.data.mapSchueler,
-			mapKlassen: this.data.mapKlassen,
-			mapJahrgaenge: this.data.mapJahrgaenge,
-			mapKurse: this.data.mapKurse,
-			schulgliederungen: api.schulgliederungen,
+			schuelerListeManager: () => this.data.schuelerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -106,8 +101,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
 			auswahl: this.data.auswahl,
-			stammdaten: () => this.data.auswahl === undefined ? undefined : this.data.stammdaten,
-			mapKlassen: this.data.mapKlassen,
+			stammdaten: () => this.data.auswahl === null ? null : this.data.stammdaten,
+			schuelerListeManager: () => this.data.schuelerListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),

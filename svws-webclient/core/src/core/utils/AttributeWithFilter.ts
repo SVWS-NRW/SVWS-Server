@@ -81,7 +81,7 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	 * @return der Wert oder null, falls kein Wert enthalten ist.
 	 */
 	public get(key : K) : V | null {
-		return this.get(key);
+		return this._mapValuesByKey.get(key);
 	}
 
 	/**

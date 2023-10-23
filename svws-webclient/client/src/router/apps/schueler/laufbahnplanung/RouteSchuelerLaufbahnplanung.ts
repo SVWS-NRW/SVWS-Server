@@ -23,7 +23,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 			if (routeSchueler.data.auswahl === undefined)
 				return false;
 			const abiturjahr = routeSchueler.data.auswahl?.abiturjahrgang;
-			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
+			return !(abiturjahr && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
 		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
@@ -35,11 +35,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		if (this.parent === undefined)
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.id === undefined) {
-			await this.data.ladeDaten();
+			await this.data.ladeDaten(null);
 		} else {
 			const id = parseInt(to_params.id);
 			try {
-				await this.data.ladeDaten(this.parent.data.mapSchueler.get(id));
+				await this.data.ladeDaten(this.parent.data.schuelerListeManager.schueler.get(id));
 			} catch(error) {
 				return routeSchueler.getRoute(id);
 			}

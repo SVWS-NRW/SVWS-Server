@@ -233,7 +233,7 @@
 			uniqueKey?: string;
 			clickable?: boolean;
 			allowUnclick?: boolean;
-			clicked?: DataTableItem | undefined;
+			clicked?: DataTableItem | undefined | null;
 			selectable?: boolean;
 			disableHeader?: boolean;
 			disableFooter?: boolean;
@@ -246,7 +246,7 @@
 			filterOpen?: boolean;
 			filterHide?: boolean;
 			filtered?: boolean;
-			filterReset?: () => void | undefined;
+			filterReset?: () => any;
 			sortBy?: string;
 			sortingOrder?: DataTableSortingOrder;
 			toggleColumns?: boolean;

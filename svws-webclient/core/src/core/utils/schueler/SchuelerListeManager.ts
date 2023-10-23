@@ -160,7 +160,7 @@ export class SchuelerListeManager extends JavaObject {
 
 	/**
 	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassen, die Kurs, die Schulgliederungen und der Schülerstatus
+	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
 	 * beachtet.
 	 *
 	 * @return die gefilterte Liste
@@ -170,9 +170,9 @@ export class SchuelerListeManager extends JavaObject {
 			return this._filtered;
 		const tmpList : List<SchuelerListeEintrag> = new ArrayList();
 		for (const eintrag of this.schueler.list()) {
-			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
+			if (this.jahrgaenge.filterAktiv() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang))))
 				continue;
-			if (this.klassen.filterAktiv() && (!this.klassen.filterHasKey(eintrag.idKlasse)))
+			if (this.klassen.filterAktiv() && ((eintrag.idKlasse < 0) || (!this.klassen.filterHasKey(eintrag.idKlasse))))
 				continue;
 			if (this.kurse.filterAktiv()) {
 				let hatEinenKurs : boolean = false;
@@ -182,7 +182,7 @@ export class SchuelerListeManager extends JavaObject {
 				if (!hatEinenKurs)
 					continue;
 			}
-			if (this.schulgliederungen.filterAktiv() && (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung)))
+			if (this.schulgliederungen.filterAktiv() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung))))
 				continue;
 			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
 				continue;

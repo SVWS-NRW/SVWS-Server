@@ -1,11 +1,7 @@
 import { shallowRef } from "vue";
-
-import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
-	SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
-	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
-
 import { api } from "~/router/Api";
+import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
 
 
 interface RouteStateSchuelerLaufbahnplanung {
@@ -205,10 +201,10 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if (auswahl === undefined)
+		if (auswahl === null)
 			this.setPatchedDefaultState({});
 		else {
 			const gostJahrgang = new GostJahrgang();

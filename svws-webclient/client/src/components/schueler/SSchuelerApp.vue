@@ -1,5 +1,5 @@
 <template>
-	<div v-if="stammdaten !== undefined" class="page--flex">
+	<div v-if="stammdaten !== null" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
@@ -47,9 +47,9 @@
 	});
 
 	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (props.auswahl === undefined)
+		if (props.auswahl === null)
 			return false;
-		return props.mapKlassen.get(props.auswahl.idKlasse)?.kuerzel ?? false;
+		return props.schuelerListeManager().klassen.get(props.auswahl.idKlasse)?.kuerzel ?? false;
 	});
 
 </script>

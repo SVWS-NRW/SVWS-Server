@@ -128,7 +128,7 @@ public class SchuelerListeManager {
 
 	/**
 	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
-	 * die Jahrgänge, die Klassen, die Kurs, die Schulgliederungen und der Schülerstatus
+	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
 	 * beachtet.
 	 *
 	 * @return die gefilterte Liste
@@ -138,9 +138,9 @@ public class SchuelerListeManager {
 			return _filtered;
 		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
 		for (final @NotNull SchuelerListeEintrag eintrag : this.schueler.list()) {
-			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
+			if (this.jahrgaenge.filterAktiv() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang))))
 				continue;
-			if (this.klassen.filterAktiv() && (!this.klassen.filterHasKey(eintrag.idKlasse)))
+			if (this.klassen.filterAktiv() && ((eintrag.idKlasse < 0) || (!this.klassen.filterHasKey(eintrag.idKlasse))))
 				continue;
 			if (this.kurse.filterAktiv()) {
 				boolean hatEinenKurs = false;
@@ -150,7 +150,7 @@ public class SchuelerListeManager {
 				if (!hatEinenKurs)
 					continue;
 			}
-			if (this.schulgliederungen.filterAktiv() && (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung)))
+			if (this.schulgliederungen.filterAktiv() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung))))
 				continue;
 			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
 				continue;

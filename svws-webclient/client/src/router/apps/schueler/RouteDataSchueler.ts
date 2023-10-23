@@ -1,50 +1,35 @@
-import { shallowReactive, shallowRef, type ShallowReactive } from "vue";
-import { useDebounceFn } from '@vueuse/shared';
+import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt, List} from "@core";
+import type { RouteNode } from "~/router/RouteNode";
+import { shallowRef } from "vue";
 
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang} from "@core";
+import { SchuelerListeManager, ArrayList} from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-import type { RouteNode } from "~/router/RouteNode";
 
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 
-import type { Filter } from "~/components/schueler/SSchuelerAuswahlProps";
 
 interface RouteStateSchueler {
 	idSchuljahresabschnitt: number,
-	auswahl: SchuelerListeEintrag | undefined;
+	auswahl: SchuelerListeEintrag | null;
+	schuelerListeManager: SchuelerListeManager;
+	filtered: List<SchuelerListeEintrag>;
 	auswahlGruppe: SchuelerListeEintrag[];
-	stammdaten: SchuelerStammdaten | undefined;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
-	mapKlassen: Map<number, KlassenListeEintrag>;
-	mapJahrgaenge: Map<number, JahrgangsListeEintrag>;
-	mapKurse: Map<number, KursListeEintrag>;
-	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
-	filter: ShallowReactive<Filter>;
+	stammdaten: SchuelerStammdaten | null;
 	view: RouteNode<any, any>;
 }
 
 export class RouteDataSchueler {
 	private static _defaultState : RouteStateSchueler = {
 		idSchuljahresabschnitt: -1,
-		auswahl: undefined,
+		auswahl: null,
+		schuelerListeManager: new SchuelerListeManager(new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+		filtered: new ArrayList<SchuelerListeEintrag>(),
 		auswahlGruppe: [],
-		stammdaten: undefined,
-		mapSchueler: new Map(),
-		mapKlassen: new Map(),
-		mapJahrgaenge: new Map(),
-		mapKurse: new Map(),
-		mapAbiturjahrgaenge: new Map(),
-		filter: shallowReactive({
-			jahrgang: undefined,
-			kurs: undefined,
-			klasse: undefined,
-			schulgliederung: undefined,
-			status: [ SchuelerStatus.AKTIV, SchuelerStatus.EXTERN ]
-		}),
+		stammdaten: null,
 		view: routeSchuelerIndividualdaten,
 	};
 
@@ -62,57 +47,38 @@ export class RouteDataSchueler {
 		this._state.value = { ... this._state.value };
 	}
 
-	private firstSchueler(mapSchueler: Map<number, SchuelerListeEintrag>): SchuelerListeEintrag | undefined {
-		if (mapSchueler.size === 0)
-			return undefined;
-		const arr = [...mapSchueler.values()]
-			.filter(s => !this.filter.status.length || this.filter.status.map(s => s.id).includes(s.status))
-			.filter(s => !this.filter.jahrgang || s.jahrgang === this.filter.jahrgang.kuerzel)
-			.filter(s => !this.filter.klasse || s.idKlasse === this.filter.klasse.id)
-			.filter(s => !this.filter.kurs || s.kurse?.toArray(new Array<number>()).includes(this.filter.kurs.id))
-			.filter(s => !this.filter.schulgliederung || s.schulgliederung === this.filter.schulgliederung.daten.kuerzel)
-		return arr[0];
-	}
-
-	private async ladeStammdaten(eintrag: SchuelerListeEintrag | undefined): Promise<SchuelerStammdaten | undefined> {
-		if (eintrag === undefined)
-			return undefined;
+	private async ladeStammdaten(eintrag: SchuelerListeEintrag | null): Promise<SchuelerStammdaten | null> {
+		if (eintrag === null)
+			return null;
 		return await api.server.getSchuelerStammdaten(api.schema, eintrag.id);
 	}
 
-	private async ladeMapAbiturjahrgaenge(): Promise<Map<number, GostJahrgang>> {
-		// Prüfe, ob die Schulform eine gymnasiale Oberstufe hat und lade ggf. die Abiturjahrgänge
-		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
-		if (api.schulform.daten.hatGymOb) {
-			const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema)
-			for (const j of listAbiturjahrgaenge)
-				mapAbiturjahrgaenge.set(j.abiturjahr, j);
-		}
-		return mapAbiturjahrgaenge;
-	}
 	/**
 	 * Setzt den Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
-		const mapSchueler = await api.getSchuelerListeAktuell(idSchuljahresabschnitt)
-		const mapKlassen = await api.getKlassenListe(idSchuljahresabschnitt);
-		const mapKurse = await api.getKursListe(idSchuljahresabschnitt);
-		const mapJahrgaenge = await api.getJahrgangsListe();
-		const mapAbiturjahrgaenge = await this.ladeMapAbiturjahrgaenge();
-		const schuelerVorher = this._state.value.auswahl === undefined ? undefined : mapSchueler.get(this._state.value.auswahl.id);
-		const auswahl = schuelerVorher === undefined ? this.firstSchueler(mapSchueler) : schuelerVorher;
+		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const listAbiturjahrgaenge = api.schulform.daten.hatGymOb ? await api.server.getGostAbiturjahrgaenge(api.schema) : new ArrayList<GostJahrgang>();
+		const schuelerListeManager = new SchuelerListeManager(listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
+		schuelerListeManager.schuelerstatus.filterAdd(SchuelerStatus.AKTIV);
+		schuelerListeManager.schuelerstatus.filterAdd(SchuelerStatus.EXTERN);
+		const filtered = schuelerListeManager.filtered();
+		const schuelerVorher = this._state.value.auswahl === null ? null : schuelerListeManager.schueler.get(this._state.value.auswahl.id);
+		const auswahl = (schuelerVorher === null)
+			? filtered.isEmpty() ? null : filtered.get(0)
+			: schuelerVorher;
 		const stammdaten = await this.ladeStammdaten(auswahl);
-		const view = schuelerVorher === undefined ? routeSchuelerIndividualdaten : this._state.value.view;
+		const view = schuelerVorher === null ? routeSchuelerIndividualdaten : this._state.value.view;
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt,
-			mapSchueler,
-			mapKlassen,
-			mapKurse,
-			mapJahrgaenge,
-			mapAbiturjahrgaenge,
 			auswahl,
+			schuelerListeManager,
+			filtered,
 			stammdaten,
 			view
 		});
@@ -123,12 +89,14 @@ export class RouteDataSchueler {
 	 *
 	 * @param schueler   der ausgewählte Schüler
 	 */
-	public async setSchueler(schueler: SchuelerListeEintrag | undefined) {
+	public async setSchueler(schueler: SchuelerListeEintrag | null) {
 		if (schueler?.id === this._state.value.auswahl?.id)
 			return;
-		if ((schueler === undefined) || (this.mapSchueler.size === 0))
+		if ((schueler === null) || (this.schuelerListeManager.schueler.list().isEmpty()))
 			return;
-		const auswahl = (this.mapSchueler.get(schueler.id) === undefined) ? this.firstSchueler(this.mapSchueler) : schueler;
+		const auswahl = (this.schuelerListeManager.schueler.get(schueler.id) === null)
+			? this._state.value.filtered.isEmpty() ? null : this._state.value.filtered.get(0)
+			: schueler;
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.setPatchedState({ auswahl, stammdaten });
 	}
@@ -144,7 +112,7 @@ export class RouteDataSchueler {
 		return this._state.value.view;
 	}
 
-	get auswahl(): SchuelerListeEintrag | undefined {
+	get auswahl(): SchuelerListeEintrag | null {
 		return this._state.value.auswahl;
 	}
 
@@ -153,43 +121,21 @@ export class RouteDataSchueler {
 	}
 
 	get hatStammdaten(): boolean {
-		return this._state.value.stammdaten !== undefined;
+		return this._state.value.stammdaten !== null;
 	}
 
 	get stammdaten(): SchuelerStammdaten {
-		if (this._state.value.stammdaten === undefined)
+		if (this._state.value.stammdaten === null)
 			throw new Error("Unerwarteter Fehler: Stammdaten nicht initialisiert");
 		return this._state.value.stammdaten;
 	}
 
-	get filter(): Filter {
-		return this._state.value.filter;
+	get schuelerListeManager(): SchuelerListeManager {
+		return this._state.value.schuelerListeManager;
 	}
 
-	get mapSchueler(): Map<number, SchuelerListeEintrag> {
-		return this._state.value.mapSchueler;
-	}
-
-	get mapKlassen(): Map<number, KlassenListeEintrag> {
-		return this._state.value.mapKlassen;
-	}
-
-	get mapKurse(): Map<number, KursListeEintrag> {
-		return this._state.value.mapKurse;
-	}
-
-	get mapJahrgaenge(): Map<number, JahrgangsListeEintrag> {
-		return this._state.value.mapJahrgaenge;
-	}
-
-	get mapAbiturjahrgaenge(): Map<number, GostJahrgang> {
-		return this._state.value.mapAbiturjahrgaenge;
-	}
-
-	patch = useDebounceFn((data: Partial<SchuelerStammdaten>)=> this.patchit(data), 100)
-
-	patchit = (data : Partial<SchuelerStammdaten>) => {
-		if (this.auswahl === undefined)
+	patch = (data : Partial<SchuelerStammdaten>) => {
+		if (this.auswahl === null)
 			return;
 		api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id).then(()=>{
 			const stammdaten = this.stammdaten;
@@ -198,8 +144,8 @@ export class RouteDataSchueler {
 		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
-	gotoSchueler = async (value: SchuelerListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
+	gotoSchueler = async (value: SchuelerListeEintrag | null) => {
+		if (value === null || value === undefined) {
 			await RouteManager.doRoute({ name: routeSchueler.name, params: { } });
 			return;
 		}
@@ -207,6 +153,7 @@ export class RouteDataSchueler {
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
 
-	setFilter = (value: Filter) => this.setPatchedState({filter: Object.assign(this._state.value.filter, value)});
+	setFilter = async () => this.commit();
+
 	setAuswahlGruppe = (auswahlGruppe: SchuelerListeEintrag[]) =>	this.setPatchedState({auswahlGruppe});
 }
