@@ -5,7 +5,7 @@
 	<div class="page--content page--content--full">
 		<svws-ui-content-card>
 			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 			</template>
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">

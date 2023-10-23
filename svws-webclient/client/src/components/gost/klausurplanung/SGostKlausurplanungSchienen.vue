@@ -28,7 +28,7 @@
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card>
 			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 			</template>
 			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 				<div class="text-headline-md mb-2">Planung</div>

@@ -1,6 +1,7 @@
 
 import type {
 	GostFaecherManager,
+	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurvorgabe,
 	GostKlausurvorgabenManager,
@@ -10,6 +11,7 @@ import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungVorgabenProps {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
+	halbjahr: GostHalbjahr;
 	klausurvorgabenmanager: () => GostKlausurvorgabenManager;
 	kursklausurmanager?: () => GostKursklausurManager;
 	faecherManager: GostFaecherManager;

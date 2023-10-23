@@ -5,7 +5,7 @@
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card>
 			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
+				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 			</template>
 			<div class="mb-2">
 				<div class="text-headline-md">Planung</div>
