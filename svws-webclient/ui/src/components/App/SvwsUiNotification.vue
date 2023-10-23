@@ -39,7 +39,7 @@
 				</div>
 			</div>
 			<div class="absolute top-0 right-0 p-1">
-				<svws-ui-button type="icon" @click="isOpen = false" tabindex="-1" class="notification--close-button">
+				<svws-ui-button type="icon" @click="close" tabindex="-1" class="notification--close-button">
 					<i-ri-close-line />
 				</svws-ui-button>
 			</div>
@@ -54,10 +54,16 @@
 	const props = withDefaults(defineProps<{
 		type?: 'info' | 'error' | 'success' | 'warning' | 'bug';
 		icon?: 'error' | 'login' | 'success' | 'warning' | 'info' | 'bug';
+		id?: number;
 	}>(), {
 		type: 'info',
 		icon: undefined,
+		id: 0,
 	});
+
+	const emit = defineEmits<{
+		click: [id: number]
+	}>()
 
 	const isOpen = ref(true)
 	const stackOpen = ref(false)
@@ -68,6 +74,12 @@
 
 	function toggleStackOpen () {
 		stackOpen.value = !stackOpen.value
+	}
+
+	function close() {
+		isOpen.value = false;
+		if (props.id > 0)
+			emit('click', props.id);
 	}
 
 	defineExpose({
