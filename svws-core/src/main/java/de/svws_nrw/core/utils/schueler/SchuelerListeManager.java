@@ -1,9 +1,9 @@
 package de.svws_nrw.core.utils.schueler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Function;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
@@ -12,6 +12,9 @@ import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.core.utils.AttributeWithFilter;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
@@ -24,9 +27,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class SchuelerListeManager {
 
-	/** Die Liste, welche als Grundlage in den Manager geladen wurde */
-	private final @NotNull List<@NotNull SchuelerListeEintrag> _schueler = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerByID = new HashMap<>();
+	/** Ein Filter-Attribut für die Schülerliste. Dieses wird nicht für das Filtern der Schüler verwendet, sondern für eine Mehrfachauswahl */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
+	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerMitStatus = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInJahrgang = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInKlasse = new HashMap2D<>();
@@ -35,20 +38,35 @@ public class SchuelerListeManager {
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInAbiturjahrgang = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInSchulgliederung = new HashMap2D<>();
 
-	private final @NotNull List<@NotNull JahrgangsListeEintrag> _jahrgaenge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull JahrgangsListeEintrag> _mapJahrgangByID = new HashMap<>();
+	/** Das Filter-Attribut für die Jahrgänge */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
+	private static final @NotNull Function<@NotNull JahrgangsListeEintrag, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsListeEintrag jg) -> jg.id;
 
-	private final @NotNull List<@NotNull KlassenListeEintrag> _klassen = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull KlassenListeEintrag> _mapKlasseByID = new HashMap<>();
+	/** Das Filter-Attribut für die Klassen */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull KlassenListeEintrag> klassen;
+	private static final @NotNull Function<@NotNull KlassenListeEintrag, @NotNull Long> _klasseToId = (final @NotNull KlassenListeEintrag k) -> k.id;
 
-	private final @NotNull List<@NotNull KursListeEintrag> _kurse = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull KursListeEintrag> _mapKursByID = new HashMap<>();
+	/** Das Filter-Attribut für die Kurse */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull KursListeEintrag> kurse;
+	private static final @NotNull Function<@NotNull KursListeEintrag, @NotNull Long> _kursToId = (final @NotNull KursListeEintrag k) -> k.id;
 
-	private final @NotNull List<@NotNull Schuljahresabschnitt> _schuljahresabschnitte = new ArrayList<>();
-	private final @NotNull Map<@NotNull Long, @NotNull Schuljahresabschnitt> _mapSchuljahresabschnittByID = new HashMap<>();
+	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
+	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
 
-	private final @NotNull List<@NotNull GostJahrgang> _abiturjahrgaenge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Integer, @NotNull GostJahrgang> _mapAbiturjahrgangByID = new HashMap<>();
+	/** Das Filter-Attribut für die Abiturjahrgänge - die Filterfunktion wird zur Zeit noch nicht genutzt */
+	public final @NotNull AttributeWithFilter<@NotNull Integer, @NotNull GostJahrgang> abiturjahrgaenge;
+	private static final @NotNull Function<@NotNull GostJahrgang, @NotNull Integer> _abiturjahrgangToId = (final @NotNull GostJahrgang a) -> a.abiturjahr;
+
+	/** Das Filter-Attribut für die Schulgliederungen */
+	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull Schulgliederung> schulgliederungen;
+	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull Long> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.id;
+	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
+
+	/** Das Filter-Attribut für den Schüler-Status */
+	public final @NotNull AttributeWithFilter<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
+	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
+	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
 
 	/**
@@ -67,22 +85,20 @@ public class SchuelerListeManager {
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		initSchueler(schueler);
-		initJahrgaenge(jahrgaenge);
-		initKlassen(klassen);
-		initKurse(kurse);
-		initSchuljahresabschnitte(schuljahresabschnitte);
-		initAbiturjahrgaenge(abiturjahrgaenge);
+		this.schueler = new AttributeWithFilter<>(schueler, _schuelerToId, SchuelerUtils.comparator);
+		initSchueler();
+		this.jahrgaenge = new AttributeWithFilter<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator);
+		this.klassen = new AttributeWithFilter<>(klassen, _klasseToId, KlassenUtils.comparator);
+		this.kurse = new AttributeWithFilter<>(kurse, _kursToId, KursUtils.comparator);
+		this.schuljahresabschnitte = new AttributeWithFilter<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator);
+		this.abiturjahrgaenge = new AttributeWithFilter<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator);
+		this.schulgliederungen = new AttributeWithFilter<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung);
+		this.schuelerstatus = new AttributeWithFilter<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus);
 	}
 
 
-	private void initSchueler(final @NotNull List<@NotNull SchuelerListeEintrag> schueler) {
-		this._schueler.clear();
-		this._schueler.addAll(schueler);
-		this._schueler.sort(SchuelerUtils.comparator);
-		this._mapSchuelerByID.clear();
-		for (final @NotNull SchuelerListeEintrag s : schueler) {
-			this._mapSchuelerByID.put(s.id, s);
+	private void initSchueler() {
+		for (final @NotNull SchuelerListeEintrag s : this.schueler.list()) {
 			this._mapSchuelerMitStatus.put(s.status, s.id, s);
 			if (s.idJahrgang >= 0)
 				this._mapSchuelerInJahrgang.put(s.idJahrgang, s.id, s);
@@ -97,51 +113,6 @@ public class SchuelerListeManager {
 			if (!s.schulgliederung.isBlank())
 				this._mapSchuelerInSchulgliederung.put(s.schulgliederung, s.id, s);
 		}
-	}
-
-	private void initJahrgaenge(final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge) {
-		this._jahrgaenge.clear();
-		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(JahrgangsUtils.comparator);
-		this._mapJahrgangByID.clear();
-		for (final @NotNull JahrgangsListeEintrag j : jahrgaenge)
-			this._mapJahrgangByID.put(j.id, j);
-	}
-
-	private void initKlassen(final @NotNull List<@NotNull KlassenListeEintrag> klassen) {
-		this._klassen.clear();
-		this._klassen.addAll(klassen);
-		this._klassen.sort(KlassenUtils.comparator);
-		this._mapKlasseByID.clear();
-		for (final @NotNull KlassenListeEintrag k : klassen)
-			this._mapKlasseByID.put(k.id, k);
-	}
-
-	private void initKurse(final @NotNull List<@NotNull KursListeEintrag> kurse) {
-		this._kurse.clear();
-		this._kurse.addAll(kurse);
-		this._kurse.sort(KursUtils.comparator);
-		this._mapKursByID.clear();
-		for (final @NotNull KursListeEintrag k : kurse)
-			this._mapKursByID.put(k.id, k);
-	}
-
-	private void initSchuljahresabschnitte(final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte) {
-		this._schuljahresabschnitte.clear();
-		this._schuljahresabschnitte.addAll(schuljahresabschnitte);
-		this._schuljahresabschnitte.sort(SchuljahresabschnittsUtils.comparator);
-		this._mapSchuljahresabschnittByID.clear();
-		for (final @NotNull Schuljahresabschnitt sja : schuljahresabschnitte)
-			this._mapSchuljahresabschnittByID.put(sja.id, sja);
-	}
-
-	private void initAbiturjahrgaenge(final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		this._abiturjahrgaenge.clear();
-		this._abiturjahrgaenge.addAll(abiturjahrgaenge);
-		this._abiturjahrgaenge.sort(GostAbiturjahrUtils.comparator);
-		this._mapAbiturjahrgangByID.clear();
-		for (final @NotNull GostJahrgang j : abiturjahrgaenge)
-			this._mapAbiturjahrgangByID.put(j.abiturjahr, j);
 	}
 
 }

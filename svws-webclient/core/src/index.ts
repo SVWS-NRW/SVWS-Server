@@ -477,6 +477,7 @@ export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
+export { AttributeWithFilter } from './core/utils/AttributeWithFilter';
 export { BlockungsUtils } from './core/utils/BlockungsUtils';
 export { CollectionUtils } from './core/utils/CollectionUtils';
 export { DateUtils } from './core/utils/DateUtils';
