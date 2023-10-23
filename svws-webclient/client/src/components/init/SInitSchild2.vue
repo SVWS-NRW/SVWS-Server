@@ -55,7 +55,9 @@
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
 
-	async function set(item: string) {
+	async function set(item: string | null | undefined) {
+		if (item === null || item === undefined)
+			return;
 		for (const [k,v] of items.entries()) {
 			if ((v === item) && (k !== undefined)) {
 				await props.setDB(k);

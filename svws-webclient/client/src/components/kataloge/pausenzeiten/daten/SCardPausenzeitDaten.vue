@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<div class="input-wrapper">
-			<svws-ui-select :model-value="Wochentag.fromIDorException(data.wochentag)" @update:model-value="doPatch({wochentag: Number($event.id)})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
+			<svws-ui-select :model-value="Wochentag.fromIDorException(data.wochentag)" @update:model-value="wt => doPatch({wochentag: Number(wt!.id)})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
 			<svws-ui-text-input type="number" :model-value="data.beginn" @change="doPatch({beginn: Number($event)})" />
 			<svws-ui-text-input type="number" :model-value="data.ende" @change="doPatch({ende: Number($event)})" />
 		</div>

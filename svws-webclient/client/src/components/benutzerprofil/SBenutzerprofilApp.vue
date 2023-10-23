@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-header>
 		<div>
-			<span class="inline-block mr-3">{{ benutzer.kuerzel }}</span>
+			<span class="inline-block mr-3">{{ benutzer.anzeigename }}</span>
 			<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 				ID:
 				{{ benutzer.id }}
