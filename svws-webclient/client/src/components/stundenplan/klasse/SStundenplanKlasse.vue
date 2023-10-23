@@ -1,13 +1,5 @@
 <template>
 	<div class="page--content page--content--full">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav>
-				<svws-ui-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="i => i.kuerzel" autocomplete headless
-					:item-filter="(i, text)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="()=>0" />
-				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
-					class="print:hidden" headless :disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
-			</svws-ui-sub-nav>
-		</Teleport>
 		<template v-if="props.stundenplanManager().klasseGetMengeAsList().isEmpty()">
 			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
@@ -99,7 +91,7 @@
 	import type { List, StundenplanKlasse } from "@core";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet } from "@core";
 	import { ref, computed, onMounted } from "vue";
 	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
@@ -182,14 +174,22 @@
 					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster))
-			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach }]);
+		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
+			const klassen = new ArrayList<number>();
+			klassen.add(dragData.value.idKlasse);
+			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen}]);
+		}
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
 			return await props.removeUnterrichtKlasse([dragData.value]);
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster))
-			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach }]);
+		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster)) {
+			const klassen = new  HashSet<number>();
+			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
+			for (const schueler of listSchueler)
+				klassen.add(schueler.idKlasse);
+			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer}]);
+		}
 		// TODO Fall StundenplanZeitraster -> undefined
 		// TODO Fall StundenplanPausenaufsicht -> StundenplanPausenzeit
 		// TODO Fall StundenplanPausenaufsicht -> undefined
