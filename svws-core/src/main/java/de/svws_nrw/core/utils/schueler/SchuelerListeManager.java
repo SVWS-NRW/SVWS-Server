@@ -1,5 +1,6 @@
 package de.svws_nrw.core.utils.schueler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -59,8 +60,8 @@ public class SchuelerListeManager {
 	private static final @NotNull Function<@NotNull GostJahrgang, @NotNull Integer> _abiturjahrgangToId = (final @NotNull GostJahrgang a) -> a.abiturjahr;
 
 	/** Das Filter-Attribut für die Schulgliederungen */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull Schulgliederung> schulgliederungen;
-	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull Long> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.id;
+	public final @NotNull AttributeWithFilter<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
+	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
 	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
@@ -113,6 +114,38 @@ public class SchuelerListeManager {
 			if (!s.schulgliederung.isBlank())
 				this._mapSchuelerInSchulgliederung.put(s.schulgliederung, s.id, s);
 		}
+	}
+
+
+	/**
+	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
+	 * die Jahrgänge, die Klassen, die Kurs, die Schulgliederungen und der Schülerstatus
+	 * beachtet.
+	 *
+	 * @return die gefilterte Liste
+	 */
+	private @NotNull List<@NotNull SchuelerListeEintrag> getFiltered() {
+		final @NotNull List<@NotNull SchuelerListeEintrag> result = new ArrayList<>();
+		for (final @NotNull SchuelerListeEintrag eintrag : this.schueler.list()) {
+			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
+				continue;
+			if (this.klassen.filterAktiv() && (!this.klassen.filterHasKey(eintrag.idKlasse)))
+				continue;
+			if (this.kurse.filterAktiv()) {
+				boolean hatEinenKurs = false;
+				for (final long idKurs : eintrag.kurse)
+					if (this.kurse.filterHasKey(idKurs))
+						hatEinenKurs = true;
+				if (!hatEinenKurs)
+					continue;
+			}
+			if (this.schulgliederungen.filterAktiv() && (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung)))
+				continue;
+			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
+				continue;
+			result.add(eintrag);
+		}
+		return result;
 	}
 
 }

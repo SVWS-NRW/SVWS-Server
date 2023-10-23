@@ -5,6 +5,7 @@ import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
 import { AttributeWithFilter } from '../../../core/utils/AttributeWithFilter';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -82,9 +83,9 @@ export class SchuelerListeManager extends JavaObject {
 	/**
 	 * Das Filter-Attribut für die Schulgliederungen
 	 */
-	public readonly schulgliederungen : AttributeWithFilter<number, Schulgliederung>;
+	public readonly schulgliederungen : AttributeWithFilter<string, Schulgliederung>;
 
-	private static readonly _schulgliederungToId : JavaFunction<Schulgliederung, number> = { apply : (sg: Schulgliederung) => sg.daten.id };
+	private static readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => sg.daten.kuerzel };
 
 	private static readonly _comparatorSchulgliederung : Comparator<Schulgliederung> = { compare : (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
 
@@ -137,6 +138,37 @@ export class SchuelerListeManager extends JavaObject {
 			if (!JavaString.isBlank(s.schulgliederung))
 				this._mapSchuelerInSchulgliederung.put(s.schulgliederung, s.id, s);
 		}
+	}
+
+	/**
+	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
+	 * die Jahrgänge, die Klassen, die Kurs, die Schulgliederungen und der Schülerstatus
+	 * beachtet.
+	 *
+	 * @return die gefilterte Liste
+	 */
+	private getFiltered() : List<SchuelerListeEintrag> {
+		const result : List<SchuelerListeEintrag> = new ArrayList();
+		for (const eintrag of this.schueler.list()) {
+			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
+				continue;
+			if (this.klassen.filterAktiv() && (!this.klassen.filterHasKey(eintrag.idKlasse)))
+				continue;
+			if (this.kurse.filterAktiv()) {
+				let hatEinenKurs : boolean = false;
+				for (const idKurs of eintrag.kurse)
+					if (this.kurse.filterHasKey(idKurs))
+						hatEinenKurs = true;
+				if (!hatEinenKurs)
+					continue;
+			}
+			if (this.schulgliederungen.filterAktiv() && (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung)))
+				continue;
+			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
+				continue;
+			result.add(eintrag);
+		}
+		return result;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

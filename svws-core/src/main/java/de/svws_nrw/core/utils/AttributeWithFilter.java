@@ -120,6 +120,16 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 
 
 	/**
+	 * Gibt zurück, ob der Filter aktiv ist und Filter-Werte hat.
+	 *
+	 * @return true, falls der Filter aktiv ist, und ansonsten false
+	 */
+	public boolean filterAktiv() {
+		return !this._mapFilterValuesByKey.isEmpty();
+	}
+
+
+	/**
 	 * Prüft, ob der übergebene Wert im Filter vorhanden ist oder nicht.
 	 *
 	 * @param value   der zu prüfende Wert
