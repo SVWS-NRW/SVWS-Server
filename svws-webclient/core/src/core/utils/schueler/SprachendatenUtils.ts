@@ -26,7 +26,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
 	public static hatSprachbelegung(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
-		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler(sprache, (""))) {
+		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
 		return SprachendatenUtils.getSprachbelegung(sprachendaten, sprache) !== null;
@@ -41,7 +41,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
 	public static hatSprachbelegungInSekI(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
-		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler(sprache, (""))) {
+		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
 		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
@@ -52,40 +52,27 @@ export class SprachendatenUtils extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit der angegebenen Belegungsdauer existiert.
+	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
 	 * @param sprache das einstellige Kürzel der Sprache
-	 * @param mindestBelegdauer Zulässig sind Werte 1 bis 5 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static hatSprachbelegungInSekIMitDauer(sprachendaten : Sprachendaten | null, sprache : string | null, mindestBelegdauer : number | null) : boolean {
-		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler(sprache, ("")) || mindestBelegdauer === null || mindestBelegdauer <= 0) {
-			return false;
-		}
-		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
-		if (belegung === null) {
-			return false;
-		}
-		let belegtVonJahrgangNumerisch : number;
-		let belegtBisJahrgangNumerisch : number;
-		let letzterJahrgangSekI : number;
-		if (belegung.belegungVonJahrgang !== null) {
-			belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
-			belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
-			letzterJahrgangSekI = 10;
-			if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
-				letzterJahrgangSekI = 9;
-			}
-			if (0 < belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= 10) {
-				if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
-					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
-				}
-				return ((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= mindestBelegdauer);
-			}
-		}
-		return false;
+	public static hatSprachbelegungMitMin2JahrenDauerInSekI(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
+		return SprachendatenUtils.hatSprachbelegungMitMinNJahrenInSekI(sprachendaten, sprache, 2);
+	}
+
+	/**
+	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 4 Jahren existiert.
+	 *
+	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 * @param sprache das einstellige Kürzel der Sprache
+	 *
+	 * @return true, falls eine Belegung existiert und ansonsten false
+	 */
+	public static hatSprachbelegungMitMin4JahrenDauerInSekI(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
+		return SprachendatenUtils.hatSprachbelegungMitMinNJahrenInSekI(sprachendaten, sprache, 4);
 	}
 
 	/**
@@ -97,7 +84,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return die Sprachbelegung oder null, falls keine existiert
 	 */
 	public static getSprachbelegung(sprachendaten : Sprachendaten | null, sprache : string | null) : Sprachbelegung | null {
-		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler(sprache, (""))) {
+		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return null;
 		}
 		const belegungen : List<Sprachbelegung> = sprachendaten.belegungen;
@@ -107,50 +94,6 @@ export class SprachendatenUtils extends JavaObject {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Liefert die Sprachen aus der Sprachenfolge zurück, deren Beginn im angegebenen Zeitraum liegt und die angegebene Dauer besitzt.
-	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
-	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
-	 * Sprachprüfungen werden nicht berücksichtigt.
-	 *
-	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param belegungsbeginnStart Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
-	 * @param belegungsbeginnEnde Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
-	 * @param mindestBelegdauer Zulässig sind Werte 1 bis 5 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
-	 *
-	 * @return List mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
-	 */
-	public static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungsbeginnStart : string | null, belegungsbeginnEnde : string | null, mindestBelegdauer : number | null) : List<Sprachbelegung> {
-		const resultBelegungen : List<Sprachbelegung> = new ArrayList();
-		if (sprachendaten === null || sprachendaten.belegungen === null || belegungsbeginnStart === null || JavaObject.equalsTranspiler(belegungsbeginnStart, ("")) || belegungsbeginnEnde === null || JavaObject.equalsTranspiler(belegungsbeginnEnde, ("")) || mindestBelegdauer === null || mindestBelegdauer < 0)
-			return resultBelegungen;
-		let belegtVonJahrgangNumerisch : number;
-		let belegtBisJahrgangNumerisch : number;
-		let letzterJahrgangSekI : number;
-		const alleBelegungen : List<Sprachbelegung> = sprachendaten.belegungen;
-		for (const belegung of alleBelegungen) {
-			if (belegung.sprache !== null && belegung.belegungVonJahrgang !== null) {
-				belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
-				belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
-				letzterJahrgangSekI = 10;
-				if (belegtVonJahrgangNumerisch === 6 || belegtVonJahrgangNumerisch === 8) {
-					letzterJahrgangSekI = 9;
-				}
-				if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
-					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
-				}
-				if (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= mindestBelegdauer) && (belegtVonJahrgangNumerisch > 0) && SprachendatenUtils.getJahrgangNumerisch(belegungsbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenUtils.getJahrgangNumerisch(belegungsbeginnEnde)) {
-					resultBelegungen.add(belegung);
-				}
-			}
-		}
-		if (!resultBelegungen.isEmpty()) {
-			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.getJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.getJahrgangNumerisch(b.belegungVonJahrgang)) };
-			resultBelegungen.sort(comparator);
-		}
-		return resultBelegungen;
 	}
 
 	/**
@@ -164,10 +107,10 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls die Sprache als fortgeführte Fremdsprache ab EF belegt werden kann, andernfalls false
 	 */
 	public static istFortfuehrbareSpracheInGOSt(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
-		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler(sprache, (""))) {
+		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
+		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(sprachendaten, sprache)) {
 			return true;
 		}
 		const pruefungen : List<Sprachpruefung> = sprachendaten.pruefungen;
@@ -197,10 +140,10 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return true, falls die Sprache als neu einsetzende Fremdsprache ab EF belegt werden kann, andernfalls false
 	 */
 	public static istNeueinsetzbareSpracheInGOSt(sprachendaten : Sprachendaten | null, sprache : string | null) : boolean {
-		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler(sprache, (""))) {
+		if (sprachendaten === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
 			return false;
 		}
-		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(sprachendaten, sprache, 2)) {
+		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(sprachendaten, sprache)) {
 			return false;
 		}
 		const pruefungen : List<Sprachpruefung> = sprachendaten.pruefungen;
@@ -254,7 +197,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
-	public static hatEineSpracheMitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
+	public static hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
 		if (sprachendaten === null)
 			return false;
 		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4).size();
@@ -279,7 +222,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
-	public static hatZweiSprachenMitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
+	public static hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
 		if (sprachendaten === null)
 			return false;
 		const belegungen : List<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "07", 4);
@@ -306,7 +249,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return true, falls der Nachweis gemäß der aktuellen Sprachdaten erfüllt ist, andernfalls false.
 	 */
-	public static hatSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
+	public static hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : boolean {
 		if (sprachendaten === null)
 			return false;
 		const anzahlSprachen : number = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "08", "10", 2).size();
@@ -321,7 +264,7 @@ export class SprachendatenUtils extends JavaObject {
 	 *
 	 * @return Sprache, falls eine Belegung vorhanden ist, sonst null
 	 */
-	public static getSpracheMit2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : string | null {
+	public static getEineSpracheAb8MitMin2JahrenDauerEndeSekI(sprachendaten : Sprachendaten | null) : string | null {
 		if (sprachendaten === null)
 			return null;
 		const belegungen : List<Sprachbelegung> = sprachendaten.belegungen;
@@ -413,12 +356,12 @@ export class SprachendatenUtils extends JavaObject {
 				}
 			}
 		}
-		if (!JavaObject.equalsTranspiler(pruefungZweiteSprache, ("")))
+		if (!(JavaObject.equalsTranspiler("", (pruefungZweiteSprache))))
 			return pruefungZweiteSprache;
 		const belegungen : List<Sprachbelegung> = sprachendaten.belegungen;
 		if (belegungen !== null) {
 			const sprachbelegungen : List<Sprachbelegung> = SprachendatenUtils.getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten, "05", "10", 0);
-			if (!JavaObject.equalsTranspiler(pruefungErsteSprache, (""))) {
+			if (!(JavaObject.equalsTranspiler("", (pruefungErsteSprache)))) {
 				for (const sprachbelegung of sprachbelegungen) {
 					if (!JavaObject.equalsTranspiler(sprachbelegung.sprache, (pruefungErsteSprache)))
 						return sprachbelegung.sprache;
@@ -429,6 +372,86 @@ export class SprachendatenUtils extends JavaObject {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Hilfsfunktion, die prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert.
+	 *
+	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 * @param sprache das einstellige Kürzel der Sprache
+	 * @param n Anzahl der Sprachbelegung, die mindestens erreicht worden sein müssen.
+	 *
+	 * @return true, falls eine Belegung existiert und ansonsten false
+	 */
+	private static hatSprachbelegungMitMinNJahrenInSekI(sprachendaten : Sprachendaten | null, sprache : string | null, n : number) : boolean {
+		if (sprachendaten === null || sprachendaten.belegungen === null || sprache === null || JavaObject.equalsTranspiler("", (sprache))) {
+			return false;
+		}
+		const belegung : Sprachbelegung | null = SprachendatenUtils.getSprachbelegung(sprachendaten, sprache);
+		if (belegung === null) {
+			return false;
+		}
+		let belegtVonJahrgangNumerisch : number;
+		let belegtBisJahrgangNumerisch : number;
+		let letzterJahrgangSekI : number;
+		if (belegung.belegungVonJahrgang !== null) {
+			belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
+			belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
+			letzterJahrgangSekI = 10;
+			if (0 < belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= 10) {
+				if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
+					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
+				}
+				return ((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= n);
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Hilfsfunktion, die Sprachen aus der Sprachenfolge zurückliefert, deren Beginn im angegebenen Zeitraum liegt und die angegebene Dauer besitzt.
+	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
+	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
+	 * Sprachprüfungen werden nicht berücksichtigt.
+	 * Anmerkung: Das Ende Sekundarstufe I wird stets in der Stufe 10 angesetzt. Dadurch ergibt sich (nur) an einem G8-Gymnasium eine Abweichung der
+	 * Belegungsdauer von einem Jahr zugunsten des Schülers. Da in der APO-GOSt aber nur Sprachen mit mindestens vier Jahren mit Beginn bis
+	 * einschließlich Klasse 7 und Sprachen ab Klasse 8 unterschieden werden, ergeben sich bei der späteren Anwendung dieser Hilfsfunktion keine
+	 * Auswirkungen bei der Zuordnung zu einer dieser Gruppen (es ergeben sich max. 3 Jahre bei Beginn in Klasse 8 und ein Sprachbeginn in Klasse 9
+	 * am Gymnasium G8 gibt es nicht).
+	 *
+	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 * @param belegungsbeginnStart Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
+	 * @param belegungsbeginnEnde Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
+	 * @param mindestBelegdauer Zulässig sind Werte 1 bis 5 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
+	 *
+	 * @return List mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
+	 */
+	private static getSprachlegungenNachBeginnUndDauerEndeSekI(sprachendaten : Sprachendaten | null, belegungsbeginnStart : string | null, belegungsbeginnEnde : string | null, mindestBelegdauer : number | null) : List<Sprachbelegung> {
+		const resultBelegungen : List<Sprachbelegung> = new ArrayList();
+		if (sprachendaten === null || sprachendaten.belegungen === null || belegungsbeginnStart === null || JavaObject.equalsTranspiler("", (belegungsbeginnStart)) || belegungsbeginnEnde === null || JavaObject.equalsTranspiler("", (belegungsbeginnEnde)) || mindestBelegdauer === null || mindestBelegdauer < 0)
+			return resultBelegungen;
+		let belegtVonJahrgangNumerisch : number;
+		let belegtBisJahrgangNumerisch : number;
+		let letzterJahrgangSekI : number;
+		const alleBelegungen : List<Sprachbelegung> = sprachendaten.belegungen;
+		for (const belegung of alleBelegungen) {
+			if (belegung.sprache !== null && belegung.belegungVonJahrgang !== null) {
+				belegtVonJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungVonJahrgang);
+				belegtBisJahrgangNumerisch = SprachendatenUtils.getJahrgangNumerisch(belegung.belegungBisJahrgang);
+				letzterJahrgangSekI = 10;
+				if (belegtBisJahrgangNumerisch === 0 || belegtBisJahrgangNumerisch > letzterJahrgangSekI) {
+					belegtBisJahrgangNumerisch = letzterJahrgangSekI;
+				}
+				if (((belegtBisJahrgangNumerisch - belegtVonJahrgangNumerisch + 1) >= mindestBelegdauer) && (belegtVonJahrgangNumerisch > 0) && SprachendatenUtils.getJahrgangNumerisch(belegungsbeginnStart) <= belegtVonJahrgangNumerisch && belegtVonJahrgangNumerisch <= SprachendatenUtils.getJahrgangNumerisch(belegungsbeginnEnde)) {
+					resultBelegungen.add(belegung);
+				}
+			}
+		}
+		if (!resultBelegungen.isEmpty()) {
+			const comparator : Comparator<Sprachbelegung> | null = { compare : (a: Sprachbelegung, b: Sprachbelegung) => JavaInteger.compare(SprachendatenUtils.getJahrgangNumerisch(a.belegungVonJahrgang), SprachendatenUtils.getJahrgangNumerisch(b.belegungVonJahrgang)) };
+			resultBelegungen.sort(comparator);
+		}
+		return resultBelegungen;
 	}
 
 	/**
@@ -473,7 +496,7 @@ export class SprachendatenUtils extends JavaObject {
 	 * @return Wert des ASDJahrgangs zwischen 5 und 13, wenn dieser nicht bestimmt werden kann, wird der Wert 0 zurückgegeben.
 	 */
 	private static getJahrgangNumerisch(kuerzelJg : string | null) : number {
-		if (kuerzelJg === null || JavaObject.equalsTranspiler(kuerzelJg, ("")))
+		if (kuerzelJg === null || JavaObject.equalsTranspiler("", (kuerzelJg)))
 			return 0;
 		switch (kuerzelJg) {
 			case "EF": {

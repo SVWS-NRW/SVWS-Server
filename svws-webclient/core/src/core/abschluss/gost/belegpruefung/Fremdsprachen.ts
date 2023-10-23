@@ -166,7 +166,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 					this.addFehler(GostBelegungsfehler.FS_25);
 				} else {
 					this.addFehler(GostBelegungsfehler.FS_18);
-					if (!SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
+					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 						this.addFehler(GostBelegungsfehler.FS_24);
 				}
 			}
@@ -178,13 +178,13 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * einsetzende Fremdsprache.
 	 */
 	private pruefeEF1FremdsprachenfolgeZweiteFremdsprache() : void {
-		if (SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
+		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 			return;
-		if (SprachendatenUtils.hatEineSpracheMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
+		if (SprachendatenUtils.hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 			if (this.manager.pruefeBelegungExistiertMitSchriftlichkeitEinzeln(this._fremdsprachenNeu, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 				return;
-			if (SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
+			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
+				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
 				if (!this.manager.pruefeBelegungMitSchriftlichkeitEinzeln(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1))
 					this.addFehler(GostBelegungsfehler.FS_13);
 				return;
@@ -246,7 +246,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			if (fach === null)
 				continue;
 			const biliSprache : string | null = fach.biliSprache;
-			if (!SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), biliSprache, 2)) {
+			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(this.manager.getSprachendaten(), biliSprache)) {
 				this.addFehler(GostBelegungsfehler.BIL_14);
 				continue;
 			}
@@ -362,7 +362,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 				if (anzahlFortfuehrbareFremdsprachen === 0) {
 					this.addFehler(GostBelegungsfehler.FS_25);
 				} else {
-					if (!SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
+					if (!SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 						this.addFehler(GostBelegungsfehler.FS_24);
 				}
 			}
@@ -380,13 +380,13 @@ export class Fremdsprachen extends GostBelegpruefung {
 	 * einsetzende Fremdsprache.
 	 */
 	private pruefeGesamtFremdsprachenfolgeZweiteFremdsprache() : void {
-		if (SprachendatenUtils.hatZweiSprachenMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
+		if (SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten()))
 			return;
-		if (SprachendatenUtils.hatEineSpracheMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
+		if (SprachendatenUtils.hatEineSpracheAb5bis7MitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
 			if (this.manager.pruefeBelegungExistiert(this._fremdsprachenNeu, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 				return;
-			if (SprachendatenUtils.hatSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
-				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getSpracheMit2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
+			if (SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten())) {
+				const zweiteFremdsprache : AbiturFachbelegung | null = this.manager.getSprachbelegung(SprachendatenUtils.getEineSpracheAb8MitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten()));
 				if (!this.manager.pruefeBelegungMitSchriftlichkeit(zweiteFremdsprache, GostSchriftlichkeit.SCHRIFTLICH, GostHalbjahr.EF1, GostHalbjahr.EF2))
 					this.addFehler(GostBelegungsfehler.FS_13);
 				return;
@@ -458,7 +458,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			return;
 		for (const biliSachfach of this._biliSachfaecher) {
 			const biliFach : GostFach | null = this.manager.getFach(biliSachfach);
-			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), biliFach.biliSprache, 2)))
+			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(this.manager.getSprachendaten(), biliFach.biliSprache)))
 				this.addFehler(GostBelegungsfehler.BIL_14);
 		}
 	}

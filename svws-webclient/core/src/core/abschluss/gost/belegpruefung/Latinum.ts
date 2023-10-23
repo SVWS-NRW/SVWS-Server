@@ -33,12 +33,12 @@ export class Latinum extends GostBelegpruefung {
 	protected pruefeGesamt() : void {
 		if (!SprachendatenUtils.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L"))
 			return;
-		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 4)) {
+		if (SprachendatenUtils.hatSprachbelegungMitMin4JahrenDauerInSekI(this.manager.getSprachendaten(), "L")) {
 			if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2))
 				this.addFehler(GostBelegungsfehler.L_10_INFO);
 			return;
 		}
-		if ((SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 2)) && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
+		if ((SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(this.manager.getSprachendaten(), "L")) && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
 			this.addFehler(GostBelegungsfehler.L_11_INFO);
 	}
 
