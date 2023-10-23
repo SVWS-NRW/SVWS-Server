@@ -786,7 +786,7 @@ public class GostBlockungsdatenManager {
 		_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-		_map_idKurs_kurs.remove(idKurs);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, idKurs);
 		_daten.kurse.remove(kurs);
 	}
 

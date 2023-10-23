@@ -2606,8 +2606,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const nSchueler : number = this.getKursE(idKurs).schueler.size();
 		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
-		for (const schienenID of kurs.schienen)
+		for (const schienenID of kurs.schienen) {
 			this.getSchieneE(schienenID!).kurse.remove(kurs);
+		}
 		kurs.schienen.clear();
 		this.stateRevalidateEverything();
 	}

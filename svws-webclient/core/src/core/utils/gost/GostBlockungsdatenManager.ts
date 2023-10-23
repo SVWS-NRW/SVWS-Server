@@ -805,7 +805,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
 		this._list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs);
 		Map2DUtils.removeFromListAndTrimOrException(this._map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-		this._map_idKurs_kurs.remove(idKurs);
+		DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_kurs, idKurs);
 		this._daten.kurse.remove(kurs);
 	}
 
