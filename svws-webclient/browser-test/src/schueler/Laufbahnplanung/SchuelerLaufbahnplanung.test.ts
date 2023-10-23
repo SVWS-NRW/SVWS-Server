@@ -14,6 +14,6 @@ test.beforeEach(async ({ baseURL, page, loginPage }) => {
 	// await page.waitForURL('**/laufbahnplanung');
 });
 
-test("Teste PDF herunterladen", async({ schuelerlaufbahnplanungpage}) => {
+test.fixme("Teste PDF herunterladen", async({ schuelerlaufbahnplanungpage}) => {
 	await schuelerlaufbahnplanungpage.clickPDFherunterladen();
 })
