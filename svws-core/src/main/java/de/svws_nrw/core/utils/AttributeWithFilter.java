@@ -34,15 +34,20 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 	/** Ein Comparator für das Sortieren der enthaltenen Objekte */
 	private final @NotNull Comparator<@NotNull V> _comparator;
 
+	/** Ein Handler für das Ergebnis, dass der Filter verändert wurde */
+	private final Runnable _eventHandlerFilterChanged;
+
 
 	/**
 	 * Erzeugt ein neues Objekt für ein Attribut mit Filter-Option
 	 *
-	 * @param values      die Menge der erlaubten Werte
-	 * @param toId        eine Funktion zum Ermitteln des Schlüssels eines Objektes
-	 * @param comparator  eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
+	 * @param values        die Menge der erlaubten Werte
+	 * @param toId          eine Funktion zum Ermitteln des Schlüssels eines Objektes
+	 * @param comparator    eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
+	 * @param eventHandler  ein Runnable, welches aufgerufen wird, wenn der Status des Filters sich ändert
 	 */
-	public AttributeWithFilter(final @NotNull Collection<@NotNull V> values, final @NotNull Function<@NotNull V, @NotNull K> toId, final @NotNull Comparator<@NotNull V> comparator) {
+	public AttributeWithFilter(final @NotNull Collection<@NotNull V> values, final @NotNull Function<@NotNull V, @NotNull K> toId,
+			final @NotNull Comparator<@NotNull V> comparator, final Runnable eventHandler) {
 		this._toID = toId;
 		this._comparator = comparator;
 		this._values.clear();
@@ -51,6 +56,7 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 		this._mapValuesByKey.clear();
 		for (final @NotNull V v : this._values)
 			this._mapValuesByKey.put(toId.apply(v), v);
+		this._eventHandlerFilterChanged = eventHandler;
 	}
 
 
@@ -167,6 +173,8 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 	 */
 	public void filterClear() {
 		this._mapFilterValuesByKey.clear();
+		if (_eventHandlerFilterChanged != null)
+			_eventHandlerFilterChanged.run();
 	}
 
 
@@ -181,6 +189,8 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 		if (!this.hasValue(value))
 			throw new DeveloperNotificationException("Der Wert existiert nicht für dieses Attribut und kann daher nicht für den Filter verwendet werden.");
 		this._mapFilterValuesByKey.put(this._toID.apply(value), value);
+		if (_eventHandlerFilterChanged != null)
+			_eventHandlerFilterChanged.run();
 	}
 
 
@@ -191,6 +201,8 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 	 */
 	public void filterRemove(final @NotNull V value) {
 		this._mapFilterValuesByKey.remove(this._toID.apply(value));
+		if (_eventHandlerFilterChanged != null)
+			_eventHandlerFilterChanged.run();
 	}
 
 
@@ -226,6 +238,8 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 		if (!this.has(key))
 			throw new DeveloperNotificationException("Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für den Filter verwendet werden.");
 		this._mapFilterValuesByKey.put(key, this.getOrException(key));
+		if (_eventHandlerFilterChanged != null)
+			_eventHandlerFilterChanged.run();
 	}
 
 
@@ -236,6 +250,8 @@ public class AttributeWithFilter<@NotNull K, @NotNull V> {
 	 */
 	public void filterRemoveByKey(final @NotNull K key) {
 		this._mapFilterValuesByKey.remove(key);
+		if (_eventHandlerFilterChanged != null)
+			_eventHandlerFilterChanged.run();
 	}
 
 

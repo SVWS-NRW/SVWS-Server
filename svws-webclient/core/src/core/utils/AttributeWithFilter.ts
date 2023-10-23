@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaFunction } from '../../java/util/function/JavaFunction';
 import { HashMap } from '../../java/util/HashMap';
+import type { Runnable } from '../../java/lang/Runnable';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
@@ -35,15 +36,21 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	 */
 	private readonly _comparator : Comparator<V>;
 
+	/**
+	 * Ein Handler für das Ergebnis, dass der Filter verändert wurde
+	 */
+	private readonly _eventHandlerFilterChanged : Runnable | null;
+
 
 	/**
 	 * Erzeugt ein neues Objekt für ein Attribut mit Filter-Option
 	 *
-	 * @param values      die Menge der erlaubten Werte
-	 * @param toId        eine Funktion zum Ermitteln des Schlüssels eines Objektes
-	 * @param comparator  eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
+	 * @param values        die Menge der erlaubten Werte
+	 * @param toId          eine Funktion zum Ermitteln des Schlüssels eines Objektes
+	 * @param comparator    eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
+	 * @param eventHandler  ein Runnable, welches aufgerufen wird, wenn der Status des Filters sich ändert
 	 */
-	public constructor(values : Collection<V>, toId : JavaFunction<V, K>, comparator : Comparator<V>) {
+	public constructor(values : Collection<V>, toId : JavaFunction<V, K>, comparator : Comparator<V>, eventHandler : Runnable | null) {
 		super();
 		this._toID = toId;
 		this._comparator = comparator;
@@ -53,6 +60,7 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 		this._mapValuesByKey.clear();
 		for (const v of this._values)
 			this._mapValuesByKey.put(toId.apply(v), v);
+		this._eventHandlerFilterChanged = eventHandler;
 	}
 
 	/**
@@ -160,6 +168,8 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	 */
 	public filterClear() : void {
 		this._mapFilterValuesByKey.clear();
+		if (this._eventHandlerFilterChanged !== null)
+			this._eventHandlerFilterChanged.run();
 	}
 
 	/**
@@ -173,6 +183,8 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 		if (!this.hasValue(value))
 			throw new DeveloperNotificationException("Der Wert existiert nicht für dieses Attribut und kann daher nicht für den Filter verwendet werden.")
 		this._mapFilterValuesByKey.put(this._toID.apply(value), value);
+		if (this._eventHandlerFilterChanged !== null)
+			this._eventHandlerFilterChanged.run();
 	}
 
 	/**
@@ -182,6 +194,8 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	 */
 	public filterRemove(value : V) : void {
 		this._mapFilterValuesByKey.remove(this._toID.apply(value));
+		if (this._eventHandlerFilterChanged !== null)
+			this._eventHandlerFilterChanged.run();
 	}
 
 	/**
@@ -215,6 +229,8 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 		if (!this.has(key))
 			throw new DeveloperNotificationException("Der Schlüssel existiert nicht für dieses Attribut und kann daher nicht für den Filter verwendet werden.")
 		this._mapFilterValuesByKey.put(key, this.getOrException(key));
+		if (this._eventHandlerFilterChanged !== null)
+			this._eventHandlerFilterChanged.run();
 	}
 
 	/**
@@ -224,6 +240,8 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	 */
 	public filterRemoveByKey(key : K) : void {
 		this._mapFilterValuesByKey.remove(key);
+		if (this._eventHandlerFilterChanged !== null)
+			this._eventHandlerFilterChanged.run();
 	}
 
 	/**

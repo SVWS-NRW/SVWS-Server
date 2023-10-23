@@ -69,6 +69,15 @@ public class SchuelerListeManager {
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
 	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
+	/** Die gefilterte Schüler-Liste, sofern sie schon berechnet wurde */
+	private List<@NotNull SchuelerListeEintrag> _filtered = null;
+
+	/** Ein Handler für das Ereignis, dass der Schüler-Filter angepasst wurde */
+	private final @NotNull Runnable _eventHandlerFilterChanged = () -> this._filtered = null;
+
+	/** Ein Handler für das Ereignis, dass die Schülerauswahl angepasst wurde */
+	private static final @NotNull Runnable _eventHandlerSchuelerAuswahlChanged = () -> { /* nicht zu tun */ };
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -86,15 +95,15 @@ public class SchuelerListeManager {
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		this.schueler = new AttributeWithFilter<>(schueler, _schuelerToId, SchuelerUtils.comparator);
+		this.schueler = new AttributeWithFilter<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerSchuelerAuswahlChanged);
 		initSchueler();
-		this.jahrgaenge = new AttributeWithFilter<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator);
-		this.klassen = new AttributeWithFilter<>(klassen, _klasseToId, KlassenUtils.comparator);
-		this.kurse = new AttributeWithFilter<>(kurse, _kursToId, KursUtils.comparator);
-		this.schuljahresabschnitte = new AttributeWithFilter<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator);
-		this.abiturjahrgaenge = new AttributeWithFilter<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator);
-		this.schulgliederungen = new AttributeWithFilter<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung);
-		this.schuelerstatus = new AttributeWithFilter<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus);
+		this.jahrgaenge = new AttributeWithFilter<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
+		this.klassen = new AttributeWithFilter<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
+		this.kurse = new AttributeWithFilter<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
+		this.schuljahresabschnitte = new AttributeWithFilter<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributeWithFilter<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
+		this.schulgliederungen = new AttributeWithFilter<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributeWithFilter<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 	}
 
 
@@ -124,8 +133,10 @@ public class SchuelerListeManager {
 	 *
 	 * @return die gefilterte Liste
 	 */
-	private @NotNull List<@NotNull SchuelerListeEintrag> getFiltered() {
-		final @NotNull List<@NotNull SchuelerListeEintrag> result = new ArrayList<>();
+	public @NotNull List<@NotNull SchuelerListeEintrag> filtered() {
+		if (_filtered != null)
+			return _filtered;
+		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
 		for (final @NotNull SchuelerListeEintrag eintrag : this.schueler.list()) {
 			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
 				continue;
@@ -143,9 +154,10 @@ public class SchuelerListeManager {
 				continue;
 			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
 				continue;
-			result.add(eintrag);
+			tmpList.add(eintrag);
 		}
-		return result;
+		_filtered = tmpList;
+		return _filtered;
 	}
 
 }

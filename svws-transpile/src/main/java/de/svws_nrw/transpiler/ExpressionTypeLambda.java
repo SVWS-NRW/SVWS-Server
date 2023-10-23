@@ -106,7 +106,13 @@ public final class ExpressionTypeLambda extends ExpressionType {
 						return classType.getFullQualifiedName();
 				}
 			}
-			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces");
+			if (varType instanceof final IdentifierTree it) {
+				final Element e = transpiler.getElement(it);
+				if (e instanceof final TypeElement te)
+					return te.toString();
+				throw new TranspilerException("Transpiler Error: Unhandled functional interface : " + it.toString());
+			}
+			throw new TranspilerException("Transpiler Error: Unhandled type for functional interfaces : " + vt.getType());
 		}
 		if (parent instanceof final MethodInvocationTree mit) {
 			// determine the index in the parameter list where the lambda is used as parameter

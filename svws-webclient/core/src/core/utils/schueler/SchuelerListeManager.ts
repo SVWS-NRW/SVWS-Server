@@ -2,22 +2,23 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
-import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
-import { AttributeWithFilter } from '../../../core/utils/AttributeWithFilter';
 import { JavaString } from '../../../java/lang/JavaString';
-import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
-import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
+import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
+import { AttributeWithFilter } from '../../../core/utils/AttributeWithFilter';
+import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
+import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
+import type { Runnable } from '../../../java/lang/Runnable';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
@@ -98,6 +99,23 @@ export class SchuelerListeManager extends JavaObject {
 
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
+	/**
+	 * Die gefilterte Schüler-Liste, sofern sie schon berechnet wurde
+	 */
+	private _filtered : List<SchuelerListeEintrag> | null = null;
+
+	/**
+	 * Ein Handler für das Ereignis, dass der Schüler-Filter angepasst wurde
+	 */
+	private readonly _eventHandlerFilterChanged : Runnable = { run : () => this._filtered = null };
+
+	/**
+	 * Ein Handler für das Ereignis, dass die Schülerauswahl angepasst wurde
+	 */
+	private static readonly _eventHandlerSchuelerAuswahlChanged : Runnable = { run : () => {
+		// empty block
+	} };
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -111,15 +129,15 @@ export class SchuelerListeManager extends JavaObject {
 	 */
 	public constructor(schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
 		super();
-		this.schueler = new AttributeWithFilter(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator);
+		this.schueler = new AttributeWithFilter(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator, SchuelerListeManager._eventHandlerSchuelerAuswahlChanged);
 		this.initSchueler();
-		this.jahrgaenge = new AttributeWithFilter(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator);
-		this.klassen = new AttributeWithFilter(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator);
-		this.kurse = new AttributeWithFilter(kurse, SchuelerListeManager._kursToId, KursUtils.comparator);
-		this.schuljahresabschnitte = new AttributeWithFilter(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator);
-		this.abiturjahrgaenge = new AttributeWithFilter(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator);
-		this.schulgliederungen = new AttributeWithFilter(Arrays.asList(...Schulgliederung.values()), SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung);
-		this.schuelerstatus = new AttributeWithFilter(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus);
+		this.jahrgaenge = new AttributeWithFilter(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
+		this.klassen = new AttributeWithFilter(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
+		this.kurse = new AttributeWithFilter(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
+		this.schuljahresabschnitte = new AttributeWithFilter(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributeWithFilter(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
+		this.schulgliederungen = new AttributeWithFilter(Arrays.asList(...Schulgliederung.values()), SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributeWithFilter(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 	}
 
 	private initSchueler() : void {
@@ -147,8 +165,10 @@ export class SchuelerListeManager extends JavaObject {
 	 *
 	 * @return die gefilterte Liste
 	 */
-	private getFiltered() : List<SchuelerListeEintrag> {
-		const result : List<SchuelerListeEintrag> = new ArrayList();
+	public filtered() : List<SchuelerListeEintrag> {
+		if (this._filtered !== null)
+			return this._filtered;
+		const tmpList : List<SchuelerListeEintrag> = new ArrayList();
 		for (const eintrag of this.schueler.list()) {
 			if (this.jahrgaenge.filterAktiv() && (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang)))
 				continue;
@@ -166,9 +186,10 @@ export class SchuelerListeManager extends JavaObject {
 				continue;
 			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
 				continue;
-			result.add(eintrag);
+			tmpList.add(eintrag);
 		}
-		return result;
+		this._filtered = tmpList;
+		return this._filtered;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

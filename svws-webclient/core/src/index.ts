@@ -581,6 +581,7 @@ export { JavaShort } from './java/lang/JavaShort';
 export { JavaString } from './java/lang/JavaString';
 export { NullPointerException } from './java/lang/NullPointerException';
 export { NumberFormatException } from './java/lang/NumberFormatException';
+export type { Runnable } from './java/lang/Runnable';
 export { RuntimeException } from './java/lang/RuntimeException';
 export { StringBuilder } from './java/lang/StringBuilder';
 export { StringIndexOutOfBoundsException } from './java/lang/StringIndexOutOfBoundsException';
