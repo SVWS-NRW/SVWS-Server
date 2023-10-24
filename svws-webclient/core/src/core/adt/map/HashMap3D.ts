@@ -9,7 +9,7 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 
-	private readonly _map1 : JavaMap<K1, JavaMap<K2, JavaMap<K3, V | null>>> = new HashMap();
+	private readonly _map1 : JavaMap<K1, JavaMap<K2, JavaMap<K3, V>>> = new HashMap();
 
 
 	/**
@@ -29,13 +29,13 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 *
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
-	public put(key1 : K1, key2 : K2, key3 : K3, value : V | null) : void {
-		let map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+	public put(key1 : K1, key2 : K2, key3 : K3, value : V) : void {
+		let map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null) {
 			map2 = new HashMap();
 			this._map1.put(key1, map2);
 		}
-		let map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		let map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null) {
 			map3 = new HashMap();
 			map2.put(key2, map3);
@@ -56,10 +56,10 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @throws NullPointerException falls es den Pfad (key1, key2, key3) nicht gibt.
 	 */
 	public getOrException(key1 : K1, key2 : K2, key3 : K3) : V | null {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
-		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
 		if (!map3.containsKey(key3))
@@ -77,10 +77,10 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @return den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
 	 */
 	public getOrNull(key1 : K1, key2 : K2, key3 : K3) : V | null {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			return null;
-		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			return null;
 		return map3.get(key3);
@@ -93,7 +93,7 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 *
 	 * @return die Map zum Mapping key1 oder NULL. <br>
 	 */
-	public getMap2OrNull(key1 : K1) : JavaMap<K2, JavaMap<K3, V | null>> | null {
+	public getMap2OrNull(key1 : K1) : JavaMap<K2, JavaMap<K3, V>> | null {
 		return this._map1.get(key1);
 	}
 
@@ -105,8 +105,8 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 *
 	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
 	 */
-	public getMap3OrNull(key1 : K1, key2 : K2) : JavaMap<K3, V | null> | null {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+	public getMap3OrNull(key1 : K1, key2 : K2) : JavaMap<K3, V> | null {
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			return null;
 		return map2.get(key2);
@@ -140,10 +140,10 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @return TRUE, falls für das Tripel (key1, key2, key3) ein Mapping existiert.
 	 */
 	public contains(key1 : K1, key2 : K2, key3 : K3) : boolean {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			return false;
-		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			return false;
 		return map3.containsKey(key3);
@@ -165,10 +165,10 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
 	 */
 	public removeOrException(key1 : K1, key2 : K2, key3 : K3) : void {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
-		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
 		if (!map3.containsKey(key3))
@@ -190,10 +190,10 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 * @param key3  Der 3. Schlüssel des Tripels(key1, key2, key3).
 	 */
 	public remove(key1 : K1, key2 : K2, key3 : K3) : void {
-		const map2 : JavaMap<K2, JavaMap<K3, V | null>> | null = this._map1.get(key1);
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			return;
-		const map3 : JavaMap<K3, V | null> | null = map2.get(key2);
+		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			return;
 		if (!map3.containsKey(key3))
@@ -226,10 +226,45 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 		for (const map2 of this._map1.values())
 			for (const map3 of map2.values())
 				for (const value of map3.values())
-					if (value === null)
-						throw new DeveloperNotificationException("HashMap3D.getNonNullValuesAsList() --> Es existieren NULL Elemente!")
-					else
-						list.add(value);
+					list.add(value);
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller Values zum Mapping (key1)
+	 *
+	 * @param key1  Schlüssel
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public getNonNullValuesOfMap2AsList(key1 : K1) : List<V> {
+		const list : ArrayList<V> = new ArrayList();
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
+		if (map2 !== null) {
+			for (const map3 of map2.values())
+				for (const value of map3.values())
+					list.add(value);
+		}
+		return list;
+	}
+
+	/**
+	 * Liefert eine Liste aller Values zum Mapping (key1, key2)
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public getNonNullValuesOfMap3AsList(key1 : K1, key2 : K2) : List<V> {
+		const list : ArrayList<V> = new ArrayList();
+		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
+		if (map2 !== null) {
+			const map3 : JavaMap<K3, V> | null = map2.get(key2);
+			if (map3 !== null)
+				for (const value of map3.values())
+					list.add(value);
+		}
 		return list;
 	}
 

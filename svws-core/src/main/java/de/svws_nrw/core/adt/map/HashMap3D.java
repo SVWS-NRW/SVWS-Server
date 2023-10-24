@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 
-	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, V>>> _map1 = new HashMap<>();
+	private final @NotNull Map<@NotNull K1, @NotNull Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>>> _map1 = new HashMap<>();
 
 	/**
 	 * Konstruktor.
@@ -41,14 +41,14 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 *
 	 * @param value Der zugeordnete Wert. Der Wert null ist erlaubt.
 	 */
-	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final V value) {
-		Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+	public void put(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull V value) {
+		Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null) {
 			map2 = new HashMap<>();
 			_map1.put(key1, map2);
 		}
 
-		Map<@NotNull K3, V> map3 = map2.get(key2);
+		Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null) {
 			map3 = new HashMap<>();
 			map2.put(key2, map3);
@@ -70,11 +70,11 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 * @throws NullPointerException falls es den Pfad (key1, key2, key3) nicht gibt.
 	 */
 	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) throws NullPointerException {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 
-		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 
@@ -94,11 +94,11 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 * @return den Wert zum Mapping (key1, key2, key3) oder NULL. <br>
 	 */
 	public V getOrNull(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return null;
 
-		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null)
 			return null;
 
@@ -112,7 +112,7 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 *
 	 * @return die Map zum Mapping key1 oder NULL. <br>
 	 */
-	public Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> getMap2OrNull(final @NotNull K1 key1) {
+	public Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> getMap2OrNull(final @NotNull K1 key1) {
 		return _map1.get(key1);
 	}
 
@@ -124,8 +124,8 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 *
 	 * @return die Map zum Mapping (key1, key2) oder NULL. <br>
 	 */
-	public Map<@NotNull K3, V> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+	public Map<@NotNull K3, @NotNull V> getMap3OrNull(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return null;
 
@@ -162,11 +162,11 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 * @return TRUE, falls für das Tripel (key1, key2, key3) ein Mapping existiert.
 	 */
 	public boolean contains(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return false;
 
-		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null)
 			return false;
 
@@ -190,11 +190,11 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 *
 	 */
 	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 
-		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 
@@ -221,11 +221,11 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	 *
 	 */
 	public void remove(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
-		final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 = _map1.get(key1);
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			return;
 
-		final Map<@NotNull K3, V> map3 = map2.get(key2);
+		final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
 		if (map3 == null)
 			return;
 
@@ -260,13 +260,52 @@ public class HashMap3D<@NotNull K1, @NotNull K2, @NotNull K3, @NotNull V> {
 	public @NotNull List<@NotNull V> getNonNullValuesAsList() {
 		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
 
-		for (@NotNull final Map<@NotNull K2, @NotNull Map<@NotNull K3, V>> map2 : _map1.values())
-			for (@NotNull final Map<@NotNull K3, V> map3 : map2.values())
-				for (final V value : map3.values())
-					if (value == null)
-						throw new DeveloperNotificationException("HashMap3D.getNonNullValuesAsList() --> Es existieren NULL Elemente!");
-					else
-						list.add(value);
+		for (@NotNull final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 : _map1.values())
+			for (@NotNull final Map<@NotNull K3, @NotNull V> map3 : map2.values())
+				for (final @NotNull V value : map3.values())
+					list.add(value);
+
+		return list;
+	}
+
+
+	/**
+	 * Liefert eine Liste aller Values zum Mapping (key1)
+	 *
+	 * @param key1  Schlüssel
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public @NotNull List<@NotNull V> getNonNullValuesOfMap2AsList(final @NotNull K1 key1) {
+		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
+		if (map2 != null) {
+			for (@NotNull final Map<@NotNull K3, @NotNull V> map3 : map2.values())
+				for (final @NotNull V value : map3.values())
+					list.add(value);
+		}
+
+		return list;
+	}
+
+
+	/**
+	 * Liefert eine Liste aller Values zum Mapping (key1, key2)
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 * @param key2  Der 2. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return eine Liste aller Values in dieser Map.
+	 */
+	public @NotNull List<@NotNull V> getNonNullValuesOfMap3AsList(final @NotNull K1 key1, final @NotNull K2 key2) {
+		@NotNull final ArrayList<@NotNull V> list = new ArrayList<>();
+		final Map<@NotNull K2, @NotNull Map<@NotNull K3, @NotNull V>> map2 = _map1.get(key1);
+		if (map2 != null) {
+			final Map<@NotNull K3, @NotNull V> map3 = map2.get(key2);
+			if (map3 != null)
+			    for (final @NotNull V value : map3.values())
+				    list.add(value);
+		}
 
 		return list;
 	}

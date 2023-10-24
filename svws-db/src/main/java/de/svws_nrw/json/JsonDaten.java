@@ -1,10 +1,15 @@
 package de.svws_nrw.json;
 
+import java.io.File;
+
+import de.svws_nrw.core.data.bk.BKLehrplanKatalog;
+import de.svws_nrw.core.data.bk.BKLehrplanKatalogEintrag;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogIndex;
 import de.svws_nrw.core.utils.schule.AbgangsartenManager;
 import de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager;
+import de.svws_nrw.core.utils.schule.BerufskollegLehrplanManager;
 
 /**
  * Diese Klasse dient dem Zugriff auf Daten aus JSON-Dateien.
@@ -63,5 +68,45 @@ public final class JsonDaten {
 
 	/** Der Core-Manager für die Fachklassen an berufsbildenden Schulformenen. */
 	public static final BerufskollegFachklassenManager fachklassenManager = new BerufskollegFachklassenManager(getFachklassen());
+
+
+	/**
+	 * Liest den Katalog der berufsbezogenen Lehrpläne an berufsbildenden Schulformen ein.
+	 *
+	 * @return der Katalog der berufsbezogenen Lehrpläne
+	 */
+    /* Einlesen der BK-Jasons in folgendem Ablauf
+     * - Die Daten sind nach Gliederungsindizes in Unterverzeichnissen gruppiert
+     * - in jedem dieser Unterverzeichnisse ist eine fachklassen_<id>.json Datei enthalten, die die Fachklassen des Gliederungsindex enthält
+     * - es sind eine Reihe von Lehrplänen enthalten, die die Namensgebung Lehrplan_<index>_<fachklasse>.json haben, die
+     *   mittels sweep durch das Verzeichnis automatisch eingelesen werden sollen.
+     */
+
+	private static BKLehrplanKatalog getLehrplaene() {
+		final BKLehrplanKatalog katalog = new BKLehrplanKatalog();
+		final File dir = new File("daten/json/bk/lehrplaene");
+		if (dir.isDirectory()) {
+			final File[] files = dir.listFiles();
+			if (files != null) {
+				for (final File json : files) {
+					if (json.isFile()) {
+						final BKLehrplanKatalogEintrag lehrplan = JsonReader.fromResource(json.toString(), BKLehrplanKatalogEintrag.class);
+						katalog.version += lehrplan.version;
+						katalog.lehrplaene.add(lehrplan);
+					}
+				}
+			}
+		}
+		//for (final int index : indizes) {
+			//final BerufskollegFachklassenKatalogIndex katIndex = JsonReader.fromResource("daten/json/fachklassen/Index" + index + ".json", BerufskollegFachklassenKatalogIndex.class);
+			//katalog.version += katIndex.version;
+			//katalog.indizes.add(katIndex);
+		//}
+		return katalog;
+	}
+
+
+	/** Der Core-Manager für die Fachklassen an berufsbildenden Schulformenen. */
+	public static final BerufskollegLehrplanManager lehrplanManager = new BerufskollegLehrplanManager(getLehrplaene());
 
 }
