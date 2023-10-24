@@ -437,6 +437,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		int anzahlFortgefuehrteFremdsprachenEFBelegt = 0;
 		int anzahlFortgefuehrteFremdsprachenDurchgehendBelegt = 0;
 		int anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF = 0;
+		int anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF = 0;
 
 		// Anzahl der generell fortführbaren Sprachen gemäß Sprachenfolge und Sprachprüfungen ermitteln
 		final int anzahlFortfuehrbareFremdsprachen = SprachendatenUtils.getFortfuehrbareSprachenInGOSt(manager.getSprachendaten()).size();
@@ -464,8 +465,12 @@ public final class Fremdsprachen extends GostBelegpruefung {
 						anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF += 1;
 
 					// Prüfe, ob diese Sprache durchgängig von EF.1 bis Q2.2 belegt wurde. Dabei ist die Schriftlichkeit ab Q1.1 nicht zwingend erforderlich.
-					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+					if (manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 						anzahlFortgefuehrteFremdsprachenDurchgehendBelegt += 1;
+						// Prüfe, ob die belegte Fremdsprache in der EF.1 und EF.2 schriftlich belegt war. Andernfalls liegt ein Fehler vor.
+						if (manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1) || manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2))
+							anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF += 1;
+					}
 				} else {
 					// Es wurde ein Fach einer fortgeführten Fremdsprache belegt, ohne das die Sprachenfolge oder die Sprachprüfung dazu passt. Gib eine Fehlermeldung aus.
 					addFehler(GostBelegungsfehler.FS_23);
@@ -478,7 +483,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			addFehler(GostBelegungsfehler.FS_12);
 
 		// Wenn alle durchgängig belegten, fortgeführten Fremdsprachen in mindestens einem EF Halbjahr mündlich belegt sind, gib eine weitere Fehlermeldung aus.
-		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt == anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF))
+		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt == anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF))
 			addFehler(GostBelegungsfehler.FS_16);
 
 		// Es wurde eine passende Fremdsprache zur Erfüllung der Bedingung der ersten Fremdsprache gefunden.

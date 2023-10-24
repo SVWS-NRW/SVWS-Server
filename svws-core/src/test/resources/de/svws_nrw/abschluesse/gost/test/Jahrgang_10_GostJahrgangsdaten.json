@@ -1,0 +1,21 @@
+{
+  "abiturjahr": 2027,
+  "jahrgang": "10",
+  "bezeichnung": "Abi 2027 (10)",
+  "istAbgeschlossen": false,
+  "textBeratungsbogen": "",
+  "textMailversand": "",
+  "hatZusatzkursGE": true,
+  "beginnZusatzkursGE": "Q2.1",
+  "hatZusatzkursSW": true,
+  "beginnZusatzkursSW": "Q2.1",
+  "istBlockungFestgelegt": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "beratungslehrer": []
+}

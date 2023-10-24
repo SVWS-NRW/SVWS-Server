@@ -305,6 +305,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		let anzahlFortgefuehrteFremdsprachenEFBelegt : number = 0;
 		let anzahlFortgefuehrteFremdsprachenDurchgehendBelegt : number = 0;
 		let anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF : number = 0;
+		let anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF : number = 0;
 		const anzahlFortfuehrbareFremdsprachen : number = SprachendatenUtils.getFortfuehrbareSprachenInGOSt(this.manager.getSprachendaten()).size();
 		for (const abiFachbelegung of this._fremdsprachenFortgefuehrt) {
 			if (!this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1)) {
@@ -317,8 +318,11 @@ export class Fremdsprachen extends GostBelegpruefung {
 						anzahlFortgefuehrteFremdsprachenEFBelegt += 1;
 					if (this.manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1) || this.manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2))
 						anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF += 1;
-					if (this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+					if (this.manager.pruefeBelegung(abiFachbelegung, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)) {
 						anzahlFortgefuehrteFremdsprachenDurchgehendBelegt += 1;
+						if (this.manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF1) || this.manager.pruefeBelegungMitSchriftlichkeit(abiFachbelegung, GostSchriftlichkeit.MUENDLICH, GostHalbjahr.EF2))
+							anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF += 1;
+					}
 				} else {
 					this.addFehler(GostBelegungsfehler.FS_23);
 				}
@@ -326,7 +330,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 		}
 		if (anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF > 0)
 			this.addFehler(GostBelegungsfehler.FS_12);
-		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt === anzahlFortgefuehrteFremdsprachenBelegtFehlerMuendlichEF))
+		if ((anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0) && (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt === anzahlFortgefuehrteFremdsprachenDurchgehendBelegtFehlerMuendlichEF))
 			this.addFehler(GostBelegungsfehler.FS_16);
 		if (anzahlFortgefuehrteFremdsprachenDurchgehendBelegt > 0)
 			return;
