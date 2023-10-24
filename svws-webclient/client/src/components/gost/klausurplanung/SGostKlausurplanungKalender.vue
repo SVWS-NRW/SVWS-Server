@@ -99,7 +99,7 @@
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
 								<span class="text-button font-medium">{{ klausur.kursKurzbezeichnung }}</span>
-								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur).datum !== null ? kursklausurmanager().terminByKursklausur(klausur).datum : terminSelected.datum) }}</span>
+								<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kursklausurmanager().terminByKursklausur(klausur)!.datum !== null ? kursklausurmanager().terminByKursklausur(klausur)!.datum! : stundenplanmanager.datumGetByKwzAndZeitraster(kwAuswahl, zeitrasterSelected!)) }}</span>
 							</span>
 						</div>
 					</li>
