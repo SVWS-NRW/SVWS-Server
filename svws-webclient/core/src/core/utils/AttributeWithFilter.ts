@@ -124,6 +124,26 @@ export class AttributeWithFilter<K, V> extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Liste der im Filter ausgewählten Werte für dieses Attribut zurück.
+	 * Ist die Liste leer, so ist kein Filter gesetzt.
+	 *
+	 * @return die Liste der im Filter ausgewählten Werte für dieses Attribut zurück.
+	 */
+	public filterList() : List<V> {
+		return new ArrayList(this._mapFilterValuesByKey.values());
+	}
+
+	/**
+	 * Gibt die Liste der im Filter ausgewählten Schlüssel für dieses Attribut zurück.
+	 * Ist die Liste leer, so ist kein Filter gesetzt.
+	 *
+	 * @return die Liste der im Filter ausgewählten Schlüssel für dieses Attribut zurück.
+	 */
+	public filterKeyList() : List<K> {
+		return new ArrayList(this._mapFilterValuesByKey.keySet());
+	}
+
+	/**
 	 * Gibt zurück, ob der Filter aktiv ist und Filter-Werte hat.
 	 *
 	 * @return true, falls der Filter aktiv ist, und ansonsten false
