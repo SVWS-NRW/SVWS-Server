@@ -11,7 +11,7 @@
 				<svws-ui-tooltip :indicator="false" :hover="false" :show-arrow="false" position="top" class="h-full">
 					<svws-ui-button type="transparent" class="h-full">
 						<i-ri-table-line />
-						<template #badge v-if="hiddenColumns.length">
+						<template #badge v-if="hiddenColumns.size">
 							<span />
 						</template>
 						<span>Daten</span>
@@ -20,7 +20,7 @@
 						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 							<li v-for="(column, index) in columns" :key="index">
 								<template v-if="typeof column !== 'string'">
-									<svws-ui-checkbox :model-value="!hiddenColumns.includes(column.key)" :disabled="!column.toggle" @update:model-value="updateHiddenColumns(column.key, $event)">
+									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="ok => updateHiddenColumns(column.key, ok)">
 										{{ column.label }}
 									</svws-ui-checkbox>
 								</template>
@@ -76,7 +76,7 @@
 							{
 								'svws-disabled': column.disabled,
 								'svws-sortable-column': column.sortable,
-								'svws-active': column.sortable && (sortByAndOrder.key === column.name) && (typeof sortByAndOrder.order === 'boolean'),
+								'svws-active': column.sortable && (internalSortByAndOrder.key === column.name) && (typeof internalSortByAndOrder.order === 'boolean'),
 								'svws-divider': column.divider,
 							}
 						]" :tabindex="column.sortable ? 0 : -1">
@@ -92,8 +92,8 @@
 							</template>
 						</slot>
 						<span v-if="column.sortable" class="svws-sorting-icon" :class="{'-order-1': column.align === 'right'}">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': ((sortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((sortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': ((sortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((sortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
 						</span>
 					</div>
 				</div>
@@ -172,11 +172,8 @@
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
-	import type { TableHTMLAttributes } from "vue";
 	import { computed, useAttrs, toRef, toRaw, onMounted, onUpdated, ref } from "vue";
 	import { useDebounceFn } from "@vueuse/core";
-
-	const DataTableSortingOptions = ['asc', 'desc', null] as const
 
 	type DataTableColumnSource = DataTableColumn | string
 
@@ -318,7 +315,7 @@
 	}
 
 	const buildNormalizedColumns = (props: UseColumnProps) => {
-		return props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !hiddenColumns.value.includes(column.key));
+		return props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !hiddenColumns.value.has(column.key));
 	}
 
 	const columnsComputed = computed(() =>
@@ -344,15 +341,15 @@
 	}));
 
 	const sortedRows = computed(() => {
-		if (rowsComputed.value.length <= 1 || props.sortByMulti !== undefined)
+		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
 			return rowsComputed.value;
-		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => props.sortByAndOrder.key === key && sortable, );
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => internalSortByAndOrder.value.key === key && sortable, );
 		const column = columnsComputed.value[columnIndex];
 		if (!column)
 			return rowsComputed.value;
-		const sortingOrderRatio = props.sortByAndOrder.order === false ? -1 : 1
+		const sortingOrderRatio = internalSortByAndOrder.value.order === false ? -1 : 1
 		return [...rowsComputed.value].sort((a, b) => {
-			if (props.sortByAndOrder.order === null)
+			if (internalSortByAndOrder.value.order === null)
 				return a.initialIndex - b.initialIndex;
 			const firstValue = String(a.cells[columnIndex].value);
 			const secondValue = String(b.cells[columnIndex].value);
@@ -368,14 +365,18 @@
 		return null;
 	}
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const internalSortByAndOrder = ref<SortByAndOrder>(props.sortByAndOrder)
+
 	function toggleSorting(column: DataTableColumnInternal) {
-		const neu: SortByAndOrder = {key: column.key, order: null};
-		if (column.key === props.sortByAndOrder.key || props.sortByMulti === undefined)
-			neu.order = cycleSorting(props.sortByAndOrder.order);
-		else {
+		const neu: SortByAndOrder = {key: column.key, order: true};
+		if (column.key === internalSortByAndOrder.value.key)
+			neu.order = cycleSorting(internalSortByAndOrder.value.order);
+		else if (props.sortByMulti !== undefined){
 			const alt = props.sortByMulti.get(column.key);
 			neu.order = cycleSorting(alt);
 		}
+		internalSortByAndOrder.value = neu;
 		emit('update:sortByAndOrder', neu);
 	}
 
@@ -484,18 +485,10 @@
 
 	const noDataCalculated = computed(() => (sortedRows.value.length === 0));
 
-	const computedTableAttributes = computed(() => ({
-		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
-	} as TableHTMLAttributes));
+	const hiddenColumns = ref<Set<string>>(new Set());
 
-	const hiddenColumns = ref([] as string[]);
-
-	const updateHiddenColumns = (columnKey: string, ok: any) => {
-		if (ok) {
-			hiddenColumns.value = hiddenColumns.value.filter(column => column !== columnKey)
-		} else {
-			hiddenColumns.value.push(columnKey)
-		}
+	function updateHiddenColumns(columnKey: string, ok: any) {
+		ok ? hiddenColumns.value.delete(columnKey) : hiddenColumns.value.add(columnKey);
 	}
 
 </script>
