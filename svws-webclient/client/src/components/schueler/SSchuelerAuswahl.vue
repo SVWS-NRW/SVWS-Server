@@ -8,7 +8,8 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
-				:columns="cols" clickable selectable count :filter-open="true" filtered :filterReset="filterReset" scroll-into-view scroll>
+				:columns="cols" clickable selectable count :filter-open="true" filtered :filterReset="filterReset" scroll-into-view scroll
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
@@ -69,6 +70,8 @@
 
 	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung, SchuelerStatus } from "@core";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
+	import type { SortByAndOrder } from "@ui";
+	import { ArrayList, Pair } from "@core";
 	import { computed, ref, watch } from "vue";
 
 	const props = defineProps<SchuelerAuswahlProps>();
@@ -77,6 +80,33 @@
 	const showModalGruppenaktionen = () => _showModalGruppenaktionen;
 
 	const search = ref<string>("");
+
+	const sortByMulti = computed<Map<string, boolean>>(() => {
+		const map = new Map<string, boolean>();
+		for (const pair of props.schuelerListeManager().orderGet())
+			if (pair.b !== null)
+				map.set(pair.a === "klassen" ? "idKlasse" : pair.a, pair.b);
+		return map;
+	})
+
+	const sortByAndOrder = computed<SortByAndOrder | undefined>({
+		get: () => {
+			const list = props.schuelerListeManager().orderGet();
+			if (list.isEmpty())
+				return undefined;
+			else {
+				const { a: key, b: order} = list.get(0);
+				return {key: key === 'klassen' ? 'idKlasse' : key, order};
+			}
+		},
+		set: (value) => {
+			if ((value === undefined) || (value.key === null))
+				return;
+			const key = value.key === 'idKlasse' ? 'klassen' : value.key;
+			props.schuelerListeManager().orderUpdate(key, value.order);
+			void props.setFilter();
+		}
+	})
 
 	const cols = [
 		{ key: "idKlasse", label: "Klasse", sortable: true, span: 1 },

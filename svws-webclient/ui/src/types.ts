@@ -23,3 +23,5 @@ export type DataTableColumn = {
 	divider?: boolean
 	toggle?: boolean
 }
+
+export type SortByAndOrder = { key: string | null; order: boolean | null};

@@ -54,7 +54,7 @@
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
 			'svws-has-selection': selectable && selectedItemsRaw.length > 0,
-			'svws-sortable': sortBy,
+			'svws-sortable': sortByAndOrder.key,
 			'svws-no-data': typeof noData !== 'undefined' ? noData : noDataCalculated,
 			'svws-type-navigation': type === 'navigation',
 			'svws-type-grid': type === 'grid',
@@ -76,7 +76,7 @@
 							{
 								'svws-disabled': column.disabled,
 								'svws-sortable-column': column.sortable,
-								'svws-active': column.sortable && sortBy === column.name && sortingOrder,
+								'svws-active': column.sortable && (sortByAndOrder.key === column.name) && sortByAndOrder.order,
 								'svws-divider': column.divider,
 							}
 						]" :tabindex="column.sortable ? 0 : -1">
@@ -92,8 +92,8 @@
 							</template>
 						</slot>
 						<span v-if="column.sortable" class="svws-sorting-icon" :class="{'-order-1': column.align === 'right'}">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'asc'}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'desc'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': ((sortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((sortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': ((sortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((sortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
 						</span>
 					</div>
 				</div>
@@ -169,20 +169,13 @@
 	</div>
 </template>
 
-<script lang="ts">
-	export default defineComponent({
-		inheritAttrs: false,
-	});
-</script>
-
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
-	import type { DataTableColumn, InputType } from "../types";
+	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
 	import type { TableHTMLAttributes } from "vue";
-	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
+	import { computed, useAttrs, toRef, toRaw, onMounted, onUpdated, ref } from "vue";
 	import { useDebounceFn } from "@vueuse/core";
 
-	type DataTableSortingOrder = 'asc' | 'desc' | null
 	const DataTableSortingOptions = ['asc', 'desc', null] as const
 
 	type DataTableColumnSource = DataTableColumn | string
@@ -225,6 +218,8 @@
 		items: Iterable<DataTableItem>;
 	}
 
+	defineOptions({ inheritAttrs: false });
+
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
@@ -247,8 +242,8 @@
 			filterHide?: boolean;
 			filtered?: boolean;
 			filterReset?: () => any;
-			sortBy?: string;
-			sortingOrder?: DataTableSortingOrder;
+			sortByAndOrder?: SortByAndOrder;
+			sortByMulti?: Map<string, (boolean | null)>;
 			toggleColumns?: boolean;
 			scroll?: boolean;
 		}>(),
@@ -273,18 +268,17 @@
 			filterHide: true,
 			filtered: false,
 			filterReset: undefined,
-			sortBy: undefined,
-			sortingOrder: undefined,
+			sortByAndOrder: () => ({key: null, order: null}),
+			sortByMulti: undefined,
 			toggleColumns: false,
 			scroll: false,
 		}
 	);
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: any[]): void;
-		(e: "update:sortBy", sortBy: string): void;
-		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
-		(e: "update:clicked", items: any | null): void;
+		"update:modelValue": [items: any[]];
+		"update:sortByAndOrder": [obj: SortByAndOrder];
+		"update:clicked": [items: any | null];
 	}>();
 
 	const attrs = useAttrs();
@@ -349,45 +343,16 @@
 		})}
 	}));
 
-	function useSafeVModel<P extends object, F, K extends keyof P>(props: P, fallbackValue: F, key?: K) {
-		const instance = getCurrentInstance();
-		const emit = instance?.emit;
-		if (!key)
-			key = 'modelValue' as K;
-		const event = `update:${key.toString()}`;
-		const fallback = ref<F>(fallbackValue)
-		return computed<F>({
-			get: () => {
-				// @ts-expect-error fix later
-				if (props[key] === undefined)
-					return fallback.value;
-				// @ts-expect-error fix later
-				return props[key];
-			},
-			set: (value) => {
-				// @ts-expect-error fix later
-				if (props[key] === undefined) {
-					// @ts-expect-error fix later
-					fallback.value = value;
-				}
-				emit?.(event, value);
-			},
-		})
-	}
-
-	const sortBy = useSafeVModel(props, '', 'sortBy');
-	const sortingOrder = useSafeVModel(props, null as DataTableSortingOrder, 'sortingOrder');
-
 	const sortedRows = computed(() => {
-		if (rowsComputed.value.length <= 1)
+		if (rowsComputed.value.length <= 1 || props.sortByMulti !== undefined)
 			return rowsComputed.value;
-		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => sortBy.value === key && sortable, );
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => props.sortByAndOrder.key === key && sortable, );
 		const column = columnsComputed.value[columnIndex];
 		if (!column)
 			return rowsComputed.value;
-		const sortingOrderRatio = sortingOrder.value === 'desc' ? -1 : 1
+		const sortingOrderRatio = props.sortByAndOrder.order === false ? -1 : 1
 		return [...rowsComputed.value].sort((a, b) => {
-			if (sortingOrder.value === null)
+			if (props.sortByAndOrder.order === null)
 				return a.initialIndex - b.initialIndex;
 			const firstValue = String(a.cells[columnIndex].value);
 			const secondValue = String(b.cells[columnIndex].value);
@@ -395,20 +360,21 @@
 		})
 	})
 
-	const cycleSorting = (value: DataTableSortingOrder) => {
-		const index = DataTableSortingOptions.findIndex((sortingValue) => sortingValue === value)
-		return (index !== -1)
-			? DataTableSortingOptions[(index + 1) % DataTableSortingOptions.length]
-			: DataTableSortingOptions[0];
+	const cycleSorting = (value: boolean | null) => {
+		if (value === null)
+			return true;
+		if (value === true)
+			return false;
+		return null;
 	}
 
 	function toggleSorting(column: DataTableColumnInternal) {
-		if (column.key === sortBy.value) {
-			sortingOrder.value = cycleSorting(sortingOrder.value);
-		} else {
-			sortBy.value = column.key;
-			sortingOrder.value = DataTableSortingOptions[0];
-		}
+		const neu: SortByAndOrder = {key: column.key, order: null};
+		if (column.key === props.sortByAndOrder.key)
+			neu.order = cycleSorting(props.sortByAndOrder.order);
+		else
+			neu.order = true;
+		emit('update:sortByAndOrder', neu);
 	}
 
 	const filterOpenProp = toRef(props, 'filterOpen');

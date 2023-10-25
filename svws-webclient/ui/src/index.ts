@@ -53,4 +53,4 @@ export { default as SvwsUiTabPanel } from "./components/Deprecated/SvwsUiTabPane
 export { default as SvwsUiDragData } from "./components/Deprecated/SvwsUiDragData.vue";
 export { default as SvwsUiDropData } from "./components/Deprecated/SvwsUiDropData.vue";
 
-export type { DataTableColumn, InputDataType } from "./types";
+export type { DataTableColumn, InputDataType, SortByAndOrder } from "./types";
