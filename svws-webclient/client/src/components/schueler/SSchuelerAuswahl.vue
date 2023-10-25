@@ -71,7 +71,6 @@
 	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung, SchuelerStatus } from "@core";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 	import type { SortByAndOrder } from "@ui";
-	import { ArrayList, Pair } from "@core";
 	import { computed, ref, watch } from "vue";
 
 	const props = defineProps<SchuelerAuswahlProps>();

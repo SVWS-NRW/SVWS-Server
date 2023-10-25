@@ -202,20 +202,28 @@ export class SchuelerListeManager extends JavaObject {
 			for (let i : number = 0; i < this._order.size(); i++) {
 				const eintrag : Pair<string, boolean> = this._order.get(i);
 				if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-					this._order.remove(i);
+					this._order.remove(eintrag);
+					this._filtered = null;
 					return;
 				}
 			}
 			return;
 		}
-		for (const eintrag of this._order) {
+		for (let i : number = 0; i < this._order.size(); i++) {
+			const eintrag : Pair<string, boolean> = this._order.get(i);
 			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
+				if (eintrag.b === order)
+					return;
+				this._order.remove(eintrag);
 				eintrag.b = order;
+				this._order.add(0, eintrag);
+				this._filtered = null;
 				return;
 			}
 		}
 		const eintrag : Pair<string, boolean> = new Pair(field, order);
 		this._order.add(0, eintrag);
+		this._filtered = null;
 	}
 
 	/**

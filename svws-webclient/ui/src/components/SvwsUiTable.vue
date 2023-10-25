@@ -76,7 +76,7 @@
 							{
 								'svws-disabled': column.disabled,
 								'svws-sortable-column': column.sortable,
-								'svws-active': column.sortable && (sortByAndOrder.key === column.name) && sortByAndOrder.order,
+								'svws-active': column.sortable && (sortByAndOrder.key === column.name) && (typeof sortByAndOrder.order === 'boolean'),
 								'svws-divider': column.divider,
 							}
 						]" :tabindex="column.sortable ? 0 : -1">
@@ -360,8 +360,8 @@
 		})
 	})
 
-	const cycleSorting = (value: boolean | null) => {
-		if (value === null)
+	const cycleSorting = (value: boolean | null | undefined) => {
+		if (value === null || value === undefined)
 			return true;
 		if (value === true)
 			return false;
@@ -370,10 +370,12 @@
 
 	function toggleSorting(column: DataTableColumnInternal) {
 		const neu: SortByAndOrder = {key: column.key, order: null};
-		if (column.key === props.sortByAndOrder.key)
+		if (column.key === props.sortByAndOrder.key || props.sortByMulti === undefined)
 			neu.order = cycleSorting(props.sortByAndOrder.order);
-		else
-			neu.order = true;
+		else {
+			const alt = props.sortByMulti.get(column.key);
+			neu.order = cycleSorting(alt);
+		}
 		emit('update:sortByAndOrder', neu);
 	}
 

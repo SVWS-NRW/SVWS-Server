@@ -169,22 +169,30 @@ public class SchuelerListeManager {
 			for (int i = 0; i < this._order.size(); i++) {
 				final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
 				if (eintrag.a.equals(field)) {
-					this._order.remove(i);
+					this._order.remove(eintrag);
+					this._filtered = null;
 					return;
 				}
 			}
 			return;
 		}
 		// Prüfe, ob bereits ein Eintrag vorhanden ist und passe diesen ggf an
-		for (final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag : this._order) {
+		for (int i = 0; i < this._order.size(); i++) {
+			final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
 			if (eintrag.a.equals(field)) {
+				if (eintrag.b == order)
+					return;
+				this._order.remove(eintrag);
 				eintrag.b = order;
+				this._order.add(0, eintrag);
+				this._filtered = null;
 				return;
 			}
 		}
 		// Füge einen neuen Eintrag vorne in der Liste hinzu
 		final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = new Pair<>(field, order);
 		this._order.add(0, eintrag);
+		this._filtered = null;
 	}
 
 
