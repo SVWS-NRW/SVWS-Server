@@ -135,11 +135,56 @@ public class SchuelerListeManager {
 	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
 	 * oder absteigend (false) sortiert werden soll.
 	 *
-	 * @param order   die Sortier-Ordnung.
+	 * @param order   die Sortier-Ordnung
 	 */
-	public void setOrder(final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
+	public void orderSet(final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
 		this._order = order;
 		this._filtered = null;
+	}
+
+
+	/**
+	 * Gibt die Sortier-Ordnung für die gefilterten Listen zurück als eine Menge von Paaren,
+	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
+	 * oder absteigend (false) sortiert werden soll.
+	 *
+	 * @return   die Sortier-Ordnung
+	 */
+	public final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> orderGet() {
+		return new ArrayList<>(this._order);
+	}
+
+
+	/**
+	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld. Dabei
+	 * werden vorhande Feld-Eintrage angepasst oder bei null entfernt. Nicht vorhande
+	 * Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 *
+	 * @param field   das Feld
+	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
+	 */
+	public void orderUpdate(@NotNull final String field, final Boolean order) {
+		// Prüfe, ob der Feld-Eintrag entfernt werden soll
+		if (order == null) {
+			for (int i = 0; i < this._order.size(); i++) {
+				final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
+				if (eintrag.a.equals(field)) {
+					this._order.remove(i);
+					return;
+				}
+			}
+			return;
+		}
+		// Prüfe, ob bereits ein Eintrag vorhanden ist und passe diesen ggf an
+		for (final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag : this._order) {
+			if (eintrag.a.equals(field)) {
+				eintrag.b = order;
+				return;
+			}
+		}
+		// Füge einen neuen Eintrag vorne in der Liste hinzu
+		final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = new Pair<>(field, order);
+		this._order.add(0, eintrag);
 	}
 
 

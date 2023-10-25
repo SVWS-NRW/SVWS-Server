@@ -171,11 +171,51 @@ export class SchuelerListeManager extends JavaObject {
 	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
 	 * oder absteigend (false) sortiert werden soll.
 	 *
-	 * @param order   die Sortier-Ordnung.
+	 * @param order   die Sortier-Ordnung
 	 */
-	public setOrder(order : List<Pair<string, boolean>>) : void {
+	public orderSet(order : List<Pair<string, boolean>>) : void {
 		this._order = order;
 		this._filtered = null;
+	}
+
+	/**
+	 * Gibt die Sortier-Ordnung für die gefilterten Listen zurück als eine Menge von Paaren,
+	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
+	 * oder absteigend (false) sortiert werden soll.
+	 *
+	 * @return   die Sortier-Ordnung
+	 */
+	public orderGet() : List<Pair<string, boolean>> {
+		return new ArrayList(this._order);
+	}
+
+	/**
+	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld. Dabei
+	 * werden vorhande Feld-Eintrage angepasst oder bei null entfernt. Nicht vorhande
+	 * Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 *
+	 * @param field   das Feld
+	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
+	 */
+	public orderUpdate(field : string, order : boolean | null) : void {
+		if (order === null) {
+			for (let i : number = 0; i < this._order.size(); i++) {
+				const eintrag : Pair<string, boolean> = this._order.get(i);
+				if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
+					this._order.remove(i);
+					return;
+				}
+			}
+			return;
+		}
+		for (const eintrag of this._order) {
+			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
+				eintrag.b = order;
+				return;
+			}
+		}
+		const eintrag : Pair<string, boolean> = new Pair(field, order);
+		this._order.add(0, eintrag);
 	}
 
 	/**
