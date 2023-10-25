@@ -73,6 +73,15 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	}
 
 	/**
+	 * Gibt die Anzahl der zulässigen Werte für dieses Attribut zurück.
+	 *
+	 * @return die Anzahl der zulässigen Werte für dieses Attribut
+	 */
+	public size() : number {
+		return this._values.size();
+	}
+
+	/**
 	 * Gibt den Wert zu dem angegebenen Schlüssel zurück,
 	 * sofern es sich um einen zulässigen Schlüssel handelt.
 	 *
@@ -150,6 +159,15 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	 */
 	public auswahlExists() : boolean {
 		return !this._mapAuswahlValuesByKey.isEmpty();
+	}
+
+	/**
+	 * Gibt die Anzahl der Elemente in der Auswahl zurück.
+	 *
+	 * @return die Anzahl der Elemente in der Auswahl
+	 */
+	public auswahlSize() : number {
+		return this._mapAuswahlValuesByKey.size();
 	}
 
 	/**

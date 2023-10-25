@@ -8,7 +8,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
-				:columns="cols" clickable selectable count :filter-open="true" filtered :filterReset="filterReset" scroll-into-view scroll
+				:columns="cols" clickable selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
@@ -68,10 +68,11 @@
 
 <script setup lang="ts">
 
-	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung, SchuelerStatus } from "@core";
-	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
-	import type { SortByAndOrder } from "@ui";
 	import { computed, ref, watch } from "vue";
+	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung} from "@core";
+	import { SchuelerStatus } from "@core";
+	import type { SortByAndOrder } from "@ui";
+	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 
@@ -180,10 +181,23 @@
 	async function filterReset() {
 		props.schuelerListeManager().schulgliederungen.auswahlClear();
 		props.schuelerListeManager().schuelerstatus.auswahlClear();
+		props.schuelerListeManager().schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+		props.schuelerListeManager().schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		props.schuelerListeManager().jahrgaenge.auswahlClear();
 		props.schuelerListeManager().klassen.auswahlClear();
 		props.schuelerListeManager().kurse.auswahlClear();
 		await props.setFilter();
+	}
+
+	function filterChanged(): boolean {
+		if (props.schuelerListeManager().schulgliederungen.auswahlExists()
+			|| props.schuelerListeManager().jahrgaenge.auswahlExists()
+			|| props.schuelerListeManager().klassen.auswahlExists()
+			|| props.schuelerListeManager().kurse.auswahlExists())
+			return true;
+		return (!(props.schuelerListeManager().schuelerstatus.auswahlSize() === 2
+			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.AKTIV)
+			&& props.schuelerListeManager().schuelerstatus.auswahlHas(SchuelerStatus.EXTERN)))
 	}
 
 	function text_status(status: SchuelerStatus): string {

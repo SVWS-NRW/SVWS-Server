@@ -72,6 +72,16 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 
 
 	/**
+	 * Gibt die Anzahl der zulässigen Werte für dieses Attribut zurück.
+	 *
+	 * @return die Anzahl der zulässigen Werte für dieses Attribut
+	 */
+	public int size() {
+		return this._values.size();
+	}
+
+
+	/**
 	 * Gibt den Wert zu dem angegebenen Schlüssel zurück,
 	 * sofern es sich um einen zulässigen Schlüssel handelt.
 	 *
@@ -155,6 +165,16 @@ public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 	 */
 	public boolean auswahlExists() {
 		return !this._mapAuswahlValuesByKey.isEmpty();
+	}
+
+
+	/**
+	 * Gibt die Anzahl der Elemente in der Auswahl zurück.
+	 *
+	 * @return die Anzahl der Elemente in der Auswahl
+	 */
+	public int auswahlSize() {
+		return this._mapAuswahlValuesByKey.size();
 	}
 
 
