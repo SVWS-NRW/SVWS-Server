@@ -15,7 +15,7 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulgliederung;
-import de.svws_nrw.core.utils.AttributeWithFilter;
+import de.svws_nrw.core.utils.AttributeMitAuswahl;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
 public class SchuelerListeManager {
 
 	/** Ein Filter-Attribut für die Schülerliste. Dieses wird nicht für das Filtern der Schüler verwendet, sondern für eine Mehrfachauswahl */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
+	public final @NotNull AttributeMitAuswahl<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
 	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerMitStatus = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInJahrgang = new HashMap2D<>();
@@ -40,32 +40,32 @@ public class SchuelerListeManager {
 	private final @NotNull HashMap2D<@NotNull String, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInSchulgliederung = new HashMap2D<>();
 
 	/** Das Filter-Attribut für die Jahrgänge */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
+	public final @NotNull AttributeMitAuswahl<@NotNull Long, @NotNull JahrgangsListeEintrag> jahrgaenge;
 	private static final @NotNull Function<@NotNull JahrgangsListeEintrag, @NotNull Long> _jahrgangToId = (final @NotNull JahrgangsListeEintrag jg) -> jg.id;
 
 	/** Das Filter-Attribut für die Klassen */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull KlassenListeEintrag> klassen;
+	public final @NotNull AttributeMitAuswahl<@NotNull Long, @NotNull KlassenListeEintrag> klassen;
 	private static final @NotNull Function<@NotNull KlassenListeEintrag, @NotNull Long> _klasseToId = (final @NotNull KlassenListeEintrag k) -> k.id;
 
 	/** Das Filter-Attribut für die Kurse */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull KursListeEintrag> kurse;
+	public final @NotNull AttributeMitAuswahl<@NotNull Long, @NotNull KursListeEintrag> kurse;
 	private static final @NotNull Function<@NotNull KursListeEintrag, @NotNull Long> _kursToId = (final @NotNull KursListeEintrag k) -> k.id;
 
 	/** Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt */
-	public final @NotNull AttributeWithFilter<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
+	public final @NotNull AttributeMitAuswahl<@NotNull Long, @NotNull Schuljahresabschnitt> schuljahresabschnitte;
 	private static final @NotNull Function<@NotNull Schuljahresabschnitt, @NotNull Long> _schuljahresabschnittToId = (final @NotNull Schuljahresabschnitt sja) -> sja.id;
 
 	/** Das Filter-Attribut für die Abiturjahrgänge - die Filterfunktion wird zur Zeit noch nicht genutzt */
-	public final @NotNull AttributeWithFilter<@NotNull Integer, @NotNull GostJahrgang> abiturjahrgaenge;
+	public final @NotNull AttributeMitAuswahl<@NotNull Integer, @NotNull GostJahrgang> abiturjahrgaenge;
 	private static final @NotNull Function<@NotNull GostJahrgang, @NotNull Integer> _abiturjahrgangToId = (final @NotNull GostJahrgang a) -> a.abiturjahr;
 
 	/** Das Filter-Attribut für die Schulgliederungen */
-	public final @NotNull AttributeWithFilter<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
+	public final @NotNull AttributeMitAuswahl<@NotNull String, @NotNull Schulgliederung> schulgliederungen;
 	private static final @NotNull Function<@NotNull Schulgliederung, @NotNull String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
 	private static final @NotNull Comparator<@NotNull Schulgliederung> _comparatorSchulgliederung = (final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
-	public final @NotNull AttributeWithFilter<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
+	public final @NotNull AttributeMitAuswahl<@NotNull Integer, @NotNull SchuelerStatus> schuelerstatus;
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
 	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
@@ -95,15 +95,15 @@ public class SchuelerListeManager {
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		this.schueler = new AttributeWithFilter<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerSchuelerAuswahlChanged);
+		this.schueler = new AttributeMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerSchuelerAuswahlChanged);
 		initSchueler();
-		this.jahrgaenge = new AttributeWithFilter<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
-		this.klassen = new AttributeWithFilter<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
-		this.kurse = new AttributeWithFilter<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
-		this.schuljahresabschnitte = new AttributeWithFilter<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
-		this.abiturjahrgaenge = new AttributeWithFilter<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
-		this.schulgliederungen = new AttributeWithFilter<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
-		this.schuelerstatus = new AttributeWithFilter<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributeMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
+		this.klassen = new AttributeMitAuswahl<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
+		this.kurse = new AttributeMitAuswahl<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
+		this.schuljahresabschnitte = new AttributeMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributeMitAuswahl<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
+		this.schulgliederungen = new AttributeMitAuswahl<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributeMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 	}
 
 
@@ -138,21 +138,21 @@ public class SchuelerListeManager {
 			return _filtered;
 		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
 		for (final @NotNull SchuelerListeEintrag eintrag : this.schueler.list()) {
-			if (this.jahrgaenge.filterAktiv() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang))))
+			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 				continue;
-			if (this.klassen.filterAktiv() && ((eintrag.idKlasse < 0) || (!this.klassen.filterHasKey(eintrag.idKlasse))))
+			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
 				continue;
-			if (this.kurse.filterAktiv()) {
+			if (this.kurse.auswahlExists()) {
 				boolean hatEinenKurs = false;
 				for (final long idKurs : eintrag.kurse)
-					if (this.kurse.filterHasKey(idKurs))
+					if (this.kurse.auswahlHasKey(idKurs))
 						hatEinenKurs = true;
 				if (!hatEinenKurs)
 					continue;
 			}
-			if (this.schulgliederungen.filterAktiv() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung))))
+			if (this.schulgliederungen.auswahlExists() && ((eintrag.schulgliederung.isBlank()) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
 				continue;
-			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
+			if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
 				continue;
 			tmpList.add(eintrag);
 		}

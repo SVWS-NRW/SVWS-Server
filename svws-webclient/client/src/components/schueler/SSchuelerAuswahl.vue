@@ -99,61 +99,61 @@
 	});
 
 	const filterStatus = computed<SchuelerStatus[]>({
-		get: () => [...props.schuelerListeManager().schuelerstatus.filterList()],
+		get: () => [...props.schuelerListeManager().schuelerstatus.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().schuelerstatus.filterClear();
+			props.schuelerListeManager().schuelerstatus.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().schuelerstatus.filterAdd(v);
+				props.schuelerListeManager().schuelerstatus.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({
-		get: () => [...props.schuelerListeManager().schulgliederungen.filterList()],
+		get: () => [...props.schuelerListeManager().schulgliederungen.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().schulgliederungen.filterClear();
+			props.schuelerListeManager().schulgliederungen.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().schulgliederungen.filterAdd(v);
+				props.schuelerListeManager().schulgliederungen.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterJahrgaenge = computed<JahrgangsListeEintrag[]>({
-		get: () => [...props.schuelerListeManager().jahrgaenge.filterList()],
+		get: () => [...props.schuelerListeManager().jahrgaenge.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().jahrgaenge.filterClear();
+			props.schuelerListeManager().jahrgaenge.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().jahrgaenge.filterAdd(v);
+				props.schuelerListeManager().jahrgaenge.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterKlassen = computed<KlassenListeEintrag[]>({
-		get: () => [...props.schuelerListeManager().klassen.filterList()],
+		get: () => [...props.schuelerListeManager().klassen.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().klassen.filterClear();
+			props.schuelerListeManager().klassen.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().klassen.filterAdd(v);
+				props.schuelerListeManager().klassen.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	const filterKurse = computed<KursListeEintrag[]>({
-		get: () => [...props.schuelerListeManager().kurse.filterList()],
+		get: () => [...props.schuelerListeManager().kurse.auswahl()],
 		set: (value) => {
-			props.schuelerListeManager().kurse.filterClear();
+			props.schuelerListeManager().kurse.auswahlClear();
 			for (const v of value)
-				props.schuelerListeManager().kurse.filterAdd(v);
+				props.schuelerListeManager().kurse.auswahlAdd(v);
 			void props.setFilter();
 		}
 	});
 
 	async function filterReset() {
-		props.schuelerListeManager().schulgliederungen.filterClear();
-		props.schuelerListeManager().schuelerstatus.filterClear();
-		props.schuelerListeManager().jahrgaenge.filterClear();
-		props.schuelerListeManager().klassen.filterClear();
-		props.schuelerListeManager().kurse.filterClear();
+		props.schuelerListeManager().schulgliederungen.auswahlClear();
+		props.schuelerListeManager().schuelerstatus.auswahlClear();
+		props.schuelerListeManager().jahrgaenge.auswahlClear();
+		props.schuelerListeManager().klassen.auswahlClear();
+		props.schuelerListeManager().kurse.auswahlClear();
 		await props.setFilter();
 	}
 

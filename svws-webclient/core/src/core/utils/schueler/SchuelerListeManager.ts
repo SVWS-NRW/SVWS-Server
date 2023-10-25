@@ -12,10 +12,10 @@ import type { Comparator } from '../../../java/util/Comparator';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
+import { AttributeMitAuswahl } from '../../../core/utils/AttributeMitAuswahl';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
-import { AttributeWithFilter } from '../../../core/utils/AttributeWithFilter';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import type { Runnable } from '../../../java/lang/Runnable';
@@ -28,7 +28,7 @@ export class SchuelerListeManager extends JavaObject {
 	/**
 	 * Ein Filter-Attribut für die Schülerliste. Dieses wird nicht für das Filtern der Schüler verwendet, sondern für eine Mehrfachauswahl
 	 */
-	public readonly schueler : AttributeWithFilter<number, SchuelerListeEintrag>;
+	public readonly schueler : AttributeMitAuswahl<number, SchuelerListeEintrag>;
 
 	private static readonly _schuelerToId : JavaFunction<SchuelerListeEintrag, number> = { apply : (s: SchuelerListeEintrag) => s.id };
 
@@ -49,42 +49,42 @@ export class SchuelerListeManager extends JavaObject {
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
 	 */
-	public readonly jahrgaenge : AttributeWithFilter<number, JahrgangsListeEintrag>;
+	public readonly jahrgaenge : AttributeMitAuswahl<number, JahrgangsListeEintrag>;
 
 	private static readonly _jahrgangToId : JavaFunction<JahrgangsListeEintrag, number> = { apply : (jg: JahrgangsListeEintrag) => jg.id };
 
 	/**
 	 * Das Filter-Attribut für die Klassen
 	 */
-	public readonly klassen : AttributeWithFilter<number, KlassenListeEintrag>;
+	public readonly klassen : AttributeMitAuswahl<number, KlassenListeEintrag>;
 
 	private static readonly _klasseToId : JavaFunction<KlassenListeEintrag, number> = { apply : (k: KlassenListeEintrag) => k.id };
 
 	/**
 	 * Das Filter-Attribut für die Kurse
 	 */
-	public readonly kurse : AttributeWithFilter<number, KursListeEintrag>;
+	public readonly kurse : AttributeMitAuswahl<number, KursListeEintrag>;
 
 	private static readonly _kursToId : JavaFunction<KursListeEintrag, number> = { apply : (k: KursListeEintrag) => k.id };
 
 	/**
 	 * Das Filter-Attribut für die Schuljahresabschnitte - die Filterfunktion wird zur Zeit noch nicht genutzt
 	 */
-	public readonly schuljahresabschnitte : AttributeWithFilter<number, Schuljahresabschnitt>;
+	public readonly schuljahresabschnitte : AttributeMitAuswahl<number, Schuljahresabschnitt>;
 
 	private static readonly _schuljahresabschnittToId : JavaFunction<Schuljahresabschnitt, number> = { apply : (sja: Schuljahresabschnitt) => sja.id };
 
 	/**
 	 * Das Filter-Attribut für die Abiturjahrgänge - die Filterfunktion wird zur Zeit noch nicht genutzt
 	 */
-	public readonly abiturjahrgaenge : AttributeWithFilter<number, GostJahrgang>;
+	public readonly abiturjahrgaenge : AttributeMitAuswahl<number, GostJahrgang>;
 
 	private static readonly _abiturjahrgangToId : JavaFunction<GostJahrgang, number> = { apply : (a: GostJahrgang) => a.abiturjahr };
 
 	/**
 	 * Das Filter-Attribut für die Schulgliederungen
 	 */
-	public readonly schulgliederungen : AttributeWithFilter<string, Schulgliederung>;
+	public readonly schulgliederungen : AttributeMitAuswahl<string, Schulgliederung>;
 
 	private static readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => sg.daten.kuerzel };
 
@@ -93,7 +93,7 @@ export class SchuelerListeManager extends JavaObject {
 	/**
 	 * Das Filter-Attribut für den Schüler-Status
 	 */
-	public readonly schuelerstatus : AttributeWithFilter<number, SchuelerStatus>;
+	public readonly schuelerstatus : AttributeMitAuswahl<number, SchuelerStatus>;
 
 	private static readonly _schuelerstatusToId : JavaFunction<SchuelerStatus, number> = { apply : (s: SchuelerStatus) => s.id };
 
@@ -129,15 +129,15 @@ export class SchuelerListeManager extends JavaObject {
 	 */
 	public constructor(schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
 		super();
-		this.schueler = new AttributeWithFilter(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator, SchuelerListeManager._eventHandlerSchuelerAuswahlChanged);
+		this.schueler = new AttributeMitAuswahl(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator, SchuelerListeManager._eventHandlerSchuelerAuswahlChanged);
 		this.initSchueler();
-		this.jahrgaenge = new AttributeWithFilter(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
-		this.klassen = new AttributeWithFilter(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
-		this.kurse = new AttributeWithFilter(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
-		this.schuljahresabschnitte = new AttributeWithFilter(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
-		this.abiturjahrgaenge = new AttributeWithFilter(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
-		this.schulgliederungen = new AttributeWithFilter(Arrays.asList(...Schulgliederung.values()), SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
-		this.schuelerstatus = new AttributeWithFilter(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		this.jahrgaenge = new AttributeMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
+		this.klassen = new AttributeMitAuswahl(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
+		this.kurse = new AttributeMitAuswahl(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
+		this.schuljahresabschnitte = new AttributeMitAuswahl(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
+		this.abiturjahrgaenge = new AttributeMitAuswahl(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
+		this.schulgliederungen = new AttributeMitAuswahl(Arrays.asList(...Schulgliederung.values()), SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributeMitAuswahl(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 	}
 
 	private initSchueler() : void {
@@ -170,21 +170,21 @@ export class SchuelerListeManager extends JavaObject {
 			return this._filtered;
 		const tmpList : List<SchuelerListeEintrag> = new ArrayList();
 		for (const eintrag of this.schueler.list()) {
-			if (this.jahrgaenge.filterAktiv() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.filterHasKey(eintrag.idJahrgang))))
+			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 				continue;
-			if (this.klassen.filterAktiv() && ((eintrag.idKlasse < 0) || (!this.klassen.filterHasKey(eintrag.idKlasse))))
+			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
 				continue;
-			if (this.kurse.filterAktiv()) {
+			if (this.kurse.auswahlExists()) {
 				let hatEinenKurs : boolean = false;
 				for (const idKurs of eintrag.kurse)
-					if (this.kurse.filterHasKey(idKurs))
+					if (this.kurse.auswahlHasKey(idKurs))
 						hatEinenKurs = true;
 				if (!hatEinenKurs)
 					continue;
 			}
-			if (this.schulgliederungen.filterAktiv() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.filterHasKey(eintrag.schulgliederung))))
+			if (this.schulgliederungen.auswahlExists() && ((JavaString.isBlank(eintrag.schulgliederung)) || (!this.schulgliederungen.auswahlHasKey(eintrag.schulgliederung))))
 				continue;
-			if (this.schuelerstatus.filterAktiv() && (!this.schuelerstatus.filterHasKey(eintrag.status)))
+			if (this.schuelerstatus.auswahlExists() && (!this.schuelerstatus.auswahlHasKey(eintrag.status)))
 				continue;
 			tmpList.add(eintrag);
 		}

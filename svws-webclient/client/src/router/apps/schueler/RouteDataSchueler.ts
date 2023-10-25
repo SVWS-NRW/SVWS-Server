@@ -65,8 +65,8 @@ export class RouteDataSchueler {
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listAbiturjahrgaenge = api.schulform.daten.hatGymOb ? await api.server.getGostAbiturjahrgaenge(api.schema) : new ArrayList<GostJahrgang>();
 		const schuelerListeManager = new SchuelerListeManager(listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
-		schuelerListeManager.schuelerstatus.filterAdd(SchuelerStatus.AKTIV);
-		schuelerListeManager.schuelerstatus.filterAdd(SchuelerStatus.EXTERN);
+		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		const filtered = schuelerListeManager.filtered();
 		const schuelerVorher = this._state.value.auswahl === null ? null : schuelerListeManager.schueler.get(this._state.value.auswahl.id);
 		const auswahl = (schuelerVorher === null)
