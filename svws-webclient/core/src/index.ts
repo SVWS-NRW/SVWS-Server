@@ -484,7 +484,7 @@ export { Verkehrssprache } from './core/types/schule/Verkehrssprache';
 export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
-export { AttributeMitAuswahl } from './core/utils/AttributeMitAuswahl';
+export { AttributMitAuswahl } from './core/utils/AttributMitAuswahl';
 export { BlockungsUtils } from './core/utils/BlockungsUtils';
 export { CollectionUtils } from './core/utils/CollectionUtils';
 export { DateUtils } from './core/utils/DateUtils';

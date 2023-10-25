@@ -18,7 +18,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <K> der Typ des eindeutigen Schlüsselwertes für ein enthaltenes Objekt
  * @param <V> der Typ der enthaltenen Objekte
  */
-public class AttributeMitAuswahl<@NotNull K, @NotNull V> {
+public class AttributMitAuswahl<@NotNull K, @NotNull V> {
 
 	/** Eine Menge der zulässigen Werte */
 	private final @NotNull List<@NotNull V> _values = new ArrayList<>();
@@ -47,7 +47,7 @@ public class AttributeMitAuswahl<@NotNull K, @NotNull V> {
 	 * @param comparator    eine Vergleichsmethode zum Vergleichen von zwei enthaltenen Objekten
 	 * @param eventHandler  ein Runnable, welches aufgerufen wird, wenn der Status der Auswahl sich ändert
 	 */
-	public AttributeMitAuswahl(final @NotNull Collection<@NotNull V> values, final @NotNull Function<@NotNull V, @NotNull K> toId,
+	public AttributMitAuswahl(final @NotNull Collection<@NotNull V> values, final @NotNull Function<@NotNull V, @NotNull K> toId,
 			final @NotNull Comparator<@NotNull V> comparator, final Runnable eventHandler) {
 		this._toID = toId;
 		this._comparator = comparator;

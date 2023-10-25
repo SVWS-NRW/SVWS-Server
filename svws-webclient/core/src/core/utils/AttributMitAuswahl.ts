@@ -9,7 +9,7 @@ import { DeveloperNotificationException } from '../../core/exceptions/DeveloperN
 import type { JavaMap } from '../../java/util/JavaMap';
 import type { Comparator } from '../../java/util/Comparator';
 
-export class AttributeMitAuswahl<K, V> extends JavaObject {
+export class AttributMitAuswahl<K, V> extends JavaObject {
 
 	/**
 	 * Eine Menge der zulässigen Werte
@@ -284,11 +284,11 @@ export class AttributeMitAuswahl<K, V> extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.AttributeMitAuswahl'].includes(name);
+		return ['de.svws_nrw.core.utils.AttributMitAuswahl'].includes(name);
 	}
 
 }
 
-export function cast_de_svws_nrw_core_utils_AttributeMitAuswahl<K, V>(obj : unknown) : AttributeMitAuswahl<K, V> {
-	return obj as AttributeMitAuswahl<K, V>;
+export function cast_de_svws_nrw_core_utils_AttributMitAuswahl<K, V>(obj : unknown) : AttributMitAuswahl<K, V> {
+	return obj as AttributMitAuswahl<K, V>;
 }
