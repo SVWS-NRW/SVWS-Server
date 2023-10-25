@@ -52,16 +52,7 @@
 					<template #kwAuswahl>
 						<div class="col-span-2 flex gap-0.5 my-auto">
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
-							<div class="relative svws-kw-auswahl flex-grow bg-svws text-white rounded-md h-7 -my-1 group">
-								<div class="absolute top-0 left-0 w-[20rem] cursor-pointer">
-									<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-										class="opacity-0 w-72"
-										:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" />
-								</div>
-								<span class="w-full h-full inline-flex items-center justify-center pointer-events-none z-50 relative">
-									<span class="inline-flex items-center gap-0.5"><i-ri-expand-up-down-line class="text-button opacity-50 -ml-3 group-hover:opacity-100" />KW {{ kwAuswahl?.kw || '–' }}</span>
-								</span>
-							</div>
+							<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="kw => kw.kw.toString()" headless />
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><i-ri-arrow-right-s-line class="-m-0.5" /></svws-ui-button>
 						</div>
 					</template>
@@ -111,14 +102,14 @@
 
 <script setup lang="ts">
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List} from "@core";
-	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import { GostKlausurtermin, HashSet, StundenplanZeitraster, DateUtils, ZulaessigesFach} from "@core";
+	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
+	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ZulaessigesFach, ArrayList} from "@core";
 	import { computed, ref, onMounted } from "vue";
-	import { ArrayList} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
 	const kwAuswahl = ref<StundenplanKalenderwochenzuordnung>(props.stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString()));
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
