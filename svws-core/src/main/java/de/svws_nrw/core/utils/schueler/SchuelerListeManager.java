@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
+import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
@@ -13,6 +14,7 @@ import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
@@ -78,6 +80,8 @@ public class SchuelerListeManager {
 	/** Ein Handler für das Ereignis, dass die Schülerauswahl angepasst wurde */
 	private static final @NotNull Runnable _eventHandlerSchuelerAuswahlChanged = () -> { /* nicht zu tun */ };
 
+	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
+	private @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order = Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true));
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -127,6 +131,58 @@ public class SchuelerListeManager {
 
 
 	/**
+	 * Setzt die Sortier-Ordnung für die gefilterten Listen. Hier wird eine Menge von Paaren angegeben,
+	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
+	 * oder absteigend (false) sortiert werden soll.
+	 *
+	 * @param order   die Sortier-Ordnung.
+	 */
+	public void setOrder(final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
+		this._order = order;
+		this._filtered = null;
+	}
+
+
+	/**
+	 * Vergleicht zwei Schülerlisteneinträge anhand der spezifizierten Ordnung.
+	 *
+	 * @param a   der erste Eintrag
+	 * @param b   der zweite Eintrag
+	 *
+	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
+	 */
+	private int compare(final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) {
+		for (final Pair<@NotNull String, @NotNull Boolean> criteria : _order) {
+			final String field = criteria.a;
+			final boolean asc = (criteria.b == null) || criteria.b;
+			int cmp = 0;
+			if ("klassen".equals(field)) {
+				final KlassenListeEintrag aKlasse = this.klassen.get(a.idKlasse);
+				final KlassenListeEintrag bKlasse = this.klassen.get(b.idKlasse);
+				if ((aKlasse == null) && (bKlasse == null)) {
+					cmp = 0;
+				} else if (aKlasse == null) {
+					cmp = -1;
+				} else if (bKlasse == null) {
+					cmp = 1;
+				} else {
+					cmp = KlassenUtils.comparator.compare(aKlasse, bKlasse);
+				}
+			} else if ("nachname".equals(field)) {
+				cmp = a.nachname.compareTo(b.nachname);
+			} else if ("vorname".equals(field)) {
+				cmp = a.vorname.compareTo(b.vorname);
+			} else
+				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.");
+			if (cmp == 0)
+				continue;
+			return asc ? cmp : -cmp;
+		}
+		return Long.compare(a.id, b.id);
+	}
+
+
+	/**
 	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
 	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
 	 * beachtet.
@@ -156,6 +212,8 @@ public class SchuelerListeManager {
 				continue;
 			tmpList.add(eintrag);
 		}
+		final @NotNull Comparator<@NotNull SchuelerListeEintrag> comparator = (final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> this.compare(a, b);
+		tmpList.sort(comparator);
 		_filtered = tmpList;
 		return _filtered;
 	}

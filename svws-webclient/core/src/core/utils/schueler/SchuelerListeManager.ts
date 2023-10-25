@@ -7,6 +7,7 @@ import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../../core/utils/schule/SchuljahresabschnittsUtils';
 import { JavaString } from '../../../java/lang/JavaString';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
@@ -14,11 +15,13 @@ import { KursListeEintrag } from '../../../core/data/kurse/KursListeEintrag';
 import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
+import { Pair } from '../../../core/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import type { Runnable } from '../../../java/lang/Runnable';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
@@ -116,6 +119,11 @@ export class SchuelerListeManager extends JavaObject {
 		// empty block
 	} };
 
+	/**
+	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.
+	 */
+	private _order : List<Pair<string, boolean>> = Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true));
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -159,6 +167,60 @@ export class SchuelerListeManager extends JavaObject {
 	}
 
 	/**
+	 * Setzt die Sortier-Ordnung für die gefilterten Listen. Hier wird eine Menge von Paaren angegeben,
+	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
+	 * oder absteigend (false) sortiert werden soll.
+	 *
+	 * @param order   die Sortier-Ordnung.
+	 */
+	public setOrder(order : List<Pair<string, boolean>>) : void {
+		this._order = order;
+		this._filtered = null;
+	}
+
+	/**
+	 * Vergleicht zwei Schülerlisteneinträge anhand der spezifizierten Ordnung.
+	 *
+	 * @param a   der erste Eintrag
+	 * @param b   der zweite Eintrag
+	 *
+	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
+	 */
+	private compare(a : SchuelerListeEintrag, b : SchuelerListeEintrag) : number {
+		for (const criteria of this._order) {
+			const field : string | null = criteria.a;
+			const asc : boolean = (criteria.b === null) || criteria.b;
+			let cmp : number = 0;
+			if (JavaObject.equalsTranspiler("klassen", (field))) {
+				const aKlasse : KlassenListeEintrag | null = this.klassen.get(a.idKlasse);
+				const bKlasse : KlassenListeEintrag | null = this.klassen.get(b.idKlasse);
+				if ((aKlasse === null) && (bKlasse === null)) {
+					cmp = 0;
+				} else
+					if (aKlasse === null) {
+						cmp = -1;
+					} else
+						if (bKlasse === null) {
+							cmp = 1;
+						} else {
+							cmp = KlassenUtils.comparator.compare(aKlasse, bKlasse);
+						}
+			} else
+				if (JavaObject.equalsTranspiler("nachname", (field))) {
+					cmp = JavaString.compareTo(a.nachname, b.nachname);
+				} else
+					if (JavaObject.equalsTranspiler("vorname", (field))) {
+						cmp = JavaString.compareTo(a.vorname, b.vorname);
+					} else
+						throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom Manager nicht unterstützt.")
+			if (cmp === 0)
+				continue;
+			return asc ? cmp : -cmp;
+		}
+		return JavaLong.compare(a.id, b.id);
+	}
+
+	/**
 	 * Gibt eine gefilterte Liste der Schüler zurück. Als Filter werden dabei
 	 * die Jahrgänge, die Klassen, die Kurse, die Schulgliederungen und der Schülerstatus
 	 * beachtet.
@@ -188,6 +250,8 @@ export class SchuelerListeManager extends JavaObject {
 				continue;
 			tmpList.add(eintrag);
 		}
+		const comparator : Comparator<SchuelerListeEintrag> = { compare : (a: SchuelerListeEintrag, b: SchuelerListeEintrag) => this.compare(a, b) };
+		tmpList.sort(comparator);
 		this._filtered = tmpList;
 		return this._filtered;
 	}
