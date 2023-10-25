@@ -1,5 +1,5 @@
 <template>
-	<div v-if="stammdaten !== null" class="page--flex">
+	<div v-if="stammdaten() !== null" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />

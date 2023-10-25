@@ -116,7 +116,7 @@
 
 	watch(()=>props.schuelerListeManager().filtered(), async (neu)=> {
 		if (props.auswahl && neu.contains(props.auswahl) === false)
-			await props.gotoSchueler(neu.get(0));
+			await props.gotoSchueler(neu.isEmpty() ? null : neu.get(0));
 	})
 
 	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {

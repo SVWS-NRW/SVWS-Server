@@ -92,8 +92,10 @@ export class RouteDataSchueler {
 	public async setSchueler(schueler: SchuelerListeEintrag | null) {
 		if (schueler?.id === this._state.value.auswahl?.id)
 			return;
-		if ((schueler === null) || (this.schuelerListeManager.schueler.list().isEmpty()))
+		if ((schueler === null) || (this.schuelerListeManager.schueler.list().isEmpty())) {
+			this.setPatchedState({ auswahl : null, stammdaten : null });
 			return;
+		}
 		const auswahl = (this.schuelerListeManager.schueler.get(schueler.id) === null)
 			? this._state.value.filtered.isEmpty() ? null : this._state.value.filtered.get(0)
 			: schueler;
@@ -134,14 +136,14 @@ export class RouteDataSchueler {
 		return this._state.value.schuelerListeManager;
 	}
 
-	patch = (data : Partial<SchuelerStammdaten>) => {
+	patch = async (data : Partial<SchuelerStammdaten>) => {
 		if (this.auswahl === null)
 			return;
-		api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id).then(()=>{
+		api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id).then(() => {
 			const stammdaten = this.stammdaten;
-			this.setPatchedState({stammdaten: Object.assign(stammdaten, data)});
+			this.setPatchedState({ stammdaten: Object.assign(stammdaten, data) });
+			// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 		}).catch((e) => console.log(e))
-		// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
 	}
 
 	gotoSchueler = async (value: SchuelerListeEintrag | null) => {
@@ -153,7 +155,16 @@ export class RouteDataSchueler {
 		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
 	}
 
-	setFilter = async () => this.commit();
+	setFilter = async () => {
+		if (!this.hatStammdaten) {
+			const listFiltered = this.schuelerListeManager.filtered();
+			if (!listFiltered.isEmpty()) {
+				await this.gotoSchueler(listFiltered.get(0));
+				return;
+			}
+		}
+		this.commit();
+	}
 
 	setAuswahlGruppe = (auswahlGruppe: SchuelerListeEintrag[]) =>	this.setPatchedState({auswahlGruppe});
 }
