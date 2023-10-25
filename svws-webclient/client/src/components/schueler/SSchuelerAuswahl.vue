@@ -15,9 +15,9 @@
 				</template>
 				<template #filterAdvanced>
 					<svws-ui-multi-select v-model="filterStatus" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />
-					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="text" autocomplete :item-filter="find" />
-					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="text" autocomplete :item-filter="find" />
-					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="text" autocomplete :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
+					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<i-ri-filter-line />
