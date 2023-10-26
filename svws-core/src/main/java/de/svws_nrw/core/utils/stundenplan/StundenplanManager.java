@@ -4484,12 +4484,35 @@ public class StundenplanManager {
 	 * @param u  Das neue {@link StundenplanUnterricht}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public void unterrichtPatchAttributes(final @NotNull StundenplanUnterricht u) {
+		// Überprüfen
 		unterrichtCheck(u);
 
-		// Altes Objekt durch neues Objekt ersetzen
+		// Altes Objekt durch neues Objekt ersetzen.
 		DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, u.id);
 		DeveloperNotificationException.ifMapPutOverwrites(_unterricht_by_id, u.id, u);
 
+		// Alles aktualisieren.
+		update_all();
+	}
+
+	/**
+	 * Aktualisiert alle {@link StundenplanUnterricht}-Objekte der Liste.
+	 * Hinweis: Die ID kann nicht gepatched werden. Sie wird verwendet, um das zu ersetzende Objekte zu identifizieren.
+	 *
+	 * @param list Die Liste der neuen {@link StundenplanUnterricht}-Objekte.
+	 */
+	public void unterrichtPatchAttributesAll(final @NotNull List<@NotNull StundenplanUnterricht> list) {
+		// Überprüfen
+		for (final StundenplanUnterricht u : list)
+			unterrichtCheck(u);
+
+		// Alte Objekte durch neue Objekte ersetzen.
+		for (final StundenplanUnterricht u : list) {
+			DeveloperNotificationException.ifMapRemoveFailes(_unterricht_by_id, u.id);
+			DeveloperNotificationException.ifMapPutOverwrites(_unterricht_by_id, u.id, u);
+		}
+
+		// Alles aktualisieren.
 		update_all();
 	}
 

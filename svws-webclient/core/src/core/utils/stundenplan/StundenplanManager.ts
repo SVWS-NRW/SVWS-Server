@@ -4238,6 +4238,22 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
+	/**
+	 * Aktualisiert alle {@link StundenplanUnterricht}-Objekte der Liste.
+	 * Hinweis: Die ID kann nicht gepatched werden. Sie wird verwendet, um das zu ersetzende Objekte zu identifizieren.
+	 *
+	 * @param list Die Liste der neuen {@link StundenplanUnterricht}-Objekte.
+	 */
+	public unterrichtPatchAttributesAll(list : List<StundenplanUnterricht>) : void {
+		for (const u of list)
+			this.unterrichtCheck(u);
+		for (const u of list) {
+			DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, u.id);
+			DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
+		}
+		this.update_all();
+	}
+
 	private unterrichtRemoveByIdOhneUpdate(idUnterricht : number) : void {
 		DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, idUnterricht);
 	}
