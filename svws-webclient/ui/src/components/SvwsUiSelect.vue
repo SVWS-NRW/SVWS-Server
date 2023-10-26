@@ -228,11 +228,14 @@
 		doFocus();
 		showList.value = true;
 		void nextTick(() => {
-			if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null))
+			if (refList.value === null)
+				return;
+			if ((selectedItem.value !== null) && (selectedItem.value !== undefined))
 				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
-			else if (refList.value !== null)
+			else
 				refList.value.activeItemIndex = 0;
-			refList.value?.itemRefs[refList.value.activeItemIndex].scrollIntoView();
+			if (refList.value.itemRefs[refList.value.activeItemIndex] !== undefined)
+				refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 		});
 	}
 
