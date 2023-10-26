@@ -2779,27 +2779,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
-	 * Löscht den übergebenen Kurs.
+	 * Löscht den übergebenen Kurs. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
 	 *
 	 * @param  idKurs Die Datenbank-ID des Kurses.
 	 *
-	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                                         falls der Kurs noch Schülerzuordnungen hat.
+	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public void setRemoveKursByID(final long idKurs) throws DeveloperNotificationException {
 		// Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", _parent.kursGetExistiert(idKurs));
-		final int nSchueler = getKursE(idKurs).schueler.size();
-		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
 
-		// Kurs aus der Datenstruktur (Schienen --> Kurse) löschen, sonst wird die Kurs-Schienen-Zuordnung kopiert.
+		// Lösche den Kurs aus der DTO-Datenstruktur (löscht dadurch auch SuS).
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
-		for (final @NotNull Long schienenID : kurs.schienen) {
+		for (final @NotNull Long schienenID : kurs.schienen)
 			getSchieneE(schienenID).kurse.remove(kurs);
-		}
 
-		kurs.schienen.clear();
-
+		// Bewertungen aktualisieren
 		stateRevalidateEverything();
 	}
 
@@ -2812,18 +2807,20 @@ public class GostBlockungsergebnisManager {
 	 * @param  idKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
 	public void setMergeKurseByID(final long idKursID1keep, final long idKursID2delete) {
-		// 1) Verschieben der SuS von Kurs2 nach Kurs1 (in diesem Manager).
-		final @NotNull GostBlockungsergebnisKurs kurs2 = getKursE(idKursID2delete);
-		for (final @NotNull Long schuelerID : new ArrayList<>(kurs2.schueler)) {
-			stateSchuelerKursEntfernen(schuelerID, idKursID2delete);
-			stateSchuelerKursHinzufuegen(schuelerID, idKursID1keep);
-		}
+		// Verschiebe die SuS in der DTO-Datenstruktur
+		final @NotNull GostBlockungsergebnisKurs kursDelete = getKursE(idKursID2delete);
+		final @NotNull GostBlockungsergebnisKurs kursKeep = getKursE(idKursID1keep);
+		kursKeep.schueler.addAll(kursDelete.schueler);
 
-		// 2) Kurs2 löschen (beim Parent-Manager).
+		// Lösche den Kurs aus der DTO-Datenstruktur (löscht dadurch auch SuS).
+		for (final @NotNull Long schienenID : kursDelete.schienen)
+			getSchieneE(schienenID).kurse.remove(kursDelete);
+
+		// Löschen den Kurs beim Parent-Manager.
 		_parent.kursRemoveByID(idKursID2delete);
 
-		// 3) Kurs2 löschen (in diesem Manager).
-		setRemoveKursByID(idKursID2delete);
+		// Bewertungen aktualisieren
+		stateRevalidateEverything();
 	}
 
 	/**

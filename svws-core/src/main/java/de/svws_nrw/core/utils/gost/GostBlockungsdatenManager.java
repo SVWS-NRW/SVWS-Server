@@ -632,8 +632,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert eine nach Kursnummer sortiere Liste der Kurse für das angegebenen Fach und die
-	 * angegegebene Kursart.
+	 * Liefert eine nach Kursnummer sortiere Liste der Kurse für das angegebenen Fach und die angegebene Kursart.
 	 *
 	 * @param idFach      die ID des Fachs
 	 * @param idKursart   die ID der Kursart
