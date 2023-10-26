@@ -11,7 +11,7 @@
 		</template>
 		<template #regelEdit>
 			<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" label="Kurs hat" />
-			<svws-ui-text-input placeholder="externe Schüler" v-model="anzahl" type="number" />
+			<svws-ui-input-number placeholder="externe Schüler" v-model="anzahl" :min="1" />
 		</template>
 	</BlockungsregelBase>
 </template>
