@@ -21,7 +21,7 @@
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
 			<div class="flex flex-col gap-1 max-w-[12rem] ml-auto">
 				<span class="text-sm font-bold">Zusammenlegen mit</span>
-				<svws-ui-select v-if="kurseMitKursart.size()"
+				<svws-ui-select v-if="andereKurse.size > 0"
 					:model-value="undefined" @update:model-value="kurs2 => combineKurs(kurs, kurs2)"
 					title="Kurs auswählen" class="text-sm" headless
 					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
@@ -32,12 +32,13 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, LehrerListeEintrag, List } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@core";
 	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
@@ -49,14 +50,14 @@
 		removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 		anzahlSpalten: number;
 		kurs: GostBlockungKurs;
-		kurseMitKursart: List<GostBlockungsergebnisKurs>;
+		fachart: number;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		bgColor: string;
 	}>();
 
 	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {
 		const result = new Map<number, GostBlockungsergebnisKurs>();
-		for (const k of props.kurseMitKursart)
+		for (const k of props.getErgebnismanager().getOfFachartKursmenge(props.fachart))
 			if (k.id !== props.kurs.id)
 				result.set(k.id, k);
 		return result;

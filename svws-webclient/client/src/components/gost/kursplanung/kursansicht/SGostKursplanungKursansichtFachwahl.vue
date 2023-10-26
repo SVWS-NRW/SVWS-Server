@@ -129,7 +129,8 @@
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
-				:kurs="kurs" :kurse-mit-kursart="kurseMitKursart(kurs).value" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
+				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager"
+				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>
@@ -245,11 +246,6 @@
 		return props.hatErgebnis ? props.getErgebnismanager().getKursE(kurs.id) : undefined;
 	});
 
-	const kurseMitKursart = (kurs: GostBlockungKurs) : ComputedRef<List<GostBlockungsergebnisKurs>> => computed(() => {
-		const fachart = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
-		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
-	});
-
 	const filtered_by_kursart = (kurs: GostBlockungKurs) : ComputedRef<List<GostBlockungsergebnisKurs>> => computed(() => {
 		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart_id);
@@ -269,13 +265,6 @@
 	});
 
 	const toggle_kursdetail_anzeige = (idKurs : number) => kursdetail_anzeige.value = (kursdetail_anzeige.value === idKurs) ? undefined : idKurs;
-
-	const kursOhneBorder = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
-		return (kurseMitKursart(kurs).value.size() > 1)
-			&& !kursbezeichnung(kurs).value.endsWith(kurseMitKursart(kurs).value.size().toString())
-			&& (kursdetail_anzeige.value !== kurs.id);
-	})
-
 
 	const istZugeordnetKursSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id);
