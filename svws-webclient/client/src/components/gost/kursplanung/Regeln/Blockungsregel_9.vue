@@ -76,7 +76,7 @@
 		},
 		set: (value) => {
 			if (regel.value !== undefined)
-				regel.value.parameter.set(1, value)
+				regel.value.parameter.set(1, Number(value))
 		}
 	})
 
