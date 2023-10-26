@@ -5,7 +5,7 @@
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
-					<svws-ui-menu-header :user="username" :schule="schulname" />
+					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">

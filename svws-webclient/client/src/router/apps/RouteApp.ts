@@ -113,6 +113,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return {
 			logout: routeLogin.logout,
 			username: api.username,
+			schemaname: api.schema,
 			schulform: api.schulform,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
