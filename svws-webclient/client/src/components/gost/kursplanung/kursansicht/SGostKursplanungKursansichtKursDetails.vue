@@ -19,10 +19,9 @@
 			</div>
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
-			<div class="flex flex-col gap-1 max-w-[12rem] ml-auto">
+			<div class="flex flex-col gap-1 max-w-[12rem] ml-auto" v-if="andereKurse.size > 0">
 				<span class="text-sm font-bold">Zusammenlegen mit</span>
-				<svws-ui-select v-if="andereKurse.size > 0"
-					:model-value="undefined" @update:model-value="kurs2 => combineKurs(kurs, kurs2)"
+				<svws-ui-select :model-value="andererKurs" @update:model-value="kurs2 => doCombineKurs(kurs2 as GostBlockungsergebnisKurs)"
 					title="Kurs auswählen" class="text-sm" headless
 					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
 			</div>
@@ -34,7 +33,7 @@
 
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@core";
 	import type { ComputedRef } from 'vue';
-	import { computed } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -54,6 +53,8 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		bgColor: string;
 	}>();
+
+	const andererKurs = ref<GostBlockungsergebnisKurs | undefined | null>(undefined);
 
 	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {
 		const result = new Map<number, GostBlockungsergebnisKurs>();
@@ -81,6 +82,11 @@
 
 	async function del_schiene() {
 		await props.removeSchieneKurs(props.kurs);
+	}
+
+	async function doCombineKurs(kurs2 : GostBlockungsergebnisKurs) {
+		andererKurs.value = andererKurs.value === undefined ? null : undefined; // Workaround, um den internen State der Combo-Box zurückzusetzen
+		await props.combineKurs(props.kurs, kurs2);
 	}
 
 </script>
