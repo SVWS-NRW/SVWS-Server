@@ -205,6 +205,13 @@
 		return arr;
 	});
 
+	watch(sortedList, items => {
+		for (const item of items)
+			if (item === data.value)
+				return;
+		data.value = undefined;
+	});
+
 	const filteredList = computed<Item[]>(() => {
 		if (props.autocomplete) {
 			const isCurrent : boolean = (selectedItem.value !== null) && (selectedItem.value !== undefined) && (props.itemText(selectedItem.value) === searchText.value);

@@ -2,28 +2,28 @@
 	<div class="svws-ui-tr !grid-cols-1 -mt-px border-y border-black/10 !border-t-black/10 shadow-inner" :style="{ '--background-color': bgColor }">
 		<div class="pr-3 pl-7 pt-3 pb-4 flex gap-16">
 			<div class="flex flex-col gap-2 my-auto">
-				<span class="text-sm font-bold">Kurs</span>
-				<div class="flex items-center gap-1">
+				<div class="flex items-center gap-4">
+					<span class="text-sm font-bold">Kurs:</span>
+					<svws-ui-button type="icon" @click="del_kurs" title="Kurs entfernen" class="ml-1"><i-ri-delete-bin-line /></svws-ui-button>
 					<svws-ui-button type="secondary" @click="add_kurs" title="Kurs hinzufügen">Hinzufügen</svws-ui-button>
 					<svws-ui-button type="secondary" @click="splitKurs(kurs)">Aufteilen</svws-ui-button>
-					<svws-ui-button type="icon" @click="del_kurs" title="Kurs entfernen" class="ml-1"><i-ri-delete-bin-line /></svws-ui-button>
-				</div>
-			</div>
-			<div class="flex flex-col gap-1 my-auto">
-				<span class="text-sm font-bold">Schienen</span>
-				<div class="flex items-center gap-1">
-					<svws-ui-button type="icon" @click="del_schiene" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
-					<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
-					<svws-ui-button type="icon" @click="add_schiene" size="small"><i-ri-add-line /></svws-ui-button>
+					<template v-if="andereKurse.size > 0">
+						<svws-ui-select :model-value="undefined" @update:model-value="kurs2 => (kurs2 !== undefined && kurs2 !== null) && combineKurs(kurs, kurs2)"
+							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="item => get_kursbezeichnung(item.id)" />
+					</template>
 				</div>
 			</div>
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
 				:add-regel="addRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
-			<div class="flex flex-col gap-1 max-w-[12rem] ml-auto" v-if="andereKurse.size > 0">
-				<span class="text-sm font-bold">Zusammenlegen mit</span>
-				<svws-ui-select :model-value="andererKurs" @update:model-value="kurs2 => doCombineKurs(kurs2 as GostBlockungsergebnisKurs)"
-					title="Kurs auswählen" class="text-sm" headless
-					:item-text="item => get_kursbezeichnung(item.id)" :items="andereKurse.values()" />
+			<div class="flex flex-col gap-1 my-auto">
+				<div class="flex items-center gap-4">
+					<span class="text-sm font-bold">Schienen:</span>
+					<div class="flex gap-1">
+						<svws-ui-button type="icon" @click="del_schiene" size="small" :disabled="kurs.anzahlSchienen <= 1"><i-ri-subtract-line /></svws-ui-button>
+						<div class="mx-1">{{ kurs.anzahlSchienen }}</div>
+						<svws-ui-button type="icon" @click="add_schiene" size="small"><i-ri-add-line /></svws-ui-button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -31,9 +31,9 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag, List } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
 	import type { ComputedRef } from 'vue';
-	import { computed, ref } from 'vue';
+	import { computed } from 'vue';
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
@@ -53,8 +53,6 @@
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		bgColor: string;
 	}>();
-
-	const andererKurs = ref<GostBlockungsergebnisKurs | undefined | null>(undefined);
 
 	const andereKurse: ComputedRef<Map<number, GostBlockungsergebnisKurs>> = computed(() => {
 		const result = new Map<number, GostBlockungsergebnisKurs>();
@@ -82,11 +80,6 @@
 
 	async function del_schiene() {
 		await props.removeSchieneKurs(props.kurs);
-	}
-
-	async function doCombineKurs(kurs2 : GostBlockungsergebnisKurs) {
-		andererKurs.value = andererKurs.value === undefined ? null : undefined; // Workaround, um den internen State der Combo-Box zurückzusetzen
-		await props.combineKurs(props.kurs, kurs2);
 	}
 
 </script>
