@@ -223,7 +223,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
-				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer })
+				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer, zwischenspeicher: undefined })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
