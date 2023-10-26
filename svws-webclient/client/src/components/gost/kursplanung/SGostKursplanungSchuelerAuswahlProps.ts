@@ -6,7 +6,7 @@ export interface KursplanungSchuelerAuswahlProps {
 	setSchueler: (schueler: SchuelerListeEintrag) => Promise<void>;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	schueler: SchuelerListeEintrag | undefined;
-	schuelerFilter: GostKursplanungSchuelerFilter;
+	schuelerFilter: () => GostKursplanungSchuelerFilter;
 	faecherManager: GostFaecherManager;
 	config: Config;
 }

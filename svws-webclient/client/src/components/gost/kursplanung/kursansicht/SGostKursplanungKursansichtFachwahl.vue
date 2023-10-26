@@ -29,7 +29,7 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
+			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
 				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 					<svws-ui-checkbox :model-value="getKursauswahl().has(kurs.id)" @update:model-value="getKursauswahl().has(kurs.id) ? getKursauswahl().delete(kurs.id) : getKursauswahl().add(kurs.id)" headless />
 				</div>
@@ -71,7 +71,7 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] === 0}">{{ kursdifferenz(kurs).value[1] }}</span>
@@ -150,13 +150,14 @@
 	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
 	function toggleSchuelerFilterFachwahl(idFach: number, kursart: GostKursart) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.fach !== idFach) {
-			props.schuelerFilter.kursart = kursart;
-			props.schuelerFilter.fach = idFach;
+		if (filter.fach !== idFach) {
+			filter.kursart = kursart;
+			filter.fach = idFach;
 		} else {
-			props.schuelerFilter.reset();
+			filter.reset();
 		}
 	}
 
@@ -185,14 +186,15 @@
 	});
 
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.fach !== kurs.fach_id || props.schuelerFilter.kursart?.id !== kurs.kursart) {
-			props.schuelerFilter.kursart = GostKursart.fromID(kurs.kursart);
-			props.schuelerFilter.fach = kurs.fach_id;
+		if (filter.fach !== kurs.fach_id || filter.kursart?.id !== kurs.kursart) {
+			filter.kursart = GostKursart.fromID(kurs.kursart);
+			filter.fach = kurs.fach_id;
 		}
 		else
-			props.schuelerFilter.reset();
+			filter.reset();
 	}
 
 	const kurslehrer = (kurs: GostBlockungKurs) : ComputedRef<LehrerListeEintrag | undefined> => computed(() => {
@@ -276,17 +278,18 @@
 
 	const istKursAusgewaehlt = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
 		const k = props.getErgebnismanager().getKursE(kurs.id);
-		const filter_kurs_id = props.schuelerFilter?.kurs?.id;
+		const filter_kurs_id = props.schuelerFilter()?.kurs?.id;
 		return (k !== undefined) && (k.id === filter_kurs_id);
 	});
 
 	function toggleKursAusgewaehlt(kurs : GostBlockungKurs) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.kurs?.id !== kurs.id)
-			props.schuelerFilter.kurs = kurs;
+		if (filter.kurs?.id !== kurs.id)
+			filter.kurs = kurs;
 		else
-			props.schuelerFilter.reset();
+			filter.reset();
 	}
 
 	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {

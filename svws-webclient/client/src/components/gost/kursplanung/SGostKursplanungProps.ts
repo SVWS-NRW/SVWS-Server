@@ -35,7 +35,7 @@ export interface GostKursplanungProps {
 	config: Config;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
-	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
+	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 	faecherManager: GostFaecherManager;
 	halbjahr: GostHalbjahr;
 	mapLehrer: Map<number, LehrerListeEintrag>;
