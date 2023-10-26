@@ -19,7 +19,7 @@
 			</template>
 		</svws-ui-modal>
 		<div class="flex gap-4">
-			<div class="text-sm font-bold">Lehrkräfte:</div>
+			<div class="text-sm font-bold">Zusatzkräfte:</div>
 			<div class="inline-flex gap-1" :class="{'-mt-1': anzahl_zusatzkraefte}">
 				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer?.kuerzel).join(", ") }}</div>
 				<svws-ui-button :type="anzahl_zusatzkraefte ? 'transparent' : 'secondary'" @click="toggle_zusatzkraefte_modal">

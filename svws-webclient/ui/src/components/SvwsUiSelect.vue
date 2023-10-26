@@ -54,7 +54,7 @@
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
-	type InputDataType = Item | null | undefined;
+	type SelectDataType = Item | null | undefined;
 
 	const props = withDefaults(defineProps<{
 		label?: string;
@@ -67,7 +67,7 @@
 		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
 		itemFilter?: (items: Item[], searchText: string) => Item[];
-		modelValue: InputDataType;
+		modelValue: SelectDataType;
 		useNull?: boolean;
 		headless?: boolean;
 		removable?: boolean;
@@ -89,7 +89,7 @@
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: InputDataType): void;
+		(e: "update:modelValue", items: SelectDataType): void;
 		(e: "blur", event: Event): void;
 	}>();
 
@@ -119,7 +119,7 @@
 		return props.itemText(selectedItem.value);
 	}
 
-	function onInput(value: string | number) {
+	function onInput(value: string) {
 		if (props.autocomplete && (refList.value === null) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
 			openListbox();
 		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
@@ -144,11 +144,11 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const data = shallowRef<InputDataType>(props.modelValue);
+	const data = shallowRef<SelectDataType>(props.modelValue);
 
-	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value: SelectDataType) => updateData(value), { immediate: false });
 
-	function updateData(value: InputDataType) {
+	function updateData(value: SelectDataType) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
 			return;
 		if (data.value === value)
@@ -309,10 +309,10 @@
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-	const content = computed<InputDataType>(() => data.value);
+	const content = computed<SelectDataType>(() => data.value);
 
 	defineExpose<{
-		content: ComputedRef<InputDataType>,
+		content: ComputedRef<SelectDataType>,
 		reset: () => void,
 	}>({ content, reset });
 

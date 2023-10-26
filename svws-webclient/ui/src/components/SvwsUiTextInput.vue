@@ -105,7 +105,7 @@
 		modelValue: null,
 		placeholder: "",
 		statistics: false,
-		valid: ()=>true,
+		valid: () => true,
 		disabled: false,
 		required: false,
 		readonly: false,

@@ -75,7 +75,7 @@
 			return regel.value.parameter.get(1);
 		},
 		set: (value) => {
-			if (regel.value)
+			if (regel.value !== undefined)
 				regel.value.parameter.set(1, value)
 		}
 	})

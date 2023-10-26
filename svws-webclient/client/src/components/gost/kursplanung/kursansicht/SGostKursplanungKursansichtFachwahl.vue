@@ -106,7 +106,7 @@
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
 							}"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
-							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
+							{{ getSchuelerAnzahl(kurs.id) }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
@@ -354,6 +354,12 @@
 			regel.parameter.add(s.nummer);
 			await props.addRegel(regel);
 		}
+	}
+
+	function getSchuelerAnzahl(idKurs: number) : string {
+		const aktive = props.getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(idKurs);
+		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
+		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
 	}
 
 </script>

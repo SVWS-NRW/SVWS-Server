@@ -15,7 +15,7 @@
 			aria-autocomplete="list"
 			:aria-controls="showList ? listIdPrefix : null"
 			:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-			@update:model-value="onInput"
+			@update:model-value="value => searchText = value"
 			@click="toggleListBox"
 			@focus="onInputFocus"
 			@blur="onInputBlur"
@@ -125,10 +125,6 @@
 
 	function generateInputText() {
 		return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
-	}
-
-	function onInput(value: string | number) {
-		searchText.value = "" + value;
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
