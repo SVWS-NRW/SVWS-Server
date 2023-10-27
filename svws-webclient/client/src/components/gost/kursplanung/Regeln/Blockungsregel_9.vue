@@ -63,7 +63,7 @@
 			return kurs || new GostBlockungKurs()
 		},
 		set: (value) => {
-			if (regel.value)
+			if (regel.value !== undefined)
 				regel.value.parameter.set(0, value.id)
 		}
 	});
@@ -76,7 +76,7 @@
 		},
 		set: (value) => {
 			if (regel.value !== undefined)
-				regel.value.parameter.set(1, Number(value))
+				regel.value.parameter.set(1, value)
 		}
 	})
 
