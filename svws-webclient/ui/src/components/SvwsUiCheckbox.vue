@@ -122,7 +122,7 @@
 		}
 
 		&.svws-headless {
-			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold opacity-50;
+			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold opacity-50 p-0;
 
 			&:before {
 				content: '';
