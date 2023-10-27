@@ -1,5 +1,5 @@
 <template>
-	<div v-if="stammdaten() !== null" class="page--flex">
+	<div v-if="schuelerListeManager().hasDaten()" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
@@ -8,10 +8,10 @@
 						<span>{{ vorname }} {{ nachname }}</span>
 						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 							ID:
-							{{ stammdaten()?.id || '—' }}
+							{{ schuelerListeManager().daten().id }}
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ inputKlasse ? inputKlasse : '–' }}</span>
+					<span class="svws-subline">{{ inputKlasse === null ? '–' : inputKlasse }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -27,29 +27,28 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 
 	const props = defineProps<SchuelerAppProps>();
 
-	const foto: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten()?.foto ?? undefined;
+	const foto = computed<string | undefined>(() => {
+		return props.schuelerListeManager().daten().foto ?? undefined;
 	});
 
-	const nachname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten()?.nachname;
+	const nachname = computed<string>(() => {
+		return props.schuelerListeManager().daten().nachname;
 	});
 
-	const vorname: ComputedRef<string | undefined> = computed(() => {
-		return props.stammdaten()?.vorname;
+	const vorname = computed<string>(() => {
+		return props.schuelerListeManager().daten().vorname;
 	});
 
-	const inputKlasse: ComputedRef<string | false> = computed(() => {
-		if (props.auswahl === null)
-			return false;
-		return props.schuelerListeManager().klassen.get(props.auswahl.idKlasse)?.kuerzel ?? false;
+	const inputKlasse = computed<string | null>(() => {
+		if (!props.schuelerListeManager().hasDaten())
+			return null;
+		return props.schuelerListeManager().klassen.get(props.schuelerListeManager().auswahl().idKlasse)?.kuerzel ?? null;
 	});
 
 </script>

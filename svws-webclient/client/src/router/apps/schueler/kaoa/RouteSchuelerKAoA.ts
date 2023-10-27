@@ -19,7 +19,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
-		super.isHidden = (params?: RouteParams) => routeSchueler.data.auswahl === undefined;
+		super.isHidden = (params?: RouteParams) => !routeSchueler.data.schuelerListeManager.hasDaten();
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -28,11 +28,11 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		if (this.parent === undefined)
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.id === undefined) {
-			await this.data.ladeDaten(undefined);
+			await this.data.ladeDaten(null);
 		} else {
 			const id = parseInt(to_params.id);
 			try {
-				await this.data.ladeDaten(this.parent.data.mapSchueler.get(id));
+				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.schueler.get(id));
 			} catch(error) {
 				return routeSchueler.getRoute(id);
 			}

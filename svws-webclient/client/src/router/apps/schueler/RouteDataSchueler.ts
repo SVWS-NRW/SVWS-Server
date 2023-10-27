@@ -14,18 +14,14 @@ import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individuald
 
 interface RouteStateSchueler {
 	idSchuljahresabschnitt: number,
-	auswahl: SchuelerListeEintrag | null;
 	schuelerListeManager: SchuelerListeManager;
-	stammdaten: SchuelerStammdaten | null;
 	view: RouteNode<any, any>;
 }
 
 export class RouteDataSchueler {
 	private static _defaultState : RouteStateSchueler = {
 		idSchuljahresabschnitt: -1,
-		auswahl: null,
 		schuelerListeManager: new SchuelerListeManager(new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
-		stammdaten: null,
 		view: routeSchuelerIndividualdaten,
 	};
 
@@ -55,6 +51,7 @@ export class RouteDataSchueler {
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
+		// Lese die grundlegenden Daten für den Schuljahresabschnitt ein und erstelle den Schülerlisten-Manager zunächst ohne Auswahl
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
@@ -63,17 +60,20 @@ export class RouteDataSchueler {
 		const schuelerListeManager = new SchuelerListeManager(listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		const schuelerVorher = this._state.value.auswahl === null ? null : schuelerListeManager.schueler.get(this._state.value.auswahl.id);
-		const auswahl = (schuelerVorher === null)
-			? schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0)
-			: schuelerVorher;
+		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen
+		const auswahlVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
+		let auswahl = null;
+		if ((auswahlVorher !== null) && schuelerListeManager.schueler.has(auswahlVorher.id))
+			auswahl = schuelerListeManager.schueler.getOrException(auswahlVorher.id);
+		if (auswahl === null)
+			auswahl = schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);
-		const view = schuelerVorher === null ? routeSchuelerIndividualdaten : this._state.value.view;
+		schuelerListeManager.setDaten(stammdaten);
+		// Setze ggf. den Tab in der Schüler-Applikation und setze den neu erzeugten Routing-State
+		const view = auswahlVorher === null ? routeSchuelerIndividualdaten : this._state.value.view;
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt,
-			auswahl,
 			schuelerListeManager,
-			stammdaten,
 			view
 		});
 	}
@@ -84,17 +84,20 @@ export class RouteDataSchueler {
 	 * @param schueler   der ausgewählte Schüler
 	 */
 	public async setSchueler(schueler: SchuelerListeEintrag | null) {
-		if (schueler?.id === this._state.value.auswahl?.id)
+		if ((schueler === null) && (!this.schuelerListeManager.hasDaten()))
 			return;
 		if ((schueler === null) || (this.schuelerListeManager.schueler.list().isEmpty())) {
-			this.setPatchedState({ auswahl : null, stammdaten : null });
+			this.schuelerListeManager.setDaten(null);
+			this.commit();
 			return;
 		}
-		const auswahl = (this.schuelerListeManager.schueler.get(schueler.id) === null)
-			? this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0)
-			: schueler;
+		if ((schueler !== null) && (this.schuelerListeManager.hasDaten() && (schueler.id === this.schuelerListeManager.auswahl().id)))
+			return;
+		let auswahl = this.schuelerListeManager.schueler.get(schueler.id);
+		if (auswahl === null)
+			auswahl = this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);
-		this.setPatchedState({ auswahl, stammdaten });
+		this.schuelerListeManager.setDaten(stammdaten);
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -108,32 +111,21 @@ export class RouteDataSchueler {
 		return this._state.value.view;
 	}
 
-	get auswahl(): SchuelerListeEintrag | null {
-		return this._state.value.auswahl;
-	}
-
-	get hatStammdaten(): boolean {
-		return this._state.value.stammdaten !== null;
-	}
-
-	get stammdaten(): SchuelerStammdaten {
-		if (this._state.value.stammdaten === null)
-			throw new Error("Unerwarteter Fehler: Stammdaten nicht initialisiert");
-		return this._state.value.stammdaten;
-	}
-
 	get schuelerListeManager(): SchuelerListeManager {
 		return this._state.value.schuelerListeManager;
 	}
 
 	patch = async (data : Partial<SchuelerStammdaten>) => {
-		if (this.auswahl === null)
+		if (!this.schuelerListeManager.hasDaten())
 			return;
-		api.server.patchSchuelerStammdaten(data, api.schema, this.auswahl.id).then(() => {
-			const stammdaten = this.stammdaten;
-			this.setPatchedState({ stammdaten: Object.assign(stammdaten, data) });
-			// TODO Bei Anpassungen von nachname, vorname -> routeSchueler: Schülerliste aktualisieren...
-		}).catch((e) => console.log(e))
+		const idSchueler = this.schuelerListeManager.auswahl().id;
+		const stammdaten = this.schuelerListeManager.daten();
+		if (stammdaten === null)
+			return;
+		await api.server.patchSchuelerStammdaten(data, api.schema, idSchueler);
+		Object.assign(stammdaten, data);
+		this.schuelerListeManager.setDaten(stammdaten);
+		this.commit();
 	}
 
 	gotoSchueler = async (value: SchuelerListeEintrag | null) => {
@@ -146,7 +138,7 @@ export class RouteDataSchueler {
 	}
 
 	setFilter = async () => {
-		if (!this.hatStammdaten) {
+		if (!this.schuelerListeManager.hasDaten()) {
 			const listFiltered = this.schuelerListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
 				await this.gotoSchueler(listFiltered.get(0));

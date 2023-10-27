@@ -19,8 +19,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { DataTableColumn } from "@ui";
+
 	import type { SchuelerAdressenProps } from "./SSChuelerAdressenProps";
 
 	defineProps<SchuelerAdressenProps>();
+
 </script>

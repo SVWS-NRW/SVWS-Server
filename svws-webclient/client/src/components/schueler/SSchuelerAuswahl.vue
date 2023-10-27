@@ -7,7 +7,8 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clicked="schuelerListeManager().hasDaten() ? schuelerListeManager().auswahl() : null" @update:clicked="gotoSchueler"
+				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" clickable selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
@@ -70,7 +71,7 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung} from "@core";
-	import { LogConsumerConsole, SchuelerStatus } from "@core";
+	import { SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
@@ -115,7 +116,7 @@
 	]
 
 	watch(() => props.schuelerListeManager().filtered(), async (neu) => {
-		if (props.auswahl && neu.contains(props.auswahl) === false)
+		if (props.schuelerListeManager().hasDaten() && neu.contains(props.schuelerListeManager().auswahl()) === false)
 			await props.gotoSchueler(neu.isEmpty() ? null : neu.get(0));
 	})
 

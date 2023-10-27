@@ -283,7 +283,7 @@ public class SchuelerListeManager {
 	 * @return true, wenn Daten vorliegen, und ansonsten false
 	 */
 	public boolean hasDaten() {
-		return _daten != null;
+		return this._daten != null;
 	}
 
 
@@ -292,8 +292,10 @@ public class SchuelerListeManager {
 	 *
 	 * @return die Stammdaten
 	 */
-	public SchuelerStammdaten daten() {
-		return _daten;
+	public @NotNull SchuelerStammdaten daten() {
+		if (this._daten == null)
+			throw new DeveloperNotificationException("Es exitsiert derzeit keine Schülerauswahl");
+		return this._daten;
 	}
 
 
@@ -348,6 +350,16 @@ public class SchuelerListeManager {
 		final @NotNull SchuelerListeEintrag eintrag = this.schueler.getOrException(this._daten.id);
 		eintrag.idKlasse = ((idKlasse == null) || (idKlasse < 0)) ? -1 : idKlasse;
 		this.orderSet(this.orderGet());
+	}
+
+
+	/**
+	 * Gibt die ID der Auswahl zurück. Ist keine Auswahl vorhanden, so wird null zurückgegeben.
+	 *
+	 * @return die ID oder null
+	 */
+	public Long auswahlID() {
+		return this._daten == null ? null : this._daten.id;
 	}
 
 

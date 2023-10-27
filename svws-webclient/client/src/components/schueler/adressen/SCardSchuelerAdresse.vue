@@ -48,7 +48,6 @@
 <script setup lang="ts">
 
 	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
@@ -65,25 +64,25 @@
 	}>();
 
 
-	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
+	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
 		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
-	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+	const inputBetreuungslehrer = computed<LehrerListeEintrag | undefined>({
 		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
 	/** Adresse */
 
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
+	const inputWohnortID = computed<OrtKatalogEintrag | undefined>({
 		get: () => props.betriebsStammdaten.ort_id === null ? undefined : props.mapOrte.get(props.betriebsStammdaten.ort_id),
 		set: (value) => void props.patchBetrieb({ ort_id: value === undefined ? null : value.id }, props.betriebsStammdaten.id)
 	});
 
 
-	const anschreiben: WritableComputedRef<boolean> = computed({
+	const anschreiben = computed<boolean>({
 		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});

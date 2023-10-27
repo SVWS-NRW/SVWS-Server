@@ -109,9 +109,7 @@ export class RouteDataSchuelerLernabschnitte {
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
 		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt);
-		let schueler = routeSchueler.data.auswahl;
-		if (schueler === undefined)
-			schueler = new SchuelerListeEintrag();
+		const schueler = routeSchueler.data.schuelerListeManager.auswahl();
 		const manager = new SchuelerLernabschnittManager(schueler, daten, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
 		curState = Object.assign({ ... curState }, { auswahl: found, daten, manager });
 		return curState;

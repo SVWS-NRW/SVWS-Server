@@ -1,7 +1,6 @@
 import type { SchuelerListeEintrag, Schuljahresabschnitt, SchuelerListeManager } from "@core";
 
 export interface SchuelerAuswahlProps {
-	auswahl: SchuelerListeEintrag | null;
 	schuelerListeManager: () => SchuelerListeManager;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;

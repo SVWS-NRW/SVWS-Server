@@ -60,7 +60,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.schueler.get(id) : null;
 		await this.data.setSchueler(eintrag);
-		if (!this.data.hatStammdaten) {
+		if (!this.data.schuelerListeManager.hasDaten()) {
 			if (to.name === this.name) {
 				const listFiltered = this.data.schuelerListeManager.filtered();
 				if (listFiltered.isEmpty())
@@ -70,7 +70,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			return this.getRoute();
 		}
 		if (to.name === this.name)
-			return this.getChildRoute(this.data.stammdaten.id);
+			return this.getChildRoute(this.data.schuelerListeManager.daten().id);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
@@ -89,7 +89,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
@@ -102,8 +101,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
-			auswahl: this.data.auswahl,
-			stammdaten: () => this.data.auswahl === null ? null : this.data.stammdaten,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
@@ -131,7 +128,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
 		await this.data.setView(node);
 	}
 

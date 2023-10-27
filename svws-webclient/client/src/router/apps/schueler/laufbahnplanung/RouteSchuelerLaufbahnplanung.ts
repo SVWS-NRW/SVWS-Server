@@ -20,9 +20,9 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {
-			if (routeSchueler.data.auswahl === undefined)
+			if (!routeSchueler.data.schuelerListeManager.hasDaten())
 				return false;
-			const abiturjahr = routeSchueler.data.auswahl?.abiturjahrgang;
+			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
 			return !(abiturjahr && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);

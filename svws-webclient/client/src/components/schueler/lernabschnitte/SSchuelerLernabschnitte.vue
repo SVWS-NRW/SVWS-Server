@@ -50,7 +50,9 @@
 </style>
 
 <style lang="postcss">
-.svws-select-lernabschnitt .text-input-component {
-	@apply text-headline-md w-fit;
-}
+
+	.svws-select-lernabschnitt .text-input-component {
+		@apply text-headline-md w-fit;
+	}
+
 </style>

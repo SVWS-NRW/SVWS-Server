@@ -27,7 +27,6 @@
 
 	import type { BetriebStammdaten } from "@core";
 	import { BetriebAnsprechpartner } from "@core";
-	import type { Ref } from 'vue';
 	import { ref } from 'vue';
 
 	const props = defineProps<{
@@ -38,7 +37,7 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const ansprechpartner : Ref<BetriebAnsprechpartner> = ref(new BetriebAnsprechpartner())
+	const ansprechpartner = ref<BetriebAnsprechpartner>(new BetriebAnsprechpartner())
 
 	async function save() {
 		ansprechpartner.value.betrieb_id = props.betriebsStammdaten.id;

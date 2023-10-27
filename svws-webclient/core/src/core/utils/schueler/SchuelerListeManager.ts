@@ -324,7 +324,9 @@ export class SchuelerListeManager extends JavaObject {
 	 *
 	 * @return die Stammdaten
 	 */
-	public daten() : SchuelerStammdaten | null {
+	public daten() : SchuelerStammdaten {
+		if (this._daten === null)
+			throw new DeveloperNotificationException("Es exitsiert derzeit keine Schülerauswahl")
 		return this._daten;
 	}
 
@@ -370,6 +372,15 @@ export class SchuelerListeManager extends JavaObject {
 		const eintrag : SchuelerListeEintrag = this.schueler.getOrException(this._daten.id);
 		eintrag.idKlasse = ((idKlasse === null) || (idKlasse < 0)) ? -1 : idKlasse;
 		this.orderSet(this.orderGet());
+	}
+
+	/**
+	 * Gibt die ID der Auswahl zurück. Ist keine Auswahl vorhanden, so wird null zurückgegeben.
+	 *
+	 * @return die ID oder null
+	 */
+	public auswahlID() : number | null {
+		return this._daten === null ? null : this._daten.id;
 	}
 
 	/**

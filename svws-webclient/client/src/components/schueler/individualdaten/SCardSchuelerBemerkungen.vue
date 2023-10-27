@@ -1,24 +1,20 @@
 <template>
 	<svws-ui-content-card class="col-span-full">
-		<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data().bemerkungen" resizeable="vertical" autoresize
-			@change="bemerkungen => doPatch({ bemerkungen: bemerkungen === null ? '' : bemerkungen })" />
+		<svws-ui-textarea-input placeholder="Bemerkungen" :model-value="data.bemerkungen" resizeable="vertical" autoresize
+			@change="bemerkungen => patch({ bemerkungen: bemerkungen === null ? '' : bemerkungen })" />
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { SchuelerStammdaten } from "@core";
+	import { computed } from "vue";
+	import type { SchuelerListeManager, SchuelerStammdaten } from "@core";
 
 	const props = defineProps<{
-		data: () => SchuelerStammdaten;
+		schuelerListeManager: () => SchuelerListeManager;
+		patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<SchuelerStammdaten>): void;
-	}>()
-
-	function doPatch(data: Partial<SchuelerStammdaten>) {
-		emit('patch', data);
-	}
+	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
 
 </script>
