@@ -16,7 +16,6 @@ interface RouteStateSchueler {
 	idSchuljahresabschnitt: number,
 	auswahl: SchuelerListeEintrag | null;
 	schuelerListeManager: SchuelerListeManager;
-	filtered: List<SchuelerListeEintrag>;
 	stammdaten: SchuelerStammdaten | null;
 	view: RouteNode<any, any>;
 }
@@ -26,7 +25,6 @@ export class RouteDataSchueler {
 		idSchuljahresabschnitt: -1,
 		auswahl: null,
 		schuelerListeManager: new SchuelerListeManager(new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
-		filtered: new ArrayList<SchuelerListeEintrag>(),
 		stammdaten: null,
 		view: routeSchuelerIndividualdaten,
 	};
@@ -65,10 +63,9 @@ export class RouteDataSchueler {
 		const schuelerListeManager = new SchuelerListeManager(listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		const filtered = schuelerListeManager.filtered();
 		const schuelerVorher = this._state.value.auswahl === null ? null : schuelerListeManager.schueler.get(this._state.value.auswahl.id);
 		const auswahl = (schuelerVorher === null)
-			? filtered.isEmpty() ? null : filtered.get(0)
+			? schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0)
 			: schuelerVorher;
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		const view = schuelerVorher === null ? routeSchuelerIndividualdaten : this._state.value.view;
@@ -76,7 +73,6 @@ export class RouteDataSchueler {
 			idSchuljahresabschnitt,
 			auswahl,
 			schuelerListeManager,
-			filtered,
 			stammdaten,
 			view
 		});
@@ -95,7 +91,7 @@ export class RouteDataSchueler {
 			return;
 		}
 		const auswahl = (this.schuelerListeManager.schueler.get(schueler.id) === null)
-			? this._state.value.filtered.isEmpty() ? null : this._state.value.filtered.get(0)
+			? this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0)
 			: schueler;
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.setPatchedState({ auswahl, stammdaten });
