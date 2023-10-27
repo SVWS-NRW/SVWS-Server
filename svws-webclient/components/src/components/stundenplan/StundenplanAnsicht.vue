@@ -89,11 +89,11 @@
 						<div v-if="zeitrasterHatUnterrichtMitWochentyp(wochentag.id, stunde)" class="svws-multiple" :style="`grid-template-columns: repeat(${manager().stundenplanGetWochenTypModell()}, minmax(0, 1fr)`">
 							<template v-for="wt in manager().getWochenTypModell()" :key="wt">
 								<div class="border-r border-black/25 p-1 last:border-r-0 flex flex-col" :style="`grid-column-start: ${wt}`">
-									<template v-if="getUnterricht(wochentag, stunde, wt, -1).size() > 0">
-										<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
-									</template>
 									<template v-if="mode !== 'klasse'">
 										<!-- Diese Ansicht hat keine Anzeige der Schienen (Schüler, Lehrer) -->
+										<template v-if="getUnterricht(wochentag, stunde, wt, 0).size() > 0">
+											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+										</template>
 										<div v-for="unterricht in getUnterricht(wochentag, stunde, wt, 0)" :key="unterricht.id"
 											class="svws-ui-stundenplan--unterricht svws-compact"
 											:class="{'flex-grow': getUnterricht(wochentag, stunde, wt, 0).size() === 1}"
@@ -105,6 +105,9 @@
 										</div>
 									</template>
 									<template v-else v-for="schiene in [{id: -1}, ...getSchienen(wochentag, stunde, wt)]" :key="schiene.id">
+										<template v-if="getUnterricht(wochentag, stunde, wt, schiene.id).size() > 0">
+											<div class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0"> {{ manager().stundenplanGetWochenTypAsString(wt) }}</div>
+										</template>
 										<div :id="schiene.id > -1 ? `schiene-${getUnterricht(wochentag, stunde, wt, schiene.id).hashCode().toString()}`: ''">
 											<div v-if="'bezeichnung' in schiene" class="col-span-full text-sm font-bold text-center mb-1 py-1 print:mb-0 cursor-grab"
 												:draggable="isDraggable()" @dragstart="onDrag(getUnterricht(wochentag, stunde, wt, schiene.id), $event)" @dragend="onDrag(undefined)">
