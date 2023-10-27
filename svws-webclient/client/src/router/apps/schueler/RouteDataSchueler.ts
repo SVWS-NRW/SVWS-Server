@@ -2,7 +2,7 @@ import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, Jah
 import type { RouteNode } from "~/router/RouteNode";
 import { shallowRef } from "vue";
 
-import { SchuelerListeManager, ArrayList} from "@core";
+import { SchuelerListeManager, ArrayList } from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
@@ -21,7 +21,7 @@ interface RouteStateSchueler {
 export class RouteDataSchueler {
 	private static _defaultState : RouteStateSchueler = {
 		idSchuljahresabschnitt: -1,
-		schuelerListeManager: new SchuelerListeManager(new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
+		schuelerListeManager: new SchuelerListeManager(null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
 		view: routeSchuelerIndividualdaten,
 	};
 
@@ -57,7 +57,7 @@ export class RouteDataSchueler {
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listAbiturjahrgaenge = api.schulform.daten.hatGymOb ? await api.server.getGostAbiturjahrgaenge(api.schema) : new ArrayList<GostJahrgang>();
-		const schuelerListeManager = new SchuelerListeManager(listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
+		const schuelerListeManager = new SchuelerListeManager(api.schulform, listSchueler, listJahrgaenge, listKlassen, listKurse, api.schuleStammdaten.abschnitte, listAbiturjahrgaenge);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		schuelerListeManager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen

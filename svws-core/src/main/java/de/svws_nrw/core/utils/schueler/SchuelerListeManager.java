@@ -17,6 +17,7 @@ import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
@@ -84,6 +85,9 @@ public class SchuelerListeManager {
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
 	private @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order = Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true));
 
+	/** Die Schulform der Schule */
+	private final Schulform _schulform;
+
 	/** Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist. */
 	private SchuelerStammdaten _daten = null;
 
@@ -91,6 +95,7 @@ public class SchuelerListeManager {
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schulform               die Schulform der Schule
 	 * @param schueler                die Liste der Schüler
 	 * @param jahrgaenge              die Liste des Jahrgangskatalogs
 	 * @param klassen                 die Liste des Klassenkatalogs
@@ -98,12 +103,14 @@ public class SchuelerListeManager {
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public SchuelerListeManager(final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
+	public SchuelerListeManager(final Schulform schulform,
+			final @NotNull List<@NotNull SchuelerListeEintrag> schueler,
 			final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge,
 			final @NotNull List<@NotNull KlassenListeEintrag> klassen,
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
+		this._schulform = schulform;
 		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerSchuelerAuswahlChanged);
 		initSchueler();
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
@@ -111,7 +118,8 @@ public class SchuelerListeManager {
 		this.kurse = new AttributMitAuswahl<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
 		this.schuljahresabschnitte = new AttributMitAuswahl<>(schuljahresabschnitte, _schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, _eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl<>(abiturjahrgaenge, _abiturjahrgangToId, GostAbiturjahrUtils.comparator, _eventHandlerFilterChanged);
-		this.schulgliederungen = new AttributMitAuswahl<>(Arrays.asList(Schulgliederung.values()), _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
+		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
+		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
 	}
 
@@ -274,6 +282,18 @@ public class SchuelerListeManager {
 		tmpList.sort(comparator);
 		_filtered = tmpList;
 		return _filtered;
+	}
+
+
+	/**
+	 * Gibt die Schulform der Schule des Schülers zurück.
+	 *
+	 * @return die Schulform der Schule
+	 */
+	public @NotNull Schulform schulform() {
+		if (this._schulform == null)
+			throw new DeveloperNotificationException("Der Schülerlisten-Manager sollte nur mit einer korrekt gesetzten Schulform verwendet werden.");
+		return this._schulform;
 	}
 
 

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
+import { Schulform } from '../../../core/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { KlassenListeEintrag } from '../../../core/data/klassen/KlassenListeEintrag';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
@@ -126,6 +127,11 @@ export class SchuelerListeManager extends JavaObject {
 	private _order : List<Pair<string, boolean>> = Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true));
 
 	/**
+	 * Die Schulform der Schule
+	 */
+	private readonly _schulform : Schulform | null;
+
+	/**
 	 * Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist.
 	 */
 	private _daten : SchuelerStammdaten | null = null;
@@ -134,6 +140,7 @@ export class SchuelerListeManager extends JavaObject {
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
 	 *
+	 * @param schulform               die Schulform der Schule
 	 * @param schueler                die Liste der Schüler
 	 * @param jahrgaenge              die Liste des Jahrgangskatalogs
 	 * @param klassen                 die Liste des Klassenkatalogs
@@ -141,8 +148,9 @@ export class SchuelerListeManager extends JavaObject {
 	 * @param schuljahresabschnitte   die Liste der Schuljahresabschnitte
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
-	public constructor(schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
+	public constructor(schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
 		super();
+		this._schulform = schulform;
 		this.schueler = new AttributMitAuswahl(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator, SchuelerListeManager._eventHandlerSchuelerAuswahlChanged);
 		this.initSchueler();
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
@@ -150,7 +158,8 @@ export class SchuelerListeManager extends JavaObject {
 		this.kurse = new AttributMitAuswahl(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
 		this.schuljahresabschnitte = new AttributMitAuswahl(schuljahresabschnitte, SchuelerListeManager._schuljahresabschnittToId, SchuljahresabschnittsUtils.comparator, this._eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl(abiturjahrgaenge, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
-		this.schulgliederungen = new AttributMitAuswahl(Arrays.asList(...Schulgliederung.values()), SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
+		this.schulgliederungen = new AttributMitAuswahl(gliederungen, SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 	}
 
@@ -308,6 +317,17 @@ export class SchuelerListeManager extends JavaObject {
 		tmpList.sort(comparator);
 		this._filtered = tmpList;
 		return this._filtered;
+	}
+
+	/**
+	 * Gibt die Schulform der Schule des Schülers zurück.
+	 *
+	 * @return die Schulform der Schule
+	 */
+	public schulform() : Schulform {
+		if (this._schulform === null)
+			throw new DeveloperNotificationException("Der Schülerlisten-Manager sollte nur mit einer korrekt gesetzten Schulform verwendet werden.")
+		return this._schulform;
 	}
 
 	/**
