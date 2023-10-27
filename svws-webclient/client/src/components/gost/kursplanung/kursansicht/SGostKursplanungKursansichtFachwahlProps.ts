@@ -9,6 +9,7 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	getKursauswahl: () => Set<number>,
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+	patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 	removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 	updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 	patchKurs: (data: Partial<GostBlockungKurs>, kurs_id: number) => Promise<void>;

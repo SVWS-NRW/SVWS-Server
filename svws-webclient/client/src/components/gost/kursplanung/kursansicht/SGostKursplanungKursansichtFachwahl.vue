@@ -130,7 +130,7 @@
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
 				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager"
-				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
+				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel"
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>

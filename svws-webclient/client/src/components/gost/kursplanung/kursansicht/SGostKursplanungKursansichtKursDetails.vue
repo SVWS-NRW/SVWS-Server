@@ -11,6 +11,8 @@
 						<svws-ui-select :model-value="undefined" @update:model-value="kurs2 => (kurs2 !== undefined && kurs2 !== null) && combineKurs(kurs, kurs2)"
 							title="Zusammenlegen mit" class="text-sm" headless :items="andereKurse" :item-text="item => get_kursbezeichnung(item.id)" />
 					</template>
+					<span class="text-sm font-bold">Externe Schüler:</span>
+					<svws-ui-input-number placeholder="externe Schüler" :model-value="getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)" @update:model-value="updateExterne" :min="0" headless />
 				</div>
 			</div>
 			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
@@ -31,7 +33,8 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, LehrerListeEintrag } from "@core";
+	import { GostKursblockungRegelTyp, GostBlockungRegel } from "@core";
 	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
 
@@ -39,6 +42,8 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
+		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		addKurs: (fach_id : number, kursart_id : number) => Promise<GostBlockungKurs | undefined>;
@@ -80,6 +85,29 @@
 
 	async function del_schiene() {
 		await props.removeSchieneKurs(props.kurs);
+	}
+
+	async function updateExterne(anzahl: number | null) {
+		const curr = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.kurs.id);
+		if (curr === anzahl || (anzahl === null) || anzahl < 0)
+			return;
+		const list = props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
+		let regel = undefined;
+		for (const item of list)
+			if (item.parameter.get(0) === props.kurs.id)
+				regel = item;
+		if (regel !== undefined && anzahl === 0)
+			return await props.removeRegel(regel.id);
+		if (regel === undefined){
+			regel = new GostBlockungRegel();
+			regel.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
+			regel.parameter.add(props.kurs.id);
+			regel.parameter.add(1, anzahl);
+			return await props.addRegel(regel)
+		} else {
+			regel.parameter.set(1, anzahl);
+			return await props.patchRegel(regel, regel.id);
+		}
 	}
 
 </script>
