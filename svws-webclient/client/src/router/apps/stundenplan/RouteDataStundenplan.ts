@@ -345,13 +345,15 @@ export class RouteDataStundenplan {
 
 	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster) => {
 		api.status.start();
+		const list = new ArrayList<StundenplanUnterricht>();
 		for (const datum of data) {
 			if (datum.idZeitraster !== zeitraster.id) {
 				await api.server.patchStundenplanUnterricht({ idZeitraster: zeitraster.id }, api.schema, datum.id);
 				datum.idZeitraster = zeitraster.id;
-				this.stundenplanManager.unterrichtPatchAttributes(datum);
+				list.add(datum);
 			}
 		}
+		this.stundenplanManager.unterrichtPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
 	}
