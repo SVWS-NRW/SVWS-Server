@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.data.klassen.KlassenListeEintrag;
 import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.SchuelerStatus;
@@ -82,6 +83,10 @@ public class SchuelerListeManager {
 
 	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
 	private @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order = Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true));
+
+	/** Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist. */
+	private SchuelerStammdaten _daten = null;
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -269,6 +274,95 @@ public class SchuelerListeManager {
 		tmpList.sort(comparator);
 		_filtered = tmpList;
 		return _filtered;
+	}
+
+
+	/**
+	 * Gibt zurück, ob ein Schüler ausgewählt ist und Daten vorliegen.
+	 *
+	 * @return true, wenn Daten vorliegen, und ansonsten false
+	 */
+	public boolean hasDaten() {
+		return _daten != null;
+	}
+
+
+	/**
+	 * Gibt die Stammdaten des aktuell ausgewählten Schülers zurück.
+	 *
+	 * @return die Stammdaten
+	 */
+	public SchuelerStammdaten daten() {
+		return _daten;
+	}
+
+
+	/**
+	 * Setzt die Stammdaten des Schülers. Dabei wird ggf. die Auswahl angepasst.
+	 *
+	 * @param daten   die neuen Stammdaten
+	 *
+	 * @throws DeveloperNotificationException   falls der Schüler nicht in der Liste der Schüler vorhanden ist
+	 */
+	public void setDaten(final SchuelerStammdaten daten) throws DeveloperNotificationException {
+		// Die Auswahl wird zurückgesetzt und es ist kein Schüler mehr ausgewählt
+		if (daten == null) {
+			this._daten = null;
+			return;
+		}
+		// Bestimme den Listen-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler beim Aufruf vor...
+		final @NotNull SchuelerListeEintrag eintrag = this.schueler.getOrException(daten.id);
+		// Passe ggf. die Daten in der Schülerliste an ... (beim Patchen der Daten)
+		boolean updateEintrag = false;
+		if (!daten.vorname.equals(eintrag.vorname)) {
+			eintrag.vorname = daten.vorname;
+			updateEintrag = true;
+		}
+		if (!daten.nachname.equals(eintrag.nachname)) {
+			eintrag.nachname = daten.nachname;
+			updateEintrag = true;
+		}
+		// ... und setze die neue Stammdaten
+		this._daten = daten;
+		// ... und berechne ggf. die Sortierung der Schülerliste neu
+		if (updateEintrag)
+			this.orderSet(this.orderGet());
+	}
+
+
+	/**
+	 * Aktualisiert die Klassen-ID bei dem Schüler
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
+	 */
+	public void updateKlassenID(final Long idKlasse) throws DeveloperNotificationException {
+		// Prüfe, ob überhaupt eine Schüler-Auswahl vorliegt ...
+		if (this._daten == null)
+			throw new DeveloperNotificationException("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.".formatted(idKlasse));
+		// Prüfe, ob die angebene Klassen-ID überhaupt gültig ist ...
+		if ((idKlasse != null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
+			throw new DeveloperNotificationException("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.".formatted(idKlasse));
+		// Bestimme den Listen-Eintrag, passe diesen an und aktualisiere dann ggf. die Sortierung ...
+		final @NotNull SchuelerListeEintrag eintrag = this.schueler.getOrException(this._daten.id);
+		eintrag.idKlasse = ((idKlasse == null) || (idKlasse < 0)) ? -1 : idKlasse;
+		this.orderSet(this.orderGet());
+	}
+
+
+	/**
+	 * Gibt den Eintrag der aktuellen Schülerauswahl in der Liste zurück. Hiefür muss eine
+	 * gültige Auswahl vorliegen. Dies kann ggf. vorher über hasDaten geprüft werden.
+	 *
+	 * @return der Eintrag in der Schülerliste
+	 *
+	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
+	 */
+	public @NotNull SchuelerListeEintrag auswahl() {
+		if (this._daten == null)
+			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Schüler-Auswahl vorliegen.");
+		return this.schueler.getOrException(this._daten.id);
 	}
 
 }

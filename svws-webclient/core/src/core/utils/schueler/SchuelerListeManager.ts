@@ -17,6 +17,7 @@ import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Pair } from '../../../core/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import { SchuelerStammdaten } from '../../../core/data/schueler/SchuelerStammdaten';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
@@ -123,6 +124,11 @@ export class SchuelerListeManager extends JavaObject {
 	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.
 	 */
 	private _order : List<Pair<string, boolean>> = Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true));
+
+	/**
+	 * Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist.
+	 */
+	private _daten : SchuelerStammdaten | null = null;
 
 
 	/**
@@ -302,6 +308,82 @@ export class SchuelerListeManager extends JavaObject {
 		tmpList.sort(comparator);
 		this._filtered = tmpList;
 		return this._filtered;
+	}
+
+	/**
+	 * Gibt zurück, ob ein Schüler ausgewählt ist und Daten vorliegen.
+	 *
+	 * @return true, wenn Daten vorliegen, und ansonsten false
+	 */
+	public hasDaten() : boolean {
+		return this._daten !== null;
+	}
+
+	/**
+	 * Gibt die Stammdaten des aktuell ausgewählten Schülers zurück.
+	 *
+	 * @return die Stammdaten
+	 */
+	public daten() : SchuelerStammdaten | null {
+		return this._daten;
+	}
+
+	/**
+	 * Setzt die Stammdaten des Schülers. Dabei wird ggf. die Auswahl angepasst.
+	 *
+	 * @param daten   die neuen Stammdaten
+	 *
+	 * @throws DeveloperNotificationException   falls der Schüler nicht in der Liste der Schüler vorhanden ist
+	 */
+	public setDaten(daten : SchuelerStammdaten | null) : void {
+		if (daten === null) {
+			this._daten = null;
+			return;
+		}
+		const eintrag : SchuelerListeEintrag = this.schueler.getOrException(daten.id);
+		let updateEintrag : boolean = false;
+		if (!JavaObject.equalsTranspiler(daten.vorname, (eintrag.vorname))) {
+			eintrag.vorname = daten.vorname;
+			updateEintrag = true;
+		}
+		if (!JavaObject.equalsTranspiler(daten.nachname, (eintrag.nachname))) {
+			eintrag.nachname = daten.nachname;
+			updateEintrag = true;
+		}
+		this._daten = daten;
+		if (updateEintrag)
+			this.orderSet(this.orderGet());
+	}
+
+	/**
+	 * Aktualisiert die Klassen-ID bei dem Schüler
+	 *
+	 * @param idKlasse   die ID der Klasse
+	 *
+	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
+	 */
+	public updateKlassenID(idKlasse : number | null) : void {
+		if (this._daten === null)
+			throw new DeveloperNotificationException(JavaString.format("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.", idKlasse))
+		if ((idKlasse !== null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
+			throw new DeveloperNotificationException(JavaString.format("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.", idKlasse))
+		const eintrag : SchuelerListeEintrag = this.schueler.getOrException(this._daten.id);
+		eintrag.idKlasse = ((idKlasse === null) || (idKlasse < 0)) ? -1 : idKlasse;
+		this.orderSet(this.orderGet());
+	}
+
+	/**
+	 * Gibt den Eintrag der aktuellen Schülerauswahl in der Liste zurück. Hiefür muss eine
+	 * gültige Auswahl vorliegen. Dies kann ggf. vorher über hasDaten geprüft werden.
+	 *
+	 * @return der Eintrag in der Schülerliste
+	 *
+	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
+	 */
+	public auswahl() : SchuelerListeEintrag {
+		if (this._daten === null)
+			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Schüler-Auswahl vorliegen.")
+		return this.schueler.getOrException(this._daten.id);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
