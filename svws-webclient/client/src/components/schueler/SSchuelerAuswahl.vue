@@ -7,7 +7,7 @@
 			<abschnitt-auswahl :akt-abschnitt="aktAbschnitt" :abschnitte="abschnitte" :set-abschnitt="setAbschnitt" :akt-schulabschnitt="aktSchulabschnitt" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="rowsFiltered"
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchueler" :items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" clickable selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
 				<template #search>
@@ -28,7 +28,7 @@
 					{{ value === null ? "–" : schuelerListeManager().klassen.get(value)?.kuerzel }}
 				</template>
 				<template #actions>
-					<svws-ui-button v-if="selectedItems.length" type="transparent" @click="showModalGruppenaktionen().value = true">
+					<svws-ui-button v-if="selectedItems.length > 0" type="transparent" @click="showModalGruppenaktionen().value = true">
 						<i-ri-edit-2-line />
 						Auswahl bearbeiten
 					</svws-ui-button>
@@ -52,7 +52,7 @@
 
 		<template #modalContent>
 			<div class="opacity-50 mb-4">
-				{{ selectedItems.splice(0,10).map(schueler => schueler.vorname + ' ' + schueler.nachname).join(', ') }}
+				{{ [ ... selectedItems ].splice(0,10).map(schueler => schueler.vorname + ' ' + schueler.nachname).join(', ') }}
 				{{ selectedItems.length > 10 ? ' und ' + (selectedItems.length - 10) + ' weitere' : '' }}
 			</div>
 			<svws-ui-input-wrapper :grid="4">
@@ -68,9 +68,9 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, watch } from "vue";
+	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsListeEintrag, KlassenListeEintrag, KursListeEintrag, Schulgliederung} from "@core";
-	import { SchuelerStatus } from "@core";
+	import { LogConsumerConsole, SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
 
@@ -114,7 +114,7 @@
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 },
 	]
 
-	watch(()=>props.schuelerListeManager().filtered(), async (neu)=> {
+	watch(() => props.schuelerListeManager().filtered(), async (neu) => {
 		if (props.auswahl && neu.contains(props.auswahl) === false)
 			await props.gotoSchueler(neu.isEmpty() ? null : neu.get(0));
 	})
@@ -221,10 +221,17 @@
 		return schulgliederung.daten.kuerzel;
 	}
 
-	const selectedItems = computed<SchuelerListeEintrag[]>({
-		get: () => props.auswahlGruppe,
-		set: (items) => props.setAuswahlGruppe(items)
-	});
+	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
+
+	function setAuswahl(items : SchuelerListeEintrag[]) {
+		const schuelerauswahl = props.schuelerListeManager().schueler;
+		for (const vorhanden of [ ... schuelerauswahl.auswahl() ])
+			if (!items.includes(vorhanden))
+				schuelerauswahl.auswahlRemove(vorhanden);
+		for (const item of items)
+			schuelerauswahl.auswahlAdd(item);
+		selectedItems.value = [ ... schuelerauswahl.auswahl() ];
+	}
 
 	function onAction(action: string, item: SchuelerListeEintrag) {
 		switch(action) {

@@ -17,7 +17,6 @@ interface RouteStateSchueler {
 	auswahl: SchuelerListeEintrag | null;
 	schuelerListeManager: SchuelerListeManager;
 	filtered: List<SchuelerListeEintrag>;
-	auswahlGruppe: SchuelerListeEintrag[];
 	stammdaten: SchuelerStammdaten | null;
 	view: RouteNode<any, any>;
 }
@@ -28,7 +27,6 @@ export class RouteDataSchueler {
 		auswahl: null,
 		schuelerListeManager: new SchuelerListeManager(new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),
 		filtered: new ArrayList<SchuelerListeEintrag>(),
-		auswahlGruppe: [],
 		stammdaten: null,
 		view: routeSchuelerIndividualdaten,
 	};
@@ -118,10 +116,6 @@ export class RouteDataSchueler {
 		return this._state.value.auswahl;
 	}
 
-	get auswahlGruppe(): SchuelerListeEintrag[] {
-		return this._state.value.auswahlGruppe;
-	}
-
 	get hatStammdaten(): boolean {
 		return this._state.value.stammdaten !== null;
 	}
@@ -166,5 +160,4 @@ export class RouteDataSchueler {
 		this.commit();
 	}
 
-	setAuswahlGruppe = (auswahlGruppe: SchuelerListeEintrag[]) =>	this.setPatchedState({auswahlGruppe});
 }

@@ -2,7 +2,6 @@ import type { SchuelerListeEintrag, Schuljahresabschnitt, SchuelerListeManager }
 
 export interface SchuelerAuswahlProps {
 	auswahl: SchuelerListeEintrag | null;
-	auswahlGruppe: SchuelerListeEintrag[];
 	schuelerListeManager: () => SchuelerListeManager;
 	abschnitte: Map<number, Schuljahresabschnitt>;
 	aktAbschnitt: Schuljahresabschnitt;
@@ -10,6 +9,5 @@ export interface SchuelerAuswahlProps {
 	setAbschnitt: (abschnitt: Schuljahresabschnitt) => void;
 	gotoSchueler: (value: SchuelerListeEintrag | null) => Promise<void>;
 	setFilter: () => Promise<void>;
-	setAuswahlGruppe: (value: SchuelerListeEintrag[]) => void;
 }
 

@@ -90,7 +90,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			auswahlGruppe: this.data.auswahlGruppe,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
@@ -98,7 +97,6 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoSchueler: this.data.gotoSchueler,
 			setFilter: this.data.setFilter,
-			setAuswahlGruppe: this.data.setAuswahlGruppe,
 		};
 	}
 
