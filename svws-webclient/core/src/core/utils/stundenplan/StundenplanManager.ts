@@ -209,11 +209,15 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _klassenmenge_by_idPausenzeit : HashMap<number, List<StundenplanKlasse>> = new HashMap();
 
+	private readonly _klassenmenge_by_idUnterricht : HashMap<number, List<StundenplanKlasse>> = new HashMap();
+
 	private readonly _klassenunterricht_by_idKlasse_and_idFach : HashMap2D<number, number, StundenplanKlassenunterricht> = new HashMap2D();
 
 	private readonly _klassenunterrichtmenge : List<StundenplanKlassenunterricht> = new ArrayList();
 
 	private readonly _klassenunterrichtmenge_by_idKlasse : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
+
+	private readonly _klassenunterrichtmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKlassenunterricht>> = new HashMap2D();
 
 	private readonly _klassenunterrichtmenge_by_idSchueler : HashMap<number, List<StundenplanKlassenunterricht>> = new HashMap();
 
@@ -232,6 +236,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _kursmenge_by_idLehrer : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
 	private readonly _kursmenge_by_idKlasse : HashMap<number, List<StundenplanKurs>> = new HashMap();
+
+	private readonly _kursmenge_by_idKlasse_and_idSchiene : HashMap2D<number, number, List<StundenplanKurs>> = new HashMap2D();
 
 	private readonly _kursmenge_by_idJahrgang : HashMap<number, List<StundenplanKurs>> = new HashMap();
 
@@ -304,6 +310,8 @@ export class StundenplanManager extends JavaObject {
 	private readonly _schienenmenge_by_idJahrgang : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
 	private readonly _schienenmenge_by_idUnterricht : HashMap<number, List<StundenplanSchiene>> = new HashMap();
+
+	private readonly _schienenmenge_by_idKlasse : HashMap<number, List<StundenplanSchiene>> = new HashMap();
 
 	private readonly _schueler_by_id : HashMap<number, StundenplanSchueler> = new HashMap();
 
@@ -548,13 +556,63 @@ export class StundenplanManager extends JavaObject {
 		this.update_pausenaufsichtmenge_by_idSchueler_and_idPausenzeit();
 		this.update_unterrichtmenge_by_idJahrgang();
 		this.update_unterrichtmenge_by_idSchueler();
+		this.update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
 		this.update_unterrichtmenge_by_idKlasse();
 		this.update_unterrichtmenge_by_idKlasse_and_idZeitraster();
+		this.update_klassenmenge_by_idUnterricht();
 		this.update_unterrichtmenge_by_idJahrgang_and_idZeitraster();
 		this.update_unterrichtmenge_by_idSchueler_and_idZeitraster();
+		this.update_schienenmenge_by_idKlasse();
+		this.update_kursmenge_by_idKlasse_and_idSchiene();
+	}
+
+	private update_schienenmenge_by_idKlasse() : void {
+		this._schienenmenge_by_idKlasse.clear();
+		for (const klasse of this._klassenmenge) {
+			const schienenIDs : HashSet<number> = new HashSet();
+			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, klasse.id))
+				schienenIDs.addAll(kurs.schienen);
+			for (const klassenunterricht of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse, klasse.id))
+				schienenIDs.addAll(klassenunterricht.schienen);
+			for (const idSchiene of schienenIDs) {
+				const schiene : StundenplanSchiene = DeveloperNotificationException.ifMapGetIsNull(this._schiene_by_id, idSchiene);
+				MapUtils.addToList(this._schienenmenge_by_idKlasse, klasse.id, schiene);
+			}
+			MapUtils.getOrCreateArrayList(this._schienenmenge_by_idKlasse, klasse.id).sort(StundenplanManager._compSchiene);
+		}
+	}
+
+	private update_kursmenge_by_idKlasse_and_idSchiene() : void {
+		this._kursmenge_by_idKlasse_and_idSchiene.clear();
+		for (const idKlasse of this._kursmenge_by_idKlasse.keySet())
+			for (const kurs of MapUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse, idKlasse))
+				if (kurs.schienen.isEmpty()) {
+					Map2DUtils.addToList(this._kursmenge_by_idKlasse_and_idSchiene, idKlasse, -1, kurs);
+				} else {
+					for (const idSchiene of kurs.schienen)
+						Map2DUtils.addToList(this._kursmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene, kurs);
+				}
+		for (const idKlasse of this._kursmenge_by_idKlasse_and_idSchiene.getKeySet())
+			for (const idSchiene of this._kursmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
+				this._kursmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(StundenplanManager._compKurs);
+	}
+
+	private update_klassenunterrichtmenge_by_idKlasse_and_idSchiene() : void {
+		this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.clear();
+		for (const idKlasse of this._klassenunterrichtmenge_by_idKlasse.keySet())
+			for (const klassenunterricht of MapUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse, idKlasse))
+				if (klassenunterricht.schienen.isEmpty()) {
+					Map2DUtils.addToList(this._klassenunterrichtmenge_by_idKlasse_and_idSchiene, idKlasse, -1, klassenunterricht);
+				} else {
+					for (const idSchiene of klassenunterricht.schienen)
+						Map2DUtils.addToList(this._klassenunterrichtmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene, klassenunterricht);
+				}
+		for (const idKlasse of this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySet())
+			for (const idSchiene of this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getKeySetOf(idKlasse))
+				this._klassenunterrichtmenge_by_idKlasse_and_idSchiene.getNonNullOrException(idKlasse, idSchiene).sort(this._compKlassenunterricht);
 	}
 
 	private update_schienenmenge_by_idUnterricht() : void {
@@ -1184,6 +1242,22 @@ export class StundenplanManager extends JavaObject {
 		this._zeitrastermenge_by_stunde.clear();
 		for (const zeit of this._zeitrastermenge)
 			MapUtils.addToList(this._zeitrastermenge_by_stunde, zeit.unterrichtstunde, zeit);
+	}
+
+	private update_klassenmenge_by_idUnterricht() : void {
+		this._klassenmenge_by_idUnterricht.clear();
+		for (const u of this._unterrichtmenge) {
+			if (u.idKurs === null) {
+				for (const idKlasse of u.klassen) {
+					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, idKlasse);
+					MapUtils.addToListIfNotExists(this._klassenmenge_by_idUnterricht, u.id, klasse);
+				}
+			} else {
+				for (const klasse of MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, u.idKurs)) {
+					MapUtils.addToListIfNotExists(this._klassenmenge_by_idUnterricht, u.id, klasse);
+				}
+			}
+		}
 	}
 
 	private aufsichtsbereichAddOhneUpdate(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
@@ -1970,6 +2044,19 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse einer bestimmten Schiene.
+	 * <br>Hinweis: Ist die ID der Schiene -1, sind alle {@link StundenplanKlassenunterricht}-Objekte ohne Schienenzugehörigkeit gemeint.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanKlassenunterricht}-Objekte der Klasse einer bestimmten Schiene.
+	 */
+	public klassenunterrichtGetMengeByKlasseIdAndSchieneId(idKlasse : number, idSchiene : number) : List<StundenplanKlassenunterricht> {
+		return Map2DUtils.getOrCreateArrayList(this._klassenunterrichtmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanKlassenunterricht}-Objekte des Lehrers.
 	 * <br> Laufzeit: O(1)
 	 *
@@ -2279,6 +2366,19 @@ export class StundenplanManager extends JavaObject {
 		const wochentyp : number = this.kalenderwochenzuordnungGetWochentypOrDefault(e[6], e[5]);
 		const wochentag : Wochentag = Wochentag.fromIDorException(e[3]);
 		return this.kursGetMengeGefiltertByWochentypAndWochentagAndStunde(idsKurs, wochentyp, wochentag, unterrichtstunde);
+	}
+
+	/**
+	 * Liefert eine Liste aller {@link StundenplanKurs}-Objekte der Klasse einer bestimmten Schiene.
+	 * <br>Hinweis: Ist die ID der Schiene -1, sind alle {@link StundenplanKurs}-Objekte ohne Schienenzugehörigkeit gemeint.
+	 *
+	 * @param idKlasse      Die Datenbank-ID der Klasse.
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 *
+	 * @return eine Liste aller {@link StundenplanKurs}-Objekte der Klasse einer bestimmten Schiene.
+	 */
+	public kursGetMengeByKlasseIdAndSchieneId(idKlasse : number, idSchiene : number) : List<StundenplanKurs> {
+		return Map2DUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene);
 	}
 
 	private kursGetWochenminutenISTungerundet(idKurs : number) : number {
@@ -3276,6 +3376,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanSchiene}-Objekte der Klasse.
+	 * <br>Hinweis: Es handelt sich um die Schienen aller {@link StundenplanKurs} und aller {@link StundenplanKlassenunterricht}- Objekte.
+	 *
+	 * @param idKlasse  Die Datenbank-ID der Klasse.
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanSchiene}-Objekte der Klasse.
+	 */
+	public schieneGetMengeByKlasseId(idKlasse : number) : List<StundenplanSchiene> {
+		return MapUtils.getOrCreateArrayList(this._schienenmenge_by_idKlasse, idKlasse);
+	}
+
+	/**
 	 * Liefert eine Liste aller {@link StundenplanSchiene}-Objekte des Lehrers am "wochentag, stunde, wochentyp".
 	 * Falls der Parameter "inklWoche0" TRUE ist und der "wochentyp" größer als 0 ist, wird der Unterricht des Wochentyps 0 auch hinzugefügt.
 	 *
@@ -4206,8 +4318,8 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtHatSchiene(u : StundenplanUnterricht, idSchiene : number) : boolean {
 		const schienen : List<StundenplanSchiene> = MapUtils.getOrCreateArrayList(this._schienenmenge_by_idUnterricht, u.id);
-		if (schienen.isEmpty() && (idSchiene < 0))
-			return true;
+		if (idSchiene < 0)
+			return schienen.isEmpty();
 		for (const schiene of schienen)
 			if (schiene.id === idSchiene)
 				return true;
