@@ -25,8 +25,8 @@ public final class SprachendatenUtils {
     /**
      * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache existiert.
      *
-     * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     * @param sprache   das einstellige Kürzel der Sprache
+     * @param sprachendaten	die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+     * @param sprache   	das einstellige Kürzel der Sprache
      *
      * @return true, falls eine Belegung existiert und ansonsten false
      */
@@ -41,9 +41,10 @@ public final class SprachendatenUtils {
 
     /**
      * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I existiert.
+	 * Die Länge der Belegung sowie deren Anfang und Ende werden nicht berücksichtigt.
      *
      * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     * @param sprache   das einstellige Kürzel der Sprache
+     * @param sprache   	das einstellige Kürzel der Sprache
      *
      * @return true, falls eine Belegung existiert und ansonsten false
      */
@@ -64,28 +65,34 @@ public final class SprachendatenUtils {
 
 
 	/**
-	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert.
+	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert
+	 * und ob diese Jahre am Ende der Sekundarstufe I liegen.
+	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
+	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param sprache das einstellige Kürzel der Sprache
+	 * @param sprache 		das einstellige Kürzel der Sprache
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static boolean hatSprachbelegungMitMin2JahrenDauerInSekI(final Sprachendaten sprachendaten, final String sprache) {
-		return hatSprachbelegungMitMinNJahrenInSekI(sprachendaten, sprache, 2);
+	public static boolean hatSprachbelegungMitMin2JahrenDauerEndeSekI(final Sprachendaten sprachendaten, final String sprache) {
+		return hatSprachbelegungMitMinNJahrenEndeSekI(sprachendaten, sprache, 2);
 	}
 
 
 	/**
-	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 4 Jahren existiert.
+	 * Prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert
+	 * und ob diese Jahre am Ende der Sekundarstufe I liegen.
+	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
+	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param sprache das einstellige Kürzel der Sprache
+	 * @param sprache 		das einstellige Kürzel der Sprache
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	public static boolean hatSprachbelegungMitMin4JahrenDauerInSekI(final Sprachendaten sprachendaten, final String sprache) {
-		return hatSprachbelegungMitMinNJahrenInSekI(sprachendaten, sprache, 4);
+	public static boolean hatSprachbelegungMitMin4JahrenDauerEndeSekI(final Sprachendaten sprachendaten, final String sprache) {
+		return hatSprachbelegungMitMinNJahrenEndeSekI(sprachendaten, sprache, 4);
 	}
 
 
@@ -93,7 +100,7 @@ public final class SprachendatenUtils {
      * Gibt die zu der übergebenen Sprache gehörende Sprachbelegung zurück.
      *
      * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     * @param sprache   das einstellige Kürzel der Sprache
+     * @param sprache   	das einstellige Kürzel der Sprache
      *
      * @return die Sprachbelegung oder null, falls keine existiert
      */
@@ -120,7 +127,7 @@ public final class SprachendatenUtils {
      * sowie Sprachen aus bestimmten Sprachprüfungen.
      *
      * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-     * @param sprache das einstellige Kürzel der Sprache
+     * @param sprache 		das einstellige Kürzel der Sprache
      *
      * @return true, falls die Sprache als fortgeführte Fremdsprache ab EF belegt werden kann, andernfalls false
      */
@@ -130,7 +137,7 @@ public final class SprachendatenUtils {
             return false;
         }
 
-        if (hatSprachbelegungMitMin2JahrenDauerInSekI(sprachendaten, sprache)) {
+        if (hatSprachbelegungMitMin2JahrenDauerEndeSekI(sprachendaten, sprache)) {
             return true;
         }
 
@@ -166,7 +173,7 @@ public final class SprachendatenUtils {
 	 * die nur im Rahmen des HSU belegt oder geprüft wurden.
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param sprache das einstellige Kürzel der Sprache
+	 * @param sprache 		das einstellige Kürzel der Sprache
 	 *
 	 * @return true, falls die Sprache als neu einsetzende Fremdsprache ab EF belegt werden kann, andernfalls false
 	 */
@@ -176,7 +183,7 @@ public final class SprachendatenUtils {
 			return false;
 		}
 
-		if (hatSprachbelegungMitMin2JahrenDauerInSekI(sprachendaten, sprache)) {
+		if (hatSprachbelegungMitMin2JahrenDauerEndeSekI(sprachendaten, sprache)) {
 			return false;
 		}
 
@@ -465,15 +472,24 @@ public final class SprachendatenUtils {
 
 
 	/**
-	 * Hilfsfunktion, die prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. 2 Jahren existiert.
+	 * Hilfsfunktion, die prüft, ob eine unterrichtliche Belegung der übergebenen Sprache in der Sekundarstufe I mit mind. n Jahren existiert
+	 * und ob diese Jahre am Ende der Sekundarstufe I liegen.
+	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
+	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
+	 * Sprachprüfungen werden nicht berücksichtigt.
+	 * Anmerkung: Das Ende Sekundarstufe I wird bei offenem Sprachende stets in der Stufe 10 angesetzt. Dadurch ergibt sich (nur) an einem G8-Gymnasium
+	 * eine Abweichung der Belegungsdauer von einem Jahr zugunsten des Schülers. Da in der APO-GOSt aber nur Sprachen mit mindestens vier Jahren mit
+	 * Beginn bis einschließlich Klasse 7 und Sprachen ab Klasse 8 unterschieden werden, ergeben sich bei der späteren Anwendung dieser Hilfsfunktion
+	 * keine Auswirkungen bei der Zuordnung zu einer dieser Gruppen (es ergeben sich max. 3 Jahre bei Beginn in Klasse 8 und ein Sprachbeginn in Klasse 9
+	 * am Gymnasium G8 gibt es nicht).
 	 *
 	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param sprache das einstellige Kürzel der Sprache
-	 * @param n Anzahl der Sprachbelegung, die mindestens erreicht worden sein müssen.
+	 * @param sprache 		das einstellige Kürzel der Sprache
+	 * @param n 			Anzahl der Sprachbelegung, die mindestens erreicht worden sein müssen. Zulässig sind die Werte 0, 2, 4.
 	 *
 	 * @return true, falls eine Belegung existiert und ansonsten false
 	 */
-	private static boolean hatSprachbelegungMitMinNJahrenInSekI(final Sprachendaten sprachendaten, final String sprache, final int n) {
+	private static boolean hatSprachbelegungMitMinNJahrenEndeSekI(final Sprachendaten sprachendaten, final String sprache, final int n) {
 
 		if (sprachendaten == null || sprachendaten.belegungen == null || sprache == null || "".equals(sprache)) {
 			return false;
@@ -484,6 +500,12 @@ public final class SprachendatenUtils {
 		if (belegung == null) {
 			return false;
 		}
+
+		// Sprachbelegungen mit einem Ende vor der Jahrgangsstufe 9 können nicht am Ende der Sekundarstufe I liegen.
+		// Gleiches gilt für ein Ende in 9.1 und 10.1. Es werden daher nur das Belegungsende null (=offen), 9.2 (Gymnasium G8) und 10.2 zugelassen.
+		// Alle anderen Fälle geben hier false zurück.
+		if (belegung.belegungBisJahrgang != null && ((getJahrgangNumerisch(belegung.belegungBisJahrgang) <= 8) || ((getJahrgangNumerisch(belegung.belegungBisJahrgang) == 9 || getJahrgangNumerisch(belegung.belegungBisJahrgang) == 10)  && belegung.belegungBisAbschnitt != null && belegung.belegungBisAbschnitt == 1)))
+			return false;
 
 		int belegtVonJahrgangNumerisch;
 		int belegtBisJahrgangNumerisch;
@@ -512,16 +534,16 @@ public final class SprachendatenUtils {
 	 * Dabei wird davon ausgegangen, dass Sprachen ohne Ende der Belegung am Ende der Sekundarstufe I belegt wurden.
 	 * Bei einem Schüler der Sek-II wird auch nur die Dauer der Belegung in der Sek-I betrachtet.
 	 * Sprachprüfungen werden nicht berücksichtigt.
-	 * Anmerkung: Das Ende Sekundarstufe I wird stets in der Stufe 10 angesetzt. Dadurch ergibt sich (nur) an einem G8-Gymnasium eine Abweichung der
-	 * Belegungsdauer von einem Jahr zugunsten des Schülers. Da in der APO-GOSt aber nur Sprachen mit mindestens vier Jahren mit Beginn bis
-	 * einschließlich Klasse 7 und Sprachen ab Klasse 8 unterschieden werden, ergeben sich bei der späteren Anwendung dieser Hilfsfunktion keine
-	 * Auswirkungen bei der Zuordnung zu einer dieser Gruppen (es ergeben sich max. 3 Jahre bei Beginn in Klasse 8 und ein Sprachbeginn in Klasse 9
+	 * Anmerkung: Das Ende Sekundarstufe I wird bei offenem Sprachende stets in der Stufe 10 angesetzt. Dadurch ergibt sich (nur) an einem G8-Gymnasium
+	 * eine Abweichung der Belegungsdauer von einem Jahr zugunsten des Schülers. Da in der APO-GOSt aber nur Sprachen mit mindestens vier Jahren mit
+	 * Beginn bis einschließlich Klasse 7 und Sprachen ab Klasse 8 unterschieden werden, ergeben sich bei der späteren Anwendung dieser Hilfsfunktion
+	 * keine Auswirkungen bei der Zuordnung zu einer dieser Gruppen (es ergeben sich max. 3 Jahre bei Beginn in Klasse 8 und ein Sprachbeginn in Klasse 9
 	 * am Gymnasium G8 gibt es nicht).
 	 *
-	 * @param sprachendaten die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
-	 * @param belegungsbeginnStart Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
-	 * @param belegungsbeginnEnde Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
-	 * @param mindestBelegdauer Zulässig sind Werte 1 bis 5 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
+	 * @param sprachendaten 		die Sprachendaten mit Sprachbelegungen und Sprachprüfungen
+	 * @param belegungsbeginnStart 	Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn größer oder gleich dem angegebenen ASDJahrgang ist.
+	 * @param belegungsbeginnEnde 	Es werden nur Sprachen berücksichtigt, deren Belegungsbeginn kleiner oder gleich dem angegebenen ASDJahrgang ist.
+	 * @param mindestBelegdauer 	Zulässig sind Werte 0, 2, 4 für die minimale Dauer der Sprachbelegung, damit die Sprache berücksichtigt wird.
 	 *
 	 * @return List mit Sprachbelegungen, die die Kriterien erfüllen. Die Liste ist nach Belegungsbeginn aufsteigend sortiert
 	 */
@@ -545,7 +567,13 @@ public final class SprachendatenUtils {
 		// Es können nur die Eintragungen berücksichtigt werden, bei denen die Sprache und der Sprachbeginn geklärt ist. Andere Eintragungen werden nicht berücksichtigt.
 		final @NotNull List<@NotNull Sprachbelegung> alleBelegungen = sprachendaten.belegungen;
 		for (final Sprachbelegung belegung : alleBelegungen) {
-			if (belegung.sprache != null && belegung.belegungVonJahrgang != null) {
+			// Sprachen ohne Angabe eines Beginns können nicht berücksichtigt werden.
+			// Sprachbelegungen mit einem Ende vor der Jahrgangsstufe 9 können nicht am Ende der Sekundarstufe I liegen.
+			// Gleiches gilt für ein Ende in 9.1 und 10.1. Es werden daher nur das Belegungsende null (=offen), 9.2 (Gymnasium G8) und 10.2 zugelassen.
+			// Alle anderen Fälle fallen hier heraus.
+			if ((belegung.sprache != null && belegung.belegungVonJahrgang != null)
+				&& !(belegung.belegungBisJahrgang != null && ((getJahrgangNumerisch(belegung.belegungBisJahrgang) <= 8) || ((getJahrgangNumerisch(belegung.belegungBisJahrgang) == 9 || getJahrgangNumerisch(belegung.belegungBisJahrgang) == 10)  && belegung.belegungBisAbschnitt != null && belegung.belegungBisAbschnitt == 1)))) {
+
 				belegtVonJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungVonJahrgang);
 				belegtBisJahrgangNumerisch = getJahrgangNumerisch(belegung.belegungBisJahrgang);
 

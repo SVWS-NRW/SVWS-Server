@@ -351,7 +351,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 			if (fach == null)
 				continue;
 			final String biliSprache = fach.biliSprache;
-			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(manager.getSprachendaten(), biliSprache)) {
+			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), biliSprache)) {
 				addFehler(GostBelegungsfehler.BIL_14);
 				continue;
 			}
@@ -706,7 +706,7 @@ public final class Fremdsprachen extends GostBelegpruefung {
 		for (final AbiturFachbelegung biliSachfach : _biliSachfaecher) {
 			// Prüfe, ob die Unterrichtssprache des bilingualen Sachfaches in der Sekundarstufe I mindestens zwei Jahre lang belegt wurde
 			final GostFach biliFach = manager.getFach(biliSachfach);
-			if ((biliFach == null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(manager.getSprachendaten(), biliFach.biliSprache)))
+			if ((biliFach == null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(manager.getSprachendaten(), biliFach.biliSprache)))
 				addFehler(GostBelegungsfehler.BIL_14);
 		}
 	}

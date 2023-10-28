@@ -246,7 +246,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			if (fach === null)
 				continue;
 			const biliSprache : string | null = fach.biliSprache;
-			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(this.manager.getSprachendaten(), biliSprache)) {
+			if (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), biliSprache)) {
 				this.addFehler(GostBelegungsfehler.BIL_14);
 				continue;
 			}
@@ -462,7 +462,7 @@ export class Fremdsprachen extends GostBelegpruefung {
 			return;
 		for (const biliSachfach of this._biliSachfaecher) {
 			const biliFach : GostFach | null = this.manager.getFach(biliSachfach);
-			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerInSekI(this.manager.getSprachendaten(), biliFach.biliSprache)))
+			if ((biliFach === null) || (!SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), biliFach.biliSprache)))
 				this.addFehler(GostBelegungsfehler.BIL_14);
 		}
 	}

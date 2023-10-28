@@ -436,7 +436,7 @@ public final class ABPSchueler {
 			if (gostLeistungen != null) {
 				eintrag.Bilingual = gostLeistungen.bilingualeSprache;
 				if (gostLeistungen.sprachendaten != null) {
-					eintrag.Latein = SprachendatenUtils.hatSprachbelegungInSekI(gostLeistungen.sprachendaten, "L");
+					eintrag.Latein = SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(gostLeistungen.sprachendaten, "L");
 					eintrag.Einsprachler_S1 = !(SprachendatenUtils.hatZweiSprachenAb5Bis7MitMin4JahrenDauerEndeSekI(gostLeistungen.sprachendaten) || SprachendatenUtils.hatEineSpracheAb8MitMin2JahrenDauerEndeSekI(gostLeistungen.sprachendaten));
 				}
 			}
