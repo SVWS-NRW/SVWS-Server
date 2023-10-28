@@ -740,6 +740,20 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert die Regel, welche die Anzahl der DummySuS eines Kurses definiert oder NULL.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche die Anzahl der DummySuS eines Kurses definiert oder NULL.
+	 */
+	public GostBlockungRegel kursGetRegelDummySchuelerOrNull(final long idKurs) {
+		for (final @NotNull GostBlockungRegel regel : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			if (regel.parameter.get(0) == idKurs)
+				return regel;
+		return null;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
 	 *
 	 * @param idKurs     Die Datenbank-ID des Kurses.
