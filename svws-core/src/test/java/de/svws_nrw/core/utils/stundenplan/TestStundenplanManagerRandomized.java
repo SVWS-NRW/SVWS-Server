@@ -67,14 +67,14 @@ class TestStundenplanManagerRandomized {
 	/**
 	 * Diese Klasse testet den {@link StundenplanManager} mit randomisierten Daten.
 	 */
-	@DisplayName("testStundenplanManager")
+	@DisplayName("TestStundenplanManagerRandomized")
 	@Test
-	void testRandom() {
+	void testAll() {
 		for (int runden = 1; runden <= 1024; runden *= 2)
-			testModifications(runden);
+			testeMehrereRunden(runden);
 	}
 
-	private static void testModifications(final int runden) {
+	private static void testeMehrereRunden(final int runden) {
 		// System.out.println("\nRunden = " + runden);
 		final @NotNull Random rnd = new Random(_SEED);
 
@@ -86,19 +86,19 @@ class TestStundenplanManagerRandomized {
 		final @NotNull StundenplanManagerDummy m2 = new StundenplanManagerDummy();
 
 		for (int i = 0; i < runden; i++)
-			testModification(rnd, m1, m2);
+			testeJedeMethode(rnd, m1, m2);
 	}
 
-	private static void testModification(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationFach(rnd, m1, m2);
-		testModificationRaum(rnd, m1, m2);
-		testModificationSchueler(rnd, m1, m2);
-		testModificationJahrgang(rnd, m1, m2);
-		testModificationAufsichtsbereich(rnd, m1, m2);
-		testModificationZeitraster(rnd, m1, m2);
+	private static void testeJedeMethode(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testFach(rnd, m1, m2);
+		testRaum(rnd, m1, m2);
+		testSchueler(rnd, m1, m2);
+		testJahrgang(rnd, m1, m2);
+		testAufsichtsbereich(rnd, m1, m2);
+		testZeitraster(rnd, m1, m2);
 
-		testModificationLehrer(rnd, m1, m2);
-		testModificationKlasse(rnd, m1, m2);
+		testLehrer(rnd, m1, m2);
+		testKlasse(rnd, m1, m2);
 
 		// kalenderwochenzuordnung
 		// zeitraster
@@ -111,14 +111,14 @@ class TestStundenplanManagerRandomized {
 		// unterricht
 	}
 
-	private static void testModificationFach(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationFachAdd(rnd, m1, m2);
-		testModificationFachAddAll(rnd, m1, m2);
-		testModificationFachGetByIdOrException(rnd, m1, m2);
-		testModificationFachGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	private static void testFach(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testFachAdd(rnd, m1, m2);
+		testFachAddAll(rnd, m1, m2);
+		testFachGetByIdOrException(rnd, m1, m2);
+		testFachGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationFachAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testFachAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanFach fach = StundenplanManagerDummy.fachCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -138,7 +138,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationFachAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testFachAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanFach> fachList = StundenplanManagerDummy.fachListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -158,7 +158,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationFachGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testFachGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idFach = rnd.nextLong(StundenplanManagerDummy.FACH_MAX_ID);
 
 		StundenplanFach fach1 = null;
@@ -181,7 +181,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (fach1 == null) && (fach2 == null));
 	}
 
-	private static void testModificationFachGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testFachGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.fachGetMengeAsList().size(), m2.fachGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanFach> i1 = m1.fachGetMengeAsList().iterator();
@@ -193,17 +193,17 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationRaum(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationRaumAdd(rnd, m1, m2);
-		testModificationRaumAddAll(rnd, m1, m2);
-		testModificationRaumGetByIdOrException(rnd, m1, m2);
-		testModificationRaumPatchAttributes(rnd, m1, m2);
-		testModificationRaumRemoveById(rnd, m1, m2);
-		testModificationRaumRemoveAll(rnd, m1, m2);
-		testModificationRaumGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	private static void testRaum(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testRaumAdd(rnd, m1, m2);
+		testRaumAddAll(rnd, m1, m2);
+		testRaumGetByIdOrException(rnd, m1, m2);
+		testRaumPatchAttributes(rnd, m1, m2);
+		testRaumRemoveById(rnd, m1, m2);
+		testRaumRemoveAll(rnd, m1, m2);
+		testRaumGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationRaumAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanRaum raum = StundenplanManagerDummy.raumCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -223,7 +223,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationRaumAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanRaum> raumList = StundenplanManagerDummy.raumListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -243,7 +243,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationRaumGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idRaum = rnd.nextLong(StundenplanManagerDummy.RAUM_MAX_ID);
 
 		StundenplanRaum raum1 = null;
@@ -266,7 +266,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (raum1 == null) && (raum2 == null));
 	}
 
-	private static void testModificationRaumGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.raumGetMengeAsList().size(), m2.raumGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanRaum> i1 = m1.raumGetMengeAsList().iterator();
@@ -278,7 +278,7 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationRaumPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanRaum raum = StundenplanManagerDummy.raumCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -298,7 +298,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationRaumRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanRaum raum = StundenplanManagerDummy.raumCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -318,7 +318,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationRaumRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testRaumRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanRaum> raumList = StundenplanManagerDummy.raumListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -338,20 +338,20 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationSchueler(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationSchuelerAdd(rnd, m1, m2);
-		testModificationSchuelerAddAll(rnd, m1, m2);
-		testModificationSchuelerGetAnzahlByKlasseIdOrException(m1, m2);
+	private static void testSchueler(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testSchuelerAdd(rnd, m1, m2);
+		testSchuelerAddAll(rnd, m1, m2);
+		testSchuelerGetAnzahlByKlasseIdOrException(m1, m2);
 		// schuelerGetIDorException
-		testModificationSchuelerGetByIdOrException(rnd, m1, m2);
-		testModificationSchuelerGetMengeByKlasseIdAsListOrException(m1, m2);
+		testSchuelerGetByIdOrException(rnd, m1, m2);
+		testSchuelerGetMengeByKlasseIdAsListOrException(m1, m2);
 		// schuelerGetAnzahlByKursIdAsListOrException
 		// schuelerGetMengeByKursIdAsListOrException
 		// schuelerRemoveById
-		testModificationSchuelerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+		testSchuelerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationSchuelerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanSchueler schueler = StundenplanManagerDummy.schuelerCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -371,7 +371,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationSchuelerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanSchueler> schuelerList = StundenplanManagerDummy.schuelerListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -391,7 +391,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationSchuelerGetMengeByKlasseIdAsListOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerGetMengeByKlasseIdAsListOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
 
@@ -416,7 +416,7 @@ class TestStundenplanManagerRandomized {
 
 	}
 
-	private static void testModificationSchuelerGetAnzahlByKlasseIdOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerGetAnzahlByKlasseIdOrException(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i2 = m2.klasseGetMengeAsList().iterator();
 
@@ -429,7 +429,7 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationSchuelerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idSchueler = rnd.nextLong(StundenplanManagerDummy.SCHUELER_MAX_ID);
 
 		StundenplanSchueler schueler1 = null;
@@ -452,7 +452,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (schueler1 == null) && (schueler2 == null));
 	}
 
-	private static void testModificationSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testSchuelerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.schuelerGetMengeAsList().size(), m2.schuelerGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanSchueler> i1 = m1.schuelerGetMengeAsList().iterator();
@@ -463,17 +463,17 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationJahrgang(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-			testModificationJahrgangAdd(rnd, m1, m2);
-			testModificationJahrgangAddAll(rnd, m1, m2);
-			testModificationJahrgangGetByIdOrException(rnd, m1, m2);
-			testModificationJahrgangPatchAttributes(rnd, m1, m2);
+	private static void testJahrgang(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+			testJahrgangAdd(rnd, m1, m2);
+			testJahrgangAddAll(rnd, m1, m2);
+			testJahrgangGetByIdOrException(rnd, m1, m2);
+			testJahrgangPatchAttributes(rnd, m1, m2);
 //			m1.jahrgangRemoveAll
 //			m1.jahrgangRemoveById
-			testModificationJahrgangGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+			testJahrgangGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationJahrgangAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testJahrgangAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanJahrgang jahrgang = StundenplanManagerDummy.jahrgangCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -493,7 +493,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationJahrgangAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testJahrgangAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanJahrgang> jahrgangList = StundenplanManagerDummy.jahrgangListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -513,7 +513,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationJahrgangGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testJahrgangGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idJahrgang = rnd.nextLong(StundenplanManagerDummy.JAHRGANG_MAX_ID);
 
 		StundenplanJahrgang jahrgang1 = null;
@@ -536,7 +536,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (jahrgang1 == null) && (jahrgang2 == null));
 	}
 
-	private static void testModificationJahrgangPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testJahrgangPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanJahrgang jahrgang = StundenplanManagerDummy.jahrgangCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -556,7 +556,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationJahrgangGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testJahrgangGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.jahrgangGetMengeAsList().size(), m2.jahrgangGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanJahrgang> i1 = m1.jahrgangGetMengeAsList().iterator();
@@ -567,17 +567,17 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationAufsichtsbereich(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationAufsichtsbereichAdd(rnd, m1, m2);
-		testModificationAufsichtsbereichAddAll(rnd, m1, m2);
-		testModificationAufsichtsbereichGetByIdOrException(rnd, m1, m2);
-		testModificationAufsichtsbereichPatchAttributes(rnd, m1, m2);
-		testModificationAufsichtsbereichRemoveById(rnd, m1, m2);
-		testModificationAufsichtsbereichRemoveAll(rnd, m1, m2);
-		testModificationAufsichtsbereichGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	private static void testAufsichtsbereich(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testAufsichtsbereichAdd(rnd, m1, m2);
+		testAufsichtsbereichAddAll(rnd, m1, m2);
+		testAufsichtsbereichGetByIdOrException(rnd, m1, m2);
+		testAufsichtsbereichPatchAttributes(rnd, m1, m2);
+		testAufsichtsbereichRemoveById(rnd, m1, m2);
+		testAufsichtsbereichRemoveAll(rnd, m1, m2);
+		testAufsichtsbereichGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationAufsichtsbereichAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -597,7 +597,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationAufsichtsbereichAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = StundenplanManagerDummy.aufsichtsbereichListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -617,7 +617,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationAufsichtsbereichGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idAufsichtsbereich = rnd.nextLong(StundenplanManagerDummy.AUFSICHTSBEREICH_MAX_ID);
 
 		StundenplanAufsichtsbereich aufsichtsbereich1 = null;
@@ -640,7 +640,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (aufsichtsbereich1 == null) && (aufsichtsbereich2 == null));
 	}
 
-	private static void testModificationAufsichtsbereichPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -660,7 +660,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationAufsichtsbereichRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanAufsichtsbereich aufsichtsbereich = StundenplanManagerDummy.aufsichtsbereichCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -680,7 +680,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationAufsichtsbereichRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanAufsichtsbereich> aufsichtsbereichList = StundenplanManagerDummy.aufsichtsbereichListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -700,7 +700,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationAufsichtsbereichGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testAufsichtsbereichGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.aufsichtsbereichGetMengeAsList().size(), m2.aufsichtsbereichGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanAufsichtsbereich> i1 = m1.aufsichtsbereichGetMengeAsList().iterator();
@@ -711,11 +711,14 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationZeitraster(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationZeitrasterAdd(rnd, m1, m2);
+	private static void testZeitraster(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testZeitrasterAdd(rnd, m1, m2);
+		testZeitrasterAddAll(rnd, m1, m2);
+		testZeitrasterExistsByWochentag(rnd, m1, m2);
+		testZeitrasterExistsByWochentagAndStunde(rnd, m1, m2);
 	}
 
-	private static void testModificationZeitrasterAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testZeitrasterAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanZeitraster zeitraster = StundenplanManagerDummy.zeitrasterCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -735,17 +738,52 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrer(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationLehrerAdd(rnd, m1, m2);
-		testModificationLehrerAddAll(rnd, m1, m2);
-		testModificationLehrerGetByIdOrException(rnd, m1, m2);
-		testModificationLehrerPatchAttributes(rnd, m1, m2);
-		testModificationLehrerRemoveById(rnd, m1, m2);
-		testModificationLehrerRemoveAll(rnd, m1, m2);
-		testModificationLehrerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	private static void testZeitrasterAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterList = StundenplanManagerDummy.zeitrasterListCreateRandom(rnd);
+
+		boolean ex1 = false;
+		try {
+			m1.zeitrasterAddAll(zeitrasterList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex1 = true;
+		}
+
+		boolean ex2 = false;
+		try {
+			m2.zeitrasterAddAll(zeitrasterList);
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			ex2 = true;
+		}
+
+		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testZeitrasterExistsByWochentag(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final int wochentag = StundenplanManagerDummy.zeitrasterGetRandomWochentag(rnd).id;
+		final boolean b1 = m1.zeitrasterExistsByWochentag(wochentag);
+		final boolean b2 = m2.zeitrasterExistsByWochentag(wochentag);
+		assertEquals(b1, b2);
+	}
+
+	private static void testZeitrasterExistsByWochentagAndStunde(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		final int wochentag = StundenplanManagerDummy.zeitrasterGetRandomWochentag(rnd).id;
+		final int stunde = StundenplanManagerDummy.zeitrasterGetRandomStunde(rnd);
+		final boolean b1 = m1.zeitrasterExistsByWochentagAndStunde(wochentag, stunde);
+		final boolean b2 = m2.zeitrasterExistsByWochentagAndStunde(wochentag, stunde);
+		assertEquals(b1, b2);
+	}
+
+	private static void testLehrer(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testLehrerAdd(rnd, m1, m2);
+		testLehrerAddAll(rnd, m1, m2);
+		testLehrerGetByIdOrException(rnd, m1, m2);
+		testLehrerPatchAttributes(rnd, m1, m2);
+		testLehrerRemoveById(rnd, m1, m2);
+		testLehrerRemoveAll(rnd, m1, m2);
+		testLehrerGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	}
+
+	private static void testLehrerAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanLehrer lehrer = StundenplanManagerDummy.lehrerCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -765,7 +803,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerAddAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanLehrer> lehrerList = StundenplanManagerDummy.lehrerListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -785,7 +823,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerGetByIdOrException(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final long idLehrer = rnd.nextLong(StundenplanManagerDummy.LEHRER_MAX_ID);
 
 		StundenplanLehrer lehrer1 = null;
@@ -808,7 +846,7 @@ class TestStundenplanManagerRandomized {
 			assertEquals(true, (lehrer1 == null) && (lehrer2 == null));
 	}
 
-	private static void testModificationLehrerPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerPatchAttributes(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanLehrer lehrer = StundenplanManagerDummy.lehrerCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -828,7 +866,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerRemoveById(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanLehrer lehrer = StundenplanManagerDummy.lehrerCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -848,7 +886,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerRemoveAll(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull List<@NotNull StundenplanLehrer> lehrerList = StundenplanManagerDummy.lehrerListCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -868,7 +906,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationLehrerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testLehrerGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.lehrerGetMengeAsList().size(), m2.lehrerGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanLehrer> i1 = m1.lehrerGetMengeAsList().iterator();
@@ -880,12 +918,12 @@ class TestStundenplanManagerRandomized {
 		}
 	}
 
-	private static void testModificationKlasse(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
-		testModificationKlasseAdd(rnd, m1, m2);
-		testModificationKlasseGetMengeAsList(m1, m2); // Mengen-Check zuletzt
+	private static void testKlasse(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+		testKlasseAdd(rnd, m1, m2);
+		testKlasseGetMengeAsList(m1, m2); // Mengen-Check zuletzt
 	}
 
-	private static void testModificationKlasseAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testKlasseAdd(final @NotNull Random rnd, final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		final @NotNull StundenplanKlasse klasse = StundenplanManagerDummy.klasseCreateRandom(rnd);
 
 		boolean ex1 = false;
@@ -905,7 +943,7 @@ class TestStundenplanManagerRandomized {
 		assertEquals(true, ex1 == ex2);
 	}
 
-	private static void testModificationKlasseGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
+	private static void testKlasseGetMengeAsList(final @NotNull StundenplanManager m1, final @NotNull StundenplanManagerDummy m2) {
 		assertEquals(m1.klasseGetMengeAsList().size(), m2.klasseGetMengeAsList().size());
 
 		final @NotNull Iterator<@NotNull StundenplanKlasse> i1 = m1.klasseGetMengeAsList().iterator();

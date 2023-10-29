@@ -4464,6 +4464,13 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private zeitrasterAddAllOhneUpdate(listZeitraster : List<StundenplanZeitraster>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const zeitraster of listZeitraster) {
+			if (this._zeitraster_by_id.containsKey(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Zeitraster-ID existiert bereits!")
+			if (!setOfIDs.add(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Doppelte Zeitraster-ID in 'list'!")
+		}
 		for (const zeitraster of listZeitraster)
 			this.zeitrasterAddOhneUpdate(zeitraster);
 	}

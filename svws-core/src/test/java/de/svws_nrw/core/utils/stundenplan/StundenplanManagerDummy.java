@@ -17,6 +17,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
+import de.svws_nrw.core.types.Wochentag;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -693,6 +694,28 @@ public final class StundenplanManagerDummy {
 	}
 
 	/**
+	 * Liefert einen zufälligen {@link Wochentag}.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return einen zufälligen {@link Wochentag}.
+	 */
+	public static @NotNull Wochentag zeitrasterGetRandomWochentag(final @NotNull Random rnd) {
+		return Wochentag.fromIDorException(rnd.nextInt(7) + 1);
+	}
+
+	/**
+	 * Liefert eine zufällige Unterrichtsstunde aus dem Intervall [0;29].
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine zufällige Unterrichtsstunde aus dem Intervall [0;29].
+	 */
+	public static int zeitrasterGetRandomStunde(final @NotNull Random rnd) {
+		return rnd.nextInt(30);
+	}
+
+	/**
 	 * Liefert ein zufällig erzeugtes Dummy-Zeitraster.
 	 *
 	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
@@ -702,11 +725,28 @@ public final class StundenplanManagerDummy {
 	public static @NotNull StundenplanZeitraster zeitrasterCreateRandom(final @NotNull Random rnd) {
 		final @NotNull StundenplanZeitraster zeitraster = new StundenplanZeitraster();
 		zeitraster.id = rnd.nextLong(ZEITRASTER_MAX_ID);
-		zeitraster.wochentag = rnd.nextInt(7) + 1; // 1 ... 7
+		zeitraster.wochentag = zeitrasterGetRandomWochentag(rnd).id;
 		zeitraster.unterrichtstunde = rnd.nextInt(30) + 1; // 0 ... 29
 		zeitraster.stundenbeginn = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
 		zeitraster.stundenende = rnd.nextDouble() < 0.1 ? null : rnd.nextInt(24 * 60);
 		return zeitraster;
+	}
+
+	/**
+	 * Liefert eine Liste mit erzeugten Zeitrastern.
+	 *
+	 * @param rnd  Dient zur Erzeugung von Zufallswerten ausgehen von einem bekannten Seed.
+	 *
+	 * @return eine Liste mit erzeugten Zeitrastern.
+	 */
+	public static @NotNull List<@NotNull StundenplanZeitraster> zeitrasterListCreateRandom(final @NotNull Random rnd) {
+		final @NotNull List<@NotNull @NotNull StundenplanZeitraster> zeitrasterList = new ArrayList<>();
+
+		final int size = rnd.nextInt(5);
+		for (int i = 0; i < size; i++)
+			zeitrasterList.add(zeitrasterCreateRandom(rnd));
+
+		return zeitrasterList;
 	}
 
 	/**
@@ -730,6 +770,56 @@ public final class StundenplanManagerDummy {
 
 		// add
 		DeveloperNotificationException.ifMapPutOverwrites(_zeitrastermap, zeitraster.id, zeitraster);
+	}
+
+
+	/**
+	 * Fügt alle Zeitraster hinzu.
+	 *
+	 * @param list  Die Menge der Zeitraster, welche hinzugefügt werden soll.
+	 */
+	public void zeitrasterAddAll(final @NotNull List<@NotNull StundenplanZeitraster> list) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanZeitraster zeitraster : list) {
+			if (_zeitrastermap.containsKey(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAll: Zeitraster-ID existiert bereits!");
+			if (!setOfIDs.add(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAll: Doppelte Zeitraster-ID in 'list'!");
+		}
+
+		// add
+		for (final @NotNull StundenplanZeitraster zeitraster : list)
+			zeitrasterAdd(zeitraster);
+	}
+
+	/**
+	 * Liefert TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 *
+	 * @param wochentag  Der Wochentag, deren Zeitrastermenge überprüft wird.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 */
+	public boolean zeitrasterExistsByWochentag(final int wochentag) {
+		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values())
+			if (zeitraster.wochentag == wochentag)
+				return true;
+		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 *
+	 * @param wochentag  Der Wochentag, deren Zeitrastermenge überprüft wird.
+	 * @param stunde     Die Unterrichtsstunde des Wochentages.
+	 *
+	 * @return TRUE, falls ein {@link StundenplanZeitraster}-Objekt mit dem Wochentag existiert.
+	 */
+	public boolean zeitrasterExistsByWochentagAndStunde(final int wochentag, final int stunde) {
+		for (final @NotNull StundenplanZeitraster zeitraster : _zeitrastermap.values())
+			if ((zeitraster.wochentag == wochentag) && (zeitraster.unterrichtstunde == stunde))
+				return true;
+		return false;
 	}
 
 	/**

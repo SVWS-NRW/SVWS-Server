@@ -27,7 +27,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class TestStundenplanManager {
 
-	/** Eine Map mit den vollständiges Stundenplandaten  */
+	/** Eine Map mit den vollständigen Stundenplandaten  */
 	static Map<String, StundenplanKomplett> testStundenplaene = new HashMap<>();
 
 	/** Eine Map mit den Jahrgängen der Gymnasialen Oberstufe aus den zugehörigen JSON-Dateien mit den Testfällen */

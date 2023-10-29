@@ -4755,7 +4755,6 @@ public class StundenplanManager {
 			if ((z.wochentag == zeitraster.wochentag) && (z.unterrichtstunde == zeitraster.unterrichtstunde))
 				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!");
 
-
 		zeitrasterCheck(zeitraster);
 		DeveloperNotificationException.ifMapPutOverwrites(_zeitraster_by_id, zeitraster.id, zeitraster);
 	}
@@ -4772,6 +4771,16 @@ public class StundenplanManager {
 	}
 
 	private void zeitrasterAddAllOhneUpdate(final @NotNull List<@NotNull StundenplanZeitraster> listZeitraster) {
+		// check
+		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
+		for (final @NotNull StundenplanZeitraster zeitraster : listZeitraster) {
+			if (_zeitraster_by_id.containsKey(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Zeitraster-ID existiert bereits!");
+			if (!setOfIDs.add(zeitraster.id))
+				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Doppelte Zeitraster-ID in 'list'!");
+		}
+
+		// add
 		for (final @NotNull StundenplanZeitraster zeitraster : listZeitraster)
 			zeitrasterAddOhneUpdate(zeitraster);
 	}
