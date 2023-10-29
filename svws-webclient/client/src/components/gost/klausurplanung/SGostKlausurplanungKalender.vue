@@ -52,7 +52,7 @@
 					<template #kwAuswahl>
 						<div class="col-span-2 flex gap-0.5 my-auto">
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetPrevOrNull(kwAuswahl)"><i-ri-arrow-left-s-line class="-m-0.5" /></svws-ui-button>
-							<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="kw => kw.kw.toString()" headless />
+							<svws-ui-select class="flex-grow svws-kw-auswahl bg-svws text-white rounded-md h-7" title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => props.stundenplanmanager.kalenderwochenzuordnungGetWocheAsString(kw)" headless />
 							<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kwAuswahl || !stundenplanmanager.kalenderwochenzuordnungGetNextOrNull(kwAuswahl)"><i-ri-arrow-right-s-line class="-m-0.5" /></svws-ui-button>
 						</div>
 					</template>
