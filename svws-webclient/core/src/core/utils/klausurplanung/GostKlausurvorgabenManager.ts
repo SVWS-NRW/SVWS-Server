@@ -233,7 +233,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		if (quartal > 0) {
 			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
 			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
@@ -253,7 +253,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg.kuerzel, idFach);
 		return list !== null ? list : new ArrayList();
 	}
