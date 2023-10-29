@@ -70,7 +70,7 @@
 						</div>
 					</template>
 					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgaben(quartalsauswahl.value)" title="Erstelle Klausuren aus den Vorgaben"><i-ri-upload-2-line />Aus Vorgaben erstellen</svws-ui-button>
+						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><i-ri-upload-2-line />Aus Vorgaben erstellen</svws-ui-button>
 					</template>
 				</svws-ui-table>
 			</div>
@@ -159,13 +159,16 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
+		<s-gost-klausurplanung-modal :show="returnModal()" :text="modalError" :jump-to="gotoVorgaben" />
 	</div>
 </template>
 
 <script setup lang="ts">
 
-	import type { JavaMapEntry, JavaSet } from "@core";
+	import type { JavaMapEntry, JavaSet} from "@core";
+	import { OpenApiError } from "@core";
 	import {GostKursklausur, GostKlausurtermin, ZulaessigesFach, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
+	import type { Ref } from 'vue';
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungSchienenProps } from './SGostKlausurplanungSchienenProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
@@ -185,6 +188,25 @@
 		terminSelected.value = undefined;
 		dragData.value = data;
 	};
+
+	const modal = ref<boolean>(false);
+
+	function returnModal(): () => Ref<boolean> {
+		return () => modal;
+	}
+
+	const modalError = ref<string | undefined>(undefined);
+
+	async function erzeugeKursklausurenAusVorgabenOrModal() {
+		try {
+			await props.erzeugeKursklausurenAusVorgaben(props.quartalsauswahl.value);
+		} catch(err) {
+			if (err instanceof OpenApiError) {
+				modalError.value = await err.response?.text();
+				modal.value = true;
+			}
+		}
+	}
 
 	function getLehrerKuerzel(kursid: number) {
 		const kurs = props.kursmanager.get(kursid);

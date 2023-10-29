@@ -110,7 +110,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal, GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
 			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
 				//TODO Fehlermeldung an Client, dass es zu diesem Kurs/Fach keine Vorgaben gibt
-				throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für dieses Fach definiert.");
+				throw OperationError.NOT_FOUND.exception("Keine Klausurvorgaben für diesen Kurs definiert: " + kurs.KurzBez);
 			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
 				if (/*(vorgabe != null) && */!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
 					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.idVorgabe, kurs.ID);

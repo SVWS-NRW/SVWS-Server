@@ -52,6 +52,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<unknown, RouteGos
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			kursmanager: routeGostKlausurplanung.data.kursManager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
 		}
 	}
 

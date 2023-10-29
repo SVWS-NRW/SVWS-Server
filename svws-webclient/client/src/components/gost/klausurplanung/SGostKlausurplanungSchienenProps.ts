@@ -25,4 +25,5 @@ export interface GostKlausurplanungSchienenProps {
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	gotoVorgaben: () => Promise<void>;
 }

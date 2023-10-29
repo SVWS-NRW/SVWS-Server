@@ -359,10 +359,13 @@ export class RouteDataGostKlausurplanung {
 
 	erzeugeKursklausurenAusVorgaben = async (quartal: number) => {
 		api.status.start();
-		const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.kursklausurmanager.kursklausurAddAll(result);
-		this.commit();
-		api.status.stop();
+		try {
+			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+			this.kursklausurmanager.kursklausurAddAll(result);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	}
 
 	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
@@ -448,5 +451,10 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 		return true;
 	}
+
+	gotoVorgaben = async () => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+	}
+
 
 }
