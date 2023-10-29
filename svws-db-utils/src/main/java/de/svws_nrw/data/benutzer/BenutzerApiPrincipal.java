@@ -107,22 +107,22 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		}
 
 		// Spezieller DB-Zugriff für "/api/schema/root/" - Hier muss eine Anmeldung mit einem DB-Passwort erfolgen, da Operationen direkt das Schema manipulieren
-		final boolean isDBMSRootAuthentication = path.matches("/api/schema/root/.*");
+		final boolean isDBAuthentication = path.matches("/api/schema/root/.*");
 
 		// Bestimme das Schema, auf welches zugegriffen wird anhand des aktuellen Pfades - gehe zunächst davon aus, dass kein Schema gewählt ist
 		String schema = "";
-		if ((!isAnonymous) && (!isDBMSRootAuthentication)) {
+		if ((!isAnonymous) && (!isDBAuthentication)) {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
 				schema = pathelements[2];
 		}
 
 		// Erzeuge ggf. einen anonymen Principal
-		if (isAnonymous && (!isDBMSRootAuthentication))
+		if (isAnonymous && (!isDBAuthentication))
 			return new BenutzerApiPrincipal();
 
 		// Prüfe, ob ein Zugriff als Root auf das DBMS nötig ist
-		if (isDBMSRootAuthentication) {
+		if (isDBAuthentication) {
 			// Prüfe, ob der root-Zugriff per Konfiguration deaktiviert wurde. Dann darf aus Sicherheitgründen auch keine Kennwort-Prüfung stattfinden!
 			if (SVWSKonfiguration.get().isDBRootAccessDisabled())
 				return null;

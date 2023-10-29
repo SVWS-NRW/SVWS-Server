@@ -1,16 +1,10 @@
 package de.svws_nrw.api.privileged;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.db.MigrateBody;
@@ -22,7 +16,8 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
-import de.svws_nrw.data.privileged.DBUtilsPrivileged;
+import de.svws_nrw.data.schema.APITempDBFile;
+import de.svws_nrw.data.schema.DBUtilsSchema;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -65,8 +60,6 @@ import jakarta.ws.rs.core.Response.Status;
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "SchemaPrivileged")
 public class APISchemaPrivileged {
-
-	private static final Random random = new Random();
 
 	/**
 	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
@@ -211,7 +204,7 @@ public class APISchemaPrivileged {
     public boolean checkDBPassword(@RequestBody(description = "Der Benutzername und das Kennwort für den Datenbankbenutzer", required = true, content =
 			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = BenutzerKennwort.class))) final BenutzerKennwort kennwort,
     		@Context final HttpServletRequest request) {
-    	return DBUtilsPrivileged.checkDBPassword(kennwort);
+    	return DBUtilsSchema.checkDBPassword(kennwort);
     }
 
 
@@ -371,41 +364,19 @@ public class APISchemaPrivileged {
 	    	logger.addConsumer(log);
 	    	logger.addConsumer(new LogConsumerConsole());
 
-	    	// Erstelle temporär eine MDB-Datei aus dem übergebenen Byte-Array
-	    	final String mdbdirectory = SVWSKonfiguration.get().getTempPath();
-	        final String mdbFilename = schemaname +  "_" + random.ints(48, 123)  // from 0 to z
-	          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-	          .limit(40)
-	          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	          .toString() + ".mdb";
-	        logger.logLn("Erstelle eine temporäre Access-Datenbank unter dem Namen \"" + mdbdirectory + "/" + mdbFilename + "\"");
-	    	try {
-	    		Files.createDirectories(Paths.get(mdbdirectory));
-				Files.write(Paths.get(mdbdirectory + "/" + mdbFilename), multipart.database, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				logger.logLn(2, "Fehler beim Erstellen der temporären Access-Datenbank unter dem Namen \"" + mdbdirectory + "/" + mdbFilename + "\"");
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			}
+	    	try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, multipart.database, multipart.databasePassword)) {
+		    	logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+		    	logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
+		    	logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
+		    	logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
-	    	logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
-	    	logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
-	    	logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
-	    	logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
-
-			final DBConfig srcConfig = new DBConfig(DBDriver.MDB, mdbdirectory + "/" + mdbFilename, "PUBLIC", false, "admin", multipart.databasePassword, true, false, 0, 0);
-			final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true, 0, 0);
-			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
-				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			}
-
-			// Entferne die temporär angelegte Datenbank wieder...
-			logger.logLn("Löschen der temporären Access-Datenbank unter dem Namen \"" + mdbdirectory + "/" + mdbFilename + "\".");
-			try {
-				Files.delete(Paths.get(mdbdirectory + "/" + mdbFilename));
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				logger.logLn(2, "[FEHLER]");
-			}
+				final DBConfig srcConfig = mdb.getConfig();
+				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true, 0, 0);
+				if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
+					logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+				}
+	    	}
 
 			logger.logLn("Migration abgeschlossen.");
 			return simpleResponse(true, log);
@@ -444,54 +415,33 @@ public class APISchemaPrivileged {
 	    	logger.addConsumer(new LogConsumerConsole());
 
 	    	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-	    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-	        final String tmpFilename = schemaname +  "_" + random.ints(48, 123)  // from 0 to z
-	          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-	          .limit(40)
-	          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-	          .toString() + ".sqlite";
-	        logger.logLn("Erstelle eine SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-	    	try {
-	    		Files.createDirectories(Paths.get(tmpDirectory));
-				Files.write(Paths.get(tmpDirectory + "/" + tmpFilename), multipart.database, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				logger.logLn(2, "Fehler beim Erstellen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			}
+	    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, multipart.database, null)) {
+		    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+		    	logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
+		    	logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
+		    	logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
-	    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
-	    	logger.logLn(2, "- verwende den root-benutzer: " + conn.getUser().getUsername());
-	    	logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
-	    	logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
+				final int maxUpdateRevision = 3;
+				final DBConfig srcConfig = sqlite.getConfig();
+				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true, 0, 0);
 
-			final int maxUpdateRevision = 3;
-			final DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, tmpDirectory + "/" + tmpFilename, null, false, null, null, true, false, 0, 0);
-			final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername, multipart.schemaUserPassword, true, true, 0, 0);
+				final Benutzer srcUser = Benutzer.create(srcConfig);
+				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+					if (srcConn == null) {
+						logger.logLn(0, " [Fehler]");
+						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
+					}
+					logger.logLn(0, " [OK]");
 
-			final Benutzer srcUser = Benutzer.create(srcConfig);
-			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-				if (srcConn == null) {
-					logger.logLn(0, " [Fehler]");
-					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-				}
-				logger.logLn(0, " [OK]");
-
-				final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
-				logger.modifyIndent(2);
-				if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), maxUpdateRevision, false, logger))
+					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+					logger.modifyIndent(2);
+					if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), maxUpdateRevision, false, logger))
+						throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
+					logger.modifyIndent(-2);
+				} catch (@SuppressWarnings("unused") final DBException e) {
 					throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-				logger.modifyIndent(-2);
-			} catch (@SuppressWarnings("unused") final DBException e) {
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			}
-
-			// Entferne die temporär angelegte Datenbank wieder...
-			logger.logLn("Löschen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\".");
-			try {
-				Files.delete(Paths.get(tmpDirectory + "/" + tmpFilename));
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				logger.logLn(2, "[FEHLER]");
-			}
+				}
+	    	}
 
 			logger.logLn("Import abgeschlossen.");
 			return simpleResponse(true, log);

@@ -1,4 +1,4 @@
-package de.svws_nrw.data.privileged;
+package de.svws_nrw.data.schema;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
@@ -7,13 +7,13 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 
 /**
- * Diese Klasse stellt Methoden für den priviligierten Zugriff auf die SVWS-DB
- * zur Verfügung.
+ * Diese Klasse stellt Methoden für den Zugriff auf ein Schema für die
+ * SVWS-DB zur Verfügung.
  */
-public final class DBUtilsPrivileged {
+public final class DBUtilsSchema {
 
-	private DBUtilsPrivileged() {
-		throw new IllegalStateException("Instantiation of " + DBUtilsPrivileged.class.getName() + " not allowed");
+	private DBUtilsSchema() {
+		throw new IllegalStateException("Instantiation of " + DBUtilsSchema.class.getName() + " not allowed");
 	}
 
 	/**
