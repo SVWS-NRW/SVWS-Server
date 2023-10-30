@@ -191,12 +191,14 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				}
 			}),
 			Map.entry("religionID", (conn, schueler, value, map) -> {
-				final Long religionID = JSONMapper.convertToLong(value, false);
-				if ((religionID != null) && (religionID < 0))
-					throw OperationError.CONFLICT.exception();
-				final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
-				if (rel == null)
-					throw OperationError.NOT_FOUND.exception();
+				final Long religionID = JSONMapper.convertToLong(value, true);
+				if (religionID != null) {
+					if (religionID < 0)
+						throw OperationError.CONFLICT.exception();
+					final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
+					if (rel == null)
+						throw OperationError.NOT_FOUND.exception();
+				}
 				schueler.Religion_ID = religionID;
 			}),
 			Map.entry("druckeKonfessionAufZeugnisse", (conn, schueler, value, map) -> schueler.KonfDruck = JSONMapper.convertToBoolean(value, false)),
