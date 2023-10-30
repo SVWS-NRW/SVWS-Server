@@ -2107,19 +2107,18 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die IST-Wochenminuten des {@link StundenplanKlassenunterricht}.
+	 * Liefert die IST-Wochenminuten des {@link StundenplanKlassenunterricht} auf 2 Nachkommastellen gerundet.
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
-	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
 	 * <br>Laufzeit: O(|Unterrichte des Klassenunterrichts|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
 	 *
-	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * @return die IST-Wochenminuten des {@link StundenplanKlassenunterricht} auf 2 Nachkommastellen gerundet.
 	 */
 	public klassenunterrichtGetWochenminutenIST(idKlasse : number, idFach : number) : number {
-		return StundenplanManager.gerundet(this.klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach));
+		return StundenplanManager.gerundetAufZweiNachkommastellen(this.klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach));
 	}
 
 	/**
@@ -2164,7 +2163,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 */
 	public klassenunterrichtGetWochenstundenIST(idKlasse : number, idFach : number) : number {
-		return StundenplanManager.gerundet(this.klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		return StundenplanManager.gerundetAufZweiNachkommastellen(this.klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**
@@ -2211,10 +2210,10 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static gerundet(d : number) : number {
+	private static gerundetAufZweiNachkommastellen(d : number) : number {
 		if (d >= 0)
-			return ((Math.round(d) * 100.0) as number) / 100.0;
-		return -(((Math.round(-d) * 100.0) as number) / 100.0);
+			return (Math.round(d * 100.0)) / 100.0;
+		return -(Math.round(-d * 100.0)) / 100.0;
 	}
 
 	private kursAddOhneUpdate(kurs : StundenplanKurs) : void {
@@ -2418,7 +2417,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
 	 */
 	public kursGetWochenminutenIST(idKurs : number) : number {
-		return StundenplanManager.gerundet(this.kursGetWochenminutenISTungerundet(idKurs));
+		return StundenplanManager.gerundetAufZweiNachkommastellen(this.kursGetWochenminutenISTungerundet(idKurs));
 	}
 
 	/**
@@ -2449,18 +2448,17 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45-Minuten entsprechen, können nur Stundenanteile gesetzt sein.
-	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
 	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
 	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses auf 2 Nachkommastellen gerundet.
 	 *
-	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * @return die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 */
 	public kursGetWochenstundenIST(idKurs : number) : number {
-		return StundenplanManager.gerundet(this.kursGetWochenminutenISTungerundet(idKurs) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		return StundenplanManager.gerundetAufZweiNachkommastellen(this.kursGetWochenminutenISTungerundet(idKurs) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**

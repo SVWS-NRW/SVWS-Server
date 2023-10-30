@@ -2197,19 +2197,18 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die IST-Wochenminuten des {@link StundenplanKlassenunterricht}.
+	 * Liefert die IST-Wochenminuten des {@link StundenplanKlassenunterricht} auf 2 Nachkommastellen gerundet.
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
-	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
 	 * <br>Laufzeit: O(|Unterrichte des Klassenunterrichts|)
 	 *
 	 * @param idKlasse  Die Datenbank-ID der Klasse.
 	 * @param idFach    Die Datenbank-ID des Faches.
 	 *
-	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
+	 * @return die IST-Wochenminuten des {@link StundenplanKlassenunterricht} auf 2 Nachkommastellen gerundet.
 	 */
 	public double klassenunterrichtGetWochenminutenIST(final long idKlasse, final long idFach) {
-		return gerundet(klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach));
+		return gerundetAufZweiNachkommastellen(klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach));
 	}
 
 	/**
@@ -2254,7 +2253,7 @@ public class StundenplanManager {
 	 * @return die IST-Wochenstunden des {@link StundenplanKlassenunterricht}.
 	 */
 	public double klassenunterrichtGetWochenstundenIST(final long idKlasse, final long idFach) {
-		return gerundet(klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach) / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		return gerundetAufZweiNachkommastellen(klassenunterrichtGetWochenminutenISTungerundet(idKlasse, idFach) / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**
@@ -2310,10 +2309,10 @@ public class StundenplanManager {
 	// #################### StundenplanKurs ################################
 	// #####################################################################
 
-	private static double gerundet(final double d) {
+	private static double gerundetAufZweiNachkommastellen(final double d) {
 		if (d >= 0)
-			return ((int) (Math.round(d) * 100.0)) / 100.0;
-		return -(((int) (Math.round(-d) * 100.0)) / 100.0);
+			return (Math.round(d * 100.0)) / 100.0;
+		return -(Math.round(-d * 100.0)) / 100.0;
 	}
 
 	private void kursAddOhneUpdate(final @NotNull StundenplanKurs kurs) {
@@ -2520,7 +2519,7 @@ public class StundenplanManager {
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
 	 */
 	public double kursGetWochenminutenIST(final long idKurs) {
-		return gerundet(kursGetWochenminutenISTungerundet(idKurs));
+		return gerundetAufZweiNachkommastellen(kursGetWochenminutenISTungerundet(idKurs));
 	}
 
 	/**
@@ -2551,18 +2550,17 @@ public class StundenplanManager {
 	}
 
 	/**
-	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45-Minuten entsprechen, können nur Stundenanteile gesetzt sein.
-	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
 	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
 	 *
-	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 * @param idKurs  Die Datenbank-ID des Kurses auf 2 Nachkommastellen gerundet.
 	 *
-	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
+	 * @return die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 */
 	public double kursGetWochenstundenIST(final long idKurs) {
-		return gerundet(kursGetWochenminutenISTungerundet(idKurs) / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		return gerundetAufZweiNachkommastellen(kursGetWochenminutenISTungerundet(idKurs) / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**
