@@ -91,14 +91,10 @@
 		const curr = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(props.kurs.id);
 		if (curr === anzahl || (anzahl === null) || anzahl < 0)
 			return;
-		const list = props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN);
-		let regel = undefined;
-		for (const item of list)
-			if (item.parameter.get(0) === props.kurs.id)
-				regel = item;
-		if (regel !== undefined && anzahl === 0)
+		let regel = props.getDatenmanager().kursGetRegelDummySchuelerOrNull(props.kurs.id);
+		if (regel !== null && anzahl === 0)
 			return await props.removeRegel(regel.id);
-		if (regel === undefined){
+		if (regel === null) {
 			regel = new GostBlockungRegel();
 			regel.typ = GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN.typ;
 			regel.parameter.add(props.kurs.id);
