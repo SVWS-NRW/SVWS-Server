@@ -146,22 +146,23 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = shallowRef<SelectDataType>(props.modelValue);
 
-	watch(() => props.modelValue, (value: SelectDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value: SelectDataType) => updateData(value, true), { immediate: false });
 
-	function updateData(value: SelectDataType) {
+	function updateData(value: SelectDataType, fromModelValue : boolean) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
 			return;
 		if (data.value === value)
 			return;
 		data.value = value;
-		emit("update:modelValue", data.value);
+		if (!fromModelValue)
+			emit("update:modelValue", data.value);
 		if (props.indeterminate === true)
 			data.value = undefined;
 	}
 
 	const selectedItem = computed<Item | null | undefined>({
 		get: () => data.value,
-		set: (item) => updateData(item)
+		set: (item) => updateData(item, false)
 	});
 
 	const selectedItemList = computed<Set<Item>>(() => {
