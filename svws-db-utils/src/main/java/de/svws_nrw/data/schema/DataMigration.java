@@ -69,17 +69,21 @@ public final class DataMigration {
 			final DBConfig srcConfig = mdb.getConfig();
 
 			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
-			final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
-			if (tgtConfig == null) {
-				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration - Ziel-Schema nicht in der Server-Konfiguration gefunden (schema='" + conn.getDBSchema() + "')");
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
-			}
+			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
+			final boolean hatSchemaConfig = (tgtConfig != null);
+			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+			if (tgtConfig == null)
+				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
 
 			// Führe die Migration durch
 			if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, null, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation() + "', user='" + tgtConfig.getUsername() + "')");
 				throw OperationError.INTERNAL_SERVER_ERROR.exception(simpleResponse(false, log));
 			}
+
+			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
+			if (!hatSchemaConfig)
+				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
     	}
 		logger.logLn("Migration abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);
@@ -146,12 +150,11 @@ public final class DataMigration {
     	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
 
 		// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
-		final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
-		if (tgtConfig == null) {
-			logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration - Ziel-Schema nicht in der Server-Konfiguration gefunden (schema='" + conn.getDBSchema() + "')");
-			final SimpleOperationResponse daten = simpleResponse(false, log);
-			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		}
+		DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
+		final boolean hatSchemaConfig = (tgtConfig != null);
+		// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+		if (tgtConfig == null)
+			tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
 
 		// Führe die Migration durch
 		if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, schulnummer, logger)) {
@@ -159,6 +162,10 @@ public final class DataMigration {
 			final SimpleOperationResponse daten = simpleResponse(false, log);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
+
+		// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
+		if (!hatSchemaConfig)
+			SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
 
 		logger.logLn("Migration abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);

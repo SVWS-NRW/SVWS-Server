@@ -5,7 +5,6 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -117,11 +116,11 @@ public final class DataSQLite {
 			final DBConfig srcConfig = sqlite.getConfig();
 
 			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
-			final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
-			if (tgtConfig == null) {
-				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration - Ziel-Schema nicht in der Server-Konfiguration gefunden (schema='" + conn.getDBSchema() + "')");
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-			}
+			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
+			final boolean hatSchemaConfig = (tgtConfig != null);
+			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+			if (tgtConfig == null)
+				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
 
 			try {
 				final Benutzer srcUser = Benutzer.create(srcConfig);
@@ -141,6 +140,10 @@ public final class DataSQLite {
 			} catch (@SuppressWarnings("unused") final DBException e) {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
 			}
+
+			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
+			if (!hatSchemaConfig)
+				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
     	}
 
 		logger.logLn("Import abgeschlossen.");
