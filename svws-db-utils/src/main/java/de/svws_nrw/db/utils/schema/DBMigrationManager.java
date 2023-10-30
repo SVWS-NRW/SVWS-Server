@@ -269,7 +269,12 @@ public final class DBMigrationManager {
 	 * @return true, falls die Migration erfolgreich durchgeführt wurde.
 	 */
 	public static boolean migrateInto(final DBConfig srcConfig, final DBConfig tgtConfig, final int maxUpdateRevision, final boolean devMode, final Integer schulNr, final Logger logger) {
-		final Benutzer tgtUser = Benutzer.create(tgtConfig);
+		final Benutzer tgtUser;
+		try {
+			tgtUser = Benutzer.create(tgtConfig);
+		} catch (@SuppressWarnings("unused") final DBException db) {
+			return false;
+		}
 		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
 		if (!tgtManager.dropSVWSSchema())
 			return false;

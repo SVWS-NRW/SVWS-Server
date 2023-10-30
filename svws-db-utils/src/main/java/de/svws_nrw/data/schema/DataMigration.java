@@ -60,7 +60,7 @@ public final class DataMigration {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine MDB-Datei aus dem übergebenen Byte-Array
-    	try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, srcDB, srcDBPassword)) {
+    	try (APITempDBFile mdb = new APITempDBFile(DBDriver.MDB, conn.getDBSchema(), logger, log, srcDB, srcDBPassword, true)) {
 	    	logger.logLn("Migriere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
 	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());

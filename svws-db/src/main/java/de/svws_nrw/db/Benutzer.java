@@ -1,13 +1,13 @@
 package de.svws_nrw.db;
 
-import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import de.svws_nrw.ext.jbcrypt.BCrypt;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.ext.jbcrypt.BCrypt;
 
 
 /**
@@ -29,7 +29,7 @@ public final class Benutzer {
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final DBConfig _config;
 
-	/** Der Managaer für dei Datenbank-Verbindungen */
+	/** Der Manager für die Datenbank-Verbindungen */
 	public final ConnectionManager connectionManager;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
@@ -51,8 +51,10 @@ public final class Benutzer {
      * verwendende {@link DBConfig} angegeben wird.
      *
 	 * @param config   die Datenbank-Konfiguration
+	 *
+     * @throws DBException wenn die Authentifizierung fehlschlägt
      */
-    private Benutzer(final DBConfig config) {
+    private Benutzer(final DBConfig config) throws DBException {
     	this._username = "niemand";
     	this._password = "keines";
     	this._config = config;
@@ -67,8 +69,10 @@ public final class Benutzer {
 	 * @param config   die Datenbank-Konfiguration.
 	 *
 	 * @return die neue Instanz des {@link Benutzer}
+	 *
+	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-    public static Benutzer create(final DBConfig config) {
+    public static Benutzer create(final DBConfig config) throws DBException {
     	return new Benutzer(config);
     }
 
@@ -81,8 +85,10 @@ public final class Benutzer {
 	 * @param schema   der name des Schemas für die neue Verbindung
 	 *
 	 * @return der Benutzer für den Datenbankzugriff, oder null im Fehlerfall
+	 *
+	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-	public Benutzer connectTo(final String schema) {
+	public Benutzer connectTo(final String schema) throws DBException {
 		return create(_config.switchSchema(schema));
 	}
 

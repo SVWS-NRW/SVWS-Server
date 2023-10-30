@@ -5,6 +5,7 @@ import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 
 /**
  * Diese Klasse stellt Methoden für den Zugriff auf ein Schema für die
@@ -42,9 +43,16 @@ public final class DBUtilsSchema {
 				dbconfig = dbconfig.switchSchema("");
 				break;
 		}
-		final Benutzer user = Benutzer.create(dbconfig);
+		final Benutzer user;
+		try {
+			user = Benutzer.create(dbconfig);
+		} catch (@SuppressWarnings("unused") final DBException db) {
+			return false;
+		}
 		try (DBEntityManager em = user.getEntityManager()) {
 			return (em != null);
+		} catch (@SuppressWarnings("unused") final Exception pe) {
+			return false;
 		}
 	}
 

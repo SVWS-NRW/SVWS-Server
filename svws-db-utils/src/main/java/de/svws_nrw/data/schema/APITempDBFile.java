@@ -37,6 +37,9 @@ public class APITempDBFile implements AutoCloseable {
 	/** Das Kennwort für den Zugriff auf die MDB */
 	private final String _password;
 
+	/** Gibt an, ob die close-Methode sich um das Löschen der temporären Datei kümmert oder nicht */
+	private final boolean _doDelete;
+
 	/**
 	 * Erzeugt eine einfache Anwort mit der Angabe, ob die Operation erfolgreich war und
 	 * mit dem Log derOperation.
@@ -62,10 +65,12 @@ public class APITempDBFile implements AutoCloseable {
 	 * @param log          die Liste, welche die Meldungen der Loggers mitprotokolliert
 	 * @param data         die DB als Byte-Array
 	 * @param password     ggf. das Kennwort für die DB
+	 * @param doDelete     gibt an, ob die Datei beim close gelöscht werden soll oder ob sich die aufrufende Methode darum kümmert.
 	 */
 	public APITempDBFile(final DBDriver dbms, final String praefix, final Logger logger, final LogConsumerList log,
-			final byte[] data, final String password) {
+			final byte[] data, final String password, final boolean doDelete) {
 		this._dbms = dbms;
+		this._doDelete = doDelete;
 		this._logger = logger;
 		if (!dbms.isFileBased()) {
 			_logger.logLn("Fehler: Das DBMS %s wird für das Erstellen von temporären DBMS nicht unterstützt.");
@@ -120,7 +125,8 @@ public class APITempDBFile implements AutoCloseable {
 	public void close() {
 		_logger.logLn("Löschen der temporären Datenbank unter dem Namen \"" + _tmpDir + "/" + _tmpFilename + "\".");
 		try {
-			Files.delete(Paths.get(_tmpDir + "/" + _tmpFilename));
+			if (_doDelete)
+				Files.delete(Paths.get(_tmpDir + "/" + _tmpFilename));
 		} catch (@SuppressWarnings("unused") final IOException e) {
 			_logger.logLn(2, "[FEHLER]");
 		}

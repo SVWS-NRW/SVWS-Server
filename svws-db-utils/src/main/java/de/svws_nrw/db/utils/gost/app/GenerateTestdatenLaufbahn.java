@@ -37,6 +37,7 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -107,7 +108,13 @@ public class GenerateTestdatenLaufbahn {
 			if (dbSchema == null)
 				throw new IOException("Es wurde kein gültiges Datenbank-Schema zum Einlesen der Laufbahndaten angegeben.");
 			final DBConfig dbConfig = svwsconfig.getDBConfig(dbSchema);
-			final Benutzer user = Benutzer.create(dbConfig);
+			final Benutzer user;
+			try {
+				user = Benutzer.create(dbConfig);
+			} catch (@SuppressWarnings("unused") final DBException db) {
+				logger.logLn("Fehler beim Erstellen der Datenbankverbindung. Sind die Anmeldedaten korrekt?");
+				return;
+			}
 			try (DBEntityManager conn = user.getEntityManager()) {
 
 				// Lese die ID für den ersten generierten Jahrgang ein

@@ -62,7 +62,7 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Bestimme den Dateinamen für eine temporäre SQLite-Datei
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, null)) {
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
 			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
 			if (srcManager == null)
@@ -77,7 +77,7 @@ public final class DataSQLite {
 			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
 			final Response response = Response.ok((StreamingOutput) output -> {
 				try {
-					FileUtils.copy(sqlite.getFilename(), output);
+					FileUtils.move(sqlite.getFilename(), output);
 					output.flush();
 				} catch (final Exception e) {
 					throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
@@ -108,7 +108,7 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, null)) {
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, null, true)) {
 	    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
 	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
 	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
@@ -123,19 +123,21 @@ public final class DataSQLite {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
 			}
 
-			final Benutzer srcUser = Benutzer.create(srcConfig);
-			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-				if (srcConn == null) {
-					logger.logLn(0, " [Fehler]");
-					throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-				}
-				logger.logLn(0, " [OK]");
+			try {
+				final Benutzer srcUser = Benutzer.create(srcConfig);
+				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+					if (srcConn == null) {
+						logger.logLn(0, " [Fehler]");
+						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
+					}
+					logger.logLn(0, " [OK]");
 
-				final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
-				logger.modifyIndent(2);
-				if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
-					return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-				logger.modifyIndent(-2);
+					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+					logger.modifyIndent(2);
+					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
+						return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
+					logger.modifyIndent(-2);
+				}
 			} catch (@SuppressWarnings("unused") final DBException e) {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
 			}

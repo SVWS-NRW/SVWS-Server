@@ -578,7 +578,13 @@ public final class DBSchemaManager {
 		if (!DBMigrationManager.createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
 			return false;
 
-		final Benutzer schemaUser = Benutzer.create(tgtConfig);
+		final Benutzer schemaUser;
+		try {
+			schemaUser = Benutzer.create(tgtConfig);
+		} catch (@SuppressWarnings("unused") final DBException db) {
+			logger.logLn("Fehler beim Erstellen der Datenbankverbindung zum Ziel-Schema. Sind die Anmeldedaten korrekt?");
+			return false;
+		}
 		final DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
 
 		logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
