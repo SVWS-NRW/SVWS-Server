@@ -109,6 +109,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 		// Spezieller DB-Zugriff für "/api/schema/root/" - Hier muss eine Anmeldung mit einem DB-Passwort erfolgen, da Operationen direkt das Schema manipulieren
 		final boolean isDBAuthentication = path.matches("/api/schema/root/.*")
+				|| path.matches("/api/schema/create/.*")
 				|| path.matches("/api/schema/import/.*")
 				|| path.matches("/api/schema/export/.*")
 				|| path.matches("/api/schema/migrate/.*");

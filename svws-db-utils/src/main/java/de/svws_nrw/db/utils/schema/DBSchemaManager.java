@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -557,27 +558,16 @@ public final class DBSchemaManager {
 
 
 	/**
-	 * Diese Methode erstellt in der durch tgtConfig beschriebene SVWS-Server-Datenbank ein neues Schema.
+	 * Diese Methode erstellt in dem durch tgtConfig beschriebenen Schema ein SVWS-Schema der angebenen Revision.
 	 *
-	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
-	 * @param tgtRootUser          der Benutzername eines Benutzers, der mit den Rechten zum Verwalten der Datenbankschemata ausgestattet ist.
-	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
-	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
-	 * @param logger               ein Logger, welcher das Erstellen loggt.
+	 * @param tgtConfig     die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param rev           die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
+	 * @param logger        ein Logger, welcher das Erstellen loggt.
+	 * @param clearSchema   gibt an, ob das Schema zuvor bereinigt werden sol
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final Logger logger) {
-		final long max_revision = SchemaRevisionen.maxRevision.revision;
-		long rev = maxUpdateRevision;
-		if (rev < 0)
-			rev = max_revision;
-		if (rev > max_revision)
-			return false;
-
-		if (!DBMigrationManager.createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
-			return false;
-
+	private static boolean createAndUpdateSchemaInto(final DBConfig tgtConfig, final long rev, final Logger logger, final boolean clearSchema) {
 		final Benutzer schemaUser;
 		try {
 			schemaUser = Benutzer.create(tgtConfig);
@@ -586,6 +576,12 @@ public final class DBSchemaManager {
 			return false;
 		}
 		final DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
+
+		// Schema leeren...
+		if ((clearSchema) && (!manager.dropSVWSSchema())) {
+			logger.logLn("Fehler beim Leeren des Schemas in der Ziel-Datenbank.");
+			return false;
+		}
 
 		logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
 		logger.modifyIndent(2);
@@ -614,6 +610,61 @@ public final class DBSchemaManager {
 			return false;
 		logger.modifyIndent(-2);
 		return true;
+	}
+
+
+	/**
+	 * Diese Methode erstellt in der durch tgtConfig beschriebene SVWS-Server-Datenbank ein neues Schema.
+	 *
+	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf die SVWS-Server-Datenbank
+	 * @param tgtRootUser          der Benutzername eines Benutzers, der mit den Rechten zum Verwalten der Datenbankschemata ausgestattet ist.
+	 * @param tgtRootPW            das root-Kennwort für den Zugriff auf die Zieldatenbank
+	 * @param maxUpdateRevision    die Revision, bis zu welcher die Zieldatenbank aktualisiert wird
+	 * @param logger               ein Logger, welcher das Erstellen loggt.
+	 *
+	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
+	 */
+	public static boolean createNewSchema(final DBConfig tgtConfig, final String tgtRootUser, final String tgtRootPW, final long maxUpdateRevision, final Logger logger) {
+		final long max_revision = SchemaRevisionen.maxRevision.revision;
+		long rev = maxUpdateRevision;
+		if (rev < 0)
+			rev = max_revision;
+		if (rev > max_revision)
+			return false;
+
+		if (!DBMigrationManager.createNewTargetSchema(tgtConfig, tgtRootUser, tgtRootPW, logger))
+			return false;
+
+		return createAndUpdateSchemaInto(tgtConfig, rev, logger, false);
+	}
+
+
+	/**
+	 * Diese Methode verwendet das durch tgtConfig beschriebene Datenbank-Schema, um ein leeres SVWS-Schema
+	 * der angegebenen Revision anzulegen. Dabei werden evtl. zuvor bestehende Tabellen entfernt.
+	 *
+	 * @param tgtConfig            die Datenbank-Konfiguration für den Zugriff auf das Datenbank-Schema
+	 * @param maxUpdateRevision    die Revision, bis zu welcher das SVWS-Schema aktualisiert wird
+	 * @param logger               ein Logger, welcher das Erstellen loggt.
+	 *
+	 * @return true, falls das SVWS-Schema erfolgreich erzeugt wurde.
+	 */
+	public static boolean recycleSchema(final DBConfig tgtConfig, final long maxUpdateRevision, final Logger logger) {
+		final long max_revision = SchemaRevisionen.maxRevision.revision;
+		long rev = maxUpdateRevision;
+		if (rev < 0)
+			rev = max_revision;
+		if (rev > max_revision)
+			return false;
+
+		final boolean success = createAndUpdateSchemaInto(tgtConfig, rev, logger, true);
+
+		// Prüfe, ob das Datenbank-Schema bereits in der Konfiguration vorhanden ist oder nicht. Wenn nicht, dann füge es hinzu
+		final DBConfig tmp = SVWSKonfiguration.get().getDBConfig(tgtConfig.getDBSchema());
+		if (tmp == null)
+			SVWSKonfiguration.get().createOrUpdateSchema(tgtConfig.getDBSchema(), tgtConfig.getUsername(), tgtConfig.getPassword(), false);
+
+		return success;
 	}
 
 }

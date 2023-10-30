@@ -960,4 +960,72 @@ public class APISchemaPrivileged {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Anlegen eines SVWSM-Schemas in der angegebenen Revision in dem Schema mit angegebenem Namen.
+     * Der zur Authentifizierung verwendete Datenbank-Benutzer muss die nötigen Rechte haben.
+     *
+     * @param schemaname    der Name des Schemas, das angelegt werden soll
+     * @param revision      die Revisionsnummer, auf die das Schema angehoben werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Response
+     */
+    @POST
+    @Path("/api/schema/create/{schema}/{revision : \\d+}")
+    @Operation(summary = "Erstellt ein neues leeres SVWS-Schema der angegebenen Revision in dem angegebenen existierenden Schema.",
+		description = "Erstellt ein neues leeres SVWS-Schema der angegebenen Revision in dem angegebenen existierenden Schema.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Anlegen des Schemas",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Es wurde eine ungültige Revision angegeben.")
+	@ApiResponse(responseCode = "403", description = "Der angemeldete Benutzer verfügt nicht über die notwendigen Rechte zum Anlegen eines Schemas.")
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+    @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der Revision konnte nicht angelegt werden.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public SimpleOperationResponse createSchemaInto(@PathParam("schema") final String schemaname,
+    						 @PathParam("revision") final long revision,
+    						 @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+	    	final Logger logger = new Logger();
+	    	final LogConsumerList log = new LogConsumerList();
+	    	logger.addConsumer(log);
+	    	logger.addConsumer(new LogConsumerConsole());
+
+			final long max_revision = SchemaRevisionen.maxRevision.revision;
+			long rev = revision;
+			if (rev < 0)
+				rev = max_revision;
+			if (rev > max_revision)
+				throw OperationError.BAD_REQUEST.exception(simpleResponse(false, log));
+
+			final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), conn.getDBSchema(), conn.useDBLogin(), conn.getUser().getUsername(), conn.getUser().getPassword(), true, true, 0, 0);
+			final boolean success = DBSchemaManager.recycleSchema(dbconfig, revision, logger);
+			return simpleResponse(success, log);
+    	}
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Anlegen eines SVWSM-Schemas in der aktuellen Revision in dem Schema mit angegebenem Namen.
+     * Der zur Authentifizierung verwendete Datenbank-Benutzer muss die nötigen Rechte haben.
+     *
+     * @param schemaname    der Name des Schemas, das angelegt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Response
+     */
+    @POST
+    @Path("/api/schema/create/{schema}")
+    @Operation(summary = "Erstellt ein neues leeres SVWS-Schema der aktuellen Revision in dem angegebenen existierenden Schema.",
+		description = "Erstellt ein neues leeres SVWS-Schema der aktuellen Revision in dem angegebenen existierenden Schema.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Anlegen des Schemas",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "403", description = "Der angemeldete Benutzer verfügt nicht über die notwendigen Rechte zum Anlegen eines Schemas.")
+    @ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+    @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der aktuellen Revision konnte nicht angelegt werden.")
+    public SimpleOperationResponse createSchemaCurrentInto(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	return createSchemaInto(schemaname, -1, request);
+    }
+
 }

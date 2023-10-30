@@ -13,7 +13,8 @@ import jakarta.ws.rs.core.Application;
 public final class RestAppSchemaRoot extends Application {
 
 	/** Die Pfad-Spezifikation für diese Applikation */
-	private static final String[] pathSpec = { "/api/schema/root/*", "/api/schema/export/*", "/api/schema/import/*", "/api/schema/migrate/*", "/openapi/privileged.json", "/openapi/privileged.yaml" };
+	private static final String[] pathSpec = { "/api/schema/root/*", "/api/schema/create/*", "/api/schema/export/*",
+			"/api/schema/import/*", "/api/schema/migrate/*", "/openapi/privileged.json", "/openapi/privileged.yaml" };
 
 	/// Enthält die API-Klassen für diese Applikation
     private final Set<Class<?>> classes = Set.of(

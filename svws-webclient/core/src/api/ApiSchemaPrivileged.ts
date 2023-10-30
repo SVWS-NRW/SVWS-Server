@@ -22,6 +22,63 @@ export class ApiSchemaPrivileged extends BaseApi {
 	}
 
 	/**
+	 * Implementierung der POST-Methode createSchemaCurrentInto für den Zugriff auf die URL https://{hostname}/api/schema/create/{schema}
+	 *
+	 * Erstellt ein neues leeres SVWS-Schema der aktuellen Revision in dem angegebenen existierenden Schema.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Anlegen des Schemas
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der angemeldete Benutzer verfügt nicht über die notwendigen Rechte zum Anlegen eines Schemas.
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *   Code 500: Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der aktuellen Revision konnte nicht angelegt werden.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Anlegen des Schemas
+	 */
+	public async createSchemaCurrentInto(schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/create/{schema}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createSchemaInto für den Zugriff auf die URL https://{hostname}/api/schema/create/{schema}/{revision : \d+}
+	 *
+	 * Erstellt ein neues leeres SVWS-Schema der angegebenen Revision in dem angegebenen existierenden Schema.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Anlegen des Schemas
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es wurde eine ungültige Revision angegeben.
+	 *   Code 403: Der angemeldete Benutzer verfügt nicht über die notwendigen Rechte zum Anlegen eines Schemas.
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *   Code 500: Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der Revision konnte nicht angelegt werden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} revision - der Pfad-Parameter revision
+	 *
+	 * @returns Der Log vom Anlegen des Schemas
+	 */
+	public async createSchemaInto(schema : string, revision : number) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/create/{schema}/{revision : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode exportSQLiteFrom für den Zugriff auf die URL https://{hostname}/api/schema/export/{schema}/sqlite
 	 *
 	 * Exportiert das angegebene Schema in eine neu erstellte SQLite-Datenbank. Der Aufruf erfordert einen Datenbank-Benutzer mit den entsprechenden Rechten.
