@@ -279,6 +279,9 @@ public class StundenplanManager {
 	private int _zeitrasterStundeMaxOhneLeere = 1;
 	private @NotNull int @NotNull [] _zeitrasterStundenRangeOhneLeere = new int[] {1};
 
+	// wert ... by
+	private final @NotNull HashMap<@NotNull Long, @NotNull Double> _wertWochenminuten_by_idKurs = new HashMap<>();
+
 	// Stundenplan
 	private final long _stundenplanID;
 	private final int _stundenplanWochenTypModell;
@@ -286,6 +289,8 @@ public class StundenplanManager {
 	private final @NotNull String _stundenplanGueltigAb;
 	private final @NotNull String _stundenplanGueltigBis;
 	private final @NotNull String _stundenplanBezeichnung;
+
+
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -483,6 +488,7 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idJahrgang();                      // _unterrichtmenge, _jahrgangmenge_by_idKlasse, _jahrgangmenge_by_idKurs
 		update_unterrichtmenge_by_idSchueler();                      // _unterrichtmenge, _schuelermenge_by_idKlasse, _schuelermenge_by_idKurs
 		update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();   // _klassenunterrichtmenge_by_idKlasse
+		update_wertWochenminuten_by_idKurs();                        // _unterrichtmenge_by_idKurs
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();          // _pausenzeitmenge_by_idKlasse
@@ -495,6 +501,26 @@ public class StundenplanManager {
 		update_unterrichtmenge_by_idSchueler_and_idZeitraster();     // _unterrichtmenge_by_idSchueler
 		update_schienenmenge_by_idKlasse();                          // _klassenmenge, _kursmenge_by_idKlasse, _klassenunterrichtmenge_by_idKlasse
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
+
+	}
+
+	private void update_wertWochenminuten_by_idKurs() {
+		_wertWochenminuten_by_idKurs.clear();
+
+		final double faktor = (_stundenplanWochenTypModell == 0) ? 1 : _stundenplanWochenTypModell;
+		for (final @NotNull StundenplanKurs kurs : _kursmenge) {
+			double summe_minuten = 0;
+			for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, kurs.id)) {
+				final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, u.idZeitraster);
+				final @NotNull Integer ende = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
+				final @NotNull Integer beginn = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
+				final int minuten = ende - beginn;
+				summe_minuten += (u.wochentyp == 0) ? minuten * faktor : minuten;
+			}
+
+			final double wochenminuten = summe_minuten / faktor;
+			_wertWochenminuten_by_idKurs.put(kurs.id, wochenminuten);
+		}
 
 	}
 
@@ -2480,20 +2506,7 @@ public class StundenplanManager {
 		return Map2DUtils.getOrCreateArrayList(_kursmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene);
 	}
 
-	private double kursGetWochenminutenISTungerundet(final long idKurs) {
-		final double faktor = (_stundenplanWochenTypModell == 0) ? 1 : _stundenplanWochenTypModell;
 
-		double summe_minuten = 0;
-		for (final @NotNull StundenplanUnterricht u : MapUtils.getOrCreateArrayList(_unterrichtmenge_by_idKurs, idKurs)) {
-			final @NotNull StundenplanZeitraster z = DeveloperNotificationException.ifMapGetIsNull(_zeitraster_by_id, u.idZeitraster);
-			final @NotNull Integer ende = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
-			final @NotNull Integer beginn = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
-			final int minuten = ende - beginn;
-			summe_minuten += (u.wochentyp == 0) ? minuten * faktor : minuten;
-		}
-
-		return summe_minuten / faktor;
-	}
 
 	/**
 	 * Liefert die SOLL-Wochenminuten des {@link StundenplanKurs}.
@@ -2512,14 +2525,15 @@ public class StundenplanManager {
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
 	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
-	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
 	 */
 	public double kursGetWochenminutenIST(final long idKurs) {
-		return gerundetAufZweiNachkommastellen(kursGetWochenminutenISTungerundet(idKurs));
+		final double wochenminuten = DeveloperNotificationException.ifMapGetIsNull(_wertWochenminuten_by_idKurs, idKurs);
+		return gerundetAufZweiNachkommastellen(wochenminuten);
 	}
 
 	/**
@@ -2553,14 +2567,15 @@ public class StundenplanManager {
 	 * Liefert die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Durch Zeitraster, die nicht 45-Minuten entsprechen, können nur Stundenanteile gesetzt sein.
-	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses auf 2 Nachkommastellen gerundet.
 	 *
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 */
 	public double kursGetWochenstundenIST(final long idKurs) {
-		return gerundetAufZweiNachkommastellen(kursGetWochenminutenISTungerundet(idKurs) / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		final double wochenminuten = DeveloperNotificationException.ifMapGetIsNull(_wertWochenminuten_by_idKurs, idKurs);
+		return gerundetAufZweiNachkommastellen(wochenminuten / FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**

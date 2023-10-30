@@ -399,6 +399,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _zeitrasterStundenRangeOhneLeere : Array<number> = [1];
 
+	private readonly _wertWochenminuten_by_idKurs : HashMap<number, number> = new HashMap();
+
 	private readonly _stundenplanID : number;
 
 	private readonly _stundenplanWochenTypModell : number;
@@ -557,6 +559,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idJahrgang();
 		this.update_unterrichtmenge_by_idSchueler();
 		this.update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();
+		this.update_wertWochenminuten_by_idKurs();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -567,6 +570,23 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idSchueler_and_idZeitraster();
 		this.update_schienenmenge_by_idKlasse();
 		this.update_kursmenge_by_idKlasse_and_idSchiene();
+	}
+
+	private update_wertWochenminuten_by_idKurs() : void {
+		this._wertWochenminuten_by_idKurs.clear();
+		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
+		for (const kurs of this._kursmenge) {
+			let summe_minuten : number = 0;
+			for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, kurs.id)) {
+				const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
+				const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
+				const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
+				const minuten : number = ende! - beginn!;
+				summe_minuten += (u.wochentyp === 0) ? minuten * faktor : minuten;
+			}
+			const wochenminuten : number = summe_minuten / faktor;
+			this._wertWochenminuten_by_idKurs.put(kurs.id, wochenminuten);
+		}
 	}
 
 	private update_schienenmenge_by_idKlasse() : void {
@@ -2380,19 +2400,6 @@ export class StundenplanManager extends JavaObject {
 		return Map2DUtils.getOrCreateArrayList(this._kursmenge_by_idKlasse_and_idSchiene, idKlasse, idSchiene);
 	}
 
-	private kursGetWochenminutenISTungerundet(idKurs : number) : number {
-		const faktor : number = (this._stundenplanWochenTypModell === 0) ? 1 : this._stundenplanWochenTypModell;
-		let summe_minuten : number = 0;
-		for (const u of MapUtils.getOrCreateArrayList(this._unterrichtmenge_by_idKurs, idKurs)) {
-			const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
-			const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
-			const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
-			const minuten : number = ende! - beginn!;
-			summe_minuten += (u.wochentyp === 0) ? minuten * faktor : minuten;
-		}
-		return summe_minuten / faktor;
-	}
-
 	/**
 	 * Liefert die SOLL-Wochenminuten des {@link StundenplanKurs}.
 	 * <br>Laufzeit: O(1)
@@ -2410,14 +2417,15 @@ export class StundenplanManager extends JavaObject {
 	 * <br>Hinweis 1: Durch AB-Wochen, ist der Rückgabewert eine Kommazahl, da nur Stundenanteile gesetzt sein können.
 	 * <br>Hinweis 2: Der Wert kann größer als der SOLL-Wert sein, wenn mehr Unterricht als nötig gesetzt wurde.
 	 * <br>Hinweis 3: Der Wert ist auf 2 Nachkommastellen gerundet.
-	 * <br>Laufzeit: O(|Unterrichte des Kursunterrichts|)
+	 * <br>Laufzeit: O(1)
 	 *
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs}.
 	 */
 	public kursGetWochenminutenIST(idKurs : number) : number {
-		return StundenplanManager.gerundetAufZweiNachkommastellen(this.kursGetWochenminutenISTungerundet(idKurs));
+		const wochenminuten : number = DeveloperNotificationException.ifMapGetIsNull(this._wertWochenminuten_by_idKurs, idKurs).valueOf();
+		return StundenplanManager.gerundetAufZweiNachkommastellen(wochenminuten);
 	}
 
 	/**
@@ -2458,7 +2466,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return die IST-Wochenstunden des {@link StundenplanKurs} auf 2 Nachkommastellen gerundet.
 	 */
 	public kursGetWochenstundenIST(idKurs : number) : number {
-		return StundenplanManager.gerundetAufZweiNachkommastellen(this.kursGetWochenminutenISTungerundet(idKurs) / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
+		const wochenminuten : number = DeveloperNotificationException.ifMapGetIsNull(this._wertWochenminuten_by_idKurs, idKurs).valueOf();
+		return StundenplanManager.gerundetAufZweiNachkommastellen(wochenminuten / StundenplanManager.FAKTOR_WOCHENSTUNDEN_ZU_MINUTEN);
 	}
 
 	/**
