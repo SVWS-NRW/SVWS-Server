@@ -341,6 +341,8 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _unterrichtmenge_by_idJahrgang : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
 
+	private readonly _unterrichtmenge_by_idUnterricht : HashMap<number, List<StundenplanUnterricht>> = new HashMap();
+
 	private readonly _unterrichtmenge_by_idKlasse_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
 
 	private readonly _unterrichtmenge_by_idRaum_and_idZeitraster : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D();
@@ -563,6 +565,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();
 		this.update_wertWochenminuten_by_idKurs();
 		this.update_wertWochenminuten_by_idKlasse_und_idFach();
+		this.update_unterrichtmenge_by_idUnterricht();
 		this.update_pausenzeitmenge_by_idKlasse_and_wochentag();
 		this.update_pausenzeitmenge_by_idJahrgang_and_wochentag();
 		this.update_pausenzeitmenge_by_idSchueler_and_wochentag();
@@ -573,6 +576,16 @@ export class StundenplanManager extends JavaObject {
 		this.update_unterrichtmenge_by_idSchueler_and_idZeitraster();
 		this.update_schienenmenge_by_idKlasse();
 		this.update_kursmenge_by_idKlasse_and_idSchiene();
+	}
+
+	private update_unterrichtmenge_by_idUnterricht() : void {
+		this._unterrichtmenge_by_idUnterricht.clear();
+		for (const menge of this._unterrichtmenge_by_idKurs.values())
+			for (const u of menge)
+				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
+		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			for (const u of menge)
+				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
 	}
 
 	private update_wertWochenminuten_by_idKlasse_und_idFach() : void {
@@ -4335,6 +4348,21 @@ export class StundenplanManager extends JavaObject {
 			if (schiene.id === idSchiene)
 				return true;
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 *
+	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
+	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
+	 *
+	 * @return TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 */
+	public unterrichtIstVerschiebenErlaubt(u : StundenplanUnterricht, z : StundenplanZeitraster) : boolean {
+		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, u.id))
+			if ((partner.idZeitraster === z.id) && ((u.wochentyp === 0) || (u.wochentyp === partner.wochentyp)))
+				return false;
+		return true;
 	}
 
 	/**

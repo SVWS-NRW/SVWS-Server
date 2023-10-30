@@ -244,6 +244,7 @@ public class StundenplanManager {
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKurs = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idZeitraster = new HashMap<>();
 	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idJahrgang = new HashMap<>();
+	private final @NotNull HashMap<@NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idUnterricht = new HashMap<>();  // u --> Partner von u (inklusive u selbst)
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idKlasse_and_idZeitraster = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idRaum_and_idZeitraster = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull StundenplanUnterricht>> _unterrichtmenge_by_idSchueler_and_idZeitraster = new HashMap2D<>();
@@ -491,6 +492,7 @@ public class StundenplanManager {
 		update_klassenunterrichtmenge_by_idKlasse_and_idSchiene();   // _klassenunterrichtmenge_by_idKlasse
 		update_wertWochenminuten_by_idKurs();                        // _kursmenge, _unterrichtmenge_by_idKurs
 		update_wertWochenminuten_by_idKlasse_und_idFach();           // _klassenmenge, _fachmenge, _unterrichtmenge_by_idKlasse_and_idFach
+		update_unterrichtmenge_by_idUnterricht();                    // _unterrichtmenge_by_idKurs, _unterrichtmenge_by_idKlasse_and_idFach
 
 		// 3. Ordnung
 		update_pausenzeitmenge_by_idKlasse_and_wochentag();          // _pausenzeitmenge_by_idKlasse
@@ -505,6 +507,20 @@ public class StundenplanManager {
 		update_kursmenge_by_idKlasse_and_idSchiene();                // _kursmenge_by_idKlasse
 
 
+	}
+
+	private void update_unterrichtmenge_by_idUnterricht() {
+		_unterrichtmenge_by_idUnterricht.clear();
+
+		// Kurs-Unterricht-Gruppen hinzufügen.
+		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKurs.values())
+			for (final @NotNull StundenplanUnterricht u : menge)
+				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
+
+		// Klassen-Unterricht-Gruppen hinzufügen.
+		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			for (final @NotNull StundenplanUnterricht u : menge)
+				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
 	}
 
 	private void update_wertWochenminuten_by_idKlasse_und_idFach() {
@@ -4619,6 +4635,22 @@ public class StundenplanManager {
 				return true;
 
 		return false;
+	}
+
+	/**
+	 * Liefert TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 *
+	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
+	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
+	 *
+	 * @return TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 */
+	public boolean unterrichtIstVerschiebenErlaubt(final @NotNull StundenplanUnterricht u, final @NotNull StundenplanZeitraster z) {
+		for (final @NotNull StundenplanUnterricht partner : DeveloperNotificationException.ifMapGetIsNull(_unterrichtmenge_by_idUnterricht, u.id))
+			if ((partner.idZeitraster == z.id) && ((u.wochentyp == 0) || (u.wochentyp == partner.wochentyp)))
+				return false;
+
+		return true;
 	}
 
 	/**
