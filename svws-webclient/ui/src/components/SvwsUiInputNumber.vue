@@ -334,22 +334,6 @@
       @apply text-svws;
     }
 
-	&-icon {
-		@apply absolute left-2 opacity-25;
-		top: 50%;
-		transform: translateY(-50%) scale(90%);
-
-		.input-number-component:not(.input-number--filled):not(:focus-within):not(.input-number--disabled):hover & {
-			@apply opacity-50;
-		}
-
-		.input-number-component:focus-within &,
-		.input-number--filled & {
-			@apply opacity-100;
-			transform: translateY(-50%) scale(100%);
-		}
-	}
-
 	input {
 		@apply pl-8;
 	}
