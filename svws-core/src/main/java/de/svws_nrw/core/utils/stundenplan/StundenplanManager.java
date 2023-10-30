@@ -514,13 +514,14 @@ public class StundenplanManager {
 
 		// Kurs-Unterricht-Gruppen hinzufügen.
 		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKurs.values())
-			for (final @NotNull StundenplanUnterricht u : menge)
+			for (final @NotNull StundenplanUnterricht u : menge) {
+				System.out.println("Kurs-Unterricht " + u.id + " --> " + menge);
 				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
+			}
 
 		// Klassen-Unterricht-Gruppen hinzufügen.
-		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
-			for (final @NotNull StundenplanUnterricht u : menge)
-				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
+		// TODO funktioniert noch nicht.
+
 	}
 
 	private void update_wertWochenminuten_by_idKlasse_und_idFach() {

@@ -581,11 +581,10 @@ export class StundenplanManager extends JavaObject {
 	private update_unterrichtmenge_by_idUnterricht() : void {
 		this._unterrichtmenge_by_idUnterricht.clear();
 		for (const menge of this._unterrichtmenge_by_idKurs.values())
-			for (const u of menge)
+			for (const u of menge) {
+				console.log(JSON.stringify("Kurs-Unterricht " + u.id + " --> " + menge));
 				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
-		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
-			for (const u of menge)
-				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
+			}
 	}
 
 	private update_wertWochenminuten_by_idKlasse_und_idFach() : void {
