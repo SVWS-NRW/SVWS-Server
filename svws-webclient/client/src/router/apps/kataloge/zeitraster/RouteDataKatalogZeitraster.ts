@@ -3,20 +3,15 @@ import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZ
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { List} from "@core";
-
-
+import type { List, StundenplanZeitraster} from "@core";
+import { StundenplanManager, ArrayList, BenutzerKompetenz, Schulform, ServerMode, Stundenplan } from "@core";
 import { shallowRef } from "vue";
-import { StundenplanManager, StundenplanZeitraster, Wochentag, ArrayList, BenutzerKompetenz, Schulform, ServerMode, Stundenplan } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
-
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
 import { routeKatalogZeitrasterDaten } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitrasterDaten";
-
 
 interface RouteStateKatalogZeitraster {
 	listKatalogeintraege: List<StundenplanZeitraster>;
@@ -62,6 +57,7 @@ export class RouteDataKatalogZeitraster {
 		return this._state.value.stundenplanManager;
 	}
 	public async ladeListe() {
+		api.status.start();
 		const listZeitraster = await api.server.getZeitraster(api.schema);
 		const stundenplan = new Stundenplan();
 		stundenplan.zeitraster = listZeitraster;
@@ -69,73 +65,47 @@ export class RouteDataKatalogZeitraster {
 		stundenplan.gueltigBis = "2050-09-29";
 		const stundenplanManager = new StundenplanManager(stundenplan, new ArrayList(), new ArrayList(), null);
 		this.setPatchedDefaultState({ stundenplanManager });
+		api.status.stop();
 	}
 
-	patchZeitraster = async (daten: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => {
-		await api.server.patchZeitrasterEintrag(daten, api.schema, zeitraster.id);
-		this.commit();
-	}
-
-	addZeitraster = async (wochentag: Wochentag | undefined, stunde : number | undefined) => {
-		if ((wochentag === undefined) && (stunde === undefined)) {
-			return;
-		} else if ((wochentag === undefined) && (stunde !== undefined)) {
-			api.status.start();
-			// Füge Zeile im Stundenplan hinzu
-			console.log("Stunde hinten anfügen: ", stunde);
-			for (const wochentag of this.stundenplanManager.zeitrasterGetWochentageAlsEnumRange()) {
-				const z = this.stundenplanManager.zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
-				if (z !== null) {
-					const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-					delete zeitraster.id;
-					zeitraster.wochentag = wochentag.id;
-					zeitraster.unterrichtstunde = stunde + 1;
-					zeitraster.stundenbeginn = (z.stundenende ?? 0) + 5;
-					zeitraster.stundenende = zeitraster.stundenbeginn + ((z.stundenende ?? 0) - (z.stundenbeginn ?? 0));
-					const _item = await api.server.addZeitrasterEintrag(zeitraster, api.schema)
-					this.stundenplanManager.zeitrasterAdd(_item);
-				}
-			}
-		} else if ((wochentag !== undefined) && (stunde === undefined)) {
-			// Füge Spalte im Stundenplan hinzu
-			api.status.start();
-			console.log("Wochentag hinten hinzufügen: ", wochentag.kuerzel);
-			const ersteStunde = this.stundenplanManager.zeitrasterGetStundeMin();
-			const letzterTag = this.stundenplanManager.zeitrasterGetWochentagMax();
-			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-			delete zeitraster.id;
-			zeitraster.wochentag = Wochentag.fromIDorException(letzterTag + 1).id;
-			zeitraster.unterrichtstunde = ersteStunde;
-			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(ersteStunde);
-			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(ersteStunde);
-			const _item = await api.server.addZeitrasterEintrag(zeitraster, api.schema)
-			this.stundenplanManager.zeitrasterAdd(_item);
-		} else if ((wochentag !== undefined) && (stunde !== undefined)) {
-			api.status.start();
-			// Füge Zelle im Stundenplan hinzu
-			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-			delete zeitraster.id;
-			zeitraster.wochentag = wochentag.id;
-			zeitraster.unterrichtstunde = stunde;
-			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(stunde);
-			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(stunde);
-			console.log("Zeitrastereintrag ergänzen", wochentag.kuerzel, stunde);
-			const _item = await api.server.addZeitrasterEintrag(zeitraster, api.schema)
-			this.stundenplanManager.zeitrasterAdd(_item);
+	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
+		api.status.start();
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const z of zeitraster) {
+			delete z.id;
+			z.stundenbeginn = 400;
+			z.stundenende = 445;
+			const item = await api.server.addZeitrasterEintrag(z, api.schema);
+			list.add(item);
 		}
+		this.stundenplanManager.zeitrasterAddAll(list);
 		this.commit();
 		api.status.stop();
 	}
 
-	removeZeitraster = async (multi: StundenplanZeitraster[]) => {
-		for (const zeitraster of multi) {
-			await api.server.deleteZeitrasterEintrag(api.schema, zeitraster.id);
+	removeZeitraster = async (zeitraster: Iterable<StundenplanZeitraster>) => {
+		api.status.start();
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const z of zeitraster) {
+			const item = await api.server.deleteZeitrasterEintrag(api.schema, z.id);
+			list.add(item);
 		}
+		this.stundenplanManager.zeitrasterRemoveAll(list);
 		this.commit();
+		api.status.stop();
 	}
 
-	patch = async (eintrag : StundenplanZeitraster) => {
-		await api.server.patchZeitrasterEintrag(eintrag, api.schema, eintrag.id);
+	patchZeitraster = async (zeitraster : Iterable<StundenplanZeitraster>) => {
+		api.status.start();
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const z of zeitraster) {
+			await api.server.patchZeitrasterEintrag(z, api.schema, z.id);
+			this.stundenplanManager.zeitrasterPatchAttributes(z);
+			list.add(z);
+		}
+		// this.stundenplanManager.zeitrasterPatchAttributesAll(list);
+		this.commit();
+		api.status.stop();
 	}
 }
 

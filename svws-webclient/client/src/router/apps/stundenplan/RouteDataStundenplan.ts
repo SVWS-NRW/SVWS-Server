@@ -1,7 +1,7 @@
-import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, LehrerListeEintrag} from "@core";
+import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, LehrerListeEintrag, StundenplanZeitraster} from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 
-import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, StundenplanZeitraster, Wochentag } from "@core";
+import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
 
 import { shallowRef } from "vue";
 
@@ -242,65 +242,29 @@ export class RouteDataStundenplan {
 
 	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
 
-	addZeitraster = async (wochentag: Wochentag | undefined, stunde : number | undefined) => {
-		const idStundenplan = this._state.value.auswahl?.id;
-		if (idStundenplan === undefined)
-			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if ((wochentag === undefined) && (stunde === undefined)) {
-			return;
-		} else if ((wochentag === undefined) && (stunde !== undefined)) {
-			api.status.start();
-			// Füge Zeile im Stundenplan hinzu
-			console.log("Stunde hinten anfügen: ", stunde);
-			for (const wochentag of this.stundenplanManager.zeitrasterGetWochentageAlsEnumRange()) {
-				const z = this.stundenplanManager.zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
-				if (z !== null) {
-					const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-					delete zeitraster.id;
-					zeitraster.wochentag = wochentag.id;
-					zeitraster.unterrichtstunde = stunde + 1;
-					zeitraster.stundenbeginn = (z.stundenende ?? 0) + 5;
-					zeitraster.stundenende = zeitraster.stundenbeginn + ((z.stundenende ?? 0) - (z.stundenbeginn ?? 0));
-					const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
-					this.stundenplanManager.zeitrasterAdd(_item);
-				}
-			}
-		} else if ((wochentag !== undefined) && (stunde === undefined)) {
-			// Füge Spalte im Stundenplan hinzu
-			api.status.start();
-			console.log("Wochentag hinten hinzufügen: ", wochentag.kuerzel);
-			const ersteStunde = this.stundenplanManager.zeitrasterGetStundeMin();
-			const letzterTag = this.stundenplanManager.zeitrasterGetWochentagMax();
-			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-			delete zeitraster.id;
-			zeitraster.wochentag = Wochentag.fromIDorException(letzterTag + 1).id;
-			zeitraster.unterrichtstunde = ersteStunde;
-			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(ersteStunde);
-			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(ersteStunde);
-			const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
-			this.stundenplanManager.zeitrasterAdd(_item);
-		} else if ((wochentag !== undefined) && (stunde !== undefined)) {
-			api.status.start();
-			// Füge Zelle im Stundenplan hinzu
-			const zeitraster: Partial<StundenplanZeitraster> = new StundenplanZeitraster();
-			delete zeitraster.id;
-			zeitraster.wochentag = wochentag.id;
-			zeitraster.unterrichtstunde = stunde;
-			zeitraster.stundenbeginn = this.stundenplanManager.zeitrasterGetMinutenMinDerStunde(stunde);
-			zeitraster.stundenende = this.stundenplanManager.zeitrasterGetMinutenMaxDerStunde(stunde);
-			console.log("Zeitrastereintrag ergänzen", wochentag.kuerzel, stunde);
-			const _item = await api.server.addStundenplanZeitrasterEintrag(zeitraster, api.schema, idStundenplan)
-			this.stundenplanManager.zeitrasterAdd(_item);
+	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
+		api.status.start();
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const z of zeitraster) {
+			delete z.id;
+			const item = await api.server.addZeitrasterEintrag(z, api.schema);
+			list.add(item);
 		}
+		this.stundenplanManager.zeitrasterAddAll(list);
 		this.commit();
 		api.status.stop();
 	}
 
-	patchZeitraster = async (data : Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => {
-		Object.assign(zeitraster, data)
+	patchZeitraster = async (zeitraster : Iterable<StundenplanZeitraster>) => {
 		api.status.start();
-		await api.server.patchStundenplanZeitrasterEintrag(zeitraster, api.schema, zeitraster.id);
-		this.stundenplanManager.zeitrasterPatchAttributes(zeitraster);
+		const list = new ArrayList<StundenplanZeitraster>();
+		for (const z of zeitraster) {
+			await api.server.patchStundenplanZeitrasterEintrag(z, api.schema, z.id);
+			this.stundenplanManager.zeitrasterPatchAttributes(z);
+			list.add(z);
+		}
+		//TODO ergänzen
+		// this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
 	}
