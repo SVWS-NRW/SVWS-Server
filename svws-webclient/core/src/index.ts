@@ -507,6 +507,7 @@ export { GostFaecherManager } from './core/utils/gost/GostFaecherManager';
 export { GostJahrgangsFachwahlenManager } from './core/utils/gost/GostJahrgangsFachwahlenManager';
 export { GostStatistikFachwahlManager } from './core/utils/gost/GostStatistikFachwahlManager';
 export { JahrgangsUtils } from './core/utils/jahrgang/JahrgangsUtils';
+export { KlassenListeManager } from './core/utils/klassen/KlassenListeManager';
 export { KlassenUtils } from './core/utils/klassen/KlassenUtils';
 export { GostKlausurraumManager } from './core/utils/klausurplanung/GostKlausurraumManager';
 export { GostKlausurvorgabenManager } from './core/utils/klausurplanung/GostKlausurvorgabenManager';
@@ -532,6 +533,7 @@ export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/klausurpl
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/klausurplanung/KlausurterminblockungDynDaten';
 export { KursUtils } from './core/utils/kurse/KursUtils';
+export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';
