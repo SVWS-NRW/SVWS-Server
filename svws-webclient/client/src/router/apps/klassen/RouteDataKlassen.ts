@@ -1,6 +1,6 @@
 
 import type { KlassenDaten, KlassenListeEintrag, Schueler} from "@core";
-import { ArrayList, DeveloperNotificationException, JahrgangsListeEintrag, KlassenListeManager, LehrerListeEintrag} from "@core";
+import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 import { type RouteNode } from "~/router/RouteNode";
 
 import { shallowRef } from "vue";

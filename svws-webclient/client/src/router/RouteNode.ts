@@ -486,7 +486,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -496,9 +496,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-		  return await this.enter(to, to_params);
+		  return await this.enter(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doEnter(" + to.name + ")");
@@ -515,7 +515,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -526,8 +526,10 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
+		 * @param from die alte Route
+		 * @param from_params  die Routen-Parameter der alten Route
      */
-	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -535,7 +537,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params);
+			return await this.update(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");
