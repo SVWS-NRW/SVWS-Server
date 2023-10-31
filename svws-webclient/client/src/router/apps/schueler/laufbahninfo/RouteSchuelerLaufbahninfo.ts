@@ -30,7 +30,7 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 		}
 		const id = parseInt(to_params.id);
 		try {
-			await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.schueler.get(id));
+			await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.liste.get(id));
 		} catch(error) {
 			return routeSchueler.getRoute(id);
 		}

@@ -225,7 +225,7 @@
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
 
 	function setAuswahl(items : SchuelerListeEintrag[]) {
-		const schuelerauswahl = props.schuelerListeManager().schueler;
+		const schuelerauswahl = props.schuelerListeManager().liste;
 		for (const vorhanden of [ ... schuelerauswahl.auswahl() ])
 			if (!items.includes(vorhanden))
 				schuelerauswahl.auswahlRemove(vorhanden);

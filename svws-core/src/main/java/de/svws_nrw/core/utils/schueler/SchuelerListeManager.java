@@ -20,6 +20,7 @@ import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
+import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
@@ -30,11 +31,13 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Manager zum Verwalten der Schüler-Listen.
  */
-public class SchuelerListeManager {
+public class SchuelerListeManager extends AuswahlManager<@NotNull Long, @NotNull SchuelerListeEintrag, @NotNull SchuelerStammdaten> {
 
-	/** Ein Filter-Attribut für die Schülerliste. Dieses wird nicht für das Filtern der Schüler verwendet, sondern für eine Mehrfachauswahl */
-	public final @NotNull AttributMitAuswahl<@NotNull Long, @NotNull SchuelerListeEintrag> schueler;
+	/** Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ */
 	private static final @NotNull Function<@NotNull SchuelerListeEintrag, @NotNull Long> _schuelerToId = (final @NotNull SchuelerListeEintrag s) -> s.id;
+	private static final @NotNull Function<@NotNull SchuelerStammdaten, @NotNull Long> _stammdatenToId = (final @NotNull SchuelerStammdaten s) -> s.id;
+
+	/** Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können */
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerMitStatus = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInJahrgang = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull SchuelerListeEintrag> _mapSchuelerInKlasse = new HashMap2D<>();
@@ -73,24 +76,6 @@ public class SchuelerListeManager {
 	private static final @NotNull Function<@NotNull SchuelerStatus, @NotNull Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
 	private static final @NotNull Comparator<@NotNull SchuelerStatus> _comparatorSchuelerStatus = (final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
-	/** Die gefilterte Schüler-Liste, sofern sie schon berechnet wurde */
-	private List<@NotNull SchuelerListeEintrag> _filtered = null;
-
-	/** Ein Handler für das Ereignis, dass der Schüler-Filter angepasst wurde */
-	private final @NotNull Runnable _eventHandlerFilterChanged = () -> this._filtered = null;
-
-	/** Ein Handler für das Ereignis, dass die Schülerauswahl angepasst wurde */
-	private static final @NotNull Runnable _eventHandlerSchuelerAuswahlChanged = () -> { /* nicht zu tun */ };
-
-	/** Die Sortier-Ordnung, welche vom Comparator verwendet wird. */
-	private @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> _order = Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true));
-
-	/** Die Schulform der Schule */
-	private final Schulform _schulform;
-
-	/** Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist. */
-	private SchuelerStammdaten _daten = null;
-
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -110,9 +95,8 @@ public class SchuelerListeManager {
 			final @NotNull List<@NotNull KursListeEintrag> kurse,
 			final @NotNull List<@NotNull Schuljahresabschnitt> schuljahresabschnitte,
 			final @NotNull List<@NotNull GostJahrgang> abiturjahrgaenge) {
-		this._schulform = schulform;
-		this.schueler = new AttributMitAuswahl<>(schueler, _schuelerToId, SchuelerUtils.comparator, _eventHandlerSchuelerAuswahlChanged);
-		initSchueler();
+		super(schulform, schueler, SchuelerUtils.comparator, _schuelerToId, _stammdatenToId,
+				Arrays.asList(new Pair<>("klassen", true), new Pair<>("nachname", true), new Pair<>("vorname", true)));
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.klassen = new AttributMitAuswahl<>(klassen, _klasseToId, KlassenUtils.comparator, _eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl<>(kurse, _kursToId, KursUtils.comparator, _eventHandlerFilterChanged);
@@ -121,11 +105,12 @@ public class SchuelerListeManager {
 		final @NotNull List<@NotNull Schulgliederung> gliederungen = (schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl<>(Arrays.asList(SchuelerStatus.values()), _schuelerstatusToId, _comparatorSchuelerStatus, _eventHandlerFilterChanged);
+		initSchueler();
 	}
 
 
 	private void initSchueler() {
-		for (final @NotNull SchuelerListeEintrag s : this.schueler.list()) {
+		for (final @NotNull SchuelerListeEintrag s : this.liste.list()) {
 			this._mapSchuelerMitStatus.put(s.status, s.id, s);
 			if (s.idJahrgang >= 0)
 				this._mapSchuelerInJahrgang.put(s.idJahrgang, s.id, s);
@@ -144,68 +129,45 @@ public class SchuelerListeManager {
 
 
 	/**
-	 * Setzt die Sortier-Ordnung für die gefilterten Listen. Hier wird eine Menge von Paaren angegeben,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
 	 *
-	 * @param order   die Sortier-Ordnung
+	 * @param eintrag   der Auswahl-Eintrag
+	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
-	public void orderSet(final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> order) {
-		this._order = order;
-		this._filtered = null;
+	@Override
+	protected boolean onSetDaten(final @NotNull SchuelerListeEintrag eintrag, final @NotNull SchuelerStammdaten daten) {
+		// Passe ggf. die Daten in der Schülerliste an ... (beim Patchen der Daten)
+		boolean updateEintrag = false;
+		if (!daten.vorname.equals(eintrag.vorname)) {
+			eintrag.vorname = daten.vorname;
+			updateEintrag = true;
+		}
+		if (!daten.nachname.equals(eintrag.nachname)) {
+			eintrag.nachname = daten.nachname;
+			updateEintrag = true;
+		}
+		return updateEintrag;
 	}
 
 
 	/**
-	 * Gibt die Sortier-Ordnung für die gefilterten Listen zurück als eine Menge von Paaren,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Aktualisiert die Klassen-ID bei dem Schüler
 	 *
-	 * @return   die Sortier-Ordnung
-	 */
-	public final @NotNull List<@NotNull Pair<@NotNull String, @NotNull Boolean>> orderGet() {
-		return new ArrayList<>(this._order);
-	}
-
-
-	/**
-	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld. Dabei
-	 * werden vorhande Feld-Eintrage angepasst oder bei null entfernt. Nicht vorhande
-	 * Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 * @param idKlasse   die ID der Klasse
 	 *
-	 * @param field   das Feld
-	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
+	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
 	 */
-	public void orderUpdate(@NotNull final String field, final Boolean order) {
-		// Prüfe, ob der Feld-Eintrag entfernt werden soll
-		if (order == null) {
-			for (int i = 0; i < this._order.size(); i++) {
-				final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
-				if (eintrag.a.equals(field)) {
-					this._order.remove(eintrag);
-					this._filtered = null;
-					return;
-				}
-			}
-			return;
-		}
-		// Prüfe, ob bereits ein Eintrag vorhanden ist und passe diesen ggf an
-		for (int i = 0; i < this._order.size(); i++) {
-			final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = this._order.get(i);
-			if (eintrag.a.equals(field)) {
-				if (eintrag.b == order)
-					return;
-				this._order.remove(eintrag);
-				eintrag.b = order;
-				this._order.add(0, eintrag);
-				this._filtered = null;
-				return;
-			}
-		}
-		// Füge einen neuen Eintrag vorne in der Liste hinzu
-		final @NotNull Pair<@NotNull String, @NotNull Boolean> eintrag = new Pair<>(field, order);
-		this._order.add(0, eintrag);
-		this._filtered = null;
+	public void updateKlassenID(final Long idKlasse) throws DeveloperNotificationException {
+		// Prüfe, ob überhaupt eine Schüler-Auswahl vorliegt ...
+		if (this._daten == null)
+			throw new DeveloperNotificationException("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.".formatted(idKlasse));
+		// Prüfe, ob die angebene Klassen-ID überhaupt gültig ist ...
+		if ((idKlasse != null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
+			throw new DeveloperNotificationException("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.".formatted(idKlasse));
+		// Bestimme den Listen-Eintrag, passe diesen an und aktualisiere dann ggf. die Sortierung ...
+		final @NotNull SchuelerListeEintrag eintrag = this.liste.getOrException(this._daten.id);
+		eintrag.idKlasse = ((idKlasse == null) || (idKlasse < 0)) ? -1 : idKlasse;
+		this.orderSet(this.orderGet());
 	}
 
 
@@ -255,11 +217,10 @@ public class SchuelerListeManager {
 	 *
 	 * @return die gefilterte Liste
 	 */
-	public @NotNull List<@NotNull SchuelerListeEintrag> filtered() {
-		if (_filtered != null)
-			return _filtered;
+	@Override
+	protected @NotNull List<@NotNull SchuelerListeEintrag> onFilter() {
 		final @NotNull List<@NotNull SchuelerListeEintrag> tmpList = new ArrayList<>();
-		for (final @NotNull SchuelerListeEintrag eintrag : this.schueler.list()) {
+		for (final @NotNull SchuelerListeEintrag eintrag : this.liste.list()) {
 			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 				continue;
 			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
@@ -280,121 +241,7 @@ public class SchuelerListeManager {
 		}
 		final @NotNull Comparator<@NotNull SchuelerListeEintrag> comparator = (final @NotNull SchuelerListeEintrag a, final @NotNull SchuelerListeEintrag b) -> this.compare(a, b);
 		tmpList.sort(comparator);
-		_filtered = tmpList;
-		return _filtered;
-	}
-
-
-	/**
-	 * Gibt die Schulform der Schule des Schülers zurück.
-	 *
-	 * @return die Schulform der Schule
-	 */
-	public @NotNull Schulform schulform() {
-		if (this._schulform == null)
-			throw new DeveloperNotificationException("Der Schülerlisten-Manager sollte nur mit einer korrekt gesetzten Schulform verwendet werden.");
-		return this._schulform;
-	}
-
-
-	/**
-	 * Gibt zurück, ob ein Schüler ausgewählt ist und Daten vorliegen.
-	 *
-	 * @return true, wenn Daten vorliegen, und ansonsten false
-	 */
-	public boolean hasDaten() {
-		return this._daten != null;
-	}
-
-
-	/**
-	 * Gibt die Stammdaten des aktuell ausgewählten Schülers zurück.
-	 *
-	 * @return die Stammdaten
-	 */
-	public @NotNull SchuelerStammdaten daten() {
-		if (this._daten == null)
-			throw new DeveloperNotificationException("Es exitsiert derzeit keine Schülerauswahl");
-		return this._daten;
-	}
-
-
-	/**
-	 * Setzt die Stammdaten des Schülers. Dabei wird ggf. die Auswahl angepasst.
-	 *
-	 * @param daten   die neuen Stammdaten
-	 *
-	 * @throws DeveloperNotificationException   falls der Schüler nicht in der Liste der Schüler vorhanden ist
-	 */
-	public void setDaten(final SchuelerStammdaten daten) throws DeveloperNotificationException {
-		// Die Auswahl wird zurückgesetzt und es ist kein Schüler mehr ausgewählt
-		if (daten == null) {
-			this._daten = null;
-			return;
-		}
-		// Bestimme den Listen-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler beim Aufruf vor...
-		final @NotNull SchuelerListeEintrag eintrag = this.schueler.getOrException(daten.id);
-		// Passe ggf. die Daten in der Schülerliste an ... (beim Patchen der Daten)
-		boolean updateEintrag = false;
-		if (!daten.vorname.equals(eintrag.vorname)) {
-			eintrag.vorname = daten.vorname;
-			updateEintrag = true;
-		}
-		if (!daten.nachname.equals(eintrag.nachname)) {
-			eintrag.nachname = daten.nachname;
-			updateEintrag = true;
-		}
-		// ... und setze die neue Stammdaten
-		this._daten = daten;
-		// ... und berechne ggf. die Sortierung der Schülerliste neu
-		if (updateEintrag)
-			this.orderSet(this.orderGet());
-	}
-
-
-	/**
-	 * Aktualisiert die Klassen-ID bei dem Schüler
-	 *
-	 * @param idKlasse   die ID der Klasse
-	 *
-	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
-	 */
-	public void updateKlassenID(final Long idKlasse) throws DeveloperNotificationException {
-		// Prüfe, ob überhaupt eine Schüler-Auswahl vorliegt ...
-		if (this._daten == null)
-			throw new DeveloperNotificationException("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.".formatted(idKlasse));
-		// Prüfe, ob die angebene Klassen-ID überhaupt gültig ist ...
-		if ((idKlasse != null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
-			throw new DeveloperNotificationException("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.".formatted(idKlasse));
-		// Bestimme den Listen-Eintrag, passe diesen an und aktualisiere dann ggf. die Sortierung ...
-		final @NotNull SchuelerListeEintrag eintrag = this.schueler.getOrException(this._daten.id);
-		eintrag.idKlasse = ((idKlasse == null) || (idKlasse < 0)) ? -1 : idKlasse;
-		this.orderSet(this.orderGet());
-	}
-
-
-	/**
-	 * Gibt die ID der Auswahl zurück. Ist keine Auswahl vorhanden, so wird null zurückgegeben.
-	 *
-	 * @return die ID oder null
-	 */
-	public Long auswahlID() {
-		return this._daten == null ? null : this._daten.id;
-	}
-
-
-	/**
-	 * Gibt den Eintrag der aktuellen Schülerauswahl in der Liste zurück. Hiefür muss eine
-	 * gültige Auswahl vorliegen. Dies kann ggf. vorher über hasDaten geprüft werden.
-	 *
-	 * @return der Eintrag in der Schülerliste
-	 *
-	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
-	 */
-	public @NotNull SchuelerListeEintrag auswahl() {
-		if (this._daten == null)
-			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Schüler-Auswahl vorliegen.");
-		return this.schueler.getOrException(this._daten.id);
+		return tmpList;
 	}
 
 }

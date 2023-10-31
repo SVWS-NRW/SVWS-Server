@@ -58,7 +58,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.schueler.get(id) : null;
+		const eintrag = (id !== undefined) ? this.data.schuelerListeManager.liste.get(id) : null;
 		await this.data.setSchueler(eintrag);
 		if (!this.data.schuelerListeManager.hasDaten()) {
 			if (to.name === this.name) {

@@ -21,22 +21,25 @@ import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { SchuelerStammdaten } from '../../../core/data/schueler/SchuelerStammdaten';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
+import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
-import type { Runnable } from '../../../java/lang/Runnable';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
 
-export class SchuelerListeManager extends JavaObject {
+export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEintrag, SchuelerStammdaten> {
 
 	/**
-	 * Ein Filter-Attribut für die Schülerliste. Dieses wird nicht für das Filtern der Schüler verwendet, sondern für eine Mehrfachauswahl
+	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
-	public readonly schueler : AttributMitAuswahl<number, SchuelerListeEintrag>;
-
 	private static readonly _schuelerToId : JavaFunction<SchuelerListeEintrag, number> = { apply : (s: SchuelerListeEintrag) => s.id };
 
+	private static readonly _stammdatenToId : JavaFunction<SchuelerStammdaten, number> = { apply : (s: SchuelerStammdaten) => s.id };
+
+	/**
+	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste verwendet werden können
+	 */
 	private readonly _mapSchuelerMitStatus : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
 
 	private readonly _mapSchuelerInJahrgang : HashMap2D<number, number, SchuelerListeEintrag> = new HashMap2D();
@@ -104,38 +107,6 @@ export class SchuelerListeManager extends JavaObject {
 
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
-	/**
-	 * Die gefilterte Schüler-Liste, sofern sie schon berechnet wurde
-	 */
-	private _filtered : List<SchuelerListeEintrag> | null = null;
-
-	/**
-	 * Ein Handler für das Ereignis, dass der Schüler-Filter angepasst wurde
-	 */
-	private readonly _eventHandlerFilterChanged : Runnable = { run : () => this._filtered = null };
-
-	/**
-	 * Ein Handler für das Ereignis, dass die Schülerauswahl angepasst wurde
-	 */
-	private static readonly _eventHandlerSchuelerAuswahlChanged : Runnable = { run : () => {
-		// empty block
-	} };
-
-	/**
-	 * Die Sortier-Ordnung, welche vom Comparator verwendet wird.
-	 */
-	private _order : List<Pair<string, boolean>> = Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true));
-
-	/**
-	 * Die Schulform der Schule
-	 */
-	private readonly _schulform : Schulform | null;
-
-	/**
-	 * Die Stammdaten des Schülers, sofern ein Schüler ausgewählt ist.
-	 */
-	private _daten : SchuelerStammdaten | null = null;
-
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -149,10 +120,7 @@ export class SchuelerListeManager extends JavaObject {
 	 * @param abiturjahrgaenge        die Liste der Abiturjahrgänge
 	 */
 	public constructor(schulform : Schulform | null, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsListeEintrag>, klassen : List<KlassenListeEintrag>, kurse : List<KursListeEintrag>, schuljahresabschnitte : List<Schuljahresabschnitt>, abiturjahrgaenge : List<GostJahrgang>) {
-		super();
-		this._schulform = schulform;
-		this.schueler = new AttributMitAuswahl(schueler, SchuelerListeManager._schuelerToId, SchuelerUtils.comparator, SchuelerListeManager._eventHandlerSchuelerAuswahlChanged);
-		this.initSchueler();
+		super(schulform, schueler, SchuelerUtils.comparator, SchuelerListeManager._schuelerToId, SchuelerListeManager._stammdatenToId, Arrays.asList(new Pair("klassen", true), new Pair("nachname", true), new Pair("vorname", true)));
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.klassen = new AttributMitAuswahl(klassen, SchuelerListeManager._klasseToId, KlassenUtils.comparator, this._eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl(kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
@@ -161,10 +129,11 @@ export class SchuelerListeManager extends JavaObject {
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		this.initSchueler();
 	}
 
 	private initSchueler() : void {
-		for (const s of this.schueler.list()) {
+		for (const s of this.liste.list()) {
 			this._mapSchuelerMitStatus.put(s.status, s.id, s);
 			if (s.idJahrgang >= 0)
 				this._mapSchuelerInJahrgang.put(s.idJahrgang, s.id, s);
@@ -182,63 +151,39 @@ export class SchuelerListeManager extends JavaObject {
 	}
 
 	/**
-	 * Setzt die Sortier-Ordnung für die gefilterten Listen. Hier wird eine Menge von Paaren angegeben,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
 	 *
-	 * @param order   die Sortier-Ordnung
+	 * @param eintrag   der Auswahl-Eintrag
+	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
-	public orderSet(order : List<Pair<string, boolean>>) : void {
-		this._order = order;
-		this._filtered = null;
+	protected onSetDaten(eintrag : SchuelerListeEintrag, daten : SchuelerStammdaten) : boolean {
+		let updateEintrag : boolean = false;
+		if (!JavaObject.equalsTranspiler(daten.vorname, (eintrag.vorname))) {
+			eintrag.vorname = daten.vorname;
+			updateEintrag = true;
+		}
+		if (!JavaObject.equalsTranspiler(daten.nachname, (eintrag.nachname))) {
+			eintrag.nachname = daten.nachname;
+			updateEintrag = true;
+		}
+		return updateEintrag;
 	}
 
 	/**
-	 * Gibt die Sortier-Ordnung für die gefilterten Listen zurück als eine Menge von Paaren,
-	 * welche das zu sortierende Feld als String angebenen und als boolean ob es aufsteigend (true)
-	 * oder absteigend (false) sortiert werden soll.
+	 * Aktualisiert die Klassen-ID bei dem Schüler
 	 *
-	 * @return   die Sortier-Ordnung
-	 */
-	public orderGet() : List<Pair<string, boolean>> {
-		return new ArrayList(this._order);
-	}
-
-	/**
-	 * Aktualisiert die Reihenfolge bei der Sortierung für das angegebene Feld. Dabei
-	 * werden vorhande Feld-Eintrage angepasst oder bei null entfernt. Nicht vorhande
-	 * Feld-Einträge werden ergänzt, sofern eine Reihenfolge definiert wird.
+	 * @param idKlasse   die ID der Klasse
 	 *
-	 * @param field   das Feld
-	 * @param order   die Reihenfolge für dieses Feld (ascending: true, descending: false, deaktivieren: null)
+	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
 	 */
-	public orderUpdate(field : string, order : boolean | null) : void {
-		if (order === null) {
-			for (let i : number = 0; i < this._order.size(); i++) {
-				const eintrag : Pair<string, boolean> = this._order.get(i);
-				if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-					this._order.remove(eintrag);
-					this._filtered = null;
-					return;
-				}
-			}
-			return;
-		}
-		for (let i : number = 0; i < this._order.size(); i++) {
-			const eintrag : Pair<string, boolean> = this._order.get(i);
-			if (JavaObject.equalsTranspiler(eintrag.a, (field))) {
-				if (eintrag.b === order)
-					return;
-				this._order.remove(eintrag);
-				eintrag.b = order;
-				this._order.add(0, eintrag);
-				this._filtered = null;
-				return;
-			}
-		}
-		const eintrag : Pair<string, boolean> = new Pair(field, order);
-		this._order.add(0, eintrag);
-		this._filtered = null;
+	public updateKlassenID(idKlasse : number | null) : void {
+		if (this._daten === null)
+			throw new DeveloperNotificationException(JavaString.format("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.", idKlasse))
+		if ((idKlasse !== null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
+			throw new DeveloperNotificationException(JavaString.format("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.", idKlasse))
+		const eintrag : SchuelerListeEintrag = this.liste.getOrException(this._daten.id);
+		eintrag.idKlasse = ((idKlasse === null) || (idKlasse < 0)) ? -1 : idKlasse;
+		this.orderSet(this.orderGet());
 	}
 
 	/**
@@ -290,11 +235,9 @@ export class SchuelerListeManager extends JavaObject {
 	 *
 	 * @return die gefilterte Liste
 	 */
-	public filtered() : List<SchuelerListeEintrag> {
-		if (this._filtered !== null)
-			return this._filtered;
+	protected onFilter() : List<SchuelerListeEintrag> {
 		const tmpList : List<SchuelerListeEintrag> = new ArrayList();
-		for (const eintrag of this.schueler.list()) {
+		for (const eintrag of this.liste.list()) {
 			if (this.jahrgaenge.auswahlExists() && ((eintrag.idJahrgang < 0) || (!this.jahrgaenge.auswahlHasKey(eintrag.idJahrgang))))
 				continue;
 			if (this.klassen.auswahlExists() && ((eintrag.idKlasse < 0) || (!this.klassen.auswahlHasKey(eintrag.idKlasse))))
@@ -315,110 +258,11 @@ export class SchuelerListeManager extends JavaObject {
 		}
 		const comparator : Comparator<SchuelerListeEintrag> = { compare : (a: SchuelerListeEintrag, b: SchuelerListeEintrag) => this.compare(a, b) };
 		tmpList.sort(comparator);
-		this._filtered = tmpList;
-		return this._filtered;
-	}
-
-	/**
-	 * Gibt die Schulform der Schule des Schülers zurück.
-	 *
-	 * @return die Schulform der Schule
-	 */
-	public schulform() : Schulform {
-		if (this._schulform === null)
-			throw new DeveloperNotificationException("Der Schülerlisten-Manager sollte nur mit einer korrekt gesetzten Schulform verwendet werden.")
-		return this._schulform;
-	}
-
-	/**
-	 * Gibt zurück, ob ein Schüler ausgewählt ist und Daten vorliegen.
-	 *
-	 * @return true, wenn Daten vorliegen, und ansonsten false
-	 */
-	public hasDaten() : boolean {
-		return this._daten !== null;
-	}
-
-	/**
-	 * Gibt die Stammdaten des aktuell ausgewählten Schülers zurück.
-	 *
-	 * @return die Stammdaten
-	 */
-	public daten() : SchuelerStammdaten {
-		if (this._daten === null)
-			throw new DeveloperNotificationException("Es exitsiert derzeit keine Schülerauswahl")
-		return this._daten;
-	}
-
-	/**
-	 * Setzt die Stammdaten des Schülers. Dabei wird ggf. die Auswahl angepasst.
-	 *
-	 * @param daten   die neuen Stammdaten
-	 *
-	 * @throws DeveloperNotificationException   falls der Schüler nicht in der Liste der Schüler vorhanden ist
-	 */
-	public setDaten(daten : SchuelerStammdaten | null) : void {
-		if (daten === null) {
-			this._daten = null;
-			return;
-		}
-		const eintrag : SchuelerListeEintrag = this.schueler.getOrException(daten.id);
-		let updateEintrag : boolean = false;
-		if (!JavaObject.equalsTranspiler(daten.vorname, (eintrag.vorname))) {
-			eintrag.vorname = daten.vorname;
-			updateEintrag = true;
-		}
-		if (!JavaObject.equalsTranspiler(daten.nachname, (eintrag.nachname))) {
-			eintrag.nachname = daten.nachname;
-			updateEintrag = true;
-		}
-		this._daten = daten;
-		if (updateEintrag)
-			this.orderSet(this.orderGet());
-	}
-
-	/**
-	 * Aktualisiert die Klassen-ID bei dem Schüler
-	 *
-	 * @param idKlasse   die ID der Klasse
-	 *
-	 * @throws DeveloperNotificationException   falls kein Schüler ausgewählt ist oder die Klassen-ID nicht zulässig ist
-	 */
-	public updateKlassenID(idKlasse : number | null) : void {
-		if (this._daten === null)
-			throw new DeveloperNotificationException(JavaString.format("Für das Setzen der Klassen-ID %d muss ein Schüler ausgewählt sein.", idKlasse))
-		if ((idKlasse !== null) && (idKlasse >= 0) && (!this.klassen.has(idKlasse)))
-			throw new DeveloperNotificationException(JavaString.format("Die Klassen-ID %d muss zu dem aktuell ausgewählten Schuljahresabschnitt passen.", idKlasse))
-		const eintrag : SchuelerListeEintrag = this.schueler.getOrException(this._daten.id);
-		eintrag.idKlasse = ((idKlasse === null) || (idKlasse < 0)) ? -1 : idKlasse;
-		this.orderSet(this.orderGet());
-	}
-
-	/**
-	 * Gibt die ID der Auswahl zurück. Ist keine Auswahl vorhanden, so wird null zurückgegeben.
-	 *
-	 * @return die ID oder null
-	 */
-	public auswahlID() : number | null {
-		return this._daten === null ? null : this._daten.id;
-	}
-
-	/**
-	 * Gibt den Eintrag der aktuellen Schülerauswahl in der Liste zurück. Hiefür muss eine
-	 * gültige Auswahl vorliegen. Dies kann ggf. vorher über hasDaten geprüft werden.
-	 *
-	 * @return der Eintrag in der Schülerliste
-	 *
-	 * @throws DeveloperNotificationException wenn keine gültige Auswahl vorliegt
-	 */
-	public auswahl() : SchuelerListeEintrag {
-		if (this._daten === null)
-			throw new DeveloperNotificationException("Für den Aufruf dieser Methode muss zuvor eine Schüler-Auswahl vorliegen.")
-		return this.schueler.getOrException(this._daten.id);
+		return tmpList;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.utils.schueler.SchuelerListeManager'].includes(name);
+		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schueler.SchuelerListeManager'].includes(name);
 	}
 
 }

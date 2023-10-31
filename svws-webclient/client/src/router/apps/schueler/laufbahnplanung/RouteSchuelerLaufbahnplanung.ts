@@ -39,7 +39,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		} else {
 			const id = parseInt(to_params.id);
 			try {
-				await this.data.ladeDaten(this.parent.data.schuelerListeManager.schueler.get(id));
+				await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
 				return routeSchueler.getRoute(id);
 			}

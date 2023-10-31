@@ -63,8 +63,8 @@ export class RouteDataSchueler {
 		// Ermittle eine ggf. zuvor vorhandene Auswahl und versuche diese wiederherzustellen
 		const auswahlVorher = this.schuelerListeManager.hasDaten() ? this.schuelerListeManager.auswahl() : null;
 		let auswahl = null;
-		if ((auswahlVorher !== null) && schuelerListeManager.schueler.has(auswahlVorher.id))
-			auswahl = schuelerListeManager.schueler.getOrException(auswahlVorher.id);
+		if ((auswahlVorher !== null) && schuelerListeManager.liste.has(auswahlVorher.id))
+			auswahl = schuelerListeManager.liste.getOrException(auswahlVorher.id);
 		if (auswahl === null)
 			auswahl = schuelerListeManager.filtered().isEmpty() ? null : schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);
@@ -86,14 +86,14 @@ export class RouteDataSchueler {
 	public async setSchueler(schueler: SchuelerListeEintrag | null) {
 		if ((schueler === null) && (!this.schuelerListeManager.hasDaten()))
 			return;
-		if ((schueler === null) || (this.schuelerListeManager.schueler.list().isEmpty())) {
+		if ((schueler === null) || (this.schuelerListeManager.liste.list().isEmpty())) {
 			this.schuelerListeManager.setDaten(null);
 			this.commit();
 			return;
 		}
 		if ((schueler !== null) && (this.schuelerListeManager.hasDaten() && (schueler.id === this.schuelerListeManager.auswahl().id)))
 			return;
-		let auswahl = this.schuelerListeManager.schueler.get(schueler.id);
+		let auswahl = this.schuelerListeManager.liste.get(schueler.id);
 		if (auswahl === null)
 			auswahl = this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);

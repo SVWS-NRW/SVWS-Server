@@ -32,7 +32,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		} else {
 			const id = parseInt(to_params.id);
 			try {
-				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.schueler.get(id));
+				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
 				return routeSchueler.getRoute(id);
 			}
