@@ -485,6 +485,7 @@ export { WeiterbildungskollegBildungsgangTyp } from './core/types/schule/Weiterb
 export { WeiterbildungskollegOrganisationsformen } from './core/types/schule/WeiterbildungskollegOrganisationsformen';
 export { AdressenUtils } from './core/utils/AdressenUtils';
 export { AttributMitAuswahl } from './core/utils/AttributMitAuswahl';
+export { AuswahlManager } from './core/utils/AuswahlManager';
 export { BlockungsUtils } from './core/utils/BlockungsUtils';
 export { CollectionUtils } from './core/utils/CollectionUtils';
 export { DateUtils } from './core/utils/DateUtils';
