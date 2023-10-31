@@ -20,10 +20,12 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {
+			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
+				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
 			if (!routeSchueler.data.schuelerListeManager.hasDaten())
 				return false;
 			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
-			return !(abiturjahr && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr));
+			return (abiturjahr && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr)) ? false : routeSchueler.getRoute(parseInt(params.id));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
 		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);

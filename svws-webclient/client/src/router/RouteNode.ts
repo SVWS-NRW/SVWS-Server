@@ -28,7 +28,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	protected _kompetenzenBenoetigt: Set<BenutzerKompetenz> = new Set();
 
 	/** Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht */
-	protected isHidden: ((params?: RouteParams) => boolean) | undefined = undefined;
+	protected isHidden: ((params?: RouteParams) => RouteLocationRaw | false) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
 	protected _parent?: TRouteParent;
@@ -251,7 +251,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public children_hidden() : ComputedRef<boolean[]> {
 		const route = useRoute();
-		return computed(() => this.children.map(c => c.hidden(route.params)));
+		return computed(() => this.children.map(c => c.hidden(route.params) !== false));
 	}
 
 	/**
@@ -329,7 +329,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
-	public hidden(params?: RouteParams): boolean {
+	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
 		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
 			return false;
@@ -530,8 +530,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
-			if (this.hidden(to_params))
-				return this.parent === undefined ? this.getRoute() : this.parent.getRoute();
+			const tmpHidden = this.hidden(to_params);
+			if (tmpHidden !== false)
+				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
 			return await this.update(to, to_params);

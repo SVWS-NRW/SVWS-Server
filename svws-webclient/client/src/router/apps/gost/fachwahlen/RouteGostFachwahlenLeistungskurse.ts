@@ -27,8 +27,10 @@ export class RouteGostFachwahlenLeistungskurse extends RouteNode<unknown, RouteG
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = (params === undefined) || !params.abiturjahr ? undefined : parseInt(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
+		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
+		if ((abiturjahr === null) || (abiturjahr === -1))
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		return false;
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
