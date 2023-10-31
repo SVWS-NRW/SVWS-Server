@@ -207,7 +207,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 				if (eintrag.idJahrgang === null)
 					continue;
 				const j : JahrgangsListeEintrag | null = this.jahrgaenge.getOrException(eintrag.idJahrgang);
-				if ((j.kuerzelStatistik === null) || ((j.kuerzelStatistik !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelStatistik))))
+				if ((j.kuerzelSchulgliederung === null) || ((j.kuerzelSchulgliederung !== null) && (!this.schulgliederungen.auswahlHasKey(j.kuerzelSchulgliederung))))
 					continue;
 			}
 			tmpList.add(eintrag);
