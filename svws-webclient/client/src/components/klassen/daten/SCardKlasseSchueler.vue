@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Klassenliste">
-		<svws-ui-table :columns="cols" :items="listSchueler">
+		<svws-ui-table :columns="cols" :items="klassenListeManager().daten().schueler">
 			<template #cell(status)="{ value } : { value: number}">
 				<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
 			</template>
@@ -18,12 +18,12 @@
 
 <script setup lang="ts">
 
-	import type { List, Schueler} from "@core";
+	import type { KlassenListeManager, Schueler} from "@core";
 	import { SchuelerStatus } from "@core";
 	import type {DataTableColumn} from "@ui";
 
 	const props = defineProps<{
-		listSchueler: List<Schueler>;
+		klassenListeManager: () => KlassenListeManager;
 		gotoSchueler: (eintrag: Schueler) => Promise<void>,
 	}>();
 

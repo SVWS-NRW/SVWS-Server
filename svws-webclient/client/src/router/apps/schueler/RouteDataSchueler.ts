@@ -2,7 +2,7 @@ import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, Jah
 import type { RouteNode } from "~/router/RouteNode";
 import { shallowRef } from "vue";
 
-import { SchuelerListeManager, ArrayList } from "@core";
+import { SchuelerListeManager, ArrayList, DeveloperNotificationException } from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
@@ -98,13 +98,14 @@ export class RouteDataSchueler {
 			auswahl = this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
 		const stammdaten = await this.ladeStammdaten(auswahl);
 		this.schuelerListeManager.setDaten(stammdaten);
+		this.commit();
 	}
 
 	public async setView(view: RouteNode<any,any>) {
 		if (routeSchueler.children.includes(view))
 			this.setPatchedState({ view: view });
 		else
-			throw new Error("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
+			throw new DeveloperNotificationException("Diese für Schüler gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get view(): RouteNode<any,any> {
@@ -117,7 +118,7 @@ export class RouteDataSchueler {
 
 	patch = async (data : Partial<SchuelerStammdaten>) => {
 		if (!this.schuelerListeManager.hasDaten())
-			return;
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const idSchueler = this.schuelerListeManager.auswahl().id;
 		const stammdaten = this.schuelerListeManager.daten();
 		if (stammdaten === null)
