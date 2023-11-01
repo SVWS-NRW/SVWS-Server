@@ -514,13 +514,13 @@ public class StundenplanManager {
 
 		// Kurs-Unterricht-Gruppen hinzufügen.
 		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKurs.values())
-			for (final @NotNull StundenplanUnterricht u : menge) {
+			for (final @NotNull StundenplanUnterricht u : menge)
 				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
-			}
 
 		// Klassen-Unterricht-Gruppen hinzufügen.
-		// TODO funktioniert noch nicht.
-
+		for (final @NotNull List<@NotNull StundenplanUnterricht> menge : _unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			for (final @NotNull StundenplanUnterricht u : menge)
+				DeveloperNotificationException.ifMapPutOverwrites(_unterrichtmenge_by_idUnterricht, u.id, menge);
 	}
 
 	private void update_wertWochenminuten_by_idKlasse_und_idFach() {
@@ -3998,6 +3998,7 @@ public class StundenplanManager {
 		DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", _zeitraster_by_id, u.idZeitraster);
 		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > _stundenplanWochenTypModell);
 		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0); // 0 ist erlaubt!
+		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs == null) && (u.klassen.size() != 1)); // WENN Klassenunterricht, DANN genau 1 Klasse.
 
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", _fach_by_id, u.idFach);
 		for (final @NotNull Long idLehrkraftDesUnterrichts : u.lehrer)

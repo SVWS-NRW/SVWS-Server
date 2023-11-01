@@ -581,9 +581,11 @@ export class StundenplanManager extends JavaObject {
 	private update_unterrichtmenge_by_idUnterricht() : void {
 		this._unterrichtmenge_by_idUnterricht.clear();
 		for (const menge of this._unterrichtmenge_by_idKurs.values())
-			for (const u of menge) {
+			for (const u of menge)
 				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
-			}
+		for (const menge of this._unterrichtmenge_by_idKlasse_and_idFach.getNonNullValuesAsList())
+			for (const u of menge)
+				DeveloperNotificationException.ifMapPutOverwrites(this._unterrichtmenge_by_idUnterricht, u.id, menge);
 	}
 
 	private update_wertWochenminuten_by_idKlasse_und_idFach() : void {
@@ -3761,6 +3763,7 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", this._zeitraster_by_id, u.idZeitraster);
 		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > this._stundenplanWochenTypModell);
 		DeveloperNotificationException.ifTrue("u.wochentyp < 0", u.wochentyp < 0);
+		DeveloperNotificationException.ifTrue("(u.idKurs == null) && (u.klassen.size() != 1)", (u.idKurs === null) && (u.klassen.size() !== 1));
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", this._fach_by_id, u.idFach);
 		for (const idLehrkraftDesUnterrichts of u.lehrer)
 			DeveloperNotificationException.ifMapNotContains("_lehrer_by_id", this._lehrer_by_id, idLehrkraftDesUnterrichts);
