@@ -535,7 +535,11 @@ public final class MethodNode {
 				sb.append(System.lineSeparator());
 			} else {
 				sb.append(blockIndent);
-				sb.append(methods.get(0).plugin.convertStatement(methods.get(0).superConstructorCall, true));
+				final StatementTree superConstructorCall = methods.get(0).superConstructorCall;
+				if (superConstructorCall == null)
+					sb.append("super();");
+				else
+					sb.append(methods.get(0).plugin.convertStatement(methods.get(0).superConstructorCall, true));
 				// TODO combine statement of all constructors if possible...
 				sb.append(System.lineSeparator());
 			}
