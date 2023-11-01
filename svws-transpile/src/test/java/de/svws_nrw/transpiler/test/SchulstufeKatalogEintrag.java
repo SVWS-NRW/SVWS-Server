@@ -17,10 +17,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchulstufeKatalogEintrag extends CoreTypeData {
 
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id = -1;
-
 	/** Das eindeutige Kürzel des Katalog-Eintrags. */
 	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example = "SI")
 	public @NotNull String kuerzel = "";
@@ -32,14 +28,6 @@ public class SchulstufeKatalogEintrag extends CoreTypeData {
 	/** Die Kürzel der Schulformen die bei der Schulstufe vorkommen. */
 	@Schema(description = "die Kürzel der Schulformen die bei der Schulstufe vorkommen")
 	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
-
-	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

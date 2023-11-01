@@ -483,6 +483,23 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Returns whether a transpiler unit exists for the class represented by
+	 * the specified package and class name.
+	 *
+	 * @param packageName   the package name
+	 * @param className     the class  name
+	 *
+	 * @return true if the class exists and false otherwise
+	 */
+	public TranspilerUnit getTranspilerUnit(final String packageName, final String className) {
+		final HashMap<String, TranspilerUnit> mapUnitsByClass = mapUnitsByPackage.get(packageName);
+		if (mapUnitsByClass == null)
+			return null;
+		return mapUnitsByClass.get(className);
+	}
+
+
+	/**
 	 * Returns the full class name of the specified class tree, i.e. with
 	 * the package and in case of a nested class with its parent class(es).
 	 *
@@ -502,6 +519,37 @@ public final class Transpiler extends AbstractProcessor {
 	}
 
 
+
+	/**
+	 * Returns the list of attributes of the TypeElement, e.g. a class.
+	 *
+	 * @param typeElement   the type element
+	 *
+	 * @return the list of attributes of the type element
+	 */
+	public List<VariableElement> getAttributes(final TypeElement typeElement) {
+		final List<VariableElement> result = new ArrayList<>();
+		for (final Element e : typeElement.getEnclosedElements()) {
+			if (e instanceof final VariableElement ve) {
+				result.add(ve);
+			}
+		}
+		return result;
+	}
+
+
+	/**
+	 * Returns the list of attributes of the class tree node as VariableElement
+	 *
+	 * @param node   the class tree node
+	 *
+	 * @return the list of attributes of the class tree node as VariableElement
+	 */
+	public List<VariableElement> getAttributesFromClassTree(final ClassTree node) {
+		return getAttributes((TypeElement) this.getElement(node));
+	}
+
+
 	/**
 	 * Returns the list of attributes of the class tree node
 	 *
@@ -509,11 +557,9 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the list of attributes of the class tree node
 	 */
-	public static List<VariableTree> getAttributes(final ClassTree node) {
-		return node.getMembers().stream()
-				.filter(member -> member.getKind() == Tree.Kind.VARIABLE)
-				.map(attr -> (VariableTree) attr)
-				.collect(Collectors.toList());
+	public List<VariableTree> getAttributes(final ClassTree node) {
+		return node.getMembers().stream().filter(member -> member.getKind() == Tree.Kind.VARIABLE)
+				.map(VariableTree.class::cast).toList();
 	}
 
 

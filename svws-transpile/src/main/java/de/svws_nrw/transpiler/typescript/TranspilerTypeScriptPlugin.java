@@ -1633,7 +1633,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 		sb.append(getIndent() + "const obj = JSON.parse(json);" + System.lineSeparator());
 		sb.append(getIndent() + "const result = new " + node.getSimpleName().toString() + "();" + System.lineSeparator());
-		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : transpiler.getAttributes(node)) {
 			final VariableNode variable = new VariableNode(this, attribute);
 			if (variable.isStatic()) // ignore static members
 				continue;
@@ -1721,7 +1721,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent() + "public static transpilerToJSON(obj : " + node.getSimpleName().toString() + ") : string {" + System.lineSeparator());
 		indentC++;
 		sb.append(getIndent() + "let result = '{';" + System.lineSeparator());
-		final List<VariableTree> attributes = Transpiler.getAttributes(node);
+		final List<VariableTree> attributes = transpiler.getAttributes(node);
 		for (int i = 0; i < attributes.size(); i++) {
 			final VariableTree attribute = attributes.get(i);
 			final String endline = " + ',';" + System.lineSeparator();
@@ -1865,7 +1865,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent() + "public static transpilerToJSONPatch(obj : Partial<" + node.getSimpleName().toString() + ">) : string {" + System.lineSeparator());
 		indentC++;
 		sb.append(getIndent() + "let result = '{';" + System.lineSeparator());
-		final List<VariableTree> attributes = Transpiler.getAttributes(node);
+		final List<VariableTree> attributes = transpiler.getAttributes(node);
 		for (int i = 0; i < attributes.size(); i++) {
 			final VariableTree attribute = attributes.get(i);
 			final String endline = " + ',';" + System.lineSeparator();
@@ -2038,7 +2038,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 
 		// Generate Attributes
-		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : transpiler.getAttributes(node)) {
 			sb.append(convertAttribute(attribute, null));
 			sb.append(System.lineSeparator());
 		}
@@ -2182,7 +2182,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(getIndent()).append("static readonly all_values_by_name : Map<string, ").append(node.getSimpleName()).append("> = new Map<string, ").append(node.getSimpleName()).append(">();").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
-		for (final VariableTree attribute : Transpiler.getAttributes(node)) {
+		for (final VariableTree attribute : transpiler.getAttributes(node)) {
 			sb.append(convertAttribute(attribute, "" + node.getSimpleName()));
 			sb.append(System.lineSeparator());
 		}
