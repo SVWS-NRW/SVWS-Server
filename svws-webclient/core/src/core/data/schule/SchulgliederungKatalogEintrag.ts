@@ -11,11 +11,6 @@ import { CoreTypeData } from '../../../core/data/CoreTypeData';
 export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	/**
-	 * Die ID des Katalog-Eintrags.
-	 */
-	public id : number = -1;
-
-	/**
 	 * Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird
 	 */
 	public kuerzel : string = "";
@@ -74,16 +69,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	 * Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
 	public bkAbschlussAllgemeinbildend : List<string> = new ArrayList();
-
-	/**
-	 * Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigVon : number | null = null;
-
-	/**
-	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt.
-	 */
-	public gueltigBis : number | null = null;
 
 
 	/**
@@ -170,9 +155,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulgliederungKatalogEintrag();
-		if (typeof obj.id === "undefined")
-			 throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
@@ -209,14 +191,11 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				result.bkAbschlussAllgemeinbildend?.add(elem);
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulgliederungKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"istBK" : ' + obj.istBK + ',';
 		if (!obj.schulformen) {
@@ -262,8 +241,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -271,9 +248,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulgliederungKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + obj.id + ',';
-		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
@@ -342,12 +316,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		}
-		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

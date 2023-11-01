@@ -22,10 +22,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchulgliederungKatalogEintrag extends CoreTypeData {
 
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id = -1;
-
 	/** Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(description = "das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "A01")
 	public @NotNull String kuerzel = "";
@@ -73,14 +69,6 @@ public class SchulgliederungKatalogEintrag extends CoreTypeData {
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
 	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new ArrayList<>();
-
-	/** Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem die Schulgliederung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

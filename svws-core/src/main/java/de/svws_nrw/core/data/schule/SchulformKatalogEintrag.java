@@ -15,11 +15,6 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class SchulformKatalogEintrag extends CoreTypeData {
 
-
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id;
-
 	/** Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "GE")
 	public @NotNull String kuerzel = "";
@@ -43,14 +38,6 @@ public class SchulformKatalogEintrag extends CoreTypeData {
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. */
 	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example = "true")
 	public boolean hatGymOb;
-
-	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

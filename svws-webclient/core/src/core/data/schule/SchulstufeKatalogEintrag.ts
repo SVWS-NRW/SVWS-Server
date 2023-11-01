@@ -8,11 +8,6 @@ import { CoreTypeData } from '../../../core/data/CoreTypeData';
 export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	/**
-	 * Die ID des Katalog-Eintrags.
-	 */
-	public id : number = -1;
-
-	/**
 	 * Das eindeutige Kürzel des Katalog-Eintrags.
 	 */
 	public kuerzel : string = "";
@@ -26,16 +21,6 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	 * Die Kürzel der Schulformen die bei der Schulstufe vorkommen.
 	 */
 	public schulformen : List<string> = new ArrayList();
-
-	/**
-	 * Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigVon : number | null = null;
-
-	/**
-	 * Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigBis : number | null = null;
 
 
 	/**
@@ -86,9 +71,6 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulstufeKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulstufeKatalogEintrag();
-		if (typeof obj.id === "undefined")
-			 throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
@@ -100,14 +82,11 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 				result.schulformen?.add(elem);
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulstufeKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		if (!obj.schulformen) {
@@ -122,8 +101,6 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -131,9 +108,6 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulstufeKatalogEintrag>) : string {
 		let result = '{';
-		if (typeof obj.id !== "undefined") {
-			result += '"id" : ' + obj.id + ',';
-		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
@@ -153,12 +127,6 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		}
-		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
