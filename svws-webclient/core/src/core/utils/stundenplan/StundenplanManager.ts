@@ -4564,11 +4564,35 @@ export class StundenplanManager extends JavaObject {
 					zeit.id = -1;
 					zeit.wochentag = wochentag;
 					zeit.unterrichtstunde = stunde;
-					zeit.stundenbeginn = null;
-					zeit.stundenende = null;
+					zeit.stundenbeginn = this.zeitrasterGetDefaultStundenbeginnByStunde(stunde);
+					zeit.stundenende = this.zeitrasterGetDefaultStundenendeByStunde(stunde);
 					listDummies.add(zeit);
 				}
 		return listDummies;
+	}
+
+	/**
+	 * Liefert den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 * <br>Hinweis: Der Unterricht beginnt um 8 Uhr und nach 45 Minuten sind stets 5 Minuten Pause.
+	 *
+	 * @param stunde  Die Unterrichtsstunde, nach welcher gefragt wird.
+	 *
+	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 */
+	public zeitrasterGetDefaultStundenbeginnByStunde(stunde : number) : number {
+		return 480 + (stunde - 1) * (45 + 5);
+	}
+
+	/**
+	 * Liefert das Default-Stundenende (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 * <br>Hinweis: Das Stundenende ist stets 45 Minuten nach dem {@link #zeitrasterGetDefaultStundenbeginnByStunde(int)} der Stunde.
+	 *
+	 * @param stunde  Die Unterrichtsstunde, nach welcher gefragt wird.
+	 *
+	 * @return das Default-Stundenende (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 */
+	public zeitrasterGetDefaultStundenendeByStunde(stunde : number) : number {
+		return this.zeitrasterGetDefaultStundenbeginnByStunde(stunde) + 45;
 	}
 
 	/**
