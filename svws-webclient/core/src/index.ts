@@ -75,6 +75,7 @@ export { AVLSet } from './core/adt/set/AVLSet';
 export { MinHeap } from './core/adt/tree/MinHeap';
 export { MinHeapIterator } from './core/adt/tree/MinHeapIterator';
 export { BenutzerKennwort } from './core/data/BenutzerKennwort';
+export { CoreTypeData } from './core/data/CoreTypeData';
 export { RGBFarbe } from './core/data/RGBFarbe';
 export { SimpleOperationResponse } from './core/data/SimpleOperationResponse';
 export { AbschlussErgebnis } from './core/data/abschluss/AbschlussErgebnis';

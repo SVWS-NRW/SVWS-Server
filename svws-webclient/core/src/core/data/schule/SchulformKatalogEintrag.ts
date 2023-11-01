@@ -1,6 +1,6 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { CoreTypeData } from '../../../core/data/CoreTypeData';
 
-export class SchulformKatalogEintrag extends JavaObject {
+export class SchulformKatalogEintrag extends CoreTypeData {
 
 	/**
 	 * Die ID des Katalog-Eintrags.
@@ -88,7 +88,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.SchulformKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulformKatalogEintrag', 'de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulformKatalogEintrag {

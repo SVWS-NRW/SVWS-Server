@@ -1,16 +1,17 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.core.data.CoreTypeData;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.BerufskollegAnlage;
 import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.core.types.schule.Schulform;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -19,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
 @TranspilerDTO
-public class SchulgliederungKatalogEintrag {
+public class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")

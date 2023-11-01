@@ -1,2 +1,7 @@
 src/test/java/de/svws_nrw/transpiler/test/EmptyDTO.java,
-src/test/java/de/svws_nrw/transpiler/test/Utils.java
+src/test/java/de/svws_nrw/transpiler/test/Utils.java,
+src/test/java/de/svws_nrw/transpiler/test/CoreTypeData.java,
+src/test/java/de/svws_nrw/transpiler/test/Schulform.java,
+src/test/java/de/svws_nrw/transpiler/test/SchulstufeKatalogEintrag.java,
+src/test/java/de/svws_nrw/transpiler/test/SchulformKatalogEintrag.java
+

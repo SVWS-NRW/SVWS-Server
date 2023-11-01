@@ -3,8 +3,9 @@ import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { CoreTypeData } from '../../../core/data/CoreTypeData';
 
-export class SchulstufeKatalogEintrag extends JavaObject {
+export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	/**
 	 * Die ID des Katalog-Eintrags.
@@ -79,7 +80,7 @@ export class SchulstufeKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag', 'de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulstufeKatalogEintrag {

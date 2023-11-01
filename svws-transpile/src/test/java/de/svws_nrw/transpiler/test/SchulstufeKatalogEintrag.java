@@ -1,11 +1,9 @@
-package de.svws_nrw.core.data.schule;
+package de.svws_nrw.transpiler.test;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.CoreTypeData;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
