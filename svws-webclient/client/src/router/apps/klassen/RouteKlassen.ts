@@ -38,7 +38,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
@@ -49,12 +49,12 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 				const listFiltered = this.data.klassenListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;
-				return this.getChildRoute(listFiltered.get(0).id);
+				return this.getChildRoute(listFiltered.get(0).id, from);
 			}
 			return this.getRoute();
 		}
 		if (to.name === this.name)
-			return this.getChildRoute(this.data.klassenListeManager.daten().id);
+			return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
@@ -65,7 +65,9 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getChildRoute(id: number | undefined) : RouteLocationRaw {
+	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
+		if (from !== undefined && from.name.includes('.stundenplan'))
+			return { name: routeKlassenStundenplan.name, params: { id } };
 		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
 		return { name: redirect_name, params: { id } };
 	}

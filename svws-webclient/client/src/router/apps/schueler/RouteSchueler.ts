@@ -54,7 +54,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
@@ -65,12 +65,12 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 				const listFiltered = this.data.schuelerListeManager.filtered();
 				if (listFiltered.isEmpty())
 					return;
-				return this.getChildRoute(listFiltered.get(0).id);
+				return this.getChildRoute(listFiltered.get(0).id, from);
 			}
 			return this.getRoute();
 		}
 		if (to.name === this.name)
-			return this.getChildRoute(this.data.schuelerListeManager.daten().id);
+			return this.getChildRoute(this.data.schuelerListeManager.daten().id, from);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
@@ -79,12 +79,14 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 
 	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { id: id }};
+		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getChildRoute(id: number | undefined) : RouteLocationRaw {
+	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
+		if (from !== undefined && from.name.includes('.stundenplan'))
+			return { name: routeSchuelerStundenplan.name, params: { id } };
 		const redirect_name: string = (routeSchueler.selectedChild === undefined) ? routeSchuelerIndividualdaten.name : routeSchueler.selectedChild.name;
-		return { name: redirect_name, params: { id: id } };
+		return { name: redirect_name, params: { id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchuelerAuswahlProps {
