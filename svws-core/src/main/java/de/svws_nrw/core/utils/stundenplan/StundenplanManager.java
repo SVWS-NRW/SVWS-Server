@@ -5533,24 +5533,37 @@ public class StundenplanManager {
 
 	/**
 	 * Aktualisiert das vorhandene {@link StundenplanZeitraster}-Objekt durch das neue Objekt.
-	 * <br>Die folgenden Attribute werden nicht aktualisiert:
-	 * <br>{@link StundenplanZeitraster#id}
-	 * <br>
-	 * <br>Die folgenden Attribute werden kopiert:
-	 * <br>{@link StundenplanZeitraster#stundenbeginn}
-	 * <br>{@link StundenplanZeitraster#stundenende}
-	 * <br>{@link StundenplanZeitraster#unterrichtstunde}
-	 * <br>{@link StundenplanZeitraster#wochentag}
+	 * <br>Hinweis: Die ID eines Objekts lässt sich nicht patchen.
 	 *
-	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, dessen Attribute kopiert werden.
+	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, welches das alte ersetzt.
 	 */
 	public void zeitrasterPatchAttributes(final @NotNull StundenplanZeitraster zeitraster) {
-		zeitrasterCheck(zeitraster);
+		zeitrasterPatchAttributesAll(ListUtils.create1(zeitraster));
+	}
 
-		// Altes Objekt durch neues Objekt ersetzen
-		DeveloperNotificationException.ifMapRemoveFailes(_zeitraster_by_id, zeitraster.id);
-		DeveloperNotificationException.ifMapPutOverwrites(_zeitraster_by_id, zeitraster.id, zeitraster);
+	/**
+	 * Aktualisiert die vorhandenen {@link StundenplanZeitraster}-Objekte durch die neuen Objekte.
+	 * <br>Hinweis: Die ID der Objekte lassen sich nicht patchen.
+	 *
+	 * @param zeitrasterList  Die neuen {@link StundenplanZeitraster}-Objekte, welche die alten ersetzen.
+	 */
+	public void zeitrasterPatchAttributesAll(final @NotNull List<@NotNull StundenplanZeitraster> zeitrasterList) {
+		// Alle Objekte überprüfen.
+		final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull StundenplanZeitraster> mapWochentagStunde = new HashMap2D<>();
+		for (final @NotNull StundenplanZeitraster z : zeitrasterList) {
+			zeitrasterCheck(z);
+			DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", _zeitraster_by_id, z.id);
+			DeveloperNotificationException.ifMap2DPutOverwrites(mapWochentagStunde, z.wochentag, z.unterrichtstunde, z);
+		}
 
+		// Alte Objekte durch neue Objekte ersetzen.
+
+		for (final @NotNull StundenplanZeitraster z : zeitrasterList) {
+			DeveloperNotificationException.ifMapRemoveFailes(_zeitraster_by_id, z.id);
+			DeveloperNotificationException.ifMapPutOverwrites(_zeitraster_by_id, z.id, z);
+		}
+
+		// update
 		update_all();
 	}
 

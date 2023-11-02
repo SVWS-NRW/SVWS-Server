@@ -28,7 +28,7 @@ public final class ListUtils {
      * @return eine gefilterte Kopie der Liste.
      */
     public static <@NotNull E> @NotNull List<@NotNull E> getCopyFiltered(final @NotNull List<@NotNull E> list, final @NotNull Predicate<@NotNull E> filter) {
-        @NotNull final ArrayList<@NotNull E> listFiltered = new ArrayList<>();
+        final @NotNull ArrayList<@NotNull E> listFiltered = new ArrayList<>();
         for (final @NotNull E t : list)
             if (filter.test(t))
                 listFiltered.add(t);
@@ -123,6 +123,20 @@ public final class ListUtils {
     	if (element == null)
     		throw new DeveloperNotificationException("Kein Element bei Index " + i + "!");
     	return element;
+    }
+
+    /**
+     * Liefert eine Liste, welche mit einem Element gefüllt wurde.
+     *
+     * @param <E>      Der Inhaltstyp der Liste.
+     * @param element  Das Element, welches hinzugefügt wird.
+     *
+     * @return eine Liste, welche mit einem Element gefüllt wurde.
+     */
+    public static <@NotNull E> @NotNull List<@NotNull E> create1(final @NotNull E element) {
+        final @NotNull ArrayList<@NotNull E> list = new ArrayList<>();
+        list.add(element);
+        return list;
     }
 
 }

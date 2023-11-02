@@ -113,6 +113,20 @@ export class ListUtils extends JavaObject {
 		return element;
 	}
 
+	/**
+	 * Liefert eine Liste, welche mit einem Element gefüllt wurde.
+	 *
+	 * @param <E>      Der Inhaltstyp der Liste.
+	 * @param element  Das Element, welches hinzugefügt wird.
+	 *
+	 * @return eine Liste, welche mit einem Element gefüllt wurde.
+	 */
+	public static create1<E>(element : E) : List<E> {
+		const list : ArrayList<E> = new ArrayList();
+		list.add(element);
+		return list;
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.ListUtils'].includes(name);
 	}

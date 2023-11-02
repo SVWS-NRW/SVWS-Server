@@ -5191,21 +5191,31 @@ export class StundenplanManager extends JavaObject {
 
 	/**
 	 * Aktualisiert das vorhandene {@link StundenplanZeitraster}-Objekt durch das neue Objekt.
-	 * <br>Die folgenden Attribute werden nicht aktualisiert:
-	 * <br>{@link StundenplanZeitraster#id}
-	 * <br>
-	 * <br>Die folgenden Attribute werden kopiert:
-	 * <br>{@link StundenplanZeitraster#stundenbeginn}
-	 * <br>{@link StundenplanZeitraster#stundenende}
-	 * <br>{@link StundenplanZeitraster#unterrichtstunde}
-	 * <br>{@link StundenplanZeitraster#wochentag}
+	 * <br>Hinweis: Die ID eines Objekts lässt sich nicht patchen.
 	 *
-	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, dessen Attribute kopiert werden.
+	 * @param zeitraster  Das neue {@link StundenplanZeitraster}-Objekt, welches das alte ersetzt.
 	 */
 	public zeitrasterPatchAttributes(zeitraster : StundenplanZeitraster) : void {
-		StundenplanManager.zeitrasterCheck(zeitraster);
-		DeveloperNotificationException.ifMapRemoveFailes(this._zeitraster_by_id, zeitraster.id);
-		DeveloperNotificationException.ifMapPutOverwrites(this._zeitraster_by_id, zeitraster.id, zeitraster);
+		this.zeitrasterPatchAttributesAll(ListUtils.create1(zeitraster));
+	}
+
+	/**
+	 * Aktualisiert die vorhandenen {@link StundenplanZeitraster}-Objekte durch die neuen Objekte.
+	 * <br>Hinweis: Die ID der Objekte lassen sich nicht patchen.
+	 *
+	 * @param zeitrasterList  Die neuen {@link StundenplanZeitraster}-Objekte, welche die alten ersetzen.
+	 */
+	public zeitrasterPatchAttributesAll(zeitrasterList : List<StundenplanZeitraster>) : void {
+		const mapWochentagStunde : HashMap2D<number, number, StundenplanZeitraster> = new HashMap2D();
+		for (const z of zeitrasterList) {
+			StundenplanManager.zeitrasterCheck(z);
+			DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", this._zeitraster_by_id, z.id);
+			DeveloperNotificationException.ifMap2DPutOverwrites(mapWochentagStunde, z.wochentag, z.unterrichtstunde, z);
+		}
+		for (const z of zeitrasterList) {
+			DeveloperNotificationException.ifMapRemoveFailes(this._zeitraster_by_id, z.id);
+			DeveloperNotificationException.ifMapPutOverwrites(this._zeitraster_by_id, z.id, z);
+		}
 		this.update_all();
 	}
 
