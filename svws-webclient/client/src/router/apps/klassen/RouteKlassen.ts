@@ -66,7 +66,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
-		if (from !== undefined && from.name.includes('.stundenplan'))
+		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeKlassenStundenplan.name, params: { id } };
 		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
 		return { name: redirect_name, params: { id } };

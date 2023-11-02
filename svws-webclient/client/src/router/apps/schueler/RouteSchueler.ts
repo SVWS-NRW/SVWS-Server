@@ -83,7 +83,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
-		if (from !== undefined && from.name.includes('.stundenplan'))
+		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeSchuelerStundenplan.name, params: { id } };
 		const redirect_name: string = (routeSchueler.selectedChild === undefined) ? routeSchuelerIndividualdaten.name : routeSchueler.selectedChild.name;
 		return { name: redirect_name, params: { id } };
