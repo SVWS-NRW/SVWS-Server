@@ -76,7 +76,7 @@ public final class ApiMethod {
 		docDescription = ApiMethod.getDocDescription(transpiler, classTree, method);
 
 		// Response-Objekt erstellen und einen Vektor dieser Response-Objekt hier erzeugen, außerdem Erkennung des Response-Codes für eine erfolgreiche Rückgabe von Informationen
-		final ArrayList<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
+		final List<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
 		ApiResponse tmp200 = null;
 		for (final AnnotationTree annotationMethodApiResponse : annotationMethodApiResponses) {
 			final ApiResponse response = new ApiResponse(transpiler, annotationMethodApiResponse);

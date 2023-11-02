@@ -119,6 +119,9 @@ public final class Transpiler extends AbstractProcessor {
 	/** a map containing the package name to a map with the transpiler units of this package associated with the class name */
 	private final HashMap<String, HashMap<String, TranspilerUnit>> mapUnitsByPackage = new HashMap<>();
 
+	/** a map containing the full qualified class name package without type parameters to the corresponding class tree if a transpiler unit exists for this class */
+	private final HashMap<String, ClassTree> mapClassTreeByFullQualifiedClassName = new HashMap<>();
+
 
 	/// Transpiler Languages
 
@@ -500,6 +503,19 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Gibt den zugehörigen ClassTree für den übergebenen Klassennamen zurück,
+	 * sofern diese Klasse auch von Transpiler transpiliert wird.
+	 *
+	 * @param fullQualifiedClassName   der voll qualifizirte Name der Klasse
+	 *
+	 * @return das ClassTree-Objekt oder null
+	 */
+	public ClassTree getClassTree(final String fullQualifiedClassName) {
+		return mapClassTreeByFullQualifiedClassName.get(fullQualifiedClassName);
+	}
+
+
+	/**
 	 * Returns the full class name of the specified class tree, i.e. with
 	 * the package and in case of a nested class with its parent class(es).
 	 *
@@ -574,7 +590,7 @@ public final class Transpiler extends AbstractProcessor {
 	public static VariableTree getAttribute(final ClassTree node, final String name) {
 		return node.getMembers().stream()
 				.filter(member -> member.getKind() == Tree.Kind.VARIABLE)
-				.map(attr -> (VariableTree) attr)
+				.map(VariableTree.class::cast)
 				.filter(v -> v.getName().toString().equals(name))
 				.findFirst().orElse(null);
 	}
@@ -590,8 +606,7 @@ public final class Transpiler extends AbstractProcessor {
 	public static List<MethodTree> getConstructors(final ClassTree node) {
 		return node.getMembers().stream()
 				.filter(member -> (member.getKind() == Tree.Kind.METHOD) && ("<init>".equals("" + ((MethodTree) member).getName())))
-				.map(attr -> (MethodTree) attr)
-				.collect(Collectors.toList());
+				.map(MethodTree.class::cast).toList();
 	}
 
 
@@ -606,8 +621,7 @@ public final class Transpiler extends AbstractProcessor {
 	public static List<MethodTree> getMethods(final ClassTree node) {
 		return node.getMembers().stream()
 				.filter(member -> (member.getKind() == Tree.Kind.METHOD) && (!"<init>".equals("" + ((MethodTree) member).getName())))
-				.map(attr -> (MethodTree) attr)
-				.collect(Collectors.toList());
+				.map(MethodTree.class::cast).toList();
 	}
 
 
@@ -622,8 +636,7 @@ public final class Transpiler extends AbstractProcessor {
 	public static List<MethodTree> getAllMethods(final ClassTree node) {
 		return node.getMembers().stream()
 				.filter(member -> member.getKind() == Tree.Kind.METHOD)
-				.map(attr -> (MethodTree) attr)
-				.collect(Collectors.toList());
+				.map(MethodTree.class::cast).toList();
 	}
 
 
@@ -638,9 +651,8 @@ public final class Transpiler extends AbstractProcessor {
 	public static List<MethodTree> getMethods(final ClassTree node, final String name) {
 		return node.getMembers().stream()
 				.filter(member -> member.getKind() == Tree.Kind.METHOD)
-				.map(attr -> (MethodTree) attr)
-				.filter(m -> m.getName().toString().equals(name))
-				.collect(Collectors.toList());
+				.map(MethodTree.class::cast)
+				.filter(m -> m.getName().toString().equals(name)).toList();
 	}
 
 
@@ -689,7 +701,7 @@ public final class Transpiler extends AbstractProcessor {
 				}
 				if ((scopesLocalMethods != null) && (scopesLocalMethods.contains(ct))) {
 					final List<MethodTree> methods = getMethods(ct, node.getName().toString());
-					return (methods.size() > 0) && (methods.get(0).getModifiers().getFlags().contains(Modifier.STATIC));
+					return (!methods.isEmpty()) && (methods.get(0).getModifiers().getFlags().contains(Modifier.STATIC));
 				}
 			}
 		}
@@ -730,8 +742,8 @@ public final class Transpiler extends AbstractProcessor {
 		final TreePath path = getTreePath(node);
 		for (TreePath current = path; current.getParentPath() != null; current = current.getParentPath()) {
 			final Tree currentNode = current.getLeaf();
-			if (currentNode instanceof ClassTree)
-				return (ClassTree) currentNode;
+			if (currentNode instanceof final ClassTree ct)
+				return ct;
 		}
 		return null;
 	}
@@ -900,7 +912,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the list of all annotations of the specified type
 	 */
-	public ArrayList<AnnotationTree> getAnnotationList(final String annotationType, final Tree tree) {
+	public List<AnnotationTree> getAnnotationList(final String annotationType, final Tree tree) {
 		final ArrayList<AnnotationTree> result = new ArrayList<>();
 		ModifiersTree mods = null;
 		if (tree instanceof final ClassTree classTree) {
@@ -1298,12 +1310,9 @@ public final class Transpiler extends AbstractProcessor {
 	 */
 	ExpressionType getAttributeType(final String className, final String memberName) {
 		final TypeElement classElement = getTypeElement(className);
-		for (final Element e : classElement.getEnclosedElements()) {
-			if (e instanceof final VariableElement ve) {
-				if (memberName.equals(ve.getSimpleName().toString()))
-					return ExpressionType.getExpressionType(this, ve.asType());
-			}
-		}
+		for (final Element e : classElement.getEnclosedElements())
+			if (e instanceof final VariableElement ve &&  (memberName.equals(ve.getSimpleName().toString())))
+				return ExpressionType.getExpressionType(this, ve.asType());
 		return null;
 	}
 
@@ -1318,12 +1327,9 @@ public final class Transpiler extends AbstractProcessor {
 	 */
 	ExpressionType getNestedType(final String className, final String memberName) {
 		final TypeElement classElement = getTypeElement(className);
-		for (final Element e : classElement.getEnclosedElements()) {
-			if (e instanceof final TypeElement ve) {
-				if (memberName.equals(ve.getSimpleName().toString()))
-					return ExpressionType.getExpressionType(this, ve.asType());
-			}
-		}
+		for (final Element e : classElement.getEnclosedElements())
+			if (e instanceof final TypeElement ve &&  (memberName.equals(ve.getSimpleName().toString())))
+				return ExpressionType.getExpressionType(this, ve.asType());
 		return null;
 	}
 
@@ -1350,7 +1356,7 @@ public final class Transpiler extends AbstractProcessor {
 		// check all interfaces of the class
 		final LinkedCollection<TypeMirror> interfaces = new LinkedCollection<>();
 		interfaces.addAll(te.getInterfaces());
-		while (interfaces.size() > 0) {
+		while (!interfaces.isEmpty()) {
 			final TypeMirror interfaceType = interfaces.removeFirst();
 			final Element interfaceElement = typeUtils.asElement(interfaceType);
 			if (interfaceElement instanceof final TypeElement ite) {
@@ -1376,14 +1382,13 @@ public final class Transpiler extends AbstractProcessor {
 					return i;
 				for (final TypeMirror interfaceType : ste.getInterfaces()) {
 					final Element interfaceElement = typeUtils.asElement(interfaceType);
-					if (interfaceElement instanceof final TypeElement ite) {
-						if (ite.toString().equals(superTypeName))
-							return i + 1;
-					} else continue;
+					if ((interfaceElement instanceof final TypeElement ite) &&  (ite.toString().equals(superTypeName)))
+						return i + 1;
 				}
 				superClass = ste.getSuperclass();
 				i += 2;
-			} else break;
+			} else
+				break;
 		}
 		if ("java.lang.Object".equals(superTypeName))
 			return i;
@@ -1594,7 +1599,9 @@ public final class Transpiler extends AbstractProcessor {
 			for (final Element element : roundEnv.getRootElements()) {
 				System.out.println("  -> Preparing: " + element.toString());
 				final TreePath path = trees.getPath(element);
-				final TranspilerUnit tu = new TranspilerUnit(this, path.getCompilationUnit(), (ClassTree) path.getLeaf(), (TypeElement) element);
+				final ClassTree classTree = (ClassTree) path.getLeaf();
+				final TypeElement typeElement = (TypeElement) element;
+				final TranspilerUnit tu = new TranspilerUnit(this, path.getCompilationUnit(), classTree, typeElement);
 				mapUnits.put(path.getCompilationUnit(), tu);
 				final String packageName = tu.getPackageName();
 				HashMap<String, TranspilerUnit> listUnits = mapUnitsByPackage.get(packageName);
@@ -1603,6 +1610,7 @@ public final class Transpiler extends AbstractProcessor {
 					mapUnitsByPackage.put(packageName, listUnits);
 				}
 				listUnits.put(tu.getClassName(), tu);
+				mapClassTreeByFullQualifiedClassName.put("" + typeElement.getQualifiedName(), classTree);
 			}
 
 			// scan the java compiler Tree-API and register all tree nodes with their path, identifier, variable and method names
