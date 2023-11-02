@@ -27,6 +27,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -119,8 +120,8 @@ public final class Transpiler extends AbstractProcessor {
 	/** a map containing the package name to a map with the transpiler units of this package associated with the class name */
 	private final HashMap<String, HashMap<String, TranspilerUnit>> mapUnitsByPackage = new HashMap<>();
 
-	/** a map containing the full qualified class name package without type parameters to the corresponding class tree if a transpiler unit exists for this class */
-	private final HashMap<String, ClassTree> mapClassTreeByFullQualifiedClassName = new HashMap<>();
+	/** a map containing the qualified class name without type parameters to the corresponding class tree if a transpiler unit exists for this class */
+	private final HashMap<String, ClassTree> mapClassTreeByQualifiedName = new HashMap<>();
 
 
 	/// Transpiler Languages
@@ -506,12 +507,12 @@ public final class Transpiler extends AbstractProcessor {
 	 * Gibt den zugehörigen ClassTree für den übergebenen Klassennamen zurück,
 	 * sofern diese Klasse auch von Transpiler transpiliert wird.
 	 *
-	 * @param fullQualifiedClassName   der voll qualifizirte Name der Klasse
+	 * @param qualifiedName   der voll qualifizirte Name der Klasse
 	 *
 	 * @return das ClassTree-Objekt oder null
 	 */
-	public ClassTree getClassTree(final String fullQualifiedClassName) {
-		return mapClassTreeByFullQualifiedClassName.get(fullQualifiedClassName);
+	public ClassTree getClassTree(final String qualifiedName) {
+		return mapClassTreeByQualifiedName.get(qualifiedName);
 	}
 
 
@@ -576,6 +577,36 @@ public final class Transpiler extends AbstractProcessor {
 	public List<VariableTree> getAttributes(final ClassTree node) {
 		return node.getMembers().stream().filter(member -> member.getKind() == Tree.Kind.VARIABLE)
 				.map(VariableTree.class::cast).toList();
+	}
+
+
+	/**
+	 * Returns the list of attributes of the class tree node
+	 *
+	 * @param node   the class tree node
+	 *
+	 * @return the list of attributes of the class tree node
+	 */
+	public List<VariableTree> getAttributesWithSuperclassAttributes(final ClassTree node) {
+		final List<VariableTree> result = new ArrayList<>();
+		if (this.getElement(node) instanceof final TypeElement te) {
+			var tmp = te;
+			while (tmp != null) {
+				if ((tmp.getSuperclass() instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement type)) {
+					tmp = type;
+					final String name = "" + tmp.getQualifiedName();
+					if ("java.lang.Object".equals(name))
+						break;
+					final ClassTree ct = this.getClassTree(name);
+					if (ct != null)
+						result.addAll(getAttributes(ct));
+				} else {
+					tmp = null;
+				}
+			}
+		}
+		result.addAll(getAttributes(node));
+		return result;
 	}
 
 
@@ -1610,7 +1641,7 @@ public final class Transpiler extends AbstractProcessor {
 					mapUnitsByPackage.put(packageName, listUnits);
 				}
 				listUnits.put(tu.getClassName(), tu);
-				mapClassTreeByFullQualifiedClassName.put("" + typeElement.getQualifiedName(), classTree);
+				mapClassTreeByQualifiedName.put("" + typeElement.getQualifiedName(), classTree);
 			}
 
 			// scan the java compiler Tree-API and register all tree nodes with their path, identifier, variable and method names

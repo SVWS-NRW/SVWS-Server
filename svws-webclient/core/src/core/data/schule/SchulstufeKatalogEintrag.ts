@@ -71,6 +71,11 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulstufeKatalogEintrag {
 		const obj = JSON.parse(json);
 		const result = new SchulstufeKatalogEintrag();
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
@@ -87,6 +92,9 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : SchulstufeKatalogEintrag) : string {
 		let result = '{';
+		result += '"id" : ' + obj.id + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		if (!obj.schulformen) {
@@ -108,6 +116,15 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulstufeKatalogEintrag>) : string {
 		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.gueltigVon !== "undefined") {
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		}
+		if (typeof obj.gueltigBis !== "undefined") {
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		}
