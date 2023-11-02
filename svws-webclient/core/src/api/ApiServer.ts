@@ -5569,6 +5569,58 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen}
+	 *
+	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
+	 */
+	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogennurbelegung}
+	 *
+	 * Erstellt die Wahlbogen, reduziert auf die Belegung des Schülers, für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.
+	 */
+	public async pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(data : List<number>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogennurbelegung}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostSchuelerPDFWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \d+}
 	 *
 	 * Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.

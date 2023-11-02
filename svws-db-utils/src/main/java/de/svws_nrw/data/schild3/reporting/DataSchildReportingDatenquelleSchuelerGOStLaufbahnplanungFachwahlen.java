@@ -4,7 +4,7 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFachwahlen;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerFachwahlen;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -29,19 +29,19 @@ import java.util.stream.Collectors;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Fachwahlen eines Schülers in der Laufbahnplanung für die gymnasiale Oberstufe
  */
-public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen extends DataSchildReportingDatenquelle<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen, Long> {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen extends DataSchildReportingDatenquelle<DruckGostLaufbahnplanungSchuelerFachwahlen, Long> {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungFachwahlen
      */
 	public DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen() {
-        super(SchildReportingSchuelerGOStLaufbahnplanungFachwahlen.class);
+        super(DruckGostLaufbahnplanungSchuelerFachwahlen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-	public List<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> getDaten(final DBEntityManager conn, final List<Long> params) {
+	public List<DruckGostLaufbahnplanungSchuelerFachwahlen> getDaten(final DBEntityManager conn, final List<Long> params) {
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
                 .queryNamed("DTOSchueler.id.multiple", params, DTOSchueler.class)
@@ -55,7 +55,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 		final Map<Integer, GostFaecherManager> jahrgangGostFaecher = new HashMap<>();
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungFachwahlen> result = new ArrayList<>();
+		final ArrayList<DruckGostLaufbahnplanungSchuelerFachwahlen> result = new ArrayList<>();
 		for (final Long schuelerID : params) {
 			// GOSt-Daten des Schülers und Abiturdaten zur Schueler_ID ermitteln
 			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
@@ -79,50 +79,52 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 
 				// Erzeuge für jedes Fach des Abiturjahrgangs eine Zeile, wobei ggf. die Belegungen aus der Map verwendet werden
 				for (final GostFach fach : jahrgangGostFaecher.get(abidaten.abiturjahr).faecher()) {
-					final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach = new SchildReportingSchuelerGOStLaufbahnplanungFachwahlen();
+					final DruckGostLaufbahnplanungSchuelerFachwahlen laufbahnplanungFach = new DruckGostLaufbahnplanungSchuelerFachwahlen();
 
-					laufbahnplanungFach.schuelerID = schuelerID;
+					laufbahnplanungFach.SchuelerID = schuelerID;
 
 					// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
 					final AbiturFachbelegung belegung = belegungen.get(fach.id);
 
-					laufbahnplanungFach.kuerzel = fach.kuerzelAnzeige;
-					laufbahnplanungFach.bezeichnung = fach.bezeichnung;
-					laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = false;
-					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "";
-					laufbahnplanungFach.positionFremdsprachenfolge = "";
+					laufbahnplanungFach.Kuerzel = fach.kuerzelAnzeige;
+					laufbahnplanungFach.Bezeichnung = fach.bezeichnung;
+					laufbahnplanungFach.FachIstFortfuehrbareFremdspracheInGOSt = false;
+					laufbahnplanungFach.JahrgangFremdsprachenbeginn = "";
+					laufbahnplanungFach.PositionFremdsprachenfolge = "";
 
 					eintragFremdspracheInLaufbahnplanungFachErgaenzen(laufbahnplanungFach, fach, abidaten, sprachbelegungen, sprachpruefungen);
 
 					if (belegung == null) {
-						laufbahnplanungFach.belegungEF1 = "";
-						laufbahnplanungFach.belegungEF2 = "";
-						laufbahnplanungFach.belegungQ11 = "";
-						laufbahnplanungFach.belegungQ12 = "";
-						laufbahnplanungFach.belegungQ21 = "";
-						laufbahnplanungFach.belegungQ22 = "";
+						laufbahnplanungFach.BelegungEF1 = "";
+						laufbahnplanungFach.BelegungEF2 = "";
+						laufbahnplanungFach.BelegungQ11 = "";
+						laufbahnplanungFach.BelegungQ12 = "";
+						laufbahnplanungFach.BelegungQ21 = "";
+						laufbahnplanungFach.BelegungQ22 = "";
+						laufbahnplanungFach.FachIstBelegtInGOSt = false;
 					} else {
-						laufbahnplanungFach.belegungEF1 = eintragFachbelegung(belegung.belegungen[0]);
-						laufbahnplanungFach.belegungEF2 = eintragFachbelegung(belegung.belegungen[1]);
-						laufbahnplanungFach.belegungQ11 = eintragFachbelegung(belegung.belegungen[2]);
-						laufbahnplanungFach.belegungQ12 = eintragFachbelegung(belegung.belegungen[3]);
-						laufbahnplanungFach.belegungQ21 = eintragFachbelegung(belegung.belegungen[4]);
-						laufbahnplanungFach.belegungQ22 = eintragFachbelegung(belegung.belegungen[5]);
+						laufbahnplanungFach.BelegungEF1 = eintragFachbelegung(belegung.belegungen[0]);
+						laufbahnplanungFach.BelegungEF2 = eintragFachbelegung(belegung.belegungen[1]);
+						laufbahnplanungFach.BelegungQ11 = eintragFachbelegung(belegung.belegungen[2]);
+						laufbahnplanungFach.BelegungQ12 = eintragFachbelegung(belegung.belegungen[3]);
+						laufbahnplanungFach.BelegungQ21 = eintragFachbelegung(belegung.belegungen[4]);
+						laufbahnplanungFach.BelegungQ22 = eintragFachbelegung(belegung.belegungen[5]);
+						laufbahnplanungFach.FachIstBelegtInGOSt = true;
 
 						if (belegung.abiturFach == null) {
-							laufbahnplanungFach.abiturfach = "";
+							laufbahnplanungFach.Abiturfach = "";
 						} else {
-							laufbahnplanungFach.abiturfach = belegung.abiturFach.toString();
+							laufbahnplanungFach.Abiturfach = belegung.abiturFach.toString();
 						}
 					}
 
 					final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 					if (zulaessigesFach.daten.aufgabenfeld == null)
-						laufbahnplanungFach.aufgabenfeld = 0;
+						laufbahnplanungFach.Aufgabenfeld = 0;
 					else
-						laufbahnplanungFach.aufgabenfeld = zulaessigesFach.daten.aufgabenfeld;
-					laufbahnplanungFach.fachgruppe = zulaessigesFach.daten.fachgruppe;
-					laufbahnplanungFach.farbeClientRGB = zulaessigesFach.getHMTLFarbeRGB().replace("rgba(", "").replace(")", "");
+						laufbahnplanungFach.Aufgabenfeld = zulaessigesFach.daten.aufgabenfeld;
+					laufbahnplanungFach.Fachgruppe = zulaessigesFach.daten.fachgruppe;
+					laufbahnplanungFach.FarbeClientRGB = zulaessigesFach.getHMTLFarbeRGB().replace("rgba(", "").replace(")", "");
 
 					result.add(laufbahnplanungFach);
 				}
@@ -142,7 +144,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 	 * @param sprachbelegungen 		Sprachbelegungen des Schülers aus der Sprachenfolge
 	 * @param sprachpruefungen 		Sprachprüfungen des Schülers
 	 */
-	private static void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final SchildReportingSchuelerGOStLaufbahnplanungFachwahlen laufbahnplanungFach, final GostFach fach, final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
+	private static void eintragFremdspracheInLaufbahnplanungFachErgaenzen(final DruckGostLaufbahnplanungSchuelerFachwahlen laufbahnplanungFach, final GostFach fach, final Abiturdaten abiturdaten, final Map<String, Sprachbelegung> sprachbelegungen, final Map<String, Sprachpruefung> sprachpruefungen) {
 
 		if (!fach.istFremdsprache)
 			return;
@@ -161,25 +163,25 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFach
 					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
 					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
 					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
-					laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
-					laufbahnplanungFach.jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
-					laufbahnplanungFach.positionFremdsprachenfolge = sprachbelegung.reihenfolge.toString();
+					laufbahnplanungFach.FachIstFortfuehrbareFremdspracheInGOSt = true;
+					laufbahnplanungFach.JahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
+					laufbahnplanungFach.PositionFremdsprachenfolge = sprachbelegung.reihenfolge.toString();
 				}
 			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
-				laufbahnplanungFach.fachIstFortfuehrbareFremdspracheInGOSt = true;
+				laufbahnplanungFach.FachIstFortfuehrbareFremdspracheInGOSt = true;
 				if (sprachpruefung.istFeststellungspruefung) {
-					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "SFP";
+					laufbahnplanungFach.JahrgangFremdsprachenbeginn = "SFP";
 				} else if (sprachpruefung.istHSUPruefung) {
-					laufbahnplanungFach.jahrgangFremdsprachenbeginn = "HSU";
+					laufbahnplanungFach.JahrgangFremdsprachenbeginn = "HSU";
 				}
 				if (sprachpruefung.kannErstePflichtfremdspracheErsetzen)
-					laufbahnplanungFach.positionFremdsprachenfolge = "1";
+					laufbahnplanungFach.PositionFremdsprachenfolge = "1";
 				else if (sprachpruefung.kannZweitePflichtfremdspracheErsetzen)
-					laufbahnplanungFach.positionFremdsprachenfolge = "2";
+					laufbahnplanungFach.PositionFremdsprachenfolge = "2";
 				else if (sprachpruefung.kannWahlpflichtfremdspracheErsetzen)
-					laufbahnplanungFach.positionFremdsprachenfolge = "2";
+					laufbahnplanungFach.PositionFremdsprachenfolge = "2";
 				else {
-					laufbahnplanungFach.positionFremdsprachenfolge = "";
+					laufbahnplanungFach.PositionFremdsprachenfolge = "";
 				}
 			}
 		}

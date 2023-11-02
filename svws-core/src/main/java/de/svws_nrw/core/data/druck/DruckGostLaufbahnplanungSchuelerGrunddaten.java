@@ -1,4 +1,4 @@
-package de.svws_nrw.core.data.schild3.reporting;
+package de.svws_nrw.core.data.druck;
 
 import de.svws_nrw.base.annotations.SchildReportingDate;
 import de.svws_nrw.base.annotations.SchildReportingMemo;
@@ -8,15 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Die Klasse enthält den Core-DTO für die Schild-Reporting-Datenquelle SchuelerGOStLaufbahnplanungGrunddaten.
+ * Die Klasse enthält den Core-DTO für die GOSt-Laufbahnplanung mit den Schüler-Grunddaten.
  */
 @XmlRootElement
-@Schema(description = "Datenquelle SchuelerGOStLaufbahnplanungGrunddaten")
+@Schema(description = "Die Grunddaten zur GOSt-Laufbahnplanung eines Schülers")
 @TranspilerDTO
-public class SchildReportingSchuelerGOStLaufbahnplanungGrunddaten {
+public class DruckGostLaufbahnplanungSchuelerGrunddaten {
 
     /** Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören. */
-    @Schema(description = "die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören", example = "4711")
+    @Schema(description = "ID des Schülers, zu dem die Laufbahnplanungsdaten gehören", example = "4711")
     public long schuelerID;
 
     /** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */

@@ -3,21 +3,18 @@ package de.svws_nrw.module.pdf.gost.kursplanung;
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.utils.OperationError;
-
 import de.svws_nrw.module.pdf.PDFBuilder;
-
 import de.svws_nrw.module.pdf.schule.PDFContextSchule;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 
 /**
@@ -61,8 +58,8 @@ public final class PDFDateiGostKursplanungKurseMitKursschuelern extends PDFBuild
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) {
 
 		try {
-			final Context contextKurse = PDFContextGostKursplanungKurse.gostKursplanungKurse(conn, blockungsergebnisID, kursIDs);
-			final Context contextSchule = PDFContextSchule.schule(conn);
+			final Context contextKurse = PDFContextGostKursplanungKurse.setContext(conn, blockungsergebnisID, kursIDs);
+			final Context contextSchule = PDFContextSchule.setContext(conn);
 
 			final PDFDateiGostKursplanungKurseMitKursschuelern pdf = getPDF(contextKurse, contextSchule);
 

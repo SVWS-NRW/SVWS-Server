@@ -14,8 +14,8 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
-
 import jakarta.ws.rs.WebApplicationException;
+import org.thymeleaf.context.Context;
 
 import java.text.Collator;
 import java.time.LocalDate;
@@ -25,8 +25,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
-
-import org.thymeleaf.context.Context;
 
 /**
  * Eine Sammlung von Methoden zum Erstellen von Daten-Contexts zum Bereich "GostKursplanung" für die html-Templates zur Erstellung von PDF-Dateien.
@@ -47,7 +45,7 @@ public final class PDFContextGostKursplanungKurse {
 	 *
 	 * @return 						der Context
 	 */
-	public static Context gostKursplanungKurse(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) throws WebApplicationException {
+	public static Context setContext(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) throws WebApplicationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 

@@ -21,7 +21,7 @@ public final class PDFContextSchule {
 	 *
 	 * @return 		der Context
 	 */
-	public static Context schule(final DBEntityManager conn) {
+	public static Context setContext(final DBEntityManager conn) {
 		final Context context = new Context();
 		context.setVariable("Schule", DataSchuleStammdaten.getStammdaten(conn));
 		return context;

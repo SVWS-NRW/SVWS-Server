@@ -1,6 +1,6 @@
-import { JavaObject } from '../../../../java/lang/JavaObject';
+import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObject {
+export class DruckGostLaufbahnplanungSchuelerHinweise extends JavaObject {
 
 	/**
 	 * Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören.
@@ -18,12 +18,12 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungHinweise'].includes(name);
+		return ['de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerHinweise'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): SchildReportingSchuelerGOStLaufbahnplanungHinweise {
+	public static transpilerFromJSON(json : string): DruckGostLaufbahnplanungSchuelerHinweise {
 		const obj = JSON.parse(json);
-		const result = new SchildReportingSchuelerGOStLaufbahnplanungHinweise();
+		const result = new DruckGostLaufbahnplanungSchuelerHinweise();
 		if (typeof obj.schuelerID === "undefined")
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
@@ -33,7 +33,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 		return result;
 	}
 
-	public static transpilerToJSON(obj : SchildReportingSchuelerGOStLaufbahnplanungHinweise) : string {
+	public static transpilerToJSON(obj : DruckGostLaufbahnplanungSchuelerHinweise) : string {
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"belegungshinweis" : ' + JSON.stringify(obj.belegungshinweis!) + ',';
@@ -42,7 +42,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerGOStLaufbahnplanungHinweise>) : string {
+	public static transpilerToJSONPatch(obj : Partial<DruckGostLaufbahnplanungSchuelerHinweise>) : string {
 		let result = '{';
 		if (typeof obj.schuelerID !== "undefined") {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
@@ -57,6 +57,6 @@ export class SchildReportingSchuelerGOStLaufbahnplanungHinweise extends JavaObje
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerGOStLaufbahnplanungHinweise(obj : unknown) : SchildReportingSchuelerGOStLaufbahnplanungHinweise {
-	return obj as SchildReportingSchuelerGOStLaufbahnplanungHinweise;
+export function cast_de_svws_nrw_core_data_druck_DruckGostLaufbahnplanungSchuelerHinweise(obj : unknown) : DruckGostLaufbahnplanungSchuelerHinweise {
+	return obj as DruckGostLaufbahnplanungSchuelerHinweise;
 }

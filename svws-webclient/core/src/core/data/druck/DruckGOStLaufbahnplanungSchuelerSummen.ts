@@ -1,6 +1,6 @@
-import { JavaObject } from '../../../../java/lang/JavaObject';
+import { JavaObject } from '../../../java/lang/JavaObject';
 
-export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject {
+export class DruckGostLaufbahnplanungSchuelerSummen extends JavaObject {
 
 	/**
 	 * Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören.
@@ -103,12 +103,12 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungSummen'].includes(name);
+		return ['de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerSummen'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): SchildReportingSchuelerGOStLaufbahnplanungSummen {
+	public static transpilerFromJSON(json : string): DruckGostLaufbahnplanungSchuelerSummen {
 		const obj = JSON.parse(json);
-		const result = new SchildReportingSchuelerGOStLaufbahnplanungSummen();
+		const result = new DruckGostLaufbahnplanungSchuelerSummen();
 		if (typeof obj.schuelerID === "undefined")
 			 throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
@@ -169,7 +169,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 		return result;
 	}
 
-	public static transpilerToJSON(obj : SchildReportingSchuelerGOStLaufbahnplanungSummen) : string {
+	public static transpilerToJSON(obj : DruckGostLaufbahnplanungSchuelerSummen) : string {
 		let result = '{';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
 		result += '"kursanzahlEF1" : ' + obj.kursanzahlEF1 + ',';
@@ -195,7 +195,7 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerGOStLaufbahnplanungSummen>) : string {
+	public static transpilerToJSONPatch(obj : Partial<DruckGostLaufbahnplanungSchuelerSummen>) : string {
 		let result = '{';
 		if (typeof obj.schuelerID !== "undefined") {
 			result += '"schuelerID" : ' + obj.schuelerID + ',';
@@ -261,6 +261,6 @@ export class SchildReportingSchuelerGOStLaufbahnplanungSummen extends JavaObject
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerGOStLaufbahnplanungSummen(obj : unknown) : SchildReportingSchuelerGOStLaufbahnplanungSummen {
-	return obj as SchildReportingSchuelerGOStLaufbahnplanungSummen;
+export function cast_de_svws_nrw_core_data_druck_DruckGostLaufbahnplanungSchuelerSummen(obj : unknown) : DruckGostLaufbahnplanungSchuelerSummen {
+	return obj as DruckGostLaufbahnplanungSchuelerSummen;
 }

@@ -1,10 +1,10 @@
 package de.svws_nrw.module.pdf.gost;
 
 import de.svws_nrw.base.ResourceUtils;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFehler;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungGrunddaten;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungHinweise;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungSummen;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerFehler;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerGrunddaten;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerHinweise;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerSummen;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schild3.reporting.DataSchildReportingDatenquelle;
@@ -72,10 +72,10 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 											  final int abiturjahr,
 											  final List<Long> schuelerIDs,
 											  final Map<Long, DTOSchueler> mapSchueler,
-											  final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
-											  final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
-											  final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
-											  final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
+											  final Map<Long, DruckGostLaufbahnplanungSchuelerGrunddaten> mapGrunddaten,
+											  final Map<Long, DruckGostLaufbahnplanungSchuelerSummen> mapSummen,
+											  final Map<Long, List<DruckGostLaufbahnplanungSchuelerFehler>> mapFehler,
+											  final Map<Long, List<DruckGostLaufbahnplanungSchuelerHinweise>> mapHinweise) {
 		super(html);
 
 		this.filename = dateiname;
@@ -95,10 +95,10 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 	private String getSchuelerTabellendaten(final int detaillevel,
 											final List<Long> schuelerIDs,
 											final Map<Long, DTOSchueler> mapSchueler,
-											final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten,
-											final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen,
-											final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler,
-											final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise) {
+											final Map<Long, DruckGostLaufbahnplanungSchuelerGrunddaten> mapGrunddaten,
+											final Map<Long, DruckGostLaufbahnplanungSchuelerSummen> mapSummen,
+											final Map<Long, List<DruckGostLaufbahnplanungSchuelerFehler>> mapFehler,
+											final Map<Long, List<DruckGostLaufbahnplanungSchuelerHinweise>> mapHinweise) {
 
 		int lfdNr = 0;
 
@@ -114,10 +114,10 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 
 			lfdNr++;
             final DTOSchueler schueler = mapSchueler.get(schuelerID);
-			final SchildReportingSchuelerGOStLaufbahnplanungGrunddaten grunddaten = mapGrunddaten.get(schuelerID);
-			final SchildReportingSchuelerGOStLaufbahnplanungSummen summen = mapSummen.get(schuelerID);
-			final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> fehler = mapFehler.get(schuelerID);
-			final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> hinweise = mapHinweise.get(schuelerID);
+			final DruckGostLaufbahnplanungSchuelerGrunddaten grunddaten = mapGrunddaten.get(schuelerID);
+			final DruckGostLaufbahnplanungSchuelerSummen summen = mapSummen.get(schuelerID);
+			final List<DruckGostLaufbahnplanungSchuelerFehler> fehler = mapFehler.get(schuelerID);
+			final List<DruckGostLaufbahnplanungSchuelerHinweise> hinweise = mapHinweise.get(schuelerID);
 			final int anzahlFehler = fehler == null ? 0 : fehler.size();
 			final int anzahlHinweise = hinweise == null ? 0 : hinweise.size();
 
@@ -254,7 +254,7 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 	 *
 	 * @return HTML-Tabellenzeile mit der Liste der Belegungsfehler gemäß Gesamtprüfung
 	 */
-	private String getAusgabeBelegungsfehler(final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler) {
+	private String getAusgabeBelegungsfehler(final List<DruckGostLaufbahnplanungSchuelerFehler> listFehler) {
 		if (listFehler == null || listFehler.isEmpty()) {
 			return "";
 		} else {
@@ -280,7 +280,7 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 	 *
 	 * @return HTML-Tabellenzeile mit der Liste der Belegungsfehler gemäß Gesamtprüfung
 	 */
-	private String getAusgabeBelegungshinweise(final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise) {
+	private String getAusgabeBelegungshinweise(final List<DruckGostLaufbahnplanungSchuelerHinweise> listHinweise) {
 		if (listHinweise == null || listHinweise.isEmpty())
 			return "";
 		else {
@@ -354,19 +354,19 @@ public final class PDFGostErgebnisseLaufbahnpruefung extends PDFCreator {
 		// Datenquellen und zugehörige Objekte initialisieren
 		DataSchildReportingDatenquelle.initMapDatenquellen();
 		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten objDsGD = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten();
-		final List<SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> listGrunddaten = objDsGD.getDaten(conn, schuelerIDs);
+		final List<DruckGostLaufbahnplanungSchuelerGrunddaten> listGrunddaten = objDsGD.getDaten(conn, schuelerIDs);
 		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen objDsSUM = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen();
-		final List<SchildReportingSchuelerGOStLaufbahnplanungSummen> listSummen = objDsSUM.getDaten(conn, schuelerIDs);
+		final List<DruckGostLaufbahnplanungSchuelerSummen> listSummen = objDsSUM.getDaten(conn, schuelerIDs);
 		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler objDsFEH = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
-		final List<SchildReportingSchuelerGOStLaufbahnplanungFehler> listFehler = objDsFEH.getDaten(conn, schuelerIDs);
+		final List<DruckGostLaufbahnplanungSchuelerFehler> listFehler = objDsFEH.getDaten(conn, schuelerIDs);
 		final DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise objDsHIN = new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
-		final List<SchildReportingSchuelerGOStLaufbahnplanungHinweise> listHinweise = objDsHIN.getDaten(conn, schuelerIDs);
+		final List<DruckGostLaufbahnplanungSchuelerHinweise> listHinweise = objDsHIN.getDaten(conn, schuelerIDs);
 
 		// Überführung der Ergebnisse der Datenquellen von Listen in Maps für besseren Zugriff auf die Daten.
-		final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungGrunddaten> mapGrunddaten = listGrunddaten.stream().collect(Collectors.toMap(d -> d.schuelerID, d -> d));
-		final Map<Long, SchildReportingSchuelerGOStLaufbahnplanungSummen> mapSummen = listSummen.stream().collect(Collectors.toMap(d -> d.schuelerID, d -> d));
-		final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungFehler>> mapFehler = listFehler.stream().collect(Collectors.groupingBy(d -> d.schuelerID));
-		final Map<Long, List<SchildReportingSchuelerGOStLaufbahnplanungHinweise>> mapHinweise = listHinweise.stream().collect(Collectors.groupingBy(d -> d.schuelerID));
+		final Map<Long, DruckGostLaufbahnplanungSchuelerGrunddaten> mapGrunddaten = listGrunddaten.stream().collect(Collectors.toMap(d -> d.schuelerID, d -> d));
+		final Map<Long, DruckGostLaufbahnplanungSchuelerSummen> mapSummen = listSummen.stream().collect(Collectors.toMap(d -> d.schuelerID, d -> d));
+		final Map<Long, List<DruckGostLaufbahnplanungSchuelerFehler>> mapFehler = listFehler.stream().collect(Collectors.groupingBy(d -> d.schuelerID));
+		final Map<Long, List<DruckGostLaufbahnplanungSchuelerHinweise>> mapHinweise = listHinweise.stream().collect(Collectors.groupingBy(d -> d.schuelerID));
 
 		// Die Schüler-IDs können in einer beliebigen Reihenfolge sein. Für die Ausgabe mehrerer Wahlbögen sollten sie aber in alphabetischer Reihenfolge der Schüler sein.
 		// Erzeuge daher eine Liste mit Schüler-IDs, die in der alphabetischen Reihenfolge der Schüler sortiert ist

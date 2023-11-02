@@ -1,21 +1,20 @@
-package de.svws_nrw.core.data.schild3.reporting;
+package de.svws_nrw.core.data.druck;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Die Klasse enthält den Core-DTO für die Schild-Reporting-Datenquelle SchuelerGOStLaufbahnplanungSummen.
+ * Die Klasse enthält den Core-DTO für die GOSt-Laufbahnplanung mit den Schüler-Summen.
  */
 @XmlRootElement
-@Schema(description = "Datenquelle SchuelerGOStLaufbahnplanungSummen")
+@Schema(description = "Die Daten zu den Summen zur GOSt-Laufbahnplanung eines Schülers")
 @TranspilerDTO
-public class SchildReportingSchuelerGOStLaufbahnplanungSummen {
+public class DruckGostLaufbahnplanungSchuelerSummen {
 
     /** Die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören. */
-    @Schema(description = "die ID des Schülers, zu dem die Laufbahnplanungsdaten gehören", example = "4711")
+    @Schema(description = "ID des Schülers, zu dem die Laufbahnplanungsdaten gehören", example = "4711")
     public long schuelerID;
-
 
     /** Kursanzahl in der EF.1 */
 	@Schema(description = "Kursanzahl in der EF.1", example = "12")
