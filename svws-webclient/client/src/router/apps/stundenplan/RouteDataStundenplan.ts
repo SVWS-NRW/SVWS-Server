@@ -260,11 +260,9 @@ export class RouteDataStundenplan {
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const z of zeitraster) {
 			await api.server.patchStundenplanZeitrasterEintrag(z, api.schema, z.id);
-			this.stundenplanManager.zeitrasterPatchAttributes(z);
 			list.add(z);
 		}
-		//TODO ergänzen
-		// this.stundenplanManager.zeitrasterPatchAttributesAll(list);
+		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
 	}

@@ -73,8 +73,6 @@ export class RouteDataKatalogZeitraster {
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const z of zeitraster) {
 			delete z.id;
-			z.stundenbeginn = 400;
-			z.stundenende = 445;
 			const item = await api.server.addZeitrasterEintrag(z, api.schema);
 			list.add(item);
 		}
