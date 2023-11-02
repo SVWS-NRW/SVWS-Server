@@ -243,11 +243,14 @@ export class RouteDataStundenplan {
 	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
 
 	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const list = new ArrayList<StundenplanZeitraster>();
 		for (const z of zeitraster) {
 			delete z.id;
-			const item = await api.server.addZeitrasterEintrag(z, api.schema);
+			const item = await api.server.addStundenplanZeitrasterEintrag(z, api.schema, id);
 			list.add(item);
 		}
 		this.stundenplanManager.zeitrasterAddAll(list);
