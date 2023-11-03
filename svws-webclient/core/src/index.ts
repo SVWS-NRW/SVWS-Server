@@ -536,6 +536,7 @@ export { KlausurterminblockungAlgorithmusGreedy2b } from './core/utils/klausurpl
 export { KlausurterminblockungAlgorithmusGreedy3 } from './core/utils/klausurplanung/KlausurterminblockungAlgorithmusGreedy3';
 export { KlausurterminblockungDynDaten } from './core/utils/klausurplanung/KlausurterminblockungDynDaten';
 export { KursUtils } from './core/utils/kurse/KursUtils';
+export { LehrerListeManager } from './core/utils/lehrer/LehrerListeManager';
 export { LehrerUtils } from './core/utils/lehrer/LehrerUtils';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';
