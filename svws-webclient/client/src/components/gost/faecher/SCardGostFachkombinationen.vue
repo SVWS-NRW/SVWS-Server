@@ -1,5 +1,13 @@
 <template>
-	<svws-ui-content-card :title="title">
+	<svws-ui-content-card>
+		<template #title>
+			<svws-ui-tooltip>
+				<span class="content-card--headline">{{ title }}</span>
+				<template #content>
+					{{ typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH ? 'Fach 1 und Fach 2 schließen sich gegenseitig aus in den angegebenen Kursarten':'Fach 1 erfordert Fach 2 in den angegebenen Kursarten'}}
+				</template>
+			</svws-ui-tooltip>
+		</template>
 		<svws-ui-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
 			<template #body>
 				<div v-for="row in rows" :key="row.hashCode()" class="svws-ui-tr" role="columnheader">
@@ -15,11 +23,11 @@
 
 <script setup lang="ts">
 
+	import type { DataTableColumn } from "@ui";
 	import type { List, GostJahrgangFachkombination, GostFaecherManager } from "@core";
 	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 	import { ArrayList, GostLaufbahnplanungFachkombinationTyp } from "@core";
-	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		faecherManager: () => GostFaecherManager;
