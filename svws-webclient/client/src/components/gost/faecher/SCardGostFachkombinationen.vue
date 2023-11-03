@@ -1,47 +1,9 @@
 <template>
-	<svws-ui-content-card :title="title+'e Kombinationen'">
+	<svws-ui-content-card :title="title">
 		<svws-ui-table :items="[]" :no-data="rows.size() === 0" :columns="cols">
-			<template #header>
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td" role="columnheader">
-						Fach
-					</div>
-					<div class="svws-ui-td svws-divider" role="columnheader">
-						Kursart
-					</div>
-					<div class="svws-ui-td" role="columnheader">
-						Fach
-					</div>
-					<div class="svws-ui-td svws-divider" role="columnheader">
-						Kursart
-					</div>
-					<div class="svws-ui-td svws-align-center" role="columnheader">
-						EF.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
-						EF.2
-					</div>
-					<div class="svws-ui-td svws-align-center" role="columnheader">
-						Q1.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
-						Q1.2
-					</div>
-					<div class="svws-ui-td svws-align-center" role="columnheader">
-						Q2.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider" role="columnheader">
-						Q2.2
-					</div>
-					<div class="svws-ui-td svws-align-center" role="columnheader">
-						<!--Text-->
-					</div>
-					<div class="svws-ui-td svws-align-center" role="columnheader" />
-				</div>
-			</template>
 			<template #body>
 				<div v-for="row in rows" :key="row.hashCode()" class="svws-ui-tr" role="columnheader">
-					<s-row-gost-fachkombination :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
+					<s-row-gost-fachkombination :typ="typ" :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
 				</div>
 			</template>
 			<template #actions>
@@ -71,9 +33,9 @@
 	const title: ComputedRef<string> = computed(() => {
 		switch(props.typ) {
 			case GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH:
-				return "Gefordert";
+				return "Geforderte Kombinationen";
 			case GostLaufbahnplanungFachkombinationTyp.VERBOTEN:
-				return "Unzulässig";
+				return "Unzulässige Kombinationen";
 			default:
 				return "Fehler: Typ für die Fachkombination unbekannt";
 		}
@@ -91,19 +53,20 @@
 		void props.addFachkombination(props.typ);
 	}
 
-	const cols: DataTableColumn[] = [
-		{ key: "Fach", label: "Fach", span: 1, minWidth: 5 },
-		{ key: "Kursart", label: "Kursart", span: 1, minWidth: 5},
-		{ key: "Fach", label: "Fach", align: 'center', span: 1, minWidth: 5 },
-		{ key: "Kursart", label: "Kursart", align: 'center', span: 1, minWidth: 5 },
+	const cols = computed<DataTableColumn[]>(() => [
+		{ key: "Fach1", label: "Fach 1", span: 1, minWidth: 5 },
+		{ key: "Kursart1", label: "Kursart 1", span: 1, minWidth: 5},
+		{ key: "Empty", label: (props.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH) ? "\u21d2" : "\u21d4 ", span: 0.25, minWidth: 1},
+		{ key: "Fach2", label: "Fach 2", span: 1, minWidth: 5 },
+		{ key: "Kursart2", label: "Kursart 2", span: 1, minWidth: 5 },
 		{ key: "EF.1", label: "EF.1", align: 'center', span: 0.5, minWidth: 3 },
 		{ key: "EF.2", label: "EF.2", align: 'center', span: 0.5, minWidth: 3 },
 		{ key: "Q1.1", label: "Q1.1", align: 'center', span: 0.5, minWidth: 3 },
 		{ key: "Q1.2", label: "Q1.2", align: 'center', span: 0.5, minWidth: 3 },
 		{ key: "Q2.1", label: "Q2.1", align: 'center', span: 0.5, minWidth: 3 },
 		{ key: "Q2.2", label: "Q2.2", align: 'center', span: 0.5, minWidth: 3 },
-		{ key: "Hinweistext", label: "Hinweistext", align: 'center', fixedWidth: 2 },
-		{ key: "Trash", label: "Trash", align: 'center', span: 0.25, fixedWidth: 2 },
-	];
+		{ key: "Hinweistext", label: " ", align: 'center', fixedWidth: 2 },
+		{ key: "Trash", label: " ", align: 'center', span: 0.25, fixedWidth: 2 },
+	]);
 
 </script>

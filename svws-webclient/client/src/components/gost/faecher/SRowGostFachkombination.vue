@@ -6,6 +6,9 @@
 		<svws-ui-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td" role="cell">
+		&nbsp;
+	</div>
+	<div class="svws-ui-td" role="cell">
 		<svws-ui-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
 	<div class="svws-ui-td svws-divider" role="cell">
@@ -54,6 +57,7 @@
 		faecherManager: () => GostFaecherManager;
 		patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<boolean>;
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
+		typ: GostLaufbahnplanungFachkombinationTyp;
 		kombination: GostJahrgangFachkombination;
 	}>();
 
