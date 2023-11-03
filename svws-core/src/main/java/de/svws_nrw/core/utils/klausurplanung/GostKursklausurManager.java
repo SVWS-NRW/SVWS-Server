@@ -884,16 +884,17 @@ public class GostKursklausurManager {
 	 * @param datum     das Datum, auf
 	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
 	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
 	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
-			final @NotNull String datum, final int threshold) {
+			final @NotNull String datum, final int threshold, final boolean thresholdOnly) {
 		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold, thresholdOnly);
 	}
 
-	private @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold) {
+	private @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold, final boolean thresholdOnly) {
 		Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
 
 		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
@@ -908,7 +909,7 @@ public class GostKursklausurManager {
 				if (klausurenInTermin != null)
 					klausuren.addAll(klausurenInTermin);
 			}
-			if (klausuren.size() >= threshold)
+			if (klausuren.size() == threshold || (klausuren.size() > threshold && !thresholdOnly))
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
@@ -923,11 +924,12 @@ public class GostKursklausurManager {
 	 * @param kw        der Klausurtermin, dessen Kalenderwoche geprüft wird
 	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
 	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
-		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
+	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold, final boolean thresholdOnly) {
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold, thresholdOnly);
 	}
 
 	/**

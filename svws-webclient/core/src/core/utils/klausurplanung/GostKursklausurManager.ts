@@ -835,15 +835,16 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param datum     das Datum, auf
 	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
 	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
+	public klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(termin : GostKlausurtermin, datum : string, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
 		let kwDatum : number = DateUtils.gibKwDesDatumsISO8601(datum);
-		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold);
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold, thresholdOnly);
 	}
 
-	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
+	private klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw : number, termin : GostKlausurtermin | null, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
 		let ergebnis : JavaMap<number, HashSet<GostKursklausur>> | null = new HashMap();
 		let kursklausurmenge_by_schuelerId : JavaMap<number, List<GostKursklausur> | null> | null = this._kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
 		if (kursklausurmenge_by_schuelerId === null)
@@ -856,7 +857,7 @@ export class GostKursklausurManager extends JavaObject {
 				if (klausurenInTermin !== null)
 					klausuren.addAll(klausurenInTermin);
 			}
-			if (klausuren.size() >= threshold)
+			if (klausuren.size() === threshold || (klausuren.size() > threshold && !thresholdOnly))
 				ergebnis.put(entry.getKey(), klausuren);
 		}
 		return ergebnis;
@@ -871,11 +872,12 @@ export class GostKursklausurManager extends JavaObject {
 	 * @param kw        der Klausurtermin, dessen Kalenderwoche geprüft wird
 	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
 	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
 	 *
 	 * @return die Map (Schülerid -> GostKursklausur)
 	 */
-	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number) : JavaMap<number, HashSet<GostKursklausur>> {
-		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold);
+	public klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(kw : number, threshold : number, thresholdOnly : boolean) : JavaMap<number, HashSet<GostKursklausur>> {
+		return this.klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold, thresholdOnly);
 	}
 
 	/**
