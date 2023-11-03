@@ -19,14 +19,14 @@ import java.util.List;
 
 
 /**
- * Diese Klasse beinhaltet den Code zur Erstellung von Wahlbögen für eine Liste von Schülern für die Laufbahnplanung in der GOSt.
+ * Diese Klasse beinhaltet den Code zur Erstellung einer Übersicht zu den Laufbahnplanungsprüfungsergebnissen für eine Liste von Schülern in der GOSt.
  */
-public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuilder {
+public final class PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht extends PDFBuilder {
 	/** Der Inhalt der html-Dokumentvorlage mit Schleifen und Variablen, aus der später die PDF-Datei erzeugt wird. */
-	private static final String htmlTemplate = ResourceUtils.text("de/svws_nrw/module/pdf/gost/laufbahnplanung/SchuelerWahlbogen.html");
+	private static final String htmlTemplate = ResourceUtils.text("de/svws_nrw/module/pdf/gost/laufbahnplanung/SchuelerErgebnisuebersicht.html");
 
 	/** Pfad zur css-Datei, die in der html-Dokumentvorlage verlinkt wurde. Er wird vom PDF-Builder benötigt, um als baseURI für nachladbare Dateien zu fungieren. */
-	private static final String cssDateipfad = "de/svws_nrw/module/pdf/gost/laufbahnplanung/SchuelerWahlbogen.css";
+	private static final String cssDateipfad = "de/svws_nrw/module/pdf/gost/laufbahnplanung/SchuelerErgebnisuebersicht.css";
 
 	/** Der Dateiname für die PDF-Datei. */
 	private final String pdfDateiname;
@@ -38,7 +38,7 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 	 * @param html				Der finale html-Inhalt, aus dem die PDF-Datei erzeugt werden soll.
 	 * @param dateiname        	Dateiname der finalen PDF-Datei.
 	 */
-	private PDFDateiGostLaufbahnplanungSchuelerWahlbogen(final String html, final String dateiname) {
+	private PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht(final String html, final String dateiname) {
 		super(html, cssDateipfad);
 		this.pdfDateiname = dateiname;
 	}
@@ -50,17 +50,17 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 	 *
 	 * @param conn          		die Datenbank-Verbindung
 	 * @param schuelerIDs           Liste der IDs der Schüler, deren Wahlbögen erstellt werden sollen.
-	 * @param nurBelegteFaecher 	auf dem Wahlbogen werden nur die vom Schüler belegten Fächer ausgegeben.
+	 * @param detaillevel 			gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
 	 *
 	 * @return 						die HTTP-Response mit dem PDF-Dokument
 	 */
-	public static Response query(final DBEntityManager conn, final List<Long> schuelerIDs, final Boolean nurBelegteFaecher) {
+	public static Response query(final DBEntityManager conn, final List<Long> schuelerIDs, final int detaillevel) {
 
 		try {
 			final Context contextLaufbahnplanung = PDFContextGostLaufbahnplanung.setContext(conn, schuelerIDs);
 			final Context contextSchule = PDFContextSchule.setContext(conn);
 
-			final PDFDateiGostLaufbahnplanungSchuelerWahlbogen pdf = getPDF(contextLaufbahnplanung, contextSchule, nurBelegteFaecher);
+			final PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht pdf = getPDF(contextLaufbahnplanung, contextSchule, Math.min(Math.max(detaillevel, 0), 2));
 
 			final byte[] data = pdf.getPDFAlsByteArray();
 			if (data == null)
@@ -83,18 +83,18 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 	 *
 	 * @param contextLaufbahnplanung	context mit Daten zu den Kursen für das html-Template, aus dem das PDF erzeugt wird
 	 * @param contextSchule				context mit Daten der Schule für das html-Template, aus dem das PDF erzeugt wird
-	 * @param nurBelegteFaecher 		auf dem Wahlbogen werden nur die vom Schüler belegten Fächer ausgegeben.
+	 * @param detaillevel 				gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
 	 *
 	 * @return 							Objekt zum Erstellen eines PDFs
 	 *
 	 */
-	private static PDFDateiGostLaufbahnplanungSchuelerWahlbogen getPDF(final Context contextLaufbahnplanung, final Context contextSchule, final Boolean nurBelegteFaecher) {
+	private static PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht getPDF(final Context contextLaufbahnplanung, final Context contextSchule, final int detaillevel) {
 
 		// Erzeuge den Dateinamen und den finalen html-Inhalt für die PDF-Datei aus den übergebenen Daten im context
 		final String pdfDateiname = getDateiname(contextLaufbahnplanung);
-		final String html = getHtml(contextLaufbahnplanung, contextSchule, nurBelegteFaecher);
+		final String html = getHtml(contextLaufbahnplanung, contextSchule, detaillevel);
 
-		return new PDFDateiGostLaufbahnplanungSchuelerWahlbogen(html, pdfDateiname);
+		return new PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht(html, pdfDateiname);
 	}
 
 
@@ -106,22 +106,15 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 	 * @return							den Dateinamen für die PDF-Datei
 	 */
 	private static String getDateiname(final Context contextLaufbahnplanung) {
-		String dateiname = "Laufbahnplanung.pdf";
+		String dateiname = "Laufbahnplanung_Prüfungsergebnisse.pdf";
 
 		if ((contextLaufbahnplanung.getVariable("LaufbahnplanungSchueler") instanceof List<?> laufbahnplanungSchueler)
 			&& !laufbahnplanungSchueler.isEmpty()
 			&& laufbahnplanungSchueler.get(0) instanceof DruckGostLaufbahnplanungSchueler ersteLaufbahnplanung) {
 
-			if (laufbahnplanungSchueler.size() == 1) {
-				dateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
-							ersteLaufbahnplanung.Abiturjahr,
-							ersteLaufbahnplanung.BeratungsGOStHalbjahr.replace(".", ""),
-							ersteLaufbahnplanung.Nachname.replace(' ', '_').replace('.', '_'),
-							ersteLaufbahnplanung.Vorname.replace(' ', '_').replace('.', '_'),
-							ersteLaufbahnplanung.SchuelerID);
-			} else {
-				dateiname = "Laufbahnplanung_%d_%s.pdf".formatted(ersteLaufbahnplanung.Abiturjahr, ersteLaufbahnplanung.BeratungsGOStHalbjahr.replace('.', '_'));
-			}
+			dateiname = "Laufbahnplanung_Prüfungsergebnisse_Abitur-%d_%s.pdf".formatted(
+						ersteLaufbahnplanung.Abiturjahr,
+						ersteLaufbahnplanung.BeratungsGOStHalbjahr.replace('.', '_'));
 		}
 
 		return dateiname;
@@ -134,12 +127,12 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 	 *
 	 * @param contextLaufbahnplanung	context mit Daten zu den Kursen für das html-Template, aus dem das PDF erzeugt wird
 	 * @param contextSchule				context mit Daten der Schule für das html-Template, aus dem das PDF erzeugt wird
-	 * @param nurBelegteFaecher 		auf dem Wahlbogen werden nur die vom Schüler belegten Fächer ausgegeben.
+	 * @param detaillevel 			gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
 	 *
 	 * @return 							html zum Erstellen eines PDFs
 	 *
 	 */
-	private static String getHtml(final Context contextLaufbahnplanung, final Context contextSchule, final Boolean nurBelegteFaecher) {
+	private static String getHtml(final Context contextLaufbahnplanung, final Context contextSchule, final int detaillevel) {
 
 		StringTemplateResolver resolver = new StringTemplateResolver();
 		resolver.setTemplateMode(TemplateMode.HTML);
@@ -155,7 +148,7 @@ public final class PDFDateiGostLaufbahnplanungSchuelerWahlbogen extends PDFBuild
 		for (final String variable : contextSchule.getVariableNames()) {
 			finalContext.setVariable(variable, contextSchule.getVariable(variable));
 		}
-		finalContext.setVariable("DruckparameterNurBelegteFaecher", nurBelegteFaecher);
+		finalContext.setVariable("DruckparameterDetaillevel", detaillevel);
 
 		return htmlTemplate != null ? templateEngine.process(htmlTemplate, finalContext) : "";
 	}

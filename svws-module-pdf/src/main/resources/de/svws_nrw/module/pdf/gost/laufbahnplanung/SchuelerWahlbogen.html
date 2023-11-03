@@ -21,8 +21,8 @@
 					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${SchuelerLaufbahndaten.AktuelleKlasse}">Klasse: Q1</td>
 				</tr>
 				<tr>
-					<td style="width: 20%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen</h3></td>
-					<td style="width: 80%; border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${SchuelerLaufbahndaten.Nachname + ', ' + SchuelerLaufbahndaten.Vorname}">Musterfrau, Anna</h3></td>
+					<td style="width: 25%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${DruckparameterNurBelegteFaecher}" class="very-tiny">(nur belegte Fächer)</span></h3></td>
+					<td style="width: 75%; border-bottom: 1px grey solid; text-align: right; vertical-align: middle"><h3 th:text="${SchuelerLaufbahndaten.Nachname + ', ' + SchuelerLaufbahndaten.Vorname}">Musterfrau, Anna</h3></td>
 				</tr>
 			</table>
 			<p th:if="${!#strings.isEmpty(SchuelerLaufbahndaten.Beratungsbogentext)}" th:text="${SchuelerLaufbahndaten.Beratungsbogentext}">Text der Schule für den Beratungsbogen.</p>
@@ -53,7 +53,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${SchuelerLaufbahndaten.Fachwahlen}" th:style="'background-color: rgb(' + ${Fachwahl.FarbeClientRGB} + ');'">
+					<tr th:each="Fachwahl : ${SchuelerLaufbahndaten.Fachwahlen}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.FachIstBelegtInGOSt}"  th:style="'background-color: rgb(' + ${Fachwahl.FarbeClientRGB} + ');'">
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.Kuerzel}"><b>D</b></td>
 						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.Bezeichnung}"><b>Deutsch</b></td>
 						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.JahrgangFremdsprachenbeginn}">
@@ -102,6 +102,11 @@
 						<td colspan="2" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(SchuelerLaufbahndaten.WochenstundenDurchschnittEF, 1, 1)}"><b>34,5</b></td>
 						<td colspan="4" class="kompakt ta-c bo-grey" style="border-left: 1px grey solid;" th:text="${#numbers.formatDecimal(SchuelerLaufbahndaten.WochenstundenDurchschnittQPh, 1, 2)}"><b>34,75</b></td>
 						<td class="kompakt" style="border-left: 1px grey solid;"></td>
+					</tr>
+					<tr th:if="${DruckparameterNurBelegteFaecher}">
+						<td colspan="10" class="tiny" style="font-style: italic">
+							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterFach : ${SchuelerLaufbahndaten.Fachwahlen}" th:text="${Fachwahl.Bezeichnung} + ${iterFach.count != iterFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+						</td>
 					</tr>
 				</tfoot>
 			</table>
