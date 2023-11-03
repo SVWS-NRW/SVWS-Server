@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 
 
 interface RouteStateSchuelerLaufbahnplanung {
@@ -146,8 +146,17 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	getPdfWahlbogen = async() => {
-		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.auswahl.id);
+	getPdfWahlbogen = async(title: string) => {
+		const list = new ArrayList<number>();
+		list.add(this.auswahl.id);
+		switch (title) {
+			case 'Laufbahnwahlbogen':
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema);
+			case 'Laufbahnwahlbogen (nur Belegung)':
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(list, api.schema);
+			default:
+				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
+		}
 	}
 
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {

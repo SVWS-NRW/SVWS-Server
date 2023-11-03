@@ -72,10 +72,17 @@ export class RouteDataGostLaufbahnfehler  {
 	gotoLaufbahnplanung = async (idSchueler: number) =>
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
 
-	getPdfWahlbogen = async() => {
+	getPdfWahlbogen = async(title: string, list: List<number>) => {
 		try {
 			api.status.start();
-			return await api.server.getGostAbiturjahrgangPDFWahlboegen(api.schema, this.abiturjahr);
+			switch (title) {
+				case 'Laufbahnwahlbogen':
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema);
+				case 'Laufbahnwahlbogen (nur Belegung)':
+					return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(list, api.schema);
+				default:
+					throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
+			}
 		} catch(e) {
 			throw new DeveloperNotificationException("Fehler beim Herunterladen der Wahlbögen");
 		} finally {

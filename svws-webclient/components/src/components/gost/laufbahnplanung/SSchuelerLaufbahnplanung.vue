@@ -15,7 +15,9 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button type="secondary" @click.prevent="download_file" title="Wahlbogen herunterladen"><i-ri-printer-line />PDF herunterladen</svws-ui-button>
+			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList">
+				<template #icon> <i-ri-printer-line /> </template>
+			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="flex-grow">
@@ -75,8 +77,13 @@
 		}
 	}
 
-	async function download_file() {
-		const { data, name } = await props.getPdfWahlbogen();
+	const dropdownList = [
+		{ text: "Laufbahnwahlbogen", action: () => downloadPDF("Laufbahnwahlbogen"), default: true },
+		{ text: "Laufbahnwahlbogen (nur Belegung)", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)") },
+	]
+
+	async function downloadPDF(title: string) {
+		const { data, name } = await props.getPdfWahlbogen(title);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;
