@@ -2,18 +2,19 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostKursklausur } from '../../../core/data/gost/klausurplanung/GostKursklausur';
 import type { JavaSet } from '../../../java/util/JavaSet';
+import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { DateUtils } from '../../../core/utils/DateUtils';
-import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../java/util/Comparator';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import type { List } from '../../../java/util/List';
 import { GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { HashSet } from '../../../java/util/HashSet';
+import { GostFach } from '../../../core/data/gost/GostFach';
 import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
@@ -25,7 +26,7 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class GostKursklausurManager extends JavaObject {
 
-	private readonly _vorgabenManager : GostKlausurvorgabenManager;
+	private _vorgabenManager : GostKlausurvorgabenManager;
 
 	private static readonly _compTermin : Comparator<GostKlausurtermin> = { compare : (a: GostKlausurtermin, b: GostKlausurtermin) => {
 		if (a.datum === null && b.datum !== null)
@@ -39,15 +40,26 @@ export class GostKursklausurManager extends JavaObject {
 		return a.id > b.id ? +1 : -1;
 	} };
 
-	private static readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
+	private readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
+		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
+		if (faecherManager !== null) {
+			const aFach : GostFach | null = faecherManager.get(a.idFach);
+			const bFach : GostFach | null = faecherManager.get(b.idFach);
+			if (aFach !== null && bFach !== null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
+		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+			return -1;
 		if (a.halbjahr !== b.halbjahr)
 			return a.halbjahr - b.halbjahr;
 		if (a.quartal !== b.quartal)
 			return a.quartal - b.quartal;
-		if (a.idFach !== b.idFach)
-			return a.idFach > b.idFach ? +1 : -1;
-		if (!JavaObject.equalsTranspiler(a.kursart, (b.kursart)))
-			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
 		return a.id > b.id ? +1 : -1;
 	} };
 
@@ -197,7 +209,7 @@ export class GostKursklausurManager extends JavaObject {
 	private update_kursklausurmenge() : void {
 		this._kursklausurmenge.clear();
 		this._kursklausurmenge.addAll(this._kursklausur_by_id.values());
-		this._kursklausurmenge.sort(GostKursklausurManager._compKursklausur);
+		this._kursklausurmenge.sort(this._compKursklausur);
 	}
 
 	private kursklausurAddOhneUpdate(kursklausur : GostKursklausur) : void {

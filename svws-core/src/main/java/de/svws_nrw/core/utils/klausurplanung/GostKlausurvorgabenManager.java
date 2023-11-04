@@ -73,6 +73,15 @@ public class GostKlausurvorgabenManager {
 
 	}
 
+	/**
+	 * Liefert den Fächermanager
+	 *
+	 * @return den Fächermanager
+	 */
+	public GostFaecherManager getFaecherManager() {
+		return _faecherManager;
+	}
+
 	private void update_all() {
 
 		update_vorgabemenge();

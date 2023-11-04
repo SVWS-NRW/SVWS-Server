@@ -68,6 +68,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		this.update_all();
 	}
 
+	/**
+	 * Liefert den Fächermanager
+	 *
+	 * @return den Fächermanager
+	 */
+	public getFaecherManager() : GostFaecherManager | null {
+		return this._faecherManager;
+	}
+
 	private update_all() : void {
 		this.update_vorgabemenge();
 		this.update_vorgabenmenge_by_quartal();

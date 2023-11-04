@@ -11,17 +11,18 @@ import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,7 +33,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKursklausurManager {
 
-	private final @NotNull GostKlausurvorgabenManager _vorgabenManager;
+	private @NotNull GostKlausurvorgabenManager _vorgabenManager;
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum == null && b.datum != null)
@@ -46,15 +47,26 @@ public class GostKursklausurManager {
 		return a.id > b.id ? +1 : -1;
 	};
 
-	private static final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+	private final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		if (faecherManager != null) {
+			final GostFach aFach = faecherManager.get(a.idFach);
+			final GostFach bFach = faecherManager.get(b.idFach);
+			if (aFach != null && bFach != null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
+		if (a.kursart.compareTo(b.kursart) < 0)
+			return +1;
+		if (a.kursart.compareTo(b.kursart) > 0)
+			return -1;
 		if (a.halbjahr != b.halbjahr)
 			return a.halbjahr - b.halbjahr;
 		if (a.quartal != b.quartal)
 			return a.quartal - b.quartal;
-		if (a.idFach != b.idFach)
-			return a.idFach > b.idFach ? +1 : -1;
-		if (!a.kursart.equals(b.kursart))
-			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
 		return a.id > b.id ? +1 : -1;
 	};
 
