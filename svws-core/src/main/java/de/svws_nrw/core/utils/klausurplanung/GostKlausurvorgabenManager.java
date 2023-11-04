@@ -27,6 +27,10 @@ public class GostKlausurvorgabenManager {
 	private GostFaecherManager _faecherManager;
 
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
+		if (a.kursart.compareTo(b.kursart) < 0)
+			return +1;
+		if (a.kursart.compareTo(b.kursart) > 0)
+			return -1;
 		if (_faecherManager != null) {
 			final GostFach aFach = _faecherManager.get(a.idFach);
 			final GostFach bFach = _faecherManager.get(b.idFach);
@@ -37,10 +41,6 @@ public class GostKlausurvorgabenManager {
 					return -1;
 			}
 		}
-		if (a.kursart.compareTo(b.kursart) < 0)
-			return +1;
-		if (a.kursart.compareTo(b.kursart) > 0)
-			return -1;
 		return Integer.compare(a.quartal, b.quartal);
 	};
 

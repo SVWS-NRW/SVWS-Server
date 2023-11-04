@@ -49,6 +49,10 @@ public class GostKursklausurManager {
 
 	private final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
 		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		if (a.kursart.compareTo(b.kursart) < 0)
+			return +1;
+		if (a.kursart.compareTo(b.kursart) > 0)
+			return -1;
 		if (faecherManager != null) {
 			final GostFach aFach = faecherManager.get(a.idFach);
 			final GostFach bFach = faecherManager.get(b.idFach);
@@ -59,10 +63,6 @@ public class GostKursklausurManager {
 					return -1;
 			}
 		}
-		if (a.kursart.compareTo(b.kursart) < 0)
-			return +1;
-		if (a.kursart.compareTo(b.kursart) > 0)
-			return -1;
 		if (a.halbjahr != b.halbjahr)
 			return a.halbjahr - b.halbjahr;
 		if (a.quartal != b.quartal)

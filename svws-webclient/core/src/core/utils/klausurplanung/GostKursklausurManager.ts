@@ -42,6 +42,10 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _compKursklausur : Comparator<GostKursklausur> = { compare : (a: GostKursklausur, b: GostKursklausur) => {
 		let faecherManager : GostFaecherManager | null = this._vorgabenManager.getFaecherManager();
+		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+			return -1;
 		if (faecherManager !== null) {
 			const aFach : GostFach | null = faecherManager.get(a.idFach);
 			const bFach : GostFach | null = faecherManager.get(b.idFach);
@@ -52,10 +56,6 @@ export class GostKursklausurManager extends JavaObject {
 					return -1;
 			}
 		}
-		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
-			return +1;
-		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
-			return -1;
 		if (a.halbjahr !== b.halbjahr)
 			return a.halbjahr - b.halbjahr;
 		if (a.quartal !== b.quartal)

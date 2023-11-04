@@ -21,6 +21,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	private _faecherManager : GostFaecherManager | null = null;
 
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
+		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+			return -1;
 		if (this._faecherManager !== null) {
 			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
 			const bFach : GostFach | null = this._faecherManager.get(b.idFach);
@@ -31,10 +35,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 					return -1;
 			}
 		}
-		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
-			return +1;
-		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
-			return -1;
 		return JavaInteger.compare(a.quartal, b.quartal);
 	} };
 
