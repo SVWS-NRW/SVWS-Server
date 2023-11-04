@@ -14,6 +14,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungZwischenergebnis;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.module.pdf.HtmlContext;
 import jakarta.ws.rs.WebApplicationException;
 import org.thymeleaf.context.Context;
 
@@ -26,26 +27,31 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+
 /**
- * Eine Sammlung von Methoden zum Erstellen von Daten-Contexts zum Bereich "GostKursplanung" für die html-Templates zur Erstellung von PDF-Dateien.
+ * Ein ThymeLeaf-Html-Daten-Context zum Bereich "GostKursplanung", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
  */
-public final class PDFContextGostKursplanungKurse {
-
-	private PDFContextGostKursplanungKurse() {
-		throw new IllegalStateException("Instantiation not allowed");
-	}
-
+public final class HtmlContextGostKursplanungKurse extends HtmlContext {
 
 	/**
-	 * Liefert die Daten in Form eines Context zum Füllen eines html-Templates.
+	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param conn         			die Datenbank-Verbindung
+	 * @param conn         			Datenbank-Verbindung
 	 * @param blockungsergebnisID	ID des Blockungsergebnisses, aus der Context erstellt werden soll.
 	 * @param kursIDs           	Liste der IDs der Kurse, die berücksichtigt werden sollen.
-	 *
-	 * @return 						der Context
 	 */
-	public static Context setContext(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) throws WebApplicationException {
+	public HtmlContextGostKursplanungKurse(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) {
+		erzeugeContext(conn, blockungsergebnisID, kursIDs);
+	}
+
+	/**
+	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 *
+	 * @param conn         			Datenbank-Verbindung
+	 * @param blockungsergebnisID	ID des Blockungsergebnisses, aus der Context erstellt werden soll.
+	 * @param kursIDs           	Liste der IDs der Kurse, die berücksichtigt werden sollen.
+	 */
+	private void erzeugeContext(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) throws WebApplicationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 
@@ -70,7 +76,7 @@ public final class PDFContextGostKursplanungKurse {
 		if (dtoErgebnis == null)
 			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
 
-		// Im Ergebnis ist auch die ID der Blockung enthalten. Blockungsdatenmanager auf Basis der BlockungsID des Ergebnisses erstellen.
+		// Im Ergebnis ist auch die ID der Blockung enthalten. Blockungsdatenmanager auf Basis der Blockung-ID des Ergebnisses erstellen.
 		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(dtoErgebnis.Blockung_ID);
 
 		// Kurs-IDs auf Validität prüfen, d. h. ob diese Kurse zum Blockungsergebnis gehören.
@@ -100,24 +106,24 @@ public final class PDFContextGostKursplanungKurse {
 			// sie aber in alphabetischer Reihenfolge der Schüler sein.
 			// Erzeuge daher eine Liste mit Schülern, die in der alphabetischen Reihenfolge der Schüler sortiert ist
 			final List<DTOSchueler> sortiertKursschueler = conn.queryNamed("DTOSchueler.id.multiple", ergebnisManager.getOfKursSchuelermenge(kursID).stream().map(ks -> ks.id).toList(), DTOSchueler.class).stream()
-				.sorted(Comparator.comparing((final DTOSchueler s) -> s.Nachname, colGerman)
-					.thenComparing((final DTOSchueler s) -> s.Vorname, colGerman)
-					.thenComparing((final DTOSchueler s) -> s.ID))
-				.toList();
+					.sorted(Comparator.comparing((final DTOSchueler s) -> s.Nachname, colGerman)
+							.thenComparing((final DTOSchueler s) -> s.Vorname, colGerman)
+							.thenComparing((final DTOSchueler s) -> s.ID))
+					.toList();
 
 			final List<DruckGostKursplanungKursSchueler> listeKursschueler = sortiertKursschueler.stream().map(soks ->
-				{
-					final var dto =  new DruckGostKursplanungKursSchueler();
-					dto.Id = soks.ID;
-					dto.Nachname = soks.Nachname;
-					dto.Vorname = soks.Vorname;
-					dto.Geschlecht = soks.Geschlecht.kuerzel;
-					dto.Geburtsdatum = LocalDate.parse(soks.Geburtsdatum).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-					dto.ExterneSchulnummer = soks.ExterneSchulNr;
-					dto.Belegung = (ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).istSchriftlich ? "s" : "m");
-					dto.Abiturfach = (ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).abiturfach != null) ? ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).abiturfach.toString() : "";
-					return dto;
-				}
+					{
+						final var dto =  new DruckGostKursplanungKursSchueler();
+						dto.Id = soks.ID;
+						dto.Nachname = soks.Nachname;
+						dto.Vorname = soks.Vorname;
+						dto.Geschlecht = soks.Geschlecht.kuerzel;
+						dto.Geburtsdatum = LocalDate.parse(soks.Geburtsdatum).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+						dto.ExterneSchulnummer = soks.ExterneSchulNr;
+						dto.Belegung = (ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).istSchriftlich ? "s" : "m");
+						dto.Abiturfach = (ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).abiturfach != null) ? ergebnisManager.getOfSchuelerOfKursFachwahl(soks.ID, kursID).abiturfach.toString() : "";
+						return dto;
+					}
 			).toList();
 
 			final DruckGostKursplanungKurs kurs =  new DruckGostKursplanungKurs();
@@ -138,13 +144,13 @@ public final class PDFContextGostKursplanungKurse {
 			kursplanungskurse.add(kurs);
 		}
 
-		// Daten-Context für thymeleaf erzeugen.
+		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Kursplanungskurse", kursplanungskurse);
 		context.setVariable("BlockungsergebnisId", blockungsergebnisID);
 		context.setVariable("Abiturjahr", datenManager.daten().abijahrgang);
 		context.setVariable("GostHalbjahr", GostHalbjahr.fromID(datenManager.daten().gostHalbjahr).kuerzel);
-		return context;
-	}
 
+		super.setContext(context);
+	}
 }

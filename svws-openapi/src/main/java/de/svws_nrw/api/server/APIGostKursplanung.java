@@ -1,8 +1,5 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
-import java.util.List;
-
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -24,7 +21,7 @@ import de.svws_nrw.data.gost.DataGostBlockungsliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.gost.PDFGostKurseSchienenZuordnung;
 import de.svws_nrw.module.pdf.gost.PDFGostSchuelerKurseListe;
-import de.svws_nrw.module.pdf.gost.kursplanung.PDFDateiGostKursplanungKurseMitKursschuelern;
+import de.svws_nrw.module.pdf.gost.kursplanung.PdfDateiGostKursplanungKurseMitKursschuelern;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,6 +41,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die
@@ -989,24 +989,36 @@ public class APIGostKursplanung {
 	@POST
 	@Produces("application/pdf")
 	@Path("/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung.",
-				description = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. "
-				   			+ "Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung."
-				   		   	+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
-										content = @Content(mediaType = "application/pdf",
-									   	schema = @Schema(type = "string", format = "binary", description = "Kurse-Schienen-Zuordnung")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
-	public Response pdfGostKursplanungKurseSchienenZuordnung(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-															 @RequestBody(description = "Schüler-IDs, für die die Kurse-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
-															 @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
-															 @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+	@Operation(
+            summary = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung.",
+            description = "Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. "
+                        + "Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung."
+				   		+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung",
+            content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Kurse-Schienen-Zuordnung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die Kurse-Schienen-Zuordnung für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
+	public Response pdfGostKursplanungKurseSchienenZuordnung(
+            @PathParam("schema") final String schema,
+            @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+            @RequestBody(description = "Schüler-IDs, für die die Kurse-Schienen-Zuordnung erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
 			return PDFGostKurseSchienenZuordnung.query(conn, blockungsergebnisid, schuelerids);
 		}
 	}
@@ -1025,23 +1037,36 @@ public class APIGostKursplanung {
 	@POST
 	@Produces("application/pdf")
 	@Path("/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen.",
-				description = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung."
-							+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung",
-										content = @Content(mediaType = "application/pdf",
-										schema = @Schema(type = "string", format = "binary", description = "Schüler-Kurse-Liste")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
-	public Response pdfGostKursplanungSchuelerMitKursen(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-														@RequestBody(description = "Schüler-IDs, deren Kurse-Liste erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.", required = true, content =
-														@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
-														@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+	@Operation(
+            summary = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen.",
+            description = "Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung."
+                        + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung",
+            content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Schüler-Kurse-Liste")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
+	public Response pdfGostKursplanungSchuelerMitKursen(
+            @PathParam("schema") final String schema,
+            @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+            @RequestBody(
+                    description = "Schüler-IDs, deren Kurse-Liste erstellt werden soll. Ist die Liste leer, so wird die Zuordnung des Blockungsergebnisses zurückgegeben.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
 			return PDFGostSchuelerKurseListe.query(conn, blockungsergebnisid, schuelerids);
 		}
 	}
@@ -1061,24 +1086,38 @@ public class APIGostKursplanung {
 	@POST
 	@Produces("application/pdf")
 	@Path("/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern.",
-				description = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung."
-							+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung",
-										content = @Content(mediaType = "application/pdf",
-										schema = @Schema(type = "string", format = "binary", description = "Kurs-Schüler-Liste")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
-	public Response pdfGostKursplanungKurseMitKursschuelern(@PathParam("schema") final String schema, @PathParam("blockungsergebnisid") final long blockungsergebnisid,
-														 	@RequestBody(description = "Kurs-IDs, deren Schüler-Liste erstellt werden soll.", required = true, content =
-														 	@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> kursids,
-														 	@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFDateiGostKursplanungKurseMitKursschuelern.query(conn, blockungsergebnisid, kursids);
+	@Operation(
+            summary = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern.",
+            description = "Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung."
+                        + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung",
+
+            content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Kurs-Schüler-Liste")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden")
+	public Response pdfGostKursplanungKurseMitKursschuelern(
+            @PathParam("schema") final String schema,
+            @PathParam("blockungsergebnisid") final long blockungsergebnisid,
+            @RequestBody(
+                    description = "Kurs-IDs, deren Schüler-Liste erstellt werden soll.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> kursids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostKursplanungKurseMitKursschuelern.query(conn, blockungsergebnisid, kursids);
 		}
 	}
 

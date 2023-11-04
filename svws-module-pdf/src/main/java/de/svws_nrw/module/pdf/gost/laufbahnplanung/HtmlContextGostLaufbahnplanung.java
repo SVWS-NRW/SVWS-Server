@@ -36,6 +36,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
+import de.svws_nrw.module.pdf.HtmlContext;
 import jakarta.ws.rs.WebApplicationException;
 import org.thymeleaf.context.Context;
 
@@ -53,24 +54,27 @@ import java.util.stream.Collectors;
 
 
 /**
- * Eine Sammlung von Methoden zum Erstellen von Daten-Contexts zum Bereich "GostLaufbahnplanung" für die html-Templates zur Erstellung von PDF-Dateien.
+ *  * Ein ThymeLeaf-Html-Daten-Context zum Bereich "Laufbahnplanung", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
  */
-public final class PDFContextGostLaufbahnplanung {
-
-	private PDFContextGostLaufbahnplanung() {
-		throw new IllegalStateException("Instantiation not allowed");
-	}
-
+public final class HtmlContextGostLaufbahnplanung extends HtmlContext {
 
 	/**
-	 * Liefert die Daten in Form eines Context zum Füllen eines html-Templates.
+	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
 	 *
-	 * @param conn         			die Datenbank-Verbindung
-	 * @param schuelerIDs           Liste der IDs der Schüler, die berücksichtigt werden sollen.
-	 *
-	 * @return 						der Context
+	 * @param conn         	die Datenbank-Verbindung
+	 * @param schuelerIDs	Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
-	public static Context setContext(final DBEntityManager conn, final List<Long> schuelerIDs) throws WebApplicationException {
+	public HtmlContextGostLaufbahnplanung(final DBEntityManager conn, final List<Long> schuelerIDs) {
+		erzeugeContext(conn, schuelerIDs);
+	}
+
+	/**
+	 * Erzeugt den Context zum Füllen eines html-Templates.
+	 *
+	 * @param conn         	die Datenbank-Verbindung
+	 * @param schuelerIDs   Liste der IDs der Schüler, die berücksichtigt werden sollen.
+	 */
+	private void erzeugeContext(final DBEntityManager conn, final List<Long> schuelerIDs) throws WebApplicationException {
 
 		// ####### Daten validieren. Wirft eine Exception bei Fehlern, andernfalls werden die Manager für die Blockung erzeugt. ###############################
 
@@ -89,15 +93,15 @@ public final class PDFContextGostLaufbahnplanung {
 
 		// Prüfe die Schüler-IDs. Erzeuge Maps, damit auch später leicht auf die Schülerdaten zugegriffen werden kann.
 		final Map<Long, DTOSchueler> mapSchueler = conn
-			.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class)
-			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+				.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class)
+				.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 		for (final Long sID : schuelerIDs)
 			if (mapSchueler.get(sID) == null)
 				throw OperationError.NOT_FOUND.exception("Es wurden ungültige Schüler-IDs übergeben.");
 
 		final Map<Long, DTOGostSchueler> mapGostSchueler = conn
-			.queryNamed("DTOGostSchueler.schueler_id.multiple", schuelerIDs, DTOGostSchueler.class)
-			.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+				.queryNamed("DTOGostSchueler.schueler_id.multiple", schuelerIDs, DTOGostSchueler.class)
+				.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 		for (final Long sID : schuelerIDs)
 			if (mapGostSchueler.get(sID) == null)
 				throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
@@ -110,10 +114,10 @@ public final class PDFContextGostLaufbahnplanung {
 		// Erzeuge daher eine Liste mit Schülern, die in der alphabetischen Reihenfolge der Schüler sortiert ist
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 		final List<DTOSchueler> sortiertSchueler = conn.queryNamed("DTOSchueler.id.multiple", schuelerIDs, DTOSchueler.class).stream()
-			.sorted(Comparator.comparing((final DTOSchueler s) -> s.Nachname, colGerman)
-				.thenComparing((final DTOSchueler s) -> s.Vorname, colGerman)
-				.thenComparing((final DTOSchueler s) -> s.ID))
-			.toList();
+				.sorted(Comparator.comparing((final DTOSchueler s) -> s.Nachname, colGerman)
+						.thenComparing((final DTOSchueler s) -> s.Vorname, colGerman)
+						.thenComparing((final DTOSchueler s) -> s.ID))
+				.toList();
 		final List<Long> sortiertSchuelerIDs = sortiertSchueler.stream().map(s -> s.ID).toList();
 
 
@@ -135,28 +139,28 @@ public final class PDFContextGostLaufbahnplanung {
 
 		// 4. Jahrgänge der eigenen Schule bestimmen
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn
-			.queryNamed("DTOJahrgang.all", DTOJahrgang.class).getResultList()
-			.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+				.queryNamed("DTOJahrgang.all", DTOJahrgang.class).getResultList()
+				.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		// 5. Klassen der eigenen Schule bestimmen
 		final Map<Long, DTOKlassen> mapKlassen = conn
-			.queryNamed("DTOKlassen.all", DTOKlassen.class).getResultList()
-			.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+				.queryNamed("DTOKlassen.all", DTOKlassen.class).getResultList()
+				.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		// 6. Prüfungsordnung zur SchuelerID ablegen
 		final Map<Long, String> mapSchuelerPruefungsordnungen = conn
-			.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
-			.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.PruefOrdnung));
+				.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
+				.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.PruefOrdnung));
 
 		// 7. JahrgangsID zur SchuelerID ablegen
 		final Map<Long, Long> mapSchuelerJahrgangIDs = conn
-			.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
-			.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.Jahrgang_ID));
+				.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
+				.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.Jahrgang_ID));
 
 		// 8. KlassenID zur SchuelerID ablegen
 		final Map<Long, Long> mapSchuelerKlassenIDs = conn
-			.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
-			.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.Klassen_ID));
+				.queryList("SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0", DTOSchuelerLernabschnittsdaten.class, schuelerIDs, eigeneSchule.Schuljahresabschnitts_ID)
+				.stream().collect(Collectors.toMap(sla -> sla.Schueler_ID, sla -> sla.Klassen_ID));
 
 		// 9. Maps für die GostJahrgangsdaten und GostFaecherManager der Abiturjahrgänge, damit diese nur einmal geladen werden müssen. Wir später beim Schülerdurchlauf gefüllt.
 		final Map<Integer, GostJahrgangsdaten> mapGostJahrgangsdaten = new HashMap<>();
@@ -217,7 +221,7 @@ public final class PDFContextGostLaufbahnplanung {
 				laufbahnplanungSchueler.Emailtext = gostJahrgangsdaten.textMailversand;
 				laufbahnplanungSchueler.AktuellesGOStHalbjahr = mapJahrgaenge.get(mapSchuelerJahrgangIDs.get(schuelerID)).ASDJahrgang + '.' + aktuellesHalbjahr;
 				laufbahnplanungSchueler.AktuelleKlasse = mapKlassen.get(mapSchuelerKlassenIDs.get(schuelerID)).Klasse;
-				eintragBeratungsGOStHalbjahrInLaufbahnplanungGrunddatenErgaenzen(laufbahnplanungSchueler, mapJahrgaenge.get(mapSchuelerJahrgangIDs.get(schuelerID)), mapJahrgaenge.get(mapJahrgaenge.get(mapSchuelerJahrgangIDs.get(schuelerID)).Folgejahrgang_ID), folgeHalbjahr);
+				eintragBeratungGostHalbjahrInLaufbahnplanungGrunddatenErgaenzen(laufbahnplanungSchueler, mapJahrgaenge.get(mapSchuelerJahrgangIDs.get(schuelerID)), mapJahrgaenge.get(mapJahrgaenge.get(mapSchuelerJahrgangIDs.get(schuelerID)).Folgejahrgang_ID), folgeHalbjahr);
 				eintragBeratungslehrkraefteInLaufbahnplanungGrunddatenErgaenzen(laufbahnplanungSchueler, conn, mapGostSchueler.get(schuelerID), abiturdaten);
 				laufbahnplanungSchueler.Ruecklaufdatum = mapGostSchueler.get(schuelerID).DatumRuecklauf;
 				laufbahnplanungSchueler.Beratungsdatum = mapGostSchueler.get(schuelerID).DatumBeratung;
@@ -274,11 +278,12 @@ public final class PDFContextGostLaufbahnplanung {
 			laufbahnplanungenSchueler.add(laufbahnplanungSchueler);
 		}
 
-		// Daten-Context für thymeleaf erzeugen.
+		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("LaufbahnplanungSchueler", laufbahnplanungenSchueler);
-		return context;
-		}
+
+		super.setContext(context);
+	}
 
 
 	/**
@@ -336,7 +341,7 @@ public final class PDFContextGostLaufbahnplanung {
 	 * @param folgeJahrgang 			Der Folgejahrgang zum aktuellen Jahrgang des Schülers
 	 * @param folgeHalbjahr 			Das Folgehalbjahr (1 oder 2) zum aktuellen Halbjahr der eigenen Schule
 	 */
-	private static void eintragBeratungsGOStHalbjahrInLaufbahnplanungGrunddatenErgaenzen(final DruckGostLaufbahnplanungSchueler laufbahnplanungSchueler, final DTOJahrgang aktuellerJahrgang, final DTOJahrgang folgeJahrgang, final int folgeHalbjahr) {
+	private static void eintragBeratungGostHalbjahrInLaufbahnplanungGrunddatenErgaenzen(final DruckGostLaufbahnplanungSchueler laufbahnplanungSchueler, final DTOJahrgang aktuellerJahrgang, final DTOJahrgang folgeJahrgang, final int folgeHalbjahr) {
 		if (folgeHalbjahr == 2) {
 			laufbahnplanungSchueler.BeratungsGOStHalbjahr = aktuellerJahrgang.ASDJahrgang + ".2";
 		} else if (folgeHalbjahr == 1) {
@@ -476,7 +481,7 @@ public final class PDFContextGostLaufbahnplanung {
 			}
 
 			final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-            fachwahl.Aufgabenfeld = Objects.requireNonNullElse(zulaessigesFach.daten.aufgabenfeld, 0);
+			fachwahl.Aufgabenfeld = Objects.requireNonNullElse(zulaessigesFach.daten.aufgabenfeld, 0);
 			fachwahl.Fachgruppe = zulaessigesFach.daten.fachgruppe;
 			fachwahl.FarbeClientRGB = zulaessigesFach.getHMTLFarbeRGB().replace("rgba(", "").replace(")", "");
 
@@ -509,10 +514,10 @@ public final class PDFContextGostLaufbahnplanung {
 
 			if (sprachbelegung != null) {
 				if (((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-					&& ((zfach.daten.abJahrgang == null)
-					|| zfach.daten.abJahrgang.isEmpty()
-					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-					|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
+						&& ((zfach.daten.abJahrgang == null)
+						|| zfach.daten.abJahrgang.isEmpty()
+						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend && (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)))) {
 					// Nur Sprachen heranziehen, die auch vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
 					laufbahnplanungFach.FachIstFortfuehrbareFremdspracheInGOSt = true;
 					laufbahnplanungFach.JahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
@@ -541,9 +546,9 @@ public final class PDFContextGostLaufbahnplanung {
 
 	/**Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück.
 	 *
-	 * @param belegungHj die Halbjahresbelegung des Faches
+	 * @param belegungHj 	Halbjahresbelegung des Faches
 	 *
-	 * @return String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
+	 * @return 				String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
 	private static String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
 		if (belegungHj == null)
@@ -562,6 +567,4 @@ public final class PDFContextGostLaufbahnplanung {
 			return "AT";
 		return "";
 	}
-
-
 }

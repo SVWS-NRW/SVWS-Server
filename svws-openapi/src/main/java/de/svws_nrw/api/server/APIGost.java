@@ -41,8 +41,8 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.pdf.gost.laufbahnplanung.PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht;
-import de.svws_nrw.module.pdf.gost.laufbahnplanung.PDFDateiGostLaufbahnplanungSchuelerWahlbogen;
+import de.svws_nrw.module.pdf.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht;
+import de.svws_nrw.module.pdf.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -867,24 +867,36 @@ public class APIGost {
 	@POST
 	@Produces("application/pdf")
 	@Path("/schueler/pdf/laufbahnplanungwahlbogen")
-	@Operation(summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
-		       description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-							+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.",
-				content = @Content(mediaType = "application/pdf",
-				schema = @Schema(type = "string", format = "binary", description = "Wahlbogen Laufbahnplanung")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	public Response pdfGostLaufbahnplanungSchuelerWahlbogen(@PathParam("schema") final String schema,
-															 @RequestBody(description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.", required = true, content =
-															 @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
-															 @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
+	@Operation(
+            summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+            description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+                        + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.",
+            content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Wahlbogen Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerWahlbogen(
+            @PathParam("schema") final String schema,
+            @RequestBody(
+                    description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
 		}
 	}
 
@@ -901,24 +913,35 @@ public class APIGost {
 	@POST
 	@Produces("application/pdf")
 	@Path("/schueler/pdf/laufbahnplanungwahlbogennurbelegung")
-	@Operation(summary = "Erstellt die Wahlbögen, reduziert auf die Belegung des Schülers, für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
-		description = "Erstellt die Wahlbogen, reduziert auf die Belegung des Schülers, für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.",
-		content = @Content(mediaType = "application/pdf",
-			schema = @Schema(type = "string", format = "binary", description = "Reduzierter Wahlbogen Laufbahnplanung")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um die reduzierten Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	public Response pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(@PathParam("schema") final String schema,
-																		@RequestBody(description = "Schüler-IDs, für die die reduzierten Wahlbögen erstellt werden soll.", required = true, content =
-																		@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids,
-																		@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
+	@Operation(
+            summary = "Erstellt die Wahlbögen, reduziert auf die Belegung des Schülers, für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+		    description = "Erstellt die Wahlbogen, reduziert auf die Belegung des Schülers, für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+			            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.",
+		    content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Reduzierter Wahlbogen Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die reduzierten Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Schüler-IDs, für die die reduzierten Wahlbögen erstellt werden soll.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
 		}
 	}
 
@@ -936,24 +959,35 @@ public class APIGost {
 	@POST
 	@Produces("application/pdf")
 	@Path("/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}")
-	@Operation(summary = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
-		description = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
-			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
-	@ApiResponse(responseCode = "200", 	description = "Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.",
-		content = @Content(mediaType = "application/pdf",
-			schema = @Schema(type = "string", format = "binary", description = "Ergebnisliste Laufbahnplanung")))
-	@ApiResponse(responseCode = "403", 	description = "Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.")
-	@ApiResponse(responseCode = "404", 	description = "Kein Eintrag zu den angegebenen IDs gefunden.")
-	public Response pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(@PathParam("schema") final String schema,
-																	@RequestBody(description = "Schüler-IDs, für die die Ergebnisliste Laufbahnplanung erstellt werden soll.", required = true, content =
-																	@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> schuelerids, @PathParam("detaillevel") final int detaillevel,
-																	@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFDateiGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
+	@Operation(
+            summary = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+		    description = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+			            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.",
+		    content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Ergebnisliste Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Schüler-IDs, für die die Ergebnisliste Laufbahnplanung erstellt werden soll.",
+                    required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @PathParam("detaillevel") final int detaillevel,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
 		}
 	}
 
