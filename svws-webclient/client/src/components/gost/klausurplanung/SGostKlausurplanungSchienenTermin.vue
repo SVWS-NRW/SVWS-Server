@@ -12,6 +12,7 @@
 			:kursmanager="kursmanager"
 			:termin-selected="terminSelected || false"
 			:on-drag-klausur="onDrag"
+			:show-kursschiene="true"
 			:klausur-css-classes="klausurCssClasses">
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">

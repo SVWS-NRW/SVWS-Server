@@ -77,6 +77,8 @@ export class GostKursklausurManager extends JavaObject {
 
 	private readonly _kursklausurmenge_by_quartal_and_kursart_and_idTermin : HashMap3D<number, string, number, List<GostKursklausur>> = new HashMap3D();
 
+	private readonly _kursklausur_by_idKurs_and_quartal : HashMap2D<number, number, GostKursklausur> = new HashMap2D();
+
 	private readonly _kursklausurmenge_by_kw_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
 
 	private readonly _kursklausurmenge_by_terminId_and_schuelerId : HashMap2D<number, number, List<GostKursklausur>> = new HashMap2D();
@@ -121,6 +123,7 @@ export class GostKursklausurManager extends JavaObject {
 		this.update_kursklausurmenge_by_idTermin();
 		this.update_kursklausurmenge_by_idVorgabe();
 		this.update_kursklausurmenge_by_quartal_and_idTermin();
+		this.update_kursklausur_by_idKurs_and_quartal();
 		this.update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		this.update_terminmenge_by_quartal();
 		this.update_terminmenge_by_datum();
@@ -157,6 +160,12 @@ export class GostKursklausurManager extends JavaObject {
 		this._kursklausurmenge_by_quartal_and_kursart_and_idTermin.clear();
 		for (const kk of this._kursklausurmenge)
 			Map3DUtils.getOrCreateArrayList(this._kursklausurmenge_by_quartal_and_kursart_and_idTermin, kk.quartal, kk.kursart, kk.idTermin !== null ? kk.idTermin : -1).add(kk);
+	}
+
+	private update_kursklausur_by_idKurs_and_quartal() : void {
+		this._kursklausur_by_idKurs_and_quartal.clear();
+		for (const kk of this._kursklausurmenge)
+			this._kursklausur_by_idKurs_and_quartal.put(kk.idKurs, kk.quartal, kk);
 	}
 
 	private update_terminmenge_by_quartal() : void {
@@ -925,6 +934,29 @@ export class GostKursklausurManager extends JavaObject {
 	public istVorgabeVerwendetByVorgabe(vorgabe : GostKlausurvorgabe) : boolean {
 		let klausuren : List<GostKursklausur> | null = this._kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
 		return klausuren !== null && !klausuren.isEmpty();
+	}
+
+	/**
+	 * Liefert das GostKursklausur-Objekt zu den übergebenen Parametern.
+	 *
+	 * @param idKurs die ID des Kurses
+	 * @param quartal das Quartal der Klausur
+	 *
+	 * @return die Kursklausur
+	 */
+	public kursklausurByKursidAndQuartal(idKurs : number, quartal : number) : GostKursklausur | null {
+		return this._kursklausur_by_idKurs_and_quartal.getOrNull(idKurs, quartal);
+	}
+
+	/**
+	 * Liefert die Vorgänger-GostKursklausur aus dem letzten Quartal, soweit vorhanden.
+	 *
+	 * @param klausur die Kursklausur, deren Vorgänger gesucht wird
+	 *
+	 * @return die Kursklausur
+	 */
+	public kursklausurVorterminByKursklausur(klausur : GostKursklausur) : GostKursklausur | null {
+		return this.kursklausurByKursidAndQuartal(klausur.idKurs, klausur.quartal - 1);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -53,7 +53,7 @@
 								:draggable="onDragKlausur !== undefined && (draggableKlausur === undefined || draggableKlausur(klausur))"
 								@dragstart="onDragKlausur && onDragKlausur(klausur);$event.stopPropagation()"
 								@dragend="onDragKlausur && onDragKlausur(undefined);$event.stopPropagation()"
-								class="svws-ui-tr" role="row" :title="`Kurs, Lehrkraft, Schriftlich, Dauer in Minuten,${kursklausurmanager().quartalGetByTerminid(termin.id) === -1 ? ' Quartal,' : ''} Schiene`"
+								class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')"
 								:class="[
 									props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 									{
@@ -67,8 +67,9 @@
 								<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)?.schueler.size() || 0 }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
-								<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
+								<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
 								<div v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
+								<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 							</div>
 						</template>
 					</svws-ui-table>
@@ -107,9 +108,19 @@
 		quartalsauswahl?: {value: number};
 		dragIcon?: boolean;
 		terminSelected?: boolean;
+		showKursschiene? : boolean;
+		showLastKlausurtermin? : boolean;
 	}>();
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
+
+	const datumVorklausur = (klausur: GostKursklausur) => {
+		const vorklausur = props.kursklausurmanager().kursklausurVorterminByKursklausur(klausur);
+		if (vorklausur === null)
+			return "-";
+		const termin = props.kursklausurmanager().terminByKursklausur(vorklausur);
+		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0,6);
+	};
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
@@ -117,11 +128,18 @@
 			{ key: "kuerzel", label: "Lehrkraft" },
 			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];
 
+		if (props.showKursschiene === true) {
+			cols.push({ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 1.75 })
+		}
+
 		if (props.kursklausurmanager().quartalGetByTerminid(props.termin.id) === -1) {
-			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 2.75 })
+			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 1.75 })
+		}
+
+		if (props.showLastKlausurtermin === true) {
+			cols.push({ key: "lastDate", label: "Vordatum", tooltip: "Datum der letzten Klausur", span: 0.25, align: "center", minWidth: 4.75 })
 		}
 
 		return cols;

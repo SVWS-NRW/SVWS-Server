@@ -36,6 +36,7 @@
 								:kursmanager="kursmanager"
 								:compact="dragData?.id !== termin.id"
 								:quartalsauswahl="quartalsauswahl"
+								:show-last-klausurtermin="true"
 								drag-icon>
 								<template #datum><span /></template>
 							</s-gost-klausurplanung-termin>
