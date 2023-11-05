@@ -50,23 +50,27 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
-		const eintrag = (idLehrer !== undefined) ? this.data.mapLehrer.get(idLehrer) : undefined;
+		const eintrag = (idLehrer !== undefined) ? this.data.lehrerListeManager.liste.get(idLehrer) : null;
 		await this.data.setLehrer(eintrag);
-		if (!this.data.hatStammdaten) {
-			if (to.name === this.name)
-				return;
-			return this.getRoute(undefined);
+		if (!this.data.lehrerListeManager.hasDaten()) {
+			if (to.name === this.name) {
+				const listFiltered = this.data.lehrerListeManager.filtered();
+				if (listFiltered.isEmpty())
+					return;
+				return this.getChildRoute(listFiltered.get(0).id, from);
+			}
+			return this.getRoute();
 		}
 		if (to.name === this.name)
-			return this.getChildRoute(this.data.stammdaten.id, from);
+			return this.getChildRoute(this.data.lehrerListeManager.daten().id, from);
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
 					await this.data.setView(child);
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.name, params: { id: id }};
+	public getRoute(id?: number) : RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: { id }};
 	}
 
 	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
@@ -78,19 +82,19 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): LehrerAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapLehrer: this.data.mapLehrer,
-			gotoLehrer: this.data.gotoLehrer,
+			lehrerListeManager: () => this.data.lehrerListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
-			setAbschnitt: routeApp.data.setAbschnitt
+			setAbschnitt: routeApp.data.setAbschnitt,
+			gotoLehrer: this.data.gotoEintrag,
+			setFilter: this.data.setFilter,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
-			stammdaten:  this.data.auswahl === undefined ? undefined : this.data.stammdaten,
+			lehrerListeManager: () => this.data.lehrerListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
@@ -117,7 +121,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.lehrerListeManager.auswahlID() } });
 		await this.data.setView(node);
 	}
 

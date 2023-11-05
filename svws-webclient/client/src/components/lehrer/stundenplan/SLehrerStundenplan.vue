@@ -37,13 +37,15 @@
 </script>
 
 <style lang="postcss">
-.svws-ui-empty {
-	@apply flex flex-col justify-center items-center min-h-full w-full flex-grow;
-	@apply text-headline-md text-black/50 dark:text-white/50 text-center;
 
-	svg {
-		@apply w-full h-1/5 text-light dark:text-white/5 mb-5;
-		max-width: 20vw;
+	.svws-ui-empty {
+		@apply flex flex-col justify-center items-center min-h-full w-full flex-grow;
+		@apply text-headline-md text-black/50 dark:text-white/50 text-center;
+
+		svg {
+			@apply w-full h-1/5 text-light dark:text-white/5 mb-5;
+			max-width: 20vw;
+		}
 	}
-}
+
 </style>

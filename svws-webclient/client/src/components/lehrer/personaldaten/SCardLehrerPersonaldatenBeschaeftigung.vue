@@ -5,57 +5,48 @@
 				:item-text="(i: LehrerRechtsverhaeltnis) =>i.daten.text" />
 			<svws-ui-select title="Beschäftigungsart" v-model="beschaeftigungsart" :items="LehrerBeschaeftigungsart.values()"
 				:item-text="(i: LehrerBeschaeftigungsart) =>i.daten.text" />
-			<svws-ui-text-input placeholder="Pflichtstundensoll" :model-value="personaldaten.pflichtstundensoll" @change="pflichtstundensoll=>doPatch({pflichtstundensoll: Number(pflichtstundensoll)})" type="text" />
+			<svws-ui-text-input placeholder="Pflichtstundensoll" :model-value="personaldaten.pflichtstundensoll" @change="pflichtstundensoll => patch({pflichtstundensoll: Number(pflichtstundensoll)})" type="text" />
 			<svws-ui-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 				:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
-			<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer=>doPatch({stammschulnummer})" type="text" />
+			<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer => patch({stammschulnummer})" type="text" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { LehrerPersonaldaten} from "@core";
-	import type { WritableComputedRef } from "vue";
-	import { LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 	import { computed } from "vue";
+	import { type LehrerPersonaldaten, LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis } from "@core";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten
+		personaldaten: LehrerPersonaldaten;
+		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<LehrerPersonaldaten>): void;
-	}>()
-
-	function doPatch(data: Partial<LehrerPersonaldaten>) {
-		emit('patch', data);
-	}
-
-	const rechtsverhaeltnis: WritableComputedRef<LehrerRechtsverhaeltnis | undefined> = computed({
+	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
 		get(): LehrerRechtsverhaeltnis | undefined {
 			return LehrerRechtsverhaeltnis.values().find(r => r.daten.kuerzel === props.personaldaten.rechtsverhaeltnis);
 		},
 		set(val: LehrerRechtsverhaeltnis | undefined) {
-			doPatch({ rechtsverhaeltnis: val?.daten.kuerzel });
+			void props.patch({ rechtsverhaeltnis: val?.daten.kuerzel });
 		}
 	});
 
-	const beschaeftigungsart: WritableComputedRef<LehrerBeschaeftigungsart | undefined> = computed({
+	const beschaeftigungsart = computed<LehrerBeschaeftigungsart | undefined>({
 		get(): LehrerBeschaeftigungsart | undefined {
 			return LehrerBeschaeftigungsart.values().find(r => r.daten.kuerzel === props.personaldaten.beschaeftigungsart);
 		},
 		set(val: LehrerBeschaeftigungsart | undefined) {
-			doPatch({ beschaeftigungsart: val?.daten.kuerzel });
+			void props.patch({ beschaeftigungsart: val?.daten.kuerzel });
 		}
 	});
 
-	const einsatzstatus: WritableComputedRef<LehrerEinsatzstatus | undefined> = computed({
+	const einsatzstatus = computed<LehrerEinsatzstatus | undefined>({
 		get(): LehrerEinsatzstatus | undefined {
 			return LehrerEinsatzstatus.values().find(r => r.daten.kuerzel === props.personaldaten.einsatzstatus);
 		},
 		set(val: LehrerEinsatzstatus | undefined) {
-			doPatch({ einsatzstatus: val?.daten.kuerzel });
+			void props.patch({ einsatzstatus: val?.daten.kuerzel });
 		}
 	});
 

@@ -1,23 +1,18 @@
 <template>
-	<template v-if="visible">
+	<template v-if="lehrerListeManager().hasDaten()">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<svws-ui-avatar :src="'data:image/png;base64, ' + stammdaten?.foto ?? undefined"
-					:alt="(stammdaten !== undefined) && (stammdaten.foto !== null) ? 'Foto ' + stammdaten.vorname + ' ' + stammdaten.nachname : ''" upload capture />
+				<svws-ui-avatar :src="'data:image/png;base64, ' + lehrerListeManager().daten().foto ?? undefined"
+					:alt="(lehrerListeManager().daten() !== undefined) && (lehrerListeManager().daten().foto !== null) ? 'Foto ' + lehrerListeManager().daten().vorname + ' ' + lehrerListeManager().daten().nachname : ''" upload capture />
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<template v-if="stammdaten !== undefined">
-							{{ stammdaten.titel }} {{ stammdaten.vorname }} {{ stammdaten.nachname }}
-						</template>
-						<template v-else>
-							—
-						</template>
+						{{ lehrerListeManager().daten().titel }} {{ lehrerListeManager().daten().vorname }} {{ lehrerListeManager().daten().nachname }}
 						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 							ID:
-							{{ stammdaten?.id || '—' }}
+							{{ lehrerListeManager().daten().id }}
 						</svws-ui-badge>
 					</h2>
-					<span class="svws-subline">{{ stammdaten?.kuerzel || '—' }}</span>
+					<span class="svws-subline">{{ lehrerListeManager().daten().kuerzel }}</span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
@@ -33,12 +28,8 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
-	import { computed } from "vue";
 	import type { LehrerAppProps } from "./SLehrerAppProps";
 
 	const props = defineProps<LehrerAppProps>();
-
-	const visible: ComputedRef<boolean> = computed(() => props.stammdaten !== undefined);
 
 </script>

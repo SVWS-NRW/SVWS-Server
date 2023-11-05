@@ -18,25 +18,17 @@
 </template>
 
 <script setup lang="ts">
-	import type { LehrerPersonaldaten } from "@core";
-	import { LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung, LehrerLehrbefaehigung,
-		LehrerLehrbefaehigungAnerkennung } from "@core";
-	import type { WritableComputedRef } from "vue";
+
 	import { computed } from "vue";
+	import { type LehrerPersonaldaten, LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung,
+		LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung } from "@core";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten
+		personaldaten: LehrerPersonaldaten;
+		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<LehrerPersonaldaten>): void;
-	}>()
-
-	function doPatch(data: Partial<LehrerPersonaldaten>) {
-		emit('patch', data);
-	}
-
-	const lehramt: WritableComputedRef<LehrerLehramt | undefined> = computed({
+	const lehramt = computed<LehrerLehramt | undefined>({
 		get(): LehrerLehramt | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
@@ -47,7 +39,7 @@
 		}
 	});
 
-	const lehramt_anerkennung: WritableComputedRef<LehrerLehramtAnerkennung | undefined> = computed({
+	const lehramt_anerkennung = computed<LehrerLehramtAnerkennung | undefined>({
 		get(): LehrerLehramtAnerkennung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
@@ -58,7 +50,7 @@
 		}
 	});
 
-	const lehrbefaehigung: WritableComputedRef<LehrerLehrbefaehigung | undefined> = computed({
+	const lehrbefaehigung = computed<LehrerLehrbefaehigung | undefined>({
 		get(): LehrerLehrbefaehigung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
@@ -69,7 +61,7 @@
 		}
 	});
 
-	const lehrbefaehigung_anerkennung: WritableComputedRef<LehrerLehrbefaehigungAnerkennung | undefined> = computed({
+	const lehrbefaehigung_anerkennung = computed<LehrerLehrbefaehigungAnerkennung | undefined>({
 		get(): LehrerLehrbefaehigungAnerkennung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
@@ -80,7 +72,7 @@
 		}
 	});
 
-	const fachrichtung: WritableComputedRef<LehrerFachrichtung | undefined> = computed({
+	const fachrichtung = computed<LehrerFachrichtung | undefined>({
 		get(): LehrerFachrichtung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;
@@ -91,7 +83,7 @@
 		}
 	});
 
-	const fachrichtung_anerkennung: WritableComputedRef<LehrerFachrichtungAnerkennung | undefined> = computed({
+	const fachrichtung_anerkennung = computed<LehrerFachrichtungAnerkennung | undefined>({
 		get(): LehrerFachrichtungAnerkennung | undefined {
 			// TODO aus Personaldaten bestimmten
 			const kuerzel = undefined;

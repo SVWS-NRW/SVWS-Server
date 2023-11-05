@@ -42,11 +42,11 @@
 		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
 	];
 
-	function text(klasse: LehrerListeEintrag|JahrgangsListeEintrag): string {
+	function text(klasse: LehrerListeEintrag | JahrgangsListeEintrag): string {
 		return klasse.kuerzel ?? "";
 	}
 
-	const find = (items: Iterable<LehrerListeEintrag|JahrgangsListeEintrag>, search: string) => {
+	const find = (items: Iterable<LehrerListeEintrag | JahrgangsListeEintrag>, search: string) => {
 		const list = [];
 		for (const i of items)
 			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
@@ -165,13 +165,13 @@
 	const selectedItems = shallowRef<KlassenListeEintrag[]>([]);
 
 	function setAuswahl(items : KlassenListeEintrag[]) {
-		const schuelerauswahl = props.klassenListeManager().liste;
-		for (const vorhanden of [ ... schuelerauswahl.auswahl() ])
+		const auswahl = props.klassenListeManager().liste;
+		for (const vorhanden of [ ... auswahl.auswahl() ])
 			if (!items.includes(vorhanden))
-				schuelerauswahl.auswahlRemove(vorhanden);
+				auswahl.auswahlRemove(vorhanden);
 		for (const item of items)
-			schuelerauswahl.auswahlAdd(item);
-		selectedItems.value = [ ... schuelerauswahl.auswahl() ];
+			auswahl.auswahlAdd(item);
+		selectedItems.value = [ ... auswahl.auswahl() ];
 	}
 
 	function lehrerkuerzel(list: number[]) {

@@ -19,8 +19,8 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 	}
 
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeLehrer.data.auswahl === undefined)
-			return routeLehrer.getRoute(undefined);
+		if (!routeLehrer.data.lehrerListeManager.hasDaten())
+			return routeLehrer.getRoute();
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
