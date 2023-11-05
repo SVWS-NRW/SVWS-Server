@@ -1,7 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { LehrerLehramtEintrag } from '../../../core/data/lehrer/LehrerLehramtEintrag';
 import { LehrerPersonalabschnittsdaten } from '../../../core/data/lehrer/LehrerPersonalabschnittsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { LehrerLehrbefaehigungEintrag } from '../../../core/data/lehrer/LehrerLehrbefaehigungEintrag';
+import { LehrerFachrichtungEintrag } from '../../../core/data/lehrer/LehrerFachrichtungEintrag';
 
 export class LehrerPersonaldaten extends JavaObject {
 
@@ -65,6 +68,21 @@ export class LehrerPersonaldaten extends JavaObject {
 	 */
 	public readonly abschnittsdaten : List<LehrerPersonalabschnittsdaten> = new ArrayList();
 
+	/**
+	 * Die Lehrämter des Lehrers.
+	 */
+	public readonly lehraemter : List<LehrerLehramtEintrag> = new ArrayList();
+
+	/**
+	 * Die Fachrichtungen des Lehrers.
+	 */
+	public readonly fachrichtungen : List<LehrerFachrichtungEintrag> = new ArrayList();
+
+	/**
+	 * Die Lehrbefähigungen des Lehrers.
+	 */
+	public readonly lehrbefaehigungen : List<LehrerLehrbefaehigungEintrag> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -95,6 +113,21 @@ export class LehrerPersonaldaten extends JavaObject {
 				result.abschnittsdaten?.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.lehraemter !== undefined) && (obj.lehraemter !== null)) {
+			for (const elem of obj.lehraemter) {
+				result.lehraemter?.add(LehrerLehramtEintrag.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.fachrichtungen !== undefined) && (obj.fachrichtungen !== null)) {
+			for (const elem of obj.fachrichtungen) {
+				result.fachrichtungen?.add(LehrerFachrichtungEintrag.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
+		if ((obj.lehrbefaehigungen !== undefined) && (obj.lehrbefaehigungen !== null)) {
+			for (const elem of obj.lehrbefaehigungen) {
+				result.lehrbefaehigungen?.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		return result;
 	}
 
@@ -119,6 +152,42 @@ export class LehrerPersonaldaten extends JavaObject {
 				const elem = obj.abschnittsdaten.get(i);
 				result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
 				if (i < obj.abschnittsdaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.lehraemter) {
+			result += '"lehraemter" : []';
+		} else {
+			result += '"lehraemter" : [ ';
+			for (let i = 0; i < obj.lehraemter.size(); i++) {
+				const elem = obj.lehraemter.get(i);
+				result += LehrerLehramtEintrag.transpilerToJSON(elem);
+				if (i < obj.lehraemter.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.fachrichtungen) {
+			result += '"fachrichtungen" : []';
+		} else {
+			result += '"fachrichtungen" : [ ';
+			for (let i = 0; i < obj.fachrichtungen.size(); i++) {
+				const elem = obj.fachrichtungen.get(i);
+				result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
+				if (i < obj.fachrichtungen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.lehrbefaehigungen) {
+			result += '"lehrbefaehigungen" : []';
+		} else {
+			result += '"lehrbefaehigungen" : [ ';
+			for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
+				const elem = obj.lehrbefaehigungen.get(i);
+				result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
+				if (i < obj.lehrbefaehigungen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -172,6 +241,48 @@ export class LehrerPersonaldaten extends JavaObject {
 					const elem = obj.abschnittsdaten.get(i);
 					result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
 					if (i < obj.abschnittsdaten.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.lehraemter !== "undefined") {
+			if (!obj.lehraemter) {
+				result += '"lehraemter" : []';
+			} else {
+				result += '"lehraemter" : [ ';
+				for (let i = 0; i < obj.lehraemter.size(); i++) {
+					const elem = obj.lehraemter.get(i);
+					result += LehrerLehramtEintrag.transpilerToJSON(elem);
+					if (i < obj.lehraemter.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.fachrichtungen !== "undefined") {
+			if (!obj.fachrichtungen) {
+				result += '"fachrichtungen" : []';
+			} else {
+				result += '"fachrichtungen" : [ ';
+				for (let i = 0; i < obj.fachrichtungen.size(); i++) {
+					const elem = obj.fachrichtungen.get(i);
+					result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
+					if (i < obj.fachrichtungen.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.lehrbefaehigungen !== "undefined") {
+			if (!obj.lehrbefaehigungen) {
+				result += '"lehrbefaehigungen" : []';
+			} else {
+				result += '"lehrbefaehigungen" : [ ';
+				for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
+					const elem = obj.lehrbefaehigungen.get(i);
+					result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
+					if (i < obj.lehrbefaehigungen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

@@ -225,6 +225,7 @@ export { SchuelerblockungOutputFachwahlZuKurs } from './core/data/kursblockung/S
 export { KursDaten } from './core/data/kurse/KursDaten';
 export { KursListeEintrag } from './core/data/kurse/KursListeEintrag';
 export { KursartKatalogEintrag } from './core/data/kurse/KursartKatalogEintrag';
+export { LehrerFachrichtungEintrag } from './core/data/lehrer/LehrerFachrichtungEintrag';
 export { LehrerKatalogAbgangsgrundEintrag } from './core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';
 export { LehrerKatalogAnrechnungsgrundEintrag } from './core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
 export { LehrerKatalogBeschaeftigungsartEintrag } from './core/data/lehrer/LehrerKatalogBeschaeftigungsartEintrag';
@@ -240,6 +241,8 @@ export { LehrerKatalogMehrleistungsartEintrag } from './core/data/lehrer/LehrerK
 export { LehrerKatalogMinderleistungsartEintrag } from './core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
 export { LehrerKatalogRechtsverhaeltnisEintrag } from './core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
 export { LehrerKatalogZugangsgrundEintrag } from './core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
+export { LehrerLehramtEintrag } from './core/data/lehrer/LehrerLehramtEintrag';
+export { LehrerLehrbefaehigungEintrag } from './core/data/lehrer/LehrerLehrbefaehigungEintrag';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { LehrerPersonalabschnittsdaten } from './core/data/lehrer/LehrerPersonalabschnittsdaten';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
