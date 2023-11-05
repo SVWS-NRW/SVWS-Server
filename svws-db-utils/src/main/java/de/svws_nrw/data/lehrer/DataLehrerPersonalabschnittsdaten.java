@@ -108,7 +108,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			if (strData == null) {
 				abschnittsdaten.Rechtsverhaeltnis = null;
 			} else {
-				final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getByKuerzel(null);
+				final LehrerRechtsverhaeltnis rv = LehrerRechtsverhaeltnis.getByKuerzel(strData);
 				if (rv == null)
 					throw OperationError.NOT_FOUND.exception();
 				abschnittsdaten.Rechtsverhaeltnis = rv.daten.kuerzel;
@@ -119,7 +119,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			if (strData == null) {
 				abschnittsdaten.Beschaeftigungsart = null;
 			} else {
-				final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.getByKuerzel(null);
+				final LehrerBeschaeftigungsart ba = LehrerBeschaeftigungsart.getByKuerzel(strData);
 				if (ba == null)
 					throw OperationError.NOT_FOUND.exception();
 				abschnittsdaten.Beschaeftigungsart = ba.daten.kuerzel;
@@ -130,7 +130,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 			if (strData == null) {
 				abschnittsdaten.Einsatzstatus = null;
 			} else {
-				final LehrerEinsatzstatus es = LehrerEinsatzstatus.getByKuerzel(null);
+				final LehrerEinsatzstatus es = LehrerEinsatzstatus.getByKuerzel(strData);
 				if (es == null)
 					throw OperationError.NOT_FOUND.exception();
 				abschnittsdaten.Einsatzstatus = es.daten.kuerzel;

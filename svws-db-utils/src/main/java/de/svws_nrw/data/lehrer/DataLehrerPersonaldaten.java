@@ -106,7 +106,7 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 				if (strData == null) {
 					lehrer.GrundZugang = null;
 				} else {
-					final LehrerZugangsgrund zg = LehrerZugangsgrund.getByKuerzel(null);
+					final LehrerZugangsgrund zg = LehrerZugangsgrund.getByKuerzel(strData);
 					if (zg == null)
 						throw OperationError.NOT_FOUND.exception();
 					lehrer.GrundZugang = zg.daten.kuerzel;
@@ -121,7 +121,7 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 				if (strData == null) {
 					lehrer.GrundAbgang = null;
 				} else {
-					final LehrerAbgangsgrund ag = LehrerAbgangsgrund.getByKuerzel(null);
+					final LehrerAbgangsgrund ag = LehrerAbgangsgrund.getByKuerzel(strData);
 					if (ag == null)
 						throw OperationError.NOT_FOUND.exception();
 					lehrer.GrundAbgang = ag.daten.kuerzel;
