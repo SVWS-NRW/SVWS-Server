@@ -18,6 +18,7 @@ import de.svws_nrw.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
+import de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdaten;
 import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.ServerMode;
@@ -38,6 +39,7 @@ import de.svws_nrw.data.lehrer.DataKatalogLehrerMehrleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerMinderleistungsarten;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerRechtsverhaeltnis;
 import de.svws_nrw.data.lehrer.DataKatalogLehrerZugangsgruende;
+import de.svws_nrw.data.lehrer.DataLehrerPersonalabschnittsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerPersonaldaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
@@ -210,6 +212,64 @@ public class APILehrer {
     			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonaldaten.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Personalabschnittsdaten eines Lehrers.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return die Personalabschnittsdaten eines Lehrers zu einem Schuljahresabschnitt
+     */
+    @GET
+    @Path("/personalabschnittsdaten/{id : \\d+}")
+    @Operation(summary = "Liefert zu der ID des Abschnittes die zugehörigen Personalabschnittsdaten.",
+    description = "Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Personalabschnittsdaten",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden")
+    public Response getLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen der Personalabschnittsdaten eines Lehrers.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation der Abschnittsdaten
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/personalabschnittsdaten/{id : \\d+}")
+    @Operation(summary = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an.",
+    description = "Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Lehrer-Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchLehrerPersonalabschnittsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für die Lehrer-Personalabschnittsdaten", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patch(id, is),
     		request, ServerMode.STABLE, BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
     }
 

@@ -1,11 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, LehrerPersonaldaten, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerPersonaldatenProps } from "~/components/lehrer/personaldaten/SLehrerPersonaldatenProps";
+import { routeApp } from "../RouteApp";
 
 const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLehrerPersonaldaten.vue");
 
@@ -24,7 +25,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 		if (to_params.id instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const idLehrer = !to_params.id ? undefined : parseInt(to_params.id);
-		if ((!routeLehrer.data.hatPersonaldaten) || (idLehrer !== routeLehrer.data.personaldaten.id))
+		if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (idLehrer !== routeLehrer.data.lehrerListeManager.personalDaten().id))
 			await routeLehrer.data.loadPersonaldaten();
 	}
 
@@ -38,8 +39,10 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerPersonaldatenProps {
 		return {
+			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
 			patch: routeLehrer.data.patchPersonaldaten,
-			personaldaten: routeLehrer.data.hatPersonaldaten ? routeLehrer.data.personaldaten : new LehrerPersonaldaten(),
+			patchAbschnittsdaten: routeLehrer.data.patchPersonalAbschnittsdaten,
+			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}
 

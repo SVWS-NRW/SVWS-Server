@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@core";
+import type { LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten } from "@core";
 import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -14,8 +14,6 @@ interface RouteStateLehrer {
 	// Daten, allgemein
 	idSchuljahresabschnitt: number,
 	lehrerListeManager: LehrerListeManager;
-	// später nachzuladende Daten (Routen-abhängig)
-	personaldaten: LehrerPersonaldaten | null;
 	// TODO Unterrichtsdaten
 	view: RouteNode<any, any>;
 }
@@ -25,7 +23,6 @@ export class RouteDataLehrer {
 	private static _defaultState : RouteStateLehrer = {
 		idSchuljahresabschnitt: -1,
 		lehrerListeManager: new LehrerListeManager(null, new ArrayList()),
-		personaldaten: null,
 		view: routeLehrerIndividualdaten
 	}
 
@@ -95,36 +92,30 @@ export class RouteDataLehrer {
 		}
 		if ((lehrer !== null) && (this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id)))
 			return;
+		const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
 		let auswahl = this.lehrerListeManager.liste.get(lehrer.id);
 		if (auswahl === null)
 			auswahl = this.lehrerListeManager.filtered().isEmpty() ? null : this.lehrerListeManager.filtered().get(0);
 		const daten = auswahl === null ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
 		this.lehrerListeManager.setDaten(daten);
-		const personaldaten = this.lehrerListeManager.hasDaten() && this.hatPersonaldaten
-			? await this.ladePersonaldaten(this.lehrerListeManager.auswahl()) : null;
-		this.setPatchedState({ personaldaten });
+		const personaldaten = this.lehrerListeManager.hasDaten() && hattePersonaldaten
+			? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
+			: null;
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.commit();
 	}
-
-	public get hatPersonaldaten(): boolean {
-		return this._state.value.personaldaten !== null;
-	}
-
-	get personaldaten(): LehrerPersonaldaten {
-		if (this._state.value.personaldaten === null)
-			throw new Error("Unerwarteter Fehler: Lehrerpersonaldaten nicht initialisiert");
-		return this._state.value.personaldaten;
-	}
-
 
 	public async loadPersonaldaten() {
 		if (!this.lehrerListeManager.hasDaten())
 			return;
-		const personaldaten = await this.ladePersonaldaten(this.lehrerListeManager.auswahl());
-		this.setPatchedState({ personaldaten, });
+		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.commit();
 	}
 
 	public async unloadPersonaldaten() {
-		this.setPatchedState({ personaldaten: null });
+		this.lehrerListeManager.setPersonalDaten(null);
+		this.commit();
 	}
 
 	patchStammdaten = async (data : Partial<LehrerStammdaten>) => {
@@ -141,11 +132,23 @@ export class RouteDataLehrer {
 	}
 
 	patchPersonaldaten = async (data : Partial<LehrerPersonaldaten>) => {
-		if (!this.hatPersonaldaten)
+		if (!this.lehrerListeManager.hasPersonalDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		const idLehrer =  this.personaldaten.id;
-		await api.server.patchLehrerPersonaldaten(data, api.schema, idLehrer);
-		Object.assign(this.personaldaten, data);
+		const personaldaten = this.lehrerListeManager.personalDaten();
+		await api.server.patchLehrerPersonaldaten(data, api.schema, personaldaten.id);
+		Object.assign(personaldaten, data);
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.commit();
+	}
+
+	patchPersonalAbschnittsdaten = async (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const abschnittsdaten = this.lehrerListeManager.getAbschnittById(id);
+		if (abschnittsdaten == null)
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id + " geladen.");
+		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
+		Object.assign(abschnittsdaten, data);
 		this.commit();
 	}
 

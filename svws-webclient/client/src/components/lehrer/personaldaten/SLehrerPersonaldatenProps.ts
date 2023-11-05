@@ -1,6 +1,8 @@
-import type { LehrerPersonaldaten } from "@core";
+import type { LehrerListeManager, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, Schuljahresabschnitt } from "@core";
 
 export interface LehrerPersonaldatenProps {
+	lehrerListeManager: () => LehrerListeManager;
+	aktAbschnitt: Schuljahresabschnitt;
 	patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
-	personaldaten: LehrerPersonaldaten;
+	patchAbschnittsdaten: (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => Promise<void>;
 }

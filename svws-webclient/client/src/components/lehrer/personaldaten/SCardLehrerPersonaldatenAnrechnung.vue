@@ -5,7 +5,7 @@
 				:item-text="(i: LehrerMehrleistungArt) =>i.daten.text" />
 			<svws-ui-select title="Minderleistung" v-model="minderleistungsgrund" :items="LehrerMinderleistungArt.values()"
 				:item-text="(i: LehrerMinderleistungArt) =>i.daten.text" />
-			<svws-ui-text-input placeholder="Stundensumme" :model-value="personaldaten.pflichtstundensoll" @change="pflichtstundensoll => patch({pflichtstundensoll: Number(pflichtstundensoll)})" type="text" />
+			<svws-ui-input-number placeholder="Stundensumme" :model-value="personalabschnittsdaten?.pflichtstundensoll ?? 0.0" @change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten?.id ?? -1)" />
 			<svws-ui-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
 				:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
 			<svws-ui-spacing />
@@ -17,12 +17,18 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type LehrerPersonaldaten, LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@core";
+	import { type Schuljahresabschnitt, type LehrerListeManager, type LehrerPersonalabschnittsdaten, type LehrerPersonaldaten,
+		LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@core";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten;
+		lehrerListeManager: () => LehrerListeManager;
 		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
+		patchAbschnittsdaten: (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => Promise<void>;
+		aktAbschnitt: Schuljahresabschnitt;
 	}>();
+
+	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
+	const personalabschnittsdaten = computed<LehrerPersonalabschnittsdaten | null>(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id));
 
 	const mehrleistungsgrund = computed<LehrerMehrleistungArt | undefined>({
 		get(): LehrerMehrleistungArt | undefined {

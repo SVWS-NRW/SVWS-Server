@@ -236,11 +236,11 @@ public abstract class AuswahlManager<@NotNull TID, @NotNull TAuswahl, @NotNull T
 		}
 		// Bestimme den Auswahl-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler beim Aufruf vor...
 		final @NotNull TAuswahl eintrag = this.liste.getOrException(this._datenToId.apply(daten));
-		// Passe ggf. die Daten in der Klassenliste an ... (beim Patchen der Daten)
+		// Passe ggf. die Daten in der Auswahlliste an ... (beim Patchen der Daten)
 		final boolean updateEintrag = this.onSetDaten(eintrag, daten);
 		// ... und setze die neue Daten
 		this._daten = daten;
-		// ... und berechne ggf. die Sortierung der Klassenliste neu
+		// ... und berechne ggf. die Sortierung der Liste neu
 		if (updateEintrag)
 			this.orderSet(this.orderGet());
 	}

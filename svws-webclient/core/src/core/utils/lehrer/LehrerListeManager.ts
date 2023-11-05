@@ -1,6 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
+import { LehrerPersonaldaten } from '../../../core/data/lehrer/LehrerPersonaldaten';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
+import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { LehrerStammdaten } from '../../../core/data/lehrer/LehrerStammdaten';
@@ -12,9 +14,11 @@ import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
+import { LehrerPersonalabschnittsdaten } from '../../../core/data/lehrer/LehrerPersonalabschnittsdaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { Pair } from '../../../core/adt/Pair';
 
 export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintrag, LehrerStammdaten> {
@@ -54,6 +58,15 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	 */
 	private _filterNurStatistikrelevant : boolean = true;
 
+	/**
+	 * Die Personal-Daten, sofern eine Auswahl vorhanden ist.
+	 */
+	private _personaldaten : LehrerPersonaldaten | null = null;
+
+	private readonly _mapAbschnittsdatenById : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap();
+
+	private readonly _mapAbschnittsdatenBySchuljahresabschnittsId : JavaMap<number, LehrerPersonalabschnittsdaten> = new HashMap();
+
 
 	/**
 	 * Erstellt einen neuen Manager und initialisiert diesen mit den übergebenen Daten
@@ -79,11 +92,15 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 
 	/**
 	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
+	 * Prüfe auch, ob die Lehrer-ID mit der ID der Personaldaten übereinstimmt
+	 * und setzt diese ggf. auf null.
 	 *
 	 * @param eintrag   der Auswahl-Eintrag
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
 	protected onSetDaten(eintrag : LehrerListeEintrag, daten : LehrerStammdaten) : boolean {
+		if ((this._personaldaten !== null) && (this._personaldaten.id !== eintrag.id))
+			this.clearPersonalDaten();
 		let updateEintrag : boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {
 			eintrag.kuerzel = daten.kuerzel;
@@ -205,6 +222,83 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 		const comparator : Comparator<LehrerListeEintrag> = { compare : (a: LehrerListeEintrag, b: LehrerListeEintrag) => this.compare(a, b) };
 		tmpList.sort(comparator);
 		return tmpList;
+	}
+
+	/**
+	 * Entfernt die Personalabschnittsdaten und leert die zugehörigen Maps.
+	 */
+	private clearPersonalDaten() : void {
+		this._personaldaten = null;
+		this._mapAbschnittsdatenById.clear();
+		this._mapAbschnittsdatenBySchuljahresabschnittsId.clear();
+	}
+
+	/**
+	 * Gibt zurück, ob Personal-Daten vorliegen.
+	 *
+	 * @return true, wenn Personal-Daten vorliegen, und ansonsten false
+	 */
+	public hasPersonalDaten() : boolean {
+		return this._personaldaten !== null;
+	}
+
+	/**
+	 * Gibt die Personal-Daten zurück, sofern diese zur aktuellen Auswahl
+	 * geladen wurden.
+	 *
+	 * @return die Personal-Daten
+	 */
+	public personalDaten() : LehrerPersonaldaten {
+		if (this._personaldaten === null)
+			throw new DeveloperNotificationException("Es exitsieren derzeit keine Personal-Daten")
+		return this._personaldaten;
+	}
+
+	/**
+	 * Setzt die Personal-Daten. Dabei wird ggf. die Auswahl angepasst.
+	 *
+	 * @param personaldaten   die neuen Personal-Daten
+	 *
+	 * @throws DeveloperNotificationException   falls die Personal-Daten nicht zu der Auswahl passen
+	 */
+	public setPersonalDaten(personaldaten : LehrerPersonaldaten | null) : void {
+		if (personaldaten === null) {
+			this.clearPersonalDaten();
+			return;
+		}
+		this.liste.getOrException(personaldaten.id);
+		const neueLehrerId : boolean = ((this._personaldaten === null) || (this._personaldaten.id !== personaldaten.id));
+		this._personaldaten = personaldaten;
+		if (neueLehrerId) {
+			this._mapAbschnittsdatenById.clear();
+			this._mapAbschnittsdatenBySchuljahresabschnittsId.clear();
+			for (const abschnittsdaten of personaldaten.abschnittsdaten) {
+				this._mapAbschnittsdatenById.put(abschnittsdaten.id, abschnittsdaten);
+				this._mapAbschnittsdatenBySchuljahresabschnittsId.put(abschnittsdaten.idSchuljahresabschnitt, abschnittsdaten);
+			}
+		}
+	}
+
+	/**
+	 * Gibt die Personalabschnittsdaten für den Abschnitt mit der angegebenen ID zurück.
+	 *
+	 * @param id   die ID der Personalabschnittsdaten
+	 *
+	 * @return die Personalabschnittsdaten oder null, falls für die ID keine vorhanden sind.
+	 */
+	public getAbschnittById(id : number) : LehrerPersonalabschnittsdaten | null {
+		return this._mapAbschnittsdatenById.get(id);
+	}
+
+	/**
+	 * Gibt die Personalabschnittsdaten für den Abschnitt mit der angegebenen Schuljahresabschnitts-ID zurück.
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return die Personalabschnittsdaten oder null, falls für die Schuljahresabschnitts-ID keine vorhanden sind.
+	 */
+	public getAbschnittBySchuljahresabschnittsId(id : number) : LehrerPersonalabschnittsdaten | null {
+		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

@@ -3,12 +3,16 @@ package de.svws_nrw.core.utils.lehrer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
+import de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdaten;
+import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.PersonalTyp;
@@ -42,6 +46,11 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 	/** Das Filter-Attribut auf nur Statistik-relevante Lehrer */
 	private boolean _filterNurStatistikrelevant = true;
 
+	/** Die Personal-Daten, sofern eine Auswahl vorhanden ist. */
+	private LehrerPersonaldaten _personaldaten = null;
+	private final @NotNull Map<@NotNull Long, @NotNull LehrerPersonalabschnittsdaten> _mapAbschnittsdatenById = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull LehrerPersonalabschnittsdaten> _mapAbschnittsdatenBySchuljahresabschnittsId = new HashMap<>();
+
 
 
 	/**
@@ -72,14 +81,19 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 
 	/**
 	 * Passt bei Änderungen an den Daten ggf. das Auswahl-Objekt an.
+	 * Prüfe auch, ob die Lehrer-ID mit der ID der Personaldaten übereinstimmt
+	 * und setzt diese ggf. auf null.
 	 *
 	 * @param eintrag   der Auswahl-Eintrag
 	 * @param daten     das neue Daten-Objekt zu der Auswahl
 	 */
 	@Override
 	protected boolean onSetDaten(final @NotNull LehrerListeEintrag eintrag, final @NotNull LehrerStammdaten daten) {
-		boolean updateEintrag = false;
+		// Prüfe, ob die Personaldaten zu der aktuellen Auswahl passen und setze diese ggf. zurück.
+		if ((this._personaldaten != null) && (this._personaldaten.id != eintrag.id))
+			clearPersonalDaten();
 		// Passe ggf. die Daten in der Lehrerliste an ... (beim Patchen der Daten)
+		boolean updateEintrag = false;
 		if (!daten.kuerzel.equals(eintrag.kuerzel)) {
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
@@ -208,5 +222,90 @@ public class LehrerListeManager extends AuswahlManager<@NotNull Long, @NotNull L
 		return tmpList;
 	}
 
+
+	/**
+	 * Entfernt die Personalabschnittsdaten und leert die zugehörigen Maps.
+	 */
+	private void clearPersonalDaten() {
+		this._personaldaten = null;
+		this._mapAbschnittsdatenById.clear();
+		this._mapAbschnittsdatenBySchuljahresabschnittsId.clear();
+	}
+
+
+	/**
+	 * Gibt zurück, ob Personal-Daten vorliegen.
+	 *
+	 * @return true, wenn Personal-Daten vorliegen, und ansonsten false
+	 */
+	public boolean hasPersonalDaten() {
+		return this._personaldaten != null;
+	}
+
+
+	/**
+	 * Gibt die Personal-Daten zurück, sofern diese zur aktuellen Auswahl
+	 * geladen wurden.
+	 *
+	 * @return die Personal-Daten
+	 */
+	public @NotNull LehrerPersonaldaten personalDaten() {
+		if (this._personaldaten == null)
+			throw new DeveloperNotificationException("Es exitsieren derzeit keine Personal-Daten");
+		return this._personaldaten;
+	}
+
+
+	/**
+	 * Setzt die Personal-Daten. Dabei wird ggf. die Auswahl angepasst.
+	 *
+	 * @param personaldaten   die neuen Personal-Daten
+	 *
+	 * @throws DeveloperNotificationException   falls die Personal-Daten nicht zu der Auswahl passen
+	 */
+	public void setPersonalDaten(final LehrerPersonaldaten personaldaten) throws DeveloperNotificationException {
+		// Die Personal-Daten werden zurückgesetzt
+		if (personaldaten == null) {
+			clearPersonalDaten();
+			return;
+		}
+		// Bestimme den Auswahl-Eintrag. Dieser sollte immer vorhanden sein. Wenn nicht, dann liegt ein Fehler vor...
+		this.liste.getOrException(personaldaten.id);
+		// ... und setze die neue Daten
+		final boolean neueLehrerId = ((this._personaldaten == null) || (this._personaldaten.id != personaldaten.id));
+		this._personaldaten = personaldaten;
+		if (neueLehrerId) {
+			this._mapAbschnittsdatenById.clear();
+			this._mapAbschnittsdatenBySchuljahresabschnittsId.clear();
+			for (final @NotNull LehrerPersonalabschnittsdaten abschnittsdaten : personaldaten.abschnittsdaten) {
+				this._mapAbschnittsdatenById.put(abschnittsdaten.id, abschnittsdaten);
+				this._mapAbschnittsdatenBySchuljahresabschnittsId.put(abschnittsdaten.idSchuljahresabschnitt, abschnittsdaten);
+			}
+		}
+	}
+
+
+	/**
+	 * Gibt die Personalabschnittsdaten für den Abschnitt mit der angegebenen ID zurück.
+	 *
+	 * @param id   die ID der Personalabschnittsdaten
+	 *
+	 * @return die Personalabschnittsdaten oder null, falls für die ID keine vorhanden sind.
+	 */
+	public LehrerPersonalabschnittsdaten getAbschnittById(final long id) {
+		return this._mapAbschnittsdatenById.get(id);
+	}
+
+
+	/**
+	 * Gibt die Personalabschnittsdaten für den Abschnitt mit der angegebenen Schuljahresabschnitts-ID zurück.
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return die Personalabschnittsdaten oder null, falls für die Schuljahresabschnitts-ID keine vorhanden sind.
+	 */
+	public LehrerPersonalabschnittsdaten getAbschnittBySchuljahresabschnittsId(final long id) {
+		return this._mapAbschnittsdatenBySchuljahresabschnittsId.get(id);
+	}
 
 }

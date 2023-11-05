@@ -18,12 +18,16 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type LehrerPersonaldaten, LehrerFachrichtung, LehrerLehrbefaehigung } from "@core";
+	import { type LehrerListeManager, type LehrerPersonalabschnittsdaten, type LehrerPersonaldaten,
+		LehrerFachrichtung, LehrerLehrbefaehigung } from "@core";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten;
+		lehrerListeManager: () => LehrerListeManager;
 		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
+		patchAbschnittsdaten: (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => Promise<void>;
 	}>();
+
+	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 
 	const lehrbefaehigung = computed<LehrerLehrbefaehigung | undefined>({
 		get(): LehrerLehrbefaehigung | undefined {

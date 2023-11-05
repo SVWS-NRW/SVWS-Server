@@ -241,6 +241,7 @@ export { LehrerKatalogMinderleistungsartEintrag } from './core/data/lehrer/Lehre
 export { LehrerKatalogRechtsverhaeltnisEintrag } from './core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
 export { LehrerKatalogZugangsgrundEintrag } from './core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
+export { LehrerPersonalabschnittsdaten } from './core/data/lehrer/LehrerPersonalabschnittsdaten';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';

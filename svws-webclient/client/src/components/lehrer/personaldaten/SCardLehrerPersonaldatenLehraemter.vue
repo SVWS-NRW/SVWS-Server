@@ -20,13 +20,17 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type LehrerPersonaldaten, LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung,
+	import { type LehrerListeManager, type LehrerPersonalabschnittsdaten, type LehrerPersonaldaten,
+		LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung,
 		LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung } from "@core";
 
 	const props = defineProps<{
-		personaldaten: LehrerPersonaldaten;
+		lehrerListeManager: () => LehrerListeManager;
 		patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;
+		patchAbschnittsdaten: (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => Promise<void>;
 	}>();
+
+	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 
 	const lehramt = computed<LehrerLehramt | undefined>({
 		get(): LehrerLehramt | undefined {
