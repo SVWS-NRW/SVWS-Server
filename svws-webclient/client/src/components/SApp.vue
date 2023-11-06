@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout :fullwidth-content="app.hideAuswahl === true">
+	<svws-ui-app-layout>
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
@@ -36,7 +36,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu>
+		<template #secondaryMenu v-if="app.hideAuswahl !== true">
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>
@@ -81,14 +81,13 @@
 <script setup lang="ts">
 
 	import type { AuswahlChildData } from './AuswahlChildData';
-	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
-	import {computed, ref} from "vue";
+	import { computed, ref } from "vue";
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
 
-	const schulname: ComputedRef<string> = computed(() => {
+	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
 		return name ? name : "Fehlende Bezeichnung für die Schule";
 	});
