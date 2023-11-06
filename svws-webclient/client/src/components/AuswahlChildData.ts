@@ -1,1 +1,1 @@
-export type AuswahlChildData = { name: string; text: string; image?: string; }
+export type AuswahlChildData = { name: string; text: string; image?: string; hideAuswahl?: boolean }

@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout>
+	<svws-ui-app-layout :fullwidth-content="app.hideAuswahl === true">
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>

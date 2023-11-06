@@ -371,6 +371,18 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 
 
 	/**
+	 * Prüft, ob eine Router-View mit dem Namen "name" vorhanden ist.
+	 *
+	 * @param name   der Name der zu prüfenden View
+	 *
+	 * @returns true, wenn die View vorhanden ist, und ansonsten false
+	 */
+	public hasView(name : string): boolean {
+		return (this._record.components as { [key: string] : RouteComponent })[name] !== undefined;
+	}
+
+
+	/**
      * Ein Default-Handler zur Bestimmung der Properties einer Route.
      * Liefert ein leeres Objekt zurück.
      *

@@ -115,7 +115,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
-			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text },
+			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hideAuswahl: true },
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
