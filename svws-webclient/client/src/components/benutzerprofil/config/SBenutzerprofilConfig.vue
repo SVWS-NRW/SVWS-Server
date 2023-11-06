@@ -8,6 +8,11 @@
 			</svws-ui-badge>
 		</div>
 	</svws-ui-header>
+	<div class="page--content">
+		<svws-ui-content-card title="Benutzereinstellungen" class="opacity-50">
+			Hier können die Benutzereinstellungen für den Client angepasst werden, sobald diese implementiert wurden
+		</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">

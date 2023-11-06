@@ -24,6 +24,7 @@ export class RouteBenutzerprofilDaten extends RouteNode<unknown, RouteBenutzerpr
 		return {
 			benutzer: routeBenutzerprofil.data.benutzer,
 			patch: routeBenutzerprofil.data.patch,
+			patchPasswort: routeBenutzerprofil.data.patchPasswort,
 		};
 	}
 

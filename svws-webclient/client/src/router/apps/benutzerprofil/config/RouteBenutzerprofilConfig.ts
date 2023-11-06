@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
-import type { BenutzerprofilDatenProps } from "~/components/benutzerprofil/daten/SBenutzerProfilDatenProps";
+import type { BenutzerprofilConfigProps } from "~/components/benutzerprofil/config/SBenutzerProfilConfigProps";
 import type { RouteBenutzerprofil} from "../RouteBenutzerprofil";
 import { routeBenutzerprofil } from "../RouteBenutzerprofil";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -11,7 +11,7 @@ export class RouteBenutzerprofilConfig extends RouteNode<unknown, RouteBenutzerp
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "benutzerprofil.config", "config", SBenutzerprofilConfig);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzereinstellungen";
 	}
@@ -20,7 +20,7 @@ export class RouteBenutzerprofilConfig extends RouteNode<unknown, RouteBenutzerp
 		return { name: this.name };
 	}
 
-	public getProps(to: RouteLocationNormalized): BenutzerprofilDatenProps {
+	public getProps(to: RouteLocationNormalized): BenutzerprofilConfigProps {
 		return {
 			benutzer: routeBenutzerprofil.data.benutzer,
 			patch: routeBenutzerprofil.data.patch,
