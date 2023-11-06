@@ -86,6 +86,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// Statusdaten
 		daten.status = schueler.Status.id;
 		daten.istDuplikat = schueler.Duplikat;
+		daten.externeSchulNr = schueler.ExterneSchulNr;
 		daten.fahrschuelerArtID = schueler.Fahrschueler_ID;
 		daten.haltestelleID = schueler.Haltestelle_ID;
 		daten.anmeldedatum = schueler.AnmeldeDatum;
@@ -256,6 +257,16 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				if (s == null)
 					throw OperationError.BAD_REQUEST.exception();
 				schueler.Status = s;
+			}),
+			Map.entry("externeSchulNr", (conn, schueler, value, map) -> {
+				final String externeSchulNr = JSONMapper.convertToString(value, true, true, 6);
+				if ((externeSchulNr == null) || externeSchulNr.isBlank()) {
+					schueler.ExterneSchulNr = null;
+				} else {
+					if (externeSchulNr.length() != 6)
+						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Ziffern einer Schulnummer aus NRW muss 6 betragen.");
+					schueler.ExterneSchulNr = externeSchulNr;
+				}
 			}),
 			Map.entry("fahrschuelerArtID", (conn, schueler, value, map) -> {
 				final Long fid = JSONMapper.convertToLong(value, true);

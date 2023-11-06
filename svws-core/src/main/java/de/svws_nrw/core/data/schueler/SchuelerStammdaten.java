@@ -152,6 +152,14 @@ public class SchuelerStammdaten {
 	@Schema(description = "die ID des aktuellen Schülerstatus", example = "2")
 	public int status;
 
+	/** Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
+	@Schema(description = "gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht", example = "true")
+	public boolean istDuplikat;
+
+	/** Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
+	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
+	public String externeSchulNr;
+
 	/** Die ID der Art des Fahrschülers des Schülerdatensatzes. */
 	@Schema(description = "ggf. die ID der Art des Fahrschülers", example = "3")
 	public Long fahrschuelerArtID;
@@ -195,10 +203,6 @@ public class SchuelerStammdaten {
 	/** Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht. */
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public boolean erhaeltMeisterBAFOEG;
-
-	/** Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
-	@Schema(description = "gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht", example = "true")
-	public boolean istDuplikat;
 
 
 	// Bemerkungen
