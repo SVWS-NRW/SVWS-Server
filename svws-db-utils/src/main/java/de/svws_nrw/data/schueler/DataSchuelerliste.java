@@ -104,6 +104,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.jahrgang = ((aktAbschnitt == null) || (aktAbschnitt.ASDJahrgang == null)) ? "" : aktAbschnitt.ASDJahrgang;
 		eintrag.schulgliederung = ((aktAbschnitt == null) || (aktAbschnitt.Schulgliederung == null)) ? "" : aktAbschnitt.Schulgliederung.daten.kuerzel;
 		eintrag.status = schueler.Status.id;
+		eintrag.istDuplikat = schueler.Duplikat;
+		eintrag.externeSchulNr = schueler.ExterneSchulNr;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 		return eintrag;
 	}
