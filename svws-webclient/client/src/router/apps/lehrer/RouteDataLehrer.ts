@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten } from "@core";
+import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
 import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -149,6 +149,87 @@ export class RouteDataLehrer {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id + " geladen.");
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
 		Object.assign(abschnittsdaten, data);
+		this.commit();
+	}
+
+	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Lehrämtern noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehraemter.add(eintrag);
+		this.commit();
+	}
+
+	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Lehrämtern noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehraemter.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchLehramtAnerkennung = async (eintrag: LehrerLehramtEintrag, anerkennung : LehrerLehramtAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Lehrämtern noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		this.commit();
+	}
+
+	addLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Lehrbefähigungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehrbefaehigungen.add(eintrag);
+		this.commit();
+	}
+
+	removeLehrbefaehigungen = async (eintraege: List<LehrerLehrbefaehigungEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Lehrbefähigungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehrbefaehigungen.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchLehrbefaehigungAnerkennung = async (eintrag: LehrerLehrbefaehigungEintrag, anerkennung : LehrerLehrbefaehigungAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		this.commit();
+	}
+
+	addFachrichtung = async (eintrag: LehrerFachrichtungEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Fachrichtungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().fachrichtungen.add(eintrag);
+		this.commit();
+	}
+
+	removeFachrichtungen = async (eintraege: List<LehrerFachrichtungEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Fachrichtungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().fachrichtungen.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchFachrichtungAnerkennung = async (eintrag: LehrerFachrichtungEintrag, anerkennung : LehrerFachrichtungAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
 		this.commit();
 	}
 

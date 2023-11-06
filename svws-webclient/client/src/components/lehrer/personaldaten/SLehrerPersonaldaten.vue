@@ -12,22 +12,6 @@
 				<svws-ui-text-input placeholder="Abgangsdatum" :model-value="personaldaten.abgangsdatum" @change="abgangsdatum => patch({abgangsdatum})" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Lehramtsangaben">
-			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()"
-					:item-text="(i: LehrerLehramt) => i.daten.text" required />
-				<svws-ui-select title="Anerkennung Lehramt" v-model="lehramt_anerkennung" :items="LehrerLehramtAnerkennung.values()"
-					:item-text="(i: LehrerLehramtAnerkennung) => i.daten.text" required />
-				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()"
-					:item-text="(i: LehrerLehrbefaehigung) => i.daten.text" required />
-				<svws-ui-select title="Anerkennung Lehrbefähigung" v-model="lehrbefaehigung_anerkennung" :items="LehrerLehrbefaehigungAnerkennung.values()"
-					:item-text="(i: LehrerLehrbefaehigungAnerkennung) => i.daten.text" required />
-				<svws-ui-select title="Fachrichtung" v-model="fachrichtung" :items="LehrerFachrichtung.values()"
-					:item-text="(i: LehrerFachrichtung) => i.daten.text" required />
-				<svws-ui-select title="Anerkennung Fachrichtung" v-model="fachrichtung_anerkennung" :items="LehrerFachrichtungAnerkennung.values()"
-					:item-text="(i: LehrerFachrichtungAnerkennung) => i.daten.text" required />
-			</svws-ui-input-wrapper>
-		</svws-ui-content-card>
 		<svws-ui-content-card title="Beschäftigungsdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select title="Rechtsverhältnis" v-model="rechtsverhaeltnis" :items="LehrerRechtsverhaeltnis.values()"
@@ -38,6 +22,13 @@
 				<svws-ui-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 					:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
 				<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer => patch({stammschulnummer})" type="text" />
+			</svws-ui-input-wrapper>
+		</svws-ui-content-card>
+		<svws-ui-content-card title="Lehrämter">
+			<svws-ui-input-wrapper>
+				<s-lehrer-personaldaten-lehraemter :lehrer-liste-manager="lehrerListeManager" :patch-lehramt-anerkennung="patchLehramtAnerkennung" :add-lehramt="addLehramt" :remove-lehraemter="removeLehraemter" />
+				<s-lehrer-personaldaten-lehrbefaehigungen :lehrer-liste-manager="lehrerListeManager" :patch-lehrbefaehigung-anerkennung="patchLehrbefaehigungAnerkennung" :add-lehrbefaehigung="addLehrbefaehigung" :remove-lehrbefaehigungen="removeLehrbefaehigungen" />
+				<s-lehrer-personaldaten-fachrichtungen :lehrer-liste-manager="lehrerListeManager" :patch-fachrichtung-anerkennung="patchFachrichtungAnerkennung" :add-fachrichtung="addFachrichtung" :remove-fachrichtungen="removeFachrichtungen" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Mehr- und Minderleistung, Anrechnungsstunden">
@@ -60,7 +51,6 @@
 
 	import { computed } from "vue";
 	import { type LehrerPersonaldaten, type LehrerPersonalabschnittsdaten,
-		LehrerFachrichtung, LehrerFachrichtungAnerkennung, LehrerLehramt, LehrerLehramtAnerkennung, LehrerLehrbefaehigung, LehrerLehrbefaehigungAnerkennung,
 		LehrerBeschaeftigungsart, LehrerEinsatzstatus, LehrerRechtsverhaeltnis, LehrerAnrechnungsgrund, LehrerMehrleistungArt, LehrerMinderleistungArt } from "@core";
 	import type { LehrerPersonaldatenProps } from './SLehrerPersonaldatenProps';
 
@@ -68,73 +58,6 @@
 
 	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 	const personalabschnittsdaten = computed<LehrerPersonalabschnittsdaten | null>(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id));
-
-	const lehramt = computed<LehrerLehramt | undefined>({
-		get(): LehrerLehramt | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerLehramt.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerLehramt | undefined) {
-			// TODO props.personaldaten.patch({	lehramt: val?.kuerzel });
-		}
-	});
-
-	const lehramt_anerkennung = computed<LehrerLehramtAnerkennung | undefined>({
-		get(): LehrerLehramtAnerkennung | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerLehramtAnerkennung.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerLehramtAnerkennung | undefined) {
-			// TODO props.personaldaten.patch({ lehramtAnerkennung: val?.kuerzel });
-		}
-	});
-
-	const lehrbefaehigung = computed<LehrerLehrbefaehigung | undefined>({
-		get(): LehrerLehrbefaehigung | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerLehrbefaehigung.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerLehrbefaehigung | undefined) {
-			// TODO props.personaldaten.patch({ lehrbefaehigung: val?.kuerzel });
-		}
-	});
-
-	const lehrbefaehigung_anerkennung = computed<LehrerLehrbefaehigungAnerkennung | undefined>({
-		get(): LehrerLehrbefaehigungAnerkennung | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerLehrbefaehigungAnerkennung.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerLehrbefaehigungAnerkennung | undefined) {
-			// TODO props.personaldaten.patch({ lehrbefaehigungAnerkennung: val?.kuerzel });
-		}
-	});
-
-	const fachrichtung = computed<LehrerFachrichtung | undefined>({
-		get(): LehrerFachrichtung | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerFachrichtung.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerFachrichtung | undefined) {
-			// TODO props.personaldaten.patch({ fachrichtung: val?.kuerzel });
-		}
-	});
-
-	const fachrichtung_anerkennung = computed<LehrerFachrichtungAnerkennung | undefined>({
-		get(): LehrerFachrichtungAnerkennung | undefined {
-			// TODO aus Personaldaten bestimmten
-			const kuerzel = undefined;
-			return LehrerFachrichtungAnerkennung.values().find(e => e.daten.kuerzel === kuerzel);
-		},
-		set(val: LehrerFachrichtungAnerkennung | undefined) {
-			// TODO props.personaldaten.patch({ fachrichtungAnerkennung: val?.kuerzel });
-		}
-	});
-
 
 	const rechtsverhaeltnis = computed<LehrerRechtsverhaeltnis | undefined>({
 		get(): LehrerRechtsverhaeltnis | undefined {

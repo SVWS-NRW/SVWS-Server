@@ -42,6 +42,15 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
 			patch: routeLehrer.data.patchPersonaldaten,
 			patchAbschnittsdaten: routeLehrer.data.patchPersonalAbschnittsdaten,
+			patchLehramtAnerkennung: routeLehrer.data.patchLehramtAnerkennung,
+			addLehramt: routeLehrer.data.addLehramt,
+			removeLehraemter: routeLehrer.data.removeLehraemter,
+			patchLehrbefaehigungAnerkennung: routeLehrer.data.patchLehrbefaehigungAnerkennung,
+			addLehrbefaehigung: routeLehrer.data.addLehrbefaehigung,
+			removeLehrbefaehigungen: routeLehrer.data.removeLehrbefaehigungen,
+			patchFachrichtungAnerkennung: routeLehrer.data.patchFachrichtungAnerkennung,
+			addFachrichtung: routeLehrer.data.addFachrichtung,
+			removeFachrichtungen: routeLehrer.data.removeFachrichtungen,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 		};
 	}
