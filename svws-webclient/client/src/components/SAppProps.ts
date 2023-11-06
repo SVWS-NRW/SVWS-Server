@@ -9,6 +9,7 @@ export interface AppProps {
 	schemaname: string;  // Der Name des DB-Schemas
 	logout: () => Promise<void>;
 	setApp:  (value: AuswahlChildData) => Promise<void>;
+	benutzerprofilApp: AuswahlChildData;
 	app: AuswahlChildData;
 	apps: AuswahlChildData[];
 	appsHidden: boolean[];

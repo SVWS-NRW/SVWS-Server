@@ -1,25 +1,19 @@
-import { BenutzerDaten } from "@core";
+import type { BenutzerDaten } from "@core";
+import type { RouteNode } from "~/router/RouteNode";
 import { shallowRef } from "vue";
-
-
 import { api } from "~/router/Api";
-import { RouteManager } from "~/router/RouteManager";
-import { type RouteNode } from "~/router/RouteNode";
-
-import { routeKurse } from "~/router/apps/kurse/RouteKurse";
-import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
+import { routeBenutzerprofil } from "./RouteBenutzerprofil";
+import { routeBenutzerprofilDaten } from "./daten/RouteBenutzerprofilDaten";
 
 
 interface RouteStateBenutzerprofil {
-	benutzer: BenutzerDaten;
 	view: RouteNode<any, any>;
 }
 
 export class RouteDataBenutzerprofil {
 
 	private static _defaultState: RouteStateBenutzerprofil = {
-		benutzer: new BenutzerDaten(),
-		view: routeKursDaten,
+		view: routeBenutzerprofilDaten,
 	}
 	private _state = shallowRef(RouteDataBenutzerprofil._defaultState);
 
@@ -36,18 +30,22 @@ export class RouteDataBenutzerprofil {
 	}
 
 	public async setView(view: RouteNode<any,any>) {
-		if (routeKurse.children.includes(view))
-			this.setPatchedState({ view: view });
+		if (routeBenutzerprofil.children.includes(view))
+			this.setPatchedState({ view });
 		else
 			throw new Error("Diese für das Benutzerprofil gewählte Ansicht wird nicht unterstützt.");
 	}
 
 	public get benutzer(): BenutzerDaten {
-		return this._state.value.benutzer;
+		return api.benutzerdaten;
 	}
 
 	public get view(): RouteNode<any,any> {
 		return this._state.value.view;
 	}
 
+	public patch = async (data: Partial<BenutzerDaten>) => {
+		console.log("TODO: Benutzerdaten patchen")
+		//api.server.patch
+	}
 }
