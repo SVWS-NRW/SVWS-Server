@@ -10,6 +10,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteDataBenutzerprofil } from "~/router/apps/benutzerprofil/RouteDataBenutzerprofil";
 import { routeBenutzerprofilDaten } from "./daten/RouteBenutzerprofilDaten";
+import { routeBenutzerprofilConfig } from "./config/RouteBenutzerprofilConfig";
 
 const SBenutzerprofilAuswahl = () => import("~/components/benutzerprofil/SBenutzerprofilAuswahl.vue")
 const SBenutzerprofilApp = () => import("~/components/benutzerprofil/SBenutzerprofilApp.vue")
@@ -24,9 +25,11 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 		super.setView("liste", SBenutzerprofilAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeBenutzerprofilDaten,
+			routeBenutzerprofilConfig,
 		];
 		super.menu = [
 			routeBenutzerprofilDaten,
+			routeBenutzerprofilConfig,
 		];
 		super.defaultChild = routeBenutzerprofilDaten;
 	}
