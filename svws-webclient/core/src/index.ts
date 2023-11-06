@@ -99,12 +99,12 @@ export { BenutzergruppeListeEintrag } from './core/data/benutzer/BenutzergruppeL
 export { BetriebAnsprechpartner } from './core/data/betrieb/BetriebAnsprechpartner';
 export { BetriebListeEintrag } from './core/data/betrieb/BetriebListeEintrag';
 export { BetriebStammdaten } from './core/data/betrieb/BetriebStammdaten';
+export { BKBildungsplan } from './core/data/bk/BKBildungsplan';
+export { BKBildungsplanKatalog } from './core/data/bk/BKBildungsplanKatalog';
+export { BKBildungsplanKatalogEintrag } from './core/data/bk/BKBildungsplanKatalogEintrag';
+export { BKBildungsplanKatalogIndex } from './core/data/bk/BKBildungsplanKatalogIndex';
 export { BKFBFach } from './core/data/bk/BKFBFach';
 export { BKFachklassenSchluessel } from './core/data/bk/BKFachklassenSchluessel';
-export { BKLehrplan } from './core/data/bk/BKLehrplan';
-export { BKLehrplanKatalog } from './core/data/bk/BKLehrplanKatalog';
-export { BKLehrplanKatalogEintrag } from './core/data/bk/BKLehrplanKatalogEintrag';
-export { BKLehrplanKatalogIndex } from './core/data/bk/BKLehrplanKatalogIndex';
 export { BKLernfeld } from './core/data/bk/BKLernfeld';
 export { DBSchemaListeEintrag } from './core/data/db/DBSchemaListeEintrag';
 export { MigrateBody } from './core/data/db/MigrateBody';
@@ -547,8 +547,8 @@ export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';
 export { SprachendatenUtils } from './core/utils/schueler/SprachendatenUtils';
 export { AbgangsartenManager } from './core/utils/schule/AbgangsartenManager';
+export { BerufskollegBildungsplanManager } from './core/utils/schule/BerufskollegBildungsplanManager';
 export { BerufskollegFachklassenManager } from './core/utils/schule/BerufskollegFachklassenManager';
-export { BerufskollegLehrplanManager } from './core/utils/schule/BerufskollegLehrplanManager';
 export { SchuljahresAbschnittsManager } from './core/utils/schule/SchuljahresAbschnittsManager';
 export { SchuljahresabschnittsUtils } from './core/utils/schule/SchuljahresabschnittsUtils';
 export { IntegerComparator } from './core/utils/stundenplan/IntegerComparator';

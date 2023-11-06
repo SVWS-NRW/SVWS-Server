@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Teilkatalog der Lehrpläne für einen Gliederungsindex am BK.")
 @TranspilerDTO
-public class BKLehrplanKatalog {
+public class BKBildungsplanKatalog {
 
 	/** Die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht. */
 	@Schema(description = "die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht", example = "3")
@@ -24,6 +24,6 @@ public class BKLehrplanKatalog {
 
 	/** Die Einträge des Katalogs. */
 	@Schema(description = "die Lehrpläne des Katalogs")
-	public @NotNull List<@NotNull BKLehrplanKatalogEintrag> lehrplaene = new ArrayList<>();
+	public @NotNull List<@NotNull BKBildungsplanKatalogEintrag> lehrplaene = new ArrayList<>();
 
 }

@@ -1,24 +1,19 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { BKBildungsplanKatalogEintrag } from '../../../core/data/bk/BKBildungsplanKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
-import { BKLehrplanKatalogEintrag } from '../../../core/data/bk/BKLehrplanKatalogEintrag';
 
-export class BKLehrplanKatalogIndex extends JavaObject {
-
-	/**
-	 * Der Index (Schulgliederung) für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen
-	 */
-	public index : number = 0;
+export class BKBildungsplanKatalog extends JavaObject {
 
 	/**
-	 * Die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht.
+	 * Die Version des Katalogs. Diese wird bei Änderungen am Katalog erhöht.
 	 */
 	public version : number = -1;
 
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public lehrplaene : List<BKLehrplanKatalogEintrag> = new ArrayList();
+	public lehrplaene : List<BKBildungsplanKatalogEintrag> = new ArrayList();
 
 
 	public constructor() {
@@ -26,29 +21,25 @@ export class BKLehrplanKatalogIndex extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.bk.BKLehrplanKatalogIndex'].includes(name);
+		return ['de.svws_nrw.core.data.bk.BKBildungsplanKatalog'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): BKLehrplanKatalogIndex {
+	public static transpilerFromJSON(json : string): BKBildungsplanKatalog {
 		const obj = JSON.parse(json);
-		const result = new BKLehrplanKatalogIndex();
-		if (typeof obj.index === "undefined")
-			 throw new Error('invalid json format, missing attribute index');
-		result.index = obj.index;
+		const result = new BKBildungsplanKatalog();
 		if (typeof obj.version === "undefined")
 			 throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
 		if ((obj.lehrplaene !== undefined) && (obj.lehrplaene !== null)) {
 			for (const elem of obj.lehrplaene) {
-				result.lehrplaene?.add(BKLehrplanKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrplaene?.add(BKBildungsplanKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
 	}
 
-	public static transpilerToJSON(obj : BKLehrplanKatalogIndex) : string {
+	public static transpilerToJSON(obj : BKBildungsplanKatalog) : string {
 		let result = '{';
-		result += '"index" : ' + obj.index + ',';
 		result += '"version" : ' + obj.version + ',';
 		if (!obj.lehrplaene) {
 			result += '"lehrplaene" : []';
@@ -56,7 +47,7 @@ export class BKLehrplanKatalogIndex extends JavaObject {
 			result += '"lehrplaene" : [ ';
 			for (let i = 0; i < obj.lehrplaene.size(); i++) {
 				const elem = obj.lehrplaene.get(i);
-				result += BKLehrplanKatalogEintrag.transpilerToJSON(elem);
+				result += BKBildungsplanKatalogEintrag.transpilerToJSON(elem);
 				if (i < obj.lehrplaene.size() - 1)
 					result += ',';
 			}
@@ -67,11 +58,8 @@ export class BKLehrplanKatalogIndex extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<BKLehrplanKatalogIndex>) : string {
+	public static transpilerToJSONPatch(obj : Partial<BKBildungsplanKatalog>) : string {
 		let result = '{';
-		if (typeof obj.index !== "undefined") {
-			result += '"index" : ' + obj.index + ',';
-		}
 		if (typeof obj.version !== "undefined") {
 			result += '"version" : ' + obj.version + ',';
 		}
@@ -82,7 +70,7 @@ export class BKLehrplanKatalogIndex extends JavaObject {
 				result += '"lehrplaene" : [ ';
 				for (let i = 0; i < obj.lehrplaene.size(); i++) {
 					const elem = obj.lehrplaene.get(i);
-					result += BKLehrplanKatalogEintrag.transpilerToJSON(elem);
+					result += BKBildungsplanKatalogEintrag.transpilerToJSON(elem);
 					if (i < obj.lehrplaene.size() - 1)
 						result += ',';
 				}
@@ -96,6 +84,6 @@ export class BKLehrplanKatalogIndex extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_bk_BKLehrplanKatalogIndex(obj : unknown) : BKLehrplanKatalogIndex {
-	return obj as BKLehrplanKatalogIndex;
+export function cast_de_svws_nrw_core_data_bk_BKBildungsplanKatalog(obj : unknown) : BKBildungsplanKatalog {
+	return obj as BKBildungsplanKatalog;
 }

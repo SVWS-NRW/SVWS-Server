@@ -10,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert einen Historieneintrag eines Faches aus dem Katalog der berufsbezogenen Fächer
+ * Sie liefert einen Historieneintrag eines Faches  aus dem Katalog der berufsbezogenen Fächer
  */
 @XmlRootElement
 @Schema(description = "eine Historiendatum eines Eintrags in dem Katalog der berufsbezogenen Fächer.")
@@ -29,8 +29,8 @@ public class BKFBFach {
 	@Schema(description = "die Zeugnisbezeichnung des Fachs", example = "Fertigungsprozesse")
 	public @NotNull String bezeichnung = "";
 
-	/** Die Fachklassen, in denen das Fach im Lehrplan steht */
-	@Schema(description = "Die Fachklassen, in denen das Fach im Lehrplan steht")
+	/** Die Fachklassen, in denen das Fach im Bildungsplan steht */
+	@Schema(description = "Die Fachklassen, in denen das Fach im Bildungsplan steht")
 	public @NotNull List<@NotNull BKFachklassenSchluessel> fachklassen = new ArrayList<>();
 
 	/** Gibt an, in welchem Schuljahr der Historien-Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */

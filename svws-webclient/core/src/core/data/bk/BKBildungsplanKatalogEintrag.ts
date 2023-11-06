@@ -1,9 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { BKLehrplan, cast_de_svws_nrw_core_data_bk_BKLehrplan } from '../../../core/data/bk/BKLehrplan';
+import { BKBildungsplan, cast_de_svws_nrw_core_data_bk_BKBildungsplan } from '../../../core/data/bk/BKBildungsplan';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 
-export class BKLehrplanKatalogEintrag extends JavaObject {
+export class BKBildungsplanKatalogEintrag extends JavaObject {
 
 	/**
 	 * Der Index (Schulgliederung) für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen
@@ -23,7 +23,7 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 	/**
 	 * Die Einträge des Katalogs.
 	 */
-	public historie : List<BKLehrplan> = new ArrayList();
+	public historie : List<BKBildungsplan> = new ArrayList();
 
 
 	public constructor() {
@@ -31,12 +31,12 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.bk.BKLehrplanKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.bk.BKBildungsplanKatalogEintrag'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): BKLehrplanKatalogEintrag {
+	public static transpilerFromJSON(json : string): BKBildungsplanKatalogEintrag {
 		const obj = JSON.parse(json);
-		const result = new BKLehrplanKatalogEintrag();
+		const result = new BKBildungsplanKatalogEintrag();
 		if (typeof obj.index === "undefined")
 			 throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
@@ -48,13 +48,13 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 		result.version = obj.version;
 		if ((obj.historie !== undefined) && (obj.historie !== null)) {
 			for (const elem of obj.historie) {
-				result.historie?.add(BKLehrplan.transpilerFromJSON(JSON.stringify(elem)));
+				result.historie?.add(BKBildungsplan.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
 	}
 
-	public static transpilerToJSON(obj : BKLehrplanKatalogEintrag) : string {
+	public static transpilerToJSON(obj : BKBildungsplanKatalogEintrag) : string {
 		let result = '{';
 		result += '"index" : ' + obj.index! + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
@@ -65,7 +65,7 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 			result += '"historie" : [ ';
 			for (let i = 0; i < obj.historie.size(); i++) {
 				const elem = obj.historie.get(i);
-				result += BKLehrplan.transpilerToJSON(elem);
+				result += BKBildungsplan.transpilerToJSON(elem);
 				if (i < obj.historie.size() - 1)
 					result += ',';
 			}
@@ -76,7 +76,7 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<BKLehrplanKatalogEintrag>) : string {
+	public static transpilerToJSONPatch(obj : Partial<BKBildungsplanKatalogEintrag>) : string {
 		let result = '{';
 		if (typeof obj.index !== "undefined") {
 			result += '"index" : ' + obj.index + ',';
@@ -94,7 +94,7 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 				result += '"historie" : [ ';
 				for (let i = 0; i < obj.historie.size(); i++) {
 					const elem = obj.historie.get(i);
-					result += BKLehrplan.transpilerToJSON(elem);
+					result += BKBildungsplan.transpilerToJSON(elem);
 					if (i < obj.historie.size() - 1)
 						result += ',';
 				}
@@ -108,6 +108,6 @@ export class BKLehrplanKatalogEintrag extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_bk_BKLehrplanKatalogEintrag(obj : unknown) : BKLehrplanKatalogEintrag {
-	return obj as BKLehrplanKatalogEintrag;
+export function cast_de_svws_nrw_core_data_bk_BKBildungsplanKatalogEintrag(obj : unknown) : BKBildungsplanKatalogEintrag {
+	return obj as BKBildungsplanKatalogEintrag;
 }

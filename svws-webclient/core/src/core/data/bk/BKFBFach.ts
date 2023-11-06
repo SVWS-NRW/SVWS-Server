@@ -21,7 +21,7 @@ export class BKFBFach extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
-	 * Die Fachklassen, in denen das Fach im Lehrplan steht
+	 * Die Fachklassen, in denen das Fach im Bildungsplan steht
 	 */
 	public fachklassen : List<BKFachklassenSchluessel> = new ArrayList();
 

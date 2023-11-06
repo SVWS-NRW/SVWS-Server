@@ -5,7 +5,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { BKFachklassenSchluessel } from '../../../core/data/bk/BKFachklassenSchluessel';
 
-export class BKLehrplan extends JavaObject {
+export class BKBildungsplan extends JavaObject {
 
 	/**
 	 * Die ID des Katalog-Eintrags.
@@ -48,12 +48,12 @@ export class BKLehrplan extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.bk.BKLehrplan'].includes(name);
+		return ['de.svws_nrw.core.data.bk.BKBildungsplan'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): BKLehrplan {
+	public static transpilerFromJSON(json : string): BKBildungsplan {
 		const obj = JSON.parse(json);
-		const result = new BKLehrplan();
+		const result = new BKBildungsplan();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -78,7 +78,7 @@ export class BKLehrplan extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : BKLehrplan) : string {
+	public static transpilerToJSON(obj : BKBildungsplan) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"fachklasse" : ' + BKFachklassenSchluessel.transpilerToJSON(obj.fachklasse) + ',';
@@ -114,7 +114,7 @@ export class BKLehrplan extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<BKLehrplan>) : string {
+	public static transpilerToJSONPatch(obj : Partial<BKBildungsplan>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
@@ -166,6 +166,6 @@ export class BKLehrplan extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_bk_BKLehrplan(obj : unknown) : BKLehrplan {
-	return obj as BKLehrplan;
+export function cast_de_svws_nrw_core_data_bk_BKBildungsplan(obj : unknown) : BKBildungsplan {
+	return obj as BKBildungsplan;
 }

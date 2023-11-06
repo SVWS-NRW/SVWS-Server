@@ -9,13 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
- * Diese Klasse spezifiziert ein Lernfeld, das Teil der Klasse BKLehrplan ist.
- * Sie spezifiziert ein Lernfeld laut Lehrplan mit der Nummer des Lernfelds,
+ * Diese Klasse spezifiziert ein Lernfeld, das Teil der Klasse BKBildungsplan ist.
+ * Sie spezifiziert ein Lernfeld laut Bildungsplan mit der Nummer des Lernfelds,
  * die komplette Bezeichnung, das zugehörige Bündelfach (in seltenen Fällen
  * mehr als eins), das Ausbildungsjahr sowie den Zeitrichtwert.
  */
 @XmlRootElement
-@Schema(description = "ein Lernfeld mit den Grunddaten aus dem Lehrplan")
+@Schema(description = "ein Lernfeld mit den Grunddaten aus dem Bildungsplan")
 @TranspilerDTO
 public class BKLernfeld {
 

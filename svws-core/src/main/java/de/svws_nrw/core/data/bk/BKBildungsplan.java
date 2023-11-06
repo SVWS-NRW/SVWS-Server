@@ -10,19 +10,19 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert einen Historieneintrag eines Lehrplans aus dem Katalog der BK-Lehrpläne
+ * Sie liefert einen Historieneintrag eines Bildungsplans aus dem Katalog der BK-Lehrpläne
  */
 @XmlRootElement
 @Schema(description = "ein Historiendatum eines Eintrags in dem Katalog der BK-Lehrpläne.")
 @TranspilerDTO
-public class BKLehrplan {
+public class BKBildungsplan {
 
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(description = "die ID des Katalog-Eintrags", example = "1010004001")
 	public long id = -1;
 
 	/** Der zugehörige Bildungsgang. */
-	@Schema(description = "Der zugehörige Bildungsgang des Lehrplans", example = "{10,10004}")
+	@Schema(description = "Der zugehörige Bildungsgang des Bildungsplans", example = "{10,10004}")
 	public @NotNull BKFachklassenSchluessel fachklasse = new BKFachklassenSchluessel();
 
 	/** Die Dauer des Bildungsgangs in Halbjahren. */
@@ -30,7 +30,7 @@ public class BKLehrplan {
 	public int dauer = -1;
 
 	/** Die zugehörigen Bündelfächer */
-	@Schema(description = "Die zugehörigen Bündelfächer des Lehrplans", example = "{1000,2000}")
+	@Schema(description = "Die zugehörigen Bündelfächer des Bildungsplans", example = "{1000,2000}")
 	public @NotNull List<@NotNull BKFBFach> fbFaecher = new ArrayList<>();
 
 	/** Die zugehörige Liste der Lernfelder. */

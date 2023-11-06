@@ -16,15 +16,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "der Katalog der Lehrpläne am BK.")
 @TranspilerDTO
-public class BKLehrplanKatalogEintrag {
+public class BKBildungsplanKatalogIndex {
 
 	/** Der Index (Schulgliederung) für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen */
 	@Schema(description = "der Index (Schulgliederung) für die Verknüpfung von einem Bildungsgang des Berufskollegs mit Fachklassen", example = "100")
-	public @NotNull Integer index = -1;
-
-	/** Der Fachklassenschlüssel. */
-	@Schema(description = "der Fachklassenschlüssel", example = "10004")
-	public @NotNull String schluessel = "";
+	public int index;
 
 	/** Die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht. */
 	@Schema(description = "die Version des Teilkatalogs. Diese wird bei Änderungen am Katalog erhöht", example = "3")
@@ -32,6 +28,6 @@ public class BKLehrplanKatalogEintrag {
 
 	/** Die Einträge des Katalogs. */
 	@Schema(description = "die Lehrpläne des Katalogs")
-	public @NotNull List<@NotNull BKLehrplan> historie = new ArrayList<>();
+	public @NotNull List<@NotNull BKBildungsplanKatalogEintrag> lehrplaene = new ArrayList<>();
 
 }
