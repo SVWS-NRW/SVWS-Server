@@ -59,11 +59,6 @@ export class LehrerPersonaldaten extends JavaObject {
 	public abgangsgrund : string | null = null;
 
 	/**
-	 * Die Schulnummer der Stammschule, sofern diese abweicht.
-	 */
-	public stammschulnummer : string | null = null;
-
-	/**
 	 * Die Abschnittsdaten des Lehrers.
 	 */
 	public readonly abschnittsdaten : List<LehrerPersonalabschnittsdaten> = new ArrayList();
@@ -107,7 +102,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		result.zugangsgrund = typeof obj.zugangsgrund === "undefined" ? null : obj.zugangsgrund === null ? null : obj.zugangsgrund;
 		result.abgangsdatum = typeof obj.abgangsdatum === "undefined" ? null : obj.abgangsdatum === null ? null : obj.abgangsdatum;
 		result.abgangsgrund = typeof obj.abgangsgrund === "undefined" ? null : obj.abgangsgrund === null ? null : obj.abgangsgrund;
-		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
 		if ((obj.abschnittsdaten !== undefined) && (obj.abschnittsdaten !== null)) {
 			for (const elem of obj.abschnittsdaten) {
 				result.abschnittsdaten?.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(JSON.stringify(elem)));
@@ -143,7 +137,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
 		result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
 		result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
-		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		if (!obj.abschnittsdaten) {
 			result += '"abschnittsdaten" : []';
 		} else {
@@ -228,9 +221,6 @@ export class LehrerPersonaldaten extends JavaObject {
 		}
 		if (typeof obj.abgangsgrund !== "undefined") {
 			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
-		}
-		if (typeof obj.stammschulnummer !== "undefined") {
-			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
 		if (typeof obj.abschnittsdaten !== "undefined") {
 			if (!obj.abschnittsdaten) {

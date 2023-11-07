@@ -118,53 +118,15 @@ import de.svws_nrw.csv.converter.current.PersonalTypConverterDeserializer;
 @NamedQuery(name = "DTOLehrer.datumabgang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.DatumAbgang IN :value")
 @NamedQuery(name = "DTOLehrer.grundabgang", query = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang = :value")
 @NamedQuery(name = "DTOLehrer.grundabgang.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.GrundAbgang IN :value")
-@NamedQuery(name = "DTOLehrer.pflichtstdsoll", query = "SELECT e FROM DTOLehrer e WHERE e.PflichtstdSoll = :value")
-@NamedQuery(name = "DTOLehrer.pflichtstdsoll.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.PflichtstdSoll IN :value")
-@NamedQuery(name = "DTOLehrer.rechtsverhaeltnis", query = "SELECT e FROM DTOLehrer e WHERE e.Rechtsverhaeltnis = :value")
-@NamedQuery(name = "DTOLehrer.rechtsverhaeltnis.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Rechtsverhaeltnis IN :value")
-@NamedQuery(name = "DTOLehrer.beschaeftigungsart", query = "SELECT e FROM DTOLehrer e WHERE e.Beschaeftigungsart = :value")
-@NamedQuery(name = "DTOLehrer.beschaeftigungsart.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Beschaeftigungsart IN :value")
-@NamedQuery(name = "DTOLehrer.einsatzstatus", query = "SELECT e FROM DTOLehrer e WHERE e.Einsatzstatus = :value")
-@NamedQuery(name = "DTOLehrer.einsatzstatus.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Einsatzstatus IN :value")
-@NamedQuery(name = "DTOLehrer.stammschulnr", query = "SELECT e FROM DTOLehrer e WHERE e.StammschulNr = :value")
-@NamedQuery(name = "DTOLehrer.stammschulnr.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.StammschulNr IN :value")
-@NamedQuery(name = "DTOLehrer.unterrichtsstd", query = "SELECT e FROM DTOLehrer e WHERE e.UnterrichtsStd = :value")
-@NamedQuery(name = "DTOLehrer.unterrichtsstd.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.UnterrichtsStd IN :value")
-@NamedQuery(name = "DTOLehrer.mehrleistungstd", query = "SELECT e FROM DTOLehrer e WHERE e.MehrleistungStd = :value")
-@NamedQuery(name = "DTOLehrer.mehrleistungstd.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.MehrleistungStd IN :value")
-@NamedQuery(name = "DTOLehrer.entlastungstd", query = "SELECT e FROM DTOLehrer e WHERE e.EntlastungStd = :value")
-@NamedQuery(name = "DTOLehrer.entlastungstd.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.EntlastungStd IN :value")
-@NamedQuery(name = "DTOLehrer.anrechnungstd", query = "SELECT e FROM DTOLehrer e WHERE e.AnrechnungStd = :value")
-@NamedQuery(name = "DTOLehrer.anrechnungstd.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.AnrechnungStd IN :value")
-@NamedQuery(name = "DTOLehrer.reststd", query = "SELECT e FROM DTOLehrer e WHERE e.RestStd = :value")
-@NamedQuery(name = "DTOLehrer.reststd.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.RestStd IN :value")
-@NamedQuery(name = "DTOLehrer.lpassword", query = "SELECT e FROM DTOLehrer e WHERE e.LPassword = :value")
-@NamedQuery(name = "DTOLehrer.lpassword.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.LPassword IN :value")
-@NamedQuery(name = "DTOLehrer.pwaktuell", query = "SELECT e FROM DTOLehrer e WHERE e.PWAktuell = :value")
-@NamedQuery(name = "DTOLehrer.pwaktuell.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.PWAktuell IN :value")
-@NamedQuery(name = "DTOLehrer.schildweb_fl", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_FL = :value")
-@NamedQuery(name = "DTOLehrer.schildweb_fl.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_FL IN :value")
-@NamedQuery(name = "DTOLehrer.schildweb_kl", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_KL = :value")
-@NamedQuery(name = "DTOLehrer.schildweb_kl.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_KL IN :value")
-@NamedQuery(name = "DTOLehrer.schildweb_config", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_Config = :value")
-@NamedQuery(name = "DTOLehrer.schildweb_config.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.SchILDweb_Config IN :value")
 @NamedQuery(name = "DTOLehrer.kennworttools", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools = :value")
 @NamedQuery(name = "DTOLehrer.kennworttools.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortTools IN :value")
-@NamedQuery(name = "DTOLehrer.antwort1", query = "SELECT e FROM DTOLehrer e WHERE e.Antwort1 = :value")
-@NamedQuery(name = "DTOLehrer.antwort1.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Antwort1 IN :value")
-@NamedQuery(name = "DTOLehrer.antwort2", query = "SELECT e FROM DTOLehrer e WHERE e.Antwort2 = :value")
-@NamedQuery(name = "DTOLehrer.antwort2.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.Antwort2 IN :value")
 @NamedQuery(name = "DTOLehrer.kennworttoolsaktuell", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell = :value")
 @NamedQuery(name = "DTOLehrer.kennworttoolsaktuell.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.KennwortToolsAktuell IN :value")
-@NamedQuery(name = "DTOLehrer.xnmpassword", query = "SELECT e FROM DTOLehrer e WHERE e.XNMPassword = :value")
-@NamedQuery(name = "DTOLehrer.xnmpassword.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.XNMPassword IN :value")
-@NamedQuery(name = "DTOLehrer.xnmpassword2", query = "SELECT e FROM DTOLehrer e WHERE e.XNMPassword2 = :value")
-@NamedQuery(name = "DTOLehrer.xnmpassword2.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.XNMPassword2 IN :value")
 @NamedQuery(name = "DTOLehrer.credentialid", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID = :value")
 @NamedQuery(name = "DTOLehrer.credentialid.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "DTOLehrer.primaryKeyQuery", query = "SELECT e FROM DTOLehrer e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOLehrer.all.migration", query = "SELECT e FROM DTOLehrer e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "PflichtstdSoll", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "StammschulNr", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd", "LPassword", "PWAktuell", "SchILDweb_FL", "SchILDweb_KL", "SchILDweb_Config", "KennwortTools", "Antwort1", "Antwort2", "KennwortToolsAktuell", "XNMPassword", "XNMPassword2", "CredentialID"})
+@JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "KennwortTools", "KennwortToolsAktuell", "CredentialID"})
 public final class DTOLehrer {
 
 	/** Eindeutige ID zur Kennzeichnung des Lehrer-Datensatzes */
@@ -383,116 +345,15 @@ public final class DTOLehrer {
 	@JsonProperty
 	public String GrundAbgang;
 
-	/** Das Pflichtstundensoll des Lehrers */
-	@Column(name = "PflichtstdSoll")
-	@JsonProperty
-	public Double PflichtstdSoll;
-
-	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) */
-	@Column(name = "Rechtsverhaeltnis")
-	@JsonProperty
-	public String Rechtsverhaeltnis;
-
-	/** Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) */
-	@Column(name = "Beschaeftigungsart")
-	@JsonProperty
-	public String Beschaeftigungsart;
-
-	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) */
-	@Column(name = "Einsatzstatus")
-	@JsonProperty
-	public String Einsatzstatus;
-
-	/** Die Schulnummer der Stammschule, sofern diese abweicht */
-	@Column(name = "StammschulNr")
-	@JsonProperty
-	public String StammschulNr;
-
-	/** Berechnetes Feld: Die Anzahl der unterrichteten Stunden */
-	@Column(name = "UnterrichtsStd")
-	@JsonProperty
-	public Double UnterrichtsStd;
-
-	/** Berechnetes Feld: Die Stunden für eine Mehrleistung */
-	@Column(name = "MehrleistungStd")
-	@JsonProperty
-	public Double MehrleistungStd;
-
-	/** Berechnetes Feld: Die Stunden für eine Entlastung */
-	@Column(name = "EntlastungStd")
-	@JsonProperty
-	public Double EntlastungStd;
-
-	/** Berechnetes Feld: Die angerechneten Stunden für eine nichtunterrichtliche Tätigkeit */
-	@Column(name = "AnrechnungStd")
-	@JsonProperty
-	public Double AnrechnungStd;
-
-	/** Berechnetes Feld: Reststunden */
-	@Column(name = "RestStd")
-	@JsonProperty
-	public Double RestStd;
-
 	/** Wird für das GS-Modul genutzt (gehashed). */
-	@Column(name = "LPassword")
-	@JsonProperty
-	public String LPassword;
-
-	/** Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist */
-	@Column(name = "PWAktuell")
-	@JsonProperty
-	public String PWAktuell;
-
-	/** DEPRECATED: nicht mehr genutzt SchildWeb */
-	@Column(name = "SchILDweb_FL")
-	@JsonProperty
-	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean SchILDweb_FL;
-
-	/** DEPRECATED: nicht mehr genutzt SchildWeb */
-	@Column(name = "SchILDweb_KL")
-	@JsonProperty
-	@Convert(converter = BooleanPlusMinusDefaultPlusConverter.class)
-	@JsonSerialize(using = BooleanPlusMinusDefaultPlusConverterSerializer.class)
-	@JsonDeserialize(using = BooleanPlusMinusDefaultPlusConverterDeserializer.class)
-	public Boolean SchILDweb_KL;
-
-	/** DEPRECATED: nicht mehr genutzt SchildWeb */
-	@Column(name = "SchILDweb_Config")
-	@JsonProperty
-	public String SchILDweb_Config;
-
-	/** DEPRECATED: wurde nie verwendet */
 	@Column(name = "KennwortTools")
 	@JsonProperty
 	public String KennwortTools;
 
-	/** DEPRECATED: wurde nie verwendet */
-	@Column(name = "Antwort1")
-	@JsonProperty
-	public String Antwort1;
-
-	/** DEPRECATED: wurde nie verwendet */
-	@Column(name = "Antwort2")
-	@JsonProperty
-	public String Antwort2;
-
-	/** DEPRECATED: wurde nie verwendet */
+	/** Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist */
 	@Column(name = "KennwortToolsAktuell")
 	@JsonProperty
 	public String KennwortToolsAktuell;
-
-	/** Passwort für das XNM-Tool  */
-	@Column(name = "XNMPassword")
-	@JsonProperty
-	public String XNMPassword;
-
-	/** zweites Passwort für das XNM-Tool  */
-	@Column(name = "XNMPassword2")
-	@JsonProperty
-	public String XNMPassword2;
 
 	/** Die ID des Credential-Eintrags */
 	@Column(name = "CredentialID")
@@ -553,7 +414,7 @@ public final class DTOLehrer {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", PflichtstdSoll=" + this.PflichtstdSoll + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", StammschulNr=" + this.StammschulNr + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ", LPassword=" + this.LPassword + ", PWAktuell=" + this.PWAktuell + ", SchILDweb_FL=" + this.SchILDweb_FL + ", SchILDweb_KL=" + this.SchILDweb_KL + ", SchILDweb_Config=" + this.SchILDweb_Config + ", KennwortTools=" + this.KennwortTools + ", Antwort1=" + this.Antwort1 + ", Antwort2=" + this.Antwort2 + ", KennwortToolsAktuell=" + this.KennwortToolsAktuell + ", XNMPassword=" + this.XNMPassword + ", XNMPassword2=" + this.XNMPassword2 + ", CredentialID=" + this.CredentialID + ")";
+		return "DTOLehrer(ID=" + this.ID + ", GU_ID=" + this.GU_ID + ", Kuerzel=" + this.Kuerzel + ", kuerzelLID=" + this.kuerzelLID + ", Nachname=" + this.Nachname + ", Vorname=" + this.Vorname + ", PersonTyp=" + this.PersonTyp + ", Sortierung=" + this.Sortierung + ", Sichtbar=" + this.Sichtbar + ", Aenderbar=" + this.Aenderbar + ", FuerExport=" + this.FuerExport + ", statistikRelevant=" + this.statistikRelevant + ", Strassenname=" + this.Strassenname + ", HausNr=" + this.HausNr + ", HausNrZusatz=" + this.HausNrZusatz + ", Ort_ID=" + this.Ort_ID + ", Ortsteil_ID=" + this.Ortsteil_ID + ", telefon=" + this.telefon + ", telefonMobil=" + this.telefonMobil + ", eMailPrivat=" + this.eMailPrivat + ", eMailDienstlich=" + this.eMailDienstlich + ", staatsangehoerigkeit=" + this.staatsangehoerigkeit + ", Geburtsdatum=" + this.Geburtsdatum + ", Geschlecht=" + this.Geschlecht + ", Anrede=" + this.Anrede + ", Amtsbezeichnung=" + this.Amtsbezeichnung + ", Titel=" + this.Titel + ", Faecher=" + this.Faecher + ", identNrTeil1=" + this.identNrTeil1 + ", identNrTeil2SerNr=" + this.identNrTeil2SerNr + ", PANr=" + this.PANr + ", personalNrLBV=" + this.personalNrLBV + ", verguetungsSchluessel=" + this.verguetungsSchluessel + ", DatumZugang=" + this.DatumZugang + ", GrundZugang=" + this.GrundZugang + ", DatumAbgang=" + this.DatumAbgang + ", GrundAbgang=" + this.GrundAbgang + ", KennwortTools=" + this.KennwortTools + ", KennwortToolsAktuell=" + this.KennwortToolsAktuell + ", CredentialID=" + this.CredentialID + ")";
 	}
 
 }

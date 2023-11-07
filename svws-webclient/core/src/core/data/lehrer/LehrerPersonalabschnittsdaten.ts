@@ -37,6 +37,11 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	 */
 	public einsatzstatus : string | null = null;
 
+	/**
+	 * Die Schulnummer der Stammschule, sofern diese abweicht.
+	 */
+	public stammschulnummer : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -62,6 +67,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		result.rechtsverhaeltnis = typeof obj.rechtsverhaeltnis === "undefined" ? null : obj.rechtsverhaeltnis === null ? null : obj.rechtsverhaeltnis;
 		result.beschaeftigungsart = typeof obj.beschaeftigungsart === "undefined" ? null : obj.beschaeftigungsart === null ? null : obj.beschaeftigungsart;
 		result.einsatzstatus = typeof obj.einsatzstatus === "undefined" ? null : obj.einsatzstatus === null ? null : obj.einsatzstatus;
+		result.stammschulnummer = typeof obj.stammschulnummer === "undefined" ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
 		return result;
 	}
 
@@ -74,6 +80,7 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
 		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
 		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,6 +108,9 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 		}
 		if (typeof obj.einsatzstatus !== "undefined") {
 			result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
+		}
+		if (typeof obj.stammschulnummer !== "undefined") {
+			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

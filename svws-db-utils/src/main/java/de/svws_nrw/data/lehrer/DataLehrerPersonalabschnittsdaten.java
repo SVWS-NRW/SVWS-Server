@@ -16,6 +16,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -50,6 +51,7 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 		daten.rechtsverhaeltnis = lehrer.Rechtsverhaeltnis;
 		daten.beschaeftigungsart = lehrer.Beschaeftigungsart;
 		daten.einsatzstatus = lehrer.Einsatzstatus;
+		daten.stammschulnummer = lehrer.StammschulNr;
 		return daten;
 	};
 
@@ -135,6 +137,9 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
 					throw OperationError.NOT_FOUND.exception();
 				abschnittsdaten.Einsatzstatus = es.daten.kuerzel;
 			}
+		}),
+		Map.entry("stammschulnummer", (conn, lehrer, value, map) -> {
+			lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_LehrerAbschnittsdaten.col_StammschulNr.datenlaenge());
 		})
 	);
 

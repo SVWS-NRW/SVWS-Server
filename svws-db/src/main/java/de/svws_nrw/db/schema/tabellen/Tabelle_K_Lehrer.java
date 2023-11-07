@@ -216,95 +216,114 @@ public class Tabelle_K_Lehrer extends SchemaTabelle {
 	public SchemaTabelleSpalte col_GrundAbgang = add("GrundAbgang", SchemaDatentypen.VARCHAR, false).setDatenlaenge(10)
 		.setJavaComment("Der Grund für das Verlassen der Schule durch den Lehrer");
 
-	/** Die Definition der Tabellenspalte PflichtstdSoll */
-	public SchemaTabelleSpalte col_PflichtstdSoll = add("PflichtstdSoll", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Das Pflichtstundensoll des Lehrers");
+	/** Die Definition der Tabellenspalte KennwortTools */
+	public SchemaTabelleSpalte col_KennwortTools = add("KennwortTools", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+		.setJavaComment("Wird für das GS-Modul genutzt (gehashed).");
 
-	/** Die Definition der Tabellenspalte Rechtsverhaeltnis */
-	public SchemaTabelleSpalte col_Rechtsverhaeltnis = add("Rechtsverhaeltnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setJavaComment("Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit)");
-
-	/** Die Definition der Tabellenspalte Beschaeftigungsart */
-	public SchemaTabelleSpalte col_Beschaeftigungsart = add("Beschaeftigungsart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-		.setJavaComment("Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.)");
-
-	/** [ASD] Die Definition der Tabellenspalte Einsatzstatus */
-	public SchemaTabelleSpalte col_Einsatzstatus = add("Einsatzstatus", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
-		.setJavaComment("[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig)");
-
-	/** Die Definition der Tabellenspalte StammschulNr */
-	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
-		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht");
-
-	/** Die Definition der Tabellenspalte UnterrichtsStd */
-	public SchemaTabelleSpalte col_UnterrichtsStd = add("UnterrichtsStd", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Berechnetes Feld: Die Anzahl der unterrichteten Stunden");
-
-	/** Die Definition der Tabellenspalte MehrleistungStd */
-	public SchemaTabelleSpalte col_MehrleistungStd = add("MehrleistungStd", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Berechnetes Feld: Die Stunden für eine Mehrleistung");
-
-	/** Die Definition der Tabellenspalte EntlastungStd */
-	public SchemaTabelleSpalte col_EntlastungStd = add("EntlastungStd", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Berechnetes Feld: Die Stunden für eine Entlastung");
-
-	/** Die Definition der Tabellenspalte AnrechnungStd */
-	public SchemaTabelleSpalte col_AnrechnungStd = add("AnrechnungStd", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Berechnetes Feld: Die angerechneten Stunden für eine nichtunterrichtliche Tätigkeit");
-
-	/** Die Definition der Tabellenspalte RestStd */
-	public SchemaTabelleSpalte col_RestStd = add("RestStd", SchemaDatentypen.FLOAT, false)
-		.setJavaComment("Berechnetes Feld: Reststunden");
+	/** Die Definition der Tabellenspalte KennwortToolsAktuell */
+	public SchemaTabelleSpalte col_KennwortToolsAktuell = add("KennwortToolsAktuell", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
+		.setDefault("-;5")
+		.setJavaComment("Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist");
 
 	/** Die Definition der Tabellenspalte LPassword */
 	public SchemaTabelleSpalte col_LPassword = add("LPassword", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Wird für das GS-Modul genutzt (gehashed).");
+		.setJavaComment("DEPRECATED: Wird für das GS-Modul genutzt (gehashed).")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte PWAktuell */
 	public SchemaTabelleSpalte col_PWAktuell = add("PWAktuell", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 		.setDefault("-;5")
-		.setJavaComment("Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist");
+		.setJavaComment("DEPRECATED: Gibt an ob das LPassword geändert wurde oder ob es noch das Initialkennwort ist")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte PflichtstdSoll */
+	public SchemaTabelleSpalte col_PflichtstdSoll = add("PflichtstdSoll", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Das Pflichtstundensoll des Lehrers")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte Rechtsverhaeltnis */
+	public SchemaTabelleSpalte col_Rechtsverhaeltnis = add("Rechtsverhaeltnis", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+		.setJavaComment("Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit)")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte Beschaeftigungsart */
+	public SchemaTabelleSpalte col_Beschaeftigungsart = add("Beschaeftigungsart", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+		.setJavaComment("Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.)")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** [ASD] Die Definition der Tabellenspalte Einsatzstatus */
+	public SchemaTabelleSpalte col_Einsatzstatus = add("Einsatzstatus", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
+		.setJavaComment("[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig)")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte StammschulNr */
+	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
+		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte UnterrichtsStd */
+	public SchemaTabelleSpalte col_UnterrichtsStd = add("UnterrichtsStd", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Berechnetes Feld: Die Anzahl der unterrichteten Stunden")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte MehrleistungStd */
+	public SchemaTabelleSpalte col_MehrleistungStd = add("MehrleistungStd", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Berechnetes Feld: Die Stunden für eine Mehrleistung")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte EntlastungStd */
+	public SchemaTabelleSpalte col_EntlastungStd = add("EntlastungStd", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Berechnetes Feld: Die Stunden für eine Entlastung")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte AnrechnungStd */
+	public SchemaTabelleSpalte col_AnrechnungStd = add("AnrechnungStd", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Berechnetes Feld: Die angerechneten Stunden für eine nichtunterrichtliche Tätigkeit")
+		.setVeraltet(SchemaRevisionen.REV_13);
+
+	/** Die Definition der Tabellenspalte RestStd */
+	public SchemaTabelleSpalte col_RestStd = add("RestStd", SchemaDatentypen.FLOAT, false)
+		.setJavaComment("Berechnetes Feld: Reststunden")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte SchILDweb_FL */
 	public SchemaTabelleSpalte col_SchILDweb_FL = add("SchILDweb_FL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
+		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte SchILDweb_KL */
 	public SchemaTabelleSpalte col_SchILDweb_KL = add("SchILDweb_KL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setDefault("+")
 		.setConverter(BooleanPlusMinusDefaultPlusConverter.class)
-		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
+		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte SchILDweb_Config */
 	public SchemaTabelleSpalte col_SchILDweb_Config = add("SchILDweb_Config", SchemaDatentypen.TEXT, false)
-		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb");
-
-	/** Die Definition der Tabellenspalte KennwortTools */
-	public SchemaTabelleSpalte col_KennwortTools = add("KennwortTools", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("DEPRECATED: wurde nie verwendet");
+		.setJavaComment("DEPRECATED: nicht mehr genutzt SchildWeb")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte Antwort1 */
 	public SchemaTabelleSpalte col_Antwort1 = add("Antwort1", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("DEPRECATED: wurde nie verwendet");
+		.setJavaComment("DEPRECATED: wurde nie verwendet")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte Antwort2 */
 	public SchemaTabelleSpalte col_Antwort2 = add("Antwort2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("DEPRECATED: wurde nie verwendet");
-
-	/** Die Definition der Tabellenspalte KennwortToolsAktuell */
-	public SchemaTabelleSpalte col_KennwortToolsAktuell = add("KennwortToolsAktuell", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-		.setDefault("-;5")
-		.setJavaComment("DEPRECATED: wurde nie verwendet");
+		.setJavaComment("DEPRECATED: wurde nie verwendet")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte XNMPassword */
 	public SchemaTabelleSpalte col_XNMPassword = add("XNMPassword", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("Passwort für das XNM-Tool ");
+		.setJavaComment("Passwort für das XNM-Tool ")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte XNMPassword2 */
 	public SchemaTabelleSpalte col_XNMPassword2 = add("XNMPassword2", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
-		.setJavaComment("zweites Passwort für das XNM-Tool ");
+		.setJavaComment("zweites Passwort für das XNM-Tool ")
+		.setVeraltet(SchemaRevisionen.REV_13);
 
 	/** Die Definition der Tabellenspalte CredentialID */
 	public SchemaTabelleSpalte col_CredentialID = add("CredentialID", SchemaDatentypen.BIGINT, false)

@@ -43,6 +43,10 @@ public class LehrerPersonalabschnittsdaten {
 	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.", example = "*")
 	public String einsatzstatus;
 
+	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
+	@Schema(description = "Die Schulnummer der Stammschule, sofern diese abweicht.", example = "168890")
+	public String stammschulnummer;
+
 
 	// TODO Mehr- und Minder leistungen als Array mit weiteren DTO-Klassen
 }

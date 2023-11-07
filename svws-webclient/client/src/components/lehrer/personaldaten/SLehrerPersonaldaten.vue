@@ -21,7 +21,7 @@
 				<svws-ui-input-number placeholder="Pflichtstundensoll" :model-value="personalabschnittsdaten?.pflichtstundensoll ?? 0.0" @change="pflichtstundensoll => patchAbschnittsdaten({ pflichtstundensoll: pflichtstundensoll }, personalabschnittsdaten?.id ?? -1)" />
 				<svws-ui-select title="Einsatzstatus" v-model="einsatzstatus" :items="LehrerEinsatzstatus.values()"
 					:item-text="(i: LehrerEinsatzstatus) =>i.daten.text" />
-				<svws-ui-text-input placeholder="Stammschule" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer => patch({stammschulnummer})" type="text" />
+				<svws-ui-text-input placeholder="Stammschule" :model-value="personalabschnittsdaten?.stammschulnummer" @change="stammschulnummer => patchAbschnittsdaten({ stammschulnummer }, personalabschnittsdaten?.id ?? -1)" type="text" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Lehrämter">
@@ -41,7 +41,6 @@
 				<svws-ui-select title="Nicht unterichtliche Tätigkeiten" v-model="anrechnungsgrund" :items="LehrerAnrechnungsgrund.values()"
 					:item-text="(i: LehrerAnrechnungsgrund) =>i.daten.text" />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Stammschulnummer" :model-value="personaldaten.stammschulnummer" @change="stammschulnummer => patch({stammschulnummer})" type="text" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 	</div>

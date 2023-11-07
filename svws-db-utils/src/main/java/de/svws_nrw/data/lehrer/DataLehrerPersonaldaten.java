@@ -50,7 +50,6 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 		daten.zugangsgrund = lehrer.GrundZugang;
 		daten.abgangsdatum = lehrer.DatumAbgang;
 		daten.abgangsgrund = lehrer.GrundAbgang;
-		daten.stammschulnummer = lehrer.StammschulNr;
 		return daten;
 	};
 
@@ -129,9 +128,6 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 					throw OperationError.NOT_FOUND.exception();
 				lehrer.GrundAbgang = ag.daten.kuerzel;
 			}
-		}),
-		Map.entry("stammschulnummer", (conn, lehrer, value, map) -> {
-			lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_K_Lehrer.col_StammschulNr.datenlaenge());
 		})
 	);
 

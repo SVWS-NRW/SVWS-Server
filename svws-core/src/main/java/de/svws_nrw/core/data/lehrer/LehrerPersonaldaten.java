@@ -58,10 +58,6 @@ public class LehrerPersonaldaten {
 	@Schema(description = "Der Grund für den Abgang des Lehrers - siehe Statistik-Katalog.", example = "RUHEST")
 	public String abgangsgrund;
 
-	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
-	@Schema(description = "Die Schulnummer der Stammschule, sofern diese abweicht.", example = "168890")
-	public String stammschulnummer;
-
 	/** Die Abschnittsdaten des Lehrers. */
 	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class, description = "Ein Array mit den Abschnittsdaten des Lehrers zu den einzelnen Schuljahresabschnitten."))
 	public final @NotNull List<@NotNull LehrerPersonalabschnittsdaten> abschnittsdaten = new ArrayList<>();
