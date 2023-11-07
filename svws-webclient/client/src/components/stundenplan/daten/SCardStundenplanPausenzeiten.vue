@@ -35,7 +35,7 @@
 		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
 		importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
-		listPausenzeiten: List<StundenplanPausenzeit>;
+		listPausenzeiten: () => List<StundenplanPausenzeit>;
 	}>();
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();

@@ -4,7 +4,7 @@
 		<template #modalTitle>Pausenzeiten aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listPausenzeiten.size()" :items="listPausenzeiten" clickable :clicked="pausenzeit" selectable v-bind="selected" />
+				<svws-ui-table v-if="listPausenzeiten().size()" :items="listPausenzeiten()" clickable :clicked="pausenzeit" selectable v-model="selected" />
 				<div v-else>Keine Einträge im Pausenzeiten-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Pausenzeiten-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
@@ -12,7 +12,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -24,7 +24,7 @@
 
 	const props = defineProps<{
 		importPausenzeiten: (Pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
-		listPausenzeiten: List<StundenplanPausenzeit>;
+		listPausenzeiten: () => List<StundenplanPausenzeit>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -37,4 +37,8 @@
 		showModal().value = true;
 	}
 
+	async function importer() {
+		await props.importPausenzeiten(selected.value);
+		showModal().value = false;
+	}
 </script>

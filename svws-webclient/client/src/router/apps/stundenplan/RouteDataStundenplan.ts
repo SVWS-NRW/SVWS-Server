@@ -157,7 +157,21 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	importRaeume = async (raeume: StundenplanRaum[]) => {}
+	importRaeume = async (raeume: Partial<StundenplanRaum>[]) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		api.status.start();
+		const list = new ArrayList<StundenplanRaum>()
+		for (const item of raeume) {
+			delete item.id;
+			const raum = await api.server.addStundenplanRaum(item, api.schema, id);
+			list.add(raum);
+		}
+		this.stundenplanManager.raumAddAll(list);
+		this.commit();
+		api.status.stop();
+	}
 
 	addPausenzeit = async (pausenzeit: Partial<StundenplanPausenzeit>) => {
 		const id = this._state.value.auswahl?.id;
@@ -195,7 +209,21 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	importPausenzeiten = async (pausenzeiten: StundenplanPausenzeit[]) => {}
+	importPausenzeiten = async (pausenzeiten: Partial<StundenplanPausenzeit>[]) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		api.status.start();
+		const list = new ArrayList<StundenplanPausenzeit>()
+		for (const item of pausenzeiten) {
+			delete item.id;
+			const pausenzeit = await api.server.addStundenplanPausenzeit(item, api.schema, id)
+			list.add(pausenzeit);
+		}
+		this.stundenplanManager.pausenzeitAddAll(list);
+		this.commit();
+		api.status.stop();
+	}
 
 	addAufsichtUndBereich = async (data: Partial<StundenplanPausenaufsicht>) => {
 		api.status.start();
@@ -240,7 +268,20 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-	importAufsichtsbereiche = async (s: StundenplanAufsichtsbereich[]) => {}
+	importAufsichtsbereiche = async (aufsichtsbereiche: Partial<StundenplanAufsichtsbereich>[]) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		api.status.start();
+		const list = new ArrayList<StundenplanAufsichtsbereich>()
+		for (const item of aufsichtsbereiche) {
+			delete item.id;
+			const bereich = await api.server.addStundenplanAufsichtsbereich(item, api.schema, id);
+			list.add(bereich);
+		}
+		this.stundenplanManager.aufsichtsbereichAddAll(list);
+		api.status.stop();
+	}
 
 	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
 		const id = this._state.value.auswahl?.id;
