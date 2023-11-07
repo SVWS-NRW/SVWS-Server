@@ -588,7 +588,12 @@ public final class SVWSKonfiguration {
 	public boolean hasSchema(final String schemaName) {
 		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
 			return false;
-		return dto.dbconfigs.get(schemaName) != null;
+		if (dto.dbconfigs.get(schemaName) != null)
+			return true;
+		for (final String sn : dto.dbconfigs.keySet())
+			if (sn.equalsIgnoreCase(schemaName))
+				return true;
+		return false;
 	}
 
 

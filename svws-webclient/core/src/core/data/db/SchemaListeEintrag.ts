@@ -17,6 +17,11 @@ export class SchemaListeEintrag extends JavaObject {
 	 */
 	public isTainted : boolean = false;
 
+	/**
+	 * Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers eingetragen ist.
+	 */
+	public isInConfig : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -38,6 +43,9 @@ export class SchemaListeEintrag extends JavaObject {
 		if (typeof obj.isTainted === "undefined")
 			 throw new Error('invalid json format, missing attribute isTainted');
 		result.isTainted = obj.isTainted;
+		if (typeof obj.isInConfig === "undefined")
+			 throw new Error('invalid json format, missing attribute isInConfig');
+		result.isInConfig = obj.isInConfig;
 		return result;
 	}
 
@@ -46,6 +54,7 @@ export class SchemaListeEintrag extends JavaObject {
 		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
+		result += '"isInConfig" : ' + obj.isInConfig + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -61,6 +70,9 @@ export class SchemaListeEintrag extends JavaObject {
 		}
 		if (typeof obj.isTainted !== "undefined") {
 			result += '"isTainted" : ' + obj.isTainted + ',';
+		}
+		if (typeof obj.isInConfig !== "undefined") {
+			result += '"isInConfig" : ' + obj.isInConfig + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

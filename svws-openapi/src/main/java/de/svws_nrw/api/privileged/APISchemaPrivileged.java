@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.db.MigrateBody;
@@ -113,6 +114,7 @@ public class APISchemaPrivileged {
 					schemainfo.name = schemaname;
 					schemainfo.revision = version.getRevisionOrDefault(-1);
 					schemainfo.isTainted = version.isTainted();
+					schemainfo.isInConfig = SVWSKonfiguration.get().hasSchema(schemaname);
 					result.add(schemainfo);
 				}
 			}

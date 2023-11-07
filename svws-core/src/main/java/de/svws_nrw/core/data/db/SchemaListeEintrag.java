@@ -26,4 +26,8 @@ public class SchemaListeEintrag {
 	@Schema(description = "gibt an, ob das Schema als \"verdorben\" markiert wurde und deswegen nicht mehr für den produktiven Einsatz in der Schule genutzt werden sollte", example = "false")
 	public boolean isTainted = false;
 
+	/** Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers eingetragen ist. */
+	@Schema(description = "gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers eingetragen ist.", example = "true")
+	public boolean isInConfig = false;
+
 }
