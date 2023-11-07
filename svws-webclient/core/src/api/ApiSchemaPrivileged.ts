@@ -130,6 +130,52 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/liste/alle
+	 *
+	 * Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<String>
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
+	 *
+	 * @returns Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
+	 */
+	public async getSchemaListe() : Promise<List<string>> {
+		const path = "/api/schema/liste/alle";
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<string>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSVWSSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/liste/svws
+	 *
+	 * Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchemaListeEintrag>
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
+	 *
+	 * @returns Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
+	 */
+	public async getSVWSSchemaListe() : Promise<List<SchemaListeEintrag>> {
+		const path = "/api/schema/liste/svws";
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchemaListeEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchemaListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode migrateMariaDBInto für den Zugriff auf die URL https://{hostname}/api/schema/migrate/{schema}/mariadb
 	 *
 	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Die Daten in diesem Schema werden ersetzt.
@@ -479,29 +525,6 @@ export class ApiSchemaPrivileged extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/root/liste
-	 *
-	 * Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<String>
-	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
-	 *
-	 * @returns Die Liste mit allen sichtbaren Schema-Namen in der Datenbank
-	 */
-	public async getSchemaListe() : Promise<List<string>> {
-		const path = "/api/schema/root/liste";
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der POST-Methode migrateMariaDB2Schema für den Zugriff auf die URL https://{hostname}/api/schema/root/migrate/mariadb/{schema}
 	 *
 	 * Migriert die übergebene Datenbank in das Schema mit dem angegebenen Namen. Sollte ein Schema mit dem Namen bereits bestehen, so wird es ersetzt.
@@ -706,29 +729,6 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return SimpleOperationResponse.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSVWSSchemaListe für den Zugriff auf die URL https://{hostname}/api/schema/root/svwsliste
-	 *
-	 * Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchemaListeEintrag>
-	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die SVWS-Schema-Liste der Datenbank auszulesen. Hierfür werden root-Rechte benötigt
-	 *
-	 * @returns Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas
-	 */
-	public async getSVWSSchemaListe() : Promise<List<SchemaListeEintrag>> {
-		const path = "/api/schema/root/svwsliste";
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchemaListeEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchemaListeEintrag.transpilerFromJSON(text)); });
-		return ret;
 	}
 
 

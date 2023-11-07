@@ -90,7 +90,7 @@ public class APISchemaPrivileged {
      * @return die Liste der vorhandenen SVWS-Schemata in der Datenbank
      */
     @GET
-    @Path("/api/schema/root/svwsliste")
+    @Path("/api/schema/liste/svws")
     @Operation(summary = "Liefert eine Liste der SVWS-Schemata.",
     description = "Liefert eine Liste der SVWS-Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
     @ApiResponse(responseCode = "200", description = "Die Schema-Liste mit den Namen und den Versionsinformationen des Schemas",
@@ -130,7 +130,7 @@ public class APISchemaPrivileged {
      * @return          die Liste der vorhandenen Schemata in der Datenbank
      */
     @GET
-    @Path("/api/schema/root/liste")
+    @Path("/api/schema/liste/alle")
     @Operation(summary = "Liefert eine Liste der Schemata.",
     description = "Liefert eine Liste der Schemata. Hierfür werden root-Rechte auf der Datenbank benötigt.")
     @ApiResponse(responseCode = "200", description = "Die Liste mit allen sichtbaren Schema-Namen in der Datenbank",

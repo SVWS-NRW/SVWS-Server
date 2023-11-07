@@ -109,6 +109,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 		// Spezieller DB-Zugriff für "/api/schema/root/" - Hier muss eine Anmeldung mit einem DB-Passwort erfolgen, da Operationen direkt das Schema manipulieren
 		final boolean isDBAuthentication = path.matches("/api/schema/root/.*")
+				|| path.matches("/api/schema/liste/.*")
 				|| path.matches("/api/schema/create/.*")
 				|| path.matches("/api/schema/import/.*")
 				|| path.matches("/api/schema/export/.*")
@@ -135,8 +136,12 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			final boolean useRootSchema = path.matches("/api/schema/root/.*");
 			if (!useRootSchema) {
 				final var pathelements = path.split("/");
-				if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2])))
-					schema = pathelements[4];
+				if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2]))) {
+					if ("liste".equals(pathelements[3]))
+						schema = "information_schema";
+					else
+						schema = pathelements[4];
+				}
 			}
 			// Erstelle eine DB-Konfiguration für den Datenbank-Root-Zugriff mit den angegebenen Benutzerdaten
 			// An dieser Stelle kann nicht vorausgesetzt werden, dass ein anderes SVWS-Schema bereits generiert wurde.
