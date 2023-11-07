@@ -110,11 +110,12 @@ public class APISchemaPrivileged {
 				if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 					continue;
 				if (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE) {
+					final String schemanameConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(schemaname);
 					final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
-					schemainfo.name = schemaname;
+					schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
 					schemainfo.revision = version.getRevisionOrDefault(-1);
 					schemainfo.isTainted = version.isTainted();
-					schemainfo.isInConfig = SVWSKonfiguration.get().hasSchema(schemaname);
+					schemainfo.isInConfig = (schemanameConfig != null);
 					result.add(schemainfo);
 				}
 			}

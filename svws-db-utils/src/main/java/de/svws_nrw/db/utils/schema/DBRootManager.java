@@ -258,8 +258,7 @@ public final class DBRootManager {
 	public boolean dbSchemaExists(final String nameSchema) {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
 			return false;
-		final List<String> schemata = DTOInformationSchema.queryNames(conn);
-		return (schemata != null) && schemata.contains(nameSchema.toLowerCase());
+		return DTOInformationSchema.hasSchemaIgnoreCase(conn, nameSchema);
 	}
 
 
@@ -274,17 +273,19 @@ public final class DBRootManager {
 	public boolean dropDBSchemaIfExists(final String nameSchema) {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
 			return false;
-		final List<String> schemata = DTOInformationSchema.queryNames(conn);
-		if (!schemata.contains(nameSchema.toLowerCase()))
+		final String name = DTOInformationSchema.getSchemanameCaseDB(conn, nameSchema);
+		if (name == null)
 			return true;
 		boolean success = switch (conn.getDBDriver()) {
-			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + nameSchema + "`") > Integer.MIN_VALUE;
-			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + nameSchema + "]") > Integer.MIN_VALUE;
+			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + name + "`") > Integer.MIN_VALUE;
+			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + name + "]") > Integer.MIN_VALUE;
 			default -> false;
 		};
 		// Aktualisieren der DB-Konfiguration
 		if (success)
 			success = SVWSKonfiguration.get().removeSchema(nameSchema);
+		if (!success)
+			success = SVWSKonfiguration.get().removeSchema(name);
 		return success;
 	}
 

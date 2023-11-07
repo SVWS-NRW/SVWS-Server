@@ -598,6 +598,27 @@ public final class SVWSKonfiguration {
 
 
 	/**
+	 * Prüft, ob für den angebenen Schema-Namen eine Konfiguration vorliegt oder nicht.
+	 * Wenn es vorliegt gibt es den Schema-Namen in dem Case, der in der
+	 * SVWS-Konfiguration verwendet wird, zurück.
+	 *
+	 * @param schemaName   der Name des Datenbank-Schemas
+	 *
+	 * @return der Name des Schemas in der SVWS-Konfiguration oder null, wenn es nicht existiert
+	 */
+	public String getSchemanameCaseConfig(final String schemaName) {
+		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
+			return null;
+		if (dto.dbconfigs.get(schemaName) != null)
+			return schemaName;
+		for (final String sn : dto.dbconfigs.keySet())
+			if (sn.equalsIgnoreCase(schemaName))
+				return sn;
+		return null;
+	}
+
+
+	/**
 	 * Sperrt das angegebene Schema
 	 *
 	 * @param schemaName   der Name des zu sperrenden Schemas
