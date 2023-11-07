@@ -33,9 +33,15 @@ export class RouteDataBenutzerprofil {
 		//api.server.patch
 	}
 
-	public patchPasswort = async (alt: string, neu: string) => {
-		console.log("TODO Passwort ändern")
-		const password = neu.length > 0 ? neu : null;
-		await api.server.setPassword(neu, api.schema, api.benutzerdaten.id);
+	public patchPasswort = async (eins: string, zwei: string): Promise<boolean> => {
+		if (eins !== zwei)
+			return false;
+		const password = eins.length > 0 ? eins : null;
+		try {
+			await api.server.setPassword(password, api.schema, api.benutzerdaten.id);
+			return true;
+		} catch (e) {
+			return false;
+		}
 	}
 }

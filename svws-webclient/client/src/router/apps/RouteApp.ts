@@ -123,7 +123,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getApp(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text, hideAuswahl: this.data.view.hasView('list') };
+		return { name: this.data.view.name, text: this.data.view.text, hideAuswahl: !this.data.view.hasView('liste') };
 	}
 
 	private getApps(): AuswahlChildData[] {

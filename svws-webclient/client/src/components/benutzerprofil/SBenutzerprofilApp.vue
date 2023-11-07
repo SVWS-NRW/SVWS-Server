@@ -11,9 +11,10 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Passwort ändern">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="altes Passwort" v-model="altesPasswort" type="text" />
-				<svws-ui-text-input placeholder="neues Passwort" v-model="neuesPasswort" type="text" />
-				<svws-ui-button type="secondary" @click="patchPasswort(altesPasswort, neuesPasswort)"> Passwort ändern </svws-ui-button>
+				<svws-ui-text-input placeholder="Erste Eingabe neues Passwort" v-model="erstesPasswort" type="text" />
+				<svws-ui-text-input placeholder="Zweite Eingabe neues Passwort" v-model="zweitesPasswort" type="text" />
+				<svws-ui-button :type="ok === null ? 'secondary': ok === true ? 'primary' : 'danger'" @click="password" :disabled="erstesPasswort !== zweitesPasswort"> Passwort ändern </svws-ui-button>
+				{{ ok === true ? "Das Passwort wurde geändert, bitte melden Sie sich neu an" : ok === false ? 'Es gab einen Fehler bei der Passwortänderung' : '' }}
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Benutzereinstellungen" class="opacity-50">
@@ -29,6 +30,11 @@
 
 	const props = defineProps<BenutzerprofilAppProps>();
 
-	const altesPasswort = ref('');
-	const neuesPasswort = ref('');
+	const erstesPasswort = ref('');
+	const zweitesPasswort = ref('');
+	const ok = ref<boolean | null>(null);
+
+	async function password() {
+		ok.value = await props.patchPasswort(erstesPasswort.value, zweitesPasswort.value);
+	}
 </script>
