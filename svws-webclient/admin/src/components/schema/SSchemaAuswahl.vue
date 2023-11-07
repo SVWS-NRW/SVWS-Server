@@ -4,7 +4,7 @@
 			<span>Schema</span>
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchema" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="mapSchema.values()"
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchema" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="mapSchema().values()"
 				:columns="cols" clickable selectable count scroll-into-view scroll>
 				<template #cell(name)="{ value }">
 					{{ value }}
@@ -20,6 +20,9 @@
 				</template>
 				<template #actions>
 					<svws-ui-button type="trash" @click="removeSchemata" v-if="selectedItems.length > 0" />
+					<s-schema-auswahl-neu-modal v-slot="{ openModal }" :add-schema="addSchema">
+						<svws-ui-button @click="openModal()" type="icon" title="Schema hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+					</s-schema-auswahl-neu-modal>
 				</template>
 			</svws-ui-table>
 		</template>

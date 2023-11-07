@@ -67,10 +67,11 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		return {
 			auswahl: this.data.auswahl,
 			auswahlGruppe: this.data.auswahlGruppe,
-			mapSchema: this.data.mapSchema,
+			mapSchema: () => this.data.mapSchema,
 			gotoSchema: this.data.gotoSchema,
 			setAuswahlGruppe: this.data.setAuswahlGruppe,
 			removeSchemata: this.data.removeSchemata,
+			addSchema: this.data.addSchema,
 		};
 	}
 

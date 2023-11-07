@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 
-import {type Comparator, JavaString, type List, SchemaListeEintrag } from "@core";
+import type { BenutzerKennwort , Comparator,  List} from "@core";
+import { JavaString, SchemaListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -134,11 +135,26 @@ export class RouteDataSchema {
 	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	this.setPatchedState({ auswahlGruppe });
 
 	removeSchemata = async () => {
-		for (const schema of this.auswahlGruppe) {
+		api.status.start();
+		for (const schema of this.auswahlGruppe)
 			await api.privileged.destroySchema(schema.name);
-		}
+		api.status.stop();
 		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
 			await this.gotoSchema(undefined);
 		this.setAuswahlGruppe([]);
+	}
+
+	addSchema = async (data: BenutzerKennwort, schema: string) => {
+		api.status.start();
+		await api.privileged.createSchemaCurrent(data, schema);
+		const list = await api.privileged.getSVWSSchemaListe();
+		for (const item of list)
+			if (item.name === schema) {
+				this.mapSchema.set(item.name, item);
+				this.setPatchedState({mapSchema: this.mapSchema})
+				await this.gotoSchema(item);
+				break;
+			}
+		api.status.stop();
 	}
 }
