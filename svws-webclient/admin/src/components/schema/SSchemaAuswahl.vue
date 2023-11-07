@@ -10,10 +10,16 @@
 					{{ value }}
 				</template>
 				<template #cell(revision)="{ value }">
-					{{ value }}
+					{{ value > 0 ? value : '–' }}
 				</template>
 				<template #cell(isTainted)="{ value }">
-					{{ value }}
+					<i-ri-file-damage-line v-if="value === true" />
+				</template>
+				<template #cell(isInConfig)="{ value }">
+					<i-ri-settings-2-line v-if="value === true" />
+				</template>
+				<template #actions>
+					<svws-ui-button type="trash" @click="removeSchemata" v-if="selectedItems.length > 0" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -31,13 +37,13 @@
 	const cols = [
 		{ key: "name", label: "Schemaname", sortable: true, span: 2 },
 		{ key: "revision", label: "Revision", sortable: true, span: 1 },
-		{ key: "isTainted", label: "Tainted ?", sortable: true, span: 1 },
+		{ key: "isTainted", label: "Tainted", tooltip: 'Dieses Schema ist nicht in der angegebenen Revision und wird als Entwickler-Schema betrachtet', sortable: true, span: 1 },
+		{ key: "isInConfig", label: "Config", tooltip: 'Dieses Schema ist in der Config-Datei eingetragen', sortable: true, span: 1 },
 	]
 
 	const selectedItems = computed<Array<SchemaListeEintrag>>({
 		get: () => props.auswahlGruppe,
 		set: (items) => props.setAuswahlGruppe(items)
 	});
-
 
 </script>

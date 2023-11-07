@@ -6,5 +6,6 @@ export interface SchemaAuswahlProps {
 	mapSchema: Map<string, SchemaListeEintrag>;
 	gotoSchema: (value: SchemaListeEintrag | undefined) => Promise<void>;
 	setAuswahlGruppe: (value: SchemaListeEintrag[]) => void;
+	removeSchemata: () => Promise<void>;
 }
 

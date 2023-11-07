@@ -133,4 +133,12 @@ export class RouteDataSchema {
 
 	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	this.setPatchedState({ auswahlGruppe });
 
+	removeSchemata = async () => {
+		for (const schema of this.auswahlGruppe) {
+			await api.privileged.destroySchema(schema.name);
+		}
+		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
+			await this.gotoSchema(undefined);
+		this.setAuswahlGruppe([]);
+	}
 }
