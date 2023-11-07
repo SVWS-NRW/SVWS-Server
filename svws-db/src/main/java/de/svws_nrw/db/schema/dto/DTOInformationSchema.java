@@ -70,7 +70,7 @@ public final class DTOInformationSchema {
 	}
 
 
-	private static final Set<String> setSystemSchemaMariaDB = Stream.of("information_schema", "mysql", "performance_schema").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemSchemaMariaDB = Stream.of("information_schema", "mysql", "performance_schema", "sys").collect(Collectors.toCollection(HashSet::new));
 	private static final Set<String> setSystemSchemaMySQL = Stream.of("information_schema", "mysql", "performance_schema", "sys").collect(Collectors.toCollection(HashSet::new));
 	private static final Set<String> setSystemSchemaMSSQL = Stream.of("master", "tempdb",  "model", "msdb").collect(Collectors.toCollection(HashSet::new));
 
