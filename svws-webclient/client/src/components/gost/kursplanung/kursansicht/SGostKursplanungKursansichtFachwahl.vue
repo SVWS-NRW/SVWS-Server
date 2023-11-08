@@ -207,11 +207,11 @@
 
 	const kurslehrer_liste = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
-		const id = kurslehrer(kurs).value?.id;
-		if (id)
-			vergeben.add(id);
 		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
 			vergeben.add(l.id);
+		const id = kurslehrer(kurs).value?.id;
+		if (id)
+			vergeben.delete(id);
 		const result = [];
 		for (const l of props.mapLehrer.values())
 			if ((!vergeben.has(l.id)) && (l.istSichtbar))
