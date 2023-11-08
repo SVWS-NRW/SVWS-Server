@@ -50,7 +50,7 @@
 	import type { MaybeElement } from "@floating-ui/vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { computed, nextTick, ref, shallowRef, watch } from "vue";
+	import { computed, nextTick, ref, shallowRef, toRaw, watch } from "vue";
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
@@ -113,9 +113,9 @@
 	});
 
 	function generateInputText() {
-		if ((data.value === null) || (data.value === undefined))
+		if ((selectedItem.value === null) || (selectedItem.value === undefined))
 			return "";
-		return props.itemText(data.value);
+		return props.itemText(selectedItem.value);
 	}
 
 	function onInput(value: string) {
@@ -145,7 +145,9 @@
 	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = shallowRef<SelectDataType>(props.modelValue);
 
-	watch(() => props.modelValue, (value: SelectDataType) => updateData(value, true), { immediate: false });
+	watch(() => props.modelValue, (value: SelectDataType) => {
+		updateData(toRaw(value), true);
+	}, { immediate: false });
 
 	function updateData(value: SelectDataType, fromModelValue : boolean) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
