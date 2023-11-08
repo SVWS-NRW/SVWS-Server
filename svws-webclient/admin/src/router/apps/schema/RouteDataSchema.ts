@@ -151,7 +151,21 @@ export class RouteDataSchema {
 		for (const item of list)
 			if (item.name === schema) {
 				this.mapSchema.set(item.name, item);
-				this.setPatchedState({mapSchema: this.mapSchema})
+				this.setPatchedState({mapSchema: this.mapSchema});
+				await this.gotoSchema(item);
+				break;
+			}
+		api.status.stop();
+	}
+
+	importSchema = async (data: FormData, schema: string) => {
+		api.status.start();
+		await api.privileged.importSQLite2Schema(data, schema);
+		const list = await api.privileged.getSVWSSchemaListe();
+		for (const item of list)
+			if (item.name === schema) {
+				this.mapSchema.set(item.name, item);
+				this.setPatchedState({mapSchema: this.mapSchema});
 				await this.gotoSchema(item);
 				break;
 			}

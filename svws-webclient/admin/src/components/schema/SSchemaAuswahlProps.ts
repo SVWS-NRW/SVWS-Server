@@ -8,5 +8,6 @@ export interface SchemaAuswahlProps {
 	setAuswahlGruppe: (value: SchemaListeEintrag[]) => void;
 	removeSchemata: () => Promise<void>;
 	addSchema: (data: BenutzerKennwort, schema: string) => Promise<void>;
+	importSchema:  (formData: FormData, schema: string) => Promise<void>;
 }
 
