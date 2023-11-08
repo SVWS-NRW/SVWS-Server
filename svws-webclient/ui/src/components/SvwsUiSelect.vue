@@ -90,7 +90,6 @@
 
 	const emit = defineEmits<{
 		(e: "update:modelValue", items: SelectDataType): void;
-		(e: "blur", event: Event): void;
 	}>();
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
@@ -114,9 +113,9 @@
 	});
 
 	function generateInputText() {
-		if ((selectedItem.value === null) || (selectedItem.value === undefined))
+		if ((data.value === null) || (data.value === undefined))
 			return "";
-		return props.itemText(selectedItem.value);
+		return props.itemText(data.value);
 	}
 
 	function onInput(value: string) {
