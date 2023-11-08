@@ -207,6 +207,9 @@
 
 	const kurslehrer_liste = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
+		const id = kurslehrer(kurs).value?.id;
+		if (id)
+			vergeben.add(id);
 		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
 			vergeben.add(l.id);
 		const result = [];
