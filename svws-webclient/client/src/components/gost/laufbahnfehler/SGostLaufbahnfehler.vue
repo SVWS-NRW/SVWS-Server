@@ -159,20 +159,27 @@
 	}
 
 	const dropdownList = [
-		{ text: "Laufbahnwahlbogen markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen", true), default: true },
-		{ text: "Laufbahnwahlbogen gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen", false) },
-		{ text: "Laufbahnwahlbogen (nur Belegung) markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true) },
-		{ text: "Laufbahnwahlbogen (nur Belegung) gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false) },
+		{ text: "Laufbahnwahlbogen gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen", false, 0), default: true },
+		{ text: "Laufbahnwahlbogen (nur Belegung) gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
+		{ text: "Ergebnisliste (nur Summen) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
+		{ text: "Ergebnisliste (nur Summen und Fehler) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
+		{ text: "Ergebnisliste (vollständig) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
+		{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
+		{ text: "Laufbahnwahlbogen markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen", true, 0) },
+		{ text: "Laufbahnwahlbogen (nur Belegung) markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
+		{ text: "Ergebnisliste (nur Summen) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
+		{ text: "Ergebnisliste (nur Summen und Fehler) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },
+		{ text: "Ergebnisliste (vollständig) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 2) }
 	]
 
-	async function downloadPDF(title: string, single: boolean) {
+	async function downloadPDF(title: string, single: boolean, detaillevel: number) {
 		const list = new ArrayList<number>();
 		if (single)
 			list.add(schueler.value.schueler.id);
 		else
 			for (const s of filtered.value)
 				list.add(s.schueler.id);
-		const { data, name } = await props.getPdfWahlbogen(title, list);
+		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;
