@@ -5,7 +5,7 @@
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
 			<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" :model-value="getLehrbefaehigungAnerkennung(rowData)" @update:model-value="anerkennung => patchLehrbefaehigungAnerkennung(rowData, anerkennung ?? null)"
-				:items="LehrerLehrbefaehigung.values()" :item-text="(i: LehrerLehrbefaehigungAnerkennung) => i.daten.text" headless />
+				:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="(i: LehrerLehrbefaehigungAnerkennung) => i.daten.text" headless />
 		</template>
 		<template #actions>
 			<svws-ui-button @click="removeLehrbefaehigungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
