@@ -470,7 +470,7 @@ public class APIStundenplan {
     		    + "besitzt.")
     @ApiResponse(responseCode = "201", description = "Die Räume wurden erfolgreich hinzugefügt.",
             content = @Content(mediaType = MediaType.APPLICATION_JSON,
-            schema = @Schema(implementation = StundenplanRaum.class)))
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanRaum.class))))
     @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Räume für einen Stundenplan anzulegen.")
     @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
     @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")

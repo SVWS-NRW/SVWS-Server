@@ -9020,6 +9020,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addAufsichtsbereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/create/multiple
+	 *
+	 * Erstellt neue Aufsichtsbereiche für die Schule und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Aufsichtsbereich>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Aufsichtsbereiche für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<Aufsichtsbereich>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 */
+	public async addAufsichtsbereiche(data : List<Partial<Aufsichtsbereich>>, schema : string) : Promise<List<Aufsichtsbereich>> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Aufsichtsbereich>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerFoerderschwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/foerderschwerpunkt/{id : \d+}
 	 *
 	 * Liest die Daten des Förderschwerpunktes zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
@@ -9444,6 +9474,36 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/create/multiple
+	 *
+	 * Erstellt neue Räume für die Schule und gibt die zugehörigen Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Räume wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Raum>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Räume für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<Raum>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Räume wurden erfolgreich hinzugefügt.
+	 */
+	public async addRaeume(data : List<Partial<Raum>>, schema : string) : Promise<List<Raum>> {
+		const path = "/db/{schema}/schule/raeume/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Raum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -9973,7 +10033,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Die Räume wurden erfolgreich hinzugefügt.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: StundenplanRaum
+	 *     - Rückgabe-Typ: List<StundenplanRaum>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Räume für einen Stundenplan anzulegen.
 	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -9984,14 +10044,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Räume wurden erfolgreich hinzugefügt.
 	 */
-	public async addStundenplanRaeume(data : List<Partial<StundenplanRaum>>, schema : string, id : number) : Promise<StundenplanRaum> {
+	public async addStundenplanRaeume(data : List<Partial<StundenplanRaum>>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
 		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return StundenplanRaum.transpilerFromJSON(text);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanRaum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanRaum.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
