@@ -58,11 +58,6 @@
 				</template>
 			</div>
 		</div>
-		<div class="flex items-center gap-2 flex-wrap mt-5 justify-end">
-			<StundenplanZeitrasterImportModal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
-				<svws-ui-button type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
-			</StundenplanZeitrasterImportModal>
-		</div>
 	</div>
 	<aside>
 		<div class="sticky top-8 flex flex-col gap-5">
@@ -70,13 +65,16 @@
 				<svws-ui-button type="secondary" @click="addStunde">
 					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ manager().zeitrasterGetStundeMax() + 1 }}. Stunde
 				</svws-ui-button>
-				<svws-ui-button type="secondary" @click="addWochentag" :disabled="wochentagRange.length > 7">
+				<svws-ui-button type="secondary" @click="addWochentag" v-if="manager().zeitrasterGetWochentagMax() < 7">
 					<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + 1) }}
 				</svws-ui-button>
 			</div>
-			<svws-ui-button type="secondary" class="mb-5" @click="addBlock" title="Alle Zeitraster Montag - Freitag, 1.- 9. Stunde erstellen">
+			<svws-ui-button type="secondary" @click="addBlock" title="Alle Zeitraster Montag - Freitag, 1.- 9. Stunde erstellen">
 				<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />Mo-Fr / 1.-9. erstellen
 			</svws-ui-button>
+			<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+				<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+			</stundenplan-zeitraster-import-modal>
 			<slot />
 		</div>
 	</aside>

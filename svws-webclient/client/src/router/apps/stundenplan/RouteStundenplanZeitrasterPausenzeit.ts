@@ -36,6 +36,8 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<unknown, Rou
 			removeZeitraster: routeStundenplan.data.removeZeitraster,
 			importZeitraster: routeStundenplan.data.importZeitraster,
 			addAufsichtUndBereich: routeStundenplan.data.addAufsichtUndBereich,
+			selected: () => routeStundenplan.data.selected,
+			setSelection: routeStundenplan.data.setSelection,
 		};
 	}
 

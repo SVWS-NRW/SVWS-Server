@@ -1,4 +1,4 @@
-import type { StundenplanManager, StundenplanZeitraster } from "@core";
+import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
 
 export type StundenplanAnsichtPlanungProps = {
 	manager: () => StundenplanManager;

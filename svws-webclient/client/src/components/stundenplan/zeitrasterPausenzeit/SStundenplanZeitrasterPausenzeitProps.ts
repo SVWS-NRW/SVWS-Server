@@ -1,4 +1,4 @@
-import type { LehrerListeEintrag, List, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanZeitraster, } from "@core";
+import type { LehrerListeEintrag, List, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanZeitraster, Wochentag, } from "@core";
 
 export interface StundenplanZeitrasterPausenzeitProps {
 	stundenplanManager: () => StundenplanManager;
@@ -12,4 +12,6 @@ export interface StundenplanZeitrasterPausenzeitProps {
 	importZeitraster: () => Promise<void>;
 	listLehrer: List<LehrerListeEintrag>;
 	addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
+	selected: () => Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
+	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
 }

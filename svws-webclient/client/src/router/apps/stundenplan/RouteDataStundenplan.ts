@@ -1,13 +1,9 @@
-import type { StundenplanListeEintrag, StundenplanRaum, StundenplanPausenaufsicht, StundenplanAufsichtsbereich, StundenplanPausenzeit, List, Raum, Stundenplan, JahrgangsListeEintrag, StundenplanUnterricht, LehrerListeEintrag, StundenplanZeitraster} from "@core";
+import type { StundenplanListeEintrag, StundenplanPausenaufsicht, List, Raum, Stundenplan, JahrgangsListeEintrag, LehrerListeEintrag} from "@core";
+import { Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
-
-import { StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang } from "@core";
-
 import { shallowRef } from "vue";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
-
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
 
@@ -21,6 +17,7 @@ interface RouteStateStundenplan {
 	listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	listJahrgaenge: List<JahrgangsListeEintrag>;
 	listLehrer: List<LehrerListeEintrag>;
+	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 	view: RouteNode<any, any>;
 }
 export class RouteDataStundenplan {
@@ -35,6 +32,7 @@ export class RouteDataStundenplan {
 		listAufsichtsbereiche: new ArrayList(),
 		listJahrgaenge: new ArrayList(),
 		listLehrer: new ArrayList(),
+		selected: undefined,
 		view: routeStundenplanDaten,
 	}
 	private _state = shallowRef(RouteDataStundenplan._defaultState);
@@ -102,6 +100,14 @@ export class RouteDataStundenplan {
 		return this._state.value.listLehrer;
 	}
 
+	get selected(): Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined {
+		return this._state.value.selected;
+	}
+
+	public setSelection = (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
+		this.setPatchedState({selected: value});
+	}
+
 	patch = async (data : Partial<Stundenplan>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
@@ -120,6 +126,8 @@ export class RouteDataStundenplan {
 		this.setPatchedState({daten: Object.assign(daten, data), auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege});
 		api.status.stop();
 	}
+
+
 
 	addRaum = async (raum: Partial<StundenplanRaum>) => {
 		const id = this._state.value.auswahl?.id;
@@ -153,6 +161,8 @@ export class RouteDataStundenplan {
 			list.add(raum);
 		}
 		this.stundenplanManager.raumRemoveAll(list);
+		if (this.selected instanceof StundenplanRaum && list.contains(this.selected))
+			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
@@ -205,6 +215,8 @@ export class RouteDataStundenplan {
 			list.add(pausenzeit);
 		}
 		this.stundenplanManager.pausenzeitRemoveAll(list);
+		if (this.selected instanceof StundenplanPausenzeit && list.contains(this.selected))
+			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
@@ -264,6 +276,8 @@ export class RouteDataStundenplan {
 			list.add(aufsichtsbereich);
 		}
 		this.stundenplanManager.aufsichtsbereichRemoveAll(list);
+		if (this.selected instanceof StundenplanAufsichtsbereich && list.contains(this.selected))
+			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
@@ -319,6 +333,10 @@ export class RouteDataStundenplan {
 			list.add(zeitraster);
 		}
 		this.stundenplanManager.zeitrasterRemoveAll(list);
+		if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
+		|| (typeof this.selected === 'number')
+		|| (this.selected instanceof Wochentag))
+			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
@@ -374,6 +392,8 @@ export class RouteDataStundenplan {
 			list.add(unterricht);
 		}
 		this.stundenplanManager.unterrichtRemoveAll(list);
+		if (this.selected instanceof StundenplanUnterricht && list.contains(this.selected))
+			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
