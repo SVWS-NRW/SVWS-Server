@@ -451,24 +451,17 @@ export class ApiSchemaPrivileged extends BaseApi {
 	 * Entfernt das Schema mit dem angegebenen Namen, falls es existiert.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Log vom Löschen des Schemas
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<String>
+	 *   Code 204: Der Log vom Löschen des Schemas
 	 *   Code 403: Das Schema darf nicht gelöscht werden.
 	 *   Code 404: Das angegebene Schema wurde nicht gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Der Log vom Löschen des Schemas
 	 */
-	public async destroySchema(schema : string) : Promise<List<string>> {
+	public async destroySchema(schema : string) : Promise<void> {
 		const path = "/api/schema/root/destroy/{schema}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const result : string = await super.postJSON(path, null);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
-		return ret;
+		await super.postJSON(path, null);
+		return;
 	}
 
 

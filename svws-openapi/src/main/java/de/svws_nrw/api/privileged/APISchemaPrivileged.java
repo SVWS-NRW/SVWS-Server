@@ -319,23 +319,21 @@ public class APISchemaPrivileged {
     @Path("/api/schema/root/destroy/{schema}")
     @Operation(summary = "Entfernt das bestehende Schema mit dem angegebenen Namen.",
                description = "Entfernt das Schema mit dem angegebenen Namen, falls es existiert.")
-    @ApiResponse(responseCode = "200", description = "Der Log vom Löschen des Schemas",
-                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
+    @ApiResponse(responseCode = "204", description = "Der Log vom Löschen des Schemas")
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht gelöscht werden.")
     @ApiResponse(responseCode = "404", description = "Das angegebene Schema wurde nicht gefunden.")
-    public List<String> destroySchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    public Response destroySchema(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 	    	// Erzeuge einen Root-Manager zum Löschen des Schemas
 			final DBRootManager root_manager = DBRootManager.create(conn);
 			if (root_manager == null)
-				throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
+				return OperationError.FORBIDDEN.getResponse();
 
 	    	// Prüfe ob das Schema existiert und lösche das Schema mit dem Root-Manager
 			if (!root_manager.dropDBSchemaIfExists(schemaname))
-				throw new WebApplicationException(Status.NOT_FOUND.getStatusCode());
+				return OperationError.NOT_FOUND.getResponse();
 
-			// TODO logging
-			return null;
+			return Response.status(Status.NO_CONTENT).build();
     	}
     }
 
