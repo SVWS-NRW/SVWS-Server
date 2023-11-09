@@ -127,8 +127,6 @@ export class RouteDataStundenplan {
 		api.status.stop();
 	}
 
-
-
 	addRaum = async (raum: Partial<StundenplanRaum>) => {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)

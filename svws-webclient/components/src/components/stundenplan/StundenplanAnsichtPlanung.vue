@@ -72,9 +72,11 @@
 			<svws-ui-button type="secondary" @click="addBlock" title="Alle Zeitraster Montag - Freitag, 1.- 9. Stunde erstellen">
 				<i-ri-calendar-event-line /><i-ri-add-line class="-ml-1" />Mo-Fr / 1.-9. erstellen
 			</svws-ui-button>
-			<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
-				<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
-			</stundenplan-zeitraster-import-modal>
+			<template v-if="importZeitraster !== undefined">
+				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+					<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><i-ri-archive-line /> Aus Katalog importieren</svws-ui-button>
+				</stundenplan-zeitraster-import-modal>
+			</template>
 			<slot />
 		</div>
 	</aside>

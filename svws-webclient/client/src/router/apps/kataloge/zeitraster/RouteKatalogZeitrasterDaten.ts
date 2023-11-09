@@ -31,8 +31,10 @@ export class RouteKatalogZeitrasterDaten extends RouteNode<unknown, RouteKatalog
 			patchZeitraster: routeKatalogZeitraster.data.patchZeitraster,
 			addZeitraster: routeKatalogZeitraster.data.addZeitraster,
 			removeZeitraster: routeKatalogZeitraster.data.removeZeitraster,
-			importZeitraster: async ()=>{},//routeKatalogZeitraster.data.importZeitraster,
+			importZeitraster: undefined,//routeKatalogZeitraster.data.importZeitraster,
 			addAufsichtUndBereich: async ()=>{},//routeKatalogZeitraster.data.addAufsichtUndBereich,
+			selected: () => routeKatalogZeitraster.data.selected,
+			setSelection: routeKatalogZeitraster.data.setSelection,
 		};
 	}
 

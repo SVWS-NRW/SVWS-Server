@@ -3,8 +3,8 @@ import type { ZeitrasterAuswahlProps } from "~/components/kataloge/zeitraster/SZ
 import type { ZeitrasterAppProps } from "~/components/kataloge/zeitraster/SZeitrasterAppProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { RouteApp } from "~/router/apps/RouteApp";
-import type { List, StundenplanZeitraster} from "@core";
-import { StundenplanManager, ArrayList, BenutzerKompetenz, Schulform, ServerMode, Stundenplan } from "@core";
+import type { List, StundenplanPausenzeit , StundenplanZeitraster, Wochentag } from "@core";
+import { StundenplanManager, ArrayList, BenutzerKompetenz, Schulform, ServerMode, Stundenplan  } from "@core";
 import { shallowRef } from "vue";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -16,6 +16,7 @@ import { routeKatalogZeitrasterDaten } from "~/router/apps/kataloge/zeitraster/R
 interface RouteStateKatalogZeitraster {
 	listKatalogeintraege: List<StundenplanZeitraster>;
 	stundenplanManager: StundenplanManager | undefined;
+	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 	view: RouteNode<any, any>;
 }
 
@@ -24,6 +25,7 @@ export class RouteDataKatalogZeitraster {
 	private static _defaultState: RouteStateKatalogZeitraster = {
 		listKatalogeintraege: new ArrayList(),
 		stundenplanManager: undefined,
+		selected: undefined,
 		view: routeKatalogZeitrasterDaten,
 	}
 	private _state = shallowRef(RouteDataKatalogZeitraster._defaultState);
@@ -56,6 +58,15 @@ export class RouteDataKatalogZeitraster {
 			throw new Error("Unerwarteter Fehler: Stundenplandaten nicht initialisiert");
 		return this._state.value.stundenplanManager;
 	}
+
+	get selected(): Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined {
+		return this._state.value.selected;
+	}
+
+	public setSelection = (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
+		this.setPatchedState({selected: value});
+	}
+
 	public async ladeListe() {
 		api.status.start();
 		const listZeitraster = await api.server.getZeitraster(api.schema);
@@ -89,6 +100,7 @@ export class RouteDataKatalogZeitraster {
 			list.add(item);
 		}
 		this.stundenplanManager.zeitrasterRemoveAll(list);
+		this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
 	}
@@ -101,7 +113,7 @@ export class RouteDataKatalogZeitraster {
 			this.stundenplanManager.zeitrasterPatchAttributes(z);
 			list.add(z);
 		}
-		// this.stundenplanManager.zeitrasterPatchAttributesAll(list);
+		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
 	}
