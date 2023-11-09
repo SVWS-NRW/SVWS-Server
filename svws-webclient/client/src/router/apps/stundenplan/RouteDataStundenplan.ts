@@ -170,13 +170,13 @@ export class RouteDataStundenplan {
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanRaum>()
+		const list = new ArrayList<Partial<StundenplanRaum>>()
 		for (const item of raeume) {
 			delete item.id;
-			const raum = await api.server.addStundenplanRaum(item, api.schema, id);
-			list.add(raum);
+			list.add(item);
 		}
-		this.stundenplanManager.raumAddAll(list);
+		const raueme = await api.server.addStundenplanRaeume(list, api.schema, id);
+		this.stundenplanManager.raumAddAll(raueme);
 		this.commit();
 		api.status.stop();
 	}
