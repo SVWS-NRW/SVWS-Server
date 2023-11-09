@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.svws_nrw.base.compression.CompressionException;
@@ -148,6 +149,31 @@ public final class JSONMapper {
 		}
 	}
 
+
+	/**
+	 * Wandelt die JSON-Daten aus dem {@link InputStream} in eine Liste von Maps von Key-Value-Paaren um.
+	 * Dabei müssen die JSON-Daten ein Array sein.
+	 *
+	 * @param in   der Input-Stream mit dem JSON-Input
+	 *
+	 * @return die Listes von Maps
+	 */
+	public static List<Map<String, Object>> toMultipleMaps(final InputStream in) {
+		final String jsonAll = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
+		try {
+			final List<Map<String, Object>> result = new ArrayList<>();
+			final JsonNode node = mapper.readTree(jsonAll);
+			if (!node.isArray())
+				throw OperationError.BAD_REQUEST.exception("Das übergebene JSON ist kein Array bzw. Liste");
+			for (final JsonNode element : node) {
+				final String json = element.toString();
+				result.add(mapper.readValue(json, new TypeReference<Map<String, Object>>() { /**/ }));
+			}
+			return result;
+		} catch (final JsonProcessingException e) {
+			throw new WebApplicationException("Fehler beim Parsen des JSON-Strings.", e, Response.Status.BAD_REQUEST);
+		}
+	}
 
 
 	/**
