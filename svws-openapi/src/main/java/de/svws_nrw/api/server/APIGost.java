@@ -1,9 +1,5 @@
 package de.svws_nrw.api.server;
 
-import java.io.InputStream;
-
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
@@ -45,8 +41,8 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.pdf.gost.PDFGostErgebnisseLaufbahnpruefung;
-import de.svws_nrw.module.pdf.gost.PDFGostWahlbogen;
+import de.svws_nrw.module.pdf.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht;
+import de.svws_nrw.module.pdf.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -69,6 +65,10 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Die Klasse spezifiziert die OpenAPI-Schnittstelle für den Zugriff auf die SVWS-Datenbank in Bezug auf die gymnasiale Oberstufe.
@@ -586,70 +586,6 @@ public class APIGost {
     }
 
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage der PDF-Wahlbögen für die gymnasiale Oberstufe eines Abiturjahrgangs.
-     *
-     * @param schema       das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abiturjahr   das Abiturjahr, zu welchem die Wahlbögen erstellt werden sollen
-     * @param request      die Informationen zur HTTP-Anfrage
-     *
-     * @return das PDF mit den Wahlbögen des Abiturjahrgangs
-     */
-    @GET
-    @Produces("application/pdf")
-    @Path("/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\\d+}")
-    @Operation(summary = "Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang.",
-               description = "Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.")
-    @ApiResponse(responseCode = "200", description = "Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs",
-                 content = @Content(mediaType = "application/pdf",
-                 schema = @Schema(type = "string", format = "binary", description = "PDF-Wahlbögen")))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.")
-    @ApiResponse(responseCode = "404", description = "Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden")
-    public Response getGostAbiturjahrgangPDFWahlboegen(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return PDFGostWahlbogen.queryJahrgang(conn, abiturjahr);
-    	}
-    }
-
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage einer PDF-Liste mit den Kurs- und Wochenstundensummen sowie den Laufbahnfehlern der Schüler eines Abiturjahrgangs.
-	 *
-	 * @param schema       	das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param abiturjahr   	das Abiturjahr, zu welchem die Liste erstellt werden sollen
-	 * @param detaillevel	gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
-	 * @param request      	die Informationen zur HTTP-Anfrage
-	 *
-	 * @return das PDF mit der Liste des Abiturjahrgangs
-	 */
-	@GET
-	@Produces("application/pdf")
-	@Path("/abiturjahrgang/pdf/ergebnisse_laufbahnpruefung/{abiturjahr : -?\\d+}/{detaillevel : \\d+}")
-	@Operation(summary = "Erstellt eine PDF-Liste mit den Ergebnissen der Laufbahnprüfung in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang.",
-			   description = "Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang. "
-				   		     + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.")
-	@ApiResponse(responseCode = "200", description = "Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs",
-				 content = @Content(mediaType = "application/pdf",
-				 schema = @Schema(type = "string", format = "binary", description = "PDF-Ergebnisse-Laufbahnprüfung")))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.")
-	@ApiResponse(responseCode = "404", description = "Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden")
-	public Response getGostAbiturjahrgangPDFErgebnisseLaufbahnpruefung(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr, @PathParam("detaillevel") final int detaillevel, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFGostErgebnisseLaufbahnpruefung.queryJahrgang(conn, abiturjahr, detaillevel);
-		}
-	}
-
-
 	/**
      * Die OpenAPI-Methode für die Abfrage der Default-Laufbahnplanungsdaten der gymnasialen Oberstufe für einen
      * Abiturjahrgang.
@@ -918,36 +854,142 @@ public class APIGost {
     	}
     }
 
-    /**
-     * Die OpenAPI-Methode für die Abfrage des PDF-Wahlbogens für die gymnasiale Oberstufe eines Schülers.
-     *
-     * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param schuelerid  die ID des Schülers zu dem der Wahlbogen erstellt werden soll
-     * @param request     die Informationen zur HTTP-Anfrage
-     *
-     * @return der PDF-Wahlbogen des Schülers
-     */
-    @GET
-    @Produces("application/pdf")
-    @Path("/schueler/pdf/wahlbogen/{schuelerid : \\d+}")
-    @Operation(summary = "Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID.",
-               description = "Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. "
-    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens "
-    		    + "besitzt.")
-    @ApiResponse(responseCode = "200", description = "Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers",
-                 content = @Content(mediaType = "application/pdf",
-                 schema = @Schema(type = "string", format = "binary", description = "PDF-Wahlbogen")))
-    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
-    @ApiResponse(responseCode = "404", description = "Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden")
-    public Response getGostSchuelerPDFWahlbogen(@PathParam("schema") final String schema, @PathParam("schuelerid") final long schuelerid, @Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-    			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-    		return PDFGostWahlbogen.query(conn, schuelerid);
-    	}
-    }
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
+	 *
+	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schuelerids           Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param request     			die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe
+	 */
+	@POST
+	@Produces("application/pdf")
+	@Path("/schueler/pdf/laufbahnplanungwahlbogen")
+	@Operation(
+            summary = "Erstellt die Wahlbögen für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+            description = "Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+                        + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.",
+            content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Wahlbogen Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerWahlbogen(
+            @PathParam("schema") final String schema,
+            @RequestBody(
+                    description = "Schüler-IDs, für die die Wahlbögen erstellt werden soll.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
+		}
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage von Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
+	 *
+	 * @param schema      			das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schuelerids           Liste der IDs der SuS, deren Kurse-Schienen-Zuordnung erstellt werden soll. Werden keine IDs übergeben, so wird die Matrix allgemein für das Blockungsergebnis erstellt.
+	 * @param request     			die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die zu den übergebenen IDs gehörigen Wahlbögen (in reduzierter Form) zur Laufbahnplanung der gymnasialen Oberstufe
+	 */
+	@POST
+	@Produces("application/pdf")
+	@Path("/schueler/pdf/laufbahnplanungwahlbogennurbelegung")
+	@Operation(
+            summary = "Erstellt die Wahlbögen, reduziert auf die Belegung des Schülers, für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+		    description = "Erstellt die Wahlbogen, reduziert auf die Belegung des Schülers, für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+			            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.",
+		    content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Reduzierter Wahlbogen Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die reduzierten Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Schüler-IDs, für die die reduzierten Wahlbögen erstellt werden soll.",
+                    required = true,
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
+		}
+	}
+
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage einer Ergebnisliste zur Laufbahnplanung der gymnasialen Oberstufe als PDF-Datei.
+	 *
+	 * @param schema      		Das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param schuelerids       Liste der IDs der SuS, deren Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe erstellt werden soll.
+	 * @param detaillevel		gibt an, welche Detailinformationen die Liste enthalten soll: 0 = Summen, 1 = Summen und Fehler, 2 = Summen, Fehler und Hinweise
+	 * @param request     		die Informationen zur HTTP-Anfrage
+	 *
+	 * @return Die zu den übergebenen IDs zugehörige Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe
+	 */
+	@POST
+	@Produces("application/pdf")
+	@Path("/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}")
+	@Operation(
+            summary = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die gymnasiale Oberstufe zu den Schülern mit den angegebenen IDs.",
+		    description = "Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. "
+			            + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.")
+	@ApiResponse(
+            responseCode = "200",
+            description = "Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.",
+		    content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "binary", description = "Ergebnisliste Laufbahnplanung")))
+	@ApiResponse(
+            responseCode = "403",
+            description = "Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.")
+	@ApiResponse(
+            responseCode = "404",
+            description = "Kein Eintrag zu den angegebenen IDs gefunden.")
+	public Response pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(
+            @PathParam("schema") final String schema,
+            @RequestBody(description = "Schüler-IDs, für die die Ergebnisliste Laufbahnplanung erstellt werden soll.",
+                    required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
+            final List<Long> schuelerids,
+            @PathParam("detaillevel") final int detaillevel,
+            @Context final HttpServletRequest request) {
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
+                request,
+                ServerMode.STABLE,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
+			return PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
+		}
+	}
 
 
     /**

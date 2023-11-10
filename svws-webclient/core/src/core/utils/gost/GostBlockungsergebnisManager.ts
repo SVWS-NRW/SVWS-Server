@@ -2594,21 +2594,17 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Löscht den übergebenen Kurs.
+	 * Löscht den übergebenen Kurs. Entfernt zuvor potentiell vorhandene Schülerinnen und Schüler aus dem Kurs.
 	 *
 	 * @param  idKurs Die Datenbank-ID des Kurses.
 	 *
-	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde, oder
-	 *                                         falls der Kurs noch Schülerzuordnungen hat.
+	 * @throws DeveloperNotificationException  Falls der Kurs nicht zuerst beim Datenmanager entfernt wurde.
 	 */
 	public setRemoveKursByID(idKurs : number) : void {
 		DeveloperNotificationException.ifTrue("Der Kurs " + idKurs + " muss erst beim Datenmanager entfernt werden!", this._parent.kursGetExistiert(idKurs));
-		const nSchueler : number = this.getKursE(idKurs).schueler.size();
-		DeveloperNotificationException.ifTrue("Entfernen unmöglich: Kurs " + idKurs + " hat noch " + nSchueler + " Schüler!", nSchueler > 0);
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		for (const schienenID of kurs.schienen)
 			this.getSchieneE(schienenID!).kurse.remove(kurs);
-		kurs.schienen.clear();
 		this.stateRevalidateEverything();
 	}
 
@@ -2621,13 +2617,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param  idKursID2delete  Die Datenbank-ID des Kurses, der gelöscht wird.
 	 */
 	public setMergeKurseByID(idKursID1keep : number, idKursID2delete : number) : void {
-		const kurs2 : GostBlockungsergebnisKurs = this.getKursE(idKursID2delete);
-		for (const schuelerID of new ArrayList(kurs2.schueler)) {
-			this.stateSchuelerKursEntfernen(schuelerID!, idKursID2delete);
-			this.stateSchuelerKursHinzufuegen(schuelerID!, idKursID1keep);
-		}
+		const kursDelete : GostBlockungsergebnisKurs = this.getKursE(idKursID2delete);
+		const kursKeep : GostBlockungsergebnisKurs = this.getKursE(idKursID1keep);
+		kursKeep.schueler.addAll(kursDelete.schueler);
+		for (const schienenID of kursDelete.schienen)
+			this.getSchieneE(schienenID!).kurse.remove(kursDelete);
 		this._parent.kursRemoveByID(idKursID2delete);
-		this.setRemoveKursByID(idKursID2delete);
+		this.stateRevalidateEverything();
 	}
 
 	/**

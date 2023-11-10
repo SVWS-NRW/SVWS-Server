@@ -4,7 +4,7 @@
 		<template #modalTitle>Aufsichtsbereiche aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listAufsichtsbereiche.size()" :items="listAufsichtsbereiche" clickable :clicked="aufsichtsbereich" selectable v-bind="selected" />
+				<svws-ui-table v-if="listAufsichtsbereiche().size()" :items="listAufsichtsbereiche()" clickable :clicked="aufsichtsbereich" selectable v-model="selected" />
 				<div v-else>Keine Einträge im Aufsichtsbereiche-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Aufsichtsbereiche-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
@@ -12,7 +12,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -24,7 +24,7 @@
 
 	const props = defineProps<{
 		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
-		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
+		listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -37,4 +37,8 @@
 		showModal().value = true;
 	}
 
+	async function importer() {
+		await props.importAufsichtsbereiche(selected.value);
+		showModal().value = false;
+	}
 </script>

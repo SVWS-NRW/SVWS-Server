@@ -1,5 +1,8 @@
 package de.svws_nrw.core.utils.jahrgang;
 
+import java.util.Comparator;
+
+import de.svws_nrw.core.data.jahrgang.JahrgangsListeEintrag;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
@@ -12,6 +15,19 @@ public final class JahrgangsUtils {
 	private JahrgangsUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
+
+
+	/** Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten. */
+	public static final @NotNull Comparator<@NotNull JahrgangsListeEintrag> comparator = (final @NotNull JahrgangsListeEintrag a, final @NotNull JahrgangsListeEintrag b) -> {
+		int cmp = a.sortierung - b.sortierung;
+		if (cmp != 0)
+			return cmp;
+		if ((a.kuerzel == null) || (b.kuerzel == null))
+			return Long.compare(a.id, b.id);
+		cmp = a.kuerzel.compareTo(b.kuerzel);
+		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
+	};
+
 
 	/**
 	 * Bestimmt für die angegebene Schulform, die übergebene Schulgliederung (auch beim Schüler eingetragenen Schulgliederung)

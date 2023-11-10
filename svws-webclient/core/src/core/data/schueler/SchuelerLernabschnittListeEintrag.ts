@@ -48,9 +48,9 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 	public pruefungsOrdnung : string = "";
 
 	/**
-	 * Die ID der Klasse des Schülers.
+	 * Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist.
 	 */
-	public klassenID : number = -1;
+	public klassenID : number | null = null;
 
 	/**
 	 * Die Bezeichnung der Klasse des Schülers
@@ -63,9 +63,9 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 	public klasseStatistik : string = "";
 
 	/**
-	 * Die ID des Jahrgangs des Schülers
+	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
 	 */
-	public jahrgangID : number = -1;
+	public jahrgangID : number | null = null;
 
 	/**
 	 * Die Statistik-Bezeichnung des Jahrgangs des Schülers
@@ -111,18 +111,14 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		if (typeof obj.pruefungsOrdnung === "undefined")
 			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
 		result.pruefungsOrdnung = obj.pruefungsOrdnung;
-		if (typeof obj.klassenID === "undefined")
-			 throw new Error('invalid json format, missing attribute klassenID');
-		result.klassenID = obj.klassenID;
+		result.klassenID = typeof obj.klassenID === "undefined" ? null : obj.klassenID === null ? null : obj.klassenID;
 		if (typeof obj.klasse === "undefined")
 			 throw new Error('invalid json format, missing attribute klasse');
 		result.klasse = obj.klasse;
 		if (typeof obj.klasseStatistik === "undefined")
 			 throw new Error('invalid json format, missing attribute klasseStatistik');
 		result.klasseStatistik = obj.klasseStatistik;
-		if (typeof obj.jahrgangID === "undefined")
-			 throw new Error('invalid json format, missing attribute jahrgangID');
-		result.jahrgangID = obj.jahrgangID;
+		result.jahrgangID = typeof obj.jahrgangID === "undefined" ? null : obj.jahrgangID === null ? null : obj.jahrgangID;
 		if (typeof obj.jahrgang === "undefined")
 			 throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
@@ -140,10 +136,10 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 		result += '"istGewertet" : ' + obj.istGewertet + ',';
 		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
 		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
-		result += '"klassenID" : ' + obj.klassenID + ',';
+		result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
 		result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
 		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
-		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
+		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -180,7 +176,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
 		}
 		if (typeof obj.klassenID !== "undefined") {
-			result += '"klassenID" : ' + obj.klassenID + ',';
+			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
 		}
 		if (typeof obj.klasse !== "undefined") {
 			result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
@@ -189,7 +185,7 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
 		}
 		if (typeof obj.jahrgangID !== "undefined") {
-			result += '"jahrgangID" : ' + obj.jahrgangID + ',';
+			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
 		}
 		if (typeof obj.jahrgang !== "undefined") {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';

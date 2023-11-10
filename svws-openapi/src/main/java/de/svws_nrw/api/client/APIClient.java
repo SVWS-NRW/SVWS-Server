@@ -8,11 +8,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.api.ResourceFile;
+import de.svws_nrw.api.ResourceFileManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
- * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Client. Das zu verwendende
- * Datenbank-Schema ist dabei als Query-Parameter bei der "index.html"-Datei zu verwenden.
+ * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Client.
  */
 @Path("")
 @Tag(name = "SVWSClient")
@@ -30,8 +30,8 @@ public class APIClient {
 	 *         nicht gefunden wurde
 	 */
     private static Response getFile(final String filename) {
-    	final byte[] data = ResourceFile.getData(filename);
-    	if (data == null)
+    	final byte[] data = ResourceFileManager.client().getData(filename);
+    	if ((data == null) || (data.length == 0))
     		return Response.status(Status.NOT_FOUND).build();
         return Response.ok(data).build();
     }

@@ -16,7 +16,7 @@
 		<Teleport to="body">
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :filtered-list="dropdownActions">
 				<template #item="{ item }">
-					<button class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
+					<button class="svws-ui-dropdown-list--item" role="button" @click="item.separator !== true && action(item)" :disabled="item.separator === true">
 						{{ item.text }}
 					</button>
 				</template>
@@ -37,6 +37,7 @@
 		text: string;
 		action: () => void | Promise<void>;
 		default?: boolean;
+		separator?: boolean;
 	}
 
 	const props = withDefaults(defineProps<{

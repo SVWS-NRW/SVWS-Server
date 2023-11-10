@@ -14,6 +14,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.schema.dto.DTOInformationUser;
 
@@ -138,7 +139,12 @@ public final class DBRootManager {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
-		final Benutzer user = this.conn.getUser().connectTo(nameSchema);
+		final Benutzer user;
+		try {
+			user = this.conn.getUser().connectTo(nameSchema);
+		} catch (@SuppressWarnings("unused") final DBException db) {
+			return false;
+		}
 		try (DBEntityManager tmpConn = user.getEntityManager()) {
 			if (tmpConn == null)
 				return false;
@@ -252,8 +258,7 @@ public final class DBRootManager {
 	public boolean dbSchemaExists(final String nameSchema) {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
 			return false;
-		final List<String> schemata = DTOInformationSchema.queryNames(conn);
-		return (schemata != null) && schemata.contains(nameSchema.toLowerCase());
+		return DTOInformationSchema.hasSchemaIgnoreCase(conn, nameSchema);
 	}
 
 
@@ -268,17 +273,19 @@ public final class DBRootManager {
 	public boolean dropDBSchemaIfExists(final String nameSchema) {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport() || (nameSchema == null) || "".equals(nameSchema))
 			return false;
-		final List<String> schemata = DTOInformationSchema.queryNames(conn);
-		if (!schemata.contains(nameSchema.toLowerCase()))
+		final String name = DTOInformationSchema.getSchemanameCaseDB(conn, nameSchema);
+		if (name == null)
 			return true;
 		boolean success = switch (conn.getDBDriver()) {
-			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + nameSchema + "`") > Integer.MIN_VALUE;
-			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + nameSchema + "]") > Integer.MIN_VALUE;
+			case MARIA_DB, MYSQL -> conn.executeNativeDelete("DROP SCHEMA IF EXISTS `" + name + "`") > Integer.MIN_VALUE;
+			case MSSQL -> conn.executeNativeDelete("DROP DATABASE IF EXISTS [" + name + "]") > Integer.MIN_VALUE;
 			default -> false;
 		};
 		// Aktualisieren der DB-Konfiguration
 		if (success)
 			success = SVWSKonfiguration.get().removeSchema(nameSchema);
+		if (!success)
+			success = SVWSKonfiguration.get().removeSchema(name);
 		return success;
 	}
 
@@ -398,7 +405,15 @@ public final class DBRootManager {
 		if (config.getDBDriver().hasMultiSchemaSupport()) {
 			logger.logLn("-> Verbinde mit einem DB-Root-Manager zu der Ziel-DB...");
 			final DBConfig rootConfig = getDBRootConfig(config.getDBDriver(), config.getDBLocation(), user_root, pw_root);
-			final Benutzer rootUser = Benutzer.create(rootConfig);
+			final Benutzer rootUser;
+			try {
+				rootUser = Benutzer.create(rootConfig);
+			} catch (final DBException db) {
+				logger.logLn(2, " [Fehler]");
+				logger.log(LogLevel.ERROR, 2, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+				logger.log(LogLevel.ERROR, 2, "Überprüfen Sie das verwendete Kennwort.");
+				return false;
+			}
 			try (DBEntityManager rootConn = rootUser.getEntityManager()) {
 				logger.modifyIndent(2);
 				logger.log("- ");

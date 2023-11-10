@@ -11,7 +11,7 @@ import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
-import { GostKursklausurManager } from '../../../core/utils/klausurplanung/GostKursklausurManager';
+import { GostKursklausurManager, cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager } from '../../../core/utils/klausurplanung/GostKursklausurManager';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
@@ -20,6 +20,8 @@ import type { JavaMap } from '../../../java/util/JavaMap';
 import { GostSchuelerklausurraumstunde } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 
 export class GostKlausurraumManager extends JavaObject {
+
+	private readonly _kursklausurManager : GostKursklausurManager;
 
 	/**
 	 * Ein Comparator für die GostKlausurräume.
@@ -72,8 +74,9 @@ export class GostKlausurraumManager extends JavaObject {
 	 *                          Gost-Klausurtermins
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
+	 * @param kursklausurmanager der Kursklausur-Manager
 	 */
-	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>);
+	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -86,26 +89,31 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param listSkrs          die Liste der Schülerklausurraumstunden
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
+	 * @param kursklausurmanager der Kursklausur-Manager
 	 */
-	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>);
+	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3? : List<GostSchuelerklausur>) {
+	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausur>, __param4? : GostKursklausurManager) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && (typeof __param3 === "undefined")) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && (typeof __param4 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param2);
+			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param3);
+			this._kursklausurManager = kursklausurmanager;
 			const raeume : List<GostKlausurraum> | null = new ArrayList();
 			raeume.add(raum);
 			this.initAll(raeume, stunden, new ArrayList(), schuelerklausuren);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager'))))) {
 			const raeume : List<GostKlausurraum> = cast_java_util_List(__param0);
 			const listRs : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const listSkrs : List<GostSchuelerklausurraumstunde> = cast_java_util_List(__param2);
 			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param3);
+			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param4);
+			this._kursklausurManager = kursklausurmanager;
 			this.initAll(raeume, listRs, listSkrs, schuelerklausuren);
 		} else throw new Error('invalid method overload');
 	}
@@ -704,14 +712,12 @@ export class GostKlausurraumManager extends JavaObject {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
-	 * @param manager das GostKlausurraumManager-Objekt
-	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public kursklausurGetMenge(manager : GostKursklausurManager) : List<GostKursklausur> {
+	public kursklausurGetMenge() : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		for (const kkId of this._schuelerklausurmenge_by_idKursklausur.keySet()) {
-			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
+			kursklausuren.add(this._kursklausurManager.kursklausurGetByIdOrException(kkId));
 		}
 		return kursklausuren;
 	}
@@ -731,19 +737,30 @@ export class GostKlausurraumManager extends JavaObject {
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
 	 * @param idRaum  die Id des Klausurraums
-	 * @param manager der Kursklausurmanager
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public kursklausurGetMengeByRaumid(idRaum : number, manager : GostKursklausurManager) : List<GostKursklausur> {
+	public kursklausurGetMengeByRaumid(idRaum : number) : List<GostKursklausur> {
 		const kursklausuren : List<GostKursklausur> | null = new ArrayList();
 		if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
 		for (const idKK of this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
 			if (!this._schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
-				kursklausuren.add(manager.kursklausurGetByIdOrException(idKK));
+				kursklausuren.add(this._kursklausurManager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idRaum  die Id des Klausurraums
+	 * @param idKursklausur die Id der Kursklausur
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public schuelerklausurGetMengeByRaumidAndKursklausurid(idRaum : number, idKursklausur : number) : List<GostSchuelerklausur> {
+		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurmenge_by_idRaum_and_idKursklausur, idRaum, idKursklausur);
 	}
 
 	/**

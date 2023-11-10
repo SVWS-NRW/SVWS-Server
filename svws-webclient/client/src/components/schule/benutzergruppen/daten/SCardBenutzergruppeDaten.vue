@@ -19,10 +19,10 @@
 		setIstAdmin : (istAdmin:boolean) => Promise<void>;
 	}>();
 
-	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
+	const inputIstAdmin: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzergruppenManager().istAdmin(),
 		set: (value) => {
-			if ((value === undefined) || (value === props.getBenutzergruppenManager().istAdmin()))
+			if (value === props.getBenutzergruppenManager().istAdmin())
 				return;
 			void props.setIstAdmin(value);
 		}

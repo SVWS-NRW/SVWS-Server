@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, ServerMode } from "@core";
+import { BenutzerKompetenz, GostKursklausurManager, Schulform, ArrayList, ServerMode, GostKlausurvorgabenManager } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -29,8 +29,9 @@ export class RouteGostKlausurplanungKalender extends RouteNode<unknown, RouteGos
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungKalenderProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
-			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new ArrayList(), new ArrayList())},
+			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new GostKlausurvorgabenManager(new ArrayList(), null), new ArrayList(), null)},
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,
 			mapSchueler: routeGostKlausurplanung.data.mapSchueler,
 			patchKlausurtermin: routeGostKlausurplanung.data.patchKlausurtermin,

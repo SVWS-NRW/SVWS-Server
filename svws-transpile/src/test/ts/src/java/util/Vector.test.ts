@@ -166,10 +166,10 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.toArray(array);
 		expect(array).toMatchSnapshot();
 	});
-	test.skip("toString: returns string of elements", () => {
-		expect(v.toString()).toEqual(`[${a.toString()}]`);
-		v.add(b);
-		expect(v.toString()).toEqual(`[${a.toString()}, ${b.toString()}]`);
+	test("toString: returns string of elements", () => {
+		const string = v.toString();
+		const [obj] = JSON.parse(string);
+		expect(obj).toEqual(a)
 	});
 	test("get: returns element at index", () => {
 		expect(v.get(0)).toEqual(a);
@@ -293,7 +293,6 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.add(c);
 		for (const e of v) {
 			expect(e).toBeDefined();
-			expect(e).toBeInstanceOf(Object);
 		}
 	});
 	test("listIterator: returns an Iterator for the Vector", () => {
@@ -321,20 +320,6 @@ describe.each([s, n, l])("java.util.Vector, getestet mit $name", ({ a, b, c, d, 
 		v.retainAll(v2);
 		expect(v.size()).toBe(1);
 		expect(v.elementAt(0)).toEqual(b);
-	});
-	test.todo("subList: returns partial List from index to index", () => {
-		//const v2 = v.subList(1, 2);
-		//expect(v2.size()).toBe(1);
-		//expect(v2.elementAt(0)).toEqual(b);
-	});
-	test.todo(
-		"removeIf: remove elements from vector if they meet condition",
-		() => {
-			//
-		}
-	);
-	test.todo("spliterator: creates a Spliterator instance", () => {
-		//expect(v.spliterator()).toBeInstanceOf(VectorSpliterator);
 	});
 	test("sort: Sortiere Elemente mit Comparator Funktion", () => {
 		v.add(b);

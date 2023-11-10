@@ -92,6 +92,18 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public static transpilerFromJSON(json : string): AdressbuchKontakt {
 		const obj = JSON.parse(json);
 		const result = new AdressbuchKontakt();
+		if (typeof obj.id === "undefined")
+			 throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
+		if (typeof obj.adressbuchId === "undefined")
+			 throw new Error('invalid json format, missing attribute adressbuchId');
+		result.adressbuchId = obj.adressbuchId;
+		if (typeof obj.uri === "undefined")
+			 throw new Error('invalid json format, missing attribute uri');
+		result.uri = obj.uri;
+		if (typeof obj.version === "undefined")
+			 throw new Error('invalid json format, missing attribute version');
+		result.version = obj.version;
 		if (typeof obj.nachname === "undefined")
 			 throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
@@ -124,6 +136,10 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 
 	public static transpilerToJSON(obj : AdressbuchKontakt) : string {
 		let result = '{';
+		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
+		result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
+		result += '"version" : ' + JSON.stringify(obj.version!) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
@@ -168,6 +184,18 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 
 	public static transpilerToJSONPatch(obj : Partial<AdressbuchKontakt>) : string {
 		let result = '{';
+		if (typeof obj.id !== "undefined") {
+			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		}
+		if (typeof obj.adressbuchId !== "undefined") {
+			result += '"adressbuchId" : ' + JSON.stringify(obj.adressbuchId!) + ',';
+		}
+		if (typeof obj.uri !== "undefined") {
+			result += '"uri" : ' + JSON.stringify(obj.uri!) + ',';
+		}
+		if (typeof obj.version !== "undefined") {
+			result += '"version" : ' + JSON.stringify(obj.version!) + ',';
+		}
 		if (typeof obj.nachname !== "undefined") {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		}

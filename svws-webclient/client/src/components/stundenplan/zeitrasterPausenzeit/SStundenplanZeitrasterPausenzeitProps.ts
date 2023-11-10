@@ -1,17 +1,17 @@
-import type { LehrerListeEintrag, List, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanZeitraster, Wochentag } from "@core";
+import type { LehrerListeEintrag, List, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenzeit, StundenplanZeitraster, Wochentag, } from "@core";
 
 export interface StundenplanZeitrasterPausenzeitProps {
 	stundenplanManager: () => StundenplanManager;
-	patch: (daten: Partial<Stundenplan>) => Promise<void>;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 	addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	importPausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
-	listPausenzeiten: List<StundenplanPausenzeit>;
-	patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
-	addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
+	patchZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
+	addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
-	importZeitraster: () => Promise<void>;
+	importZeitraster: undefined | (() => Promise<void>);
 	listLehrer: List<LehrerListeEintrag>;
 	addAufsichtUndBereich: (pausenaufsicht: Partial<StundenplanPausenaufsicht>) => Promise<void>;
+	selected: () => Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
+	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
 }

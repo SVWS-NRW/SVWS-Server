@@ -79,6 +79,14 @@ public class SchuleStammdaten {
 	@Schema(description = "die ID des Schuljahresabschnittes, in welchem sich die Schule befindet", example = "14")
 	public long idSchuljahresabschnitt;
 
+	/** Der Schuljahresabschnittes, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen). */
+	@Schema(description = "der Schuljahresabschnittes, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen)", example = "2023/24.1")
+	public @NotNull String textSchuljahresabschnitt = "";
+
+	/** Das Schuljahr, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen). */
+	@Schema(description = "das Schuljahr, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen)", example = "2023/24")
+	public @NotNull String textSchuljahr = "";
+
 	/** Die Anzahl der Abschnitte pro Jahrgangsstufe. */
 	@Schema(description = "Anzahl der Abschnitte pro Jahrgangsstufe", example = "1")
 	public long anzJGS_Jahr;

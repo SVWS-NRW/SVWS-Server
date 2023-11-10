@@ -34,8 +34,10 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
+		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : Number(params.abiturjahr);
+		if ((abiturjahr === null) || (abiturjahr === -1))
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		return false;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
@@ -114,7 +116,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<unknown, RouteGostKu
 			setSchueler: routeGostKursplanung.data.gotoSchueler,
 			getErgebnismanager: () => routeGostKursplanung.data.ergebnismanager,
 			schueler: routeGostKursplanung.data.hatSchueler ? routeGostKursplanung.data.auswahlSchueler : undefined,
-			schuelerFilter: routeGostKursplanung.data.schuelerFilter,
+			schuelerFilter: () => routeGostKursplanung.data.schuelerFilter,
 			faecherManager: routeGost.data.faecherManager,
 			config: api.config,
 		}

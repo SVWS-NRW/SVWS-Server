@@ -1,9 +1,7 @@
-import type { KlassenDaten, LehrerListeEintrag, JahrgangsListeEintrag, Schueler} from "@core";
+import type { KlassenDaten, Schueler, KlassenListeManager} from "@core";
 
 export interface KlassenDatenProps {
 	patch: (data : Partial<KlassenDaten>) => Promise<void>;
-	data: KlassenDaten,
-	mapLehrer: Map<number, LehrerListeEintrag>,
-	mapJahrgaenge: Map<number, JahrgangsListeEintrag>,
+	klassenListeManager: () => KlassenListeManager;
 	gotoSchueler: (eintrag: Schueler) => Promise<void>,
 }

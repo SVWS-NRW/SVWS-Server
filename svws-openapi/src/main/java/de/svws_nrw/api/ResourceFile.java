@@ -2,20 +2,16 @@ package de.svws_nrw.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 import de.svws_nrw.base.FileUtils;
+import de.svws_nrw.db.utils.OperationError;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Diese Klasse dient als Cache für Datei-Ressourcen, wie dem SVWS-Client, die über
- * die OpenAPI-Schnisstelle zur Verfügung gestellt werden.
+ * Diese Klasse dient als Cache für Datei-Ressourcen.
  */
 public final class ResourceFile {
-
-	/** Eine HashMap mit den {@link ResourceFile}-Objekt zugeordnet zu dem Dateiname, unter dem auf die Ressource zugegriffen wird, */
-	private static final HashMap<String, ResourceFile> files = new HashMap<>();
 
 	/** Der Datei-Pfad dieser Ressource */
 	private final String path;
@@ -37,15 +33,12 @@ public final class ResourceFile {
 	 *                 übernommen werden soll, da der Pfad der Ressource ein relativer Pfad ist.
 	 * @param file   das {@link File}-Objekt für den Zugriff auf die Datei-Ressource
 	 */
-	private ResourceFile(final String prefix, final File file) {
+	ResourceFile(final String prefix, final File file) {
 		this.file = file;
 		final String p = file.getPath().replace('\\', '/');
 		this.path = p.substring(prefix.length(), p.length()).replaceFirst("^/", "");
 		this.cache = null;
 		this.cacheTimestamp = Long.MIN_VALUE;
-// TODO log info
-System.out.println("Adding File Resource: " + this.path);
-		files.put(this.path, this);
 	}
 
 
@@ -64,9 +57,7 @@ System.out.println("Adding File Resource: " + this.path);
 				this.cacheTimestamp = file.lastModified();
 			}
 		} catch (final SecurityException | IOException e) {
-			// TODO log error
-			e.printStackTrace();
-			return null;
+			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 		}
 		return this.cache;
 	}
@@ -107,94 +98,5 @@ System.out.println("Adding File Resource: " + this.path);
 		final int pos = path.lastIndexOf('/') + 1;
 		return (pos == 0) ? path : path.substring(pos);
 	}
-
-
-	/**
-	 * Fügt alle Ressourcen in dem angegebenen Verzeichnis zu den Ressourcen hinzu. Dabei wird das
-	 * angegbene Präfix bei dem Pfadnamen der Dateien nicht für die Registierung als Resource
-	 * verwendet und aus dem Pfad für die Registrierung entfernt.
-	 *
-	 * @param prefix   das bei der Registrierung zu ignorierende Präfix des Dateipfades
-	 * @param dir      das Verzeichnis, in dem die hinzuzufügenden Datei-Ressourcen gesucht werden
-	 */
-	@SuppressWarnings("unused")
-	private static void addDirectory(final String prefix, final File dir) {
-		if (!dir.isDirectory())
-			return;
-		final File[] dir_content = dir.listFiles();
-		if (dir_content == null)
-			return;
-		for (final File f : dir_content) {
-			if (f.isFile()) {
-				new ResourceFile(prefix, f);
-			} else if (f.isDirectory()) {
-				addDirectory(prefix, f);
-			}
-		}
-	}
-
-
-	/**
-	 * Registiert alle Datei-Ressourcen angebenen Pfad. Bei der Registierung werden nur die relativen Pfade
-	 * darunter verwendet.
-	 *
-	 * @param path   der Pfad, in dem die Datei-Ressourcen hinzuzufügen sind.
-	 */
-    public static void add(final String path) {
-    	addDirectory(path, new File(path));
-    }
-
-
-    /**
-     * Entfernt alle registrierten Datei-Ressourcen aus der Registrierung.
-     */
-	public static void clearAll() {
-    	files.clear();
-	}
-
-
-	/**
-	 * Prüft zunächst, ob eine Datei-Ressource unter dem angegebenen Pfad registriert ist.
-	 * Ist dies der Fall, so wird das {@link HttpServletResponse}-Objekt mit den Daten der
-	 * Datei-Ressource beschrieben und es wird true zurückgegeben. Tritt beim ein Fehler
-	 * auf oder ist keine Datei-Ressource unter dem Pfad registriert, so wird fals
-	 * zurückgegeben.
-	 *
-	 * @param path       der Pfad der Datei-Ressource
-	 * @param response   das {@link HttpServletResponse}-Objekt für die Daten der Ressource
-	 *
-	 * @return true, falls die Response gültige Daten beinhaltet, ansonsten false
-	 */
-    public static boolean handleResponse(final String path, final HttpServletResponse response) {
-    	final ResourceFile res = files.get(path);
-    	if (res == null)
-    		return false;
-    	try {
-			res.write(response);
-		} catch (final IOException e) {
-			// TODO log error
-			e.printStackTrace();
-			return false;
-		}
-    	return true;
-    }
-
-
-    /**
-     * Prüft zunächst, ob eine Datei-Ressource unter dem angegebenen Pfad registriert ist.
-     * Ist die nicht der Fall, so wird null zurückgegeben. Ansonsten werden
-     * die Daten der registrierten Datei-Ressource zurückgeben (siehe auch
-     * {@link ResourceFile#getData()}).
-     *
-     * @param path   der Pfad der Datei-Ressource
-     *
-     * @return die Daten der Datei-Ressource oder null im Fehlerfall
-     */
-    public static byte[] getData(final String path) {
-    	final ResourceFile res = files.get(path);
-    	if (res == null)
-    		return null;
-    	return res.getData();
-    }
 
 }

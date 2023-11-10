@@ -11,6 +11,7 @@ import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanu
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
+import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungDetailAnsicht";
 
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteDataGostKlausurplanung";
 
@@ -34,6 +35,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			routeGostKlausurplanungSchienen,
 			routeGostKlausurplanungKalender,
 			routeGostKlausurplanungRaumzeit,
+			routeGostKlausurplanungDetailAnsicht,
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		this.isHidden = (params?: RouteParams) => {
@@ -42,8 +44,10 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined);
+		const abiturjahr = params?.abiturjahr === undefined ? null : Number(params.abiturjahr);
+		if (abiturjahr === null)
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		return false;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {

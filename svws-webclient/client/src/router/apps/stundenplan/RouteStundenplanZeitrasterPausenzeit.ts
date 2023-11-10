@@ -26,18 +26,18 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<unknown, Rou
 	public getProps(to: RouteLocationNormalized): StundenplanZeitrasterPausenzeitProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
-			patch: routeStundenplan.data.patch,
+			listLehrer: routeStundenplan.data.listLehrer,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			addPausenzeit: routeStundenplan.data.addPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
 			importPausenzeiten: routeStundenplan.data.importPausenzeiten,
-			listPausenzeiten: routeStundenplan.data.listPausenzeiten,
 			patchZeitraster: routeStundenplan.data.patchZeitraster,
 			addZeitraster: routeStundenplan.data.addZeitraster,
 			removeZeitraster: routeStundenplan.data.removeZeitraster,
 			importZeitraster: routeStundenplan.data.importZeitraster,
-			listLehrer: routeStundenplan.data.listLehrer,
 			addAufsichtUndBereich: routeStundenplan.data.addAufsichtUndBereich,
+			selected: () => routeStundenplan.data.selected,
+			setSelection: routeStundenplan.data.setSelection,
 		};
 	}
 

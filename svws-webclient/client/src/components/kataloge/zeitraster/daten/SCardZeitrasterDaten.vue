@@ -10,9 +10,9 @@
 
 	const props = defineProps<{
 		listKatalogeintraege: () => List<StundenplanZeitraster>;
-		patchZeitraster: (daten: StundenplanZeitraster, multi: StundenplanZeitraster[]) => Promise<void>;
-		addZeitraster: (daten: StundenplanZeitraster, tage: number[]) => Promise<void>;
-		removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+		patchZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
+		addZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
+		removeZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
 </script>

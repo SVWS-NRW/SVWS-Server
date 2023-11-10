@@ -14,18 +14,18 @@ import jakarta.validation.constraints.NotNull;
 public enum Sprachpruefungniveau {
 
 	/** Prüfungsniveau angelehnt an 'HA9' */
-	HA9(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_HA9", "Hauptschulabschluss nach Klasse 9", null, null)
+	ESA(new SprachpruefungsniveauKatalogEintrag[] {
+			new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_ESA", "Erster Schulabschluss", null, null)
 	}),
 
 	/** Prüfungsniveau angelehnt an 'HA10' */
-	HA10(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_HA10", "Hauptschulabschluss nach Klasse 10", null, null)
+	EESA(new SprachpruefungsniveauKatalogEintrag[] {
+			new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_EESA", "Erweiterter Erster Schulabschluss", null, null)
 	}),
 
 	/** Prüfungsniveau angelehnt an 'MSA' */
 	MSA(new SprachpruefungsniveauKatalogEintrag[] {
-			new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null),
+			new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null),
 	}),
 
 	/** Prüfungsniveau angelehnt an 'EF' */

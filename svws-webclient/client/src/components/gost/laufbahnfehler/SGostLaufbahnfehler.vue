@@ -1,14 +1,14 @@
 <template>
 	<div class="page--content">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button type="secondary" @click.prevent="download_file" title="Wahlbögen herunterladen" :disabled="apiStatus.pending">
-				<i-ri-printer-line />Wahlbögen herunterladen <svws-ui-spinner :spinning="apiStatus.pending" />
-			</svws-ui-button>
+			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :disabled="apiStatus.pending">
+				<template #icon> <i-ri-printer-line /><svws-ui-spinner :spinning="apiStatus.pending" /> </template>
+			</svws-ui-button-select>
 		</Teleport>
 		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">
 			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
@@ -31,7 +31,7 @@
 					</svws-ui-tooltip>
 				</template>
 				<template #cell(linkToSchueler)="{ rowData }">
-					<button type="button" @click.stop="gotoLaufbahnplanung(rowData as Schueler)" class="button button--icon" title="Zur Laufbahnplanung">
+					<button type="button" @click.stop="gotoLaufbahnplanung(rowData.schueler.id)" class="button button--icon" title="Zur Laufbahnplanung">
 						<i-ri-link />
 					</button>
 				</template>
@@ -67,18 +67,17 @@
 
 <script setup lang="ts">
 
-	import type { List, Schueler, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
-	import { GostBelegpruefungsErgebnisse} from '@core';
+	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
 	import type { ComputedRef, WritableComputedRef} from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
-	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus } from '@core';
+	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse } from '@core';
 	import { computed, ref, toRaw, onMounted } from 'vue';
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 
 	const cols: DataTableColumn[] = [
-		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
+		{key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center"},
 		{key: 'name', label: 'Name, Vorname', span: 2},
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
@@ -159,11 +158,31 @@
 		return res;
 	}
 
-	async function download_file() {
-		const pdf = await props.getPdfWahlbogen();
+	const dropdownList = [
+		{ text: "Laufbahnwahlbogen gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen", false, 0), default: true },
+		{ text: "Laufbahnwahlbogen (nur Belegung) gefilterte Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", false, 0) },
+		{ text: "Ergebnisliste (nur Summen) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 0) },
+		{ text: "Ergebnisliste (nur Summen und Fehler) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 1) },
+		{ text: "Ergebnisliste (vollständig) gefilterte Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", false, 2) },
+		{ text: "---------------------------------------------------------------", action: () => {}, separator: true },
+		{ text: "Laufbahnwahlbogen markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen", true, 0) },
+		{ text: "Laufbahnwahlbogen (nur Belegung) markierter Schüler", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)", true, 0) },
+		{ text: "Ergebnisliste (nur Summen) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 0) },
+		{ text: "Ergebnisliste (nur Summen und Fehler) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 1) },
+		{ text: "Ergebnisliste (vollständig) markierter Schüler", action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", true, 2) }
+	]
+
+	async function downloadPDF(title: string, single: boolean, detaillevel: number) {
+		const list = new ArrayList<number>();
+		if (single)
+			list.add(schueler.value.schueler.id);
+		else
+			for (const s of filtered.value)
+				list.add(s.schueler.id);
+		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel);
 		const link = document.createElement("a");
-		link.href = URL.createObjectURL(pdf);
-		link.download = `Laufbahnplanung_${props.abiturjahr}.pdf`;
+		link.href = URL.createObjectURL(data);
+		link.download = name;
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);

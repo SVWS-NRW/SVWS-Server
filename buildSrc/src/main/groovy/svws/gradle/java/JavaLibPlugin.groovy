@@ -76,15 +76,21 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "2.0.28";
-		def openHtmlToPdfVersion = "1.0.10";
+		def version = "3.0.0";
+		def openHtmlToPdfVersion = "1.1.4";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
-		project.dependencies.add('pdf', 'com.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'com.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'com.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
 	}
 
+
+	void addThymeleafConfiguration() {
+		def version = "3.1.2.RELEASE";
+		project.configurations.create('thymeleaf');
+		project.dependencies.add('thymeleaf', 'org.thymeleaf:thymeleaf:' + version);
+	}
 
 
 	void addRestEasyConfiguration() {
@@ -137,6 +143,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		this.addJacksonConfiguration();
 		this.addJettyConfiguration();
 		this.addPdfConfiguration();
+		this.addThymeleafConfiguration();
 		this.addRestEasyConfiguration();
 		this.addSwagger();
 		this.addValidation();

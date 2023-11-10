@@ -4,7 +4,7 @@
 		<template #modalTitle>Räume aus Katalog importieren</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-table v-if="listRaeume.size()" :items="listRaeume" clickable :clicked="raum" selectable v-bind="selected" />
+				<svws-ui-table v-if="listRaeume().size()" :items="listRaeume()" clickable :clicked="raum" selectable v-model="selected" />
 				<div v-else>Keine Einträge im Raum-Katalog hinterlegt.</div>
 				<div>Neue Einträge im Raum-Katalog können unter Schule angelegt werden</div>
 				<!-- TODO Link einfügen und Beschreibung anpassen -->
@@ -12,7 +12,7 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer" :disabled="selected.length === 0"> Ausgewählte importieren </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -24,7 +24,7 @@
 
 	const props = defineProps<{
 		importRaeume: (raeume: Raum[]) => Promise<void>;
-		listRaeume: List<Raum>;
+		listRaeume: () => List<Raum>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -35,6 +35,11 @@
 
 	const openModal = () => {
 		showModal().value = true;
+	}
+
+	async function importer() {
+		await props.importRaeume(selected.value);
+		showModal().value = false;
 	}
 
 </script>

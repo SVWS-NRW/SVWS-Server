@@ -32,7 +32,9 @@
 		return list;
 	}
 
-	async function runInitSchule(schule: SchulenKatalogEintrag) {
+	async function runInitSchule(schule: SchulenKatalogEintrag | null | undefined) {
+		if (schule === null || schule === undefined)
+			return;
 		loading.value = true;
 		status.value = await props.initSchule(schule);
 		loading.value = false;

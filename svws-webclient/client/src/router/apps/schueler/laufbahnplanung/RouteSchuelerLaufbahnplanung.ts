@@ -20,10 +20,12 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		super.isHidden = (params?: RouteParams) => {
-			if (routeSchueler.data.auswahl === undefined)
+			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
+				return routeError.getRoute(new Error("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+			if (!routeSchueler.data.schuelerListeManager.hasDaten())
 				return false;
-			const abiturjahr = routeSchueler.data.auswahl?.abiturjahrgang;
-			return !(abiturjahr && routeSchueler.data.mapAbiturjahrgaenge.get(abiturjahr));
+			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
+			return (abiturjahr && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr)) ? false : routeSchueler.getRoute(parseInt(params.id));
 		}
 		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
 		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
@@ -35,11 +37,11 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		if (this.parent === undefined)
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.id === undefined) {
-			await this.data.ladeDaten();
+			await this.data.ladeDaten(null);
 		} else {
 			const id = parseInt(to_params.id);
 			try {
-				await this.data.ladeDaten(this.parent.data.mapSchueler.get(id));
+				await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
 				return routeSchueler.getRoute(id);
 			}

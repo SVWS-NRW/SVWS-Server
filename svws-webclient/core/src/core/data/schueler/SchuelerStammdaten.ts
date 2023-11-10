@@ -153,29 +153,19 @@ export class SchuelerStammdaten extends JavaObject {
 	public geburtslandMutter : string | null = null;
 
 	/**
-	 * Die ID eines sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes.
-	 */
-	public foerderschwerpunktID : number | null = null;
-
-	/**
-	 * Die ID eines zweiten sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes.
-	 */
-	public foerderschwerpunkt2ID : number | null = null;
-
-	/**
-	 * Gibt an, ob ein AOSF bei dem Schülerdatensatz vorliegt.
-	 */
-	public istAOSF : boolean | null = null;
-
-	/**
-	 * Gibt an, ob zieldifferentes Lerne bei dem Schülerdatensatz vorliegt.
-	 */
-	public istLernenZieldifferent : boolean | null = null;
-
-	/**
 	 * Die ID des Status des Schülerdatensatzes.
 	 */
 	public status : number = 0;
+
+	/**
+	 * Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht.
+	 */
+	public istDuplikat : boolean = false;
+
+	/**
+	 * Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 */
+	public externeSchulNr : string | null = null;
 
 	/**
 	 * Die ID der Art des Fahrschülers des Schülerdatensatzes.
@@ -231,11 +221,6 @@ export class SchuelerStammdaten extends JavaObject {
 	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht.
 	 */
 	public erhaeltMeisterBAFOEG : boolean = false;
-
-	/**
-	 * Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht.
-	 */
-	public istDuplikat : boolean = false;
 
 	/**
 	 * Textfeld mit Bemerkungen zum Schülerdatensatz.
@@ -298,13 +283,13 @@ export class SchuelerStammdaten extends JavaObject {
 		result.verkehrspracheFamilie = typeof obj.verkehrspracheFamilie === "undefined" ? null : obj.verkehrspracheFamilie === null ? null : obj.verkehrspracheFamilie;
 		result.geburtslandVater = typeof obj.geburtslandVater === "undefined" ? null : obj.geburtslandVater === null ? null : obj.geburtslandVater;
 		result.geburtslandMutter = typeof obj.geburtslandMutter === "undefined" ? null : obj.geburtslandMutter === null ? null : obj.geburtslandMutter;
-		result.foerderschwerpunktID = typeof obj.foerderschwerpunktID === "undefined" ? null : obj.foerderschwerpunktID === null ? null : obj.foerderschwerpunktID;
-		result.foerderschwerpunkt2ID = typeof obj.foerderschwerpunkt2ID === "undefined" ? null : obj.foerderschwerpunkt2ID === null ? null : obj.foerderschwerpunkt2ID;
-		result.istAOSF = typeof obj.istAOSF === "undefined" ? null : obj.istAOSF === null ? null : obj.istAOSF;
-		result.istLernenZieldifferent = typeof obj.istLernenZieldifferent === "undefined" ? null : obj.istLernenZieldifferent === null ? null : obj.istLernenZieldifferent;
 		if (typeof obj.status === "undefined")
 			 throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
+		if (typeof obj.istDuplikat === "undefined")
+			 throw new Error('invalid json format, missing attribute istDuplikat');
+		result.istDuplikat = obj.istDuplikat;
+		result.externeSchulNr = typeof obj.externeSchulNr === "undefined" ? null : obj.externeSchulNr === null ? null : obj.externeSchulNr;
 		result.fahrschuelerArtID = typeof obj.fahrschuelerArtID === "undefined" ? null : obj.fahrschuelerArtID === null ? null : obj.fahrschuelerArtID;
 		result.haltestelleID = typeof obj.haltestelleID === "undefined" ? null : obj.haltestelleID === null ? null : obj.haltestelleID;
 		result.anmeldedatum = typeof obj.anmeldedatum === "undefined" ? null : obj.anmeldedatum === null ? null : obj.anmeldedatum;
@@ -324,9 +309,6 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.erhaeltMeisterBAFOEG === "undefined")
 			 throw new Error('invalid json format, missing attribute erhaeltMeisterBAFOEG');
 		result.erhaeltMeisterBAFOEG = obj.erhaeltMeisterBAFOEG;
-		if (typeof obj.istDuplikat === "undefined")
-			 throw new Error('invalid json format, missing attribute istDuplikat');
-		result.istDuplikat = obj.istDuplikat;
 		result.bemerkungen = typeof obj.bemerkungen === "undefined" ? null : obj.bemerkungen === null ? null : obj.bemerkungen;
 		return result;
 	}
@@ -363,11 +345,9 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"verkehrspracheFamilie" : ' + ((!obj.verkehrspracheFamilie) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
 		result += '"geburtslandVater" : ' + ((!obj.geburtslandVater) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
 		result += '"geburtslandMutter" : ' + ((!obj.geburtslandMutter) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
-		result += '"foerderschwerpunktID" : ' + ((!obj.foerderschwerpunktID) ? 'null' : obj.foerderschwerpunktID) + ',';
-		result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID) + ',';
-		result += '"istAOSF" : ' + ((!obj.istAOSF) ? 'null' : obj.istAOSF) + ',';
-		result += '"istLernenZieldifferent" : ' + ((!obj.istLernenZieldifferent) ? 'null' : obj.istLernenZieldifferent) + ',';
 		result += '"status" : ' + obj.status + ',';
+		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID) + ',';
 		result += '"haltestelleID" : ' + ((!obj.haltestelleID) ? 'null' : obj.haltestelleID) + ',';
 		result += '"anmeldedatum" : ' + ((!obj.anmeldedatum) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
@@ -379,7 +359,6 @@ export class SchuelerStammdaten extends JavaObject {
 		result += '"keineAuskunftAnDritte" : ' + obj.keineAuskunftAnDritte + ',';
 		result += '"erhaeltSchuelerBAFOEG" : ' + obj.erhaeltSchuelerBAFOEG + ',';
 		result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG + ',';
-		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
 		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -478,20 +457,14 @@ export class SchuelerStammdaten extends JavaObject {
 		if (typeof obj.geburtslandMutter !== "undefined") {
 			result += '"geburtslandMutter" : ' + ((!obj.geburtslandMutter) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
 		}
-		if (typeof obj.foerderschwerpunktID !== "undefined") {
-			result += '"foerderschwerpunktID" : ' + ((!obj.foerderschwerpunktID) ? 'null' : obj.foerderschwerpunktID) + ',';
-		}
-		if (typeof obj.foerderschwerpunkt2ID !== "undefined") {
-			result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID) + ',';
-		}
-		if (typeof obj.istAOSF !== "undefined") {
-			result += '"istAOSF" : ' + ((!obj.istAOSF) ? 'null' : obj.istAOSF) + ',';
-		}
-		if (typeof obj.istLernenZieldifferent !== "undefined") {
-			result += '"istLernenZieldifferent" : ' + ((!obj.istLernenZieldifferent) ? 'null' : obj.istLernenZieldifferent) + ',';
-		}
 		if (typeof obj.status !== "undefined") {
 			result += '"status" : ' + obj.status + ',';
+		}
+		if (typeof obj.istDuplikat !== "undefined") {
+			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		}
+		if (typeof obj.externeSchulNr !== "undefined") {
+			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		}
 		if (typeof obj.fahrschuelerArtID !== "undefined") {
 			result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID) + ',';
@@ -525,9 +498,6 @@ export class SchuelerStammdaten extends JavaObject {
 		}
 		if (typeof obj.erhaeltMeisterBAFOEG !== "undefined") {
 			result += '"erhaeltMeisterBAFOEG" : ' + obj.erhaeltMeisterBAFOEG + ',';
-		}
-		if (typeof obj.istDuplikat !== "undefined") {
-			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
 		}
 		if (typeof obj.bemerkungen !== "undefined") {
 			result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';

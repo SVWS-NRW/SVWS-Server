@@ -4,7 +4,7 @@
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
-				<svws-ui-select :model-value="Wochentag.fromIDorException(item.wochentag)" @update:model-value="item.wochentag=$event.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
+				<svws-ui-select :model-value="Wochentag.fromIDorException(item.wochentag)" @update:model-value="wt => item.wochentag=wt!.id" :items="Wochentag.values()" :item-text="i=>i.beschreibung" required placeholder="Wochentag" />
 				<svws-ui-text-input type="number" v-model="item.beginn" required placeholder="Beginn" />
 				<svws-ui-text-input type="number" v-model="item.ende" required placeholder="Ende" />
 			</div>

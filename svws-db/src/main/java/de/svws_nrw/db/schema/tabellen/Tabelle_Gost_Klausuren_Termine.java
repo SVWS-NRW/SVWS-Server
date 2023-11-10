@@ -10,6 +10,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -59,11 +60,18 @@ public class Tabelle_Gost_Klausuren_Termine extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Klausuren_Termine_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Klausuren_Termine_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Klausuren_Termine_Abi_Jahrgang_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
-		);
+		"Gost_Klausuren_Termine_Abi_Jahrgang_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
+	);
+
+
+	/** Die Definition des Non-Unique-Index Gost_Klausuren_Termine_IDX_Abi_Jahrgang */
+	public SchemaTabelleIndex index_Gost_Klausuren_Termine_IDX_Abi_Jahrgang = addIndex("Gost_Klausuren_Termine_IDX_Abi_Jahrgang",
+		col_Abi_Jahrgang
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

@@ -7,6 +7,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -53,6 +54,11 @@ public class Tabelle_Gost_Blockung_Kurslehrer extends SchemaTabelle {
 			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
 		);
 
+	/** Die Definition des Non-Unique-Index Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID */
+	public SchemaTabelleIndex index_Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID = addIndex("Gost_Blockung_Kurslehrer_IDX_Blockung_Kurs_ID",
+		col_Blockung_Kurs_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 	/**
 	 * Erstellt die Schema-Defintion für die Tabelle Gost_Blockung_Kurslehrer.

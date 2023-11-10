@@ -28,7 +28,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	protected _kompetenzenBenoetigt: Set<BenutzerKompetenz> = new Set();
 
 	/** Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht */
-	protected isHidden: ((params?: RouteParams) => boolean) | undefined = undefined;
+	protected isHidden: ((params?: RouteParams) => RouteLocationRaw | false) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
 	protected _parent?: TRouteParent;
@@ -251,7 +251,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      */
 	public children_hidden() : ComputedRef<boolean[]> {
 		const route = useRoute();
-		return computed(() => this.children.map(c => c.hidden(route.params)));
+		return computed(() => this.children.map(c => c.hidden(route.params) !== false));
 	}
 
 	/**
@@ -329,7 +329,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
      */
-	public hidden(params?: RouteParams): boolean {
+	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
 		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
 			return false;
@@ -367,6 +367,18 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 			throw new Error("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
 		(this._record.components as { [key: string] : RouteComponent })[name] = component;
 		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })[name] = prop_handler;
+	}
+
+
+	/**
+	 * Prüft, ob eine Router-View mit dem Namen "name" vorhanden ist.
+	 *
+	 * @param name   der Name der zu prüfenden View
+	 *
+	 * @returns true, wenn die View vorhanden ist, und ansonsten false
+	 */
+	public hasView(name : string): boolean {
+		return (this._record.components as { [key: string] : RouteComponent })[name] !== undefined;
 	}
 
 
@@ -486,7 +498,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async enter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -496,9 +508,9 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doEnter(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-		  return await this.enter(to, to_params);
+		  return await this.enter(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doEnter(" + to.name + ")");
@@ -515,7 +527,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
      */
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -526,15 +538,18 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
      *
      * @param to   die neue Route
      * @param to_params   die Routen-Parameter
+		 * @param from die alte Route
+		 * @param from_params  die Routen-Parameter der alten Route
      */
-	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
-			if (this.hidden(to_params))
-				return this.parent === undefined ? this.getRoute() : this.parent.getRoute();
+			const tmpHidden = this.hidden(to_params);
+			if (tmpHidden !== false)
+				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params);
+			return await this.update(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doUpdate(" + to.name + ")");

@@ -102,6 +102,7 @@ import { LehrerKatalogMinderleistungsartEintrag } from '../core/data/lehrer/Lehr
 import { LehrerKatalogRechtsverhaeltnisEintrag } from '../core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
 import { LehrerKatalogZugangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
+import { LehrerPersonalabschnittsdaten } from '../core/data/lehrer/LehrerPersonalabschnittsdaten';
 import { LehrerPersonaldaten } from '../core/data/lehrer/LehrerPersonaldaten';
 import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
 import { List } from '../java/util/List';
@@ -1990,6 +1991,61 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der PATCH-Methode patchFach für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/{id : \d+}
+	 *
+	 * Passt das Fach mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Fächern besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<FachDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/faecher/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = FachDaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteFach für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/{id : \d+}
+	 *
+	 * Entfernt ein Fach. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines Faches hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das Fach wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: FachDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Fach zu löschen.
+	 *   Code 404: Kein Fach vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Fach wurde erfolgreich entfernt.
+	 */
+	public async deleteFach(schema : string, id : number) : Promise<FachDaten> {
+		const path = "/db/{schema}/faecher/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return FachDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getKatalogFachgruppenEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/allgemein/fachgruppe/{id : \d+}
 	 *
 	 * Gibt den Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -2202,6 +2258,35 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<SprachreferenzniveauKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SprachreferenzniveauKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addFach für den Zugriff auf die URL https://{hostname}/db/{schema}/faecher/create
+	 *
+	 * Erstellt ein neues Fach und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Faches besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Das Fach wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: FachDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um ein Fach anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<FachDaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Das Fach wurde erfolgreich hinzugefügt.
+	 */
+	public async addFach(data : Partial<FachDaten>, schema : string, id : number) : Promise<FachDaten> {
+		const path = "/db/{schema}/faecher/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = FachDaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return FachDaten.transpilerFromJSON(text);
 	}
 
 
@@ -3024,60 +3109,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFErgebnisseLaufbahnpruefung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/ergebnisse_laufbahnpruefung/{abiturjahr : -?\d+}/{detaillevel : \d+}
-	 *
-	 * Erstellt eine PDF-Liste mit den Schülern und ihren Kurs- und Wochenstunden sowie ihren Laufbahnfehlern in der gymnasialen Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
-	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
-	 *
-	 * @returns Die PDF-Liste mit Summen und Fehlern des angegebenen Abiturjahrgangs
-	 */
-	public async getGostAbiturjahrgangPDFErgebnisseLaufbahnpruefung(schema : string, abiturjahr : number, detaillevel : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/abiturjahrgang/pdf/ergebnisse_laufbahnpruefung/{abiturjahr : -?\\d+}/{detaillevel : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
-			.replace(/{detaillevel\s*(:[^}]+)?}/g, detaillevel.toString());
-		const data : ApiFile = await super.getPDF(path);
-		return data;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostAbiturjahrgangPDFWahlboegen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\d+}
-	 *
-	 * Erstellt die PDF-Wahlbögen für die gymnasiale Oberstufe zu dem angegebenen Abiturjahrgang. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des PDFs besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
-	 *     - Mime-Type: application/pdf
-	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wahlbögen für die Gymnasialen Oberstufe des Abiturjahrgangs zu erstellen.
-	 *   Code 404: Kein Eintrag für Laufbahnplanungsdaten des Abiturjahrgangs der gymnasialen Oberstufe gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 *
-	 * @returns Die PDF-Wahlbögen für die gymnasialen Oberstufe des angegebenen Abiturjahrgangs
-	 */
-	public async getGostAbiturjahrgangPDFWahlboegen(schema : string, abiturjahr : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/abiturjahrgang/pdf/wahlboegen/{abiturjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const data : ApiFile = await super.getPDF(path);
-		return data;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode restauriereGostBlockung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/{abiturjahr : \d+}/{halbjahr : \d+}/restore
 	 *
 	 * Restauriert die Blockung aus den Leistungsdaten. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Restaurieren einer Blockung besitzt.
@@ -3655,7 +3686,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode pdfGostKursplanungKurseMitKursschuelern für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \d+}
+	 *
+	 * Erstellt eine PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Kurse der Schüler für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zur Blockung bzw. deren Ergebnissen für die angegebenen IDs gefunden
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} blockungsergebnisid - der Pfad-Parameter blockungsergebnisid
+	 *
+	 * @returns Die PDF-Datei mit einer Liste von Kursen mit deren Schülern zum angegebenen Ergebnis einer Blockung
+	 */
+	public async pdfGostKursplanungKurseMitKursschuelern(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/blockungen/pdf/kurse_mit kursschuelern/{blockungsergebnisid : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode pdfGostKursplanungKurseSchienenZuordnung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung. Sofern Schüler-IDs übergeben werden, werden für diese die Zuordnungen ausgegeben, andernfalls die allgemeine Zuordnung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Schienen-Zuordnung besitzt.
 	 *
@@ -3672,7 +3731,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit der Kurse-Schienen-Zuordnung zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+	public async pdfGostKursplanungKurseSchienenZuordnung(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
 		const path = "/db/{schema}/gost/blockungen/pdf/kurse_schienen_zuordnung/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
@@ -3683,7 +3742,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostBlockungPDFSchuelerKurseListe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \d+}
+	 * Implementierung der POST-Methode pdfGostKursplanungSchuelerMitKursen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \d+}
 	 *
 	 * Erstellt eine PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kurse-Liste eines Schülers besitzt.
 	 *
@@ -3700,8 +3759,8 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die PDF-Datei mit einer Liste von Schülern und deren belegten Kursen zum angegebenen Ergebnis einer Blockung
 	 */
-	public async getGostBlockungPDFSchuelerKurseListe(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/blockungen/pdf/schueler_kurse_liste/{blockungsergebnisid : \\d+}"
+	public async pdfGostKursplanungSchuelerMitKursen(data : List<number>, schema : string, blockungsergebnisid : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/blockungen/pdf/schueler_mit_kursen/{blockungsergebnisid : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{blockungsergebnisid\s*(:[^}]+)?}/g, blockungsergebnisid.toString());
 		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
@@ -5077,6 +5136,9 @@ export class ApiServer extends BaseApi {
 	 *   Code 200: Der Log vom Import der Laufbahndaten
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
 	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
 	 *     - Mime-Type: application/json
@@ -5454,28 +5516,82 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostSchuelerPDFWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \d+}
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerErgebnisuebersicht für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \d+}
 	 *
-	 * Erstellt den PDF-Wahlbogen für die gymnasiale Oberstufe zu dem Schüler mit der angegebenen ID. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 * Erstellt eine Ergebnisübersicht der Laufbahnplanung für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
+	 *   Code 200: Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Ergebnisliste Laufbahnplanung für die gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} detaillevel - der Pfad-Parameter detaillevel
+	 *
+	 * @returns Die PDF-Datei mit der Ergebnisübersicht der Laufbahnplanung der gymnasialen Oberstufe.
+	 */
+	public async pdfGostLaufbahnplanungSchuelerErgebnisuebersicht(data : List<number>, schema : string, detaillevel : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungergebnisuebersicht/{detaillevel : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{detaillevel\s*(:[^}]+)?}/g, detaillevel.toString());
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen
+	 *
+	 * Erstellt die Wahlbogen für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
 	 *     - Mime-Type: application/pdf
 	 *     - Rückgabe-Typ: ApiFile
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wahlbogen für die Gymnasialen Oberstufe eines Schülers zu erstellen.
-	 *   Code 404: Kein Eintrag für einen Schüler mit Laufbahnplanungsdaten der gymnasialen Oberstufe für die angegebene ID gefunden
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
 	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} schuelerid - der Pfad-Parameter schuelerid
 	 *
-	 * @returns Der PDF-Wahlbogen für die gymnasialen Oberstufe des angegebenen Schülers
+	 * @returns Die PDF-Datei mit den Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe.
 	 */
-	public async getGostSchuelerPDFWahlbogen(schema : string, schuelerid : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/schueler/pdf/wahlbogen/{schuelerid : \\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{schuelerid\s*(:[^}]+)?}/g, schuelerid.toString());
-		const data : ApiFile = await super.getPDF(path);
-		return data;
+	public async pdfGostLaufbahnplanungSchuelerWahlbogen(data : List<number>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogennurbelegung
+	 *
+	 * Erstellt die Wahlbogen, reduziert auf die Belegung des Schülers, für die Laufbahnplanung der gymnasialen Oberstufe zu den Schülern mit der angegebenen IDs als PDF-Datei. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen des Wahlbogens besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.
+	 *     - Mime-Type: application/pdf
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die reduzierten Wahlbögen zur Laufbahnplanung der gymnasialen Oberstufe zu erstellen.
+	 *   Code 404: Kein Eintrag zu den angegebenen IDs gefunden.
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die PDF-Datei mit den Wahlbögen, reduziert auf die Belegung des Schülers, zur Laufbahnplanung der gymnasialen Oberstufe.
+	 */
+	public async pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(data : List<number>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/schueler/pdf/laufbahnplanungwahlbogennurbelegung"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoPDF(path, body);
+		return result;
 	}
 
 
@@ -6505,6 +6621,59 @@ export class ApiServer extends BaseApi {
 		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
+	 *
+	 * Liest die Personalabschnittsdaten zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Lehrerpersonaldaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Personalabschnittsdaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: LehrerPersonalabschnittsdaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten anzusehen.
+	 *   Code 404: Keine Lehrer-Personalabschnittsdaten mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Personalabschnittsdaten
+	 */
+	public async getLehrerPersonalabschnittsdaten(schema : string, id : number) : Promise<LehrerPersonalabschnittsdaten> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return LehrerPersonalabschnittsdaten.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchLehrerPersonalabschnittsdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/lehrer/personalabschnittsdaten/{id : \d+}
+	 *
+	 * Passt die Lehrer-Personalabschnittsdaten zu der angegebenen ID an und speichert das Ergebnis in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Lehrer-Personalabschnittsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in die Lehrer-Personalabschnittsdaten integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Lehrer-Personaldaten zu ändern.
+	 *   Code 404: Kein Lehrer-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<LehrerPersonalabschnittsdaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchLehrerPersonalabschnittsdaten(data : Partial<LehrerPersonalabschnittsdaten>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/lehrer/personalabschnittsdaten/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = LehrerPersonalabschnittsdaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
@@ -8851,6 +9020,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addAufsichtsbereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/aufsichtsbereiche/create/multiple
+	 *
+	 * Erstellt neue Aufsichtsbereiche für die Schule und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Aufsichtsbereich>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Aufsichtsbereiche für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<Aufsichtsbereich>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 */
+	public async addAufsichtsbereiche(data : List<Partial<Aufsichtsbereich>>, schema : string) : Promise<List<Aufsichtsbereich>> {
+		const path = "/db/{schema}/schule/aufsichtsbereiche/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Aufsichtsbereich>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Aufsichtsbereich.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuelerFoerderschwerpunkt für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/foerderschwerpunkt/{id : \d+}
 	 *
 	 * Liest die Daten des Förderschwerpunktes zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogdaten besitzt.
@@ -9275,6 +9474,36 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return Raum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume/create/multiple
+	 *
+	 * Erstellt neue Räume für die Schule und gibt die zugehörigen Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Räume wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Raum>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Räume für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<Raum>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Räume wurden erfolgreich hinzugefügt.
+	 */
+	public async addRaeume(data : List<Partial<Raum>>, schema : string) : Promise<List<Raum>> {
+		const path = "/db/{schema}/schule/raeume/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<Raum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(Raum.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -9793,6 +10022,38 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanRaum.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/raeume/create/multiple
+	 *
+	 * Erstellt mehrere neue Räume für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Räume wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanRaum>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Räume für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanRaum>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Räume wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanRaeume(data : List<Partial<StundenplanRaum>>, schema : string, id : number) : Promise<List<StundenplanRaum>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanRaum>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanRaum.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

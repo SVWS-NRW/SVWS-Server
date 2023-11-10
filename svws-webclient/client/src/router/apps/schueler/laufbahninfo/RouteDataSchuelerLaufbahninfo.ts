@@ -52,10 +52,10 @@ export class RouteDataSchuelerLaufbahninfo {
 		return this._state.value.sprachpruefungen;
 	}
 
-	public async auswahlSchueler(auswahl?: SchuelerListeEintrag) {
+	public async auswahlSchueler(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if (auswahl === undefined) {
+		if ((auswahl === null) || (auswahl === undefined)) {
 			this.setPatchedDefaultState({});
 			return;
 		}

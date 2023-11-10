@@ -11,7 +11,7 @@
 		</template>
 		<template #regelEdit>
 			<parameter-kurs v-model="kurs1" :map-faecher="mapFaecher" :kurse="kurse_filtered" label="Kurs hat" />
-			<svws-ui-text-input placeholder="externe Schüler" v-model="anzahl" type="number" />
+			<svws-ui-input-number placeholder="externe Schüler" v-model="anzahl" :min="1" />
 		</template>
 	</BlockungsregelBase>
 </template>
@@ -63,7 +63,7 @@
 			return kurs || new GostBlockungKurs()
 		},
 		set: (value) => {
-			if (regel.value)
+			if (regel.value !== undefined)
 				regel.value.parameter.set(0, value.id)
 		}
 	});
@@ -75,7 +75,7 @@
 			return regel.value.parameter.get(1);
 		},
 		set: (value) => {
-			if (regel.value)
+			if (regel.value !== undefined)
 				regel.value.parameter.set(1, value)
 		}
 	})

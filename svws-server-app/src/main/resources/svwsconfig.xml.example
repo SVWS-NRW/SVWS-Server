@@ -17,11 +17,17 @@
 	<!-- Gibt den HTTPS-Port des Servers an -->
 	<PortHTTPS>443</PortHTTPS>
 	
+	<!-- Gibt einen zweiten Port für den Servers an, falls für den priviligierten Datenbank-Zugriff (z.B. mit dem root-Benutzer) ein extra Verbindung genutzt wird -->
+	<PortHTTPPrivilegedAccess>8443</PortHTTPPrivilegedAccess>
+	
 	<!-- Aktiviert die Nutzung der CORS-Header - Default: true -->
 	<UseCORSHeader>true</UseCORSHeader>
 	
 	<!-- Gibt den Pfad an, wo die Dateien des Web-Clients liegen -->
-	<ClientPath>webclient/build</ClientPath>
+	<ClientPath>webclient/client/build</ClientPath>
+	
+	<!-- Gibt den Pfad an, wo die Dateien des Admin Web-Clients liegen -->
+	<AdminClientPath>webclient/admin/build</AdminClientPath>
 	
 	<!-- Gibt an, ob Logging in Dateien aktiviert werden soll. -->
 	<LoggingEnabled>true</LoggingEnabled>

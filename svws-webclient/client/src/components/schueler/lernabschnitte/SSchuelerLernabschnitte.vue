@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content h-full w-full">
-		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation">
+		<svws-ui-table :clicked="lernabschnitt" @update:clicked="gotoLernabschnitt" :columns="[{key: 'schuljahresabschnitt', label: 'Abschnitt'}]" :items="lernabschnitte" clickable type="navigation" class="-mt-1">
 			<template #cell="{ rowData: row }">
 				<span>
 					{{ row.schuljahr + "." + row.abschnitt }}
@@ -15,11 +15,11 @@
 				</svws-ui-tooltip>
 			</template>
 		</svws-ui-table>
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
-			<svws-ui-sub-nav type="tabs">
-				<svws-ui-router-tab-bar-button v-for="c in children" :route="c" :selected="child"
-					:hidden="false" @select="setChild(c)" :key="c.name" />
-			</svws-ui-sub-nav>
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+			<nav class="svws-ui-secondary-tabs">
+				<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
+					:hidden="false" @select="setChild(c)" :key="index" />
+			</nav>
 		</Teleport>
 		<router-view :key="$route.hash" />
 	</div>
@@ -44,11 +44,15 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		grid-template-columns: 8.5rem minmax(50rem, 1fr);
+		grid-template-columns: 7rem minmax(50rem, 1fr) minmax(50rem, 1fr);
 	}
 
-	.svws-ui-tabs--secondary {
-		@apply flex gap-1;
+</style>
+
+<style lang="postcss">
+
+	.svws-select-lernabschnitt .text-input-component {
+		@apply text-headline-md w-fit;
 	}
 
 </style>

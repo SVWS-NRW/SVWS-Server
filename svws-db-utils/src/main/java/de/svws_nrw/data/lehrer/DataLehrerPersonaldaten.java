@@ -2,19 +2,21 @@ package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund;
+import de.svws_nrw.core.types.lehrer.LehrerZugangsgrund;
+import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -48,11 +50,6 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 		daten.zugangsgrund = lehrer.GrundZugang;
 		daten.abgangsdatum = lehrer.DatumAbgang;
 		daten.abgangsgrund = lehrer.GrundAbgang;
-		daten.pflichtstundensoll = lehrer.PflichtstdSoll;
-		daten.rechtsverhaeltnis = lehrer.Rechtsverhaeltnis;
-		daten.beschaeftigungsart = lehrer.Beschaeftigungsart;
-		daten.einsatzstatus = lehrer.Einsatzstatus;
-		daten.stammschulnummer = lehrer.StammschulNr;
 		return daten;
 	};
 
@@ -74,51 +71,69 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
     	if (lehrer == null)
     		return OperationError.NOT_FOUND.getResponse();
 		final LehrerPersonaldaten daten = dtoMapper.apply(lehrer);
+		daten.abschnittsdaten.addAll(DataLehrerPersonalabschnittsdaten.getByLehrerId(conn, id));
+		daten.lehraemter.addAll(DataLehrerLehramt.getByLehrerId(conn, id));
+		daten.fachrichtungen.addAll(DataLehrerFachrichtungen.getByLehrerId(conn, id));
+		daten.lehrbefaehigungen.addAll(DataLehrerLehrbefaehigung.getByLehrerId(conn, id));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-
 	}
+
+	private final Map<String, DataBasicMapper<DTOLehrer>> patchMappings = Map.ofEntries(
+		Map.entry("id", (conn, lehrer, value, map) -> {
+			final Long patch_id = JSONMapper.convertToLong(value, true);
+			if ((patch_id == null) || (patch_id.longValue() != lehrer.ID))
+				throw OperationError.BAD_REQUEST.exception();
+		}),
+		Map.entry("identNrTeil1", (conn, lehrer, value, map) -> {
+			lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
+		}),
+		Map.entry("identNrTeil2SerNr", (conn, lehrer, value, map) -> {
+			lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_SerNr.datenlaenge());
+		}),
+		Map.entry("personalaktennummer", (conn, lehrer, value, map) -> {
+			lehrer.PANr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_PANr.datenlaenge());
+		}),
+		Map.entry("lbvPersonalnummer", (conn, lehrer, value, map) -> {
+			lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_LBVNr.datenlaenge());
+		}),
+		Map.entry("lbvVerguetungsschluessel", (conn, lehrer, value, map) -> {
+			lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_VSchluessel.datenlaenge());
+		}),
+		Map.entry("zugangsdatum", (conn, lehrer, value, map) -> {
+			// TODO Datumsformat überprüfen
+			lehrer.DatumZugang = JSONMapper.convertToString(value, true, false, null);
+		}),
+		Map.entry("zugangsgrund", (conn, lehrer, value, map) -> {
+			final String strData = JSONMapper.convertToString(value, true, false, null);
+			if (strData == null) {
+				lehrer.GrundZugang = null;
+			} else {
+				final LehrerZugangsgrund zg = LehrerZugangsgrund.getByKuerzel(strData);
+				if (zg == null)
+					throw OperationError.NOT_FOUND.exception();
+				lehrer.GrundZugang = zg.daten.kuerzel;
+			}
+		}),
+		Map.entry("abgangsdatum", (conn, lehrer, value, map) -> {
+			// TODO Datumsformat überprüfen
+			lehrer.DatumAbgang = JSONMapper.convertToString(value, true, false, null);
+		}),
+		Map.entry("abgangsgrund", (conn, lehrer, value, map) -> {
+			final String strData = JSONMapper.convertToString(value, true, false, null);
+			if (strData == null) {
+				lehrer.GrundAbgang = null;
+			} else {
+				final LehrerAbgangsgrund ag = LehrerAbgangsgrund.getByKuerzel(strData);
+				if (ag == null)
+					throw OperationError.NOT_FOUND.exception();
+				lehrer.GrundAbgang = ag.daten.kuerzel;
+			}
+		})
+	);
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
-    	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
-    		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-	    	if (lehrer == null)
-	    		throw OperationError.NOT_FOUND.exception();
-	    	for (final Entry<String, Object> entry : map.entrySet()) {
-	    		final String key = entry.getKey();
-	    		final Object value = entry.getValue();
-	    		switch (key) {
-					case "id" -> {
-						final Long patch_id = JSONMapper.convertToLong(value, true);
-						if ((patch_id == null) || (patch_id.longValue() != id.longValue()))
-							throw OperationError.BAD_REQUEST.exception();
-					}
-
-	    			case "identNrTeil1" -> lehrer.identNrTeil1 = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_IdentNr1.datenlaenge());
-	    			case "identNrTeil2SerNr" -> lehrer.identNrTeil2SerNr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_SerNr.datenlaenge());
-	    			case "personalaktennummer" -> lehrer.PANr = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_PANr.datenlaenge());
-	    			case "lbvPersonalnummer" -> lehrer.personalNrLBV = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_LBVNr.datenlaenge());
-	    			case "lbvVerguetungsschluessel" -> lehrer.verguetungsSchluessel = JSONMapper.convertToString(value, true, true, Schema.tab_K_Lehrer.col_VSchluessel.datenlaenge());
-
-	    			case "zugangsdatum" -> lehrer.DatumZugang = JSONMapper.convertToString(value, true, true, null);
-	    			case "zugangsgrund" -> lehrer.GrundZugang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-	    			case "abgangsdatum" -> lehrer.DatumAbgang = JSONMapper.convertToString(value, true, true, null);
-	    			case "abgangsgrund" -> lehrer.GrundAbgang = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-
-	    			case "pflichtstundensoll" -> lehrer.PflichtstdSoll = JSONMapper.convertToDouble(value, true);
-	    			case "rechtsverhaeltnis" -> lehrer.Rechtsverhaeltnis = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-	    			case "beschaeftigungsart" -> lehrer.Beschaeftigungsart = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-	    			case "einsatzstatus" -> lehrer.Einsatzstatus = JSONMapper.convertToString(value, true, true, null);   // TODO Katalog prüfen ...
-
-	    			case "stammschulnummer" -> lehrer.StammschulNr = JSONMapper.convertToString(value, true, false, Schema.tab_K_Lehrer.col_StammschulNr.datenlaenge());
-
-	    			default -> throw OperationError.BAD_REQUEST.exception();
-	    		}
-	    	}
-	    	conn.transactionPersist(lehrer);
-    	}
-    	return Response.status(Status.OK).build();
+		return super.patchBasic(id, is, DTOLehrer.class, patchMappings);
 	}
 
 }

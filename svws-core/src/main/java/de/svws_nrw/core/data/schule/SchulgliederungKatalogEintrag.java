@@ -1,16 +1,17 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.core.data.CoreTypeData;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.BerufskollegAnlage;
 import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.core.types.schule.Schulform;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -19,11 +20,7 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
 @TranspilerDTO
-public class SchulgliederungKatalogEintrag {
-
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id = -1;
+public class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	/** Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(description = "das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "A01")
@@ -72,14 +69,6 @@ public class SchulgliederungKatalogEintrag {
 	/** Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt", example = "HA9")
 	public @NotNull List<@NotNull String> bkAbschlussAllgemeinbildend = new ArrayList<>();
-
-	/** Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem die Schulgliederung gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

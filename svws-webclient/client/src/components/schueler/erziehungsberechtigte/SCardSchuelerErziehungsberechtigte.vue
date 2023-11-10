@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card :title="erzieher.vorname || erzieher.nachname ? `Daten zu ${erzieher.vorname ? erzieher.vorname + ' ' : '' }${erzieher.nachname}` : 'Daten zur Person'" class="col-span-full mt-16 lg:mt-20">
 		<template #actions>
-			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben || undefined" @update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
+			<svws-ui-checkbox :model-value="erzieher.erhaeltAnschreiben === true" @update:model-value="doPatch({ erhaeltAnschreiben: Boolean($event) }, erzieher.id)" class="mr-2">
 				Erhält Anschreiben
 			</svws-ui-checkbox>
 			<svws-ui-button type="danger">

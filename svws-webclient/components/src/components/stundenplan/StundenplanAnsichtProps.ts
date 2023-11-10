@@ -1,7 +1,6 @@
-import { type StundenplanKalenderwochenzuordnung, type StundenplanManager, type StundenplanPausenaufsicht,
-	type StundenplanKurs, type StundenplanKlassenunterricht, type StundenplanUnterricht, type StundenplanZeitraster, type StundenplanPausenzeit } from "@core";
+import type { StundenplanKalenderwochenzuordnung, StundenplanManager, StundenplanPausenaufsicht, StundenplanKurs, StundenplanKlassenunterricht, StundenplanUnterricht, StundenplanZeitraster, StundenplanPausenzeit, List } from "@core";
 
-export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | StundenplanKurs | StundenplanUnterricht | StundenplanPausenaufsicht | undefined;
+export type StundenplanAnsichtDragData = StundenplanKlassenunterricht | StundenplanKurs | StundenplanUnterricht | List<StundenplanUnterricht> | StundenplanPausenaufsicht | undefined;
 
 export type StundenplanAnsichtDropZone = StundenplanZeitraster | StundenplanPausenzeit | undefined;
 
@@ -17,6 +16,6 @@ export interface StundenplanAnsichtProps {
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	useDragAndDrop?: boolean;
 	dragData?: () => StundenplanAnsichtDragData;
-	onDrag?: (data: StundenplanAnsichtDragData) => void;
+	onDrag?: (data: StundenplanAnsichtDragData, event?: DragEvent) => void;
 	onDrop?: (zone: StundenplanAnsichtDropZone) => void;
 }

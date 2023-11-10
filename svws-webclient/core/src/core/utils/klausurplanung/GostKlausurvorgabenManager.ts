@@ -18,9 +18,13 @@ import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 
 export class GostKlausurvorgabenManager extends JavaObject {
 
-	private _faecherManager : GostFaecherManager = new GostFaecherManager();
+	private _faecherManager : GostFaecherManager | null = null;
 
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
+		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
+			return +1;
+		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
+			return -1;
 		if (this._faecherManager !== null) {
 			const aFach : GostFach | null = this._faecherManager.get(a.idFach);
 			const bFach : GostFach | null = this._faecherManager.get(b.idFach);
@@ -31,10 +35,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 					return -1;
 			}
 		}
-		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
-			return +1;
-		if (JavaString.compareTo(a.kursart, b.kursart) > 0)
-			return -1;
 		return JavaInteger.compare(a.quartal, b.quartal);
 	} };
 
@@ -57,7 +57,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *                      und Gost-Halbjahres
 	 * @param faecherManager   der Fächermanager
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager) {
+	public constructor(listVorgaben : List<GostKlausurvorgabe>, faecherManager : GostFaecherManager | null) {
 		super();
 		this._faecherManager = faecherManager;
 		this.initAll(listVorgaben);
@@ -66,6 +66,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	private initAll(listVorgaben : List<GostKlausurvorgabe>) : void {
 		this.vorgabeAddAll(listVorgaben);
 		this.update_all();
+	}
+
+	/**
+	 * Liefert den Fächermanager
+	 *
+	 * @return den Fächermanager
+	 */
+	public getFaecherManager() : GostFaecherManager | null {
+		return this._faecherManager;
 	}
 
 	private update_all() : void {
@@ -233,7 +242,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		if (quartal > 0) {
 			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
 			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
@@ -253,7 +262,7 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> | null {
+	public vorgabeGetMengeByKursartallgAndFachid(kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg.kuerzel, idFach);
 		return list !== null ? list : new ArrayList();
 	}

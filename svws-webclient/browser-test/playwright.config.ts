@@ -10,7 +10,7 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-	testDir: './src',
+	testDir: 'src',
 	/* Maximum time one test can run for. */
 	 // path to the global setup files.
 	//globalSetup: './global.d.ts',
@@ -29,7 +29,7 @@ export default defineConfig({
 	forbidOnly: !!process.env.CI,
 	/* Retry on CI only */
 	//retries: process.env.CI ? 2 : 0,
-	retries: 3,
+	retries: 2,
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 15 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -39,7 +39,7 @@ export default defineConfig({
 		/* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
 		actionTimeout: 0,
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: 'https://localhost/#/',
+		baseURL: 'localhost:3000/#/',
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: 'on-first-retry',
 		headless: true,
@@ -53,11 +53,12 @@ export default defineConfig({
 		//    name: 'chromium',
 		//    use: { ...devices['Desktop Chrome'] },
 		// },
-
-		{
-			name: 'firefox',
-			use: { ...devices['Desktop Firefox'] },
-		},
+		// {
+		// 	name: 'firefox',
+		// 	use: {
+		// 	 	...devices['Desktop Firefox'],
+		// 	},
+		// },
 
 		// {
 		//   name: 'webkit',
@@ -79,10 +80,10 @@ export default defineConfig({
 		//   name: 'Microsoft Edge',
 		//   use: { channel: 'msedge' },
 		// },
-		// {
-		//   name: 'Google Chrome',
-		//   use: { channel: 'chrome' },
-		// },
+		{
+		  name: 'Google Chrome',
+		  use: { channel: 'chrome' },
+		},
 	],
 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	// outputDir: 'test-results/',

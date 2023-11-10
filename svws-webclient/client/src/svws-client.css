@@ -30,32 +30,6 @@
 	max-width: 140rem;
 }
 
-/*
-.page--statistik .router-tab-bar--wrapper,
-.page--statistik .page--content,
-.page--statistik .page--content--dashboard,
-.page--statistik .svws-ui-header,
-.page--statistik .page--header {
-	max-width: 140rem;
-	@apply mx-auto w-full;
-}
-
-.page--statistik .router-tab-bar--wrapper:after {
-	@apply -left-1/2;
-	width: 200vw;
-}
-
-.page--statistik .router-tab-bar--content,
-.page--statistik .router-tab-bar--panel .page--content {
-	@apply px-4 sm:px-5 md:px-6 lg:px-8;
-}
-
-.page--statistik .page--header,
-.page--statistik .svws-ui-header {
-	@apply 3xl:px-8 4xl:px-8;
-}
-*/
-
 .page--content .page--content {
 	@apply p-0 !important;
 }

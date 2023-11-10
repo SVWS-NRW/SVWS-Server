@@ -32,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.beschaeftigungsart.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Beschaeftigungsart IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.einsatzstatus", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus = :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.einsatzstatus.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Einsatzstatus IN :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.stammschulnr", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.StammschulNr = :value")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.stammschulnr.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.StammschulNr IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.pflichtstdsoll", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll = :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.pflichtstdsoll.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.PflichtstdSoll IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.unterrichtsstd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.UnterrichtsStd = :value")
@@ -46,7 +48,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.reststd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.all.migration", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd"})
+@JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "StammschulNr", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd"})
 public final class DTOLehrerAbschnittsdaten {
 
 	/** ID des Eintrags für die LehrerAbschnittsdaten */
@@ -79,6 +81,11 @@ public final class DTOLehrerAbschnittsdaten {
 	@Column(name = "Einsatzstatus")
 	@JsonProperty
 	public String Einsatzstatus;
+
+	/** Die Schulnummer der Stammschule, sofern diese abweicht */
+	@Column(name = "StammschulNr")
+	@JsonProperty
+	public String StammschulNr;
 
 	/** Pflichtstundensoll für die LehrerAbschnittsdaten */
 	@Column(name = "PflichtstdSoll")
@@ -158,7 +165,7 @@ public final class DTOLehrerAbschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOLehrerAbschnittsdaten(ID=" + this.ID + ", Lehrer_ID=" + this.Lehrer_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", PflichtstdSoll=" + this.PflichtstdSoll + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ")";
+		return "DTOLehrerAbschnittsdaten(ID=" + this.ID + ", Lehrer_ID=" + this.Lehrer_ID + ", Schuljahresabschnitts_ID=" + this.Schuljahresabschnitts_ID + ", Rechtsverhaeltnis=" + this.Rechtsverhaeltnis + ", Beschaeftigungsart=" + this.Beschaeftigungsart + ", Einsatzstatus=" + this.Einsatzstatus + ", StammschulNr=" + this.StammschulNr + ", PflichtstdSoll=" + this.PflichtstdSoll + ", UnterrichtsStd=" + this.UnterrichtsStd + ", MehrleistungStd=" + this.MehrleistungStd + ", EntlastungStd=" + this.EntlastungStd + ", AnrechnungStd=" + this.AnrechnungStd + ", RestStd=" + this.RestStd + ")";
 	}
 
 }

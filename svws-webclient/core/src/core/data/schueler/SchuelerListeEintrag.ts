@@ -55,6 +55,16 @@ export class SchuelerListeEintrag extends JavaObject {
 	public status : number = 0;
 
 	/**
+	 * Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht.
+	 */
+	public istDuplikat : boolean = false;
+
+	/**
+	 * Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 */
+	public externeSchulNr : string | null = null;
+
+	/**
 	 * Die ID des Schuljahresabschnittes des Schülers.
 	 */
 	public idSchuljahresabschnitt : number = -1;
@@ -104,6 +114,10 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (typeof obj.status === "undefined")
 			 throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
+		if (typeof obj.istDuplikat === "undefined")
+			 throw new Error('invalid json format, missing attribute istDuplikat');
+		result.istDuplikat = obj.istDuplikat;
+		result.externeSchulNr = typeof obj.externeSchulNr === "undefined" ? null : obj.externeSchulNr === null ? null : obj.externeSchulNr;
 		if (typeof obj.idSchuljahresabschnitt === "undefined")
 			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
@@ -127,6 +141,8 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
 		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung!) + ',';
 		result += '"status" : ' + obj.status + ',';
+		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt! + ',';
 		if (!obj.kurse) {
 			result += '"kurse" : []';
@@ -176,6 +192,12 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (typeof obj.status !== "undefined") {
 			result += '"status" : ' + obj.status + ',';
+		}
+		if (typeof obj.istDuplikat !== "undefined") {
+			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		}
+		if (typeof obj.externeSchulNr !== "undefined") {
+			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		}
 		if (typeof obj.idSchuljahresabschnitt !== "undefined") {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';

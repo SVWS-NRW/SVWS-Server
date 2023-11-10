@@ -42,6 +42,10 @@ public class Tabelle_LehrerAbschnittsdaten extends SchemaTabelle {
 	public SchemaTabelleSpalte col_Einsatzstatus = add("Einsatzstatus", SchemaDatentypen.VARCHAR, false).setDatenlaenge(1)
 		.setJavaComment("Einsatzstatus für die LehrerAbschnittsdaten");
 
+	/** Die Definition der Tabellenspalte StammschulNr */
+	public SchemaTabelleSpalte col_StammschulNr = add("StammschulNr", SchemaDatentypen.VARCHAR, false).setDatenlaenge(6)
+		.setJavaComment("Die Schulnummer der Stammschule, sofern diese abweicht").setRevision(SchemaRevisionen.REV_13);
+
 	/** Die Definition der Tabellenspalte PflichtstdSoll */
 	public SchemaTabelleSpalte col_PflichtstdSoll = add("PflichtstdSoll", SchemaDatentypen.FLOAT, false)
 		.setJavaComment("Pflichtstundensoll für die LehrerAbschnittsdaten");

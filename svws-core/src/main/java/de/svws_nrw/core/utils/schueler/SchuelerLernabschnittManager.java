@@ -18,6 +18,9 @@ import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
+import de.svws_nrw.core.utils.klassen.KlassenUtils;
+import de.svws_nrw.core.utils.kurse.KursUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -66,34 +69,6 @@ public class SchuelerLernabschnittManager {
 		if (b.text == null)
 			return 1;
 		return a.text.compareTo(b.text);
-	};
-
-	private static final @NotNull Comparator<@NotNull JahrgangsListeEintrag> _compJahrgaenge = (final @NotNull JahrgangsListeEintrag a, final @NotNull JahrgangsListeEintrag b) -> {
-		int cmp = a.sortierung - b.sortierung;
-		if (cmp != 0)
-			return cmp;
-		if ((a.kuerzel == null) || (b.kuerzel == null))
-			return Long.compare(a.id, b.id);
-		cmp = a.kuerzel.compareTo(b.kuerzel);
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-	};
-
-	private static final @NotNull Comparator<@NotNull KlassenListeEintrag> _compKlassen = (final @NotNull KlassenListeEintrag a, final @NotNull KlassenListeEintrag b) -> {
-		int cmp = a.sortierung - b.sortierung;
-		if (cmp != 0)
-			return cmp;
-		if ((a.kuerzel == null) || (b.kuerzel == null))
-			return Long.compare(a.id, b.id);
-		cmp = a.kuerzel.compareTo(b.kuerzel);
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
-	};
-
-	private static final @NotNull Comparator<@NotNull KursListeEintrag> _compKurs = (final @NotNull KursListeEintrag a, final @NotNull KursListeEintrag b) -> {
-		int cmp = a.sortierung - b.sortierung;
-		if (cmp != 0)
-			return cmp;
-		cmp = a.kuerzel.compareTo(b.kuerzel);
-		return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 	};
 
 	private static final @NotNull Comparator<@NotNull LehrerListeEintrag> _compLehrer = (final @NotNull LehrerListeEintrag a, final @NotNull LehrerListeEintrag b) -> {
@@ -173,7 +148,7 @@ public class SchuelerLernabschnittManager {
 	private void initJahrgaenge(final @NotNull List<@NotNull JahrgangsListeEintrag> jahrgaenge) {
 		this._jahrgaenge.clear();
 		this._jahrgaenge.addAll(jahrgaenge);
-		this._jahrgaenge.sort(_compJahrgaenge);
+		this._jahrgaenge.sort(JahrgangsUtils.comparator);
 		this._mapJahrgangByID.clear();
 		for (final @NotNull JahrgangsListeEintrag j : jahrgaenge)
 			this._mapJahrgangByID.put(j.id, j);
@@ -182,7 +157,7 @@ public class SchuelerLernabschnittManager {
 	private void initKlassen(final @NotNull List<@NotNull KlassenListeEintrag> klassen) {
 		this._klassen.clear();
 		this._klassen.addAll(klassen);
-		this._klassen.sort(_compKlassen);
+		this._klassen.sort(KlassenUtils.comparator);
 		this._mapKlasseByID.clear();
 		for (final @NotNull KlassenListeEintrag k : klassen)
 			this._mapKlasseByID.put(k.id, k);
@@ -191,7 +166,7 @@ public class SchuelerLernabschnittManager {
 	private void initKurse(final @NotNull List<@NotNull KursListeEintrag> kurse) {
 		this._kurse.clear();
 		this._kurse.addAll(kurse);
-		this._kurse.sort(_compKurs);
+		this._kurse.sort(KursUtils.comparator);
 		this._mapKursByID.clear();
 		for (final @NotNull KursListeEintrag k : kurse)
 			this._mapKursByID.put(k.id, k);

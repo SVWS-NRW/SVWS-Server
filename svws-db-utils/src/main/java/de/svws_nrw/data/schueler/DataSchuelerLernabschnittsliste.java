@@ -78,7 +78,7 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	if (abschnitte == null)
     		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
     	// Bestimme die Klassen aus den Abschnitte und liese diese aus der Klassentabelle aus
-    	final List<Long> klassenIDs = abschnitte.stream().map(a -> a.Klassen_ID).toList();
+    	final List<Long> klassenIDs = abschnitte.stream().filter(a -> a.Klassen_ID != null).map(a -> a.Klassen_ID).toList();
     	final List<DTOKlassen> klassen = klassenIDs.isEmpty() ? new ArrayList<>() : conn.queryNamed("DTOKlassen.id.multiple", klassenIDs, DTOKlassen.class);
     	final Map<Long, DTOKlassen> mapKlassen = klassen.stream().collect(Collectors.toMap(k -> k.ID, k -> k));
     	// Bestimme die Schuljahres-Abschnitte
@@ -90,10 +90,10 @@ public final class DataSchuelerLernabschnittsliste extends DataManager<Long> {
     	for (final DTOSchuelerLernabschnittsdaten l : abschnitte) {
     		final SchuelerLernabschnittListeEintrag e = dtoMapper.apply(l);
     		final DTOKlassen klasse = mapKlassen.get(e.klassenID);
-    		if (klasse == null)
-    			return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    		e.klasse = klasse.Klasse;
-    		e.klasseStatistik = klasse.ASDKlasse;
+    		if (klasse != null) {
+	    		e.klasse = klasse.Klasse;
+	    		e.klasseStatistik = klasse.ASDKlasse;
+    		}
     		final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(e.schuljahresabschnitt);
     		if (schuljahresabschnitt == null)
     			return OperationError.INTERNAL_SERVER_ERROR.getResponse();

@@ -1,5 +1,5 @@
 
-import { type Ref, ref, shallowRef } from "vue";
+import { type Ref, ref, shallowRef, computed } from "vue";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdaten, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt } from "@core";
 import { ArrayList, DeveloperNotificationException, GostBlockungsdatenManager, GostBlockungsergebnisListeneintrag, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr, HashSet, SchuelerStatus } from "@core";
@@ -110,6 +110,7 @@ export class RouteDataGostKursplanung {
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
 		for (const l of listLehrer)
 			mapLehrer.set(l.id, l);
+		// Bestimme die Kurssortierung
 		api.status.stop();
 		// Setze den State neu
 		this.setPatchedDefaultState({
@@ -326,6 +327,8 @@ export class RouteDataGostKursplanung {
 	}
 
 	addBlockung = async () => {
+		if ((this._state.value.abiturjahr === undefined) || (this._state.value.abiturjahr === -1))
+			return;
 		api.status.start();
 		const result = await api.server.createGostAbiturjahrgangBlockung(api.schema, this.jahrgangsdaten.abiturjahr, this.halbjahr.id);
 		this.mapBlockungen.set(result.id, result);
@@ -681,9 +684,11 @@ export class RouteDataGostKursplanung {
 		return liste;
 	}
 
-	ergebnisZuNeueBlockung = async (idErgebnis: number) => {
+	ergebnisAbleiten = async () => {
+		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
+			return;
 		api.status.start();
-		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, idErgebnis);
+		const result = await api.server.dupliziereGostBlockungMitErgebnis(api.schema, this.auswahlErgebnis.id);
 		this.mapBlockungen.set(result.id, result);
 		this.setPatchedState({mapBlockungen: this.mapBlockungen})
 		api.status.stop();
@@ -743,22 +748,26 @@ export class RouteDataGostKursplanung {
 		try {
 			const list = new ArrayList<number>();
 			switch (title) {
+				case "Schülerliste markierte Kurse":
+					for (const kurs of this.kursAuswahl.value)
+						list.add(kurs);
+					return await api.server.pdfGostKursplanungKurseMitKursschuelern(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung":
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung markierter Schüler":
 					list.add(this.auswahlSchueler.id);
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kurse-Schienen-Zuordnung gefilterte Schüler":
 					for (const schueler of this.schuelerFilter.filtered.value)
 						list.add(schueler.id);
-					return await api.server.getGostBlockungPDFKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
-				case "Kursbelegung markierter Schülers":
+					return await api.server.pdfGostKursplanungKurseSchienenZuordnung(list, api.schema, this.ergebnismanager.getErgebnis().id);
+				case "Kursbelegung markierter Schüler":
 					list.add(this.auswahlSchueler.id);
-					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				case "Kursbelegung gefilterte Schüler":
 					for (const schueler of this.schuelerFilter.filtered.value)
 						list.add(schueler.id);
-					return await api.server.getGostBlockungPDFSchuelerKurseListe(list, api.schema, this.ergebnismanager.getErgebnis().id);
+					return await api.server.pdfGostKursplanungSchuelerMitKursen(list, api.schema, this.ergebnismanager.getErgebnis().id);
 				default:
 					throw new Error();
 			}
@@ -789,6 +798,25 @@ export class RouteDataGostKursplanung {
 		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
 			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
 	}
+
+	public kurssortierung = computed<'fach' | 'kursart'>({
+		get: () => {
+			const value = api.config.getValue('gost.kursansicht.sortierung');
+			if ((value === undefined) || ((value !== 'kursart') && (value !== 'fach')))
+				return 'kursart';
+			return value;
+		},
+		set: (value) => {
+			void api.config.setValue('gost.kursansicht.sortierung', value);
+			if (this._state.value.ergebnismanager !== undefined) {
+				if (value === 'kursart')
+					this.ergebnismanager.kursSetSortierungKursartFachNummer();
+				else
+					this.ergebnismanager.kursSetSortierungFachKursartNummer();
+			}
+			this.commit();
+		}
+	});
 
 	protected getListeKursauswahl(): List<number> {
 		const result = new ArrayList<number>();

@@ -118,9 +118,22 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// füge den Raum in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
 		final ObjLongConsumer<DTOKatalogRaum> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Räume mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		final ObjLongConsumer<DTOKatalogRaum> initDTO = (dto, id) -> dto.ID = id;
+		return super.addBasicMultiple(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 

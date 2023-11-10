@@ -26,6 +26,8 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurraumManager {
 
+	private final @NotNull GostKursklausurManager _kursklausurManager;
+
 	/** Ein Comparator für die GostKlausurräume. */
 	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaum = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> Long.compare(a.id, b.id);
 
@@ -64,9 +66,11 @@ public class GostKlausurraumManager {
 	 *                          Gost-Klausurtermins
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
+	 * @param kursklausurmanager der Kursklausur-Manager
 	 */
 	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
-			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager) {
+		_kursklausurManager = kursklausurmanager;
 		final List<@NotNull GostKlausurraum> raeume = new ArrayList<>();
 		raeume.add(raum);
 		initAll(raeume, stunden, new ArrayList<>(), schuelerklausuren);
@@ -83,9 +87,11 @@ public class GostKlausurraumManager {
 	 * @param listSkrs          die Liste der Schülerklausurraumstunden
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
+	 * @param kursklausurmanager der Kursklausur-Manager
 	 */
 	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> listRs,
-			final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren) {
+			final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager) {
+		_kursklausurManager = kursklausurmanager;
 		initAll(raeume, listRs, listSkrs, schuelerklausuren);
 	}
 
@@ -743,14 +749,12 @@ public class GostKlausurraumManager {
 	/**
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
-	 * @param manager das GostKlausurraumManager-Objekt
-	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMenge(final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMenge() {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		for (final long kkId : _schuelerklausurmenge_by_idKursklausur.keySet()) {
-			kursklausuren.add(manager.kursklausurGetByIdOrException(kkId));
+			kursklausuren.add(_kursklausurManager.kursklausurGetByIdOrException(kkId));
 		}
 		return kursklausuren;
 	}
@@ -770,19 +774,30 @@ public class GostKlausurraumManager {
 	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
 	 *
 	 * @param idRaum  die Id des Klausurraums
-	 * @param manager der Kursklausurmanager
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMengeByRaumid(final long idRaum, final @NotNull GostKursklausurManager manager) {
+	public @NotNull List<@NotNull GostKursklausur> kursklausurGetMengeByRaumid(final long idRaum) {
 		final List<@NotNull GostKursklausur> kursklausuren = new ArrayList<>();
 		if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.containsKey1(idRaum))
 			return kursklausuren;
 		for (final long idKK : _schuelerklausurmenge_by_idRaum_and_idKursklausur.getKeySetOf(idRaum)) {
 			if (!_schuelerklausurmenge_by_idRaum_and_idKursklausur.getNonNullOrException(idRaum, idKK).isEmpty())
-				kursklausuren.add(manager.kursklausurGetByIdOrException(idKK));
+				kursklausuren.add(_kursklausurManager.kursklausurGetByIdOrException(idKK));
 		}
 		return kursklausuren;
+	}
+
+	/**
+	 * Fügt einen neuen Klausurraum den internen Datenstrukturen hinzu.
+	 *
+	 * @param idRaum  die Id des Klausurraums
+	 * @param idKursklausur die Id der Kursklausur
+	 *
+	 * @return die Liste der GostKursklausuren
+	 */
+	public @NotNull List<@NotNull GostSchuelerklausur> schuelerklausurGetMengeByRaumidAndKursklausurid(final long idRaum, final long idKursklausur) {
+		return DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurmenge_by_idRaum_and_idKursklausur, idRaum, idKursklausur);
 	}
 
 	/**

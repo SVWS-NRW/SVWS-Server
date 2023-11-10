@@ -34,7 +34,7 @@
 		addRaum: (raum: StundenplanRaum) => Promise<void>;
 		removeRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
 		importRaeume: (raeume: StundenplanRaum[]) => Promise<void>;
-		listRaeume: List<Raum>;
+		listRaeume: () => List<Raum>;
 	}>();
 
 	const raum = ref<StundenplanRaum | undefined>();

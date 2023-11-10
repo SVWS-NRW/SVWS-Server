@@ -169,6 +169,30 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 
 
 	/**
+	 * Fügt mehrere Räume mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
+		if (this.stundenplanID == null)
+			return OperationError.NOT_FOUND.getResponse("Die StundenplanID darf nicht null sein.");
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
+		if (stundenplan == null)
+			return OperationError.NOT_FOUND.getResponse("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(stundenplanID));
+		// füge den Raum in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
+		final ObjLongConsumer<DTOStundenplanRaum> initDTO = (dto, id) -> {
+			dto.ID = id;
+			dto.Stundenplan_ID = this.stundenplanID;
+		};
+		return super.addBasicMultiple(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
 	 * Löscht einen Raum
 	 *
 	 * @param id   die ID des Raums

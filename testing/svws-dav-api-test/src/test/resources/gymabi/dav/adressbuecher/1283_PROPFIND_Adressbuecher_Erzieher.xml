@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<C:addressbook-multiget xmlns:D="DAV:"
+	xmlns:C="urn:ietf:params:xml:ns:carddav">
+	<D:prop>
+		<D:getetag />
+		<C:address-data Content-Type='text/vcard' version='3.0' />
+	</D:prop>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2095.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2098.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2105.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2107.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2114.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2288.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2289.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2292.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2481.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2294.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2295.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2298.vcf</D:href>
+	<D:href>/dav/gymabi/adressbuecher/erzieher/Erzieher_2307.vcf</D:href>
+</C:addressbook-multiget>

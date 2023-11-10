@@ -82,8 +82,7 @@ public final class DBEntityManager implements AutoCloseable {
 		if (this.config.getConnectionRetries() <= 0) {
 			this.em = user.connectionManager.getNewJPAEntityManager();
 		} else {
-			this.em = user.connectionManager.
-					getNewJPAEntityManager(this.config.getConnectionRetries(), this.config.getRetryTimeout());
+			this.em = user.connectionManager.getNewJPAEntityManager(this.config.getConnectionRetries(), this.config.getRetryTimeout());
 		}
 	}
 

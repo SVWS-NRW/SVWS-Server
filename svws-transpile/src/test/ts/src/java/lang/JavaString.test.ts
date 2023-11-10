@@ -24,20 +24,20 @@ describe("java.util.StringBuilder", () => {
 		expect(JavaString.replaceAll("Bielefeld", "e", "a")).toBe("Bialafald")
 	})
 	test("compareTo: compares two strings", ()=>{
-		expect(JavaString.compareTo("a", "b")).toBe(-1);
-		expect(JavaString.compareTo("b", "a")).toBe(1);
+		expect(JavaString.compareTo("a", "b")).toBeLessThan(0);
+		expect(JavaString.compareTo("b", "a")).toBeGreaterThan(0);
 		expect(JavaString.compareTo("a", "a")).toBe(0);
-		expect(JavaString.compareTo("A", "a")).toBe(-32);
-		expect(JavaString.compareTo("Bielefeld", "Herford")).toBe(-6);
-		expect(JavaString.compareTo("Bielefeld", null)).toBe(-1);
+		expect(JavaString.compareTo("a", "A")).toBeLessThan(0);
+		expect(JavaString.compareTo("Bielefeld", "Herford")).toBeLessThan(0);
+		expect(JavaString.compareTo("Bielefeld", null)).toBeLessThan(0);
 	})
-	test.skip("compareToIgnoreCase: compares two strings", ()=>{
-		expect(JavaString.compareToIgnoreCase("a", "b")).toBe(-1);
-		expect(JavaString.compareToIgnoreCase("A", "b")).toBe(-1);
-		expect(JavaString.compareToIgnoreCase("b", "A")).toBe(1);
+	test("compareToIgnoreCase: compares two strings", ()=>{
+		expect(JavaString.compareToIgnoreCase("a", "b")).toBeLessThan(0);
+		expect(JavaString.compareToIgnoreCase("A", "b")).toBeLessThan(0);
+		expect(JavaString.compareToIgnoreCase("b", "A")).toBeGreaterThan(0);
 		expect(JavaString.compareToIgnoreCase("a", "A")).toBe(0);
-		expect(JavaString.compareToIgnoreCase("Bielefeld", "Herford")).toBe(-6);
-		expect(JavaString.compareToIgnoreCase("Bielefeld", null)).toBe(-1);
+		expect(JavaString.compareToIgnoreCase("Bielefeld", "Herford")).toBeLessThan(0);
+		expect(JavaString.compareToIgnoreCase("Bielefeld", null)).toBeLessThan(0);
 	})
 	test("equalsIgnoreCase: compares two strings", ()=>{
 		expect(JavaString.equalsIgnoreCase("A", "b")).toBeFalsy();

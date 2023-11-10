@@ -16,7 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @Schema(description = "Informationen zu einem Kurs der gymnasialen Oberstufe.")
-@JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" }) // TODO Soll hier "suffix" stehen statt "bezeichnung" ?
+@JsonPropertyOrder({ "id", "bezeichnung", "wochenstunden" })
 @TranspilerDTO
 public class GostBlockungKurs {
 

@@ -34,7 +34,6 @@
 <script setup lang="ts">
 
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = defineProps<{
@@ -46,12 +45,12 @@
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
 	}>();
 
-	const inputBetreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+	const inputBetreuungslehrer = computed<LehrerListeEintrag | undefined>({
 		get: () => props.betrieb.betreuungslehrer_id === null ? undefined : props.mapLehrer.get(props.betrieb.betreuungslehrer_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ betreuungslehrer_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
-	const inputBetrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
+	const inputBetrieb = computed<BetriebListeEintrag | undefined>({
 		get: () => props.mapBetriebe.get(props.betrieb.betrieb_id),
 		set: (value) => {
 			if (value !== undefined)
@@ -59,26 +58,27 @@
 		}
 	});
 
-	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
+	const beschaeftigungsart = computed<KatalogEintrag | undefined>({
 		get: () => (props.betrieb.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(props.betrieb.beschaeftigungsart_id),
 		set: (value) => void props.patchSchuelerBetriebsdaten({ beschaeftigungsart_id: value === undefined ? null : value.id }, props.betrieb.id)
 	});
 
-	const praktikum: WritableComputedRef<boolean> = computed({
+	const praktikum = computed<boolean>({
 		get: () => props.betrieb.praktikum === null ? false : props.betrieb.praktikum,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ praktikum: value }, props.betrieb.id)
 	});
 
-	const anschreiben: WritableComputedRef<boolean> = computed({
+	const anschreiben = computed<boolean>({
 		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 
-	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
+	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
 		get: () => props.betrieb.ansprechpartner_id === null ? undefined : props.mapAnsprechpartner.get(props.betrieb.ansprechpartner_id),
 		set: (value) => {
 			void props.patchSchuelerBetriebsdaten({ ansprechpartner_id: value === undefined ? null : value.id }, props.betrieb.id);
 		}
 	});
+
 </script>
 

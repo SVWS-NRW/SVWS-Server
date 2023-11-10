@@ -1,0 +1,190 @@
+@Page {
+	size: A4 portrait;
+	margin-top: 17mm;
+	margin-left: 15mm;
+	margin-right: 10mm;
+	margin-bottom: 12mm;
+
+	/*noinspection CssNoGenericFontName*/
+	font-family: "liberation";
+
+	/* Boxen im Seitenrand. Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der
+	   html-Datei ein div definiert, die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
+	############################################################################################################### */
+	@top-left {
+		content: element(pageTopLeft);
+		padding-top: 2mm;
+		padding-left: 2mm;
+	}
+
+	@top-right {
+		content: element(pageTopRight);
+		padding-top: 2mm;
+		padding-right: 2mm;
+	}
+
+	@bottom-left {
+		content: element(pageBottomLeft);
+		padding-bottom: 2mm;
+		padding-left: 2mm;
+	}
+
+	@bottom-right {
+		content: element(pageBottomRight);
+		padding-bottom: 2mm;
+		padding-right: 2mm;
+	}
+}
+
+
+/* Für die Einträge in den Seitenköpfen und -füßen wird pro Bereich im body der html-Datei ein div definiert,
+   die als Running Header bzw. Footer in den @page-Boxen eingefügt werden sollen.
+############################################################################################################### */
+.pageTopLeft {
+	position: running(pageTopLeft);
+	text-align: left;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: grey;
+}
+
+.pageTopRight {
+	position: running(pageTopRight);
+	text-align: right;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: grey;
+}
+
+.pageBottomLeft {
+	position: running(pageBottomLeft);
+	text-align: left;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: grey;
+}
+
+.pageBottomRight {
+	position: running(pageBottomRight);
+	text-align: right;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: grey;
+}
+
+
+/* Um evtl. Zähler im div einzufügen, ergänze einen span, an den die Zähler angehängt werden. */
+span.counter-print { padding: 0; margin: 0; }
+span.counter-print:after { content: counter(page) " von " counter(pages); }
+
+
+/* Seitenumbrüche: Wenn Style angewendet wird, wird davor ein Seitenumbruch eingefügt.
+   Ausnahme ist die erste Seite.
+############################################################################################################### */
+.start-new-page { page-break-before: always; }
+.start-new-page:first-child { page-break-before: avoid; }
+
+
+/* Definitionen body: Festlegen der Schrift mit Unicode Unterstützung.
+############################################################################################################### */
+body {
+	/*noinspection CssNoGenericFontName*/
+	font-family: 'liberation';
+	font-weight: normal;
+	font-size: 9pt;
+}
+
+
+/* Definitionen für Text-Elemente
+############################################################################################################### */
+h1 { font-size: 14pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.1em;}
+h2 { font-size: 13pt; font-weight: bold; margin-top: 0.8em; margin-bottom: 0.1em;}
+h3 { font-size: 12pt; font-weight: bold; margin-top: 0.6em; margin-bottom: 0.1em;}
+h4 { font-size: 11pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.1em;}
+p	{ margin-top: 0.5em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
+ul 	{ margin-top: 0.5em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
+
+.fb { font-weight: bold; }
+.fi { font-style: italic; }
+
+.small { font-size: 0.9em; }
+.tiny { font-size: 0.8em; }
+.very-tiny { font-size: 0.7em; }
+
+.tc-grey { color: grey }
+
+.ta-l { text-align: left; }
+.ta-c { text-align: center; }
+.ta-r { text-align: right; }
+
+
+/* Definitionen für Tabellen
+############################################################################################################### */
+thead {
+	display: table-header-group;
+	page-break-inside: avoid;
+}
+
+tfoot {
+	page-break-inside: avoid;
+}
+
+tr {
+	page-break-inside: avoid;
+}
+
+td.kompakt {
+	padding-top: 0;
+	padding-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+td.kopffachbezeichnung {
+	text-align: left;
+	font-weight: bold;
+	border-bottom: 1px black solid;
+}
+
+td.kopffachdetails {
+	text-align: center;
+	font-weight: bold;
+	border-bottom: 1px black solid;
+}
+
+td.fachbezeichnung {
+	text-align: left;
+	font-weight: bold;
+	border-bottom: 0.5px solid grey;
+}
+
+td.fachdetails {
+	text-align: center;
+	border-bottom: 0.5px solid grey;
+}
+
+.fixed-layout-100 { width: 100%; table-layout:fixed; }
+.no-space-pad { border-spacing: 0; padding: 0; border-collapse: collapse; }
+.zero-height { height: 0; }
+
+.bo-grey { border: 0.5px solid grey; }
+.bot-grey { border-top: 0.5px solid grey; }
+.bob-grey { border-bottom: 0.5px solid grey; }
+.bol-grey { border-left: 0.5px solid grey; }
+.bor-grey { border-right: 0.5px solid grey; }
+
+.bot-black { border-top: 1px solid black; }
+
+.bg-lightgrey { background-color: #DADADA; }
+.bg-lightyellow { background-color: #FFFDAF; }
+
+.pad-top { padding-top: 1.25em; }
+.pad-bot { padding-bottom: 1.25em; }

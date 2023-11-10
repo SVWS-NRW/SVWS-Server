@@ -1,3 +1,4 @@
+import { type WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungRegel, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { Config } from "~/components/Config";
@@ -23,16 +24,18 @@ export interface GostKursplanungProps {
 	removeKursLehrer: (kurs_id: number, lehrer_id: number) => Promise<void>;
 	addSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 	removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
+	ergebnisAbleiten: () => Promise<void>;
 	ergebnisHochschreiben: () => Promise<void>;
 	ergebnisAktivieren: () => Promise<boolean>;
 	ergebnisSynchronisieren: () => Promise<void>;
 	getPDF: (title: string) => Promise<ApiFile>;
 	jahrgangsdaten: () => GostJahrgangsdaten;
+	kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 	existiertSchuljahresabschnitt: boolean;
 	config: Config;
 	hatBlockung: boolean;
 	hatErgebnis: boolean;
-	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
+	schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 	faecherManager: GostFaecherManager;
 	halbjahr: GostHalbjahr;
 	mapLehrer: Map<number, LehrerListeEintrag>;

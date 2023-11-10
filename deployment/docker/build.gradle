@@ -28,6 +28,62 @@ task copyArtifacts(type: Copy) {
 	}
 }
 
+
+
+/*
+ Task führt ein Docker-Runner-17-Build per docker durch.
+ */
+task dockerRunner17BuildTag(type: Exec) {
+	workingDir "$projectDir/dockerrunner/17"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:17'
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:17'
+	}
+}
+/*
+ Task führt ein Docker-Runner-17 push auf dockerhub durch
+ */
+task dockerRunner17Push(type: Exec) {
+	dependsOn dockerRunner17BuildTag
+	workingDir "$projectDir/dockerrunner/17"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:17'
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:17'
+	}
+}
+
+/*
+ Task führt ein Docker-Runner-21-Build per docker durch.
+ */
+task dockerRunner21BuildTag(type: Exec) {
+	workingDir "$projectDir/dockerrunner/21"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker build . -t svwsnrw/dockerrunner:21'
+	} else {
+		commandLine 'sh', '-c', 'docker build . -t svwsnrw/dockerrunner:21'
+	}
+}
+/*
+ Task führt ein Docker-Runner-21 push auf dockerhub durch
+ */
+task dockerRunner21Push(type: Exec) {
+	dependsOn dockerRunner21BuildTag
+	workingDir "$projectDir/dockerrunner/21"
+	if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+		commandLine 'cmd', '/c', 'docker login'
+		commandLine 'cmd', '/c', 'docker push svwsnrw/dockerrunner:21'
+	} else {
+		commandLine 'sh', '-c', 'docker login'
+		commandLine 'sh', '-c', 'docker push svwsnrw/dockerrunner:21'
+	}
+}
+
+
+
 /*
  Task führt ein Docker-Build per docker durch.
  */

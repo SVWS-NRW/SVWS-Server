@@ -2,8 +2,8 @@ package de.svws_nrw.api.server;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.api.schema.DBMultipartBodyDataOnly;
-import de.svws_nrw.api.schema.DBMultipartBodyDefaultSchema;
+import de.svws_nrw.api.privileged.DBMultipartBodyDataOnly;
+import de.svws_nrw.api.privileged.DBMultipartBodyDefaultSchema;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.types.ServerMode;
@@ -46,7 +46,7 @@ public class APIDatabase {
      * Die OpenAPI-Methode für den Export einer SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
      * administrative Rechte.
      *
-     * @param schemaname    Name des Schemas, in das hinein migriert werden soll
+     * @param schemaname    Name des Schemas, welches exportiert werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      *
      * @return Die SQLite-Datenbank
@@ -59,7 +59,7 @@ public class APIDatabase {
                		       + "administrative Rechte.")
     @ApiResponse(responseCode = "200", description = "Der Export der SQLite-Datenbank",
     			 content = @Content(mediaType = "application/vnd.sqlite3",
-    			 schema = @Schema(type = "string", format = "binary", description = "LuPO-MDB-Datei")))
+    			 schema = @Schema(type = "string", format = "binary", description = "LuDie SQLite-Datei")))
     @ApiResponse(responseCode = "403", description = "Das Schema darf nicht exportiert werden.")
     public Response exportSQLite(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN, BenutzerKompetenz.DATENBANK_SQLITE_EXPORT)) {

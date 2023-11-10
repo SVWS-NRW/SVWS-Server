@@ -1,17 +1,10 @@
 package de.svws_nrw.data.schema;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.Random;
-
 import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -31,8 +24,6 @@ import jakarta.ws.rs.core.StreamingOutput;
  * zur Verfügung.
  */
 public final class DataSQLite {
-
-	private static final Random random = new Random();
 
 	private DataSQLite() {
 		throw new IllegalStateException("Instantiation of " + DataSQLite.class.getName() + " not allowed");
@@ -70,46 +61,32 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Bestimme den Dateinamen für eine temporäre SQLite-Datei
-    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        final String tmpFilename = schemaname +  "_" + random.ints(48, 123)  // from 0 to z
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-          .limit(40)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString() + ".sqlite";
-        logger.logLn("Erstelle eine SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-		try {
-			if (!Files.exists(Paths.get(tmpDirectory))) {
-				Files.createDirectory(Paths.get(tmpDirectory));
-	    	}
-		} catch (final IOException e) {
-			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
-		}
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, null, false)) {
+			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
+			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
+			if (srcManager == null)
+				throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
 
-		// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
-		final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
-		if (srcManager == null)
-			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
+			// Führe den Export mithilfe des Schema-Managers durch.
+			logger.modifyIndent(2);
+			srcManager.backup.exportDB(sqlite.getFilename(), logger);
+			logger.modifyIndent(-2);
 
-		// Führe den Export mithilfe des Schema-Managers durch.
-		logger.modifyIndent(2);
-		srcManager.backup.exportDB(tmpDirectory + "/" + tmpFilename, logger);
-		logger.modifyIndent(-2);
-
-        // Lese die Datenbank in die Response ein
-		logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\" ein.");
-		final Response response = Response.ok((StreamingOutput) output -> {
-			try {
-				FileUtils.move(tmpDirectory + "/" + tmpFilename, output);
-				output.flush();
-			} catch (final Exception e) {
-				throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
-			}
-        }).header("Content-Disposition", "attachment; filename=\"" + schemaname + ".sqlite\"").build();
-		if (!response.hasEntity())
-			logger.logLn(2, "[FEHLER]");
-		logger.logLn("Datei eingelesen.");
-
-		return response;
+	        // Lese die Datenbank in die Response ein
+			logger.logLn("Lese die temporären SQLite-Datenbank unter dem Namen \"" + sqlite.getFilename() + "\" ein.");
+			final Response response = Response.ok((StreamingOutput) output -> {
+				try {
+					FileUtils.move(sqlite.getFilename(), output);
+					output.flush();
+				} catch (final Exception e) {
+					throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
+				}
+	        }).header("Content-Disposition", "attachment; filename=\"" + schemaname + ".sqlite\"").build();
+			if (!response.hasEntity())
+				logger.logLn(2, "[FEHLER]");
+			logger.logLn("Datei eingelesen.");
+			return response;
+    	}
     }
 
 
@@ -130,59 +107,44 @@ public final class DataSQLite {
     	logger.addConsumer(new LogConsumerConsole());
 
     	// Erstelle temporär eine SQLite-Datei aus dem übergebenen Byte-Array
-    	final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-        final String tmpFilename = conn.getDBSchema() +  "_" + random.ints(48, 123)  // from 0 to z
-          .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
-          .limit(40)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString() + ".sqlite";
-        logger.logLn("Erstelle eine SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-    	try {
-    		Files.createDirectories(Paths.get(tmpDirectory));
-			Files.write(Paths.get(tmpDirectory + "/" + tmpFilename), srcDB, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			logger.logLn(2, "Fehler beim Erstellen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\"");
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-		}
+    	try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, srcDB, null, true)) {
+	    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
+	    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
+	    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
 
-    	logger.logLn("Importiere in die " + conn.getDBDriver() + "-Datenbank unter " + conn.getDBLocation() + ":");
-    	logger.logLn(2, "- verwende den Admin-Benutzer: " + conn.getUser().getUsername());
-    	logger.logLn(2, "- verwende das vorhandene DB-Schema: " + conn.getDBSchema());
+	    	// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
+			final DBConfig srcConfig = sqlite.getConfig();
 
-    	// Erstelle die Quell-DB-Konfiguration für die übergebene Datei
-		final DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, tmpDirectory + "/" + tmpFilename, null, false, null, null, true, false, 0, 0);
+			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
+			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
+			final boolean hatSchemaConfig = (tgtConfig != null);
+			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+			if (tgtConfig == null)
+				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
 
-		// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
-		final DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
-		if (tgtConfig == null) {
-			logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration - Ziel-Schema nicht in der Server-Konfiguration gefunden (schema='" + conn.getDBSchema() + "')");
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-		}
+			try {
+				final Benutzer srcUser = Benutzer.create(srcConfig);
+				try (DBEntityManager srcConn = srcUser.getEntityManager()) {
+					if (srcConn == null) {
+						logger.logLn(0, " [Fehler]");
+						throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
+					}
+					logger.logLn(0, " [OK]");
 
-		final Benutzer srcUser = Benutzer.create(srcConfig);
-		try (DBEntityManager srcConn = srcUser.getEntityManager()) {
-			if (srcConn == null) {
-				logger.logLn(0, " [Fehler]");
-				throw new DBException("Fehler beim Verbinden zur SQLite-Export-Datenbank");
-			}
-			logger.logLn(0, " [OK]");
-
-			final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
-			logger.modifyIndent(2);
-			if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
+					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+					logger.modifyIndent(2);
+					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
+						return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
+					logger.modifyIndent(-2);
+				}
+			} catch (@SuppressWarnings("unused") final DBException e) {
 				return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-			logger.modifyIndent(-2);
-		} catch (@SuppressWarnings("unused") final DBException e) {
-			return OperationError.INTERNAL_SERVER_ERROR.getResponse(simpleResponse(false, log));
-		}
+			}
 
-		// Entferne die temporär angelegte Datenbank wieder...
-		logger.logLn("Löschen der temporären SQLite-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\".");
-		try {
-			Files.delete(Paths.get(tmpDirectory + "/" + tmpFilename));
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			logger.logLn(2, "[FEHLER]");
-		}
+			// Schreibe die Verbindungsinformation für das neu angelegte SVWS-Schema in die SVWS-Konfiguration
+			if (!hatSchemaConfig)
+				SVWSKonfiguration.get().createOrUpdateSchema(conn.getDBSchema(), conn.getUser().getUsername(), conn.getUser().getPassword(), false);
+    	}
 
 		logger.logLn("Import abgeschlossen.");
 		final SimpleOperationResponse daten = simpleResponse(true, log);

@@ -1,0 +1,32 @@
+{
+	"index": "10", 
+	"schluessel": "10004",
+	"version": 1,
+	"historie": [
+		{
+			"id": 1010004001,
+			"schluessel": { "index": "10", "schluessel": "10004" },
+			"dauer": 7,
+			"fbFaecher": [
+				{
+					"kuerzelStatistik": "FB",
+					"kuerzel": "FP",
+					"bezeichnung": "Fertigungsprozesse"
+				}
+			],
+			"lernfelder": [
+				{
+					"nummer": 1,
+					"bezeichnung": "Bauelemente mit handgeführten Werkzeugen fertigen",
+					"buendelfaecher": [
+						"FP"
+					],
+					"ausbildungsjahr": "1",
+					"zeitrichtwert": "80"
+				}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}
+	]
+}

@@ -24,7 +24,7 @@ export class RouteLehrerUnterrichtsdaten extends RouteNode<unknown, RouteLehrer>
 
 	public getProps(to: RouteLocationNormalized): LehrerUnterrichtsdatenProps {
 		return {
-			stammdaten: routeLehrer.data.stammdaten
+			lehrerListeManager: () => routeLehrer.data.lehrerListeManager
 		};
 	}
 

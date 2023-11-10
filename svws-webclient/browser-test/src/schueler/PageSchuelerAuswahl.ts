@@ -2,6 +2,8 @@ import type { KlassenListeEintrag, List, SchuelerListeEintrag } from "@core";
 import type { Locator, Page} from "@playwright/test";
 import { expect } from "@playwright/test";
 import { api } from "../Api";
+import type { Schueler } from "./DataSchueler";
+import { dataSchuelerAuswahl } from "./DataSchuelerAuswahl";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -15,6 +17,7 @@ export class SchuelerAuswahlPage {
 	listeSchueler? : List<SchuelerListeEintrag>;
 	listeKlassen? : Map<number, KlassenListeEintrag>;
 
+
 	constructor(public page: Page) {
 
 		this.tabelle = this.page.getByRole('table').nth(0);
@@ -24,8 +27,6 @@ export class SchuelerAuswahlPage {
 	}
 
 	async laden () {
-		const connect = await api.connectTo('localhost');
-		const login = await api.login('gymabi', 'Admin', '');
 		this.listeSchueler = await api.server.getSchuelerAktuell(api.schema);
 		this.listeKlassen = await api.getKlassenListe(1);
 	}
@@ -41,6 +42,14 @@ export class SchuelerAuswahlPage {
 		await expect(this.rg_tabellenfoot).toHaveAttribute('aria-label','Fußzeile');
 	}
 
+	async clickAlleSchueler(){
+		const schueler : Schueler[] = await dataSchuelerAuswahl.getSchueler();
+		for(const item of schueler){
+			await this.page.getByRole('row', { name: item.name2click }).click();
+			await expect(this.page.getByText(item.name)).toBeVisible()
+  		}
+	}
+
 	async clickSchueler(eintrag : SchuelerListeEintrag) {
 		if (this.listeSchueler === undefined || this.listeKlassen === undefined)
 			return;
@@ -52,17 +61,12 @@ export class SchuelerAuswahlPage {
 		await this.page.getByRole('row', { name: role_name }).click();
 	}
 
-	public getSchuelermitJahrgang(id : number) : SchuelerListeEintrag[] {
-		if (this.listeSchueler === undefined || this.listeKlassen === undefined)
-			return [];
-		const liste : SchuelerListeEintrag[] = [];
-		for (const eintrag of this.listeSchueler) {
-			if ((id === -1) && (eintrag.status === 2))
-				liste.push(eintrag);
-			if ((this.listeKlassen.get(eintrag.idKlasse)?.idJahrgang === id) && (eintrag.status === 2))
-				liste.push(eintrag);
-		}
-		return liste;
+	async clearSuchfeld(){
+  		await this.page.getByPlaceholder('Suchen').fill('');
 	}
 
+	async clearFilter(){
+		await this.page.locator('div').filter({ hasText: /^Extern$/ }).getByRole('img').click();
+ 		await this.page.getByTitle('Entfernen').locator('path').click();
+	}
 }

@@ -34,50 +34,59 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.defaultChild = routeKlasseDaten;
 	}
 
-	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		try {
-			if (to_params.id instanceof Array)
-				throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-			const idKlasse = (to_params.id === undefined) || (to_params.id === "") ? undefined : parseInt(to_params.id);
-			await this.data.setEintrag(routeApp.data.aktAbschnitt.value.id, idKlasse);
-			if ((this.data.hatAuswahl) && (this.data.auswahl?.id !== idKlasse) && this.data.auswahl !== undefined) {
-				to_params.id = this.data.auswahl.id.toString();
-				return { name: to.name, params: to_params };
+	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
+		await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
+	}
+
+	protected async update(to: RouteNode<unknown, any>, to_params: RouteParams, from?: RouteNode<unknown, any>) : Promise<void | Error | RouteLocationRaw> {
+		if (to_params.id instanceof Array)
+			return routeError.getRoute(new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
+		const id = !to_params.id ? undefined : parseInt(to_params.id);
+		const eintrag = (id !== undefined) ? this.data.klassenListeManager.liste.get(id) : null;
+		await this.data.setEintrag(eintrag);
+		if (!this.data.klassenListeManager.hasDaten()) {
+			if (to.name === this.name) {
+				const listFiltered = this.data.klassenListeManager.filtered();
+				if (listFiltered.isEmpty())
+					return;
+				return this.getChildRoute(listFiltered.get(0).id, from);
 			}
-			if ((to.name === this.name) && (this.data.hatAuswahl))
-				return this.getRoute(this.data.auswahl?.id);
-		} catch (e) {
-			return routeError.getRoute(e instanceof Error ? e : new Error("Unbekannter Fehler beim Aktualisieren der Route."));
+			return this.getRoute();
 		}
+		if (to.name === this.name)
+			return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					await this.data.setView(child);
 	}
 
-	public async leave(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void> {
-		this.data.leave();
-	}
-
-	public getRoute(id: number | undefined) : RouteLocationRaw {
+	public getRoute(id?: number) : RouteLocationRaw {
 		return { name: this.defaultChild!.name, params: { id }};
+	}
+
+	public getChildRoute(id: number | undefined, from?: RouteNode<unknown, any>) : RouteLocationRaw {
+		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
+			return { name: routeKlassenStundenplan.name, params: { id } };
+		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
+		return { name: redirect_name, params: { id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapLehrer: this.data.mapLehrer,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
-			klassenFilter: this.data.klassenFilter,
+			klassenListeManager: () => this.data.klassenListeManager,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
 			setAbschnitt: routeApp.data.setAbschnitt,
 			gotoEintrag: this.data.gotoEintrag,
-			setKlassenFilter: this.data.setKlassenFilter,
+			setFilter: this.data.setFilter,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
-			auswahl: this.data.auswahl,
-			mapLehrer: this.data.mapLehrer,
+			klassenListeManager: () => this.data.klassenListeManager,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),
@@ -104,7 +113,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { id: this.data.auswahl?.id } });
+		await RouteManager.doRoute({ name: value.name, params: { id: this.data.klassenListeManager.auswahlID() } });
 		await this.data.setView(node);
 	}
 

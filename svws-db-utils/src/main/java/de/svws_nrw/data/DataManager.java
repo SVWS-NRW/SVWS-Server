@@ -188,9 +188,22 @@ public abstract class DataManager<ID> {
 	 * @return das neue DTO
 	 */
 	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO) {
+		return newDTO(dtoClass, conn.transactionGetNextID(dtoClass), initDTO);
+	}
+
+
+	/**
+	 * Erstellt und initialisiert eine neues DTO.
+	 *
+	 * @param <DTO>      der Type des DTO
+	 * @param dtoClass   die Klasse des DTO
+	 * @param newID      die neue ID für das DTO
+	 * @param initDTO    der Consumer zum Initialisieren des DTO
+	 *
+	 * @return das neue DTO
+	 */
+	protected <DTO> DTO newDTO(final Class<DTO> dtoClass, final long newID, final ObjLongConsumer<DTO> initDTO) {
 		try {
-			// Bestimme die nächste verfügbare ID für das DTO
-			final long newID = conn.transactionGetNextID(dtoClass);
 			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 			final Constructor<DTO> constructor = dtoClass.getDeclaredConstructor();
 			constructor.setAccessible(true);
@@ -203,6 +216,43 @@ public abstract class DataManager<ID> {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception(e);
 		}
 	}
+
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden
+	 *
+	 * @param <DTO>              der Typ des Datenbank-DTOs
+	 * @param <CoreData>         der Typ des Core-DTOs
+	 * @param newID              die neue ID für das DTO
+	 * @param map                die Map für den Zugriff auf die Attribute
+	 * @param dtoClass           die Klasse des DTOs
+	 * @param initDTO            ein BiConsumer zum Initialisieren des
+	 *                           Datenbank-DTOs
+	 * @param dtoMapper          die Funktion zum Erstellen
+	 * @param attributesRequired eine Menge der benötigten Attribute im
+	 *                           JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
+	 *
+	 * @return das Core-DTO
+	 */
+	protected <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
+		for (final String attr : attributesRequired)
+			if (!map.containsKey(attr))
+				throw OperationError.BAD_REQUEST.exception("Das Attribut %s fehlt in der Anfrage".formatted(attr));
+		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
+		final DTO dto = newDTO(dtoClass, newID, initDTO);
+		applyPatchMappings(conn, dto, map, attributeMapper, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		return dtoMapper.apply(dto);
+	}
+
 
 	/**
 	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
@@ -224,21 +274,44 @@ public abstract class DataManager<ID> {
 	 */
 	protected <DTO, CoreData> Response addBasic(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
-		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		for (final String attr : attributesRequired)
-			if (!map.containsKey(attr))
-				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
-		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-		final DTO dto = newDTO(dtoClass, initDTO);
-		applyPatchMappings(conn, dto, map, attributeMapper, null);
-		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		conn.transactionFlush();
-		final CoreData daten = dtoMapper.apply(dto);
+		final long newID = conn.transactionGetNextID(dtoClass);
+		final var daten = this.addBasic(newID, JSONMapper.toMap(is), dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
+
+	/**
+	 * Fügt mehrere neue DTOs des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank jeweils eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden.
+	 *
+	 * @param <DTO>              der Typ des Datenbank-DTOs
+	 * @param <CoreData>         der Typ des Core-DTOs
+	 * @param is                 der Input-Stream
+	 * @param dtoClass           die Klasse des DTOs
+	 * @param initDTO            ein BiConsumer zum Initialisieren des
+	 *                           Datenbank-DTOs
+	 * @param dtoMapper          die Funktion zum Erstellen
+	 * @param attributesRequired eine Menge der benötigten Attribute im
+	 *                           JSON-Inputstream, um das Objekt zu initialisiesen
+	 * @param attributeMapper    die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response mit dem Core-DTO
+	 */
+	protected <DTO, CoreData> Response addBasicMultiple(final InputStream is, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
+			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		// Bestimme die nächste verfügbare ID für das DTO
+		long newID = conn.transactionGetNextID(dtoClass);
+		// Und jetzt durchwandere die einzelnen hinzuzufügenden Objekte
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		final List<CoreData> daten = new ArrayList<>();
+		for (final Map<String, Object> map : multipleMaps)
+			daten.add(this.addBasic(newID++, map, dtoClass, initDTO, dtoMapper, attributesRequired, attributeMapper));
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+
 
 	/**
 	 * Entfernt das Datenbank-DTO mit der angegebenen ID und gibt das zugehörige

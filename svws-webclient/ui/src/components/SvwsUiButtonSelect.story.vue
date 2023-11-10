@@ -31,5 +31,6 @@
 		{ key: 1, text: "Button 1", action: () => console.log("Button 1 clicked") },
 		{ key: 2, text: "Button 2", action: () => console.log("Button 2 clicked") },
 		{ key: 3, text: "Button 3", action: () => console.log("Button 3 clicked") },
+		{ key: 4, text: "Button 4", action: () => console.log("Button 4 clicked not possible"), separator: true },
 	];
 </script>

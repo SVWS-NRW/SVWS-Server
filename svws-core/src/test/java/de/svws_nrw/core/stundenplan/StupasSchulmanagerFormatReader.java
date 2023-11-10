@@ -162,14 +162,21 @@ public class StupasSchulmanagerFormatReader {
 	//	564;36;Stunde;LEHR3;BI;;RAUM3;2;4; 4;2;05a;
 	private void importiereKlassenOderKursunterricht(final StundenplanManager m, final List<StupasSchulmanagerFormatLine> list) {
 		final int wochenstunden = getWochenStunden(list);
-		final StupasSchulmanagerFormatLine line = list.get(0);
-		final List<StundenplanKlasse> klassen = getCreateKlassen(line, m);
-		final StundenplanLehrer lehrer = getCreateLehrer(line, m);
-		final StundenplanSchiene schiene = getCreateSchiene(line, m);
-		final StundenplanFach fach = getCreateFach(line, m);
+		final StupasSchulmanagerFormatLine firstLine = list.get(0); // Erstes Element gilt repräsentativ für alle.
+		final List<StundenplanKlasse> klassen = getCreateKlassen(firstLine, m);
+		final StundenplanLehrer lehrer = getCreateLehrer(firstLine, m);
+		final StundenplanSchiene schiene = getCreateSchiene(firstLine, m);
+		final StundenplanFach fach = getCreateFach(firstLine, m);
+		final StundenplanRaum raum = getCreateRaum(firstLine, m);
+
+		if ((lehrer == null) && (klassen.size() == 0)) // Mindestens Lehrkraft ODER Klasse
+			throw new DeveloperNotificationException("Format Fehler - Keine Lehrkraft und keine Klasse in der Definition.");
+
+		// Überschreiben, falls Kurs-Unterricht.
+		Long idKurs = null;
 
 		if ((klassen.size() == 1) && !getIstOberstufe(klassen.get(0).kuerzel) && !getIstAuffangklasse(klassen.get(0).kuerzel) && !getIstAG(klassen.get(0).kuerzel) && !getIstMIA(klassen.get(0).kuerzel)) {
-			// Klassenunterricht (genau eine Klasse und keine Oberstufe)
+			// Klassenunterricht (genau eine Klasse und keine spezielle Stufe)
 			final StundenplanKlassenunterricht klassenunterricht = new StundenplanKlassenunterricht();
 			klassenunterricht.idKlasse = klassen.get(0).id;
 			klassenunterricht.idFach = fach.id;
@@ -184,7 +191,8 @@ public class StupasSchulmanagerFormatReader {
 		} else {
 			// Kursunterricht
 			final StundenplanKurs kurs = new StundenplanKurs();
-			kurs.id = line.KursId;
+			kurs.id = firstLine.KursId;
+			idKurs = kurs.id;
 			kurs.idFach = fach.id;
 			kurs.bezeichnung = "";
 			kurs.wochenstunden = wochenstunden;
@@ -195,37 +203,27 @@ public class StupasSchulmanagerFormatReader {
 			kurs.lehrer = new ArrayList<>();
 		}
 
-		// Rekursiv importieren.
-		for (final StupasSchulmanagerFormatLine lineUnterricht : list)
-			importiereUnterrichtWochentagStundeWochentyp(m, lineUnterricht);
-	}
+		// Unterrichte pro Zeitraster erzeugen und hinzufügen.
+		for (final StupasSchulmanagerFormatLine line : list) {
+			final StundenplanZeitraster zeitraster = getCreateZeitraster(line, m); // muss
 
-	private void importiereUnterrichtWochentagStundeWochentyp(final StundenplanManager m, final StupasSchulmanagerFormatLine line) {
-		final StundenplanFach fach = getCreateFach(line, m); // muss
-		final StundenplanZeitraster zeitraster = getCreateZeitraster(line, m); // muss
-		final StundenplanRaum raum = getCreateRaum(line, m); // kann
-		final StundenplanSchiene schiene = getCreateSchiene(line, m); // kann
-		final StundenplanLehrer lehrer = getCreateLehrer(line, m); // kann
-		final List<StundenplanKlasse> klassen = getCreateKlassen(line, m); // kann
-		if ((lehrer == null) && (klassen.size() == 0)) // Mindestens Lehrkraft ODER Klasse
-			return; // TODO Exception?
-
-		// Unterricht erzeugen und hinzufügen.
-		final StundenplanUnterricht u = new StundenplanUnterricht();
-		u.id = unterricht_by_id.size();
-		u.idZeitraster = zeitraster.id;
-		u.wochentyp = line.Woche;
-		u.idFach = fach.id;
-		if (raum != null)
-			u.raeume.add(raum.id);
-		if (lehrer != null)
-			u.lehrer.add(lehrer.id);
-		if (schiene != null)
-			u.schienen.add(schiene.id);
-		for (final StundenplanKlasse klasse : klassen)
-			u.klassen.add(klasse.id);
-		unterricht_by_id.put(u.id, u);
-		m.unterrichtAdd(u);
+			final StundenplanUnterricht u = new StundenplanUnterricht();
+			u.id = unterricht_by_id.size();
+			u.idZeitraster = zeitraster.id;
+			u.wochentyp = line.Woche;
+			u.idKurs = idKurs;
+			u.idFach = fach.id;
+			if (lehrer != null)
+				u.lehrer.add(lehrer.id);
+			if (raum != null)
+				u.raeume.add(raum.id);
+			if (schiene != null)
+				u.schienen.add(schiene.id);
+			for (final StundenplanKlasse klasse : klassen)
+				u.klassen.add(klasse.id);
+			unterricht_by_id.put(u.id, u);
+			m.unterrichtAdd(u);
+		}
 	}
 
 	private static int getWochenTypModell(final List<StupasSchulmanagerFormatLine> csvData) {

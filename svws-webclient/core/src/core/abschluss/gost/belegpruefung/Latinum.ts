@@ -26,20 +26,20 @@ export class Latinum extends GostBelegpruefung {
 	}
 
 	protected pruefeEF1() : void {
-		if (SprachendatenUtils.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L") && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1)))
+		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L") && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1)))
 			this.addFehler(GostBelegungsfehler.L_10_INFO);
 	}
 
 	protected pruefeGesamt() : void {
-		if (!SprachendatenUtils.hatSprachbelegungInSekI(this.manager.getSprachendaten(), "L"))
-			return;
-		if (SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 4)) {
-			if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2))
-				this.addFehler(GostBelegungsfehler.L_10_INFO);
-			return;
+		if (SprachendatenUtils.hatSprachbelegungMitMin2JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L")) {
+			if (SprachendatenUtils.hatSprachbelegungMitMin4JahrenDauerEndeSekI(this.manager.getSprachendaten(), "L")) {
+				if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2))
+					this.addFehler(GostBelegungsfehler.L_10_INFO);
+			} else {
+				if (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
+					this.addFehler(GostBelegungsfehler.L_11_INFO);
+			}
 		}
-		if ((SprachendatenUtils.hatSprachbelegungInSekIMitDauer(this.manager.getSprachendaten(), "L", 2)) && (!this.manager.pruefeBelegung(this.latein, GostHalbjahr.EF1, GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)))
-			this.addFehler(GostBelegungsfehler.L_11_INFO);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

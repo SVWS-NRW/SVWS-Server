@@ -61,7 +61,6 @@ class StundenplanManagerTest {
 
 //		 m.klassenunterrichtGetMengeByLehrerIdAsList(0)
 
-
 		// ...
 	}
 

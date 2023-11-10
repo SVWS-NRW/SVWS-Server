@@ -1,14 +1,16 @@
 <template>
-	<div @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin(termin);" class="svws-ui-termin h-full flex flex-col">
+	<div @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin(termin);" class="svws-ui-termin h-full flex flex-col group">
 		<slot name="header">
-			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle}">
+			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle, 'text-svws': terminSelected}">
 				<template v-if="!$slots.tableTitle">
 					<slot name="title">
-						<span class="leading-tight inline-flex gap-0.5" :class="{'text-button': compact || compactWithDate}">
-							<i-ri-draggable v-if="dragIcon && !compact" :class="{'text-sm': compact, '-mr-0.5 -ml-2': !compact}" />
+						<span class="leading-tight inline-flex gap-0.5" :class="{'text-base': compact || compactWithDate}">
+							<span v-if="dragIcon && !compact" class="group-hover:bg-black/10 dark:group-hover:bg-white/10 -ml-1 mr-0.5 rounded">
+								<i-ri-draggable :class="{'text-sm': compact, '-mx-0.5': !compact}" />
+							</span>
 							<span class="line-clamp-1 break-all">{{ termin.bezeichnung === null ? (klausuren().size() ? [...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).join(", ") : 'Neuer Termin') : termin.bezeichnung || 'Klausurtermin' }}</span>
 						</span>
-						<div v-if="compactWithDate && termin.datum" class="mb-1 opacity-50 text-button">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
+						<div v-if="compactWithDate && termin.datum" class="mb-1 -mt-0.5 opacity-50 text-base">{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</div>
 						<div v-if="compact || compactWithDate" class="svws-compact-data text-sm font-medium flex flex-wrap mt-0.5">
 							<span>{{ kursklausurmanager().schuelerklausurAnzahlGetByTerminid(termin.id) }} Schüler<slot name="compactMaximaleDauer">, bis {{ maximaleDauer }} Minuten</slot></span>
 							<span v-if="quartalsauswahl && quartalsauswahl.value === 0">, {{ termin.quartal ? termin.quartal + ' . Quartal' : 'Beide Quartale' }}</span>
@@ -51,7 +53,7 @@
 								:draggable="onDragKlausur !== undefined && (draggableKlausur === undefined || draggableKlausur(klausur))"
 								@dragstart="onDragKlausur && onDragKlausur(klausur);$event.stopPropagation()"
 								@dragend="onDragKlausur && onDragKlausur(undefined);$event.stopPropagation()"
-								class="svws-ui-tr" role="row" :title="`Kurs, Lehrkraft, Schriftlich, Dauer in Minuten,${kursklausurmanager().quartalGetByTerminid(termin.id) === -1 ? ' Quartal,' : ''} Schiene`"
+								class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')"
 								:class="[
 									props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 									{
@@ -65,8 +67,9 @@
 								<div class="svws-ui-td" role="cell">{{ getLehrerKuerzel(klausur.idKurs) }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ klausur.schuelerIds.size() + "/" + props.kursmanager.get(klausur.idKurs)?.schueler.size() || 0 }}</div>
 								<div class="svws-ui-td svws-align-right" role="cell">{{ kursklausurmanager().vorgabeByKursklausur(klausur).dauer }}</div>
-								<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
+								<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ klausur.kursSchiene.toString() }}</span></div>
 								<div v-if="kursklausurmanager().quartalGetByTerminid(termin.id) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ klausur.quartal }}.</span></div>
+								<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 							</div>
 						</template>
 					</svws-ui-table>
@@ -104,9 +107,20 @@
 		compactWithDate?: boolean;
 		quartalsauswahl?: {value: number};
 		dragIcon?: boolean;
+		terminSelected?: boolean;
+		showKursschiene? : boolean;
+		showLastKlausurtermin? : boolean;
 	}>();
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin.id);
+
+	const datumVorklausur = (klausur: GostKursklausur) => {
+		const vorklausur = props.kursklausurmanager().kursklausurVorterminByKursklausur(klausur);
+		if (vorklausur === null)
+			return "-";
+		const termin = props.kursklausurmanager().terminByKursklausur(vorklausur);
+		return termin === null || termin.datum === null ? "-" : DateUtils.gibDatumGermanFormat(termin.datum).substring(0,6);
+	};
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
@@ -114,11 +128,18 @@
 			{ key: "kuerzel", label: "Lehrkraft" },
 			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
-			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];
 
+		if (props.showKursschiene === true) {
+			cols.push({ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 1.75 })
+		}
+
 		if (props.kursklausurmanager().quartalGetByTerminid(props.termin.id) === -1) {
-			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 2.75 })
+			cols.push({ key: "quartal", label: "Q", tooltip: "Quartal", span: 0.25, align: "center", minWidth: 1.75 })
+		}
+
+		if (props.showLastKlausurtermin === true) {
+			cols.push({ key: "lastDate", label: "Vordatum", tooltip: "Datum der letzten Klausur", span: 0.25, align: "center", minWidth: 4.75 })
 		}
 
 		return cols;
@@ -162,18 +183,37 @@
 </style>
 
 <style lang="postcss">
-.svws-ui-termin .text-input--headless {
-  @apply text-headline-md;
+.svws-ui-termin {
+  .text-input--headless {
+    @apply text-headline-md;
 
-  &:not(:focus) {
+    &:not(:focus) {
+      &::placeholder {
+        @apply text-black dark:text-white;
+      }
+    }
+
     &::placeholder {
-      @apply text-black dark:text-white;
+      @apply font-bold;
     }
   }
 
-  &::placeholder {
-    @apply font-bold;
+  .svws-selected & {
+    .text-input--headless {
+      &:not(:focus) {
+        &::placeholder {
+          @apply text-svws dark:text-svws;
+        }
+      }
+
+      &:focus {
+        &::placeholder {
+          @apply text-svws/50 dark:text-svws/50;
+        }
+      }
+    }
   }
+
 }
 
 .svws-ui-stundenplan--unterricht .svws-ui-termin {

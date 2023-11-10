@@ -52,10 +52,10 @@
 
 	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 
-	const inputIstAdmin: WritableComputedRef<boolean | undefined> = computed({
+	const inputIstAdmin: WritableComputedRef<boolean> = computed({
 		get: () => props.getBenutzerManager().istAdmin(),
 		set: (value) => {
-			if ((value === undefined) || (value === props.getBenutzerManager().istAdmin()))
+			if (value === props.getBenutzerManager().istAdmin())
 				return;
 			void props.setIstAdmin(value);
 		}

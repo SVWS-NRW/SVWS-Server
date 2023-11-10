@@ -14,6 +14,7 @@ import de.svws_nrw.data.gost.DBUtilsGostBlockung;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 
 
 
@@ -50,7 +51,13 @@ public class ImportKurs42Blockung {
 			final DBConfig cfg = SVWSKonfiguration.get().getDBConfig(schema);
 
 			// Lege einen Benutzer für den Datenbank-Zugriff an
-			final Benutzer user = Benutzer.create(cfg);
+			final Benutzer user;
+			try {
+				user = Benutzer.create(cfg);
+			} catch (@SuppressWarnings("unused") final DBException db) {
+				logger.logLn("Fehler beim Erstellen der Datenbankverbindung zur SVWS-DB. Sind die Anmeldedaten korrekt?");
+				return;
+			}
 
 		    // Lese den Pfad für das Verzeichnis der Kurs42-Dateien ein
 			final String filename = cmdLine.getValue("d", "");

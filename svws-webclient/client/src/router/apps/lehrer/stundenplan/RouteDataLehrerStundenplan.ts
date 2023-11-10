@@ -124,18 +124,18 @@ export class RouteDataLehrerStundenplan {
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.stammdaten.id, value.id, 0));
+		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.lehrerListeManager.daten().id, value.id, 0));
 	}
 
 	public gotoWochentyp = async (value: number) => {
-		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.stammdaten.id, this.auswahl.id, value));
+		await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.lehrerListeManager.daten().id, this.auswahl.id, value));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		if (value === undefined)
-			await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.stammdaten.id, this.auswahl.id, this.wochentyp));
+			await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.lehrerListeManager.daten().id, this.auswahl.id, this.wochentyp));
 		else
-			await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.stammdaten.id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
+			await RouteManager.doRoute(routeLehrerStundenplanDaten.getRoute(routeLehrer.data.lehrerListeManager.daten().id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
 	}
 
 }

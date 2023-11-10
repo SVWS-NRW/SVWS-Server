@@ -20,6 +20,11 @@ import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.Authentication.User;
 import org.eclipse.jetty.util.security.Constraint;
 
+import de.svws_nrw.api.RestAppAdminClient;
+import de.svws_nrw.api.RestAppDebug;
+import de.svws_nrw.api.RestAppSchemaRoot;
+import de.svws_nrw.config.SVWSKonfiguration;
+
 /**
  * Implementiert eine Variante des {@link BasicAuthenticator} für den
  * SVWS-Server, der auch unauthorisierte Zugriff an den Login-Service
@@ -40,8 +45,21 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
 
     @Override
     public Authentication validateRequest(final ServletRequest req, final ServletResponse res, final boolean mandatory) throws ServerAuthException {
-        final HttpServletRequest request = (HttpServletRequest) req;
+    	final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
+        // Prüfe, ob der Port zu dem Zugriffsbereich passt, falls in der SVWS-Konfiguration mehrere Ports verwendet werden
+        final SVWSKonfiguration config = SVWSKonfiguration.get();
+        if (config.hatPortHTTPPrivilegedAccess()) {
+        	final String pathInfo = request.getPathInfo();
+        	final boolean isDebugAccess = RestAppDebug.checkIsInPathSpecification(pathInfo);
+        	final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
+        			|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
+        	if (!isDebugAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
+        		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
+        	if (!isDebugAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
+        		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
+        }
+        // Prüfe die Anmeldenamen...
         final String auth = request.getHeader(HttpHeader.AUTHORIZATION.asString());
         String username = "";
         String password = "";
@@ -75,21 +93,25 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         }
         //Workaround Ende
 
-        try {
-	        UserIdentity user = login(username, password, request);
-	        if (user != null)
-	            return new UserAuthentication(getAuthMethod(), user);
-	        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
-	        if (user != null)
-	            return new UserAuthentication(getAuthMethod(), user);
-        } catch (final WebApplicationException wae) {
-    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
-    			response.setStatus(r.getStatus());
-    			writer.print(r.getEntity());
-        		return Authentication.SEND_FAILURE;
-            } catch (final IOException e) {
-                throw new ServerAuthException(e);
-            }
+        if (((username == null) || (username.isBlank())) && (request.getPathInfo().startsWith("/api/schema/root/"))) {
+        	// Anmeldung ist nicht möglich, da hier ein anonymer Zugriff prinzipiell nicht möglich ist
+        } else {
+	        try {
+		        UserIdentity user = login(username, password, request);
+		        if (user != null)
+		            return new UserAuthentication(getAuthMethod(), user);
+		        user = login(usernameISO_8859_1, passwordISO_8859_1, request);
+		        if (user != null)
+		            return new UserAuthentication(getAuthMethod(), user);
+	        } catch (final WebApplicationException wae) {
+	    		try (var r = wae.getResponse(); var writer = response.getWriter()) {
+	    			response.setStatus(r.getStatus());
+	    			writer.print(r.getEntity());
+	        		return Authentication.SEND_FAILURE;
+	            } catch (final IOException e) {
+	                throw new ServerAuthException(e);
+	            }
+	        }
         }
         try {
             response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "basic realm=\"" + _loginService.getName() + "\", charset=\"UTF-8\"");

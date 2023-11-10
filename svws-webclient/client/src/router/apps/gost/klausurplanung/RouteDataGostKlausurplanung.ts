@@ -11,7 +11,7 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
-import { routeGostKlausurplanungKonflikte } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKonflikte";
+import { routeGostKlausurplanungDetailAnsicht } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungDetailAnsicht";
 import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
 
@@ -262,7 +262,7 @@ export class RouteDataGostKlausurplanung {
 			(view !== routeGostKlausurplanungSchienen) &&
 			(view !== routeGostKlausurplanungKalender) &&
 			(view !== routeGostKlausurplanungRaumzeit) &&
-			(view !== routeGostKlausurplanungKonflikte))
+			(view !== routeGostKlausurplanungDetailAnsicht))
 			throw new Error("Die gewählte Ansicht für die Klausurplanung wird nicht unterstützt. ");
 		this.setPatchedState({ view: view });
 	}
@@ -359,10 +359,13 @@ export class RouteDataGostKlausurplanung {
 
 	erzeugeKursklausurenAusVorgaben = async (quartal: number) => {
 		api.status.start();
-		const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
-		this.kursklausurmanager.kursklausurAddAll(result);
-		this.commit();
-		api.status.stop();
+		try {
+			const result = await api.server.createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
+			this.kursklausurmanager.kursklausurAddAll(result);
+			this.commit();
+		} finally {
+			api.status.stop();
+		}
 	}
 
 	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
@@ -419,7 +422,7 @@ export class RouteDataGostKlausurplanung {
 		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausuren(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren);
+		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren, this.kursklausurmanager);
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {
@@ -448,5 +451,10 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 		return true;
 	}
+
+	gotoVorgaben = async () => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+	}
+
 
 }

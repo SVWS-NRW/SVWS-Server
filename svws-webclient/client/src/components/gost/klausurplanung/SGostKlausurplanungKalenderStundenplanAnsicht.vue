@@ -8,8 +8,8 @@
 				</div>
 			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold text-center my-auto w-full">
-				{{ wochentage[wochentag.id].slice(0, 2) }} {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }}
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
+				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kwAuswahl, wochentag)) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -78,11 +78,9 @@
 						<div class="bg-white dark:bg-black border w-full h-full rounded-md overflow-hidden flex items-center justify-center relative group"
 							:class="dragData !== undefined ? 'bg-light border-black/25 dark:border-white/25' : 'shadow border-black/10 dark:border-white/10'">
 							<i-ri-draggable class="absolute top-1 left-0 z-10 text-sm opacity-50 group-hover:opacity-100" />
-							<div class="absolute inset-0 flex w-full flex-col pointer-events-none">
-								<span v-for="color in getBgColors(termin.id)" :key="color" class="h-full inline-block" :style="`background-color: ${color}`" />
-							</div>
-							<svws-ui-tooltip :hover="false">
-								<span class="z-10 relative p-2">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
+							<div class="absolute inset-0 flex w-full flex-col pointer-events-none" :style="{background: getBgColors(termin.id)}" />
+							<svws-ui-tooltip :hover="false" class="cursor-pointer">
+								<span class="z-10 relative p-2 leading-tight font-medium">{{ termin.bezeichnung === null ? ([...kursklausurmanager().kursklausurGetMengeByTerminid(termin.id)].map(k => k.kursKurzbezeichnung).slice(0, 3).join(', ') + '...' || 'Neuer Termin') : 'Klausurtermin' }}</span>
 								<template #content>
 									<div class="-mx-3">
 										<s-gost-klausurplanung-termin :termin="termin"
@@ -264,8 +262,21 @@
 
 	function getBgColors(termin: number | null) {
 		const klausuren = [...props.kursklausurmanager().kursklausurGetMengeByTerminid(termin)].map(k => k.kursKurzbezeichnung?.split('-')[0])
+		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
 
-		return klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
+		let gradient = '';
+
+		const gradientPositions = [0, 20, 80, 100];
+
+		for (let i = 0; i < colors.length; i++) {
+			if (i > 0) {
+				gradient += `radial-gradient(farthest-side at ${gradientPositions[i % 2]}% ${gradientPositions[i % 3]}%, ${colors[i]}, ${colors[i].replace('1)', '0)')}),`;
+			}
+		}
+
+		gradient += `linear-gradient(${colors[0]}, ${colors[0]})`;
+
+		return gradient;
 	}
 
 </script>

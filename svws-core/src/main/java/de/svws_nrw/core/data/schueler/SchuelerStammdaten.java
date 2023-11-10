@@ -146,30 +146,19 @@ public class SchuelerStammdaten {
 	public String geburtslandMutter;
 
 
-	// **** Daten zur Sonderpädagogischen Förderung
-
-	/** Die ID eines sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. */
-	@Schema(description = "ggf. die ID eines sonderpädagogischen Förderschwerpunnktes", example = "3")
-	public Long foerderschwerpunktID;
-
-	/** Die ID eines zweiten sonderpädagogischen Förderschwerpunnktes des Schülerdatensatzes. */
-	@Schema(description = "ggf. die ID eines zweiten sonderpädagogischen Förderschwerpunnktes", example = "2")
-	public Long foerderschwerpunkt2ID;
-
-	/** Gibt an, ob ein AOSF bei dem Schülerdatensatz vorliegt. */
-	@Schema(description = "gibt an, ob eine sonderpädagogische Förderung nach AOSF vorliegt oder nicht", example = "true")
-	public Boolean istAOSF;
-
-	/** Gibt an, ob zieldifferentes Lerne bei dem Schülerdatensatz vorliegt. */
-	@Schema(description = "gibt an, ob zieldifferentes Lernen vorliegt oder nicht", example = "true")
-	public Boolean istLernenZieldifferent;
-
-
 	// **** Statusdaten
 
 	/** Die ID des Status des Schülerdatensatzes. */
 	@Schema(description = "die ID des aktuellen Schülerstatus", example = "2")
 	public int status;
+
+	/** Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
+	@Schema(description = "gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht", example = "true")
+	public boolean istDuplikat;
+
+	/** Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
+	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
+	public String externeSchulNr;
 
 	/** Die ID der Art des Fahrschülers des Schülerdatensatzes. */
 	@Schema(description = "ggf. die ID der Art des Fahrschülers", example = "3")
@@ -214,10 +203,6 @@ public class SchuelerStammdaten {
 	/** Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht. */
 	@Schema(description = "gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht", example = "true")
 	public boolean erhaeltMeisterBAFOEG;
-
-	/** Ggibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
-	@Schema(description = "gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht", example = "true")
-	public boolean istDuplikat;
 
 
 	// Bemerkungen

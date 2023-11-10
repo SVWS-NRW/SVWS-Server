@@ -9,6 +9,7 @@ import java.util.Random;
 import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
@@ -79,6 +80,13 @@ public final class DataLupo {
 			logger.logLn("  Import beendet");
 		} catch (@SuppressWarnings("unused") final IOException e1) {
 			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank.");
+			final SimpleOperationResponse daten = new SimpleOperationResponse();
+			daten.log = log.getStrings();
+			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		} catch (@SuppressWarnings("unused") final UserNotificationException une) {
+			final SimpleOperationResponse daten = new SimpleOperationResponse();
+			daten.log = log.getStrings();
+			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} finally {
 			// Entferne die temporär angelegte Datenbank wieder...
 			logger.logLn("Löschen der temporären LuPO-Datenbank unter dem Namen \"" + tmpDirectory + "/" + tmpFilename + "\".");

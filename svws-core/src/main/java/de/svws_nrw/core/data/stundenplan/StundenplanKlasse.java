@@ -33,7 +33,7 @@ public class StundenplanKlasse {
 	@Schema(description = "die Liste der IDs der Jahrgänge, denen die Klasse zugeordnet ist")
 	public @NotNull List<@NotNull Long> jahrgaenge = new ArrayList<>();
 
-	/** Die Liste der IDs der Schüler, die der Klasse zugeordnet sind. */
+	/** Die Liste der IDs der  {@link StundenplanSchueler}, die der Klasse zugeordnet sind. */
 	@Schema(description = "die Liste der IDs der Schüler, die der Klasse zugeordnet sind")
 	public @NotNull List<@NotNull Long> schueler = new ArrayList<>();
 

@@ -25,12 +25,12 @@
 
 <script setup lang="ts">
 	import type { StundenplanManager, StundenplanZeitraster} from "@core";
-	import { DateUtils, Wochentag, ZulaessigesFach } from "@core";
+	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
 		stundenplanManager: () => StundenplanManager;
-		patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
+		patchZeitraster: (zeitraster : Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
@@ -38,18 +38,26 @@
 		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
 	}
 
-	async function patchBeginn(event: string | number) {
-		if (typeof event === 'number')
+	async function patchBeginn(start: string | null) {
+		if (start === null)
 			return;
-		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(event);
-		await props.patchZeitraster({stundenbeginn}, props.item);
+		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
+		const zeitraster = props.item.clone() as StundenplanZeitraster;
+		zeitraster.stundenbeginn = stundenbeginn;
+		const list = new ArrayList<StundenplanZeitraster>();
+		list.add(zeitraster);
+		await props.patchZeitraster(list);
 	}
 
-	async function patchEnde(event: string | number) {
-		if (typeof event === 'number')
+	async function patchEnde(ende: string | null) {
+		if (ende === null)
 			return;
-		const stundenende = DateUtils.gibMinutenOfZeitAsString(event);
-		await props.patchZeitraster({stundenende}, props.item);
+		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
+		const zeitraster = props.item.clone() as StundenplanZeitraster;
+		zeitraster.stundenende = stundenende;
+		const list = new ArrayList<StundenplanZeitraster>();
+		list.add(zeitraster);
+		await props.patchZeitraster(list);
 	}
 
 
