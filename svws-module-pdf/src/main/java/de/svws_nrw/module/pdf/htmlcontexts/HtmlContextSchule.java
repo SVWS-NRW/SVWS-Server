@@ -1,8 +1,9 @@
-package de.svws_nrw.module.pdf.schule;
+package de.svws_nrw.module.pdf.htmlcontexts;
 
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.HtmlContext;
+import de.svws_nrw.module.pdf.drucktypes.DruckSchule;
 import org.thymeleaf.context.Context;
 
 
@@ -27,9 +28,10 @@ public final class HtmlContextSchule extends HtmlContext {
 	 * @param conn  Datenbank-Verbindung
 	 */
 	private void erzeugeContext(final DBEntityManager conn) {
-		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
-		context.setVariable("Schule", DataSchuleStammdaten.getStammdaten(conn));
+
+		DruckSchule schule = new DruckSchule(DataSchuleStammdaten.getStammdaten(conn));
+		context.setVariable("Schule", schule);
 
 		super.setContext(context);
 	}

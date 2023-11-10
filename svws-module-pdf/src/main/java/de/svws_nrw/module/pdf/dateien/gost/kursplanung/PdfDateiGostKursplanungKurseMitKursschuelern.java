@@ -1,10 +1,11 @@
-package de.svws_nrw.module.pdf.gost.kursplanung;
+package de.svws_nrw.module.pdf.dateien.gost.kursplanung;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.HtmlBuilder;
 import de.svws_nrw.module.pdf.HtmlContext;
 import de.svws_nrw.module.pdf.PdfBuilder;
-import de.svws_nrw.module.pdf.schule.HtmlContextSchule;
+import de.svws_nrw.module.pdf.htmlcontexts.HtmlContextGostKursplanungKurse;
+import de.svws_nrw.module.pdf.htmlcontexts.HtmlContextSchule;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 

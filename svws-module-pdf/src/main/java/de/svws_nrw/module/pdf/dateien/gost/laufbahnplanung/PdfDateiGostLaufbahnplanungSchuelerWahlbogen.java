@@ -1,11 +1,12 @@
-package de.svws_nrw.module.pdf.gost.laufbahnplanung;
+package de.svws_nrw.module.pdf.dateien.gost.laufbahnplanung;
 
-import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.drucktypes.DruckGostLaufbahnplanungSchueler;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.HtmlBuilder;
 import de.svws_nrw.module.pdf.HtmlContext;
 import de.svws_nrw.module.pdf.PdfBuilder;
-import de.svws_nrw.module.pdf.schule.HtmlContextSchule;
+import de.svws_nrw.module.pdf.htmlcontexts.HtmlContextGostLaufbahnplanungSchueler;
+import de.svws_nrw.module.pdf.htmlcontexts.HtmlContextSchule;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
@@ -63,7 +64,7 @@ public final class PdfDateiGostLaufbahnplanungSchuelerWahlbogen {
 	public static PdfBuilder getPdfBuilder(final DBEntityManager conn, final List<Long> schuelerIDs, final boolean nurBelegteFaecher) {
 
 		// html-Daten-Contexts erstellen und in Liste sammeln
-		final HtmlContextGostLaufbahnplanung htmlContextLaufbahnplanung = new HtmlContextGostLaufbahnplanung(conn, schuelerIDs);
+		final HtmlContextGostLaufbahnplanungSchueler htmlContextLaufbahnplanung = new HtmlContextGostLaufbahnplanungSchueler(conn, schuelerIDs);
 		final HtmlContextSchule htmlContextSchule = new HtmlContextSchule(conn);
 
 		final List<HtmlContext> htmlContexts = new ArrayList<>();
@@ -82,13 +83,13 @@ public final class PdfDateiGostLaufbahnplanungSchuelerWahlbogen {
 
 			if (laufbahnplanungSchueler.size() == 1) {
 				pdfDateiname = "Laufbahnplanung_%d_%s_%s_%s_(%d).pdf".formatted(
-						ersteLaufbahnplanung.Abiturjahr,
-						ersteLaufbahnplanung.BeratungsGOStHalbjahr.replace(".", ""),
-						ersteLaufbahnplanung.Nachname.replace(' ', '_').replace('.', '_'),
-						ersteLaufbahnplanung.Vorname.replace(' ', '_').replace('.', '_'),
-						ersteLaufbahnplanung.SchuelerID);
+						ersteLaufbahnplanung.abiturjahr,
+						ersteLaufbahnplanung.beratungsGOStHalbjahr.replace(".", ""),
+						ersteLaufbahnplanung.nachname.replace(' ', '_').replace('.', '_'),
+						ersteLaufbahnplanung.vorname.replace(' ', '_').replace('.', '_'),
+						ersteLaufbahnplanung.id);
 			} else {
-				pdfDateiname = "Laufbahnplanung_%d_%s.pdf".formatted(ersteLaufbahnplanung.Abiturjahr, ersteLaufbahnplanung.BeratungsGOStHalbjahr.replace('.', '_'));
+				pdfDateiname = "Laufbahnplanung_%d_%s.pdf".formatted(ersteLaufbahnplanung.abiturjahr, ersteLaufbahnplanung.beratungsGOStHalbjahr.replace('.', '_'));
 			}
 		}
 

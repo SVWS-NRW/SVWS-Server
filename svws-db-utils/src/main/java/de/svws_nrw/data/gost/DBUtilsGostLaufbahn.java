@@ -1,8 +1,5 @@
 package de.svws_nrw.data.gost;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.Abiturdaten;
@@ -34,6 +31,9 @@ import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Diese Klasse stellt Hilfsmethoden für den Zugriff auf Informationen
@@ -172,7 +172,9 @@ public final class DBUtilsGostLaufbahn {
 				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).kuerzel;
 				fach.belegungen[GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).id] = belegung;
 			}
-			abidaten.fachbelegungen.add(fach);
+			// Prüfe, ob das Fach in einem gewerteten Abschnitt belegt wurde. Wenn ja, dann füge es zu es den Fachbelegungen hinzu
+			if (letzteBelegungHalbjahr != null)
+				abidaten.fachbelegungen.add(fach);
 		}
 
 		// Bestimmt die Fehlstunden-Summe für den Block I (Qualifikationsphase) anhand der Fehlstunden bei den einzelnen Kurs-Belegungen.

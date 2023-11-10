@@ -1,14 +1,5 @@
 package de.svws_nrw.data.lehrer;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Function;
-
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.PersonalTyp;
@@ -21,6 +12,15 @@ import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 
 
 /**
@@ -80,22 +80,34 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
+		final LehrerStammdaten daten = getFromID(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * Gibt die Lehrerstammdaten zur ID der Lehrkraft zurück.
+	 *
+	 * @param id	Die ID der Lehrkraft.
+	 * @return		Die Lehrerstammdaten zur ID.
+	 */
+	public LehrerStammdaten getFromID(final Long id) throws WebApplicationException {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
-    	final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
-    	if (lehrer == null)
-    		return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception("Keine ID für die Lehrkraft übergeben");
+		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
+		if (lehrer == null)
+			throw OperationError.NOT_FOUND.exception("Keine Lehrkraft zur ID " + id + " gefunden.");
 		final LehrerStammdaten daten = dtoMapper.apply(lehrer);
 		final DTOLehrerFoto lehrerFoto = conn.queryByKey(DTOLehrerFoto.class, id);
 		if (lehrerFoto != null)
 			daten.foto = lehrerFoto.FotoBase64;
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+
+		return daten;
 	}
 
 	@Override
 	public Response patch(final Long id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
+    	if (!map.isEmpty()) {
     		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, id);
 	    	if (lehrer == null)
 	    		throw OperationError.NOT_FOUND.exception();
@@ -141,7 +153,7 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	    			case "geburtsdatum" -> lehrer.Geburtsdatum = JSONMapper.convertToString(value, false, false, null);  // TODO convertToDate im JSONMapper
 	    			case "staatsangehoerigkeitID" -> {
 	    		    	final String staatsangehoerigkeitID = JSONMapper.convertToString(value, true, true, null);
-	    		    	if ((staatsangehoerigkeitID == null) || ("".equals(staatsangehoerigkeitID))) {
+	    		    	if ((staatsangehoerigkeitID == null) || (staatsangehoerigkeitID.isBlank())) {
     						lehrer.staatsangehoerigkeit = null;
     					} else {
     						final Nationalitaeten nat = Nationalitaeten.getByISO3(staatsangehoerigkeitID);

@@ -1,17 +1,5 @@
 package de.svws_nrw.data.gost;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
@@ -53,6 +41,18 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -168,17 +168,30 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	}
 
 
-	@Override
-	public Response get(final Long id) {
+	/**
+	 * Liest die Daten für das Blockungsergebnis aus der Datenbank ein und erstellt das
+	 * zugehörige Core-DTO
+	 *
+	 * @param id			die ID des Blockungsergebnisses aus der Datenbank
+	 *
+	 * @return 				das Core-DTO für das Blockungsergebnis
+	 *
+	 * @throws WebApplicationException   falls das Ergebnis nicht in der Datenbank existiert.
+	 */
+	public GostBlockungsergebnis getErgebnisFromID(@NotNull final Long id) throws WebApplicationException {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		// Bestimme das Blockungs-Zwischenergebnis
 		final DTOGostBlockungZwischenergebnis ergebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, id);
 		if (ergebnis == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception("Ungültige Blockungsergebnis-ID übergeben.");
 		final GostBlockungsdatenManager datenManager = (new DataGostBlockungsdaten(conn)).getBlockungsdatenManagerFromDB(ergebnis.Blockung_ID);
-		// Bestimme die Daten des Ergebnisses
-        final GostBlockungsergebnis daten = getErgebnis(ergebnis, datenManager);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return getErgebnis(ergebnis, datenManager);
+	}
+
+
+	@Override
+	public Response get(final Long id) {
+		final GostBlockungsergebnis daten = getErgebnisFromID(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 

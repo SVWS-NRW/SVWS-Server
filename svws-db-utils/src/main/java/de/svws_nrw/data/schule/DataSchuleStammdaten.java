@@ -47,6 +47,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -88,8 +89,6 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		daten.email = schule.Email;
 		daten.webAdresse = schule.WebAdresse;
 		daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
-		daten.textSchuljahr = "%d/%s".formatted(schuljahresabschnitt.Jahr, String.valueOf(schuljahresabschnitt.Jahr + 1).substring(2));
-		daten.textSchuljahresabschnitt = "%d/%s.%d".formatted(schuljahresabschnitt.Jahr, String.valueOf(schuljahresabschnitt.Jahr + 1).substring(2), schuljahresabschnitt.Abschnitt);
 		daten.anzJGS_Jahr = schule.AnzJGS_Jahr == null ? 1 : schule.AnzJGS_Jahr;
 		daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
 		daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
@@ -121,7 +120,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	 *
 	 * @return die Stammdaten
 	 */
-	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) {
+	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) throws WebApplicationException {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw OperationError.NOT_FOUND.exception("Keine Schuldaten für die Schule vorhanden.");
@@ -135,7 +134,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStammdaten(conn)).build();
+		final SchuleStammdaten daten = getStammdaten(conn);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	/**

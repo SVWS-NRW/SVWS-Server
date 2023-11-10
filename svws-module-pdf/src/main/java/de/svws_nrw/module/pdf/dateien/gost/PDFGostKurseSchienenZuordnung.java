@@ -1,4 +1,4 @@
-package de.svws_nrw.module.pdf.gost;
+package de.svws_nrw.module.pdf.dateien.gost;
 
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;

@@ -1,12 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Geschlecht;
@@ -29,6 +22,13 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -132,7 +132,9 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		if (ids.isEmpty())
 			return result;
 		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.id.multiple", ids, DTOSchueler.class);
-		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryNamed("DTOSchuelerFoto.id.multiple", ids, DTOSchuelerFoto.class)
+		if (schueler == null || schueler.isEmpty())
+			return result;
+		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryNamed("DTOSchuelerFoto.schueler_id.multiple", ids, DTOSchuelerFoto.class)
 			.stream().collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
 		for (final DTOSchueler s : schueler) {
 			final var tmp = dtoMapper.apply(s);
