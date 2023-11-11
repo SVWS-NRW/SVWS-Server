@@ -337,6 +337,37 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Zeitrastereinträge zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Zeitrastereinträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der Liste der neuen Zeitrastereinträge
+     */
+    @POST
+    @Path("/{id : \\d+}/zeitraster/create/multiple")
+    @Operation(summary = "Erstellt mehrere neue Zeitrastereinträge für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt mehrere neue Zeitrastereinträge für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Zeitrastereinträge wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Zeitrastereinträge für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanZeitrasterEintraege(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Zeitrastereinträge ohne IDs, welche automatisch generiert werden", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen des Zeitrastereintrags eines Stundenplans.
      *
      * @param schema       das Datenbankschema
@@ -600,6 +631,37 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Aufsichtsbereiche zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Aufsichtsbereiche
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der Liste der neuen Aufsichtsbereiche
+     */
+    @POST
+    @Path("/{id : \\d+}/aufsichtsbereiche/create/multiple")
+    @Operation(summary = "Erstellt mehrere neue Aufsichtsbereiche für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt mehrere neue Aufsichtsbereiche für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanAufsichtsbereich.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Aufsichtsbereiche für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanAufsichtsbereiche(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Aufsichtsbereiche ohne IDs, welche automatisch generiert werden", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanAufsichtsbereich.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen des Aufsichtsbereichs eines Stundenplans.
      *
      * @param schema       das Datenbankschema
@@ -766,6 +828,37 @@ public class APIStundenplan {
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Pausenzeiten zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Stundenplans
+     * @param is           der Input-Stream mit den Daten der Pausenzeiten
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit der Liste der neuen Pausenzeiten
+     */
+    @POST
+    @Path("/{id : \\d+}/pausenzeiten/create/multiple")
+    @Operation(summary = "Erstellt mehrere neue Pausenzeiten für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt mehrere neue Pausenzeiten für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeiten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Pausenzeiten für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanPausenzeiten(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeiten ohne IDs, welche automatisch generiert werden", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addMultiple(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 
@@ -969,6 +1062,36 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Pausenaufsichten zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Pausenaufsichten
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Pausenaufsichten
+     */
+    @POST
+    @Path("/pausenaufsicht/create/multiple")
+    @Operation(summary = "Erstellt neue Pausenaufsichten für einen Stundenplan und gibt die zugehörigen Objekte zurück.",
+    description = "Erstellt neue Pausenaufsichten für einen Stundenplan und gibt die zugehörigen Objekte zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenaufsichten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            		array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsicht.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Pausenaufsichten für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanPausenaufsichten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenaufsichten ohne IDs, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenaufsicht.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen einer Pausenaufsicht eines Stundenplans.
      *
      * @param schema       das Datenbankschema
@@ -1103,6 +1226,36 @@ public class APIStundenplan {
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanUnterricht.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Unterrichte zu einem bestehendem Stundenplan.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Unterrichte
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Unterrichten
+     */
+    @POST
+    @Path("/unterricht/create/multiple")
+    @Operation(summary = "Erstellt neue Unterrichte für einen Stundenplan und gibt die zugehörigen Objekte zurück.",
+    description = "Erstellt neue Unterrichte für einen Stundenplan und gibt die zugehörigen Objekte zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Unterrichte wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            		array = @ArraySchema(schema = @Schema(implementation = StundenplanUnterricht.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Unterrichte für einen Stundenplan anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Stundenplandaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addStundenplanUnterrichte(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Unterrichte ohne IDs, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanUnterricht.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).addMultiple(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
     }
 

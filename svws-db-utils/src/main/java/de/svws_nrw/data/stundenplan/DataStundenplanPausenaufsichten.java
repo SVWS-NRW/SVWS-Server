@@ -176,6 +176,18 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		conn.transactionFlush();
 	}
 
+
+	private void patchInternal(final DTOStundenplanPausenaufsichten dto, final Map<String, Object> map) {
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		// Passe die Bereiche an
+		patchBereiche(dto.ID, map);
+	}
+
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		if (id == null)
@@ -186,11 +198,7 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		final DTOStundenplanPausenaufsichten dto = conn.queryByKey(DTOStundenplanPausenaufsichten.class, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		applyPatchMappings(conn, dto, map, patchMappings, null);
-		conn.transactionPersist(dto);
-		conn.transactionFlush();
-		// Passe die Bereiche an
-		patchBereiche(dto.ID, map);
+		patchInternal(dto, map);
 		return Response.status(Status.OK).build();
 	}
 
@@ -199,6 +207,13 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 
 
 	private final Function<DTOStundenplanPausenaufsichten, StundenplanPausenaufsicht> dtoMapper = (final DTOStundenplanPausenaufsichten u) -> getAufsicht(u.ID);
+
+
+	private StundenplanPausenaufsicht addInternal(final long newID, final Map<String, Object> map) {
+		final DTOStundenplanPausenaufsichten dto = newDTO(DTOStundenplanPausenaufsichten.class, newID, (obj, id) -> obj.ID = id);
+		patchInternal(dto, map);
+		return dtoMapper.apply(dto);
+	}
 
 
 	/**
@@ -215,18 +230,31 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 			if (!map.containsKey(attr))
 				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
 		// Erstelle das DTO und initialisiere es mit den übergeben Daten
-		final DTOStundenplanPausenaufsichten dto = newDTO(DTOStundenplanPausenaufsichten.class, (obj, id) -> obj.ID = id);
-		applyPatchMappings(conn, dto, map, patchMappings, null);
-		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		conn.transactionFlush();
-		// Passe die Bereiche an
-		patchBereiche(dto.ID, map);
-		final StundenplanPausenaufsicht daten = dtoMapper.apply(dto);
+		final StundenplanPausenaufsicht daten = addInternal(conn.transactionGetNextID(DTOStundenplanPausenaufsichten.class), map);
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	/**
+	 * Fügt die Pausenaufsichten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen Core-DTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		for (final Map<String, Object> map : multipleMaps)
+			for (final String attr : requiredCreateAttributes)
+				if (!map.containsKey(attr))
+					return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage bei mindestens einem Unterricht".formatted(attr));
+		final List<StundenplanPausenaufsicht> daten = new ArrayList<>();
+		long newID = conn.transactionGetNextID(DTOStundenplanPausenaufsichten.class);
+		for (final Map<String, Object> map : multipleMaps)
+			daten.add(addInternal(newID++, map));
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
 
 	/**
 	 * Löscht eine Pausenaufsicht

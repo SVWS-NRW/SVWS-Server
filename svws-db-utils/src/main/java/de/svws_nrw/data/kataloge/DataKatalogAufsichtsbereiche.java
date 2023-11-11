@@ -104,6 +104,8 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel");
 
+	private static final ObjLongConsumer<DTOKatalogAufsichtsbereich> initDTO = (dto, id) -> dto.ID = id;
+
 	/**
 	 * Fügt einen Aufsichtsbereich mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
 	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
@@ -113,7 +115,6 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		final ObjLongConsumer<DTOKatalogAufsichtsbereich> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -127,7 +128,6 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response addMultiple(final InputStream is) {
-		final ObjLongConsumer<DTOKatalogAufsichtsbereich> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasicMultiple(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 

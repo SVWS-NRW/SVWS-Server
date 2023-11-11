@@ -9341,6 +9341,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addPausenzeiten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/pausenzeiten/create/multiple
+	 *
+	 * Erstellt neue Pausenzeiten für die Schule und gibt die zugehörigen Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenzeit>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Pausenzeiten für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanPausenzeit>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 */
+	public async addPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string) : Promise<List<StundenplanPausenzeit>> {
+		const path = "/db/{schema}/schule/pausenzeiten/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenzeit>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getRaeume für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/raeume
 	 *
 	 * Gibt den Katalog der Räume der Schule zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
@@ -9830,6 +9860,36 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addZeitrasterEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/zeitraster/create/multiple
+	 *
+	 * Erstellt neue Zeitraster-Einträge für die Schule und gibt die zugehörigen Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanZeitraster>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Zeitraster-Einträge für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanZeitraster>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 */
+	public async addZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<List<StundenplanZeitraster>> {
+		const path = "/db/{schema}/schule/zeitraster/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanZeitraster>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplan für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}
 	 *
 	 * Gibt die grundlegenden Daten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -9937,6 +9997,38 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode addStundenplanAufsichtsbereiche für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/aufsichtsbereiche/create/multiple
+	 *
+	 * Erstellt mehrere neue Aufsichtsbereiche für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanAufsichtsbereich>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Aufsichtsbereiche für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanAufsichtsbereich>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanAufsichtsbereiche(data : List<Partial<StundenplanAufsichtsbereich>>, schema : string, id : number) : Promise<List<StundenplanAufsichtsbereich>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanAufsichtsbereich>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanAufsichtsbereich.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenaufsichten
 	 *
 	 * Gibt die Pausenaufsichten des Stundeplans mit der angegebenen ID zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Stundenplandaten besitzt.
@@ -9992,6 +10084,38 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenzeit.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanPausenzeiten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/pausenzeiten/create/multiple
+	 *
+	 * Erstellt mehrere neue Pausenzeiten für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenzeit>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Pausenzeiten für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanPausenzeit>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Pausenzeiten wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string, id : number) : Promise<List<StundenplanPausenzeit>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenzeit>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenzeit.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -10169,6 +10293,38 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanZeitraster.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanZeitrasterEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/{id : \d+}/zeitraster/create/multiple
+	 *
+	 * Erstellt mehrere neue Zeitrastereinträge für den angegebenen Stundenplan und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Zeitrastereinträge wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanZeitraster>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Zeitrastereinträge für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanZeitraster>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die Zeitrastereinträge wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string, id : number) : Promise<List<StundenplanZeitraster>> {
+		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanZeitraster>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanZeitraster.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -10529,6 +10685,36 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanPausenaufsicht.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanPausenaufsichten für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/pausenaufsicht/create/multiple
+	 *
+	 * Erstellt neue Pausenaufsichten für einen Stundenplan und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Pausenaufsichten wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanPausenaufsicht>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Pausenaufsichten für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanPausenaufsicht>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Pausenaufsichten wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanPausenaufsichten(data : List<Partial<StundenplanPausenaufsicht>>, schema : string) : Promise<List<StundenplanPausenaufsicht>> {
+		const path = "/db/{schema}/stundenplan/pausenaufsicht/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanPausenaufsicht>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanPausenaufsicht.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 
@@ -10943,6 +11129,36 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return StundenplanUnterricht.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addStundenplanUnterrichte für den Zugriff auf die URL https://{hostname}/db/{schema}/stundenplan/unterricht/create/multiple
+	 *
+	 * Erstellt neue Unterrichte für einen Stundenplan und gibt die zugehörigen Objekte zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Stundenplans besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die Unterrichte wurden erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<StundenplanUnterricht>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Unterrichte für einen Stundenplan anzulegen.
+	 *   Code 404: Die Stundenplandaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<StundenplanUnterricht>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Unterrichte wurden erfolgreich hinzugefügt.
+	 */
+	public async addStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<List<StundenplanUnterricht>> {
+		const path = "/db/{schema}/stundenplan/unterricht/create/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSON(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<StundenplanUnterricht>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(StundenplanUnterricht.transpilerFromJSON(text)); });
+		return ret;
 	}
 
 

@@ -1516,6 +1516,36 @@ public class APISchule {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Pausenzeiten zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Pausenzeiten
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Pausenzeiten
+     */
+    @POST
+    @Path("/pausenzeiten/create/multiple")
+    @Operation(summary = "Erstellt neue Pausenzeiten für die Schule und gibt die zugehörigen Objekt zurück.",
+    description = "Erstellt neue Pausenzeiten für die Schule und gibt die zugehörigen Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeiten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Pausenzeiten für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addPausenzeiten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeiten ohne IDs, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen einer Pausenzeit der Schule.
      *
      * @param schema       das Datenbankschema
@@ -1650,6 +1680,36 @@ public class APISchule {
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanZeitraster.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Zeitraster-Einträge zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Zeitraster-Einträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Zeitraster-Einträgen
+     */
+    @POST
+    @Path("/zeitraster/create/multiple")
+    @Operation(summary = "Erstellt neue Zeitraster-Einträge für die Schule und gibt die zugehörigen Objekt zurück.",
+    description = "Erstellt neue Zeitraster-Einträge für die Schule und gibt die zugehörigen Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeiten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Zeitraster-Einträge für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addZeitrasterEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Zeitraster-Einträge ohne IDs, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).addMultiple(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
