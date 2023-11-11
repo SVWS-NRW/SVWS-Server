@@ -18,7 +18,6 @@ public class DruckSchule extends SchuleStammdaten {
 	 * Weist die Daten zu den Feldern der Elternklasse zu, wenn ein Elternklassenobjekt übergeben wird.
 	 * @param schuleStammdaten Daten in Form eines Objektes der Elternklasse
 	 */
-	@SuppressWarnings("java:S3011") // Begründung SuppressWarning siehe Kommentare unten.
 	public DruckSchule(final SchuleStammdaten schuleStammdaten) {
 
 		/*
@@ -27,7 +26,7 @@ public class DruckSchule extends SchuleStammdaten {
 		Im Folgenden existiert damit garantiert zu jedem Feld des übergebenen Objektes ein
 		gleichnamiges Feld mit gleichem Typ in dieser Klasse.
 		*/
-		Field[] felderSchuleStammdaten = schuleStammdaten.getClass().getDeclaredFields();
+		final Field[] felderSchuleStammdaten = schuleStammdaten.getClass().getDeclaredFields();
 
 		/*
 		Filtere nun aus allen Felder die heraus, die den Modifier Public haben und nicht static sind.
@@ -36,8 +35,8 @@ public class DruckSchule extends SchuleStammdaten {
 		Klasse übereinstimmen.
 		*/
 		int modifiers;
-		List<Field> editierbareFelder = new ArrayList<>();
-		for (Field feld : felderSchuleStammdaten) {
+		final List<Field> editierbareFelder = new ArrayList<>();
+		for (final Field feld : felderSchuleStammdaten) {
 			modifiers = feld.getModifiers();
 			if (!Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
 				editierbareFelder.add(feld);
@@ -50,11 +49,11 @@ public class DruckSchule extends SchuleStammdaten {
 		(Sonar-Warnung java:S3011) ignoriert werden. Ebenso kann daher der Fehler vom Type
 		IllegalAccessException nicht auftreten.
 		*/
-		for (Field feld : editierbareFelder) {
+		for (final Field feld : editierbareFelder) {
 			try {
 				feld.setAccessible(true);
 				feld.set(this, feld.get(schuleStammdaten));
-			} catch (Exception ignore) {
+			} catch (@SuppressWarnings("unused") final IllegalAccessException ignore) {
 				// Gemäß obigen Kommentaren sollte hier kein Fehlerfall auftreten.
 			}
 		}
