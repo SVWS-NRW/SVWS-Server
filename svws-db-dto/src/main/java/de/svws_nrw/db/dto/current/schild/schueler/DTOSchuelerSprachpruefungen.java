@@ -72,6 +72,7 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 @NamedQuery(name = "DTOSchuelerSprachpruefungen.notepruefung", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung = :value")
 @NamedQuery(name = "DTOSchuelerSprachpruefungen.notepruefung.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN :value")
 @NamedQuery(name = "DTOSchuelerSprachpruefungen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerSprachpruefungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuelerSprachpruefungen.all.migration", query = "SELECT e FROM DTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "ErsetzteSprache", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
 public final class DTOSchuelerSprachpruefungen {

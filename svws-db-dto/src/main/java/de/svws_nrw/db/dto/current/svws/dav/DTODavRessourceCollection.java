@@ -48,6 +48,7 @@ import de.svws_nrw.csv.converter.current.DavRessourceCollectionTypConverterDeser
 @NamedQuery(name = "DTODavRessourceCollection.geloeschtam", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam = :value")
 @NamedQuery(name = "DTODavRessourceCollection.geloeschtam.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.geloeschtam IN :value")
 @NamedQuery(name = "DTODavRessourceCollection.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavRessourceCollection.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTODavRessourceCollection.all.migration", query = "SELECT e FROM DTODavRessourceCollection e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"Benutzer_ID", "ID", "Typ", "Anzeigename", "Beschreibung", "SyncToken", "geloeschtam"})
 public final class DTODavRessourceCollection {

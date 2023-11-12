@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerLeitungsfunktionKeys.id", query = "SELECT e FROM DTOLehrerLeitungsfunktionKeys e WHERE e.ID = :value")
 @NamedQuery(name = "DTOLehrerLeitungsfunktionKeys.id.multiple", query = "SELECT e FROM DTOLehrerLeitungsfunktionKeys e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOLehrerLeitungsfunktionKeys.primaryKeyQuery", query = "SELECT e FROM DTOLehrerLeitungsfunktionKeys e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerLeitungsfunktionKeys.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerLeitungsfunktionKeys e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOLehrerLeitungsfunktionKeys.all.migration", query = "SELECT e FROM DTOLehrerLeitungsfunktionKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
 public final class DTOLehrerLeitungsfunktionKeys {

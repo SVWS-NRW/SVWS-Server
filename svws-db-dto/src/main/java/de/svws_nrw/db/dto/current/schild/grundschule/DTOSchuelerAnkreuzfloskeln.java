@@ -45,6 +45,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 = :value")
 @NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.stufe5.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.Stufe5 IN :value")
 @NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuelerAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOSchuelerAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Floskel_ID", "Stufe1", "Stufe2", "Stufe3", "Stufe4", "Stufe5"})
 public final class DTOSchuelerAnkreuzfloskeln {

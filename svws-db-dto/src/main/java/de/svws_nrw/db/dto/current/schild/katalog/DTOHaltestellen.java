@@ -41,6 +41,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOHaltestellen.entfernungschule", query = "SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule = :value")
 @NamedQuery(name = "DTOHaltestellen.entfernungschule.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.EntfernungSchule IN :value")
 @NamedQuery(name = "DTOHaltestellen.primaryKeyQuery", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOHaltestellen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOHaltestellen.all.migration", query = "SELECT e FROM DTOHaltestellen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "EntfernungSchule"})
 public final class DTOHaltestellen {

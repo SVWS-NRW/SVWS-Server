@@ -125,6 +125,7 @@ import de.svws_nrw.csv.converter.current.PersonalTypConverterDeserializer;
 @NamedQuery(name = "DTOLehrer.credentialid", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID = :value")
 @NamedQuery(name = "DTOLehrer.credentialid.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "DTOLehrer.primaryKeyQuery", query = "SELECT e FROM DTOLehrer e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrer.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrer e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOLehrer.all.migration", query = "SELECT e FROM DTOLehrer e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "GU_ID", "Kuerzel", "kuerzelLID", "Nachname", "Vorname", "PersonTyp", "Sortierung", "Sichtbar", "Aenderbar", "FuerExport", "statistikRelevant", "Strassenname", "HausNr", "HausNrZusatz", "Ort_ID", "Ortsteil_ID", "telefon", "telefonMobil", "eMailPrivat", "eMailDienstlich", "staatsangehoerigkeit", "Geburtsdatum", "Geschlecht", "Anrede", "Amtsbezeichnung", "Titel", "Faecher", "identNrTeil1", "identNrTeil2SerNr", "PANr", "personalNrLBV", "verguetungsSchluessel", "DatumZugang", "GrundZugang", "DatumAbgang", "GrundAbgang", "KennwortTools", "KennwortToolsAktuell", "CredentialID"})
 public final class DTOLehrer {

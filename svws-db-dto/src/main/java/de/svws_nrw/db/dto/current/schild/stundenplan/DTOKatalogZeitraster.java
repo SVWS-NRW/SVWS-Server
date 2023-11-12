@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOKatalogZeitraster.ende", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende = :value")
 @NamedQuery(name = "DTOKatalogZeitraster.ende.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.Ende IN :value")
 @NamedQuery(name = "DTOKatalogZeitraster.primaryKeyQuery", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKatalogZeitraster.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOKatalogZeitraster.all.migration", query = "SELECT e FROM DTOKatalogZeitraster e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Tag", "Stunde", "Beginn", "Ende"})
 public final class DTOKatalogZeitraster {

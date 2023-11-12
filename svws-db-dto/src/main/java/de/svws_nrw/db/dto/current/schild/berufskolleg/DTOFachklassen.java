@@ -65,6 +65,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOFachklassen.ebene3klartext", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext = :value")
 @NamedQuery(name = "DTOFachklassen.ebene3klartext.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.Ebene3Klartext IN :value")
 @NamedQuery(name = "DTOFachklassen.primaryKeyQuery", query = "SELECT e FROM DTOFachklassen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOFachklassen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFachklassen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOFachklassen.all.migration", query = "SELECT e FROM DTOFachklassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class DTOFachklassen {

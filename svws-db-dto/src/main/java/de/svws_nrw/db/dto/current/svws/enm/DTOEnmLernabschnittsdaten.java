@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = :value")
 @NamedQuery(name = "DTOEnmLernabschnittsdaten.tsbemerkungversetzung.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN :value")
 @NamedQuery(name = "DTOEnmLernabschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOEnmLernabschnittsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOEnmLernabschnittsdaten.all.migration", query = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsBemerkungVersetzung"})
 public final class DTOEnmLernabschnittsdaten {

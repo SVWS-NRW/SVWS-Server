@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOGostKlausurenRaeume.bemerkungen", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen = :value")
 @NamedQuery(name = "DTOGostKlausurenRaeume.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenRaeume.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostKlausurenRaeume.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOGostKlausurenRaeume.all.migration", query = "SELECT e FROM DTOGostKlausurenRaeume e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Termin_ID", "Stundenplan_Raum_ID", "Bemerkungen"})
 public final class DTOGostKlausurenRaeume {

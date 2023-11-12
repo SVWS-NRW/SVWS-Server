@@ -71,6 +71,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchuleNRW.kurzbez", query = "SELECT e FROM DTOSchuleNRW e WHERE e.KurzBez = :value")
 @NamedQuery(name = "DTOSchuleNRW.kurzbez.multiple", query = "SELECT e FROM DTOSchuleNRW e WHERE e.KurzBez IN :value")
 @NamedQuery(name = "DTOSchuleNRW.primaryKeyQuery", query = "SELECT e FROM DTOSchuleNRW e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuleNRW.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuleNRW e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuleNRW.all.migration", query = "SELECT e FROM DTOSchuleNRW e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulNr", "Name", "SchulformNr", "SchulformKrz", "SchulformBez", "Strassenname", "HausNr", "HausNrZusatz", "PLZ", "Ort", "Telefon", "Fax", "Email", "Schulleiter", "Sortierung", "Sichtbar", "Aenderbar", "SchulNr_SIM", "Kuerzel", "KurzBez"})
 public final class DTOSchuleNRW {

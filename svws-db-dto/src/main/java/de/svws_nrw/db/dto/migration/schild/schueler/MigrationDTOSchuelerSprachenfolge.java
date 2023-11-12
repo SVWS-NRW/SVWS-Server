@@ -41,6 +41,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangbis", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis = :value")
 @NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.jahrgangbis.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.JahrgangBis IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchuelerSprachenfolge.all.migration", query = "SELECT e FROM MigrationDTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "AbschnittVon", "AbschnittBis", "Referenzniveau", "SchulnrEigner", "Fach_ID", "Reihenfolge", "JahrgangVon", "JahrgangBis"})
 public final class MigrationDTOSchuelerSprachenfolge {

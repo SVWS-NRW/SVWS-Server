@@ -45,6 +45,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKonfession.zeugnisbezeichnung", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung = :value")
 @NamedQuery(name = "DTOKonfession.zeugnisbezeichnung.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ZeugnisBezeichnung IN :value")
 @NamedQuery(name = "DTOKonfession.primaryKeyQuery", query = "SELECT e FROM DTOKonfession e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKonfession.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKonfession e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOKonfession.all.migration", query = "SELECT e FROM DTOKonfession e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar", "ExportBez", "ZeugnisBezeichnung"})
 public final class DTOKonfession {

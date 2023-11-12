@@ -41,6 +41,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOSportbefreiung.schulnreigner", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSportbefreiung.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSportbefreiung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSportbefreiung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSportbefreiung.all.migration", query = "SELECT e FROM MigrationDTOSportbefreiung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner"})
 public final class MigrationDTOSportbefreiung {

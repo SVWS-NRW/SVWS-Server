@@ -58,6 +58,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerAllgemeineAdresse.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerAllgemeineAdresse e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSchuelerAllgemeineAdresse.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerAllgemeineAdresse e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerAllgemeineAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerAllgemeineAdresse e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchuelerAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOSchuelerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Adresse_ID", "Vertragsart_ID", "Vertragsbeginn", "Vertragsende", "Ausbilder", "AllgAdrAnschreiben", "Praktikum", "Sortierung", "Ansprechpartner_ID", "Betreuungslehrer_ID", "SchulnrEigner"})
 public final class MigrationDTOSchuelerAllgemeineAdresse {

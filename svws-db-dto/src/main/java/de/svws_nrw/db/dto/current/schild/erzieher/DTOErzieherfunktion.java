@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOErzieherfunktion.aenderbar", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOErzieherfunktion.aenderbar.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOErzieherfunktion.primaryKeyQuery", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOErzieherfunktion.primaryKeyQuery.multiple", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOErzieherfunktion.all.migration", query = "SELECT e FROM DTOErzieherfunktion e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOErzieherfunktion {

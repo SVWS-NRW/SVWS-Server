@@ -74,6 +74,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerAbgaenge.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerAbgaenge e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSchuelerAbgaenge.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbgaenge e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerAbgaenge.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerAbgaenge e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerAbgaenge.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerAbgaenge e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchuelerAbgaenge.all.migration", query = "SELECT e FROM MigrationDTOSchuelerAbgaenge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "BemerkungIntern", "AbgangsSchulform", "AbgangsBeschreibung", "OrganisationsformKrz", "AbgangsSchule", "AbgangsSchuleAnschr", "AbgangsSchulNr", "LSJahrgang", "LSEntlassArt", "LSSchulformSIM", "LSSchulEntlassDatum", "LSVersetzung", "LSSGL", "LSFachklKennung", "LSFachklSIM", "FuerSIMExport", "LSBeginnDatum", "LSBeginnJahrgang", "SchulnrEigner"})
 public final class MigrationDTOSchuelerAbgaenge {

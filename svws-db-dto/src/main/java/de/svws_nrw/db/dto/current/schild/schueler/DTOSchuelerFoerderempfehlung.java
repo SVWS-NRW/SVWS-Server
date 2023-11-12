@@ -76,6 +76,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerFoerderempfehlung.abgeschlossen", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen = :value")
 @NamedQuery(name = "DTOSchuelerFoerderempfehlung.abgeschlossen.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.Abgeschlossen IN :value")
 @NamedQuery(name = "DTOSchuelerFoerderempfehlung.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID = ?1")
+@NamedQuery(name = "DTOSchuelerFoerderempfehlung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN ?1")
 @NamedQuery(name = "DTOSchuelerFoerderempfehlung.all.migration", query = "SELECT e FROM DTOSchuelerFoerderempfehlung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"GU_ID", "Abschnitt_ID", "DatumAngelegt", "Klassen_ID", "Lehrer_ID", "DatumAenderungSchild", "DatumAenderungSchildWeb", "Inhaltl_Prozessbez_Komp", "Methodische_Komp", "Lern_Arbeitsverhalten", "Massn_Inhaltl_Prozessbez_Komp", "Massn_Methodische_Komp", "Massn_Lern_Arbeitsverhalten", "Verantwortlichkeit_Eltern", "Verantwortlichkeit_Schueler", "Zeitrahmen_von_Datum", "Zeitrahmen_bis_Datum", "Ueberpruefung_Datum", "Naechstes_Beratungsgespraech", "EingabeFertig", "Faecher", "Abgeschlossen"})
 public final class DTOSchuelerFoerderempfehlung {

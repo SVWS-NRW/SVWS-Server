@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOStundenplanKalenderwochenZuordnung.wochentyp", query = "SELECT e FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Wochentyp = :value")
 @NamedQuery(name = "DTOStundenplanKalenderwochenZuordnung.wochentyp.multiple", query = "SELECT e FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.Wochentyp IN :value")
 @NamedQuery(name = "DTOStundenplanKalenderwochenZuordnung.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanKalenderwochenZuordnung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOStundenplanKalenderwochenZuordnung.all.migration", query = "SELECT e FROM DTOStundenplanKalenderwochenZuordnung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundenplan_ID", "Jahr", "KW", "Wochentyp"})
 public final class DTOStundenplanKalenderwochenZuordnung {

@@ -72,6 +72,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKlassen.ankreuzzeugnisse", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse = :value")
 @NamedQuery(name = "DTOKlassen.ankreuzzeugnisse.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.Ankreuzzeugnisse IN :value")
 @NamedQuery(name = "DTOKlassen.primaryKeyQuery", query = "SELECT e FROM DTOKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKlassen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKlassen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOKlassen.all.migration", query = "SELECT e FROM DTOKlassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "AdrMerkmal", "KoopKlasse", "Ankreuzzeugnisse"})
 public final class DTOKlassen {

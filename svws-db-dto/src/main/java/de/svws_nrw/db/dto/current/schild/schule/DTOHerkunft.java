@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOHerkunft.gueltigbis", query = "SELECT e FROM DTOHerkunft e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTOHerkunft.gueltigbis.multiple", query = "SELECT e FROM DTOHerkunft e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTOHerkunft.primaryKeyQuery", query = "SELECT e FROM DTOHerkunft e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOHerkunft.primaryKeyQuery.multiple", query = "SELECT e FROM DTOHerkunft e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOHerkunft.all.migration", query = "SELECT e FROM DTOHerkunft e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Beschreibung", "gueltigVon", "gueltigBis"})
 public final class DTOHerkunft {

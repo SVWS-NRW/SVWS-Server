@@ -80,6 +80,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOVersetzung.ankreuzzeugnisse", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse = :value")
 @NamedQuery(name = "MigrationDTOVersetzung.ankreuzzeugnisse.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.Ankreuzzeugnisse IN :value")
 @NamedQuery(name = "MigrationDTOVersetzung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOVersetzung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOVersetzung.all.migration", query = "SELECT e FROM MigrationDTOVersetzung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "ASDKlasse", "Klasse", "Jahrgang_ID", "FKlasse", "VKlasse", "OrgFormKrz", "KlassenlehrerKrz", "StvKlassenlehrerKrz", "Restabschnitte", "ASDSchulformNr", "Fachklasse_ID", "PruefOrdnung", "Sichtbar", "Sortierung", "Klassenart", "SommerSem", "NotenGesperrt", "SchulnrEigner", "AdrMerkmal", "WebNotenGesperrt", "KoopKlasse", "Ankreuzzeugnisse"})
 public final class MigrationDTOVersetzung {

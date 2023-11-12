@@ -43,6 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOZuordnungReportvorlagen.zeugnisart", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart = :value")
 @NamedQuery(name = "DTOZuordnungReportvorlagen.zeugnisart.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.Zeugnisart IN :value")
 @NamedQuery(name = "DTOZuordnungReportvorlagen.primaryKeyQuery", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOZuordnungReportvorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOZuordnungReportvorlagen.all.migration", query = "SELECT e FROM DTOZuordnungReportvorlagen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Jahrgang_ID", "Abschluss", "AbschlussBB", "AbschlussArt", "VersetzungKrz", "Fachklasse_ID", "Reportvorlage", "Beschreibung", "Gruppe", "Zeugnisart"})
 public final class DTOZuordnungReportvorlagen {

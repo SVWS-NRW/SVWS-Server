@@ -51,6 +51,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerZP10.fachlehrer_id", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID = :value")
 @NamedQuery(name = "DTOSchuelerZP10.fachlehrer_id.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.Fachlehrer_ID IN :value")
 @NamedQuery(name = "DTOSchuelerZP10.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerZP10.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuelerZP10.all.migration", query = "SELECT e FROM DTOSchuelerZP10 e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "Fach_ID", "Vornote", "NoteSchriftlich", "MdlPruefung", "MdlPruefungFW", "NoteMuendlich", "NoteAbschluss", "Fachlehrer_ID"})
 public final class DTOSchuelerZP10 {

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID = :value")
 @NamedQuery(name = "MigrationDTOBenutzerAllgemein.credentialid.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "MigrationDTOBenutzerAllgemein.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzerAllgemein.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOBenutzerAllgemein.all.migration", query = "SELECT e FROM MigrationDTOBenutzerAllgemein e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "AnzeigeName", "CredentialID"})
 public final class MigrationDTOBenutzerAllgemein {

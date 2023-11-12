@@ -92,6 +92,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.extid", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ExtID = :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.extid.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ExtID IN :value")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOKatalogAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "AllgAdrAdressArt", "name1", "name2", "strasse", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "ortsteil_id", "plz", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "SchulnrEigner", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
 public final class MigrationDTOKatalogAllgemeineAdresse {

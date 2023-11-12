@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOFloskeln.schulnreigner", query = "SELECT e FROM MigrationDTOFloskeln e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOFloskeln.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOFloskeln e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOFloskeln.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFloskeln e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "MigrationDTOFloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFloskeln e WHERE e.Kuerzel IN ?1")
 @NamedQuery(name = "MigrationDTOFloskeln.all.migration", query = "SELECT e FROM MigrationDTOFloskeln e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "FloskelText", "FloskelGruppe", "FloskelFach", "FloskelNiveau", "FloskelJahrgang", "SchulnrEigner"})
 public final class MigrationDTOFloskeln {

@@ -104,6 +104,7 @@ import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelDeserializer;
 @NamedQuery(name = "DTOSchuelerLeistungsdaten.umfang", query = "SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Umfang = :value")
 @NamedQuery(name = "DTOSchuelerLeistungsdaten.umfang.multiple", query = "SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Umfang IN :value")
 @NamedQuery(name = "DTOSchuelerLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerLeistungsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuelerLeistungsdaten.all.migration", query = "SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Fach_ID", "Hochrechnung", "Fachlehrer_ID", "Kursart", "KursartAllg", "Kurs_ID", "NotenKrz", "NotenKrzQuartal", "Warnung", "Warndatum", "AbiFach", "Wochenstunden", "AbiZeugnis", "Prognose", "FehlStd", "uFehlStd", "Sortierung", "Lernentw", "Gekoppelt", "VorherAbgeschl", "AbschlussJahrgang", "HochrechnungStatus", "SchulNr", "Zusatzkraft_ID", "WochenstdZusatzkraft", "Prf10Fach", "AufZeugnis", "Gewichtung", "NoteAbschlussBA", "Umfang"})
 public final class DTOSchuelerLeistungsdaten {

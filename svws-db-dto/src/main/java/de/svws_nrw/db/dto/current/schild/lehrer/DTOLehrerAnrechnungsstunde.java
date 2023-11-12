@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungstd", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd = :value")
 @NamedQuery(name = "DTOLehrerAnrechnungsstunde.anrechnungstd.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.AnrechnungStd IN :value")
 @NamedQuery(name = "DTOLehrerAnrechnungsstunde.primaryKeyQuery", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerAnrechnungsstunde.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOLehrerAnrechnungsstunde.all.migration", query = "SELECT e FROM DTOLehrerAnrechnungsstunde e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "AnrechnungsgrundKrz", "AnrechnungStd"})
 public final class DTOLehrerAnrechnungsstunde {

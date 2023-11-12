@@ -37,6 +37,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchulfunktion.sichtbar", query = "SELECT e FROM DTOSchulfunktion e WHERE e.Sichtbar = :value")
 @NamedQuery(name = "DTOSchulfunktion.sichtbar.multiple", query = "SELECT e FROM DTOSchulfunktion e WHERE e.Sichtbar IN :value")
 @NamedQuery(name = "DTOSchulfunktion.primaryKeyQuery", query = "SELECT e FROM DTOSchulfunktion e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchulfunktion.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchulfunktion e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchulfunktion.all.migration", query = "SELECT e FROM DTOSchulfunktion e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar"})
 public final class DTOSchulfunktion {

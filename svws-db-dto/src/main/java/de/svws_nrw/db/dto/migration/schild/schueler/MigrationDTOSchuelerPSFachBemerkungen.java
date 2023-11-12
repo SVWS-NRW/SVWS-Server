@@ -39,6 +39,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOSchuelerPSFachBemerkungen.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerPSFachBemerkungen e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSchuelerPSFachBemerkungen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerPSFachBemerkungen e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerPSFachBemerkungen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerPSFachBemerkungen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerPSFachBemerkungen e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchuelerPSFachBemerkungen.all.migration", query = "SELECT e FROM MigrationDTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "ASV", "LELS", "AUE", "ESF", "BemerkungFSP", "BemerkungVersetzung", "SchulnrEigner"})
 public final class MigrationDTOSchuelerPSFachBemerkungen {

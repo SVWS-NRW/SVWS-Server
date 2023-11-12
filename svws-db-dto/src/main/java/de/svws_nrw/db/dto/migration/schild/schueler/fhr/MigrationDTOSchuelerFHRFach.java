@@ -107,6 +107,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @NamedQuery(name = "MigrationDTOSchuelerFHRFach.schulnreigner", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSchuelerFHRFach.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerFHRFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFHRFach.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchuelerFHRFach.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFHRFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Fach_ID", "KursartAllg", "FachKrz", "PSII_2_1", "HSII_2_1", "RSII_2_1", "PSII_2_2", "HSII_2_2", "RSII_2_2", "PSII_2_1_W", "HSII_2_1_W", "RSII_2_1_W", "PSII_2_2_W", "HSII_2_2_W", "RSII_2_2_W", "PSII_3_1", "HSII_3_1", "RSII_3_1", "PSII_3_2", "HSII_3_2", "RSII_3_2", "PSII_3_1_W", "HSII_3_1_W", "RSII_3_1_W", "PSII_3_2_W", "HSII_3_2_W", "RSII_3_2_W", "KSII_2_1", "KSII_2_2", "KSII_2_1_W", "KSII_2_2_W", "KSII_3_1", "KSII_3_2", "KSII_3_1_W", "KSII_3_2_W", "FSortierung", "SchulnrEigner"})
 public final class MigrationDTOSchuelerFHRFach {

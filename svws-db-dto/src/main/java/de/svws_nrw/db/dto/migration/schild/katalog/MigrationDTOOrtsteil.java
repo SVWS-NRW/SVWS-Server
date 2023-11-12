@@ -47,6 +47,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOOrtsteil.ortsteilschluessel", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel = :value")
 @NamedQuery(name = "MigrationDTOOrtsteil.ortsteilschluessel.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.OrtsteilSchluessel IN :value")
 @NamedQuery(name = "MigrationDTOOrtsteil.primaryKeyQuery", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOOrtsteil.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IN ?1")
 @NamedQuery(name = "MigrationDTOOrtsteil.all.migration", query = "SELECT e FROM MigrationDTOOrtsteil e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Ort_ID", "PLZ", "Sortierung", "Sichtbar", "Aenderbar", "SchulnrEigner", "OrtsteilSchluessel"})
 public final class MigrationDTOOrtsteil {

@@ -320,11 +320,11 @@ public abstract class DataManager<ID> {
 	 * @param <DTO>      der Typ des Datenbank-DTOs
 	 * @param <CoreData> der Typ des Core-DTOs
 	 * @param id         die ID
-	 * @param dtoClass   die Klasses des Datenbank-DTOs
+	 * @param dtoClass   die Klasse des Datenbank-DTOs
 	 * @param dtoMapper  der Mapper für das Mapping eines Datenbank-DTOs auf ein
 	 *                   Core-DTO
 	 *
-	 * @return die Response - im Erfolgsfall mit dem gelöschen Core-DTO
+	 * @return die Response - im Erfolgsfall mit dem gelöschten Core-DTO
 	 */
 	protected <DTO, CoreData> Response deleteBasic(final Object id, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
 		// Bestimme das DTO
@@ -340,32 +340,33 @@ public abstract class DataManager<ID> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
 	/**
 	 * Entfernt die Datenbank-DTOs mit den angegebenen IDs und gibt die zugehörigen
 	 * Core-DTOs in der Response zurück.
 	 *
 	 * @param <DTO>      der Typ des Datenbank-DTOs
 	 * @param <CoreData> der Typ des Core-DTOs
-	 * @param ids        die Liste mit den IDs
-	 * @param dtoClass   die Klasses des Datenbank-DTOs
+	 * @param ids        die IDs
+	 * @param dtoClass   die Klasse der Datenbank-DTOs
 	 * @param dtoMapper  der Mapper für das Mapping eines Datenbank-DTOs auf ein
 	 *                   Core-DTO
 	 *
-	 * @return die Response - im Erfolgsfall eine Liste mit den gelöschen Core-DTOs
+	 * @return die Response - im Erfolgsfall mit den gelöschten Core-DTOs
 	 */
-	protected <DTO, CoreData> Response deleteAllBasic(final List<? extends Object> ids, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+	protected <DTO, CoreData> Response deleteBasicMultiple(final List<? extends Object> ids, final Class<DTO> dtoClass, final Function<DTO, CoreData> dtoMapper) {
+		// Bestimme die DTOs
 		if (ids == null)
-			throw OperationError.NOT_FOUND.exception("Es muss eine ID angegeben werden. Null ist nicht zulässig.");
+			throw OperationError.NOT_FOUND.exception("Es müssen IDs angegeben werden. Null ist nicht zulässig.");
+		final List<DTO> dtos = conn.queryNamed(dtoClass.getSimpleName() + ".primaryKeyQuery.multiple", ids, dtoClass);
+		if (dtos == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde keine DTOs mit den angegebenen IDs gefunden.");
 		final List<CoreData> daten = new ArrayList<>();
-		for (final Object id : ids) {
-			final DTO dto = conn.queryByKey(dtoClass, id);
-			if (dto == null)
-				throw OperationError.NOT_FOUND.exception("Es wurde kein DTO mit der ID %s gefunden.".formatted(id));
+		for (final DTO dto : dtos) {
 			daten.add(dtoMapper.apply(dto));
-			// Entferne das DTO
 			conn.transactionRemove(dto);
+			conn.transactionFlush();
 		}
-		conn.transactionFlush();
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

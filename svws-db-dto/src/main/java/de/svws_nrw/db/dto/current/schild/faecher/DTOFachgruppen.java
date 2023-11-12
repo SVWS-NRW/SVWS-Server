@@ -55,6 +55,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOFachgruppen.gueltigbis", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTOFachgruppen.gueltigbis.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTOFachgruppen.primaryKeyQuery", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOFachgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOFachgruppen.all.migration", query = "SELECT e FROM DTOFachgruppen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Fachbereich", "SchildFgID", "FG_Bezeichnung", "FG_Kuerzel", "Schulformen", "FarbeR", "FarbeG", "FarbeB", "Sortierung", "FuerZeugnis", "gueltigVon", "gueltigBis"})
 public final class DTOFachgruppen {

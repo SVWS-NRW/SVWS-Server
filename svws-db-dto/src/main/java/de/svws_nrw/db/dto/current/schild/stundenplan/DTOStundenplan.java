@@ -41,6 +41,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOStundenplan.wochentypmodell", query = "SELECT e FROM DTOStundenplan e WHERE e.WochentypModell = :value")
 @NamedQuery(name = "DTOStundenplan.wochentypmodell.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.WochentypModell IN :value")
 @NamedQuery(name = "DTOStundenplan.primaryKeyQuery", query = "SELECT e FROM DTOStundenplan e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplan.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplan e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOStundenplan.all.migration", query = "SELECT e FROM DTOStundenplan e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "Beginn", "Ende", "Beschreibung", "WochentypModell"})
 public final class DTOStundenplan {

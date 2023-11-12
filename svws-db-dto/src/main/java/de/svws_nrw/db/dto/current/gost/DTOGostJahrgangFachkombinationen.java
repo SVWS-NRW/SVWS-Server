@@ -62,6 +62,7 @@ import de.svws_nrw.csv.converter.current.gost.GostLaufbahnplanungFachkombination
 @NamedQuery(name = "DTOGostJahrgangFachkombinationen.hinweistext", query = "SELECT e FROM DTOGostJahrgangFachkombinationen e WHERE e.Hinweistext = :value")
 @NamedQuery(name = "DTOGostJahrgangFachkombinationen.hinweistext.multiple", query = "SELECT e FROM DTOGostJahrgangFachkombinationen e WHERE e.Hinweistext IN :value")
 @NamedQuery(name = "DTOGostJahrgangFachkombinationen.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangFachkombinationen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostJahrgangFachkombinationen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostJahrgangFachkombinationen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOGostJahrgangFachkombinationen.all.migration", query = "SELECT e FROM DTOGostJahrgangFachkombinationen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abi_Jahrgang", "Fach1_ID", "Fach2_ID", "Kursart1", "Kursart2", "EF1", "EF2", "Q11", "Q12", "Q21", "Q22", "Typ", "Hinweistext"})
 public final class DTOGostJahrgangFachkombinationen {

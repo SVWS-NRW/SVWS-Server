@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOTeilleistungsarten.gewichtung", query = "SELECT e FROM DTOTeilleistungsarten e WHERE e.Gewichtung = :value")
 @NamedQuery(name = "DTOTeilleistungsarten.gewichtung.multiple", query = "SELECT e FROM DTOTeilleistungsarten e WHERE e.Gewichtung IN :value")
 @NamedQuery(name = "DTOTeilleistungsarten.primaryKeyQuery", query = "SELECT e FROM DTOTeilleistungsarten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOTeilleistungsarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTeilleistungsarten e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOTeilleistungsarten.all.migration", query = "SELECT e FROM DTOTeilleistungsarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Gewichtung"})
 public final class DTOTeilleistungsarten {

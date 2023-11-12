@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOFloskelgruppen.farbe", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe = :value")
 @NamedQuery(name = "DTOFloskelgruppen.farbe.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Farbe IN :value")
 @NamedQuery(name = "DTOFloskelgruppen.primaryKeyQuery", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel = ?1")
+@NamedQuery(name = "DTOFloskelgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IN ?1")
 @NamedQuery(name = "DTOFloskelgruppen.all.migration", query = "SELECT e FROM DTOFloskelgruppen e WHERE e.Kuerzel IS NOT NULL")
 @JsonPropertyOrder({"Kuerzel", "Hauptgruppe", "Bezeichnung", "Farbe"})
 public final class DTOFloskelgruppen {

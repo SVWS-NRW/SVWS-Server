@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOKAoAKategorieKeys.id", query = "SELECT e FROM DTOKAoAKategorieKeys e WHERE e.ID = :value")
 @NamedQuery(name = "DTOKAoAKategorieKeys.id.multiple", query = "SELECT e FROM DTOKAoAKategorieKeys e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKAoAKategorieKeys.primaryKeyQuery", query = "SELECT e FROM DTOKAoAKategorieKeys e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKAoAKategorieKeys.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKAoAKategorieKeys e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOKAoAKategorieKeys.all.migration", query = "SELECT e FROM DTOKAoAKategorieKeys e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID"})
 public final class DTOKAoAKategorieKeys {

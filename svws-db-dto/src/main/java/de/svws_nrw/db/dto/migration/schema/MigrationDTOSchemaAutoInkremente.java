@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOSchemaAutoInkremente.maxid", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID = :value")
 @NamedQuery(name = "MigrationDTOSchemaAutoInkremente.maxid.multiple", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.MaxID IN :value")
 @NamedQuery(name = "MigrationDTOSchemaAutoInkremente.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "MigrationDTOSchemaAutoInkremente.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IN ?1")
 @NamedQuery(name = "MigrationDTOSchemaAutoInkremente.all.migration", query = "SELECT e FROM MigrationDTOSchemaAutoInkremente e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "MaxID"})
 public final class MigrationDTOSchemaAutoInkremente {

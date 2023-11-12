@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOSchuljahresabschnitte.folgeabschnitt_id", query = "SELECT e FROM DTOSchuljahresabschnitte e WHERE e.FolgeAbschnitt_ID = :value")
 @NamedQuery(name = "DTOSchuljahresabschnitte.folgeabschnitt_id.multiple", query = "SELECT e FROM DTOSchuljahresabschnitte e WHERE e.FolgeAbschnitt_ID IN :value")
 @NamedQuery(name = "DTOSchuljahresabschnitte.primaryKeyQuery", query = "SELECT e FROM DTOSchuljahresabschnitte e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuljahresabschnitte.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuljahresabschnitte e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuljahresabschnitte.all.migration", query = "SELECT e FROM DTOSchuljahresabschnitte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Jahr", "Abschnitt", "VorigerAbschnitt_ID", "FolgeAbschnitt_ID"})
 public final class DTOSchuljahresabschnitte {

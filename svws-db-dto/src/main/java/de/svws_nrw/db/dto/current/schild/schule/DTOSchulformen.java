@@ -50,6 +50,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchulformen.schulform2", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 = :value")
 @NamedQuery(name = "DTOSchulformen.schulform2.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.Schulform2 IN :value")
 @NamedQuery(name = "DTOSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOSchulformen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchulformen.all.migration", query = "SELECT e FROM DTOSchulformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SGL", "SF_SGL", "Schulform", "DoppelQualifikation", "Sortierung", "Sichtbar", "BKIndex", "Schulform2"})
 public final class DTOSchulformen {

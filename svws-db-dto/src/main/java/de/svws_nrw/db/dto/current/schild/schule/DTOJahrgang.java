@@ -62,6 +62,7 @@ import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverter
 @NamedQuery(name = "DTOJahrgang.folgejahrgang_id", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID = :value")
 @NamedQuery(name = "DTOJahrgang.folgejahrgang_id.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.Folgejahrgang_ID IN :value")
 @NamedQuery(name = "DTOJahrgang.primaryKeyQuery", query = "SELECT e FROM DTOJahrgang e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOJahrgang.primaryKeyQuery.multiple", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOJahrgang.all.migration", query = "SELECT e FROM DTOJahrgang e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID"})
 public final class DTOJahrgang {

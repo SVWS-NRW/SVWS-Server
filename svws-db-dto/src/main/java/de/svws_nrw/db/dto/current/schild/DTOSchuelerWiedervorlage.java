@@ -52,6 +52,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen = :value")
 @NamedQuery(name = "DTOSchuelerWiedervorlage.nichtloeschen.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.NichtLoeschen IN :value")
 @NamedQuery(name = "DTOSchuelerWiedervorlage.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerWiedervorlage.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchuelerWiedervorlage.all.migration", query = "SELECT e FROM DTOSchuelerWiedervorlage e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Bemerkung", "AngelegtAm", "WiedervorlageAm", "ErledigtAm", "User_ID", "Sekretariat", "Typ", "NichtLoeschen"})
 public final class DTOSchuelerWiedervorlage {

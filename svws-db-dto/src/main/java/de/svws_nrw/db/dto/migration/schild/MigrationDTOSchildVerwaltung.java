@@ -55,6 +55,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
 @NamedQuery(name = "MigrationDTOSchildVerwaltung.datumdatengeloescht.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
 @NamedQuery(name = "MigrationDTOSchildVerwaltung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID = ?1")
+@NamedQuery(name = "MigrationDTOSchildVerwaltung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IN ?1")
 @NamedQuery(name = "MigrationDTOSchildVerwaltung.all.migration", query = "SELECT e FROM MigrationDTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"BackupDatum", "AutoBerechnung", "DatumStatkue", "DatumSchildIntern", "Bescheinigung", "Stammblatt", "DatenGeprueft", "Version", "GU_ID", "SchulnrEigner", "DatumLoeschfristHinweisDeaktiviert", "DatumLoeschfristHinweisDeaktiviertUserID", "DatumDatenGeloescht"})
 public final class MigrationDTOSchildVerwaltung {

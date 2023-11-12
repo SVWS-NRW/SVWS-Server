@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOMerkmale.langtext", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext = :value")
 @NamedQuery(name = "DTOMerkmale.langtext.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.Langtext IN :value")
 @NamedQuery(name = "DTOMerkmale.primaryKeyQuery", query = "SELECT e FROM DTOMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOMerkmale.all.migration", query = "SELECT e FROM DTOMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schule", "Schueler", "Kurztext", "Langtext"})
 public final class DTOMerkmale {

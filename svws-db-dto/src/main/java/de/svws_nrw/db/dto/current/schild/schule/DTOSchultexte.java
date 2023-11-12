@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchultexte.aenderbar", query = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOSchultexte.aenderbar.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOSchultexte.primaryKeyQuery", query = "SELECT e FROM DTOSchultexte e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchultexte.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchultexte e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOSchultexte.all.migration", query = "SELECT e FROM DTOSchultexte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Inhalt", "Beschreibung", "Aenderbar"})
 public final class DTOSchultexte {

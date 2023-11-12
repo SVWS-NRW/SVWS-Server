@@ -41,6 +41,7 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOStundenplanPausenzeit.bezeichnung", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Bezeichnung = :value")
 @NamedQuery(name = "DTOStundenplanPausenzeit.bezeichnung.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.Bezeichnung IN :value")
 @NamedQuery(name = "DTOStundenplanPausenzeit.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanPausenzeit.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOStundenplanPausenzeit.all.migration", query = "SELECT e FROM DTOStundenplanPausenzeit e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundenplan_ID", "Tag", "Beginn", "Ende", "Bezeichnung"})
 public final class DTOStundenplanPausenzeit {

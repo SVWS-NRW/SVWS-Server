@@ -67,6 +67,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
 @NamedQuery(name = "DTOSchuelerGrundschuldaten.geschwisterkind.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
 @NamedQuery(name = "DTOSchuelerGrundschuldaten.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
+@NamedQuery(name = "DTOSchuelerGrundschuldaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN ?1")
 @NamedQuery(name = "DTOSchuelerGrundschuldaten.all.migration", query = "SELECT e FROM DTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Note_Sprachgebrauch", "Note_Lesen", "Note_Rechtschreiben", "Note_Sachunterricht", "Note_Mathematik", "Note_Englisch", "Note_KunstTextil", "Note_Musik", "Note_Sport", "Note_Religion", "Durchschnittsnote_Sprache", "Durchschnittsnote_Einfach", "Durchschnittsnote_Gewichtet", "Anrede_Klassenlehrer", "Nachname_Klassenlehrer", "GS_Klasse", "Bemerkungen", "Geschwisterkind"})
 public final class DTOSchuelerGrundschuldaten {

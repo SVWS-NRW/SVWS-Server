@@ -61,6 +61,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOPersonengruppenPersonen.personakadgrad", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad = :value")
 @NamedQuery(name = "DTOPersonengruppenPersonen.personakadgrad.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.PersonAkadGrad IN :value")
 @NamedQuery(name = "DTOPersonengruppenPersonen.primaryKeyQuery", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOPersonengruppenPersonen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IN ?1")
 @NamedQuery(name = "DTOPersonengruppenPersonen.all.migration", query = "SELECT e FROM DTOPersonengruppenPersonen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Gruppe_ID", "Person_ID", "PersonNr", "PersonArt", "PersonName", "PersonVorname", "PersonPLZ", "PersonOrt", "PersonStrassenname", "PersonHausNr", "PersonHausNrZusatz", "PersonTelefon", "PersonMobil", "PersonEmail", "Bemerkung", "Zusatzinfo", "Sortierung", "PersonAnrede", "PersonAkadGrad"})
 public final class DTOPersonengruppenPersonen {
