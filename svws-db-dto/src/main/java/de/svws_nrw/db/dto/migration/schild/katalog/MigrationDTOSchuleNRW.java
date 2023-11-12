@@ -75,7 +75,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOSchuleNRW.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuleNRW.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuleNRW.all.migration", query = "SELECT e FROM MigrationDTOSchuleNRW e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulNr", "Name", "SchulformNr", "SchulformKrz", "SchulformBez", "Strassenname", "HausNr", "HausNrZusatz", "Strasse", "PLZ", "Ort", "Telefon", "Fax", "Email", "Schulleiter", "Sortierung", "Sichtbar", "Aenderbar", "SchulNr_SIM", "Kuerzel", "KurzBez", "SchulnrEigner"})
 public final class MigrationDTOSchuleNRW {

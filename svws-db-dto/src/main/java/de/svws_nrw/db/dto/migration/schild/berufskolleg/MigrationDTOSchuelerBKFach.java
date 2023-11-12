@@ -73,7 +73,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusConverterDes
 @NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer = :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKFach.fachlehrer.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.Fachlehrer IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKFach.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerBKFach.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerBKFach.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKFach.all.migration", query = "SELECT e FROM MigrationDTOSchuelerBKFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Schuljahresabschnitts_ID", "Fach_ID", "FachKrz", "FachSchriftlich", "FachSchriftlichBA", "Vornote", "NoteSchriftlich", "MdlPruefung", "MdlPruefungFW", "NoteMuendlich", "NoteAbschluss", "NotePrfGesamt", "FSortierung", "SchulnrEigner", "Fachlehrer_ID", "NoteAbschlussBA", "Kursart", "Jahr", "Abschnitt", "Fachlehrer"})
 public final class MigrationDTOSchuelerBKFach {

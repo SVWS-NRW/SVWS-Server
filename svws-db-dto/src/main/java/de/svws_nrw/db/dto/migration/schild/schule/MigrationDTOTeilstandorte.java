@@ -41,7 +41,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOTeilstandorte.kuerzel", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel = :value")
 @NamedQuery(name = "MigrationDTOTeilstandorte.kuerzel.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.Kuerzel IN :value")
 @NamedQuery(name = "MigrationDTOTeilstandorte.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal = ?1")
-@NamedQuery(name = "MigrationDTOTeilstandorte.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IN ?1")
+@NamedQuery(name = "MigrationDTOTeilstandorte.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IN :value")
 @NamedQuery(name = "MigrationDTOTeilstandorte.all.migration", query = "SELECT e FROM MigrationDTOTeilstandorte e WHERE e.AdrMerkmal IS NOT NULL")
 @JsonPropertyOrder({"SchulnrEigner", "AdrMerkmal", "PLZ", "Ort", "Strasse", "Strassenname", "HausNr", "HausNrZusatz", "Bemerkung", "Kuerzel"})
 public final class MigrationDTOTeilstandorte {

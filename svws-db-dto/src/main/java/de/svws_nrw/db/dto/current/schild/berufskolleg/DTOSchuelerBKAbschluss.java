@@ -59,7 +59,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerBKAbschluss.fachpraktanteilausr", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr = :value")
 @NamedQuery(name = "DTOSchuelerBKAbschluss.fachpraktanteilausr.multiple", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.FachPraktAnteilAusr IN :value")
 @NamedQuery(name = "DTOSchuelerBKAbschluss.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "DTOSchuelerBKAbschluss.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN ?1")
+@NamedQuery(name = "DTOSchuelerBKAbschluss.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN :value")
 @NamedQuery(name = "DTOSchuelerBKAbschluss.all.migration", query = "SELECT e FROM DTOSchuelerBKAbschluss e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Schuljahresabschnitts_ID", "Zulassung", "Bestanden", "ZertifikatBK", "ZulassungErwBK", "BestandenErwBK", "ZulassungBA", "BestandenBA", "PraktPrfNote", "NoteKolloquium", "ThemaAbschlussarbeit", "BAP_Vorhanden", "NoteFachpraxis", "FachPraktAnteilAusr"})
 public final class DTOSchuelerBKAbschluss {

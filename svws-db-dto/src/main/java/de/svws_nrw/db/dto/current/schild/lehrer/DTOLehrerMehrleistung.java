@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd = :value")
 @NamedQuery(name = "DTOLehrerMehrleistung.mehrleistungstd.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.MehrleistungStd IN :value")
 @NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOLehrerMehrleistung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOLehrerMehrleistung.all.migration", query = "SELECT e FROM DTOLehrerMehrleistung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "MehrleistungsgrundKrz", "MehrleistungStd"})
 public final class DTOLehrerMehrleistung {

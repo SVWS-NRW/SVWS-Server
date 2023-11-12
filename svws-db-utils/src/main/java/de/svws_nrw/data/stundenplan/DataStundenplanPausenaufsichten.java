@@ -267,4 +267,24 @@ public final class DataStundenplanPausenaufsichten extends DataManager<Long> {
 		return super.deleteBasic(id, DTOStundenplanPausenaufsichten.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Pausenaufsichten
+	 *
+	 * @param ids   die IDs der Pausenaufsichten
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<Long> idsPausenzeiten = conn.queryNamed("DTOStundenplanPausenaufsichten.primaryKeyQuery.multiple", ids, DTOStundenplanPausenaufsichten.class)
+				.stream().map(p -> p.Pausenzeit_ID).toList();
+		if (!idsPausenzeiten.isEmpty()) {
+			final List<DTOStundenplanPausenzeit> dtos = conn.queryNamed("DTOStundenplanPausenzeit.primaryKeyQuery.multiple", idsPausenzeiten, DTOStundenplanPausenzeit.class);
+			for (final DTOStundenplanPausenzeit dto : dtos)
+				if (dto.Stundenplan_ID != this.idStundenplan)
+					throw OperationError.BAD_REQUEST.exception("Der Pausenzeit-Eintrag einer Pausenaufsicht gehört nicht zu dem angegebenen Stundenplan.");
+		}
+		return super.deleteBasicMultiple(ids, DTOStundenplanPausenaufsichten.class, dtoMapper);
+	}
+
 }

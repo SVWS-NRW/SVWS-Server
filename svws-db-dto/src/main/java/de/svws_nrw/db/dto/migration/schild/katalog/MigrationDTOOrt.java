@@ -47,7 +47,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOOrt.schulnreigner", query = "SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOOrt.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOOrt.primaryKeyQuery", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOOrt.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOOrt.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOOrt.all.migration", query = "SELECT e FROM MigrationDTOOrt e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "PLZ", "Bezeichnung", "Kreis", "Sortierung", "Sichtbar", "Aenderbar", "Land", "SchulnrEigner"})
 public final class MigrationDTOOrt {

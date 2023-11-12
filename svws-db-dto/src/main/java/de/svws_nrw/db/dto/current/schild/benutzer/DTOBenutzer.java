@@ -48,7 +48,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOBenutzer.istadmin", query = "SELECT e FROM DTOBenutzer e WHERE e.IstAdmin = :value")
 @NamedQuery(name = "DTOBenutzer.istadmin.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.IstAdmin IN :value")
 @NamedQuery(name = "DTOBenutzer.primaryKeyQuery", query = "SELECT e FROM DTOBenutzer e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOBenutzer.primaryKeyQuery.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOBenutzer.primaryKeyQuery.multiple", query = "SELECT e FROM DTOBenutzer e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOBenutzer.all.migration", query = "SELECT e FROM DTOBenutzer e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Typ", "Allgemein_ID", "Lehrer_ID", "Schueler_ID", "Erzieher_ID", "IstAdmin"})
 public final class DTOBenutzer {

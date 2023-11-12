@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.klassen_id", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.Klassen_ID = :value")
 @NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.klassen_id.multiple", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.Klassen_ID IN :value")
 @NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOStundenplanPausenzeitKlassenzuordnung.all.migration", query = "SELECT e FROM DTOStundenplanPausenzeitKlassenzuordnung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Pausenzeit_ID", "Klassen_ID"})
 public final class DTOStundenplanPausenzeitKlassenzuordnung {

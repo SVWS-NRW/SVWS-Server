@@ -39,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ = :value")
 @NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.typ.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.Typ IN :value")
 @NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK = ?1")
-@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN ?1")
+@NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IN :value")
 @NamedQuery(name = "MigrationDTOFaecherNichtMoeglicheKombination.all.migration", query = "SELECT e FROM MigrationDTOFaecherNichtMoeglicheKombination e WHERE e.PK IS NOT NULL")
 @JsonPropertyOrder({"Fach1_ID", "Fach2_ID", "SchulnrEigner", "Kursart1", "Kursart2", "PK", "Sortierung", "Phase", "Typ"})
 public final class MigrationDTOFaecherNichtMoeglicheKombination {

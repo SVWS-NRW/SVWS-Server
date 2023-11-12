@@ -86,7 +86,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.klasse", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.Klasse = :value")
 @NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.klasse.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.Klasse IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.GU_ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.GU_ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerFoerderempfehlung.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFoerderempfehlung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"GU_ID", "Schueler_ID", "Abschnitt_ID", "DatumAngelegt", "Klassen_ID", "Lehrer_ID", "DatumAenderungSchild", "DatumAenderungSchildWeb", "Inhaltl_Prozessbez_Komp", "Methodische_Komp", "Lern_Arbeitsverhalten", "Massn_Inhaltl_Prozessbez_Komp", "Massn_Methodische_Komp", "Massn_Lern_Arbeitsverhalten", "Verantwortlichkeit_Eltern", "Verantwortlichkeit_Schueler", "Zeitrahmen_von_Datum", "Zeitrahmen_bis_Datum", "Ueberpruefung_Datum", "Naechstes_Beratungsgespraech", "EingabeFertig", "Faecher", "Abgeschlossen", "Jahr", "Abschnitt", "SchulnrEigner", "Klasse"})
 public final class MigrationDTOSchuelerFoerderempfehlung {

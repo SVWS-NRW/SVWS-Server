@@ -65,7 +65,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusConverterDes
 @NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.abschnitt", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt = :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.abschnitt.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Abschnitt IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerBKAbschluss.all.migration", query = "SELECT e FROM MigrationDTOSchuelerBKAbschluss e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "Schuljahresabschnitts_ID", "Zulassung", "Bestanden", "ZertifikatBK", "ZulassungErwBK", "BestandenErwBK", "ZulassungBA", "BestandenBA", "PraktPrfNote", "NoteKolloquium", "ThemaAbschlussarbeit", "SchulnrEigner", "BAP_Vorhanden", "NoteFachpraxis", "FachPraktAnteilAusr", "Jahr", "Abschnitt"})
 public final class MigrationDTOSchuelerBKAbschluss {

@@ -143,4 +143,16 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 		return super.deleteBasic(id, DTOKatalogAufsichtsbereich.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Aufsichtsbereiche
+	 *
+	 * @param ids   die IDs der Aufsichtsbereiche
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogAufsichtsbereich.class, dtoMapper);
+	}
+
 }

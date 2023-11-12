@@ -56,7 +56,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerAllgemeineAdresse.betreuungslehrer_id", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.Betreuungslehrer_ID = :value")
 @NamedQuery(name = "DTOSchuelerAllgemeineAdresse.betreuungslehrer_id.multiple", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.Betreuungslehrer_ID IN :value")
 @NamedQuery(name = "DTOSchuelerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOSchuelerAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerAllgemeineAdresse.all.migration", query = "SELECT e FROM DTOSchuelerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Adresse_ID", "Vertragsart_ID", "Vertragsbeginn", "Vertragsende", "Ausbilder", "AllgAdrAnschreiben", "Praktikum", "Sortierung", "Ansprechpartner_ID", "Betreuungslehrer_ID"})
 public final class DTOSchuelerAllgemeineAdresse {

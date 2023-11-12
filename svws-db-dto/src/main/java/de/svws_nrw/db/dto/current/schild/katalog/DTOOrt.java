@@ -45,7 +45,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOOrt.land", query = "SELECT e FROM DTOOrt e WHERE e.Land = :value")
 @NamedQuery(name = "DTOOrt.land.multiple", query = "SELECT e FROM DTOOrt e WHERE e.Land IN :value")
 @NamedQuery(name = "DTOOrt.primaryKeyQuery", query = "SELECT e FROM DTOOrt e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOOrt.primaryKeyQuery.multiple", query = "SELECT e FROM DTOOrt e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOOrt.primaryKeyQuery.multiple", query = "SELECT e FROM DTOOrt e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOOrt.all.migration", query = "SELECT e FROM DTOOrt e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "PLZ", "Bezeichnung", "Kreis", "Sortierung", "Sichtbar", "Aenderbar", "Land"})
 public final class DTOOrt {

@@ -45,7 +45,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKursarten.aenderbar", query = "SELECT e FROM DTOKursarten e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOKursarten.aenderbar.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOKursarten.primaryKeyQuery", query = "SELECT e FROM DTOKursarten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKursarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKursarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKursarten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKursarten.all.migration", query = "SELECT e FROM DTOKursarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "InternBez", "Kursart", "KursartAllg", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOKursarten {

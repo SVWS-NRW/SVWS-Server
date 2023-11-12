@@ -67,7 +67,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOFachklassen.ebene3klartext", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene3Klartext = :value")
 @NamedQuery(name = "MigrationDTOFachklassen.ebene3klartext.multiple", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.Ebene3Klartext IN :value")
 @NamedQuery(name = "MigrationDTOFachklassen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOFachklassen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOFachklassen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOFachklassen.all.migration", query = "SELECT e FROM MigrationDTOFachklassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "BKIndex", "FKS", "AP", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "Kennung", "FKS_AP_SIM", "BKIndexTyp", "Beschreibung_W", "Status", "SchulnrEigner", "Lernfelder", "DQR_Niveau", "Ebene1Klartext", "Ebene2Klartext", "Ebene3Klartext"})
 public final class MigrationDTOFachklassen {

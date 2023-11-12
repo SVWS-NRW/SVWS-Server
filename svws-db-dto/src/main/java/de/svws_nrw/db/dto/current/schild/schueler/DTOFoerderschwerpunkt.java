@@ -41,7 +41,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOFoerderschwerpunkt.aenderbar", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOFoerderschwerpunkt.aenderbar.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOFoerderschwerpunkt.primaryKeyQuery", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOFoerderschwerpunkt.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOFoerderschwerpunkt.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOFoerderschwerpunkt.all.migration", query = "SELECT e FROM DTOFoerderschwerpunkt e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "StatistikKrz", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOFoerderschwerpunkt {

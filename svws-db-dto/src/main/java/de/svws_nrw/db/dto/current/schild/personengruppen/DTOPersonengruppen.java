@@ -45,7 +45,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOPersonengruppen.sichtbar", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar = :value")
 @NamedQuery(name = "DTOPersonengruppen.sichtbar.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.Sichtbar IN :value")
 @NamedQuery(name = "DTOPersonengruppen.primaryKeyQuery", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOPersonengruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOPersonengruppen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOPersonengruppen.all.migration", query = "SELECT e FROM DTOPersonengruppen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Gruppenname", "Zusatzinfo", "SammelEmail", "GruppenArt", "XMLExport", "Sortierung", "Sichtbar"})
 public final class DTOPersonengruppen {

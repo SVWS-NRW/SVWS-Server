@@ -61,7 +61,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOFaecherKatalog.gueltigbis", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTOFaecherKatalog.gueltigbis.multiple", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTOFaecherKatalog.primaryKeyQuery", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOFaecherKatalog.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOFaecherKatalog.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOFaecherKatalog.all.migration", query = "SELECT e FROM DTOFaecherKatalog e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "KuerzelASD", "Bezeichnung", "Kuerzel", "Aufgabenfeld", "Fachgruppe", "JahrgangAb", "IstFremdsprache", "IstHKFS", "IstAusRegUFach", "IstErsatzPflichtFS", "IstKonfKoop", "NurSII", "ExportASD", "gueltigVon", "gueltigBis"})
 public final class DTOFaecherKatalog {

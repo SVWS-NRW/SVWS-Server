@@ -41,7 +41,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOTextDateien.sortierung", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung = :value")
 @NamedQuery(name = "DTOTextDateien.sortierung.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.Sortierung IN :value")
 @NamedQuery(name = "DTOTextDateien.primaryKeyQuery", query = "SELECT e FROM DTOTextDateien e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOTextDateien.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOTextDateien.primaryKeyQuery.multiple", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOTextDateien.all.migration", query = "SELECT e FROM DTOTextDateien e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Text_ID", "Text_Body", "Sichtbar", "Sortierung"})
 public final class DTOTextDateien {

@@ -86,7 +86,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.extid", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID = :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.extid.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ExtID IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKatalogAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKatalogAllgemeineAdresse.all.migration", query = "SELECT e FROM DTOKatalogAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "adressArt", "name1", "name2", "strassenname", "hausnr", "hausnrzusatz", "ort_id", "ortsteil_id", "telefon1", "telefon2", "fax", "email", "bemerkungen", "sortierung", "ausbildungsbetrieb", "bietetPraktika", "branche", "zusatz1", "zusatz2", "Sichtbar", "Aenderbar", "Massnahmentraeger", "BelehrungISG", "GU_ID", "ErwFuehrungszeugnis", "ExtID"})
 public final class DTOKatalogAllgemeineAdresse {

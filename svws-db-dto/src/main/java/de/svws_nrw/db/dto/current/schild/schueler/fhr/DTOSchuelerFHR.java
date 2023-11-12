@@ -105,7 +105,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOSchuelerFHR.wsii_3_2_w", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.WSII_3_2_W = :value")
 @NamedQuery(name = "DTOSchuelerFHR.wsii_3_2_w.multiple", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.WSII_3_2_W IN :value")
 @NamedQuery(name = "DTOSchuelerFHR.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerFHR.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOSchuelerFHR.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerFHR.all.migration", query = "SELECT e FROM DTOSchuelerFHR e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "FHRErreicht", "Note", "GesamtPunktzahl", "SummeGK", "SummeLK", "SummenOK", "AnzRelLK", "AnzRelGK", "AnzRelOK", "AnzDefLK", "AnzDefGK", "AnzDefOK", "JSII_2_1", "JSII_2_1_W", "JSII_2_2", "JSII_2_2_W", "JSII_3_1", "JSII_3_1_W", "JSII_3_2", "JSII_3_2_W", "ASII_2_1", "ASII_2_2", "ASII_2_1_W", "ASII_2_2_W", "ASII_3_1", "ASII_3_2", "ASII_3_1_W", "ASII_3_2_W", "WSII_2_1", "WSII_2_2", "WSII_2_1_W", "WSII_2_2_W", "WSII_3_1", "WSII_3_2", "WSII_3_1_W", "WSII_3_2_W"})
 public final class DTOSchuelerFHR {

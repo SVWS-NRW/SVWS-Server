@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTODavSyncTokenSchueler.synctoken", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken = :value")
 @NamedQuery(name = "DTODavSyncTokenSchueler.synctoken.multiple", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.SyncToken IN :value")
 @NamedQuery(name = "DTODavSyncTokenSchueler.primaryKeyQuery", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID = ?1")
-@NamedQuery(name = "DTODavSyncTokenSchueler.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTODavSyncTokenSchueler.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IN :value")
 @NamedQuery(name = "DTODavSyncTokenSchueler.all.migration", query = "SELECT e FROM DTODavSyncTokenSchueler e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SyncToken"})
 public final class DTODavSyncTokenSchueler {

@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOCredentials.aes", query = "SELECT e FROM DTOCredentials e WHERE e.AES = :value")
 @NamedQuery(name = "DTOCredentials.aes.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.AES IN :value")
 @NamedQuery(name = "DTOCredentials.primaryKeyQuery", query = "SELECT e FROM DTOCredentials e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOCredentials.primaryKeyQuery.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOCredentials.primaryKeyQuery.multiple", query = "SELECT e FROM DTOCredentials e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOCredentials.all.migration", query = "SELECT e FROM DTOCredentials e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PasswordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
 public final class DTOCredentials {

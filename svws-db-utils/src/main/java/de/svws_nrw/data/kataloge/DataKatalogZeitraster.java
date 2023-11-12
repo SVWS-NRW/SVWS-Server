@@ -147,4 +147,16 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 		return super.deleteBasic(id, DTOKatalogZeitraster.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Zeitrastereinträge
+	 *
+	 * @param ids   die IDs der Zeitrastereinträge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogZeitraster.class, dtoMapper);
+	}
+
 }

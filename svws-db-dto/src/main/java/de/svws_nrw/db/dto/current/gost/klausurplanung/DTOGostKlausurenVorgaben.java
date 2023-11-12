@@ -62,7 +62,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenVorgaben.bemerkungen", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen = :value")
 @NamedQuery(name = "DTOGostKlausurenVorgaben.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenVorgaben.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenVorgaben.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostKlausurenVorgaben.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenVorgaben.all.migration", query = "SELECT e FROM DTOGostKlausurenVorgaben e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Fach_ID", "Kursart", "Dauer", "Auswahlzeit", "IstMdlPruefung", "IstAudioNotwendig", "IstVideoNotwendig", "Bemerkungen"})
 public final class DTOGostKlausurenVorgaben {

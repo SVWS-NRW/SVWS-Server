@@ -53,7 +53,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenTermine.bemerkungen", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen = :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.bemerkungen.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.Bemerkungen IN :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenTermine.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostKlausurenTermine.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenTermine.all.migration", query = "SELECT e FROM DTOGostKlausurenTermine e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abi_Jahrgang", "Halbjahr", "Quartal", "Datum", "Startzeit", "Bezeichnung", "Bemerkungen"})
 public final class DTOGostKlausurenTermine {

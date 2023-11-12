@@ -147,4 +147,16 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 		return super.deleteBasic(id, DTOKatalogPausenzeit.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Pausenzeiten
+	 *
+	 * @param ids   die IDs der Pausenzeiten
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogPausenzeit.class, dtoMapper);
+	}
+
 }

@@ -43,7 +43,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "MigrationDTOAlleSchulformen.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOAlleSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOAlleSchulformen.all.migration", query = "SELECT e FROM MigrationDTOAlleSchulformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Nummer", "Bezeichnung", "HatGymOb", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOAlleSchulformen {

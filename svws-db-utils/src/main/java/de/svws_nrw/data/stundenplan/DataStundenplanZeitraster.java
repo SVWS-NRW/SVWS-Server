@@ -157,4 +157,20 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		return super.deleteBasic(id, DTOStundenplanZeitraster.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Zeitrastereinträge
+	 *
+	 * @param ids   die IDs der Zeitrastereinträge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", ids, DTOStundenplanZeitraster.class);
+		for (final DTOStundenplanZeitraster dto : dtos)
+			if (dto.Stundenplan_ID != this.stundenplanID)
+				throw OperationError.BAD_REQUEST.exception("Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanZeitraster.class, dtoMapper);
+	}
+
 }

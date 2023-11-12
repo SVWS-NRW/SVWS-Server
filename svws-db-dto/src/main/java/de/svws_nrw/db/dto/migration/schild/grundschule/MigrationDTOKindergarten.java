@@ -57,7 +57,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @NamedQuery(name = "MigrationDTOKindergarten.schulnreigner", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOKindergarten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOKindergarten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOKindergarten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOKindergarten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOKindergarten.all.migration", query = "SELECT e FROM MigrationDTOKindergarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "PLZ", "Ort", "Strasse", "Strassenname", "HausNr", "HausNrZusatz", "Tel", "Email", "Bemerkung", "Sichtbar", "Sortierung", "SchulnrEigner"})
 public final class MigrationDTOKindergarten {

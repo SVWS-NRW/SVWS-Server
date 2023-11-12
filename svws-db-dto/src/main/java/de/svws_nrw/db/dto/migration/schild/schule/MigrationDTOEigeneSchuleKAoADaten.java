@@ -47,7 +47,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOEigeneSchuleKAoADaten.all.migration", query = "SELECT e FROM MigrationDTOEigeneSchuleKAoADaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Curriculum", "Koordinator", "Berufsorientierungsbuero", "KooperationsvereinbarungAA", "NutzungReflexionsworkshop", "NutzungEntscheidungskompetenzI", "NutzungEntscheidungskompetenzII", "SchulnrEigner"})
 public final class MigrationDTOEigeneSchuleKAoADaten {

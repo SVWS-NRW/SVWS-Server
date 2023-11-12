@@ -56,7 +56,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz = :value")
 @NamedQuery(name = "MigrationDTOStundentafelFaecher.lehrerkrz.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.LehrerKrz IN :value")
 @NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOStundentafelFaecher.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOStundentafelFaecher.all.migration", query = "SELECT e FROM MigrationDTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundentafel_ID", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "EpochenUnterricht", "Sortierung", "Sichtbar", "Gewichtung", "SchulnrEigner", "LehrerKrz"})
 public final class MigrationDTOStundentafelFaecher {

@@ -47,7 +47,7 @@ import de.svws_nrw.csv.converter.current.DatumUhrzeitConverterDeserializer;
 @NamedQuery(name = "DTODavRessource.geloeschtam", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam = :value")
 @NamedQuery(name = "DTODavRessource.geloeschtam.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.geloeschtam IN :value")
 @NamedQuery(name = "DTODavRessource.primaryKeyQuery", query = "SELECT e FROM DTODavRessource e WHERE e.ID = ?1")
-@NamedQuery(name = "DTODavRessource.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTODavRessource.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessource e WHERE e.ID IN :value")
 @NamedQuery(name = "DTODavRessource.all.migration", query = "SELECT e FROM DTODavRessource e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "DavRessourceCollection_ID", "UID", "lastModified", "KalenderTyp", "KalenderStart", "KalenderEnde", "ressource", "geloeschtam"})
 public final class DTODavRessource {

@@ -148,4 +148,16 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 		return super.deleteBasic(id, DTOKatalogRaum.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Räume
+	 *
+	 * @param ids   die IDs der Räume
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogRaum.class, dtoMapper);
+	}
+
 }

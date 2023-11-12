@@ -59,7 +59,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOJahrgang.schulnreigner", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOJahrgang.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOJahrgang.primaryKeyQuery", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOJahrgang.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOJahrgang.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOJahrgang.all.migration", query = "SELECT e FROM MigrationDTOJahrgang e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID", "SchulnrEigner"})
 public final class MigrationDTOJahrgang {

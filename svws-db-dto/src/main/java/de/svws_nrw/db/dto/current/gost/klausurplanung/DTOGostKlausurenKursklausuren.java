@@ -39,7 +39,7 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit = :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.startzeit.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.Startzeit IN :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostKlausurenKursklausuren.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostKlausurenKursklausuren.all.migration", query = "SELECT e FROM DTOGostKlausurenKursklausuren e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Vorgabe_ID", "Kurs_ID", "Termin_ID", "Startzeit"})
 public final class DTOGostKlausurenKursklausuren {

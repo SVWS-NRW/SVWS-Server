@@ -39,7 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOKatalogAdressart.aenderbar", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOKatalogAdressart.aenderbar.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOKatalogAdressart.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogAdressart.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKatalogAdressart.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKatalogAdressart.all.migration", query = "SELECT e FROM DTOKatalogAdressart e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOKatalogAdressart {

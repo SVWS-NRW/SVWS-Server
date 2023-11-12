@@ -41,7 +41,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerMerkmale.datumbis", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis = :value")
 @NamedQuery(name = "MigrationDTOSchuelerMerkmale.datumbis.multiple", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerMerkmale.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerMerkmale.all.migration", query = "SELECT e FROM MigrationDTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Kurztext", "SchulnrEigner", "DatumVon", "DatumBis"})
 public final class MigrationDTOSchuelerMerkmale {

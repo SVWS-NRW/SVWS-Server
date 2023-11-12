@@ -37,7 +37,7 @@ import de.svws_nrw.csv.converter.current.kursblockung.GostKursblockungRegelTypCo
 @NamedQuery(name = "DTOGostBlockungRegel.typ", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ = :value")
 @NamedQuery(name = "DTOGostBlockungRegel.typ.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.Typ IN :value")
 @NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostBlockungRegel.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungRegel.all.migration", query = "SELECT e FROM DTOGostBlockungRegel e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Typ"})
 public final class DTOGostBlockungRegel {

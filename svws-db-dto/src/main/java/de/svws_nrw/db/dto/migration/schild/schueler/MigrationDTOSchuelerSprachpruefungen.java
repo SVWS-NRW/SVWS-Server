@@ -59,7 +59,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.notepruefung", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung = :value")
 @NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.notepruefung.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.NotePruefung IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerSprachpruefungen.all.migration", query = "SELECT e FROM MigrationDTOSchuelerSprachpruefungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ASDJahrgang", "Anspruchsniveau", "Pruefungsdatum", "ErsetzteSprache", "IstHSUPruefung", "IstFeststellungspruefung", "KannErstePflichtfremdspracheErsetzen", "KannZweitePflichtfremdspracheErsetzen", "KannWahlpflichtfremdspracheErsetzen", "KannBelegungAlsFortgefuehrteSpracheErlauben", "Referenzniveau", "NotePruefung"})
 public final class MigrationDTOSchuelerSprachpruefungen {

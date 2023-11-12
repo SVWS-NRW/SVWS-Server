@@ -39,7 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOEntlassarten.aenderbar", query = "SELECT e FROM DTOEntlassarten e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOEntlassarten.aenderbar.multiple", query = "SELECT e FROM DTOEntlassarten e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOEntlassarten.primaryKeyQuery", query = "SELECT e FROM DTOEntlassarten e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOEntlassarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEntlassarten e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOEntlassarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEntlassarten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOEntlassarten.all.migration", query = "SELECT e FROM DTOEntlassarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOEntlassarten {

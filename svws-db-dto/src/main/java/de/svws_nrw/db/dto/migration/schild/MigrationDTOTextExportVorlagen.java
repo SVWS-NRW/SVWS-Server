@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOTextExportVorlagen.daten", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten = :value")
 @NamedQuery(name = "MigrationDTOTextExportVorlagen.daten.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.Daten IN :value")
 @NamedQuery(name = "MigrationDTOTextExportVorlagen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName = ?1")
-@NamedQuery(name = "MigrationDTOTextExportVorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN ?1")
+@NamedQuery(name = "MigrationDTOTextExportVorlagen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IN :value")
 @NamedQuery(name = "MigrationDTOTextExportVorlagen.all.migration", query = "SELECT e FROM MigrationDTOTextExportVorlagen e WHERE e.VorlageName IS NOT NULL")
 @JsonPropertyOrder({"SchulnrEigner", "VorlageName", "Daten"})
 public final class MigrationDTOTextExportVorlagen {

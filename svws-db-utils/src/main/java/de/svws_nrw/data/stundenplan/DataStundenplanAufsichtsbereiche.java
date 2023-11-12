@@ -153,4 +153,20 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 		return super.deleteBasic(id, DTOStundenplanAufsichtsbereich.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Aufsichtsbereiche
+	 *
+	 * @param ids   die IDs der Aufsichtsbereiche
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<DTOStundenplanAufsichtsbereich> dtos = conn.queryNamed("DTOStundenplanAufsichtsbereich.primaryKeyQuery.multiple", ids, DTOStundenplanAufsichtsbereich.class);
+		for (final DTOStundenplanAufsichtsbereich dto : dtos)
+			if (dto.Stundenplan_ID != this.stundenplanID)
+				throw OperationError.BAD_REQUEST.exception("Der Aufsichtsbereich-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanAufsichtsbereich.class, dtoMapper);
+	}
+
 }

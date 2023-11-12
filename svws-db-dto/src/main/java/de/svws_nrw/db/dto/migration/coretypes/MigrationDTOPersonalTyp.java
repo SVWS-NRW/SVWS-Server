@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOPersonalTyp.gueltigbis", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "MigrationDTOPersonalTyp.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "MigrationDTOPersonalTyp.primaryKeyQuery", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOPersonalTyp.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOPersonalTyp.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOPersonalTyp.all.migration", query = "SELECT e FROM MigrationDTOPersonalTyp e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOPersonalTyp {

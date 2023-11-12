@@ -53,7 +53,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOSchildVerwaltung.datumdatengeloescht", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht = :value")
 @NamedQuery(name = "DTOSchildVerwaltung.datumdatengeloescht.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.DatumDatenGeloescht IN :value")
 @NamedQuery(name = "DTOSchildVerwaltung.primaryKeyQuery", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID = ?1")
-@NamedQuery(name = "DTOSchildVerwaltung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IN ?1")
+@NamedQuery(name = "DTOSchildVerwaltung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IN :value")
 @NamedQuery(name = "DTOSchildVerwaltung.all.migration", query = "SELECT e FROM DTOSchildVerwaltung e WHERE e.GU_ID IS NOT NULL")
 @JsonPropertyOrder({"BackupDatum", "AutoBerechnung", "DatumStatkue", "DatumSchildIntern", "Bescheinigung", "Stammblatt", "DatenGeprueft", "Version", "GU_ID", "DatumLoeschfristHinweisDeaktiviert", "DatumLoeschfristHinweisDeaktiviertUserID", "DatumDatenGeloescht"})
 public final class DTOSchildVerwaltung {

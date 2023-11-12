@@ -51,7 +51,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOUsers.us_passwordhash", query = "SELECT e FROM MigrationDTOUsers e WHERE e.US_PasswordHash = :value")
 @NamedQuery(name = "MigrationDTOUsers.us_passwordhash.multiple", query = "SELECT e FROM MigrationDTOUsers e WHERE e.US_PasswordHash IN :value")
 @NamedQuery(name = "MigrationDTOUsers.primaryKeyQuery", query = "SELECT e FROM MigrationDTOUsers e WHERE e.ID = ?1")
-@NamedQuery(name = "MigrationDTOUsers.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOUsers e WHERE e.ID IN ?1")
+@NamedQuery(name = "MigrationDTOUsers.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOUsers e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOUsers.all.migration", query = "SELECT e FROM MigrationDTOUsers e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "US_Name", "US_LoginName", "US_Password", "US_UserGroups", "US_Privileges", "SchulnrEigner", "Email", "EmailName", "SMTPUsername", "SMTPPassword", "EmailSignature", "HeartbeatDate", "ComputerName", "US_PasswordHash"})
 public final class MigrationDTOUsers {

@@ -50,7 +50,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOGostSchueler.besonderelernleistung_punkte", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte = :value")
 @NamedQuery(name = "DTOGostSchueler.besonderelernleistung_punkte.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.BesondereLernleistung_Punkte IN :value")
 @NamedQuery(name = "DTOGostSchueler.primaryKeyQuery", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "DTOGostSchueler.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN ?1")
+@NamedQuery(name = "DTOGostSchueler.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IN :value")
 @NamedQuery(name = "DTOGostSchueler.all.migration", query = "SELECT e FROM DTOGostSchueler e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "DatumBeratung", "DatumRuecklauf", "HatSportattest", "Kommentar", "Beratungslehrer_ID", "PruefPhase", "BesondereLernleistung_Art", "BesondereLernleistung_Punkte"})
 public final class DTOGostSchueler {

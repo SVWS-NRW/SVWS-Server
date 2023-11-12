@@ -60,7 +60,7 @@ import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializ
 @NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht = :value")
 @NamedQuery(name = "DTOSchuelerSprachenfolge.hebraicumerreicht.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.HebraicumErreicht IN :value")
 @NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOSchuelerSprachenfolge.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerSprachenfolge.all.migration", query = "SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Sprache", "ReihenfolgeNr", "ASDJahrgangVon", "ASDJahrgangBis", "AbschnittVon", "AbschnittBis", "Referenzniveau", "KleinesLatinumErreicht", "LatinumErreicht", "GraecumErreicht", "HebraicumErreicht"})
 public final class DTOSchuelerSprachenfolge {

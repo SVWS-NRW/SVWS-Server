@@ -52,7 +52,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStKursartConverterDeserializer;
 @NamedQuery(name = "DTOGostBlockungKurs.wochenstunden", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden = :value")
 @NamedQuery(name = "DTOGostBlockungKurs.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.Wochenstunden IN :value")
 @NamedQuery(name = "DTOGostBlockungKurs.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungKurs.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostBlockungKurs.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungKurs.all.migration", query = "SELECT e FROM DTOGostBlockungKurs e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Fach_ID", "Kursart", "Kursnummer", "IstKoopKurs", "BezeichnungSuffix", "Schienenanzahl", "Wochenstunden"})
 public final class DTOGostBlockungKurs {

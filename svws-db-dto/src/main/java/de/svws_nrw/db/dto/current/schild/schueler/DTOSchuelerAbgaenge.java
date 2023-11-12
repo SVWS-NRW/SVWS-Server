@@ -72,7 +72,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerAbgaenge.lsbeginnjahrgang", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnJahrgang = :value")
 @NamedQuery(name = "DTOSchuelerAbgaenge.lsbeginnjahrgang.multiple", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.LSBeginnJahrgang IN :value")
 @NamedQuery(name = "DTOSchuelerAbgaenge.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerAbgaenge.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOSchuelerAbgaenge.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerAbgaenge.all.migration", query = "SELECT e FROM DTOSchuelerAbgaenge e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "BemerkungIntern", "AbgangsSchulform", "AbgangsBeschreibung", "OrganisationsformKrz", "AbgangsSchule", "AbgangsSchuleAnschr", "AbgangsSchulNr", "LSJahrgang", "LSEntlassArt", "LSSchulformSIM", "LSSchulEntlassDatum", "LSVersetzung", "LSSGL", "LSFachklKennung", "LSFachklSIM", "FuerSIMExport", "LSBeginnDatum", "LSBeginnJahrgang"})
 public final class DTOSchuelerAbgaenge {

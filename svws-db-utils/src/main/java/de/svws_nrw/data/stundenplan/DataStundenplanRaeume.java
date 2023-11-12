@@ -187,4 +187,20 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 		return super.deleteBasic(id, DTOStundenplanRaum.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Räume
+	 *
+	 * @param ids   die IDs der Räume
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<DTOStundenplanRaum> dtos = conn.queryNamed("DTOStundenplanRaum.primaryKeyQuery.multiple", ids, DTOStundenplanRaum.class);
+		for (final DTOStundenplanRaum dto : dtos)
+			if (dto.Stundenplan_ID != this.stundenplanID)
+				throw OperationError.BAD_REQUEST.exception("Der Raum-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanRaum.class, dtoMapper);
+	}
+
 }

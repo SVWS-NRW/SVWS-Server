@@ -39,7 +39,7 @@ import de.svws_nrw.csv.converter.current.UhrzeitConverterDeserializer;
 @NamedQuery(name = "DTOKatalogPausenzeit.bezeichnung", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Bezeichnung = :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.bezeichnung.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.Bezeichnung IN :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.primaryKeyQuery", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogPausenzeit.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKatalogPausenzeit.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKatalogPausenzeit.all.migration", query = "SELECT e FROM DTOKatalogPausenzeit e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Tag", "Beginn", "Ende", "Bezeichnung"})
 public final class DTOKatalogPausenzeit {

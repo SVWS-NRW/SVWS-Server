@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOGostBlockungSchiene.wochenstunden", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden = :value")
 @NamedQuery(name = "DTOGostBlockungSchiene.wochenstunden.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.Wochenstunden IN :value")
 @NamedQuery(name = "DTOGostBlockungSchiene.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOGostBlockungSchiene.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOGostBlockungSchiene.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungSchiene.all.migration", query = "SELECT e FROM DTOGostBlockungSchiene e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "Nummer", "Bezeichnung", "Wochenstunden"})
 public final class DTOGostBlockungSchiene {

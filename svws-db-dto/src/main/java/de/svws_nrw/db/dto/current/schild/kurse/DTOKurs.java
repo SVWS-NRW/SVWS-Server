@@ -73,7 +73,7 @@ import de.svws_nrw.csv.converter.current.KursFortschreibungsartConverterDeserial
 @NamedQuery(name = "DTOKurs.jahrgaenge", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgaenge = :value")
 @NamedQuery(name = "DTOKurs.jahrgaenge.multiple", query = "SELECT e FROM DTOKurs e WHERE e.Jahrgaenge IN :value")
 @NamedQuery(name = "DTOKurs.primaryKeyQuery", query = "SELECT e FROM DTOKurs e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKurs.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKurs e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKurs.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKurs e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKurs.all.migration", query = "SELECT e FROM DTOKurs e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schuljahresabschnitts_ID", "KurzBez", "Jahrgang_ID", "ASDJahrgang", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "Sortierung", "Sichtbar", "Schienen", "Fortschreibungsart", "WochenstdKL", "SchulNr", "EpochU", "ZeugnisBez", "Jahrgaenge"})
 public final class DTOKurs {

@@ -43,7 +43,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOSchuelerTelefon.gesperrt", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt = :value")
 @NamedQuery(name = "DTOSchuelerTelefon.gesperrt.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.Gesperrt IN :value")
 @NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOSchuelerTelefon.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerTelefon.all.migration", query = "SELECT e FROM DTOSchuelerTelefon e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "TelefonArt_ID", "Telefonnummer", "Bemerkung", "Sortierung", "Gesperrt"})
 public final class DTOSchuelerTelefon {

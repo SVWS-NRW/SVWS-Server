@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOKatalogAufsichtsbereich.beschreibung", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung = :value")
 @NamedQuery(name = "DTOKatalogAufsichtsbereich.beschreibung.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.Beschreibung IN :value")
 @NamedQuery(name = "DTOKatalogAufsichtsbereich.primaryKeyQuery", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID = ?1")
-@NamedQuery(name = "DTOKatalogAufsichtsbereich.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IN ?1")
+@NamedQuery(name = "DTOKatalogAufsichtsbereich.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKatalogAufsichtsbereich.all.migration", query = "SELECT e FROM DTOKatalogAufsichtsbereich e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Beschreibung"})
 public final class DTOKatalogAufsichtsbereich {

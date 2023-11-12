@@ -288,7 +288,7 @@ public final class DTOCreatorTable {
 			if (tabelle.pkSpalten().size() == 1) {
 				final SchemaTabelleSpalte col = tabelle.pkSpalten().iterator().next();
 				code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".primaryKeyQuery.multiple\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
-					+ "e." + col.javaAttributName() + " IN ?1\")" + System.lineSeparator();
+					+ "e." + col.javaAttributName() + " IN :value\")" + System.lineSeparator();
 			}
 			// Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle, welche für eine Migration Datensätze entfernt, die nicht der Primary-key-Constraint entsprechen
 			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".all.migration\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";

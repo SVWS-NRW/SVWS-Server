@@ -69,7 +69,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultMinus
 @NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.geschwisterkind", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind = :value")
 @NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.geschwisterkind.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Geschwisterkind IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID = ?1")
-@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN ?1")
+@NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerGrundschuldaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerGrundschuldaten e WHERE e.Schueler_ID IS NOT NULL")
 @JsonPropertyOrder({"Schueler_ID", "SchulnrEigner", "Note_Sprachgebrauch", "Note_Lesen", "Note_Rechtschreiben", "Note_Sachunterricht", "Note_Mathematik", "Note_Englisch", "Note_KunstTextil", "Note_Musik", "Note_Sport", "Note_Religion", "Durchschnittsnote_Sprache", "Durchschnittsnote_Einfach", "Durchschnittsnote_Gewichtet", "Anrede_Klassenlehrer", "Nachname_Klassenlehrer", "GS_Klasse", "Bemerkungen", "Geschwisterkind"})
 public final class MigrationDTOSchuelerGrundschuldaten {
