@@ -242,6 +242,8 @@ export { LehrerLehramtEintrag } from './core/data/lehrer/LehrerLehramtEintrag';
 export { LehrerLehrbefaehigungEintrag } from './core/data/lehrer/LehrerLehrbefaehigungEintrag';
 export { LehrerListeEintrag } from './core/data/lehrer/LehrerListeEintrag';
 export { LehrerPersonalabschnittsdaten } from './core/data/lehrer/LehrerPersonalabschnittsdaten';
+export { LehrerPersonalabschnittsdatenAnrechnungsstunden } from './core/data/lehrer/LehrerPersonalabschnittsdatenAnrechnungsstunden';
+export { LehrerPersonalabschnittsdatenLehrerfunktion } from './core/data/lehrer/LehrerPersonalabschnittsdatenLehrerfunktion';
 export { LehrerPersonaldaten } from './core/data/lehrer/LehrerPersonaldaten';
 export { LehrerStammdaten } from './core/data/lehrer/LehrerStammdaten';
 export { DatenbankVerbindungsdaten } from './core/data/schema/DatenbankVerbindungsdaten';
