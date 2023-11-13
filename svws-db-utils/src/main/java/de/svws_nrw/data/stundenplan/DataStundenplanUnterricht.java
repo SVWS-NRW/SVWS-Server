@@ -272,8 +272,33 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
 		patchInternal(dto, map);
-		return Response.status(Status.OK).build();
+		return Response.status(Status.NO_CONTENT).build();
 	}
+
+
+	/**
+	 * Führt Patches für mehrere DTOs aus. Die Patches müssen als Liste übergeben werden.
+	 *
+	 * @param is   der Input-Stream mit der Liste der Patches
+	 *
+	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 */
+	public Response patchMultiple(final InputStream is) {
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		for (final Map<String, Object> map : multipleMaps) {
+			final Long id = JSONMapper.convertToLong(map.get("id"), true);
+			if (id == null)
+				throw OperationError.BAD_REQUEST.exception("Ein Patch mit der ID null ist nicht möglich.");
+			if (map.size() == 1)
+				return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine zu patchenden Daten enthalten.");
+			final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
+			if (dto == null)
+				throw OperationError.NOT_FOUND.exception();
+			patchInternal(dto, map);
+		}
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
 
 
 	private static final Set<String> requiredCreateAttributes = Set.of("idZeitraster", "wochentyp", "idKurs", "idFach");
