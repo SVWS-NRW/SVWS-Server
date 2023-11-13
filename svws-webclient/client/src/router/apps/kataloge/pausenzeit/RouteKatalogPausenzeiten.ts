@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { StundenplanPausenzeit } from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -100,10 +100,12 @@ export class RouteDataKatalogPausenzeiten {
 
 	deleteEintraege = async (eintraege: StundenplanPausenzeit[]) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const list = new ArrayList<number>();
 		for (const eintrag of eintraege) {
-			const pausenzeit = await api.server.deleteStundenplanPausenzeit(api.schema, eintrag.id);
-			mapKatalogeintraege.delete(pausenzeit.id);
+			list.add(eintrag.id)
+			mapKatalogeintraege.delete(eintrag.id);
 		}
+		await api.server.deletePausenzeiten(list, api.schema);
 		let auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;

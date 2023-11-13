@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { StundenplanAufsichtsbereich} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { ArrayList, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -100,11 +100,13 @@ export class RouteDataKatalogAufsichtsbereiche {
 
 	deleteEintraege = async (eintraege: StundenplanAufsichtsbereich[]) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const list = new ArrayList<number>();
 		for (const eintrag of eintraege) {
-			const raum = await api.server.deleteAufsichtsbereich(api.schema, eintrag.id);
-			mapKatalogeintraege.delete(raum.id);
+			mapKatalogeintraege.delete(eintrag.id);
+			list.add(eintrag.id);
 		}
 		let auswahl;
+		await api.server.deleteAufsichtsbereiche(list, api.schema);
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
 		this.setPatchedState({mapKatalogeintraege, auswahl});
