@@ -375,16 +375,16 @@ export class RouteDataStundenplan {
 
 	patchUnterricht = async (data: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanUnterricht>();
-		loop :for (const datum of data) {
+		const list: List<StundenplanUnterricht> = new ArrayList();
+		loop: for (const datum of data) {
 			if (datum.idZeitraster !== zeitraster.id) {
 				if (!this.stundenplanManager.unterrichtIstVerschiebenErlaubt(datum, zeitraster))
 					continue loop;
-				await api.server.patchStundenplanUnterricht({ idZeitraster: zeitraster.id }, api.schema, datum.id);
 				datum.idZeitraster = zeitraster.id;
 				list.add(datum);
 			}
 		}
+		api.server.patchStundenplanUnterrichte(list, api.schema);
 		this.stundenplanManager.unterrichtPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
