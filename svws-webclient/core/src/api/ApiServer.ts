@@ -9040,7 +9040,7 @@ export class ApiServer extends BaseApi {
 	public async addAufsichtsbereiche(data : List<Partial<Aufsichtsbereich>>, schema : string) : Promise<List<Aufsichtsbereich>> {
 		const path = "/db/{schema}/schule/aufsichtsbereiche/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<Aufsichtsbereich>).map(d => Aufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Aufsichtsbereich>();
@@ -9392,7 +9392,7 @@ export class ApiServer extends BaseApi {
 	public async addPausenzeiten(data : List<Partial<StundenplanPausenzeit>>, schema : string) : Promise<List<StundenplanPausenzeit>> {
 		const path = "/db/{schema}/schule/pausenzeiten/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
@@ -9590,7 +9590,7 @@ export class ApiServer extends BaseApi {
 	public async addRaeume(data : List<Partial<Raum>>, schema : string) : Promise<List<Raum>> {
 		const path = "/db/{schema}/schule/raeume/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<Raum>).map(d => Raum.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<Raum>();
@@ -9973,7 +9973,7 @@ export class ApiServer extends BaseApi {
 	public async addZeitrasterEintraege(data : List<Partial<StundenplanZeitraster>>, schema : string) : Promise<List<StundenplanZeitraster>> {
 		const path = "/db/{schema}/schule/zeitraster/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
@@ -10167,7 +10167,7 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/aufsichtsbereiche/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanAufsichtsbereich>).map(d => StundenplanAufsichtsbereich.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanAufsichtsbereich>();
@@ -10324,7 +10324,7 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/pausenzeiten/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenzeit>).map(d => StundenplanPausenzeit.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenzeit>();
@@ -10419,7 +10419,7 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/raeume/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanRaum>).map(d => StundenplanRaum.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanRaum>();
@@ -10632,7 +10632,7 @@ export class ApiServer extends BaseApi {
 		const path = "/db/{schema}/stundenplan/{id : \\d+}/zeitraster/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
-		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanZeitraster>();
@@ -11055,7 +11055,7 @@ export class ApiServer extends BaseApi {
 	public async addStundenplanPausenaufsichten(data : List<Partial<StundenplanPausenaufsicht>>, schema : string) : Promise<List<StundenplanPausenaufsicht>> {
 		const path = "/db/{schema}/stundenplan/pausenaufsicht/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanPausenaufsicht>).map(d => StundenplanPausenaufsicht.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanPausenaufsicht>();
@@ -11499,7 +11499,7 @@ export class ApiServer extends BaseApi {
 	public async addStundenplanUnterrichte(data : List<Partial<StundenplanUnterricht>>, schema : string) : Promise<List<StundenplanUnterricht>> {
 		const path = "/db/{schema}/stundenplan/unterricht/create/multiple"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSON(d)).join() + "]";
+		const body : string = "[" + (data.toArray() as Array<StundenplanUnterricht>).map(d => StundenplanUnterricht.transpilerToJSONPatch(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<StundenplanUnterricht>();
