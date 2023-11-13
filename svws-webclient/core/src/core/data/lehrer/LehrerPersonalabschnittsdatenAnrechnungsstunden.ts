@@ -15,12 +15,12 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	/**
 	 * Die ID des Anrechnungsgrundes.
 	 */
-	public idGrund : number | null = null;
+	public idGrund : number = -1;
 
 	/**
 	 * Die Anzahl der Anrechnungsstunden, welche dem Grund zugeordnet sind.
 	 */
-	public idAnerkennungsgrund : number = 0.0;
+	public anzahl : number = 0.0;
 
 
 	public constructor() {
@@ -40,10 +40,12 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		if (typeof obj.idAbschnittsdaten === "undefined")
 			 throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
-		result.idGrund = typeof obj.idGrund === "undefined" ? null : obj.idGrund === null ? null : obj.idGrund;
-		if (typeof obj.idAnerkennungsgrund === "undefined")
-			 throw new Error('invalid json format, missing attribute idAnerkennungsgrund');
-		result.idAnerkennungsgrund = obj.idAnerkennungsgrund;
+		if (typeof obj.idGrund === "undefined")
+			 throw new Error('invalid json format, missing attribute idGrund');
+		result.idGrund = obj.idGrund;
+		if (typeof obj.anzahl === "undefined")
+			 throw new Error('invalid json format, missing attribute anzahl');
+		result.anzahl = obj.anzahl;
 		return result;
 	}
 
@@ -51,8 +53,8 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
-		result += '"idGrund" : ' + ((!obj.idGrund) ? 'null' : obj.idGrund) + ',';
-		result += '"idAnerkennungsgrund" : ' + obj.idAnerkennungsgrund + ',';
+		result += '"idGrund" : ' + obj.idGrund + ',';
+		result += '"anzahl" : ' + obj.anzahl + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,10 +69,10 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
 		}
 		if (typeof obj.idGrund !== "undefined") {
-			result += '"idGrund" : ' + ((!obj.idGrund) ? 'null' : obj.idGrund) + ',';
+			result += '"idGrund" : ' + obj.idGrund + ',';
 		}
-		if (typeof obj.idAnerkennungsgrund !== "undefined") {
-			result += '"idAnerkennungsgrund" : ' + obj.idAnerkennungsgrund + ',';
+		if (typeof obj.anzahl !== "undefined") {
+			result += '"anzahl" : ' + obj.anzahl + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
