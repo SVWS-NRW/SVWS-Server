@@ -177,8 +177,8 @@ export class RouteDataStundenplan {
 			delete item.id;
 			list.add(item);
 		}
-		const raueme = await api.server.addStundenplanRaeume(list, api.schema, id);
-		this.stundenplanManager.raumAddAll(raueme);
+		const res = await api.server.addStundenplanRaeume(list, api.schema, id);
+		this.stundenplanManager.raumAddAll(res);
 		this.commit();
 		api.status.stop();
 	}

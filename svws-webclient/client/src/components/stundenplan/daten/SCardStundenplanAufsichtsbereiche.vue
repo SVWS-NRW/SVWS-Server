@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Aufsichtsbereiche">
-		<svws-ui-table :columns="cols" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" v-model:clicked="bereich" selectable :model-value="selected" @update:model-value="selected=$event" count>
+		<svws-ui-table :columns="cols" :items="items" v-model:clicked="bereich" selectable v-model="selected" count>
 			<template #cell(kuerzel)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.kuerzel" @change="kuerzel=>patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
 			</template>
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 
 	import type { List, StundenplanAufsichtsbereich, StundenplanManager } from "@core";
-	import { ref } from "vue";
+	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -36,6 +36,11 @@
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();
 	const selected = ref<StundenplanAufsichtsbereich[]>([]);
+	const items = ref<StundenplanAufsichtsbereich[]>([]);
+
+	watch(()=>props.stundenplanManager, neu => {
+		items.value = [...neu().aufsichtsbereichGetMengeAsList()]
+	})
 
 	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}

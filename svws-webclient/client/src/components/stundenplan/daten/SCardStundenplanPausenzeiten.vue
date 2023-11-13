@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Pausenzeiten">
-		<svws-ui-table :columns="cols" :items="stundenplanManager().pausenzeitGetMengeAsList()" v-model:clicked="zeit" selectable v-model="selected" count>
+		<svws-ui-table :columns="cols" :items="items" v-model:clicked="zeit" selectable v-model="selected" count>
 			<template #cell(wochentag)="{ rowData }">
 				<svws-ui-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 			</template>
@@ -27,7 +27,7 @@
 
 	import type { List, StundenplanManager, StundenplanPausenzeit} from "@core";
 	import { Wochentag, DateUtils } from "@core";
-	import { ref } from "vue";
+	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -40,6 +40,11 @@
 
 	const zeit = ref<StundenplanPausenzeit | undefined>();
 	const selected = ref<StundenplanPausenzeit[]>([]);
+	const items = ref<StundenplanPausenzeit[]>([]);
+
+	watch(()=>props.stundenplanManager, neu => {
+		items.value = [...neu().pausenzeitGetMengeAsList()]
+	})
 
 	const cols = [
 		{key: 'wochentag', label: 'Wochentag', span: 1}, {key: 'beginn', label: 'Beginn', span: 1}, {key: 'ende', label: 'Ende', span: 1}
