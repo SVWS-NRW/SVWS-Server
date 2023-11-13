@@ -152,12 +152,14 @@ export class RouteDataStundenplan {
 	}
 
 	removeRaeume = async (raeume: Iterable<StundenplanRaum>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanRaum>()
-		for (const raum of raeume) {
-			await api.server.deleteStundenplanRaum(api.schema, raum.id);
-			list.add(raum);
-		}
+		const listID = new ArrayList<number>();
+		for (const raum of raeume)
+			listID.add(raum.id);
+		const list = await api.server.deleteStundenplanRaeume(listID, api.schema, id);
 		this.stundenplanManager.raumRemoveAll(list);
 		if (this.selected instanceof StundenplanRaum && list.contains(this.selected))
 			this._state.value.selected = undefined;
@@ -206,12 +208,14 @@ export class RouteDataStundenplan {
 	}
 
 	removePausenzeiten = async (pausenzeiten: Iterable<StundenplanPausenzeit>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanPausenzeit>()
-		for (const pausenzeit of pausenzeiten) {
-			await api.server.deleteStundenplanPausenzeit(api.schema, pausenzeit.id);
-			list.add(pausenzeit);
-		}
+		const listID = new ArrayList<number>();
+		for (const pausenzeit of pausenzeiten)
+			listID.add(pausenzeit.id);
+		const list = await api.server.deleteStundenplanPausenzeiten(listID, api.schema, id);
 		this.stundenplanManager.pausenzeitRemoveAll(list);
 		if (this.selected instanceof StundenplanPausenzeit && list.contains(this.selected))
 			this._state.value.selected = undefined;
@@ -224,13 +228,13 @@ export class RouteDataStundenplan {
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanPausenzeit>()
+		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const item of pausenzeiten) {
 			delete item.id;
-			const pausenzeit = await api.server.addStundenplanPausenzeit(item, api.schema, id)
-			list.add(pausenzeit);
+			list.add(item);
 		}
-		this.stundenplanManager.pausenzeitAddAll(list);
+		const res = await api.server.addStundenplanPausenzeiten(list, api.schema, id)
+		this.stundenplanManager.pausenzeitAddAll(res);
 		this.commit();
 		api.status.stop();
 	}
@@ -267,12 +271,14 @@ export class RouteDataStundenplan {
 	}
 
 	removeAufsichtsbereiche = async (aufsichtsbereiche: Iterable<StundenplanAufsichtsbereich>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanAufsichtsbereich>()
-		for (const aufsichtsbereich of aufsichtsbereiche) {
-			await api.server.deleteStundenplanAufsichtsbereich(api.schema, aufsichtsbereich.id);
-			list.add(aufsichtsbereich);
-		}
+		const listID = new ArrayList<number>();
+		for (const aufsichtsbereich of aufsichtsbereiche)
+			listID.add(aufsichtsbereich.id);
+		const list = await api.server.deleteStundenplanAufsichtsbereiche(listID, api.schema, id);
 		this.stundenplanManager.aufsichtsbereichRemoveAll(list);
 		if (this.selected instanceof StundenplanAufsichtsbereich && list.contains(this.selected))
 			this._state.value.selected = undefined;
@@ -285,13 +291,13 @@ export class RouteDataStundenplan {
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanAufsichtsbereich>()
+		const list = new ArrayList<Partial<StundenplanAufsichtsbereich>>()
 		for (const item of aufsichtsbereiche) {
 			delete item.id;
-			const bereich = await api.server.addStundenplanAufsichtsbereich(item, api.schema, id);
-			list.add(bereich);
+			list.add(item);
 		}
-		this.stundenplanManager.aufsichtsbereichAddAll(list);
+		const bereich = await api.server.addStundenplanAufsichtsbereiche(list, api.schema, id);
+		this.stundenplanManager.aufsichtsbereichAddAll(bereich);
 		api.status.stop();
 	}
 
@@ -300,36 +306,38 @@ export class RouteDataStundenplan {
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>();
+		const list = new ArrayList<Partial<StundenplanZeitraster>>();
 		for (const z of zeitraster) {
 			delete z.id;
-			const item = await api.server.addStundenplanZeitrasterEintrag(z, api.schema, id);
-			list.add(item);
+			list.add(z);
 		}
-		this.stundenplanManager.zeitrasterAddAll(list);
+		const res = await api.server.addStundenplanZeitrasterEintraege(list, api.schema, id);
+		this.stundenplanManager.zeitrasterAddAll(res);
 		this.commit();
 		api.status.stop();
 	}
 
 	patchZeitraster = async (zeitraster : Iterable<StundenplanZeitraster>) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>();
-		for (const z of zeitraster) {
-			await api.server.patchStundenplanZeitrasterEintrag(z, api.schema, z.id);
+		const list: List<StundenplanZeitraster> = new ArrayList();
+		for (const z of zeitraster)
 			list.add(z);
-		}
+		const res = await api.server.patchStundenplanZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
 	}
 
 	removeZeitraster = async (multi: Iterable<StundenplanZeitraster>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>()
+		const listID = new ArrayList<number>()
 		for (const zeitraster of multi) {
-			await api.server.deleteStundenplanZeitrasterEintrag(api.schema, zeitraster.id);
-			list.add(zeitraster);
+			listID.add(zeitraster.id);
 		}
+		const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, id);
 		this.stundenplanManager.zeitrasterRemoveAll(list);
 		if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
 		|| (typeof this.selected === 'number')
@@ -347,20 +355,20 @@ export class RouteDataStundenplan {
 		const listKatalogeintraege: List<Partial<StundenplanZeitraster>> = await api.server.getZeitraster(api.schema);
 		for (const item of listKatalogeintraege) {
 			delete item.id;
-			await api.server.addStundenplanZeitrasterEintrag(item, api.schema, id);
 		}
+		await api.server.addStundenplanZeitrasterEintraege(listKatalogeintraege, api.schema, id);
+		// kein Aufruf an den Manager notwendig, da wir die Route nun neu laden
 		api.status.stop();
 		await this.setEintrag(this.auswahl);
 	}
 
 	addUnterrichtKlasse = async (data: Iterable<Partial<StundenplanUnterricht>>) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanUnterricht>();
-		for (const datum of data) {
-			const unterricht = await api.server.addStundenplanUnterricht(datum, api.schema);
-			list.add(unterricht);
-		}
-		this.stundenplanManager.unterrichtAddAll(list);
+		const list = new ArrayList<Partial<StundenplanUnterricht>>();
+		for (const datum of data)
+			list.add(datum);
+		const unterrichte = await api.server.addStundenplanUnterrichte(list, api.schema);
+		this.stundenplanManager.unterrichtAddAll(unterrichte);
 		this.commit();
 		api.status.stop();
 	}
@@ -383,12 +391,15 @@ export class RouteDataStundenplan {
 	}
 
 	removeUnterrichtKlasse = async (unterrichte: Iterable<StundenplanUnterricht>) => {
+		const id = this._state.value.auswahl?.id;
+		if (id === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
-		const list = new ArrayList<StundenplanUnterricht>()
+		const listID = new ArrayList<number>();
 		for (const unterricht of unterrichte) {
-			await api.server.deleteStundenplanUnterricht(api.schema, unterricht.id);
-			list.add(unterricht);
+			listID.add(unterricht.id);
 		}
+		const list = await api.server.deleteStundenplanUnterrichte(listID, api.schema, id);
 		this.stundenplanManager.unterrichtRemoveAll(list);
 		if (this.selected instanceof StundenplanUnterricht && list.contains(this.selected))
 			this._state.value.selected = undefined;
