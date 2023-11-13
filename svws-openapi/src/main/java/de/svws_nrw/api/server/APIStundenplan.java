@@ -307,6 +307,37 @@ public class APIStundenplan {
 
 
     /**
+     * Die OpenAPI-Methode für das Patchen mehrerer Zeitraster-Einträge. Die IDs in dem Patch
+     * müssen vorhanden sein, damit die zu patchenden Daten in der DB gefunden werden können.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/zeitraster/patch/multiple")
+    @Operation(summary = "Passt die Zeitrastereinträge an.",
+    description = "Passt die Zeitrastereinträge an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag für mindestens eine der IDs der Daten gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchStundenplanZeitrasterEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Der Patch für den Zeitrastereintrag", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patchMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Hinzufügen eines neuen Zeitrastereintrags zu einem bestehendem Stundenplan.
      *
      * @param schema       das Datenbankschema

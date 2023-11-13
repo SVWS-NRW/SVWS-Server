@@ -110,6 +110,17 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
+	/**
+	 * Führt Patches für mehrere DTOs aus. Die Patches müssen als Liste übergeben werden.
+	 *
+	 * @param is   der Input-Stream mit der Liste der Patches
+	 *
+	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 */
+	public Response patchMultiple(final InputStream is) {
+		return super.patchBasicMultiple("id", is, DTOStundenplanZeitraster.class, patchMappings);
+	}
+
 
 	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "unterrichtstunde", "stundenbeginn", "stundenende");
 

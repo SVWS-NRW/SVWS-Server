@@ -131,6 +131,34 @@ public abstract class DataManager<ID> {
 		}
 	}
 
+
+
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param <DTO>           der Typ des DTOs
+	 * @param id              die ID des zu patchenden DTOs
+	 * @param map             die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
+	 * @param dtoClass        die Klasse des DTOs
+	 * @param attributeMapper die Mapper für das Anpassen des DTOs
+	 * @param attributesForbidden eine Menge von Attributen, die nicht im JSON-Inputstream enthalten sein dürfen, null falls nicht gefiltert werden soll
+	 */
+	private <DTO> void patchBasicInternal(final ID id, final Map<String, Object> map, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
+		if (id == null)
+			throw OperationError.BAD_REQUEST.exception("Ein Patch mit der ID null ist nicht möglich.");
+		if (map.isEmpty())
+			throw OperationError.NOT_FOUND.exception("In dem Patch sind keine Daten enthalten.");
+		final DTO dto = conn.queryByKey(dtoClass, id);
+		if (dto == null)
+			throw OperationError.NOT_FOUND.exception();
+		applyPatchMappings(conn, dto, map, attributeMapper, attributesForbidden);
+		conn.transactionPersist(dto);
+		conn.transactionFlush();
+	}
+
+
 	/**
 	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
 	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
@@ -146,19 +174,10 @@ public abstract class DataManager<ID> {
 	 * @return die Response
 	 */
 	protected <DTO> Response patchBasicFiltered(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper, final Set<String> attributesForbidden) {
-		if (id == null)
-			return OperationError.BAD_REQUEST.getResponse("Ein Patch mit der ID null ist nicht möglich.");
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
-			return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine Daten enthalten.");
-		final DTO dto = conn.queryByKey(dtoClass, id);
-		if (dto == null)
-			throw OperationError.NOT_FOUND.exception();
-		applyPatchMappings(conn, dto, map, attributeMapper, attributesForbidden);
-		conn.transactionPersist(dto);
-		conn.transactionFlush();
-		return Response.status(Status.OK).build();
+		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, attributesForbidden);
+		return Response.status(Status.NO_CONTENT).build();
 	}
+
 
 	/**
 	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
@@ -174,7 +193,30 @@ public abstract class DataManager<ID> {
 	 * @return die Response
 	 */
 	protected <DTO> Response patchBasic(final ID id, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
-		return patchBasicFiltered(id, is, dtoClass, attributeMapper, null);
+		patchBasicInternal(id, JSONMapper.toMap(is), dtoClass, attributeMapper, null);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Passt die Informationen der Datenbank-DTOs mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param <DTO>           der Typ der DTOs
+	 * @param idAttr          der Name des ID-Attributes der DTOs
+	 * @param is              der Input-Stream
+	 * @param dtoClass        die Klasse der DTOs
+	 * @param attributeMapper die Mapper für das Anpassen des DTOs
+	 *
+	 * @return die Response
+	 */
+	@SuppressWarnings("unchecked")
+	protected <DTO> Response patchBasicMultiple(final String idAttr, final InputStream is, final Class<DTO> dtoClass, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		for (final Map<String, Object> map : multipleMaps)
+			patchBasicInternal((ID) map.get(idAttr), map, dtoClass, attributeMapper, null);
+		return Response.status(Status.NO_CONTENT).build();
 	}
 
 
@@ -237,7 +279,7 @@ public abstract class DataManager<ID> {
 	 *
 	 * @return das Core-DTO
 	 */
-	protected <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
+	private <DTO, CoreData> CoreData addBasic(final long newID, final Map<String, Object> map, final Class<DTO> dtoClass, final ObjLongConsumer<DTO> initDTO, final Function<DTO, CoreData> dtoMapper,
 			final Set<String> attributesRequired, final Map<String, DataBasicMapper<DTO>> attributeMapper) {
 		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
 		for (final String attr : attributesRequired)
