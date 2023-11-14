@@ -130,9 +130,9 @@ export class BenutzerKompetenz extends JavaObject implements JavaEnum<BenutzerKo
 	public static readonly IMPORT_EXPORT_XML : BenutzerKompetenz = new BenutzerKompetenz("IMPORT_EXPORT_XML", 20, new BenutzerKompetenzKatalogEintrag(46, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Export über XML-Schnittstellen", null));
 
 	/**
-	 * Es werden Rechte zum Import und Export über die Schüler-Online-Schnittstelle benötigt.
+	 * Es werden Rechte zum Import und Export über die Schulbewerbung.de-Schnittstelle benötigt.
 	 */
-	public static readonly IMPORT_EXPORT_SCHUELER_ONLINE : BenutzerKompetenz = new BenutzerKompetenz("IMPORT_EXPORT_SCHUELER_ONLINE", 21, new BenutzerKompetenzKatalogEintrag(47, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Schüler-Online", null));
+	public static readonly IMPORT_EXPORT_SCHULBEWERBUNG_DE : BenutzerKompetenz = new BenutzerKompetenz("IMPORT_EXPORT_SCHULBEWERBUNG_DE", 21, new BenutzerKompetenzKatalogEintrag(47, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Schulbewerbung.de", null));
 
 	/**
 	 * Es werden Rechte zum Ansehen der Schulbezogenen Daten benötigt.

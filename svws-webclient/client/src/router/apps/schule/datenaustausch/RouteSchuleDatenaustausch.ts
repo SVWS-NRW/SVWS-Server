@@ -14,7 +14,7 @@ import { routeSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenausta
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschENM } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschWenom } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschWenom";
-import { routeSchuleDatenaustauschSchuelerOnline } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschSchuelerOnline";
+import { routeSchuleDatenaustauschSchulbewerbung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 
 import { RouteDataSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteDataSchuleDatenaustausch";
 
@@ -33,7 +33,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 		super.children = [
 			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschLaufbahnplanung,
-			routeSchuleDatenaustauschSchuelerOnline,
+			routeSchuleDatenaustauschSchulbewerbung,
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
 		];
