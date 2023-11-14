@@ -12,7 +12,7 @@ const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustau
 export class RouteSchuleDatenaustauschWenom extends RouteNode<unknown, RouteSchuleDatenaustausch> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.wenom.daten", "Webnotenmanager", SSchuleDatenaustauschWenom);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.wenom", "wenom", SSchuleDatenaustauschWenom);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";

@@ -7,7 +7,7 @@ import { api } from "~/router/Api";
 import { type RouteNode } from "~/router/RouteNode";
 
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
-import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschLupo";
+import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 
 import { OpenApiError, SimpleOperationResponse } from "@core";
 

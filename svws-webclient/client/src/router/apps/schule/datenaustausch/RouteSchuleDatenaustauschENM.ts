@@ -12,7 +12,7 @@ const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausc
 export class RouteSchuleDatenaustauschENM extends RouteNode<unknown, RouteSchuleDatenaustausch> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm.daten", "enm", SSchuleDatenaustauschENM);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "ENM Notenmanager";
