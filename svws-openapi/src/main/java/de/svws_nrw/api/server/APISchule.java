@@ -70,7 +70,6 @@ import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulstufen;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1568,9 +1567,8 @@ public class APISchule {
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeit ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogPausenzeiten(conn)).add(is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).add(is),
+       		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
