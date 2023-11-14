@@ -8,6 +8,7 @@ import { resolve } from "path";
 
 export default defineConfig({
 	test: {},
+	base: '/admin/',
 	server: { port: 3000 },
 	plugins: [
 		Vue({
