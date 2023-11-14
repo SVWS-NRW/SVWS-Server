@@ -22,6 +22,11 @@ export class SchemaListeEintrag extends JavaObject {
 	 */
 	public isInConfig : boolean = false;
 
+	/**
+	 * Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist.
+	 */
+	public isDeactivated : boolean = false;
+
 
 	public constructor() {
 		super();
@@ -46,6 +51,9 @@ export class SchemaListeEintrag extends JavaObject {
 		if (typeof obj.isInConfig === "undefined")
 			 throw new Error('invalid json format, missing attribute isInConfig');
 		result.isInConfig = obj.isInConfig;
+		if (typeof obj.isDeactivated === "undefined")
+			 throw new Error('invalid json format, missing attribute isDeactivated');
+		result.isDeactivated = obj.isDeactivated;
 		return result;
 	}
 
@@ -55,6 +63,7 @@ export class SchemaListeEintrag extends JavaObject {
 		result += '"revision" : ' + obj.revision + ',';
 		result += '"isTainted" : ' + obj.isTainted + ',';
 		result += '"isInConfig" : ' + obj.isInConfig + ',';
+		result += '"isDeactivated" : ' + obj.isDeactivated + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,6 +82,9 @@ export class SchemaListeEintrag extends JavaObject {
 		}
 		if (typeof obj.isInConfig !== "undefined") {
 			result += '"isInConfig" : ' + obj.isInConfig + ',';
+		}
+		if (typeof obj.isDeactivated !== "undefined") {
+			result += '"isDeactivated" : ' + obj.isDeactivated + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
