@@ -4,8 +4,8 @@
 		<br>
 		<span class="opacity-50"><i-ri-download2-line /></span>
 	</svws-ui-header>
-	<div class="router-tab-bar--area w-full">
-		<div class="router-tab-bar--panel overflow-auto w-full">
+	<div class="svws-ui-page w-full">
+		<div class="svws-ui-tab-content">
 			<router-view />
 		</div>
 	</div>

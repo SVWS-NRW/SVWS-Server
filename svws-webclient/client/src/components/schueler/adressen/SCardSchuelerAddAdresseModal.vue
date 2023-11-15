@@ -29,7 +29,6 @@
 
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
 	import { SchuelerBetriebsdaten } from "@core";
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import { computed, ref } from "vue";
 
 	const props = defineProps<{
@@ -44,9 +43,9 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	const schuelerBetriebsdaten : Ref<SchuelerBetriebsdaten> = ref(new SchuelerBetriebsdaten());
+	const schuelerBetriebsdaten = ref<SchuelerBetriebsdaten>(new SchuelerBetriebsdaten());
 
-	const betrieb: WritableComputedRef<BetriebListeEintrag | undefined> = computed({
+	const betrieb = computed<BetriebListeEintrag | undefined>({
 		get: () => {
 			const betrieb = props.mapBetriebe.get(schuelerBetriebsdaten.value.betrieb_id);
 			return betrieb === null ? undefined : betrieb;
@@ -65,17 +64,17 @@
 		}
 	});
 
-	const ansprechpartner: WritableComputedRef<BetriebAnsprechpartner | undefined> = computed({
+	const ansprechpartner = computed<BetriebAnsprechpartner | undefined>({
 		get: () => (schuelerBetriebsdaten.value.ansprechpartner_id === null) ? undefined : props.mapAnsprechpartner.get(schuelerBetriebsdaten.value.ansprechpartner_id),
 		set: (value) => schuelerBetriebsdaten.value.ansprechpartner_id = (value === undefined) ? null : value.id
 	});
 
-	const beschaeftigungsart: WritableComputedRef<KatalogEintrag | undefined> = computed({
+	const beschaeftigungsart = computed<KatalogEintrag | undefined>({
 		get: () => (schuelerBetriebsdaten.value.beschaeftigungsart_id === null) ? undefined : props.mapBeschaeftigungsarten.get(schuelerBetriebsdaten.value.beschaeftigungsart_id),
 		set: (value) => schuelerBetriebsdaten.value.beschaeftigungsart_id = (value === undefined) ? null : value.id
 	})
 
-	const betreuungslehrer: WritableComputedRef<LehrerListeEintrag | undefined> = computed({
+	const betreuungslehrer = computed<LehrerListeEintrag | undefined>({
 		get: () => (schuelerBetriebsdaten.value.betreuungslehrer_id === null) ? undefined : props.mapLehrer.get(schuelerBetriebsdaten.value.betreuungslehrer_id),
 		set: (value) => schuelerBetriebsdaten.value.betreuungslehrer_id = (value === undefined) ? null : value.id
 	});
@@ -94,7 +93,7 @@
 		showModal().value = true;
 	}
 
-	const listAnpsrechpartner : ComputedRef<Map<number, BetriebAnsprechpartner>> =computed(() => {
+	const listAnpsrechpartner = computed<Map<number, BetriebAnsprechpartner>>(() => {
 		const t = new Map();
 		console.log(props.mapAnsprechpartner)
 		for( const a of props.mapAnsprechpartner.entries()){
@@ -104,4 +103,5 @@
 		}
 		return t;
 	});
+
 </script>

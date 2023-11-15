@@ -1,0 +1,33 @@
+{
+	"version": 1,
+	"fbFaecher": [
+		{
+			"kuerzel": "AP",
+			"historie": [ {
+				"id": "1000",
+				"kuerzel": "AP",
+  			    "bezeichnung": "Automatisierungsprozesse",
+     			"fachklassen": [ 
+	    			{ "index": "10", "schluessel": "10004" },
+	    			{ "index": "10", "schluessel": "27600" },
+	    			{ "index": "10", "schluessel": "60101" },
+	    			{ "index": "10", "schluessel": "60102" }
+				],
+				"gueltigVon": null, 
+				"gueltigBis": null
+			} ]
+		}, {
+			"kuerzel": "FP",
+			"historie": [ {
+				"id": "2000",
+     			"kuerzel": "FP",
+    			"bezeichnung": "Fertigungsprozesse",
+     			"fachklassen": [ 
+	    			{ "index": "10", "schluessel": "27600" }
+				],
+				"gueltigVon": null, 
+				"gueltigBis": null
+			} ]
+		} 
+	]
+}

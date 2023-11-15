@@ -38,7 +38,7 @@
 <template>
 	<Story title="Router Tab Bar" id="svws-ui-router-tab-bar" group="app" icon="ri:route-line" :layout="{type: 'grid', width: '90%'}">
 		<Variant title="Default" id="Default">
-			<svws-ui-header class="h-32"><span>Headline</span><br><span class="opacity-50">Subtitle</span></svws-ui-header>
+			<svws-ui-header><span>Headline</span><br><span class="opacity-50">Subtitle</span></svws-ui-header>
 			<svws-ui-router-tab-bar :routes="routes" :hidden="hidden" v-model="selectedRoute">
 			<!--<component :is="selectedRoute.component" />-->
 			</svws-ui-router-tab-bar>

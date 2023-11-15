@@ -41,8 +41,10 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 	public checkHidden(params?: RouteParams) {
 		if (params?.abiturjahr instanceof Array)
 			throw new Error("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = (params === undefined) || !params.abiturjahr ? undefined : parseInt(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
+		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
+		if ((abiturjahr === null) || (abiturjahr === -1))
+			return { name: routeGost.defaultChild!.name, params: { abiturjahr: abiturjahr }};
+		return false;
 	}
 
 	public async beforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
@@ -193,7 +195,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			getDatenmanager: () => this.data.datenmanager,
 			rechneGostBlockung: this.data.rechneGostBlockung,
 			removeErgebnisse: this.data.removeErgebnisse,
-			ergebnisZuNeueBlockung: this.data.ergebnisZuNeueBlockung,
 			setAuswahlErgebnis: this.data.setAuswahlErgebnis,
 			hatBlockung: this.data.hatBlockung,
 			auswahlErgebnis: this.data.hatErgebnis ? this.data.auswahlErgebnis : undefined,
@@ -228,12 +229,14 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			removeKursLehrer: this.data.removeKursLehrer,
 			addSchieneKurs: this.data.addSchieneKurs,
 			removeSchieneKurs: this.data.removeSchieneKurs,
+			ergebnisAbleiten: this.data.ergebnisAbleiten,
 			ergebnisHochschreiben: this.data.ergebnisHochschreiben,
 			ergebnisAktivieren: this.data.ergebnisAktivieren,
 			ergebnisSynchronisieren: this.data.ergebnisSynchronisieren,
+			kurssortierung: this.data.kurssortierung,
 			getPDF: this.data.getPDF,
 			existiertSchuljahresabschnitt: this.data.existiertSchuljahresabschnitt,
-			schuelerFilter: this.data.hatErgebnis ? this.data.schuelerFilter : undefined,
+			schuelerFilter: () => this.data.hatErgebnis ? this.data.schuelerFilter : undefined,
 			faecherManager: routeGost.data.faecherManager,
 			halbjahr: this.data.halbjahr,
 			mapLehrer: this.data.mapLehrer,

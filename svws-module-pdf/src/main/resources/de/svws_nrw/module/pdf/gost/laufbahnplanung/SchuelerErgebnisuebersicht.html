@@ -1,0 +1,104 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Kursplanung - Kurs mit Teilnehmern</title>
+		<link rel="stylesheet" href="SchuelerErgebnisuebersicht.css" />
+	</head>
+
+	<body>
+		<div style="page-break-inside: avoid;" th:each="SchuelerLaufbahndaten,iterSchueler : ${LaufbahnplanungSchueler}">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+			<div class="pageTopRight" th:utext="'Ergebnisse der Laufbahnplanungsprüfung <br/>' + 'Abitur ' + ${SchuelerLaufbahndaten.Abiturjahr} + ' - ' + ${SchuelerLaufbahndaten.AktuellesGOStHalbjahr}">Ergebnisse der Laufbahnplanungsprüfung<br/>Abitur 2023 - Q1.2<br/></div>
+			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+			<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table th:if="${iterSchueler.count == iterSchueler.first}" class="fixed-layout-100 no-space-pad">
+				<tr>
+					<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 th:text="${'Ergebnisse der Laufbahnprüfung - Abitur ' + SchuelerLaufbahndaten.Abiturjahr + ' - ' + SchuelerLaufbahndaten.AktuellesGOStHalbjahr}">Ergebnisse der Laufbahnprüfung - Abitur 2023 - Q1.2</h3></td>
+				</tr>
+			</table>
+			<table class="fixed-layout-100 no-space-pad">
+				<tr style="height: 5px;">
+					<td class="bot-grey" style="width:4%;"></td>
+					<td class="bot-grey" style="width:30%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:4%;"></td>
+					<td class="bot-grey" style="width:1%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:3%;"></td>
+					<td class="bot-grey" style="width:7%;"></td>
+					<td class="bot-grey" style="width:6%;"></td>
+					<td class="bot-grey" style="width:6%;"></td>
+					<td class="bot-grey" style="width:1%;"></td>
+					<td class="bot-grey" style="width:5%;"></td>
+				</tr>
+				<tr class="ta-c">
+					<td class="tc-grey small" th:text="${#numbers.formatInteger(iterSchueler.count, 3) + '.'}">001.</td>
+					<td class="ta-l" th:text="${SchuelerLaufbahndaten.Nachname} + ', ' + ${SchuelerLaufbahndaten.Vorname}">Mustermann, Max</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlEF1 < 10  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlEF1 <= 10  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlEF1}">12</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlEF2 < 10  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlEF2 <= 10  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlEF2}">11</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlQ11 < 9  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlQ11 <= 9  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlQ11}">11</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlQ12 < 9  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlQ12 <= 9  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlQ12}">10</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlQ21 < 9  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlQ21 <= 9  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlQ21}">10</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.KursanzahlQ22 < 9  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlQ22 <= 9  ? 'background-color: yellow;' : '')}"  th:text="${SchuelerLaufbahndaten.KursanzahlQ22}">10</td>
+					<td class="bob-grey fb" th:style="${SchuelerLaufbahndaten.KursanzahlQPh < 38  ? 'background-color: red;' : (SchuelerLaufbahndaten.KursanzahlQPh <= 39  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.KursanzahlQPh}">41</td>
+					<td></td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenEF1 < 32  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenEF1 <= 32  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenEF1}">36</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenEF2 < 32  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenEF2 <= 32  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenEF2}">33</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenQ11 < 31  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenQ11 <= 33  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenQ11}">37</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenQ12 < 31  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenQ12 <= 33  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenQ12}">34</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenQ21 < 31  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenQ21 <= 33  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenQ21}">34</td>
+					<td class="bob-grey" th:style="${SchuelerLaufbahndaten.WochenstundenQ22 < 31  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenQ22 <= 33  ? 'background-color: yellow;' : '')}" th:text="${SchuelerLaufbahndaten.WochenstundenQ22}">34</td>
+					<td class="bob-grey fb" th:style="${SchuelerLaufbahndaten.WochenstundenGesamt < 100  ? 'background-color: red;' : (SchuelerLaufbahndaten.WochenstundenGesamt < 102  ? 'background-color: yellow;' : '')}" th:text="${#numbers.formatDecimal(SchuelerLaufbahndaten.WochenstundenGesamt, 1, 1)}">104,0</td>
+					<td class="bob-grey fb" th:style="${SchuelerLaufbahndaten.WochenstundenDurchschnittEF < 34 ? 'background-color: red;' : ''}" th:text="${#numbers.formatDecimal(SchuelerLaufbahndaten.WochenstundenDurchschnittEF, 1, 1)}">34,5</td>
+					<td class="bob-grey fb" th:style="${SchuelerLaufbahndaten.WochenstundenDurchschnittQPh < 34 ? 'background-color: red;' : ''}" th:text="${#numbers.formatDecimal(SchuelerLaufbahndaten.WochenstundenDurchschnittQPh, 1, 2)}">34,75</td>
+					<td></td>
+					<td class="bob-grey fb" th:style="${SchuelerLaufbahndaten.Fehler.size() > 0 ? 'background-color: red;' : ''}" th:text="${SchuelerLaufbahndaten.Fehler.size()}">0</td>
+				</tr>
+				<tr class="tc-grey ta-c" style="font-size: 7pt;">
+					<td></td>
+					<td class="ta-l" th:text="'Beratungsdatum: ' + ${SchuelerLaufbahndaten.Beratungsdatum}">Beratungsdatum: 16.05.2022</td>
+					<td colspan="7">anrechenbare Kurse</td>
+					<td></td>
+					<td colspan="9">Wochenstunden (gesamt und Durchschnitt EF + QPh)</td>
+					<td></td>
+					<td>Fehler</td>
+				</tr>
+				<tr th:if="${(DruckparameterDetaillevel >= 1) && !(#strings.isEmpty(SchuelerLaufbahndaten.Kommentar) && #lists.isEmpty(SchuelerLaufbahndaten.Fehler))}">
+					<td></td>
+					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Fehler und Kommentare zur Gesamtlaufbahn:</u></p>
+						<ul th:if="${!(#strings.isEmpty(SchuelerLaufbahndaten.Kommentar) && #lists.isEmpty(SchuelerLaufbahndaten.Fehler))}">
+							<li th:if="${!#lists.isEmpty(SchuelerLaufbahndaten.Fehler)}" th:each="FehlerBelegung : ${SchuelerLaufbahndaten.Fehler}" th:text="${FehlerBelegung.belegungsfehler}">Fehlertext</li>
+							<li th:if="${!#strings.isEmpty(SchuelerLaufbahndaten.Kommentar)}" th:text="${SchuelerLaufbahndaten.Kommentar}">Kommentar</li>
+						</ul>
+					</td>
+					<td></td>
+				</tr>
+				<tr th:if="${DruckparameterDetaillevel >= 2 && !#lists.isEmpty(SchuelerLaufbahndaten.Hinweise)}">
+					<td></td>
+					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
+						<ul>
+							<li th:each="HinweisBelegung : ${SchuelerLaufbahndaten.Hinweise}" th:text="${HinweisBelegung.belegungshinweis}">Hinweistext</li>
+						</ul>
+					</td>
+					<td></td>
+				</tr>
+				<tr style="height:5px;">
+					<td class="bob-grey" colspan="21"></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,9 +1,13 @@
 package de.svws_nrw.core.data.lehrer;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.core.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.lehrer.LehrerEinsatzstatus;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -54,28 +58,20 @@ public class LehrerPersonaldaten {
 	@Schema(description = "Der Grund für den Abgang des Lehrers - siehe Statistik-Katalog.", example = "RUHEST")
 	public String abgangsgrund;
 
-	/** Das Pflichtstundensoll des Lehrers. */
-	@Schema(description = "Das Pflichtstundensoll des Lehrers.", example = "18.5")
-	public Double pflichtstundensoll;
+	/** Die Abschnittsdaten des Lehrers. */
+	@ArraySchema(schema = @Schema(implementation = LehrerPersonalabschnittsdaten.class, description = "Ein Array mit den Abschnittsdaten des Lehrers zu den einzelnen Schuljahresabschnitten."))
+	public final @NotNull List<@NotNull LehrerPersonalabschnittsdaten> abschnittsdaten = new ArrayList<>();
 
-	/** Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog. */
-	@Schema(description = "Das Rechtsverhältnis unter welchem der Lehrer beschäftigt ist (z.B. Beamter auf Lebenszeit) - siehe Statistik-Katalog.", example = "L")
-	public String rechtsverhaeltnis;
+	/** Die Lehrämter des Lehrers. */
+	@ArraySchema(schema = @Schema(implementation = LehrerLehramtEintrag.class, description = "Ein Array mit den Lehrämtern des Lehrers."))
+	public final @NotNull List<@NotNull LehrerLehramtEintrag> lehraemter = new ArrayList<>();
 
-	/** Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog. */
-	@Schema(description = "Die Art der Beschäftigung (Vollzeit, Teilzeit, etc.) - siehe Statistik-Katalog.", example = "T")
-	public String beschaeftigungsart;
+	/** Die Fachrichtungen des Lehrers. */
+	@ArraySchema(schema = @Schema(implementation = LehrerFachrichtungEintrag.class, description = "Ein Array mit den Fachrichtungen des Lehrers."))
+	public final @NotNull List<@NotNull LehrerFachrichtungEintrag> fachrichtungen = new ArrayList<>();
 
-	/** [ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Core-Type {@link LehrerEinsatzstatus} */
-	@Schema(description = "[ASD] Der Einsatzstatus (z.B. Stammschule, nur hier tätig) - siehe Statistik-Katalog.", example = "*")
-	public String einsatzstatus;
+	/** Die Lehrbefähigungen des Lehrers. */
+	@ArraySchema(schema = @Schema(implementation = LehrerLehrbefaehigungEintrag.class, description = "Ein Array mit den Lehrbefähigungen des Lehrers."))
+	public final @NotNull List<@NotNull LehrerLehrbefaehigungEintrag> lehrbefaehigungen = new ArrayList<>();
 
-	/** Die Schulnummer der Stammschule, sofern diese abweicht. */
-	@Schema(description = "Die Schulnummer der Stammschule, sofern diese abweicht.", example = "168890")
-	public String stammschulnummer;
-
-
-	// TODO Lehrämter mit Array und weiteren DTO-Klassen
-
-	// TODO Mehr- und Minder leistungen als Array mit weiteren DTO-Klassen
 }

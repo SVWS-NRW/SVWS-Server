@@ -31,7 +31,7 @@
 		addAufsichtsbereich: (aufsichtsbereich: StundenplanAufsichtsbereich) => Promise<void>;
 		removeAufsichtsbereiche: (raeume: StundenplanAufsichtsbereich[]) => Promise<void>;
 		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
-		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
+		listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
 	}>();
 
 	const bereich = ref<StundenplanAufsichtsbereich | undefined>();

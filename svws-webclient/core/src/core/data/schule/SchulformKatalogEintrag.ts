@@ -1,11 +1,6 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { CoreTypeData } from '../../../core/data/CoreTypeData';
 
-export class SchulformKatalogEintrag extends JavaObject {
-
-	/**
-	 * Die ID des Katalog-Eintrags.
-	 */
-	public id : number = 0;
+export class SchulformKatalogEintrag extends CoreTypeData {
 
 	/**
 	 * Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird
@@ -32,16 +27,6 @@ export class SchulformKatalogEintrag extends JavaObject {
 	 * Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht.
 	 */
 	public hatGymOb : boolean = false;
-
-	/**
-	 * Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigVon : number | null = null;
-
-	/**
-	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigBis : number | null = null;
 
 
 	/**
@@ -88,7 +73,7 @@ export class SchulformKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.SchulformKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulformKatalogEintrag', 'de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulformKatalogEintrag {
@@ -97,6 +82,8 @@ export class SchulformKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
@@ -109,20 +96,18 @@ export class SchulformKatalogEintrag extends JavaObject {
 		if (typeof obj.hatGymOb === "undefined")
 			 throw new Error('invalid json format, missing attribute hatGymOb');
 		result.hatGymOb = obj.hatGymOb;
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulformKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
 		result += '"hatGymOb" : ' + obj.hatGymOb + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,6 +117,12 @@ export class SchulformKatalogEintrag extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.gueltigVon !== "undefined") {
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		}
+		if (typeof obj.gueltigBis !== "undefined") {
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
@@ -144,12 +135,6 @@ export class SchulformKatalogEintrag extends JavaObject {
 		}
 		if (typeof obj.hatGymOb !== "undefined") {
 			result += '"hatGymOb" : ' + obj.hatGymOb + ',';
-		}
-		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		}
-		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

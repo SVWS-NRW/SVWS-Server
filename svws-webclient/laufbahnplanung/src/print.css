@@ -13,8 +13,8 @@
 html,
 body,
 #app,
-.router-tab-bar--area,
-.router-tab-bar--panel,
+.svws-ui-page,
+.svws-ui-tab-content,
 .app--layout,
 .app--content,
 .app--content-container,
@@ -62,11 +62,11 @@ html {
 	@apply border-0 rounded-none;
 }
 
-.router-tab-bar--panel {
+.svws-ui-tab-content {
 	@apply overflow-hidden;
 }
 
-.router-tab-bar--area {
+.svws-ui-page {
 	@apply pt-0;
 }
 

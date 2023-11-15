@@ -1,9 +1,9 @@
 <template>
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
-		<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-download-2-line />Exportieren</svws-ui-button>
-				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-upload-2-line /> Importieren…</svws-ui-button>
+				<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportieren</svws-ui-button>
+				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="importLaufbahnplanung" />
 				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 				<svws-ui-button type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
@@ -15,7 +15,9 @@
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button type="secondary" @click.prevent="download_file" title="Wahlbogen herunterladen"><i-ri-printer-line />PDF herunterladen</svws-ui-button>
+			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList">
+				<template #icon> <i-ri-printer-line /> </template>
+			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="flex-grow">
@@ -75,8 +77,13 @@
 		}
 	}
 
-	async function download_file() {
-		const { data, name } = await props.getPdfWahlbogen();
+	const dropdownList = [
+		{ text: "Laufbahnwahlbogen", action: () => downloadPDF("Laufbahnwahlbogen"), default: true },
+		{ text: "Laufbahnwahlbogen (nur Belegung)", action: () => downloadPDF("Laufbahnwahlbogen (nur Belegung)") },
+	]
+
+	async function downloadPDF(title: string) {
+		const { data, name } = await props.getPdfWahlbogen(title);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;

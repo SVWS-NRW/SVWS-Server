@@ -20,6 +20,7 @@ module.exports = {
 			"./svws-webclient/ui/tsconfig.json",
 			"./svws-webclient/components/tsconfig.json",
 			"./svws-webclient/client/tsconfig.json",
+			"./svws-webclient/admin/tsconfig.json",
 			"./svws-webclient/laufbahnplanung/tsconfig.json",
 			"./svws-webclient/core-test/tsconfig.json",
 			"./svws-webclient/api-test/tsconfig.json",

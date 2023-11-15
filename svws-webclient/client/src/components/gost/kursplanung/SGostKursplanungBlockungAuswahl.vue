@@ -49,9 +49,6 @@
 			</div>
 		</template>
 		<template #actions>
-			<div class="mr-auto -ml-3">
-				<slot name="blockungRecoverAction" />
-			</div>
 			<slot name="blockungAuswahlActions" />
 		</template>
 	</svws-ui-table>
@@ -59,7 +56,7 @@
 		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status="apiStatus" />
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr="halbjahr" :api-status="apiStatus"
-		:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse" :ergebnis-zu-neue-blockung="ergebnisZuNeueBlockung"
+		:get-datenmanager="getDatenmanager" :remove-ergebnisse="removeErgebnisse"
 		:set-auswahl-ergebnis="setAuswahlErgebnis" :auswahl-ergebnis="auswahlErgebnis" />
 </template>
 
@@ -83,7 +80,6 @@
 		getDatenmanager: () => GostBlockungsdatenManager;
 		rechneGostBlockung: () => Promise<List<number>>;
 		removeErgebnisse: (ergebnisse: GostBlockungsergebnisListeneintrag[]) => Promise<void>;
-		ergebnisZuNeueBlockung: (idErgebnis: number) => Promise<void>;
 		setAuswahlErgebnis: (value: GostBlockungsergebnisListeneintrag | undefined) => Promise<void>;
 		hatBlockung: boolean;
 		auswahlErgebnis: GostBlockungsergebnisListeneintrag | undefined;

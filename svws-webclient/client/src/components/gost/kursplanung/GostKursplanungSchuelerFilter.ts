@@ -86,7 +86,7 @@ export class GostKursplanungSchuelerFilter {
 		return gefiltert;
 	})
 
-	public statistics = computed(()=>{
+	public statistics = computed(() => {
 		if (this.fach !== undefined) {
 			if (this.kursart !== undefined)
 				return {

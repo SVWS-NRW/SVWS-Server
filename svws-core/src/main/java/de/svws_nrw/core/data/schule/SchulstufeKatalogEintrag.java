@@ -3,6 +3,7 @@ package de.svws_nrw.core.data.schule;
 import java.util.List;
 import java.util.ArrayList;
 
+import de.svws_nrw.core.data.CoreTypeData;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,11 +17,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag im Katalog der Schulstufen.")
 @TranspilerDTO
-public class SchulstufeKatalogEintrag {
-
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id = -1;
+public class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	/** Das eindeutige Kürzel des Katalog-Eintrags. */
 	@Schema(description = "das eindeutige Kürzel des Katalog-Eintrags", example = "SI")
@@ -34,13 +31,6 @@ public class SchulstufeKatalogEintrag {
 	@Schema(description = "die Kürzel der Schulformen die bei der Schulstufe vorkommen")
 	public @NotNull List<@NotNull String> schulformen = new ArrayList<>();
 
-	/** Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card :title="Wochentag.fromIDorException(item.id).beschreibung">
 		<div class="flex flex-wrap gap-1">
-			<svws-ui-button v-for="s of fehlendeZeitraster" :key="s" type="secondary" @click="addZeitraster(item, s)"> {{ s }}. Stunde einfügen </svws-ui-button>
-			<svws-ui-button v-if="!fehlendeZeitraster.includes(neueStunde)" type="secondary" @click="addZeitraster(item, neueStunde)"> {{ neueStunde }}. Stunde hinzufügen </svws-ui-button>
+			<svws-ui-button v-for="s of fehlendeZeitraster" :key="s" type="secondary" @click="add(item, s)"> {{ s }}. Stunde einfügen </svws-ui-button>
+			<svws-ui-button v-if="!fehlendeZeitraster.includes(neueStunde)" type="secondary" @click="add(item, neueStunde)"> {{ neueStunde }}. Stunde hinzufügen </svws-ui-button>
 		</div>
 		<div class="mt-3">
 			<svws-ui-button type="danger" @click="removeWochentag"> <i-ri-delete-bin-line /> Wochentag entfernen </svws-ui-button>
@@ -21,7 +21,7 @@
 		item: Wochentag;
 		stundenplanManager: () => StundenplanManager;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
-		addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
+		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		addPausenzeit: (pausenzeit: StundenplanPausenzeit) => Promise<void>;
 		removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	}>();
@@ -41,6 +41,11 @@
 				arr.push(s);
 		return arr;
 	})
+
+	async function add(w: Wochentag, stunde: number) {
+		const list = props.stundenplanManager().zeitrasterGetDummyListe(w.id, w.id, stunde, stunde);
+		await props.addZeitraster(list);
+	}
 
 	async function removeWochentag() {
 		const zeitraster = props.stundenplanManager().getListZeitrasterZuWochentag(props.item);

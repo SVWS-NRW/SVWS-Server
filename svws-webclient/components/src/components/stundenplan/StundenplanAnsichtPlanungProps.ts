@@ -1,9 +1,8 @@
-import type { StundenplanManager, StundenplanZeitraster, Wochentag } from "@core";
+import type { StundenplanManager, StundenplanZeitraster  } from "@core";
 
 export type StundenplanAnsichtPlanungProps = {
 	manager: () => StundenplanManager;
-	patchZeitraster: (data: Partial<StundenplanZeitraster>, zeitraster: StundenplanZeitraster) => Promise<void>;
-	addZeitraster: (wochentag: Wochentag | undefined, stunde : number | undefined) => Promise<void>;
+	addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
-	importZeitraster: () => Promise<void>;
+	importZeitraster: undefined | (() => Promise<void>);
 }

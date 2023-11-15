@@ -91,7 +91,7 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: {
-			id: routeSchueler.data.auswahl?.id,
+			id: routeSchueler.data.schuelerListeManager.daten().id,
 			abschnitt: this.data.auswahl.schuljahresabschnitt,
 			wechselNr: this.data.auswahl.wechselNr
 		} });

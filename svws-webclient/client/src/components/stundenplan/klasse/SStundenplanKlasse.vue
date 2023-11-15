@@ -16,21 +16,22 @@
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
-							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik)}`">
+							:draggable="isDraggable()" @dragstart="onDrag(ku, $event)" @dragend="onDrag(undefined)"
+							:style="`--background-color: ${stundenplanManager().klassenunterrichtGetWochenminutenREST(klasse.id, ku.idFach) > 0 ? getBgColor(stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
 								<span :id="`klasse-${ku.idFach}-${ku.idKlasse}`" class="line-clamp-1" :title="ku.bezeichnung">{{ stundenplanManager().fachGetByIdOrException(ku.idFach).kuerzel }}</span>
 							</div>
 							<div role="cell" class="select-none svws-ui-td">
 								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
-									:class="{ 'cursor-grabbing': dragData !== undefined }">
+									:class="{ 'cursor-grabbing': dragData !== undefined }" @dragstart="wochentyp = 0" draggable="true">
 									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
 									</span>
 									<span class="pl-2">Allgemein</span>
 								</div>
 								<template v-if="stundenplanManager().getWochenTypModell() > 0">
-									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" @dragend="wochentyp = -1" class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
-										:class="{ 'cursor-grabbing': dragData !== undefined }">
+									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+										:class="{ 'cursor-grabbing': dragData !== undefined }" draggable="true">
 										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
 										</span>
@@ -44,20 +45,34 @@
 						</div>
 					</template>
 				</svws-ui-table>
-				<svws-ui-table :items="kursliste" :columns="colsKursunterricht">
+				<svws-ui-table :items="stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKursunterricht">
 					<template #body>
-						<div v-for="kurs in kursliste" :key="kurs.id" role="row" class="svws-ui-tr"
-							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)" :style="`--background-color: ${getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik)}`">
+						<div v-for="kurs in stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.id)" :key="kurs.id" role="row" class="svws-ui-tr"
+							:draggable="isDraggable()" @dragstart="onDrag(kurs, $event)" @dragend="onDrag(undefined)"
+							:style="`--background-color: ${(stundenplanManager().kursGetWochenstundenREST(kurs.id) > 0) ? getBgColor(stundenplanManager().fachGetByIdOrException(kurs.idFach).kuerzelStatistik) : ''}`">
 							<div role="cell" class="select-none svws-ui-td">
-								<span :id="`kurs-${kurs.id}`" class="svws-ui-badge cursor-grab group relative" :class="{ 'cursor-grabbing': dragData !== undefined }">
+								<span :id="`kurs-${kurs.id}`" class="line-clamp-1">{{ kurs.bezeichnung }}</span>
+							</div>
+							<div role="cell" class="select-none svws-ui-td">
+								<div class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+									:class="{ 'cursor-grabbing': dragData !== undefined }" @dragstart="wochentyp = 0" draggable="true">
 									<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
 										<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
 									</span>
-									<span class="pl-2">{{ kurs.bezeichnung }}</span>
-								</span>
+									<span class="pl-2">Allgemein</span>
+								</div>
+								<template v-if="stundenplanManager().getWochenTypModell() > 0">
+									<div v-for="i in stundenplanManager().getWochenTypModell()" :key="i" @dragstart="wochentyp = i" class="svws-ui-badge select-none flex items-center justify-center relative group cursor-grab"
+										:class="{ 'cursor-grabbing': dragData !== undefined }" draggable="true">
+										<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0">
+											<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-60 group-hover:opacity-100 group-hover:text-black" />
+										</span>
+										<span class="px-3">{{ String.fromCharCode(64 + i) }}</span>
+									</div>
+								</template>
 							</div>
 							<div role="cell" class="select-none svws-ui-td svws-align-center">
-								{{ kurs.wochenstunden }}
+								<span :class="{'rounded-sm bg-red-400': stundenplanManager().kursGetWochenstundenREST(kurs.id) < 0}">{{ stundenplanManager().kursGetWochenstundenIST(kurs.id) }}/{{ stundenplanManager().kursGetWochenstundenSOLL(kurs.id) }}</span>
 							</div>
 						</div>
 					</template>
@@ -73,22 +88,22 @@
 <script setup lang="ts">
 
 	import type { DataTableColumn } from "@ui";
-	import { ArrayList, type List, type StundenplanKlasse, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster } from "@core";
-	import { type StundenplanKlasseProps } from "./SStundenplanKlasseProps";
-	import { ref, computed, type WritableComputedRef } from "vue";
-	import { type StundenplanAnsichtDragData, type StundenplanAnsichtDropZone } from "@comp";
+	import type { List, StundenplanKlasse } from "@core";
+	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
+	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet } from "@core";
+	import { ref, computed, onMounted } from "vue";
+	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
 	const props = defineProps<StundenplanKlasseProps>();
+
+	const isMounted = ref(false);
+	onMounted(() => isMounted.value = true);
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
 	const wochentyp = ref<number>(-1);
 
-	const kursliste = computed(()=>{
-		const list = props.stundenplanManager().kursGetMengeByKlasseIdAsList(klasse.value.id);
-		return list;
-	})
-
-	const klasse: WritableComputedRef<StundenplanKlasse> = computed({
+	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
 			if (_klasse.value !== undefined)
 				try {
@@ -115,40 +130,71 @@
 
 	const dragData = ref<StundenplanAnsichtDragData>(undefined);
 
-	const onDrag = (data: StundenplanAnsichtDragData, event?: DragEvent) => {
+	function onDrag(data: StundenplanAnsichtDragData, event?: DragEvent) {
 		dragData.value = data;
-		let id;
+		if (event === undefined)
+			return;
+		let id = '';
 		if (data instanceof StundenplanKlassenunterricht)
-			id = `klasse-${data.idFach}-${data.idKlasse}`
+			id = `klasse-${data.idFach}-${data.idKlasse}`;
 		else if (data instanceof StundenplanKurs)
-			id = `kurs-${data.id}`
-		if (id) {
-			const img = document.getElementById(id);
-			if (img && event?.dataTransfer)
-				event.dataTransfer.setDragImage(img,0,0)
-		}
-		// console.log("drag", data);
-	};
+			id = `kurs-${data.id}`;
+		else if (dragData.value?.isTranspiledInstanceOf("java.util.List"))
+			id = `schiene-${dragData.value.hashCode().toString()}`;
+		const element = document.getElementById(id);
+		if ((element !== null) && (event.dataTransfer !== null))
+			event.dataTransfer?.setDragImage(element, 0, 0);
+	}
 
-	const onDrop = async (zone: StundenplanAnsichtDropZone) => {
+	async function onDrop(zone: StundenplanAnsichtDropZone) {
+		// else if oder return der api-methode, sonst wird weiter geprüft
+		if (dragData.value === undefined)
+			return;
 		// Fall StundenplanUnterricht -> StundenplanZeitraster
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster)) {
-			await props.patchUnterricht(dragData.value, zone);
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone instanceof StundenplanZeitraster))
+			return await props.patchUnterricht([dragData.value], zone);
+		// Fall List<StundenplanUnterricht> -> StundenplanZeitraster
+		// Fall List<StundenplanKurs> -> StundenplanZeitraster
+		// Fall List<StundenplanUnterricht> -> undefined
+		if (dragData.value.isTranspiledInstanceOf("java.util.List")) {
+			const listStundenplanUnterricht = new ArrayList<StundenplanUnterricht>();
+			const listStundenplanKurs = new ArrayList<StundenplanKurs>();
+			const casted: List<unknown> = cast_java_util_List(dragData.value);
+			for (const item of casted)
+				if (item instanceof StundenplanUnterricht)
+					listStundenplanUnterricht.add(item);
+				else if (item instanceof StundenplanKurs)
+					listStundenplanKurs.add(item);
+			if (listStundenplanKurs.size() > 0)
+				return await props.addUnterrichtKlasse(listStundenplanKurs);
+			if (listStundenplanUnterricht.size() > 0)
+				if (zone instanceof StundenplanZeitraster)
+					return await props.patchUnterricht(listStundenplanUnterricht, zone);
+				else if (zone === undefined)
+					return await props.removeUnterrichtKlasse(listStundenplanUnterricht);
 		}
 		// Fall StundenplanKlassenunterricht -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
-			await props.addUnterrichtKlasse({ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach });
+			const klassen = new ArrayList<number>();
+			klassen.add(dragData.value.idKlasse);
+			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen}]);
 		}
 		// Fall StundenplanUnterricht -> undefined
-		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined)) {
-			await props.removeUnterrichtKlasse([dragData.value]);
-		}
+		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
+			return await props.removeUnterrichtKlasse([dragData.value]);
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
+		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster)) {
+			const klassen = new  HashSet<number>();
+			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
+			for (const schueler of listSchueler)
+				klassen.add(schueler.idKlasse);
+			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer}]);
+		}
 		// TODO Fall StundenplanZeitraster -> undefined
 		// TODO Fall StundenplanPausenaufsicht -> StundenplanPausenzeit
 		// TODO Fall StundenplanPausenaufsicht -> undefined
 		// TODO Fall Lehrer -> StundenplanPausenzeit
-	};
+	}
 
 	function isDraggable() : boolean {
 		return dragData.value === undefined;
@@ -167,7 +213,7 @@
 
 	const _wochentyp = ref<number>(0);
 
-	const wochentypAuswahl : WritableComputedRef<number> = computed({
+	const wochentypAuswahl = computed<number>({
 		get: () : number => _wochentyp.value,
 		set: (value : number) => _wochentyp.value = value
 	});
@@ -179,7 +225,8 @@
 	];
 
 	const colsKursunterricht: DataTableColumn[] = [
-		{ key: "bezeichnung", label: "Kursunterricht", span: 2 },
+		{ key: "bezeichnung", label: "Kursunterricht", tooltip: "Klassenunterricht", span: 1 },
+		{ key: "irgendwas", label: "Wochentyp", span: 2 },
 		{ key: "wochenstunden", label: "WS", tooltip: "Wochenstunden", fixedWidth: 3, align: "center" }
 	];
 

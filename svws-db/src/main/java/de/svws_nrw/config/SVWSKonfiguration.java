@@ -352,6 +352,17 @@ public final class SVWSKonfiguration {
 	}
 
 
+	/**
+	 * Gibt den Pfad zu den Admin-Web-Client-Dateien zurück. Ist kein Admin-Client vorhanden,
+	 * so wird null zurückgegeben.
+	 *
+	 * @return der Pfad zu den Admin-Web-Client-Dateien zurück.
+	 */
+	public String getAdminClientPath() {
+		return ((dto == null) || (dto.adminClientPath == null) || ("".equals(dto.adminClientPath))) ? null : dto.adminClientPath;
+	}
+
+
 	private static final boolean default_enableClientProtection = false;
 
 	/**
@@ -443,6 +454,27 @@ public final class SVWSKonfiguration {
 	 */
 	public int getPortHTTPS() {
 		return (dto == null) || (this.dto.portHTTPS == null) ? default_PortHTTPS : this.dto.portHTTPS;
+	}
+
+
+	/**
+	 * Gibt an, ob ein getrennter HTTP-Port beim Servers für den priviligierten Zugriff auf die SVWS-Datenbank genutzter wird oder nicht.
+	 *
+	 * @return true, falls ein getrennter HTTP-Port genutzt wird, und ansonsten false
+	 */
+	public boolean hatPortHTTPPrivilegedAccess() {
+		return (dto != null) && (this.dto.portHTTPPrivilegedAccess != null);
+	}
+
+	/**
+	 * Gibt den HTTP-Port des Servers für den priviligierten Zugriff auf die SVWS-Datenbank zurück
+	 *
+	 * @return der HTTP-Port des Servers für den priviligierten Zugriff
+	 */
+	public int getPortHTTPPrivilegedAccess() {
+		if ((dto == null) || (this.dto.portHTTPPrivilegedAccess == null))
+			throw new NullPointerException("Es ist kein zweiter Port für den priviligierten Zugriff auf die SVWS-Datenbank definiert.");
+		return  this.dto.portHTTPPrivilegedAccess;
 	}
 
 
@@ -556,7 +588,33 @@ public final class SVWSKonfiguration {
 	public boolean hasSchema(final String schemaName) {
 		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
 			return false;
-		return dto.dbconfigs.get(schemaName) != null;
+		if (dto.dbconfigs.get(schemaName) != null)
+			return true;
+		for (final String sn : dto.dbconfigs.keySet())
+			if (sn.equalsIgnoreCase(schemaName))
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob für den angebenen Schema-Namen eine Konfiguration vorliegt oder nicht.
+	 * Wenn es vorliegt gibt es den Schema-Namen in dem Case, der in der
+	 * SVWS-Konfiguration verwendet wird, zurück.
+	 *
+	 * @param schemaName   der Name des Datenbank-Schemas
+	 *
+	 * @return der Name des Schemas in der SVWS-Konfiguration oder null, wenn es nicht existiert
+	 */
+	public String getSchemanameCaseConfig(final String schemaName) {
+		if ((dto == null) || (schemaName == null) || "".equals(schemaName))
+			return null;
+		if (dto.dbconfigs.get(schemaName) != null)
+			return schemaName;
+		for (final String sn : dto.dbconfigs.keySet())
+			if (sn.equalsIgnoreCase(schemaName))
+				return sn;
+		return null;
 	}
 
 

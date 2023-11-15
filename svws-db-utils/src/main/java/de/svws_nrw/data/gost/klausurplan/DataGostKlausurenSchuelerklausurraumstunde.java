@@ -181,8 +181,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				.queryNamed("DTOGostKlausurenVorgaben.id.multiple", listKursklausuren.stream().map(k -> k.idVorgabe).distinct().toList(), DTOGostKlausurenVorgaben.class).stream()
 				.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
-		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren);
 		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, null);
+		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren, kursklausurManager);
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.Datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
 

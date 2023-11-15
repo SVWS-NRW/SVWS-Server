@@ -1,15 +1,12 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { AppProps } from "~/components/SAppProps";
-
 import { Schulform, BenutzerKompetenz, ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
-
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
-
+import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
@@ -32,9 +29,7 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
-
 import { ConfigElement } from "~/components/Config";
-
 import SApp from "~/components/SApp.vue";
 
 
@@ -46,6 +41,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
 		super.children = [
+			routeBenutzerprofil,
 			routeSchule,
 			routeSchuleBenutzer,
 			routeSchuleBenutzergruppe,
@@ -113,11 +109,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return {
 			logout: routeLogin.logout,
 			username: api.username,
+			schemaname: api.schema,
 			schulform: api.schulform,
 			schuleStammdaten: api.schuleStammdaten,
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
+			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hideAuswahl: true },
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
@@ -125,7 +123,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	private getApp(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
+		return { name: this.data.view.name, text: this.data.view.text, hideAuswahl: !this.data.view.hasView('liste') };
 	}
 
 	private getApps(): AuswahlChildData[] {

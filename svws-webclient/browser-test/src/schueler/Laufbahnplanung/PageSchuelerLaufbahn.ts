@@ -14,35 +14,6 @@ export class SchuelerLaufbahnPage {
 		this.schueler = schueler
 	}
 
-	async clickExportieren(errorPage: ErrorPage) {
-		const downloadPromise = this.page.waitForEvent('download');
-		await this.page.getByRole('button', { name: 'Exportieren' }).click();
-  		const download = await downloadPromise;
-		// Save downloaded file somewhere
-		if (this.schueler?.import_lp_name)
-			await download.saveAs("./data/schueler/"+this.schueler?.export_lp_name);
-		else
-			expect("Fehlermeldung").toBe("Name der Lupodatei ist nicht vorhanden.");
-
-		if (await errorPage.isVisible())
-			expect((await errorPage.getMessage())).toBe("t");
-	}
-
-	async clickImportieren(errorPage : ErrorPage) {
-		await this.page.getByRole('button', { name: 'Importieren…' }).click();
-		const fileChooserPromise = this.page.waitForEvent('filechooser');
-		await this.page.getByRole('textbox').click();
-		const fileChooser = await fileChooserPromise;
-
-		if (this.schueler?.import_lp_name)
-			await fileChooser.setFiles("./data/schueler/"+this.schueler?.import_lp_name);
-		else
-			expect("Fehlermeldung").toBe("Name der Lupodatei ist nicht vorhanden.");
-
-		if (await errorPage.isVisible())
-			expect((await errorPage.getMessage())).toBe("t");
-  	}
-
 	async testeEingabeBelegpruefungsergebnisse() {
 		await this.pruefeLabelBelegPruefungsergebnisse()
 		await this.click_rb_ef1();

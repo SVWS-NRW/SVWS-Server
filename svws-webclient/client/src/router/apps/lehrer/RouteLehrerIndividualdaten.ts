@@ -19,11 +19,6 @@ export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> 
 		super.text = "Individualdaten";
 	}
 
-	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeLehrer.data.auswahl === undefined)
-			return routeLehrer.getRoute(undefined);
-	}
-
 	public getRoute(id: number) : RouteLocationRaw {
 		return { name: this.name, params: { id: id }};
 	}
@@ -31,7 +26,7 @@ export class RouteLehrerIndividualdaten extends RouteNode<unknown, RouteLehrer> 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
 			patch: routeLehrer.data.patchStammdaten,
-			stammdaten: routeLehrer.data.stammdaten,
+			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile
 		};

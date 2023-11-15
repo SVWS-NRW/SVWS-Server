@@ -1,6 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { LehrerListeEintrag, LehrerPersonaldaten, LehrerStammdaten } from "@core";
+import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeEintrag, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, LehrerStammdaten, List } from "@core";
+import { ArrayList, DeveloperNotificationException, LehrerListeManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -12,12 +13,7 @@ import { routeLehrerIndividualdaten } from "~/router/apps/lehrer/RouteLehrerIndi
 interface RouteStateLehrer {
 	// Daten, allgemein
 	idSchuljahresabschnitt: number,
-	mapLehrer: Map<number, LehrerListeEintrag>;
-	// Daten abhängig von der Lehrer-ID
-	auswahl: LehrerListeEintrag | undefined;
-	stammdaten: LehrerStammdaten | undefined;
-	// später nachzuladende Daten (Routen-abhängig)
-	personaldaten: LehrerPersonaldaten | undefined;
+	lehrerListeManager: LehrerListeManager;
 	// TODO Unterrichtsdaten
 	view: RouteNode<any, any>;
 }
@@ -26,10 +22,7 @@ export class RouteDataLehrer {
 
 	private static _defaultState : RouteStateLehrer = {
 		idSchuljahresabschnitt: -1,
-		mapLehrer: new Map(),
-		auswahl: undefined,
-		stammdaten: undefined,
-		personaldaten: undefined,
+		lehrerListeManager: new LehrerListeManager(null, new ArrayList()),
 		view: routeLehrerIndividualdaten
 	}
 
@@ -47,80 +40,6 @@ export class RouteDataLehrer {
 		this._state.value = { ... this._state.value };
 	}
 
-
-	private firstLehrer(mapLehrer: Map<number, LehrerListeEintrag>): LehrerListeEintrag | undefined {
-		if (mapLehrer.size === 0)
-			return undefined;
-		return mapLehrer.values().next().value;
-	}
-
-
-	private async ladeStammdaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerStammdaten | undefined> {
-		if (eintrag === undefined)
-			return undefined;
-		return await api.server.getLehrerStammdaten(api.schema, eintrag.id);
-	}
-
-
-	private async ladePersonaldaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerPersonaldaten | undefined> {
-		if (eintrag === undefined)
-			return undefined;
-		return await api.server.getLehrerPersonaldaten(api.schema, eintrag.id);
-	}
-
-
-	/**
-	 * Setzt den Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
-	 *
-	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 */
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
-		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
-		const mapLehrer = await api.getLehrerListeAktuell();
-		const auswahl = this.firstLehrer(mapLehrer);
-		const stammdaten = await this.ladeStammdaten(auswahl);
-		this.setPatchedDefaultState({
-			idSchuljahresabschnitt: idSchuljahresabschnitt,
-			mapLehrer: mapLehrer,
-			auswahl: auswahl,
-			stammdaten: stammdaten,
-			view: this._state.value.view
-		});
-	}
-
-
-	public get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
-	}
-
-	/**
-	 * Setzt den ausgewählten Lehrer und lädt dessen Stammdaten.
-	 *
-	 * @param lehrer   der ausgewählte Lehrer
-	 */
-	public async setLehrer(lehrer: LehrerListeEintrag | undefined) {
-		if (lehrer?.id === this._state.value.auswahl?.id)
-			return;
-		if ((lehrer === undefined) || (this.mapLehrer.size === 0)) {
-			this.setPatchedState({
-				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
-				mapLehrer: this._state.value.mapLehrer,
-			});
-			return;
-		}
-		const neueAuswahl = (this.mapLehrer.get(lehrer.id) === undefined) ? this.firstLehrer(this.mapLehrer) : lehrer;
-		const stammdaten = await this.ladeStammdaten(neueAuswahl);
-		const personaldaten = this.hatPersonaldaten ? await this.ladePersonaldaten(neueAuswahl) : undefined;
-		this.setPatchedState({
-			idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
-			mapLehrer: this._state.value.mapLehrer,
-			auswahl: neueAuswahl,
-			stammdaten: stammdaten,
-			personaldaten: personaldaten,
-			view: this._state.value.view,
-		});
-	}
-
 	public async setView(view: RouteNode<any,any>) {
 		if (routeLehrer.children.includes(view))
 			this.setPatchedState({ view: view });
@@ -132,67 +51,202 @@ export class RouteDataLehrer {
 		return this._state.value.view;
 	}
 
-
-	get auswahl(): LehrerListeEintrag | undefined {
-		return this._state.value.auswahl;
+	private async ladePersonaldaten(eintrag: LehrerListeEintrag | undefined): Promise<LehrerPersonaldaten | undefined> {
+		if (eintrag === undefined)
+			return undefined;
+		return await api.server.getLehrerPersonaldaten(api.schema, eintrag.id);
 	}
 
-	public get hatStammdaten(): boolean {
-		return this._state.value.stammdaten !== undefined;
+
+	get lehrerListeManager(): LehrerListeManager {
+		return this._state.value.lehrerListeManager;
 	}
 
-	get stammdaten(): LehrerStammdaten {
-		if (this._state.value.stammdaten === undefined)
-			throw new Error("Unerwarteter Fehler: Lehrerstammdaten nicht initialisiert");
-		return this._state.value.stammdaten;
+	/**
+	 * Setzt den Schuljahresabschnitt und triggert damit das Laden der Defaults für diesen Abschnitt
+	 *
+	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 */
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			 return;
+		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
+		const listLehrer = await api.server.getLehrer(api.schema);
+		const lehrerListeManager = new LehrerListeManager(api.schulform, listLehrer);
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, lehrerListeManager });
 	}
 
-	public get hatPersonaldaten(): boolean {
-		return this._state.value.personaldaten !== undefined;
-	}
 
-	get personaldaten(): LehrerPersonaldaten {
-		if (this._state.value.personaldaten === undefined)
-			throw new Error("Unerwarteter Fehler: Lehrerpersonaldaten nicht initialisiert");
-		return this._state.value.personaldaten;
+	/**
+	 * Setzt den ausgewählten Lehrer und lädt dessen Stammdaten.
+	 *
+	 * @param lehrer   der ausgewählte Lehrer
+	 */
+	public async setLehrer(lehrer: LehrerListeEintrag | null) {
+		if ((lehrer === null) && (!this.lehrerListeManager.hasDaten()))
+			return;
+		if ((lehrer === null) || (this.lehrerListeManager.liste.list().isEmpty())) {
+			this.lehrerListeManager.setDaten(null);
+			this.commit();
+			return;
+		}
+		if ((lehrer !== null) && (this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id)))
+			return;
+		const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
+		let auswahl = this.lehrerListeManager.liste.get(lehrer.id);
+		if (auswahl === null)
+			auswahl = this.lehrerListeManager.filtered().isEmpty() ? null : this.lehrerListeManager.filtered().get(0);
+		const daten = auswahl === null ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
+		this.lehrerListeManager.setDaten(daten);
+		const personaldaten = this.lehrerListeManager.hasDaten() && hattePersonaldaten
+			? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
+			: null;
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.commit();
 	}
-
 
 	public async loadPersonaldaten() {
-		if (this.auswahl === undefined)
+		if (!this.lehrerListeManager.hasDaten())
 			return;
-		const personaldaten = await this.ladePersonaldaten(this.auswahl);
-		this.setPatchedState({
-			personaldaten: personaldaten,
-		});
+		const personaldaten = await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
+		this.commit();
 	}
 
 	public async unloadPersonaldaten() {
-		this.setPatchedState({
-			personaldaten: undefined,
-		});
+		this.lehrerListeManager.setPersonalDaten(null);
+		this.commit();
 	}
 
 	patchStammdaten = async (data : Partial<LehrerStammdaten>) => {
-		await api.server.patchLehrerStammdaten(data, api.schema, this.stammdaten.id);
-		Object.assign(this.stammdaten, data);
-		// TODO Bei Anpassungen von nachname, vorname, kürzel -> Lehrerliste aktualisieren...
+		if (!this.lehrerListeManager.hasDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const idLehrer = this.lehrerListeManager.auswahl().id;
+		const daten = this.lehrerListeManager.daten();
+		if (daten === null)
+			return;
+		await api.server.patchLehrerStammdaten(data, api.schema, idLehrer);
+		Object.assign(daten, data);
+		this.lehrerListeManager.setDaten(daten);
 		this.commit();
 	}
 
 	patchPersonaldaten = async (data : Partial<LehrerPersonaldaten>) => {
-		await api.server.patchLehrerPersonaldaten(data, api.schema, this.personaldaten.id);
-		Object.assign(this.personaldaten, data);
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const personaldaten = this.lehrerListeManager.personalDaten();
+		await api.server.patchLehrerPersonaldaten(data, api.schema, personaldaten.id);
+		Object.assign(personaldaten, data);
+		this.lehrerListeManager.setPersonalDaten(personaldaten);
 		this.commit();
 	}
 
-	gotoLehrer = async (value: LehrerListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
-			await RouteManager.doRoute({ name: routeLehrer.name, params: { } });
-			return;
-		}
+	patchPersonalAbschnittsdaten = async (data : Partial<LehrerPersonalabschnittsdaten>, id : number) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		const abschnittsdaten = this.lehrerListeManager.getAbschnittById(id);
+		if (abschnittsdaten == null)
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id + " geladen.");
+		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
+		Object.assign(abschnittsdaten, data);
+		this.commit();
+	}
+
+	addLehramt = async (eintrag: LehrerLehramtEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrämter können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Lehrämtern noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehraemter.add(eintrag);
+		this.commit();
+	}
+
+	removeLehraemter = async (eintraege: List<LehrerLehramtEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrämter können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Lehrämtern noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehraemter.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchLehramtAnerkennung = async (eintrag: LehrerLehramtEintrag, anerkennung : LehrerLehramtAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Lehrämtern noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		this.commit();
+	}
+
+	addLehrbefaehigung = async (eintrag: LehrerLehrbefaehigungEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrbefähigungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Lehrbefähigungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehrbefaehigungen.add(eintrag);
+		this.commit();
+	}
+
+	removeLehrbefaehigungen = async (eintraege: List<LehrerLehrbefaehigungEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Lehrbefähigungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Lehrbefähigungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().lehrbefaehigungen.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchLehrbefaehigungAnerkennung = async (eintrag: LehrerLehrbefaehigungEintrag, anerkennung : LehrerLehrbefaehigungAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		this.commit();
+	}
+
+	addFachrichtung = async (eintrag: LehrerFachrichtungEintrag) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Fachrichtungen können nur hinzugefügt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Hinzufügen von Fachrichtungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().fachrichtungen.add(eintrag);
+		this.commit();
+	}
+
+	removeFachrichtungen = async (eintraege: List<LehrerFachrichtungEintrag>) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Fachrichtungen können nur entfernt werden, wenn gültige Personal-Daten geladen sind.");
+		// TODO API-Aufruf ...
+		console.log("Entfernen von Fachrichtungen noch nicht implementiert");
+		this.lehrerListeManager.personalDaten().fachrichtungen.removeAll(eintraege);
+		this.commit();
+	}
+
+	patchFachrichtungAnerkennung = async (eintrag: LehrerFachrichtungEintrag, anerkennung : LehrerFachrichtungAnerkennung | null) => {
+		if (!this.lehrerListeManager.hasPersonalDaten())
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
+		// TODO API-Aufruf mit idAnerkennungsgrund ...
+		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		this.commit();
+	}
+
+	gotoEintrag = async (eintrag: LehrerListeEintrag) => {
 		const redirect_name: string = (routeLehrer.selectedChild === undefined) ? routeLehrerIndividualdaten.name : routeLehrer.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { id: value.id } });
+		await RouteManager.doRoute({ name: redirect_name, params: { id: eintrag.id } });
+	}
+
+	setFilter = async () => {
+		if (!this.lehrerListeManager.hasDaten()) {
+			const listFiltered = this.lehrerListeManager.filtered();
+			if (!listFiltered.isEmpty()) {
+				await this.gotoEintrag(listFiltered.get(0));
+				return;
+			}
+		}
+		this.commit();
 	}
 
 }

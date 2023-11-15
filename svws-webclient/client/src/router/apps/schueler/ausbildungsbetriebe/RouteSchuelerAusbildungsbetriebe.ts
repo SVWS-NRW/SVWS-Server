@@ -47,7 +47,7 @@ export class RouteSchuelerAusbildungsbetriebe extends RouteNode<RouteDataSchuele
 			createSchuelerBetriebsdaten: this.data.createSchuelerBetriebsdaten,
 			mapOrte: routeApp.data.mapOrte,
 			mapOrtsteile: routeApp.data.mapOrtsteile,
-			idSchueler: routeSchueler.data.stammdaten.id,
+			idSchueler: routeSchueler.data.schuelerListeManager.daten().id,
 			listSchuelerbetriebe: () => this.data.listSchuelerbetriebe,
 			betrieb: this.data.betrieb,
 			betriebsStammdaten: this.data.daten,

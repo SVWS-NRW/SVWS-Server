@@ -279,6 +279,20 @@ public class SchemaTabelle {
 
 
 	/**
+	 * Gibt die Liste der Indizes zurück, welche in der übergebenen Revision gültig sind.
+	 *
+	 * @param rev    die Revision
+	 *
+	 * @return die Liste der Indizes
+	 */
+	public List<SchemaTabelleIndex> indizes(final long rev) {
+    	return _indizes.stream().filter(idx -> ((rev == -1) && (idx.veraltet().revision == -1))
+        				|| ((rev != -1) && (rev >= idx.revision().revision) && ((idx.veraltet().revision == -1) || (rev < idx.veraltet().revision))))
+    			.toList();
+	}
+
+
+	/**
 	 * Gibt die Liste der Unique-Indizes zurück.
 	 *
 	 * @return die Liste der Unique-Indizes

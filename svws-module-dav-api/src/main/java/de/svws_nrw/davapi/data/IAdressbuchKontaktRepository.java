@@ -69,7 +69,8 @@ public interface IAdressbuchKontaktRepository {
 		k.nachname = dtoSchueler.Nachname;
 
 		applyOrtToKontakt(k, ort);
-		k.kategorien.addAll(categories);
+		if (categories != null)
+		    k.kategorien.addAll(categories);
 		k.strassenname = dtoSchueler.Strassenname;
 		k.vorname = dtoSchueler.Vorname;
 		k.rolle = "Schüler";

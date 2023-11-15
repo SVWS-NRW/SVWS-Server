@@ -93,9 +93,10 @@ export class RouteDataKatalogFaecher {
 	patch = async (data : Partial<FachDaten>) => {
 		if (this.auswahl === undefined)
 			throw new Error("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patchFachDaten", data);
-		//await api.server.patchFachDaten(data, api.schema, this.item.id);
+		await api.server.patchFach(data, api.schema, this.daten.id);
+		Object.assign(this.daten, data);
 	}
+
 }
 export class RouteDataKatalogFaecherx {
 	auswahl: ShallowRef<FaecherListeEintrag | undefined> = shallowRef(undefined);

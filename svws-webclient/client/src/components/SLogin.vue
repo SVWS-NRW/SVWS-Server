@@ -23,7 +23,7 @@
 								</svws-ui-input-wrapper>
 								<Transition>
 									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
-										<svws-ui-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="setSchema" />
+										<svws-ui-select v-model="schema" title="DB-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
 										<svws-ui-text-input v-model="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
 										<svws-ui-text-input v-model="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
@@ -73,15 +73,15 @@
 <script setup lang="ts">
 
 	import type { LoginProps } from "./SLoginProps";
-	import type { DBSchemaListeEintrag, List} from "@core";
-	import {computed, ref, watch} from "vue";
+	import type { DBSchemaListeEintrag, List } from "@core";
+	import { computed, ref, shallowRef, watch } from "vue";
 	import { ArrayList } from "@core";
 	import { version } from '../../version';
 
 	const props = defineProps<LoginProps>();
 
 	const firstauth = ref(true);
-	const schema = ref<DBSchemaListeEintrag | undefined>();
+	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
 	const username = ref("Admin");
 	const password = ref("");
 
@@ -92,7 +92,7 @@
 	const connection_failed = ref(false);
 	const authentication_success = ref(false);
 
-	const inputDBSchemata = ref<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
+	const inputDBSchemata = shallowRef<List<DBSchemaListeEintrag>>(new ArrayList<DBSchemaListeEintrag>());
 
 	const inputHostname = computed<string>({
 		get: () => props.hostname,

@@ -9,11 +9,14 @@
 					<svws-ui-spinner :spinning="loading" />
 				</div>
 				<div v-if="log != null" class="mt-4">
-					<div class="flex text-error mb-4">
-						<div class="text-headline-md"> Log </div>
-						<i-ri-alert-line v-if="(status === true)" class="ml-1" />
+					<div :class="{ 'text-error': status === false, 'text-success': status === true }">
+						<span class="flex mb-4 text-headline-md">
+							<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-1" />
+							<i-ri-alert-line v-else-if="(status === false)" class="mr-1" />
+							Log
+						</span>
 					</div>
-					<pre>{{ log }}</pre>
+					<pre v-if="(status !== undefined)">{{ log }}</pre>
 				</div>
 			</div>
 		</div>

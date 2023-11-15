@@ -1,9 +1,26 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
+import { JahrgangsListeEintrag } from '../../../core/data/jahrgang/JahrgangsListeEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { JavaString } from '../../../java/lang/JavaString';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class JahrgangsUtils extends JavaObject {
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von Jahrgängen in Jahrgangslisten.
+	 */
+	public static readonly comparator : Comparator<JahrgangsListeEintrag> = { compare : (a: JahrgangsListeEintrag, b: JahrgangsListeEintrag) => {
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		if ((a.kuerzel === null) || (b.kuerzel === null))
+			return JavaLong.compare(a.id, b.id);
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
+	} };
 
 
 	private constructor() {

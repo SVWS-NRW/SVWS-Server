@@ -4,7 +4,7 @@
 			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
 			<svws-ui-text-input placeholder="Kürzel Schulgliederung" :model-value="data.kuerzelSchulgliederung" @change="kuerzelSchulgliederung=>doPatch({kuerzelSchulgliederung})" type="text" />
 			<svws-ui-text-input placeholder="Bezeichnung" :model-value="data.bezeichnung" @change="bezeichnung=>doPatch({bezeichnung})" type="text" />
-			<svws-ui-select title="Folgejahrgang" v-model="inputIdFolgejahrgang" :items="inputJahrgaenge" :item-text="e => e.bezeichnung ?? ''" />
+			<svws-ui-select title="Folgejahrgang" v-model="inputIdFolgejahrgang" :items="inputJahrgaenge" :item-text="e => `${e?.kuerzel ? e.kuerzel + ' : ' : ''}${e?.bezeichnung || ''}`" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 	<svws-ui-content-card>

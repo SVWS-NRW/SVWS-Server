@@ -11,7 +11,7 @@
 				<svws-ui-tooltip :indicator="false" :hover="false" :show-arrow="false" position="top" class="h-full">
 					<svws-ui-button type="transparent" class="h-full">
 						<i-ri-table-line />
-						<template #badge v-if="hiddenColumns.length">
+						<template #badge v-if="hiddenColumns.size">
 							<span />
 						</template>
 						<span>Daten</span>
@@ -20,7 +20,7 @@
 						<ul class="min-w-[10rem] flex flex-col gap-0.5 pt-1">
 							<li v-for="(column, index) in columns" :key="index">
 								<template v-if="typeof column !== 'string'">
-									<svws-ui-checkbox :model-value="!hiddenColumns.includes(column.key)" :disabled="!column.toggle" @update:model-value="updateHiddenColumns(column.key, $event)">
+									<svws-ui-checkbox :model-value="!hiddenColumns.has(column.key)" :disabled="!column.toggle" @update:model-value="ok => updateHiddenColumns(column.key, ok)">
 										{{ column.label }}
 									</svws-ui-checkbox>
 								</template>
@@ -54,7 +54,7 @@
 			'svws-clickable': clickable && (typeof noData !== 'undefined' ? !noData : !noDataCalculated),
 			'svws-selectable': selectable,
 			'svws-has-selection': selectable && selectedItemsRaw.length > 0,
-			'svws-sortable': sortBy,
+			'svws-sortable': sortByAndOrder.key,
 			'svws-no-data': typeof noData !== 'undefined' ? noData : noDataCalculated,
 			'svws-type-navigation': type === 'navigation',
 			'svws-type-grid': type === 'grid',
@@ -67,7 +67,7 @@
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-for="column in columnsComputed" class="svws-ui-td" role="columnheader" :key="column.key" :title="column.tooltip ? '' : column.label" @click.exact="column.sortable && toggleSorting(column)" @keyup.enter="column.sortable && toggleSorting(column)"
 						:class="[
@@ -76,7 +76,7 @@
 							{
 								'svws-disabled': column.disabled,
 								'svws-sortable-column': column.sortable,
-								'svws-active': column.sortable && sortBy === column.name && sortingOrder,
+								'svws-active': column.sortable && (internalSortByAndOrder.key === column.name) && (typeof internalSortByAndOrder.order === 'boolean'),
 								'svws-divider': column.divider,
 							}
 						]" :tabindex="column.sortable ? 0 : -1">
@@ -92,8 +92,8 @@
 							</template>
 						</slot>
 						<span v-if="column.sortable" class="svws-sorting-icon" :class="{'-order-1': column.align === 'right'}">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'asc'}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sortBy === column.name && sortingOrder === 'desc'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === true) || (sortByMulti?.get(column.name) === true))}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': ((internalSortByAndOrder.key === column.name) || (sortByMulti?.has(column.name))) && ((internalSortByAndOrder.order === false) || (sortByMulti?.get(column.name) === false))}" />
 						</span>
 					</div>
 				</div>
@@ -147,7 +147,7 @@
 			<slot name="footer" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :rows="sortedRows">
 				<div class="svws-ui-tr" role="row">
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="someNotAllRowsSelected ? 'indeterminate' : allRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
+						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td" role="cell">
 						<span v-if="allRowsSelected && modelValue" class="font-medium">
@@ -169,21 +169,11 @@
 	</div>
 </template>
 
-<script lang="ts">
-	export default defineComponent({
-		inheritAttrs: false,
-	});
-</script>
-
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
-	import type { DataTableColumn, InputType } from "../types";
-	import type { TableHTMLAttributes } from "vue";
-	import { defineComponent, computed, useAttrs, toRef, toRaw, onMounted, onUpdated, getCurrentInstance, ref } from "vue";
+	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
+	import { computed, useAttrs, toRef, toRaw, onMounted, onUpdated, ref } from "vue";
 	import { useDebounceFn } from "@vueuse/core";
-
-	type DataTableSortingOrder = 'asc' | 'desc' | null
-	const DataTableSortingOptions = ['asc', 'desc', null] as const
 
 	type DataTableColumnSource = DataTableColumn | string
 
@@ -225,6 +215,8 @@
 		items: Iterable<DataTableItem>;
 	}
 
+	defineOptions({ inheritAttrs: false });
+
 	const props = withDefaults(
 		defineProps<{
 			columns?: DataTableColumnSource[];
@@ -233,7 +225,7 @@
 			uniqueKey?: string;
 			clickable?: boolean;
 			allowUnclick?: boolean;
-			clicked?: DataTableItem | undefined;
+			clicked?: DataTableItem | undefined | null;
 			selectable?: boolean;
 			disableHeader?: boolean;
 			disableFooter?: boolean;
@@ -246,9 +238,9 @@
 			filterOpen?: boolean;
 			filterHide?: boolean;
 			filtered?: boolean;
-			filterReset?: () => void | undefined;
-			sortBy?: string;
-			sortingOrder?: DataTableSortingOrder;
+			filterReset?: () => any;
+			sortByAndOrder?: SortByAndOrder;
+			sortByMulti?: Map<string, (boolean | null)>;
 			toggleColumns?: boolean;
 			scroll?: boolean;
 		}>(),
@@ -273,18 +265,17 @@
 			filterHide: true,
 			filtered: false,
 			filterReset: undefined,
-			sortBy: undefined,
-			sortingOrder: undefined,
+			sortByAndOrder: () => ({key: null, order: null}),
+			sortByMulti: undefined,
 			toggleColumns: false,
 			scroll: false,
 		}
 	);
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: any[]): void;
-		(e: "update:sortBy", sortBy: string): void;
-		(e: "update:sortingOrder", sortingOrder: DataTableSortingOrder): void;
-		(e: "update:clicked", items: any | null): void;
+		"update:modelValue": [items: any[]];
+		"update:sortByAndOrder": [obj: SortByAndOrder];
+		"update:clicked": [items: any | null];
 	}>();
 
 	const attrs = useAttrs();
@@ -324,7 +315,7 @@
 	}
 
 	const buildNormalizedColumns = (props: UseColumnProps) => {
-		return props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !hiddenColumns.value.includes(column.key));
+		return props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !hiddenColumns.value.has(column.key));
 	}
 
 	const columnsComputed = computed(() =>
@@ -349,45 +340,16 @@
 		})}
 	}));
 
-	function useSafeVModel<P extends object, F, K extends keyof P>(props: P, fallbackValue: F, key?: K) {
-		const instance = getCurrentInstance();
-		const emit = instance?.emit;
-		if (!key)
-			key = 'modelValue' as K;
-		const event = `update:${key.toString()}`;
-		const fallback = ref<F>(fallbackValue)
-		return computed<F>({
-			get: () => {
-				// @ts-expect-error fix later
-				if (props[key] === undefined)
-					return fallback.value;
-				// @ts-expect-error fix later
-				return props[key];
-			},
-			set: (value) => {
-				// @ts-expect-error fix later
-				if (props[key] === undefined) {
-					// @ts-expect-error fix later
-					fallback.value = value;
-				}
-				emit?.(event, value);
-			},
-		})
-	}
-
-	const sortBy = useSafeVModel(props, '', 'sortBy');
-	const sortingOrder = useSafeVModel(props, null as DataTableSortingOrder, 'sortingOrder');
-
 	const sortedRows = computed(() => {
-		if (rowsComputed.value.length <= 1)
+		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
 			return rowsComputed.value;
-		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => sortBy.value === key && sortable, );
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => internalSortByAndOrder.value.key === key && sortable, );
 		const column = columnsComputed.value[columnIndex];
 		if (!column)
 			return rowsComputed.value;
-		const sortingOrderRatio = sortingOrder.value === 'desc' ? -1 : 1
+		const sortingOrderRatio = internalSortByAndOrder.value.order === false ? -1 : 1
 		return [...rowsComputed.value].sort((a, b) => {
-			if (sortingOrder.value === null)
+			if (internalSortByAndOrder.value.order === null)
 				return a.initialIndex - b.initialIndex;
 			const firstValue = String(a.cells[columnIndex].value);
 			const secondValue = String(b.cells[columnIndex].value);
@@ -395,20 +357,27 @@
 		})
 	})
 
-	const cycleSorting = (value: DataTableSortingOrder) => {
-		const index = DataTableSortingOptions.findIndex((sortingValue) => sortingValue === value)
-		return (index !== -1)
-			? DataTableSortingOptions[(index + 1) % DataTableSortingOptions.length]
-			: DataTableSortingOptions[0];
+	const cycleSorting = (value: boolean | null | undefined) => {
+		if (value === null || value === undefined)
+			return true;
+		if (value === true)
+			return false;
+		return null;
 	}
 
+	// eslint-disable-next-line vue/no-setup-props-destructure
+	const internalSortByAndOrder = ref<SortByAndOrder>(props.sortByAndOrder)
+
 	function toggleSorting(column: DataTableColumnInternal) {
-		if (column.key === sortBy.value) {
-			sortingOrder.value = cycleSorting(sortingOrder.value);
-		} else {
-			sortBy.value = column.key;
-			sortingOrder.value = DataTableSortingOptions[0];
+		const neu: SortByAndOrder = {key: column.key, order: true};
+		if (column.key === internalSortByAndOrder.value.key)
+			neu.order = cycleSorting(internalSortByAndOrder.value.order);
+		else if (props.sortByMulti !== undefined){
+			const alt = props.sortByMulti.get(column.key);
+			neu.order = cycleSorting(alt);
 		}
+		internalSortByAndOrder.value = neu;
+		emit('update:sortByAndOrder', neu);
 	}
 
 	const filterOpenProp = toRef(props, 'filterOpen');
@@ -516,18 +485,10 @@
 
 	const noDataCalculated = computed(() => (sortedRows.value.length === 0));
 
-	const computedTableAttributes = computed(() => ({
-		...Object.fromEntries(Object.entries(attrs).filter(([key]) => !["class", "style"].includes(key))),
-	} as TableHTMLAttributes));
+	const hiddenColumns = ref<Set<string>>(new Set());
 
-	const hiddenColumns = ref([] as string[]);
-
-	const updateHiddenColumns = (columnKey: string, ok: any) => {
-		if (ok) {
-			hiddenColumns.value = hiddenColumns.value.filter(column => column !== columnKey)
-		} else {
-			hiddenColumns.value.push(columnKey)
-		}
+	function updateHiddenColumns(columnKey: string, ok: any) {
+		ok ? hiddenColumns.value.delete(columnKey) : hiddenColumns.value.add(columnKey);
 	}
 
 </script>

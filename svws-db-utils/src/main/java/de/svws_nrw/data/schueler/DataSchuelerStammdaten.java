@@ -1,10 +1,14 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
@@ -46,7 +50,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchueler} in einen Core-DTO {@link SchuelerStammdaten}.
 	 */
-	private final Function<DTOSchueler, SchuelerStammdaten> dtoMapper = (final DTOSchueler schueler) -> {
+	private static final Function<DTOSchueler, SchuelerStammdaten> dtoMapper = (final DTOSchueler schueler) -> {
 		final SchuelerStammdaten daten = new SchuelerStammdaten();
 		// Basisdaten
 		daten.id = schueler.ID;
@@ -86,6 +90,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		// Statusdaten
 		daten.status = schueler.Status.id;
 		daten.istDuplikat = schueler.Duplikat;
+		daten.externeSchulNr = schueler.ExterneSchulNr;
 		daten.fahrschuelerArtID = schueler.Fahrschueler_ID;
 		daten.haltestelleID = schueler.Haltestelle_ID;
 		daten.anmeldedatum = schueler.AnmeldeDatum;
@@ -112,17 +117,56 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response get(final Long id) {
-		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+	/**
+	 * Gibt die Liste der Schülerstammdaten für die übergebenen IDs zurück.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 * @param ids   die Liste der Schüler-IDs
+	 *
+	 * @return die Liste der Schülerstammdaten
+	 */
+	public static List<SchuelerStammdaten> getListStammdaten(final DBEntityManager conn, final List<Long> ids) {
+		if (ids == null)
+			throw new DeveloperNotificationException("Die Liste darf nicht null sein.");
+		final var result = new ArrayList<SchuelerStammdaten>();
+		if (ids.isEmpty())
+			return result;
+		final List<DTOSchueler> schueler = conn.queryNamed("DTOSchueler.id.multiple", ids, DTOSchueler.class);
+		final Map<Long, DTOSchuelerFoto> mapFotos = conn.queryNamed("DTOSchuelerFoto.id.multiple", ids, DTOSchuelerFoto.class)
+			.stream().collect(Collectors.toMap(sf -> sf.Schueler_ID, sf -> sf));
+		for (final DTOSchueler s : schueler) {
+			final var tmp = dtoMapper.apply(s);
+			final var tmpFoto = mapFotos.get(tmp.id);
+			tmp.foto = (tmpFoto == null) ? null : tmpFoto.FotoBase64;
+			result.add(tmp);
+		}
+		return result;
+	}
+
+	/**
+	 * Gibt die Liste der Schülerstammdaten für die übergebene ID zurück.
+	 *
+	 * @param conn	die Datenbank-Verbindung
+	 * @param id    die Schüler-ID
+	 *
+	 * @return die Liste der Schülerstammdaten
+	 */
+	public static SchuelerStammdaten getStammdaten(final DBEntityManager conn, final long id) {
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
 		if (schueler == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception();
 		final SchuelerStammdaten daten = dtoMapper.apply(schueler);
 		final DTOSchuelerFoto schuelerFoto = conn.queryByKey(DTOSchuelerFoto.class, id);
 		if (schuelerFoto != null)
 			daten.foto = schuelerFoto.FotoBase64;
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+		if (id == null)
+			return OperationError.NOT_FOUND.getResponse();
+		final SchuelerStammdaten daten = getStammdaten(conn, id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -191,12 +235,14 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				}
 			}),
 			Map.entry("religionID", (conn, schueler, value, map) -> {
-				final Long religionID = JSONMapper.convertToLong(value, false);
-				if ((religionID != null) && (religionID < 0))
-					throw OperationError.CONFLICT.exception();
-				final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
-				if (rel == null)
-					throw OperationError.NOT_FOUND.exception();
+				final Long religionID = JSONMapper.convertToLong(value, true);
+				if (religionID != null) {
+					if (religionID < 0)
+						throw OperationError.CONFLICT.exception();
+					final DTOKonfession rel = conn.queryByKey(DTOKonfession.class, religionID);
+					if (rel == null)
+						throw OperationError.NOT_FOUND.exception();
+				}
 				schueler.Religion_ID = religionID;
 			}),
 			Map.entry("druckeKonfessionAufZeugnisse", (conn, schueler, value, map) -> schueler.KonfDruck = JSONMapper.convertToBoolean(value, false)),
@@ -254,6 +300,16 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 				if (s == null)
 					throw OperationError.BAD_REQUEST.exception();
 				schueler.Status = s;
+			}),
+			Map.entry("externeSchulNr", (conn, schueler, value, map) -> {
+				final String externeSchulNr = JSONMapper.convertToString(value, true, true, 6);
+				if ((externeSchulNr == null) || externeSchulNr.isBlank()) {
+					schueler.ExterneSchulNr = null;
+				} else {
+					if (externeSchulNr.length() != 6)
+						throw OperationError.BAD_REQUEST.exception("Die Anzahl der Ziffern einer Schulnummer aus NRW muss 6 betragen.");
+					schueler.ExterneSchulNr = externeSchulNr;
+				}
 			}),
 			Map.entry("fahrschuelerArtID", (conn, schueler, value, map) -> {
 				final Long fid = JSONMapper.convertToLong(value, true);

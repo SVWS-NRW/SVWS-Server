@@ -11,17 +11,18 @@ import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
+import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
 import de.svws_nrw.core.utils.MapUtils;
+import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,7 +33,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKursklausurManager {
 
-	private final @NotNull GostKlausurvorgabenManager _vorgabenManager;
+	private @NotNull GostKlausurvorgabenManager _vorgabenManager;
 
 	private static final @NotNull Comparator<@NotNull GostKlausurtermin> _compTermin = (final @NotNull GostKlausurtermin a, final @NotNull GostKlausurtermin b) -> {
 		if (a.datum == null && b.datum != null)
@@ -46,15 +47,26 @@ public class GostKursklausurManager {
 		return a.id > b.id ? +1 : -1;
 	};
 
-	private static final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+	private final @NotNull Comparator<@NotNull GostKursklausur> _compKursklausur = (final @NotNull GostKursklausur a, final @NotNull GostKursklausur b) -> {
+		GostFaecherManager faecherManager = _vorgabenManager.getFaecherManager();
+		if (a.kursart.compareTo(b.kursart) < 0)
+			return +1;
+		if (a.kursart.compareTo(b.kursart) > 0)
+			return -1;
+		if (faecherManager != null) {
+			final GostFach aFach = faecherManager.get(a.idFach);
+			final GostFach bFach = faecherManager.get(b.idFach);
+			if (aFach != null && bFach != null) {
+				if (aFach.sortierung > bFach.sortierung)
+					return +1;
+				if (aFach.sortierung < bFach.sortierung)
+					return -1;
+			}
+		}
 		if (a.halbjahr != b.halbjahr)
 			return a.halbjahr - b.halbjahr;
 		if (a.quartal != b.quartal)
 			return a.quartal - b.quartal;
-		if (a.idFach != b.idFach)
-			return a.idFach > b.idFach ? +1 : -1;
-		if (a.kursart != b.kursart)
-			return GostKursart.fromKuerzelOrException(a.kursart).compareTo(GostKursart.fromKuerzelOrException(b.kursart));
 		return a.id > b.id ? +1 : -1;
 	};
 
@@ -63,8 +75,10 @@ public class GostKursklausurManager {
 	private final @NotNull List<@NotNull GostKursklausur> _kursklausurmenge = new ArrayList<>();
 	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal = new HashMap<>();
 	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idTermin = new HashMap<>();
+	private final @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_idVorgabe = new HashMap<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_idTermin = new HashMap2D<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_quartal_and_kursart_and_idTermin = new HashMap3D<>();
+	private final @NotNull HashMap2D<@NotNull Long, @NotNull Integer, @NotNull GostKursklausur> _kursklausur_by_idKurs_and_quartal = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_kw_and_schuelerId = new HashMap2D<>();
 	private final @NotNull HashMap2D<@NotNull Long, @NotNull Long, @NotNull List<@NotNull GostKursklausur>> _kursklausurmenge_by_terminId_and_schuelerId = new HashMap2D<>();
 
@@ -81,10 +95,10 @@ public class GostKursklausurManager {
 	 * und Klausurterminen und erzeugt die privaten Attribute.
 	 *
 	 * @param vorgabenManager der Klausurvorgaben-Manager
-	 * @param listKlausuren die Liste der GostKursklausuren eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
-	 * @param listTermine   die Liste der GostKlausurtermine eines Abiturjahrgangs
-	 *                      und Gost-Halbjahres
+	 * @param listKlausuren   die Liste der GostKursklausuren eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
+	 * @param listTermine     die Liste der GostKlausurtermine eines Abiturjahrgangs
+	 *                        und Gost-Halbjahres
 	 */
 	public GostKursklausurManager(final @NotNull GostKlausurvorgabenManager vorgabenManager, final @NotNull List<@NotNull GostKursklausur> listKlausuren,
 			final List<@NotNull GostKlausurtermin> listTermine) {
@@ -121,7 +135,9 @@ public class GostKursklausurManager {
 
 		update_kursklausurmenge_by_quartal();
 		update_kursklausurmenge_by_idTermin();
+		update_kursklausurmenge_by_idVorgabe();
 		update_kursklausurmenge_by_quartal_and_idTermin();
+		update_kursklausur_by_idKurs_and_quartal();
 		update_kursklausurmenge_by_quartal_and_kursart_and_idTermin();
 		update_terminmenge_by_quartal();
 		update_terminmenge_by_datum();
@@ -143,6 +159,12 @@ public class GostKursklausurManager {
 			MapUtils.getOrCreateArrayList(_kursklausurmenge_by_idTermin, kk.idTermin != null ? kk.idTermin : -1).add(kk);
 	}
 
+	private void update_kursklausurmenge_by_idVorgabe() {
+		_kursklausurmenge_by_idVorgabe.clear();
+		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
+			MapUtils.getOrCreateArrayList(_kursklausurmenge_by_idVorgabe, kk.idVorgabe).add(kk);
+	}
+
 	private void update_kursklausurmenge_by_quartal_and_idTermin() {
 		_kursklausurmenge_by_quartal_and_idTermin.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
@@ -153,6 +175,12 @@ public class GostKursklausurManager {
 		_kursklausurmenge_by_quartal_and_kursart_and_idTermin.clear();
 		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
 			Map3DUtils.getOrCreateArrayList(_kursklausurmenge_by_quartal_and_kursart_and_idTermin, kk.quartal, kk.kursart, kk.idTermin != null ? kk.idTermin : -1).add(kk);
+	}
+
+	private void update_kursklausur_by_idKurs_and_quartal() {
+		_kursklausur_by_idKurs_and_quartal.clear();
+		for (final @NotNull GostKursklausur kk : _kursklausurmenge)
+			_kursklausur_by_idKurs_and_quartal.put(kk.idKurs, kk.quartal, kk);
 	}
 
 	private void update_terminmenge_by_quartal() {
@@ -833,72 +861,6 @@ public class GostKursklausurManager {
 	}
 
 	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param datum		das Datum, auf
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
-			final @NotNull String datum, final int threshold) {
-		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
-		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
-		int kwTermin = termin.datum != null ? DateUtils.gibKwDesDatumsISO8601(termin.datum) : -1;
-		if (kwDatum == kwTermin)
-			return ergebnis;
-
-		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kwDatum);
-		if (kursklausurmenge_by_schuelerId == null)
-			return ergebnis;
-
-		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
-			List<@NotNull GostKursklausur> temp = entry.getValue();
-			List<@NotNull GostKursklausur> klausuren = temp != null ? new ArrayList<>(temp) : new ArrayList<>();
-			List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
-			if (klausurenInTermin != null)
-				klausuren.addAll(klausurenInTermin);
-			if (klausuren.size() >= threshold)
-				ergebnis.put(entry.getKey(), klausuren);
-		}
-
-
-		return ergebnis;
-	}
-
-	/**
-	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
-	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
-	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
-	 * definiert
-	 *
-	 * @param kw    der Klausurtermin, dessen Kalenderwoche geprüft wird
-	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
-	 *                  Klausuren in die Map aufgenommen werden
-	 *
-	 * @return die Map (Schülerid -> GostKursklausur)
-	 */
-	public @NotNull Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold) {
-		Map<@NotNull Long, @NotNull List<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
-
-		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
-		if (kursklausurmenge_by_schuelerId == null)
-			return ergebnis;
-
-		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
-			List<@NotNull GostKursklausur> temp = entry.getValue();
-			if (temp != null && temp.size() >= threshold)
-				ergebnis.put(entry.getKey(), temp);
-		}
-		return ergebnis;
-	}
-
-	/**
 	 * Liefert für einen Schwellwert, einen Klausurtermin und eine Kursklausur eine
 	 * Map, die alle Schülerids mit einer Kursklausur-Liste enthält, die in der den
 	 * Termin enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der
@@ -933,6 +895,64 @@ public class GostKursklausurManager {
 	}
 
 	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param termin    der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param datum     das Datum, auf
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(final @NotNull GostKlausurtermin termin,
+			final @NotNull String datum, final int threshold, final boolean thresholdOnly) {
+		int kwDatum = DateUtils.gibKwDesDatumsISO8601(datum);
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kwDatum, termin, threshold, thresholdOnly);
+	}
+
+	private @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(final int kw, final GostKlausurtermin termin, final int threshold, final boolean thresholdOnly) {
+		Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> ergebnis = new HashMap<>();
+
+		Map<@NotNull Long, List<@NotNull GostKursklausur>> kursklausurmenge_by_schuelerId = _kursklausurmenge_by_kw_and_schuelerId.getSubMapOrNull(kw);
+		if (kursklausurmenge_by_schuelerId == null)
+			return ergebnis;
+
+		for (@NotNull Entry<@NotNull Long, List<@NotNull GostKursklausur>> entry : kursklausurmenge_by_schuelerId.entrySet()) {
+			List<@NotNull GostKursklausur> temp = entry.getValue();
+			HashSet<@NotNull GostKursklausur> klausuren = temp != null ? new HashSet<>(temp) : new HashSet<>();
+			if (termin != null) {
+				List<@NotNull GostKursklausur> klausurenInTermin = _kursklausurmenge_by_terminId_and_schuelerId.getOrNull(termin.id, entry.getKey());
+				if (klausurenInTermin != null)
+					klausuren.addAll(klausurenInTermin);
+			}
+			if (klausuren.size() == threshold || (klausuren.size() > threshold && !thresholdOnly))
+				ergebnis.put(entry.getKey(), klausuren);
+		}
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert für einen Schwellwert und einen Klausurtermin eine Map, die alle
+	 * Schülerids mit einer Kursklausur-Liste enthält, die in der den Termin
+	 * enthaltenen Kalenderwoche mehr (>=) Klausuren schreibt, als der Schwellwert
+	 * definiert
+	 *
+	 * @param kw        der Klausurtermin, dessen Kalenderwoche geprüft wird
+	 * @param threshold der Schwellwert (z.B. 3), der erreicht sein muss, damit die
+	 *                  Klausuren in die Map aufgenommen werden
+	 * @param thresholdOnly nur die exakte Anzahl an Klausurkonflikten wird in die Ergebnismap übernommen
+	 *
+	 * @return die Map (Schülerid -> GostKursklausur)
+	 */
+	public @NotNull Map<@NotNull Long, @NotNull HashSet<@NotNull GostKursklausur>> klausurenProSchueleridExceedingKWThresholdByKwAndThreshold(final int kw, final int threshold, final boolean thresholdOnly) {
+		return klausurenProSchueleridExceedingKWThresholdByKwAndTerminAndThreshold(kw, null, threshold, thresholdOnly);
+	}
+
+	/**
 	 * Liefert den Klausurtermin zu einer Kursklausur, sonst NULL.
 	 *
 	 * @param klausur die Kursklausur, zu der der Termin gesucht wird.
@@ -952,6 +972,42 @@ public class GostKursklausurManager {
 	 */
 	public @NotNull GostKlausurvorgabe vorgabeByKursklausur(final @NotNull GostKursklausur klausur) {
 		return _vorgabenManager.vorgabeGetByIdOrException(klausur.idVorgabe);
+	}
+
+	/**
+	 * Liefert zurück, ob die übergebene Klausurvorgabe von einer Kursklausur
+	 * verwendet wird.
+	 *
+	 * @param vorgabe die Klausurvorgabe, die auf Verwendung geprüft werden soll.
+	 *
+	 * @return true oder false
+	 */
+	public boolean istVorgabeVerwendetByVorgabe(final @NotNull GostKlausurvorgabe vorgabe) {
+		List<@NotNull GostKursklausur> klausuren = _kursklausurmenge_by_idVorgabe.get(vorgabe.idVorgabe);
+		return klausuren != null && !klausuren.isEmpty();
+	}
+
+	/**
+	 * Liefert das GostKursklausur-Objekt zu den übergebenen Parametern.
+	 *
+	 * @param idKurs die ID des Kurses
+	 * @param quartal das Quartal der Klausur
+	 *
+	 * @return die Kursklausur
+	 */
+	public GostKursklausur kursklausurByKursidAndQuartal(final long idKurs, final int quartal) {
+		return _kursklausur_by_idKurs_and_quartal.getOrNull(idKurs, quartal);
+	}
+
+	/**
+	 * Liefert die Vorgänger-GostKursklausur aus dem letzten Quartal, soweit vorhanden.
+	 *
+	 * @param klausur die Kursklausur, deren Vorgänger gesucht wird
+	 *
+	 * @return die Kursklausur
+	 */
+	public GostKursklausur kursklausurVorterminByKursklausur(final @NotNull GostKursklausur klausur) {
+		return kursklausurByKursidAndQuartal(klausur.idKurs, klausur.quartal - 1);
 	}
 
 }

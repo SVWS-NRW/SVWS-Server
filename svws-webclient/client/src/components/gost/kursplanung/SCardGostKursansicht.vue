@@ -58,14 +58,14 @@
 				</div>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="getKursauswahl().size === 0 ? false : (getDatenmanager().kursGetAnzahl() === getKursauswahl().size ? true : 'indeterminate')"
+						<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size" :indeterminate="getKursauswahl().size > 0 && getKursauswahl().size < getDatenmanager().kursGetAnzahl()"
 							@update:model-value="updateKursauswahl" headless />
 					</div>
-					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="sort_by = sort_by === 'kursart'? 'fach_id':'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': sort_by === 'kursart'}">
+					<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allow_regeln, 'col-span-1': !allow_regeln, 'svws-active': kurssortierung.value === 'kursart'}">
 						<span>Kurs</span>
 						<span class="svws-sorting-icon">
-							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': sort_by === 'kursart'}" />
-							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': sort_by === 'kursart'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-asc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
+							<i-ri-arrow-up-down-line class="svws-sorting-desc" :class="{'svws-active': kurssortierung.value === 'kursart'}" />
 						</span>
 					</div>
 					<div role="columnheader" class="svws-ui-td">Lehrkraft</div>
@@ -104,7 +104,7 @@
 			</template>
 
 			<template #body>
-				<template v-if="sort_by==='fach_id'">
+				<template v-if="kurssortierung.value === 'fach'">
 					<template v-for="fachwahlen in mapFachwahlStatistik().values()" :key="fachwahlen.id">
 						<template v-for="kursart in GostKursart.values()" :key="kursart.id">
 							<s-gost-kursplanung-kursansicht-fachwahl v-if="istFachwahlVorhanden(fachwahlen, kursart).value"
@@ -112,7 +112,7 @@
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
@@ -127,7 +127,7 @@
 								:faecher-manager="faecherManager" :get-datenmanager="getDatenmanager" :hat-ergebnis="hatErgebnis" :get-ergebnismanager="getErgebnismanager"
 								:map-lehrer="mapLehrer" :allow-regeln="allow_regeln" :schueler-filter="schuelerFilter"
 								:fachwahlen-anzahl="getAnzahlFachwahlen(fachwahlen, kursart)"
-								:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
@@ -147,8 +147,7 @@
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
 	import { computed, onMounted, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs,
-		GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
+	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
@@ -159,6 +158,7 @@
 		getKursauswahl: () => Set<number>,
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		addRegel: (regel: GostBlockungRegel) => Promise<GostBlockungRegel | undefined>;
+		patchRegel: (data: GostBlockungRegel, id: number) => Promise<void>;
 		removeRegel: (id: number) => Promise<GostBlockungRegel | undefined>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
 		patchSchiene: (data: Partial<GostBlockungSchiene>, id : number) => Promise<void>;
@@ -175,10 +175,11 @@
 		removeSchieneKurs: (kurs: GostBlockungKurs) => Promise<void>;
 		ergebnisHochschreiben: () => Promise<void>;
 		ergebnisAktivieren: () => Promise<boolean>;
+		kurssortierung: WritableComputedRef<'fach' | 'kursart'>;
 		existiertSchuljahresabschnitt: boolean;
 		config: Config;
 		hatErgebnis: boolean;
-		schuelerFilter: GostKursplanungSchuelerFilter | undefined;
+		schuelerFilter: () => GostKursplanungSchuelerFilter | undefined;
 		faecherManager: GostFaecherManager;
 		halbjahr: GostHalbjahr;
 		mapLehrer: Map<number, LehrerListeEintrag>;
@@ -188,17 +189,6 @@
 	}>();
 
 	const edit_schienenname: Ref<number|undefined> = ref()
-
-	// TODO Verschieben dieser Konfiguration in die Daten der Route und verwenden des Commit, um die Raktivität in der Umwahlansicht zu triggern
-	const sort_by: WritableComputedRef<string> = computed({
-		get: () => props.config.getValue('gost.kursansicht.sortierung'),
-		set: (value) => {
-			if (value === undefined)
-				value = 'kursart'
-			void props.config.setValue('gost.kursansicht.sortierung', value);
-			(value === 'kursart') ? props.getErgebnismanager().kursSetSortierungKursartFachNummer() : props.getErgebnismanager().kursSetSortierungFachKursartNummer();
-		}
-	});
 
 	const istFachwahlVorhanden = (fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : ComputedRef<boolean> => computed(() => {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();

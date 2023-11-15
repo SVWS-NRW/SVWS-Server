@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.core.data.kataloge.KatalogEintragOrte;
@@ -71,7 +71,7 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOEigeneSchule} in einen Core-DTO {@link SchuleStammdaten}.
 	 */
-	private final Function<DTOEigeneSchule, SchuleStammdaten> dtoMapper = (final DTOEigeneSchule schule) -> {
+	private static final BiFunction<DTOEigeneSchule, DTOSchuljahresabschnitte, SchuleStammdaten> dtoMapper = (final DTOEigeneSchule schule, final DTOSchuljahresabschnitte schuljahresabschnitt) -> {
     	final SchuleStammdaten daten = new SchuleStammdaten();
 		daten.schulNr = schule.SchulNr;
 		daten.schulform = schule.Schulform.daten.kuerzel;
@@ -88,6 +88,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		daten.email = schule.Email;
 		daten.webAdresse = schule.WebAdresse;
 		daten.idSchuljahresabschnitt = schule.Schuljahresabschnitts_ID;
+		daten.textSchuljahr = "%d/%s".formatted(schuljahresabschnitt.Jahr, String.valueOf(schuljahresabschnitt.Jahr + 1).substring(2));
+		daten.textSchuljahresabschnitt = "%d/%s.%d".formatted(schuljahresabschnitt.Jahr, String.valueOf(schuljahresabschnitt.Jahr + 1).substring(2), schuljahresabschnitt.Abschnitt);
 		daten.anzJGS_Jahr = schule.AnzJGS_Jahr == null ? 1 : schule.AnzJGS_Jahr;
 		daten.schuleAbschnitte.anzahlAbschnitte = schule.AnzahlAbschnitte;
 		daten.schuleAbschnitte.abschnittBez = schule.AbschnittBez;
@@ -112,14 +114,28 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public Response get(final Long id) {
+	/**
+	 * Ermittelt die Schulstammdaten zu der angegebenen ID aus der DB.
+	 *
+	 * @param conn   die Datenbank-Verbindung
+	 *
+	 * @return die Stammdaten
+	 */
+	public static SchuleStammdaten getStammdaten(final DBEntityManager conn) {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final SchuleStammdaten daten = dtoMapper.apply(schule);
-    	daten.abschnitte.addAll((new DataSchuljahresabschnitte(conn)).getAbschnitte());
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			throw OperationError.NOT_FOUND.exception("Keine Schuldaten für die Schule vorhanden.");
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw OperationError.NOT_FOUND.exception("Die Schule hat keinen gültigen aktuellen Schuljahresabschnitt.");
+		final SchuleStammdaten daten = dtoMapper.apply(schule, schuljahresabschnitt);
+		daten.abschnitte.addAll((new DataSchuljahresabschnitte(conn)).getAbschnitte());
+		return daten;
+	}
+
+	@Override
+	public Response get(final Long id) {
+        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getStammdaten(conn)).build();
 	}
 
 	/**
@@ -192,6 +208,8 @@ public final class DataSchuleStammdaten extends DataManager<Long> {
 	    			case "webAdresse" -> schule.WebAdresse = JSONMapper.convertToString(value, true, true, Schema.tab_EigeneSchule.col_WebAdresse.datenlaenge());
 
 	    			case "idSchuljahresabschnitt" -> schule.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false); // TODO ID des Schuljahresabschnittes überprüfen
+					case "textSchuljahr" -> throw OperationError.BAD_REQUEST.exception();
+					case "textSchuljahresabschnitt" -> throw OperationError.BAD_REQUEST.exception();
 	    			case "anzJGS_Jahr" -> schule.AnzJGS_Jahr = JSONMapper.convertToInteger(value, false); // TODO Abschnitt überprüfen
 
 	    			case "schuleAbschnitte" -> {

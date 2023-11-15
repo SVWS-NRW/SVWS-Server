@@ -41,10 +41,9 @@
 <script setup lang="ts" generic="Item">
 
 	import type { Strategy } from "@floating-ui/vue";
-	import type { Ref } from "vue";
-	import { ref, shallowRef, toRef } from "vue";
+	import type { Ref, ShallowRef } from "vue";
+	import { ref, shallowRef, toRef, computed } from "vue";
 	import { genId } from "../utils";
-	import { computed } from "vue";
 
 	const props = withDefaults(defineProps<{
 		statistics?: boolean;
@@ -82,11 +81,11 @@
 	})
 
 	defineExpose<{
-		activeItemIndex: Ref<number>,
-		floating: Ref<HTMLElement|null>,
+		activeItemIndex: Ref<number>;
+		floating: Ref<HTMLElement|null>;
+		itemRefs: ShallowRef<HTMLLIElement[]>;
 	}>({
-		activeItemIndex,
-		floating
+		activeItemIndex, floating, itemRefs
 	});
 
 

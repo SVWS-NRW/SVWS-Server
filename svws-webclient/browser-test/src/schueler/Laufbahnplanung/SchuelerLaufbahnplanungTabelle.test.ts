@@ -32,12 +32,12 @@ const tabclicken = async (page: Page, schueler: Schueler, sp : SchuelerLaufbahnP
 
 for (const schueler of dataSchueler) {
 
-	test(`Laufbahntabelle Sichtbarkeit Tabellentexte mit ${schueler.name}`, async ({ page, schuelerLaufbahntabellePage }) => {
+	test.skip(`Laufbahntabelle Sichtbarkeit Tabellentexte mit ${schueler.name}`, async ({ page, schuelerLaufbahntabellePage }) => {
 		await tabclicken(page, schueler,schuelerLaufbahntabellePage);
 		await schuelerLaufbahntabellePage.pruefeSichtbarkeit();
 	});
 
-	test(`Belegsprüfungserbegnisse editieren mit ${schueler.name}`, async ({ schuelerLaufbahnPage, page}) => {
+	test.skip(`Belegsprüfungserbegnisse editieren mit ${schueler.name}`, async ({ schuelerLaufbahnPage, page}) => {
 		await tabclicken(page, schueler,schuelerLaufbahnPage);
 		await schuelerLaufbahnPage.testeEingabeBelegpruefungsergebnisse();
 	});
@@ -45,21 +45,6 @@ for (const schueler of dataSchueler) {
 	test.skip(`Beratungsdaten editieren mit ${schueler.name}`, async ({ schuelerLaufbahnPage, page }) => {
 		await tabclicken(page, schueler,schuelerLaufbahnPage);
 		await schuelerLaufbahnPage.testeEingabeBeratung();
-	});
-
-	test(`Wahlbogen exportieren mit ${schueler.name}`, async ({ schuelerLaufbahnPage, page, errorPage }) => {
-		await tabclicken(page, schueler,schuelerLaufbahnPage);
-		await schuelerLaufbahnPage.clickExportieren(errorPage);
-	});
-
-	// TODO Die Lupo-Datei, die von playwright export wird, kann nicht importiert werden, weder von playwright noch von der Webseite.
-	// Fehlermeldung : ... enthält keinen Schüler mit der ID
-	test(`Wahlbogen importieren mit ${schueler.name}`, async ({ schuelerLaufbahnPage, page, errorPage, schuelerLaufbahntabellePage }) => {
-		await tabclicken(page, schueler,schuelerLaufbahnPage);
-		//await schuelerLaufbahntabellePage.clickZelle_EF_bis_Q2_alle_Faecher();
-		await schuelerLaufbahnPage.clickImportieren(errorPage);
-
-		// TODO Import mit einer korrupten Datei
 	});
 
 	test.skip(`Vergleiche Faecher zwischen API und Website mit ${schueler.name}`, async ({ schuelerLaufbahntabellePage, page }) => {

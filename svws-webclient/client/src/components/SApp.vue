@@ -5,7 +5,7 @@
 				<template #header>
 					<!--<span v-if="apiStatus?.pending">...</span>-->
 					<!--TODO: Statt Name den vollen Anzeigenamen anzeigen (erstellt dann automatisch eine Ausgabe der Initialien-->
-					<svws-ui-menu-header :user="username" :schule="schulname" />
+					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" @click="setApp(benutzerprofilApp)" class="cursor-pointer" />
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
@@ -36,7 +36,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu>
+		<template #secondaryMenu v-if="app.hideAuswahl !== true">
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>
@@ -67,7 +67,7 @@
 								</div>
 							</div>
 						</svws-ui-header>
-						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton" />
+						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton opacity-50" />
 					</template>
 					<template v-else>
 						<router-view :key="app.name" />
@@ -81,14 +81,13 @@
 <script setup lang="ts">
 
 	import type { AuswahlChildData } from './AuswahlChildData';
-	import type { ComputedRef } from "vue";
 	import type { AppProps } from './SAppProps';
-	import {computed, ref} from "vue";
+	import { computed, ref } from "vue";
 	import { version } from '../../version';
 
 	const props = defineProps<AppProps>();
 
-	const schulname: ComputedRef<string> = computed(() => {
+	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
 		return name ? name : "Fehlende Bezeichnung für die Schule";
 	});
@@ -96,8 +95,8 @@
 	const pendingSetApp = ref('');
 
 	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden…' } },
-		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
+		{ path: '/', name: '', component: { render: () => null }, meta: { text: '' } },
+		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: 'Daten laden…' } },
 	];
 	const selectedRoute = loadingSkeletonRoutes[0];
 

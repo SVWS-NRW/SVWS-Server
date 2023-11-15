@@ -7,61 +7,56 @@
 			<svws-ui-modal-hilfe> <hilfe-kursplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<template v-if="hatBlockung">
-			<Teleport to=".router-tab-bar--subnav-target" v-if="isMounted">
+			<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 				<svws-ui-sub-nav>
-					<svws-ui-button @click="onToggle" size="small" type="transparent" :disabled="regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1" :class="{'mr-2': regelzahl > 0}">
-						<i-ri-settings3-line />
-						<span class="pr-1">Regeln zur Blockung</span>
-						<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
-					</svws-ui-button>
-					<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<template v-if="aktivieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()">Aktivieren</svws-ui-button>
-						</template>
-						<template v-else>
-							<svws-ui-tooltip>
-								<svws-ui-button disabled type="transparent" size="small">Aktivieren</svws-ui-button>
-								<template #content>
-									<span v-if="!existiertSchuljahresabschnitt"> Die Blockung kann nicht aktiviert werden, da noch kein Abschnitt für dieses Halbjahr angelegt ist. </span>
-									<span v-if="bereits_aktiv"> Die Blockung kann nicht aktiviert werden, da bereits Kurse der gymnasialen Oberstufe für diesen Abschnitt angelegt sind. </span>
-									<span v-else />
-								</template>
-							</svws-ui-tooltip>
-						</template>
-					</s-card-gost-kursansicht-blockung-aktivieren-modal>
-					<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
-						<template v-if="synchronisieren_moeglich">
-							<svws-ui-button type="transparent" size="small" @click="openModal()">Synchronisieren</svws-ui-button>
-						</template>
-						<template v-else>
-							<svws-ui-tooltip>
-								<svws-ui-button disabled type="transparent" size="small">Synchronisieren</svws-ui-button>
-								<template #content>
-									<span>Nur aktuelle und zukünftige, bereits aktivierte und persistierte Blockungen können synchronisiert werden</span>
-								</template>
-							</svws-ui-tooltip>
-						</template>
-					</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
-					<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
-						<svws-ui-button type="transparent" @click="openModal()">Ergebnis hochschreiben</svws-ui-button>
-					</s-card-gost-kursansicht-blockung-hochschreiben-modal>
-					<svws-ui-button-select v-if="allowRegeln" type="secondary" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren...', action: () => {} }" no-default />
-					<svws-ui-button type="transparent" @click="toggleBlockungstabelle" class="ml-auto">
+					<svws-ui-button type="transparent" @click="toggleBlockungstabelle">
 						<template v-if="blockungstabelleVisible">
 							<i-ri-menu-fold-line />
-							Kursplanung ausblenden
+							Tabelle ausblenden
 						</template>
 						<template v-else>
 							<i-ri-menu-unfold-line />
-							Kursplanung einblenden
+							Tabelle einblenden
 						</template>
 					</svws-ui-button>
+					<div class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
+						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
+							<i-ri-file-copy-line /> Ableiten
+						</svws-ui-button>
+						<s-card-gost-kursansicht-blockung-aktivieren-modal v-if="!persistiert" :get-datenmanager="getDatenmanager" :ergebnis-aktivieren="ergebnisAktivieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Aktiviert die Blockung und persistierte diese in der Kurstabelle und den Leistungsdaten">
+								<i-ri-checkbox-circle-line /> Aktivieren
+							</svws-ui-button>
+						</s-card-gost-kursansicht-blockung-aktivieren-modal>
+						<s-card-gost-kursansicht-ergebnis-synchronisieren-modal v-else :get-datenmanager="getDatenmanager" :ergebnis-synchronisieren="ergebnisSynchronisieren" :blockungsname="blockungsname" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" :disabled="!synchronisieren_moeglich" size="small" @click="openModal()" title="Synchronisiert die Daten dieser Blockung mit den in der Kurstabelle und den Leistungsdaten persistierten Daten">
+								<i-ri-loop-left-line /> Synchronisieren
+							</svws-ui-button>
+						</s-card-gost-kursansicht-ergebnis-synchronisieren-modal>
+						<s-card-gost-kursansicht-blockung-hochschreiben-modal :get-datenmanager="getDatenmanager" :ergebnis-hochschreiben="ergebnisHochschreiben" v-slot="{ openModal }">
+							<svws-ui-button type="transparent" @click="openModal()" title="Überträgt die Daten dieser Blockung in das nächste Halbjahr">
+								<i-ri-corner-right-up-line /> Hochschreiben
+							</svws-ui-button>
+						</s-card-gost-kursansicht-blockung-hochschreiben-modal>
+					</div>
+					<div class="flex gap-0.5 items-center leading-none">
+						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
+						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen"
+							:disabled="(regelzahl < 1) && (getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)" :class="{'mr-2': regelzahl > 0}">
+							<i-ri-settings3-line />
+							Regeln anzeigen
+							<template #badge v-if="regelzahl"> {{ regelzahl }} </template>
+						</svws-ui-button>
+						<svws-ui-button-select v-if="allowRegeln" type="transparent" :dropdown-actions="actionsRegeln" :default-action="{ text: 'Fixieren…', action: () => {} }" no-default />
+					</div>
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-card-gost-kursansicht :config="config" :halbjahr="halbjahr" :faecher-manager="faecherManager" :hat-ergebnis="hatErgebnis"
 				:get-datenmanager="getDatenmanager" :get-kursauswahl="getKursauswahl" :get-ergebnismanager="getErgebnismanager"
-				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter"
-				:add-regel="addRegel" :remove-regel="removeRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
+				:map-fachwahl-statistik="mapFachwahlStatistik" :map-lehrer="mapLehrer" :schueler-filter="schuelerFilter" :kurssortierung="kurssortierung"
+				:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 				:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 				:patch-schiene="patchSchiene" :add-schiene="addSchiene" :remove-schiene="removeSchiene"
 				:remove-kurs-lehrer="removeKursLehrer" :ergebnis-aktivieren="ergebnisAktivieren" :existiert-schuljahresabschnitt="existiertSchuljahresabschnitt"
@@ -126,10 +121,11 @@
 	const toggleBlockungstabelle = () => blockungstabelleVisible.value = !blockungstabelleVisible.value;
 
 	const dropdownList = [
-		{ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung"), default: true },
+		{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true },
+		{ text: "Kurse-Schienen-Zuordnung", action: () => downloadPDF("Kurse-Schienen-Zuordnung") },
 		{ text: "Kurse-Schienen-Zuordnung markierter Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung markierter Schüler") },
 		{ text: "Kurse-Schienen-Zuordnung gefilterte Schüler", action: () => downloadPDF("Kurse-Schienen-Zuordnung gefilterte Schüler") },
-		{ text: "Kursbelegung markierter Schülers", action: () => downloadPDF("Kursbelegung markierter Schülers") },
+		{ text: "Kursbelegung markierter Schüler", action: () => downloadPDF("Kursbelegung markierter Schüler") },
 		{ text: "Kursbelegung gefilterte Schüler", action: () => downloadPDF("Kursbelegung gefilterte Schüler") },
 	]
 
@@ -171,7 +167,7 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-8 lg:gap-x-12;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
 		grid-auto-rows: 100%;
 		grid-template-columns: minmax(min-content, 1.5fr) minmax(18rem, 0.4fr) 1fr;
 		grid-auto-columns: max-content;
@@ -180,7 +176,7 @@
 			grid-template-columns: 0 minmax(20rem, 0.15fr) 1fr;
 
 			.s-gost-kursplanung-schueler-auswahl {
-			@apply -ml-8 lg:-ml-12;
+				@apply -ml-8 lg:-ml-12;
 			}
 		}
 	}

@@ -3,9 +3,12 @@ package de.svws_nrw.db;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.server.ConnectionPool;
@@ -30,6 +33,9 @@ public final class ConnectionManager {
 	static {
 		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager::closeAll));
 	}
+
+	/** Ein Zufallszahlen-Generator */
+	private static final Random random = new Random();
 
 	/**
 	 * Eine HashMap für den Zugriff auf einen Connection-Manager, der einer
@@ -126,9 +132,15 @@ public final class ConnectionManager {
 		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
 		if (config.getDBDriver() == DBDriver.MDB && config.createDBFile())
 			url += ";newdatabaseversion=V2000";
+		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
+	        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))  // filter some unicode characters
+	        .limit(40)
+	        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+	        .toString();
 		propertyMap.put("jakarta.persistence.jdbc.url", url);
 		propertyMap.put("jakarta.persistence.jdbc.user", config.getUsername());
 		propertyMap.put("jakarta.persistence.jdbc.password", config.getPassword());
+		propertyMap.put("eclipselink.session-name", sessionName);
 		propertyMap.put("eclipselink.flush", "true");
 		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
 		propertyMap.put("eclipselink.allow-zero-id", "true");
@@ -152,6 +164,7 @@ public final class ConnectionManager {
 		// TODO avoid Persistence Unit "SVWSDB" as xml file
 	}
 
+
 	/**
 	 * Schließt den Verbindungs-Manager
 	 */
@@ -167,42 +180,73 @@ public final class ConnectionManager {
 	 * @param config die Konfiguration der Datenbank-Verbindung
 	 *
 	 * @return der Manager
+	 *
+	 * @throws DBException bei einer fehlschlagenden Authentifizierung
 	 */
-	public static @NotNull ConnectionManager get(final DBConfig config) {
+	public static @NotNull ConnectionManager get(final DBConfig config) throws DBException {
 		ConnectionManager man = mapManager.get(config);
+		if (man != null) {
+			final Map<String, Object> curProps = man.emf.getProperties();
+			final String curUser = (String) curProps.get("jakarta.persistence.jdbc.user");
+			final String curPassword = (String) curProps.get("jakarta.persistence.jdbc.password");
+			if (!config.getUsername().equals(curUser) || !config.getPassword().equals(curPassword)) {
+				mapManager.remove(config);
+				man.close();
+				man = null;
+			}
+		}
 		if (man == null) {
 			man = new ConnectionManager(config);
-			mapManager.put(config, man);
+			try {
+				try (EntityManager em = man.getNewJPAEntityManager()) {
+					mapManager.put(config, man);
+				}
+			} catch (final PersistenceException pe) {
+				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
+					man.close();
+					throw new DBException(ae);
+				}
+				throw pe;
+			}
 		} else {
 			// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der
 			// Server-seitigen Beendung einer Verbindung zu erkennen
-			try (EntityManager em = man.getNewJPAEntityManager()) {
-				try {
-					em.getTransaction().begin();
-					@SuppressWarnings("resource")
-					final Connection conn = em.unwrap(Connection.class);
-					try (Statement stmt = conn.createStatement()) {
-						try (ResultSet rs = stmt.executeQuery("SELECT 1")) {
-							rs.next();
-							rs.getInt(1);
+			try {
+				try (EntityManager em = man.getNewJPAEntityManager()) {
+					try {
+						em.getTransaction().begin();
+						@SuppressWarnings("resource")
+						final Connection conn = em.unwrap(Connection.class);
+						try (Statement stmt = conn.createStatement()) {
+							try (ResultSet rs = stmt.executeQuery("SELECT 1")) {
+								rs.next();
+								rs.getInt(1);
+							}
+						}
+						em.getTransaction().commit();
+						em.clear();
+					} catch (@SuppressWarnings("unused") SQLException | DatabaseException e) {
+						// Bestimme die Anzahl der verfügbaren Verbindungen
+						final ServerSession serverSession = em.unwrap(ServerSession.class);
+						final ConnectionPool pool = serverSession.getConnectionPools().get("default");
+						if (pool == null) {
+							System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
+						} else {
+							System.err.println(
+									"INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
+							System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
+							System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
+							pool.resetConnections();
 						}
 					}
-					em.getTransaction().commit();
-					em.clear();
-				} catch (@SuppressWarnings("unused") SQLException | DatabaseException e) {
-					// Bestimme die Anzahl der verfügbaren Verbindungen
-					final ServerSession serverSession = em.unwrap(ServerSession.class);
-					final ConnectionPool pool = serverSession.getConnectionPools().get("default");
-					if (pool == null) {
-						System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
-					} else {
-						System.err.println(
-								"INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
-						System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
-						System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
-						pool.resetConnections();
-					}
 				}
+			} catch (final PersistenceException pe) {
+				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
+					mapManager.remove(config);
+					man.close();
+					throw new DBException(ae);
+				}
+				throw pe;
 			}
 		}
 		return man;

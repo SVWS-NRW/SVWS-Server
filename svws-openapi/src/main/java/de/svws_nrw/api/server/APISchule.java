@@ -1177,6 +1177,36 @@ public class APISchule {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Räume zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Räume
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Räumen
+     */
+    @POST
+    @Path("/raeume/create/multiple")
+    @Operation(summary = "Erstellt neue Räume für die Schule und gibt die zugehörigen Objekt zurück.",
+    description = "Erstellt neue Räume für die Schule und gibt die zugehörigen Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Räume wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Raum.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Räume für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addRaeume(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Räume ohne IDs, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Raum.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogRaeume(conn).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen eines Raums der Schule.
      *
      * @param schema       das Datenbankschema
@@ -1312,6 +1342,36 @@ public class APISchule {
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Aufsichtsbereich.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).add(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrere neuer Aufsichtsbereiche zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Aufsichtsbereiche
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Aufsichtsbereichen
+     */
+    @POST
+    @Path("/aufsichtsbereiche/create/multiple")
+    @Operation(summary = "Erstellt neue Aufsichtsbereiche für die Schule und gibt die zugehörigen Objekte zurück.",
+    description = "Erstellt neue Aufsichtsbereiche für die Schule und gibt die zugehörigen Objekte zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Aufsichtsbereiche wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = Aufsichtsbereich.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Aufsichtsbereiche für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addAufsichtsbereiche(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Aufsichtsbereiche ohne ID, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Aufsichtsbereich.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).addMultiple(is),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 

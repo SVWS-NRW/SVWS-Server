@@ -10,6 +10,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleUniqueIndex;
 
@@ -126,61 +127,91 @@ public class Tabelle_Kurse extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Kurse_Schuljahreabschnitt_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Schuljahreabschnitt_FK = addForeignKey(
-			"Kurse_Schuljahreabschnitt_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
-		);
+		"Kurse_Schuljahreabschnitt_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Schuljahresabschnitts_ID, Schema.tab_Schuljahresabschnitte.col_ID)
+	);
 
 	/** Die Definition des Fremdschlüssels Kurse_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Jahrgang_FK = addForeignKey(
-			"Kurse_Jahrgang_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-			new Pair<>(col_Jahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+		"Kurse_Jahrgang_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_Jahrgang_ID, Schema.tab_EigeneSchule_Jahrgaenge.col_ID)
+	)
+	.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Kurse_Fach_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Fach_FK = addForeignKey(
-			"Kurse_Fach_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
-			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+		"Kurse_Fach_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.RESTRICT,
+		new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
+	)
+	.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Kurse_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Lehrer_FK = addForeignKey(
-			"Kurse_Lehrer_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-			new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+		"Kurse_Lehrer_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_Lehrer_ID, Schema.tab_K_Lehrer.col_ID)
+	)
+	.setRevision(SchemaRevisionen.REV_2);
 
 	/** Die Definition des Fremdschlüssels Kurse_Fortschreibungsart_FK */
 	public SchemaTabelleFremdschluessel fk_Kurse_Fortschreibungsart_FK = addForeignKey(
-			"Kurse_Fortschreibungsart_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
-			new Pair<>(col_Fortschreibungsart, Schema.tab_KursFortschreibungsarten.col_Kuerzel)
-		)
-		.setRevision(SchemaRevisionen.REV_2);
+		"Kurse_Fortschreibungsart_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.SET_NULL,
+		new Pair<>(col_Fortschreibungsart, Schema.tab_KursFortschreibungsarten.col_Kuerzel)
+	)
+	.setRevision(SchemaRevisionen.REV_2);
 
+
+	/** Die Definition des Non-Unique-Index Kurse_IDX_Schuljahresabschnitts_ID_tmp */
+	public SchemaTabelleIndex index_Kurse_IDX_Schuljahresabschnitts_ID_tmp = addIndex("Kurse_IDX_Schuljahresabschnitts_ID_tmp",
+		col_Schuljahresabschnitts_ID
+	)
+	.setVeraltet(SchemaRevisionen.REV_10);
+
+	/** Die Definition des Non-Unique-Index Kurse_IDX_Schuljahresabschnitts_ID */
+	public SchemaTabelleIndex index_Kurse_IDX_Schuljahresabschnitts_ID = addIndex("Kurse_IDX_Schuljahresabschnitts_ID",
+		col_Schuljahresabschnitts_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Non-Unique-Index Kurse_IDX_Fach_ID */
+	public SchemaTabelleIndex index_Kurse_IDX_Fach_ID = addIndex("Kurse_IDX_Fach_ID",
+		col_Fach_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Non-Unique-Index Kurse_IDX_Jahrgang_ID */
+	public SchemaTabelleIndex index_Kurse_IDX_Jahrgang_ID = addIndex("Kurse_IDX_Jahrgang_ID",
+		col_Jahrgang_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Non-Unique-Index Kurse_IDX_Lehrer_ID */
+	public SchemaTabelleIndex index_Kurse_IDX_Lehrer_ID = addIndex("Kurse_IDX_Lehrer_ID",
+		col_Lehrer_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 	/** Die Definition des Unique-Index Kurse_UC1 */
 	public SchemaTabelleUniqueIndex unique_Kurse_UC1 = addUniqueIndex("Kurse_UC1",
-			col_Jahrgaenge,
-			col_Schuljahresabschnitts_ID,
-			col_Fach_ID,
-			col_ASDJahrgang,
-			col_KursartAllg,
-			col_Lehrer_ID,
-			col_WochenStd,
-			col_KurzBez
-		)
-		.setRevision(SchemaRevisionen.REV_1);
+		col_Jahrgaenge,
+		col_Schuljahresabschnitts_ID,
+		col_Fach_ID,
+		col_ASDJahrgang,
+		col_KursartAllg,
+		col_Lehrer_ID,
+		col_WochenStd,
+		col_KurzBez
+	)
+	.setRevision(SchemaRevisionen.REV_1);
 
 
 	/**

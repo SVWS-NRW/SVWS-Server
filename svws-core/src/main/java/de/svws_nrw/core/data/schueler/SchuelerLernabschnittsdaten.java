@@ -67,9 +67,9 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.", example = "APO-GOSt(B)10/G8")
 	public @NotNull String pruefungsOrdnung = "";
 
-	/** Die ID der Klasse des Schülers. */
-	@Schema(description = "die ID der Klasse des Schülers", example = "46")
-	public long klassenID = -1;
+	/** Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist. */
+	@Schema(description = "die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist", example = "46")
+	public Long klassenID = null;
 
 	/** Die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist */
 	@Schema(description = "die ID eines Tutors, der den Schüler betreut, oder null, falls keiner zugewiesen ist", example = "null")
@@ -83,9 +83,9 @@ public class SchuelerLernabschnittsdaten {
 	@Schema(description = "das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers", example = "B09")
 	public String schulgliederung;
 
-	/** Die ID des Jahrgangs des Schülers */
-	@Schema(description = "die ID des Jahrgangs des Schülers", example = "78")
-	public long jahrgangID = -1;
+	/** Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist */
+	@Schema(description = "die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist", example = "78")
+	public Long jahrgangID = null;
 
 	/** Die ID der Fachklasse des Schülers an einem Berufskolleg */
 	@Schema(description = "die ID der Fachklasse des Schülers an einem Berufskolleg", example = "null")

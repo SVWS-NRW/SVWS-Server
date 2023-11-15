@@ -1,5 +1,5 @@
 configurations {
-	implementation.extendsFrom(database, resteasy, pdf)
+	implementation.extendsFrom(database, resteasy, pdf, thymeleaf)
 }
 
 compileJava.dependsOn(":svws-core:assemble")
@@ -17,7 +17,7 @@ def fontDir = "$projectDir/src/main/resources/de/svws_nrw/module/pdf/fonts"
 def fontLiberationVersion = "2.1.5"
 def fontLiberationFileId = "7261482"
 def fontLiberationDestDir = "liberation"
-def fontLiberationFileBaseName = "liberation-fonts-ttf-${fontLiberationVersion}"  
+def fontLiberationFileBaseName = "liberation-fonts-ttf-${fontLiberationVersion}"
 def fontLiberationURL = "https://github.com/liberationfonts/liberation-fonts/files/${fontLiberationFileId}/${fontLiberationFileBaseName}.tar.gz"
 def fontLiberationDownloadLocation = "${rootDir}/download/${fontLiberationFileBaseName}.tar.gz"
 
@@ -43,7 +43,7 @@ task fontExtract(type: Copy) {
 
 task fontRemove(type: Delete) {
 	group "svws"
-	delete "${fontDir}/${fontLiberationDestDir}"  
+	delete "${fontDir}/${fontLiberationDestDir}"
 }
 
 processResources.dependsOn fontExtract

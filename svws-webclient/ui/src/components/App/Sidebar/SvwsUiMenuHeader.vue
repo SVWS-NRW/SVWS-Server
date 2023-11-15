@@ -3,10 +3,12 @@
 		collapsed?: boolean;
 		user?: string;
 		schule?: string;
+		schema?: string;
 	}>(), {
 		collapsed: false,
 		user: undefined,
 		schule: undefined,
+		schema: undefined,
 	});
 
 	const emit = defineEmits<{
@@ -32,6 +34,10 @@
 					<template v-if="schule">
 						<br>
 						<span class="opacity-50">{{ schule }}</span>
+					</template>
+					<template v-if="schema">
+						<br>
+						<span class="opacity-50">DB: {{ schema }}</span>
 					</template>
 				</div>
 			</template>

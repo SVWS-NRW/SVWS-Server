@@ -9,7 +9,7 @@ import { type RouteNode } from "~/router/RouteNode";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "~/router/apps/schule/datenaustausch/RouteDatenaustauschLupo";
 
-import { SimpleOperationResponse } from "@core";
+import { OpenApiError, SimpleOperationResponse } from "@core";
 
 
 interface RouteStateDatenaustausch {
@@ -43,6 +43,10 @@ export class RouteDataSchuleDatenaustausch {
 		try {
 			return await api.server.setGostLupoImportMDBFuerJahrgang(formData, api.schema, mode);
 		} catch(e) {
+			if ((e instanceof OpenApiError) && (e.response != null) && ((e.response.status === 400) || (e.response.status === 409))) {
+				const json : string = await e.response.text();
+				return SimpleOperationResponse.transpilerFromJSON(json);
+			}
 			const result = new SimpleOperationResponse();
 			result.log.add("Fehler bei der Server-Anfrage. ");
 			if (e instanceof Error)

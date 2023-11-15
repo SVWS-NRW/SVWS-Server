@@ -9,7 +9,7 @@
 				</div>
 				<svws-ui-checkbox v-model="modelValue1" headless>Headless</svws-ui-checkbox>
 				<div class="pointer-events-none leading-none">
-					<svws-ui-checkbox :model-value="'indeterminate'" @update:model-value="v=>modelValue6=v">Indeterminate Status</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="modelValue" @update:model-value="v=>modelValue6=v" :indeterminate="true">Indeterminate Status</svws-ui-checkbox>
 				</div>
 				<svws-ui-checkbox v-model="modelValue3" bw>BW (black and white)</svws-ui-checkbox>
 				<svws-ui-checkbox v-model="modelValue4" statistics>Wichtige Checkbox für die Statistik</svws-ui-checkbox>
@@ -20,7 +20,7 @@
 			<div class="flex flex-col items-start gap-2 mt-10">
 				<svws-ui-checkbox v-model="modelValue2" type="toggle">Toggle</svws-ui-checkbox>
 				<div class="pointer-events-none leading-none">
-					<svws-ui-checkbox :model-value="'indeterminate'" @update:model-value="v=>modelValue6=v" type="toggle">Indeterminate Status</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="modelValue" :indeterminate="true" @update:model-value="v=>modelValue6=v" type="toggle">Indeterminate Status</svws-ui-checkbox>
 				</div>
 				<svws-ui-checkbox v-model="modelValue3" bw type="toggle">BW (black and white)</svws-ui-checkbox>
 				<svws-ui-checkbox v-model="modelValue4" statistics type="toggle">Wichtige Checkbox für die Statistik</svws-ui-checkbox>

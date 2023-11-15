@@ -70,7 +70,7 @@ public final class DTOInformationSchema {
 	}
 
 
-	private static final Set<String> setSystemSchemaMariaDB = Stream.of("information_schema", "mysql", "performance_schema").collect(Collectors.toCollection(HashSet::new));
+	private static final Set<String> setSystemSchemaMariaDB = Stream.of("information_schema", "mysql", "performance_schema", "sys").collect(Collectors.toCollection(HashSet::new));
 	private static final Set<String> setSystemSchemaMySQL = Stream.of("information_schema", "mysql", "performance_schema", "sys").collect(Collectors.toCollection(HashSet::new));
 	private static final Set<String> setSystemSchemaMSSQL = Stream.of("master", "tempdb",  "model", "msdb").collect(Collectors.toCollection(HashSet::new));
 
@@ -86,14 +86,49 @@ public final class DTOInformationSchema {
 	public static List<String> queryNames(final DBEntityManager conn) {
 		return switch (conn.getDBDriver()) {
 			case MARIA_DB -> conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream()
-				.filter(name -> !setSystemSchemaMariaDB.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+				.filter(name -> !setSystemSchemaMariaDB.contains(name.toLowerCase())).toList();
 			case MYSQL -> conn.queryNamed("DTOInformationSchema.mysql", String.class).getResultList().stream()
-				.filter(name -> !setSystemSchemaMySQL.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+				.filter(name -> !setSystemSchemaMySQL.contains(name.toLowerCase())).toList();
 			case MSSQL -> conn.queryNamed("DTOInformationSchema.mssql", String.class).getResultList().stream()
-				.filter(name -> !setSystemSchemaMSSQL.contains(name.toLowerCase())).map(String::toLowerCase).toList();
+				.filter(name -> !setSystemSchemaMSSQL.contains(name.toLowerCase())).toList();
 			case SQLITE, MDB -> Collections.emptyList();
 			default -> Collections.emptyList();
 		};
+	}
+
+
+	/**
+	 * Prüft, ob das angegenene Schema in der Datenbank existiert oder nicht.
+	 *
+	 * @param conn     die Datenbank-Verbindung
+	 * @param schema   der Name des Schemas, welches geprüft wird
+	 *
+	 * @return true, falls ein Schema mit diesem Namen existiert, und ansonsten false
+	 */
+	public static boolean hasSchemaIgnoreCase(final DBEntityManager conn, final String schema) {
+		final List<String> schemata = queryNames(conn);
+		for (final String s : schemata)
+			if (s.equalsIgnoreCase(schema))
+				return true;
+		return false;
+	}
+
+
+	/**
+	 * Gibt für das angegebene Schema den Namen mit dem korrekten case zurück. Existiert das Schema nicht,
+	 * so wird null zurückgegeben.
+	 *
+	 * @param conn     die Datenbank-Verbindung
+	 * @param schema   der Name des Schemas, welches geprüft wird
+	 *
+	 * @return Der Schemaname mit dem korrekten case, falls ein Schema mit diesem Namen existiert, und ansonsten null
+	 */
+	public static String getSchemanameCaseDB(final DBEntityManager conn, final String schema) {
+		final List<String> schemata = queryNames(conn);
+		for (final String s : schemata)
+			if (s.equalsIgnoreCase(schema))
+				return s;
+		return null;
 	}
 
 

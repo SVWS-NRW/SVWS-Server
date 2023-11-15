@@ -20,6 +20,7 @@ import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -35,6 +36,7 @@ import de.svws_nrw.core.utils.gost.GostFachwahlManager;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -51,6 +53,7 @@ import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
@@ -138,14 +141,19 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final Long id) {
 		// Bestimme den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte schuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuleSchuljahresabschnitt == null)
+		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (dtoSchuleSchuljahresabschnitt == null)
 			throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
 
 		// Bestimme die Blockung
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, id);
 		if (blockung == null)
 			throw OperationError.NOT_FOUND.exception("Keine Blockung mit der ID %d gefunden.".formatted(id));
+
+		// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
+		Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
+		if (lehrerSchuljahresabschnitt == null)
+			lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
 
 		// Fächer hinzufügen.
 		final GostFaecherManager faecherManager = (new DataGostFaecher(conn, blockung.Abi_Jahrgang)).getListInternal();
@@ -171,16 +179,19 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			if (!kurslehrerIDs.isEmpty()) {
 				final Map<Long, DTOLehrer> mapLehrer = conn.queryNamed("DTOLehrer.id.multiple", kurslehrerIDs, DTOLehrer.class)
 						.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+				final Map<Long, DTOLehrerAbschnittsdaten> mapLehrerabschnittsdaten = conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID IN ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOLehrerAbschnittsdaten.class, kurslehrerIDs, lehrerSchuljahresabschnitt.id)
+					.stream().collect(Collectors.toMap(l -> l.Lehrer_ID, l -> l));
 				for (final DTOGostBlockungKurslehrer kurslehrer : kurslehrerListe) {
 					final DTOLehrer lehrer = mapLehrer.get(kurslehrer.Lehrer_ID);
 					if (lehrer == null)
 						throw OperationError.NOT_FOUND.exception();
+					final DTOLehrerAbschnittsdaten abschnitt = mapLehrerabschnittsdaten.get(kurslehrer.Lehrer_ID);
 					final GostBlockungKursLehrer kl = new GostBlockungKursLehrer();
 					kl.id = lehrer.ID;
 					kl.kuerzel = lehrer.Kuerzel;
 					kl.vorname = lehrer.Vorname;
 					kl.nachname = lehrer.Nachname;
-					kl.istExtern = (lehrer.StammschulNr != null);
+					kl.istExtern = (abschnitt != null) && ((abschnitt.StammschulNr != null) || (!abschnitt.StammschulNr.equals("" + schule.SchulNr)));
 					kl.reihenfolge = kurslehrer.Reihenfolge;
 					kl.wochenstunden = kurslehrer.Wochenstunden;
 					manager.kursAddLehrkraft(kurslehrer.Blockung_Kurs_ID, kl);

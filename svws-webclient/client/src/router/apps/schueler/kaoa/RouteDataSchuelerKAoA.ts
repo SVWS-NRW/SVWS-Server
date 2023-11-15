@@ -49,10 +49,10 @@ export class RouteDataSchuelerKAoA {
 	}
 
 
-	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if (auswahl === undefined)
+		if ((auswahl === null) || (auswahl === undefined))
 			this.setPatchedDefaultState({});
 		else {
 			try {

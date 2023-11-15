@@ -14,8 +14,3 @@
 	const props = defineProps<StundenplanDatenProps>();
 
 </script>
-
-<style lang="postcss" scoped>
-    .page--content {
-    }
-</style>

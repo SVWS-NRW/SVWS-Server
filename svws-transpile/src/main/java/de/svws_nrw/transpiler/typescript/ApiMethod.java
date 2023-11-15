@@ -76,7 +76,7 @@ public final class ApiMethod {
 		docDescription = ApiMethod.getDocDescription(transpiler, classTree, method);
 
 		// Response-Objekt erstellen und einen Vektor dieser Response-Objekt hier erzeugen, außerdem Erkennung des Response-Codes für eine erfolgreiche Rückgabe von Informationen
-		final ArrayList<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
+		final List<AnnotationTree> annotationMethodApiResponses = transpiler.getAnnotationList("io.swagger.v3.oas.annotations.responses.ApiResponse", method);
 		ApiResponse tmp200 = null;
 		for (final AnnotationTree annotationMethodApiResponse : annotationMethodApiResponses) {
 			final ApiResponse response = new ApiResponse(transpiler, annotationMethodApiResponse);
@@ -302,14 +302,12 @@ public final class ApiMethod {
 	public String getRequestBodyType() {
 		if ((!requestBody.exists) || (requestBody.content == null))
 			return null;
-		String tstype = getTSType(requestBody.content);
-		if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201)))
-			tstype = "Partial<" + tstype + ">";
-		return tstype;
+		final boolean isPartial = (httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201));
+		return getTSType(requestBody.content, isPartial);
 	}
 
 
-	private static String getTSType(final ApiContent content) {
+	private static String getTSType(final ApiContent content, final boolean isPartial) {
 	    String datatype = (content.isArrayType) ? content.arrayElementType : content.datatype;
 		if (content.isArrayType) {
 		    datatype = switch (datatype) {
@@ -318,6 +316,8 @@ public final class ApiMethod {
 				case "Boolean" -> "boolean";
 				default -> datatype;
 			};
+			if (isPartial)
+				datatype = "Partial<" + datatype + ">";
 		    return "List<" + datatype + ">";
 		}
 	    datatype = switch (datatype) {
@@ -326,6 +326,8 @@ public final class ApiMethod {
 			case "Boolean" -> "boolean | null";
 			default -> datatype;
 		};
+		if (isPartial)
+			datatype = "Partial<" + datatype + ">";
 		return datatype;
 	}
 
@@ -403,7 +405,7 @@ public final class ApiMethod {
     					sb.append("\t\tconst body : string = \"[\" + (data.toArray() as Array<" + requestBody.content.arrayElementType + ">).map(d => " + requestBody.content.arrayElementType + ".transpilerToJSON(d)).join() + \"]\";" + System.lineSeparator());
                     }
 				} else {
-					if (isTSPrimitive(getTSType(requestBody.content))) {
+					if (isTSPrimitive(getTSType(requestBody.content, false))) {
 						sb.append("\t\tconst body : string = JSON.stringify(data);" + System.lineSeparator());
 					} else {
 						if ((httpMethod == ApiHttpMethod.PATCH) || ((httpMethod == ApiHttpMethod.POST) && (returnResponse.responseCode == 201))) {

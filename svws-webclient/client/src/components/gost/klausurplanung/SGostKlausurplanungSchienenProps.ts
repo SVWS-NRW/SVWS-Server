@@ -1,4 +1,5 @@
 import type {
+	GostHalbjahr,
 	GostKlausurenCollectionSkrsKrs,
 	GostKlausurtermin,
 	GostKlausurterminblockungDaten,
@@ -12,6 +13,7 @@ import type {
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungSchienenProps {
+	halbjahr: GostHalbjahr;
 	kursklausurmanager: () => GostKursklausurManager;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapSchueler: Map<number, SchuelerListeEintrag>;
@@ -23,4 +25,5 @@ export interface GostKlausurplanungSchienenProps {
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<boolean>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	gotoVorgaben: () => Promise<void>;
 }

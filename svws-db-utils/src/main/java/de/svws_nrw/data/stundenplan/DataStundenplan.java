@@ -105,7 +105,7 @@ public final class DataStundenplan extends DataManager<Long> {
 		Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("gueltigBis", (conn, dto, value, map) -> dto.Ende = JSONMapper.convertToString(value, false, false, null)),
 		Map.entry("bezeichnungStundenplan", (conn, dto, value, map) -> dto.Beschreibung = JSONMapper.convertToString(value, false, false, 1000)),
-		Map.entry("wochenTypModell", (conn, dto, value, map) -> dto.WochentypModell = JSONMapper.convertToInteger(value, false))
+		Map.entry("wochenTypModell", (conn, dto, value, map) -> dto.WochentypModell = JSONMapper.convertToIntegerInRange(value, false, 0, 100))
 	);
 
 	@Override

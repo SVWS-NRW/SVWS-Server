@@ -6,13 +6,9 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
 import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
+import { CoreTypeData } from '../../../core/data/CoreTypeData';
 
-export class SchulgliederungKatalogEintrag extends JavaObject {
-
-	/**
-	 * Die ID des Katalog-Eintrags.
-	 */
-	public id : number = -1;
+export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	/**
 	 * Das Kürzel der Schulgliederung, welches im Rahmen der amtlichen Schulstatistik verwendet wird
@@ -73,16 +69,6 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	 * Gibt eine Liste von allgemeinbildenden Abschlüssen an, die in diesem Bildungsgang erreicht werden können, wenn es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
 	public bkAbschlussAllgemeinbildend : List<string> = new ArrayList();
-
-	/**
-	 * Gibt an, in welchem Schuljahr die Schulgliederung einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
-	 */
-	public gueltigVon : number | null = null;
-
-	/**
-	 * Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schulgliederung bekannt, so ist null gesetzt.
-	 */
-	public gueltigBis : number | null = null;
 
 
 	/**
@@ -163,7 +149,7 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schule.SchulgliederungKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.core.data.schule.SchulgliederungKatalogEintrag', 'de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}
 
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
@@ -172,6 +158,8 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
+		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (typeof obj.kuerzel === "undefined")
 			 throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
@@ -208,14 +196,14 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 				result.bkAbschlussAllgemeinbildend?.add(elem);
 			}
 		}
-		result.gueltigVon = typeof obj.gueltigVon === "undefined" ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
-		result.gueltigBis = typeof obj.gueltigBis === "undefined" ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulgliederungKatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
 		result += '"istBK" : ' + obj.istBK + ',';
 		if (!obj.schulformen) {
@@ -261,8 +249,6 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -272,6 +258,12 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.gueltigVon !== "undefined") {
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+		}
+		if (typeof obj.gueltigBis !== "undefined") {
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		if (typeof obj.kuerzel !== "undefined") {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
@@ -341,12 +333,6 @@ export class SchulgliederungKatalogEintrag extends JavaObject {
 				}
 				result += ' ]' + ',';
 			}
-		}
-		if (typeof obj.gueltigVon !== "undefined") {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		}
-		if (typeof obj.gueltigBis !== "undefined") {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

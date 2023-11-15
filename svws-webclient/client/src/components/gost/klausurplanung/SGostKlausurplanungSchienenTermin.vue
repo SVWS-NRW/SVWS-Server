@@ -1,15 +1,18 @@
 <template>
-	<div class="flex flex-col border bg-white dark:bg-black rounded-xl" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
+	<div class="flex flex-col border bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event)"
 		:class="{
 			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
 			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur === 0),
-			'border-dashed border-error/50 dark:border-error/50': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'border-dashed border-error dark:border-error': (dragData() !== undefined && dragData() instanceof GostKursklausur && (termin().quartal === dragData()!.quartal) || termin().quartal === 0) && (konflikteTerminDragKlausur > 0 || konflikteTermin() > 0),
+			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
 			:kursklausurmanager="kursklausurmanager"
 			:map-lehrer="mapLehrer"
 			:kursmanager="kursmanager"
+			:termin-selected="terminSelected || false"
 			:on-drag-klausur="onDrag"
+			:show-kursschiene="true"
 			:klausur-css-classes="klausurCssClasses">
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
@@ -53,6 +56,7 @@
 		dragData: () => GostKlausurplanungDragData;
 		onDrag: (data: GostKlausurplanungDragData) => void;
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
+		terminSelected?: boolean;
 	}>();
 
 	const klausuren = () => props.kursklausurmanager().kursklausurGetMengeByTerminid(props.termin().id);

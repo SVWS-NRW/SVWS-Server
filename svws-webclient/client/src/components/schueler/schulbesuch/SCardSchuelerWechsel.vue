@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-content-card title="Wechsel zu aufnehmender Schule">
 		<template #actions>
-			<svws-ui-checkbox :model-value="data.aufnehmdendBestaetigt || undefined" @update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })">
+			<svws-ui-checkbox :model-value="data.aufnehmdendBestaetigt === true" :indeterminate="data.aufnehmdendBestaetigt === null" @update:model-value="doPatch({ aufnehmdendBestaetigt: Boolean($event) })">
 				Aufnahme bestätigt
 			</svws-ui-checkbox>
 		</template>

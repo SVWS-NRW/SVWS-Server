@@ -12,7 +12,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungFehler;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerFehler;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -28,19 +28,19 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Fehler der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler extends DataSchildReportingDatenquelle<SchildReportingSchuelerGOStLaufbahnplanungFehler, Long> {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler extends DataSchildReportingDatenquelle<DruckGostLaufbahnplanungSchuelerFehler, Long> {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungFehler
      */
 	public DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler() {
-        super(SchildReportingSchuelerGOStLaufbahnplanungFehler.class);
+        super(DruckGostLaufbahnplanungSchuelerFehler.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-	public List<SchildReportingSchuelerGOStLaufbahnplanungFehler> getDaten(final DBEntityManager conn, final List<Long> params) {
+	public List<DruckGostLaufbahnplanungSchuelerFehler> getDaten(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
@@ -52,7 +52,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehl
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungFehler> result = new ArrayList<>();
+		final ArrayList<DruckGostLaufbahnplanungSchuelerFehler> result = new ArrayList<>();
 		for (final Long schuelerID : params) {
 			// GOSt-Daten des Schülers und Abiturdaten zur Schueler_ID ermitteln
 			final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schuelerID);
@@ -76,7 +76,7 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehl
 						for (final GostBelegpruefungErgebnisFehler f : ergebnis.fehlercodes) {
 							final GostBelegungsfehlerArt art = GostBelegungsfehlerArt.fromKuerzel(f.art);
 							if (art != GostBelegungsfehlerArt.HINWEIS) {
-								final SchildReportingSchuelerGOStLaufbahnplanungFehler laufbahnplanungFehler = new SchildReportingSchuelerGOStLaufbahnplanungFehler();
+								final DruckGostLaufbahnplanungSchuelerFehler laufbahnplanungFehler = new DruckGostLaufbahnplanungSchuelerFehler();
 								laufbahnplanungFehler.schuelerID = schuelerID;
 								laufbahnplanungFehler.belegungsfehler = f.beschreibung;
 								result.add(laufbahnplanungFehler);

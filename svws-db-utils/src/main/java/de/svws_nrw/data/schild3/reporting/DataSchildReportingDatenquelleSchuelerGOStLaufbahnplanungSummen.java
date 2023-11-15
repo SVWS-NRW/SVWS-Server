@@ -9,7 +9,7 @@ import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerGOStLaufbahnplanungSummen;
+import de.svws_nrw.core.data.druck.DruckGostLaufbahnplanungSchuelerSummen;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -25,19 +25,19 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Die Definition einer Schild-Reporting-Datenquelle für die Kurs- und Wochenstundensummen der Laufbahnplanung in der gymnasialen Oberstufe
  */
-public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle<SchildReportingSchuelerGOStLaufbahnplanungSummen, Long> {
+public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen extends DataSchildReportingDatenquelle<DruckGostLaufbahnplanungSchuelerSummen, Long> {
 
     /**
      * Erstelle die Datenquelle SchuelerGOStLaufbahnplanungSummen
      */
 	public DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen() {
-        super(SchildReportingSchuelerGOStLaufbahnplanungSummen.class);
+        super(DruckGostLaufbahnplanungSchuelerSummen.class);
         this.setMaster("schuelerID", "Schueler", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 	@Override
-	public List<SchildReportingSchuelerGOStLaufbahnplanungSummen> getDaten(final DBEntityManager conn, final List<Long> params) {
+	public List<DruckGostLaufbahnplanungSchuelerSummen> getDaten(final DBEntityManager conn, final List<Long> params) {
 
 		// Prüfe, ob die Schüler in der DB vorhanden sind
         final Map<Long, DTOSchueler> schueler = conn
@@ -49,9 +49,9 @@ public final class DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSumm
 		}
 
 		// Aggregiere die benötigten Daten aus der Datenbank, wenn alle Schüler-IDs existieren
-		final ArrayList<SchildReportingSchuelerGOStLaufbahnplanungSummen> result = new ArrayList<>();
+		final ArrayList<DruckGostLaufbahnplanungSchuelerSummen> result = new ArrayList<>();
 		for (final Long schuelerID : params) {
-			final SchildReportingSchuelerGOStLaufbahnplanungSummen laufbahnplanungSummen = new SchildReportingSchuelerGOStLaufbahnplanungSummen();
+			final DruckGostLaufbahnplanungSchuelerSummen laufbahnplanungSummen = new DruckGostLaufbahnplanungSchuelerSummen();
 			laufbahnplanungSummen.schuelerID = schuelerID;
 
 			// Abiturdaten und Abiturjahrgangsdaten zur Schueler_ID ermitteln

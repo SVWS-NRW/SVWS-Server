@@ -24,9 +24,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public class GostKlausurvorgabenManager {
 
-	private @NotNull GostFaecherManager _faecherManager = new GostFaecherManager();
+	private GostFaecherManager _faecherManager;
 
 	private final @NotNull Comparator<@NotNull GostKlausurvorgabe> _compVorgabe = (final @NotNull GostKlausurvorgabe a, final @NotNull GostKlausurvorgabe b) -> {
+		if (a.kursart.compareTo(b.kursart) < 0)
+			return +1;
+		if (a.kursart.compareTo(b.kursart) > 0)
+			return -1;
 		if (_faecherManager != null) {
 			final GostFach aFach = _faecherManager.get(a.idFach);
 			final GostFach bFach = _faecherManager.get(b.idFach);
@@ -37,10 +41,6 @@ public class GostKlausurvorgabenManager {
 					return -1;
 			}
 		}
-		if (a.kursart.compareTo(b.kursart) < 0)
-			return +1;
-		if (a.kursart.compareTo(b.kursart) > 0)
-			return -1;
 		return Integer.compare(a.quartal, b.quartal);
 	};
 
@@ -60,7 +60,7 @@ public class GostKlausurvorgabenManager {
 	 *                      und Gost-Halbjahres
 	 * @param faecherManager   der Fächermanager
 	 */
-	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben, final @NotNull GostFaecherManager faecherManager) {
+	public GostKlausurvorgabenManager(final @NotNull List<@NotNull GostKlausurvorgabe> listVorgaben, final GostFaecherManager faecherManager) {
 		_faecherManager = faecherManager;
 		initAll(listVorgaben);
 	}
@@ -71,6 +71,15 @@ public class GostKlausurvorgabenManager {
 
 		update_all();
 
+	}
+
+	/**
+	 * Liefert den Fächermanager
+	 *
+	 * @return den Fächermanager
+	 */
+	public GostFaecherManager getFaecherManager() {
+		return _faecherManager;
 	}
 
 	private void update_all() {
@@ -257,7 +266,7 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartalAndKursartallgAndFachid(final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new ArrayList<>();
 			final GostKlausurvorgabe vorgabe = vorgabeGetByQuartalAndKursartallgAndFachid(quartal, kursartAllg, idFach);
@@ -277,7 +286,7 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByKursartallgAndFachid(final @NotNull GostKursart kursartAllg, final long idFach) {
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByKursartallgAndFachid(final @NotNull GostKursart kursartAllg, final long idFach) {
 		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_kursartAllg_and_idFach.getOrNull(kursartAllg.kuerzel, idFach);
 		return list != null ? list : new ArrayList<>();
 	}

@@ -59,6 +59,14 @@ public class SchuelerListeEintrag {
 	@Schema(description = "die Bezeichnung des Status des Schülers (Aktiv, Extern, etc.)", example = "2")
 	public int status;
 
+	/** Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht. */
+	@Schema(description = "gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht", example = "true")
+	public boolean istDuplikat;
+
+	/** Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
+	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
+	public String externeSchulNr;
+
 	/** Die ID des Schuljahresabschnittes des Schülers. */
 	@Schema(description = "die ID des Schuljahresabschnittes des Schülers", example = "14")
 	public @NotNull Long idSchuljahresabschnitt = -1L;

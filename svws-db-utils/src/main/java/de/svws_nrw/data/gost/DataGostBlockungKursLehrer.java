@@ -9,13 +9,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
+import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurs;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockungKurslehrer;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerAbschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
@@ -52,7 +57,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	}
 
 
-	private static GostBlockungKursLehrer dtoMapper(final DTOEigeneSchule schule, final DTOGostBlockungKurslehrer dto, final DTOLehrer lehrer) {
+	private static GostBlockungKursLehrer dtoMapper(final DTOEigeneSchule schule, final DTOGostBlockungKurslehrer dto, final DTOLehrer lehrer, final DTOLehrerAbschnittsdaten abschnitt) {
 		final GostBlockungKursLehrer daten = new GostBlockungKursLehrer();
 		daten.id = dto.Lehrer_ID;
 		daten.kuerzel = lehrer.Kuerzel;
@@ -60,15 +65,12 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		daten.nachname = lehrer.Nachname;
 		daten.reihenfolge = dto.Reihenfolge;
 		daten.wochenstunden = dto.Wochenstunden;
-		daten.istExtern = (lehrer.StammschulNr != null) || (!lehrer.StammschulNr.equals("" + schule.SchulNr));
+		daten.istExtern = (abschnitt != null) && ((abschnitt.StammschulNr != null) || (!abschnitt.StammschulNr.equals("" + schule.SchulNr)));
 		return daten;
 	}
 
 
-	private DTOGostBlockungKurslehrer getKurslehrer(final Long idLehrer) {
-		final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
-		if (kurs == null)
-			throw OperationError.NOT_FOUND.exception();
+	private DTOGostBlockungKurslehrer getKurslehrer(final DTOGostBlockungKurs kurs, final Long idLehrer) {
 		if (idLehrer == null) {
 			final List<DTOGostBlockungKurslehrer> tmp = conn.queryNamed("DTOGostBlockungKurslehrer.blockung_kurs_id", idKurs, DTOGostBlockungKurslehrer.class);
 			if (tmp.isEmpty())
@@ -89,11 +91,26 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 		try {
 			conn.transactionBegin();
 			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-			final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(idLehrer);
+			final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+			if (dtoSchuleSchuljahresabschnitt == null)
+				throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
+			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
+			if (kurs == null)
+				throw OperationError.NOT_FOUND.exception();
+			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs.Blockung_ID);
+			if (blockung == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
+			Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
+			if (lehrerSchuljahresabschnitt == null)
+				lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
+			final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(kurs, idLehrer);
 			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, kurslehrer.Lehrer_ID);
 			if (lehrer == null)
 				return OperationError.NOT_FOUND.getResponse();
-			final GostBlockungKursLehrer daten = dtoMapper(schule, kurslehrer, lehrer);
+			final List<DTOLehrerAbschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOLehrerAbschnittsdaten.class, lehrer.ID, lehrerSchuljahresabschnitt.id);
+			final DTOLehrerAbschnittsdaten abschnitt = (abschnitte.size() != 1) ? null : abschnitte.get(0);
+			final GostBlockungKursLehrer daten = dtoMapper(schule, kurslehrer, lehrer, abschnitt);
 	    	conn.transactionCommit();
 	        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception e) {
@@ -114,7 +131,10 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 	    	return Response.status(Status.OK).build();
 		try {
 			conn.transactionBegin();
-			final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(idLehrer);
+			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
+			if (kurs == null)
+				throw OperationError.NOT_FOUND.exception();
+			final DTOGostBlockungKurslehrer kurslehrer = getKurslehrer(kurs, idLehrer);
 	    	for (final Entry<String, Object> entry : map.entrySet()) {
 	    		final String key = entry.getKey();
 	    		final Object value = entry.getValue();
@@ -170,14 +190,26 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 			conn.transactionBegin();
 			// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
 			final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+			final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+			if (dtoSchuleSchuljahresabschnitt == null)
+				throw OperationError.NOT_FOUND.exception("Der Schuljahresabschnitt für die Schule konnte nicht aus der Datenbank bestimmt werden.");
 			// Prüfe, ob ein Kurs mit der ID für eine Blockung existiert
 			final DTOGostBlockungKurs kurs = conn.queryByKey(DTOGostBlockungKurs.class, idKurs);
 			if (kurs == null)
 				throw OperationError.NOT_FOUND.exception();
+			final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs.Blockung_ID);
+			if (blockung == null)
+				throw OperationError.NOT_FOUND.exception();
+			// Bestimme den Schuljahresabschnitt (oder null) für die Blockung, sofern der Schuljahresabschnitt schon angelegt ist.
+			Schuljahresabschnitt lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, blockung.Halbjahr.getSchuljahrFromAbiturjahr(blockung.Abi_Jahrgang), blockung.Halbjahr.halbjahr);
+			if (lehrerSchuljahresabschnitt == null)
+				lehrerSchuljahresabschnitt = DataSchuljahresabschnitte.dtoMapper.apply(dtoSchuleSchuljahresabschnitt);
 			// Prüfe, ob ein Lehrer mit der ID existiert
 			final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
 			if (lehrer == null)
 				return OperationError.NOT_FOUND.getResponse();
+			final List<DTOLehrerAbschnittsdaten> abschnitte = conn.queryList("SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.Lehrer_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2", DTOLehrerAbschnittsdaten.class, lehrer.ID, lehrerSchuljahresabschnitt.id);
+			final DTOLehrerAbschnittsdaten abschnitt = (abschnitte.size() != 1) ? null : abschnitte.get(0);
 			// Prüfe, ob der Lehrer bereits dem Kurs zugeordnet ist, das darf nicht der Fall sein
 			DTOGostBlockungKurslehrer kurslehrer = conn.queryByKey(DTOGostBlockungKurslehrer.class, idKurs, idLehrer);
 			if (kurslehrer != null)
@@ -192,7 +224,7 @@ public final class DataGostBlockungKursLehrer extends DataManager<Long> {
 			kurslehrer = new DTOGostBlockungKurslehrer(idKurs, idLehrer, min, kurs.Wochenstunden);
 			conn.transactionPersist(kurslehrer);
 			conn.transactionCommit();
-			final GostBlockungKursLehrer daten = dtoMapper(schule, kurslehrer, lehrer);
+			final GostBlockungKursLehrer daten = dtoMapper(schule, kurslehrer, lehrer, abschnitt);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		} catch (final Exception exception) {
 			conn.transactionRollback();

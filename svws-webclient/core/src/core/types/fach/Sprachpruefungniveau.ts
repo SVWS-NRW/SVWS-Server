@@ -20,17 +20,17 @@ export class Sprachpruefungniveau extends JavaObject implements JavaEnum<Sprachp
 	/**
 	 * Prüfungsniveau angelehnt an 'HA9'
 	 */
-	public static readonly HA9 : Sprachpruefungniveau = new Sprachpruefungniveau("HA9", 0, [new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_HA9", "Hauptschulabschluss nach Klasse 9", null, null)]);
+	public static readonly ESA : Sprachpruefungniveau = new Sprachpruefungniveau("ESA", 0, [new SprachpruefungsniveauKatalogEintrag(1, "NIVEAU_ESA", "Erster Schulabschluss", null, null)]);
 
 	/**
 	 * Prüfungsniveau angelehnt an 'HA10'
 	 */
-	public static readonly HA10 : Sprachpruefungniveau = new Sprachpruefungniveau("HA10", 1, [new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_HA10", "Hauptschulabschluss nach Klasse 10", null, null)]);
+	public static readonly EESA : Sprachpruefungniveau = new Sprachpruefungniveau("EESA", 1, [new SprachpruefungsniveauKatalogEintrag(2, "NIVEAU_EESA", "Erweiterter Erster Schulabschluss", null, null)]);
 
 	/**
 	 * Prüfungsniveau angelehnt an 'MSA'
 	 */
-	public static readonly MSA : Sprachpruefungniveau = new Sprachpruefungniveau("MSA", 2, [new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss (Fachoberschulreife) / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null)]);
+	public static readonly MSA : Sprachpruefungniveau = new Sprachpruefungniveau("MSA", 2, [new SprachpruefungsniveauKatalogEintrag(3, "NIVEAU_MSA", "Mittlerer Schulabschluss / Berechtigung zum Besuch der gymnasialen Oberstufe (Gymnasium G8 Klasse 9)", null, null)]);
 
 	/**
 	 * Prüfungsniveau angelehnt an 'EF'

@@ -29,7 +29,7 @@
 	</template>
 	<template v-else>
 		<template v-for="kurs in listeDerKurse" :key="kurs.id">
-			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
+			<div role="row" class="svws-ui-tr" :style="{ '--background-color': bgColor }" :class="{'font-bold': schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart, 'svws-expanded': kursdetail_anzeige === kurs.id}">
 				<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 					<svws-ui-checkbox :model-value="getKursauswahl().has(kurs.id)" @update:model-value="getKursauswahl().has(kurs.id) ? getKursauswahl().delete(kurs.id) : getKursauswahl().add(kurs.id)" headless />
 				</div>
@@ -58,7 +58,7 @@
 				</div>
 				<div role="cell" class="svws-ui-td">
 					<template v-if="allowRegeln">
-						<svws-ui-select :model-value="kurslehrer(kurs).value" @update:model-value="lehrer => setKurslehrer(kurs, lehrer ?? undefined)" autocomplete :item-filter="lehrer_filter" removable headless
+						<svws-ui-select v-model="kurslehrer(kurs).value" autocomplete :item-filter="lehrer_filter" removable headless
 							:items="kurslehrer_liste(kurs).value" :item-text="l=> l.kuerzel" title="Lehrkraft" />
 					</template>
 					<template v-else>
@@ -71,7 +71,7 @@
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
 						{{ kursdifferenz(kurs).value[2] }}
-						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter?.fach === kurs.fach_id && schuelerFilter?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
+						<i-ri-filter-fill class="text-sm absolute right-0 top-1" :class="schuelerFilter()?.fach === kurs.fach_id && schuelerFilter()?.kursart?.id === kurs.kursart ? 'text-black' : 'invisible group-hover:visible opacity-25'" />
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center svws-divider">
 						<span :class="{'opacity-25': kursdifferenz(kurs).value[1] === 0}">{{ kursdifferenz(kurs).value[1] }}</span>
@@ -106,7 +106,7 @@
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
 							}"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
-							{{ getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(kurs.id) }} {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id)}e`:'' }} {{ getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)>0 ? `+${getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)}d`:'' }}
+							{{ getSchuelerAnzahl(kurs.id) }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
@@ -129,7 +129,8 @@
 			</div>
 			<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 			<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetail_anzeige === kurs.id" :bg-color="bgColor" :anzahl-spalten="6 + anzahlSchienen"
-				:kurs="kurs" :kurse-mit-kursart="kurseMitKursart(kurs).value" :get-datenmanager="getDatenmanager" :map-lehrer="mapLehrer" :add-regel="addRegel"
+				:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager"
+				:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel"
 				:add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
 				:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
 		</template>
@@ -138,24 +139,25 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
+	import { ref, computed } from "vue";
 	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
-	import { ref, type ComputedRef, computed } from "vue";
+	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(props.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
+	const bgColor = computed<string>(() => ZulaessigesFach.getByKuerzelASD(props.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0));
 
 	function toggleSchuelerFilterFachwahl(idFach: number, kursart: GostKursart) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.fach !== idFach) {
-			props.schuelerFilter.kursart = kursart;
-			props.schuelerFilter.fach = idFach;
+		if (filter.fach !== idFach) {
+			filter.kursart = kursart;
+			filter.fach = idFach;
 		} else {
-			props.schuelerFilter.reset();
+			filter.reset();
 		}
 	}
 
@@ -166,7 +168,7 @@
 	const editKursID = ref<number | undefined>(undefined);
 	const kursdetail_anzeige = ref<number | undefined>(undefined);
 
-	const listeDerKurse : ComputedRef<List<GostBlockungKurs>> = computed(() => {
+	const listeDerKurse = computed<List<GostBlockungKurs>>(() => {
 		return props.getDatenmanager().kursGetListeByFachUndKursart(props.fachwahlen.id, props.kursart.id);
 	});
 
@@ -179,30 +181,37 @@
 		editKursID.value = undefined;
 	}
 
-	const kursbezeichnung = (kurs: GostBlockungKurs) : ComputedRef<string> => computed(() => {
+	const kursbezeichnung = (kurs: GostBlockungKurs) => computed<string>(() => {
 		return props.getDatenmanager().kursGetName(kurs.id)
 	});
 
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.fach !== kurs.fach_id || props.schuelerFilter.kursart?.id !== kurs.kursart) {
-			props.schuelerFilter.kursart = GostKursart.fromID(kurs.kursart);
-			props.schuelerFilter.fach = kurs.fach_id;
+		if (filter.fach !== kurs.fach_id || filter.kursart?.id !== kurs.kursart) {
+			filter.kursart = GostKursart.fromID(kurs.kursart);
+			filter.fach = kurs.fach_id;
 		}
 		else
-			props.schuelerFilter.reset();
+			filter.reset();
 	}
 
-	const kurslehrer = (kurs: GostBlockungKurs) : ComputedRef<LehrerListeEintrag | undefined> => computed(() => {
-		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id);
-		return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
+	const kurslehrer = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag | undefined>({
+		get: () => {
+			const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id);
+			return liste.size() > 0 ? props.mapLehrer.get(liste.get(0).id) : undefined;
+		},
+		set: (value) => void setKurslehrer(kurs, value ?? undefined)
 	});
 
-	const kurslehrer_liste = (kurs: GostBlockungKurs): ComputedRef<LehrerListeEintrag[]> => computed(() => {
+	const kurslehrer_liste = (kurs: GostBlockungKurs) => computed<LehrerListeEintrag[]>(() => {
 		const vergeben = new Set();
 		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
 			vergeben.add(l.id);
+		const id = kurslehrer(kurs).value?.id;
+		if (id)
+			vergeben.delete(id);
 		const result = [];
 		for (const l of props.mapLehrer.values())
 			if ((!vergeben.has(l.id)) && (l.istSichtbar))
@@ -211,24 +220,18 @@
 	})
 
 	async function setKurslehrer(kurs: GostBlockungKurs, value: LehrerListeEintrag | undefined) {
-		if (value !== undefined && !props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)) {
-			const lehrer = await props.addKursLehrer(kurs.id, value.id);
-			if (lehrer === undefined)
-				throw new Error("Fehler beim Anlegen des Kurslehrers");
-			await add_lehrer_regel();
-		} else if (value === undefined && kurslehrer(kurs).value !== undefined) {
-			await remove_kurslehrer(kurs);
-		}
-	}
-
-	async function remove_kurslehrer(kurs : GostBlockungKurs) {
-		const lehrer = kurslehrer(kurs).value;
-		if (lehrer === undefined)
+		const lehrer = kurslehrer(kurs).value
+		if ((value === undefined && lehrer === undefined) || (value !== undefined && props.getDatenmanager().kursGetLehrkraftMitIDExists(kurs.id, value.id)))
 			return;
-		await props.removeKursLehrer(kurs.id, lehrer.id);
+		if (value !== undefined) {
+			await props.addKursLehrer(kurs.id, value.id);
+			await add_lehrer_regel();
+		}
+		if (lehrer !== undefined)
+			await props.removeKursLehrer(kurs.id, lehrer.id);
 	}
 
-	const lehrer_regel: ComputedRef<GostBlockungRegel | undefined> = computed(()=> {
+	const lehrer_regel = computed<GostBlockungRegel | undefined>(()=> {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
 		const regeln = props.getDatenmanager().regelGetListeOfTyp(regel_typ);
 		if (regeln.isEmpty())
@@ -245,27 +248,22 @@
 		await props.addRegel(r);
 	}
 
-	const anzahlSchienen: ComputedRef<number> = computed(() => props.getDatenmanager().schieneGetAnzahl());
+	const anzahlSchienen = computed<number>(() => props.getDatenmanager().schieneGetAnzahl());
 
-	const kurs_blockungsergebnis = (kurs: GostBlockungKurs) : ComputedRef<GostBlockungsergebnisKurs | undefined> => computed(() => {
+	const kurs_blockungsergebnis = (kurs: GostBlockungKurs) => computed<GostBlockungsergebnisKurs | undefined>(() => {
 		return props.hatErgebnis ? props.getErgebnismanager().getKursE(kurs.id) : undefined;
 	});
 
-	const kurseMitKursart = (kurs: GostBlockungKurs) : ComputedRef<List<GostBlockungsergebnisKurs>> => computed(() => {
-		const fachart = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
-		return props.getErgebnismanager().getOfFachartKursmenge(fachart);
-	});
-
-	const filtered_by_kursart = (kurs: GostBlockungKurs) : ComputedRef<List<GostBlockungsergebnisKurs>> => computed(() => {
+	const filtered_by_kursart = (kurs: GostBlockungKurs) => computed<List<GostBlockungsergebnisKurs>>(() => {
 		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
 		return props.getErgebnismanager().getOfFachartKursmenge(fachart_id);
 	})
 
-	const setze_kursdifferenz = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
+	const setze_kursdifferenz = (kurs: GostBlockungKurs) => computed<boolean>(() => {
 		return filtered_by_kursart(kurs).value.get(0) === kurs_blockungsergebnis(kurs).value;
 	});
 
-	const kursdifferenz = (kurs: GostBlockungKurs) : ComputedRef<[number, number, number]> => computed(() => {
+	const kursdifferenz = (kurs: GostBlockungKurs) => computed<[number, number, number]>(() => {
 		if (filtered_by_kursart(kurs).value.isEmpty())
 			return [-1,-1, -1];
 		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
@@ -276,47 +274,41 @@
 
 	const toggle_kursdetail_anzeige = (idKurs : number) => kursdetail_anzeige.value = (kursdetail_anzeige.value === idKurs) ? undefined : idKurs;
 
-	const kursOhneBorder = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
-		return (kurseMitKursart(kurs).value.size() > 1)
-			&& !kursbezeichnung(kurs).value.endsWith(kurseMitKursart(kurs).value.size().toString())
-			&& (kursdetail_anzeige.value !== kurs.id);
-	})
-
-
-	const istZugeordnetKursSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istZugeordnetKursSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		return props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(kurs.id, schiene.id);
 	})
 
-	const istKursFixiertInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istKursFixiertInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		return props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id);
 	})
 
-	const istKursAusgewaehlt = (kurs: GostBlockungKurs) : ComputedRef<boolean> => computed(() => {
+	const istKursAusgewaehlt = (kurs: GostBlockungKurs) => computed<boolean>(() => {
 		const k = props.getErgebnismanager().getKursE(kurs.id);
-		const filter_kurs_id = props.schuelerFilter?.kurs?.id;
+		const filter_kurs_id = props.schuelerFilter()?.kurs?.id;
 		return (k !== undefined) && (k.id === filter_kurs_id);
 	});
 
 	function toggleKursAusgewaehlt(kurs : GostBlockungKurs) {
-		if (props.schuelerFilter === undefined)
+		const filter = props.schuelerFilter();
+		if (filter === undefined)
 			return;
-		if (props.schuelerFilter.kurs?.id !== kurs.id)
-			props.schuelerFilter.kurs = kurs;
+		if (filter.kurs?.id !== kurs.id)
+			filter.kurs = kurs;
 		else
-			props.schuelerFilter.reset();
+			filter.reset();
 	}
 
-	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
 		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id !== schiene.id);
 	});
 
-	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
 		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id === schiene.id);
 	});
 
-	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
 		if (dragData === undefined)
 			return false;
@@ -331,7 +323,7 @@
 		return true;
 	});
 
-	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istKursGesperrtInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		return props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id);
 	})
 
@@ -350,7 +342,7 @@
 		}
 	}
 
-	const istKursVerbotenInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) : ComputedRef<boolean> => computed(() => {
+	const istKursVerbotenInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		return props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id);
 	})
 
@@ -368,6 +360,12 @@
 			regel.parameter.add(s.nummer);
 			await props.addRegel(regel);
 		}
+	}
+
+	function getSchuelerAnzahl(idKurs: number) : string {
+		const aktive = props.getErgebnismanager().getOfKursAnzahlSchuelerNichtExtern(idKurs);
+		const andere = props.getErgebnismanager().getOfKursAnzahlSchuelerExterne(idKurs) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(idKurs);
+		return (andere > 0) ? `${aktive}|${andere}` : "" + aktive;
 	}
 
 </script>

@@ -2,11 +2,11 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe> <s-gost-klausurplanung-vorgaben-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
+	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+	</Teleport>
 	<div class="page--content page--content--full">
-		<svws-ui-content-card>
-			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-			</template>
+		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(faecherManager.get(value)?.kuerzel || null) }">{{ faecherManager.get(value)?.bezeichnung }}</span>
@@ -22,7 +22,7 @@
 					<span :class="{'opacity-25': !value}">{{ value }}</span>
 				</template>
 				<template #cell(istMdlPruefung)="{ value }">
-					<i-ri-speak-line v-if="value" class="-my-0.5" />
+					<i-ri-chat1-line v-if="value" class="-my-0.5" />
 					<span v-else class="opacity-25">—</span>
 				</template>
 				<template #cell(istAudioNotwendig)="{ value }">
@@ -43,9 +43,9 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe >= 0 ? 'Vorgabe bearbeiten' : 'Vorgabe bearbeiten'" class="sticky top-8">
-			<template #actions v-if="activeVorgabe.idVorgabe >= 0">
-				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1"><i-ri-delete-bin-line />Löschen</svws-ui-button>
+		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-0 -ml-2">
+			<template #actions v-if="activeVorgabe.idVorgabe > 0">
+				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kursklausurmanager !== undefined && kursklausurmanager().istVorgabeVerwendetByVorgabe(activeVorgabe))"><i-ri-delete-bin-line />Löschen</svws-ui-button>
 			</template>
 			<template v-if="activeVorgabe.idVorgabe < 0">
 				<span class="opacity-50">Zum Bearbeiten eine Vorgabe in der Tabelle auswählen oder mit <i-ri-add-line class="inline-block text-button -mt-1" /> eine neue erstellen.</span>
@@ -68,7 +68,7 @@
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
 							<svws-ui-radio-group id="rbgMdlPruefung" :row="true">
 								<svws-ui-radio-option v-for="value in formJaNein" :class="value.name === 'Ja' ? 'order-1' : 'order-0'" :key="value.name" :value="value.name" name="formMdlPruefung" :label="value.name === 'Ja' ? 'Mündliche Prüfung' : 'Schriftlich'" :model-value="activeVorgabe.istMdlPruefung ? 'Ja' : 'Nein'" @click="activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({istMdlPruefung: value.key}, activeVorgabe.idVorgabe) : activeVorgabe.istMdlPruefung = value.key" :disabled="activeVorgabe.idVorgabe < 0">
-									<i-ri-speak-line v-if="value.name === 'Ja'" />
+									<i-ri-chat1-line v-if="value.name === 'Ja'" />
 									<template v-else>
 										<i-ri-checkbox-blank-circle-line class="radio--indicator-icon--blank" />
 										<i-ri-checkbox-circle-line class="radio--indicator-icon--checked" />
@@ -105,9 +105,9 @@
 					</svws-ui-input-wrapper>
 				</div>
 				<div v-if="activeVorgabe.idVorgabe === 0" class="flex gap-1 flex-wrap justify-start mt-9">
+					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mb-3 leading-tight opacity-50"><i-ri-information-line class="inline align-text-top mr-0.5" />Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 					<svws-ui-button type="secondary" @click="cancelEdit">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="saveKlausurvorgabe" :disabled="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1">Speichern</svws-ui-button>
-					<div v-if="activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1" class="mt-2 leading-tight opacity-50">Um die Vorgabe zu speichern, müssen Fach, Kursart und Quartal ausgewählt werden.</div>
 				</div>
 			</template>
 		</svws-ui-content-card>
@@ -213,7 +213,7 @@
 	window.addEventListener('click', function(e) {
 		const vT = document.getElementById('vorgabenTable');
 		const vE = document.getElementById('vorgabenEdit');
-		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node))
+		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list"))
 			activeVorgabe.value = new GostKlausurvorgabe();
 	});
 

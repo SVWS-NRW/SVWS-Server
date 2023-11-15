@@ -6,6 +6,9 @@ export default class LoginPage{
 		// empty
 	}
 
+	setPage(page : Page){
+		this.page = page;
+	}
 	async login(servername: string, benutzername: string, passwort: string){
 		await this.enterServeradresse(servername);
 		await this.enterBenutzername(benutzername);

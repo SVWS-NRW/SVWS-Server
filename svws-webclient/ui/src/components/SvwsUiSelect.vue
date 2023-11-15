@@ -25,9 +25,9 @@
 			@keydown.up.prevent="onArrowUp"
 			@keydown.enter.prevent="selectCurrentActiveItem"
 			@keydown.backspace="onBackspace"
-			@keydown.esc.prevent="onEscape"
-			@keydown.space="onSpace"
-			@keydown.tab="onTab" />
+			@keydown.esc.prevent="toggleListBox"
+			@keydown.space.prevent="onSpace"
+			@keydown.tab.prevent="onTab" />
 		<button v-if="removable && hasSelected" role="button" @click.stop="removeItem" class="svws-remove">
 			<i-ri-close-line />
 		</button>
@@ -45,16 +45,16 @@
 
 <script setup lang="ts" generic="Item">
 
-	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
+	import type { ComputedRef, Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { computed, nextTick, ref, shallowRef, watch } from "vue";
+	import { computed, nextTick, ref, shallowRef, toRaw, watch } from "vue";
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
-	type InputDataType = Item | null | undefined;
+	type SelectDataType = Item | null | undefined;
 
 	const props = withDefaults(defineProps<{
 		label?: string;
@@ -66,8 +66,8 @@
 		items: Iterable<Item> | Map<number, Item>;
 		itemText: (item: Item) => string;
 		itemSort?: (a: Item, b: Item) => number;
-		itemFilter?: ((items: Iterable<Item>, searchText: string) => Item[]) | ((items: Item[], searchText: string) => Item[]);
-		modelValue: InputDataType;
+		itemFilter?: (items: Item[], searchText: string) => Item[];
+		modelValue: SelectDataType;
 		useNull?: boolean;
 		headless?: boolean;
 		removable?: boolean;
@@ -81,7 +81,7 @@
 		statistics: false,
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
-		itemFilter: (items: any, search: string) => items.filter((i: any) => i.text.toLowerCase().includes(search.toLowerCase())),
+		itemFilter: (items: Item[]) => items,
 		useNull: false,
 		headless: false,
 		removable: false,
@@ -89,20 +89,15 @@
 	})
 
 	const emit = defineEmits<{
-		(e: "update:modelValue", items: InputDataType): void;
-		(e: "blur", event: Event): void;
+		(e: "update:modelValue", items: SelectDataType): void;
 	}>();
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
-
 	const showList = ref(false);
-	const itemRefs = shallowRef<HTMLLIElement[]>([]);
-	const listIdPrefix = genId();
-
-	// Input element
 	const inputEl = ref(null);
 	const hasFocus = ref(false);
 	const searchText = ref("");
+	const listIdPrefix = genId();
 
 	function onInputFocus() {
 		hasFocus.value = true;
@@ -114,12 +109,7 @@
 	}
 
 	const dynModelValue = computed<string>(() => {
-		switch (true) {
-			case showList.value && props.autocomplete:
-				return searchText.value;
-			default:
-				return generateInputText() ?? '';
-		}
+		return (showList.value && props.autocomplete) ? searchText.value : generateInputText();
 	});
 
 	function generateInputText() {
@@ -128,7 +118,7 @@
 		return props.itemText(selectedItem.value);
 	}
 
-	function onInput(value: string | number) {
+	function onInput(value: string) {
 		if (props.autocomplete && (refList.value === null) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
 			openListbox();
 		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
@@ -153,31 +143,27 @@
 	}
 
 	// eslint-disable-next-line vue/no-setup-props-destructure
-	const data = shallowRef<InputDataType>(props.modelValue);
+	const data = shallowRef<SelectDataType>(props.modelValue);
 
-	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value: SelectDataType) => {
+		updateData(toRaw(value), true);
+	}, { immediate: false });
 
-	function updateData(value: InputDataType) {
+	function updateData(value: SelectDataType, fromModelValue : boolean) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
 			return;
 		if (data.value === value)
 			return;
 		data.value = value;
-		emit("update:modelValue", data.value);
-		if (props.indeterminate === true) {
+		if (!fromModelValue)
+			emit("update:modelValue", data.value);
+		if (props.indeterminate === true)
 			data.value = undefined;
-		}
 	}
 
-	const selectedItem: WritableComputedRef<Item | null | undefined> = computed({
+	const selectedItem = computed<Item | null | undefined>({
 		get: () => data.value,
-		set: (item) => {
-			if ((item === null) || (item === undefined)) {
-				updateData(item);
-				return;
-			}
-			updateData(item);
-		}
+		set: (item) => updateData(item, false)
 	});
 
 	const selectedItemList = computed<Set<Item>>(() => {
@@ -202,7 +188,13 @@
 		doFocus();
 	}
 
-	const sortedList: ComputedRef<Item[]> = computed(() => {
+	function reset() {
+		selectedItem.value = props.useNull ? null : undefined;
+		const el: typeof TextInput = inputEl.value!;
+		el?.input.blur();
+	}
+
+	const sortedList = computed<Item[]>(() => {
 		let arr
 		if (Array.isArray(props.items))
 			arr = props.items;
@@ -215,15 +207,21 @@
 		return arr;
 	});
 
-	const filteredList: ComputedRef<Item[]> = computed(() => {
+	watch(sortedList, items => {
+		for (const item of items)
+			if (item === data.value)
+				return;
+		data.value = undefined;
+	});
+
+	const filteredList = computed<Item[]>(() => {
 		if (props.autocomplete) {
 			const isCurrent : boolean = (selectedItem.value !== null) && (selectedItem.value !== undefined) && (props.itemText(selectedItem.value) === searchText.value);
 			if (isCurrent)
 				return sortedList.value;
 			return props.itemFilter(sortedList.value, searchText.value);
-		} else {
-			return sortedList.value;
 		}
+		return sortedList.value;
 	});
 
 	function doFocus() {
@@ -239,13 +237,14 @@
 		doFocus();
 		showList.value = true;
 		void nextTick(() => {
-			if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== null)) {
+			if (refList.value === null)
+				return;
+			if ((selectedItem.value !== null) && (selectedItem.value !== undefined))
 				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
-				scrollToActiveItem();
-			} else if (refList.value !== null) {
+			else
 				refList.value.activeItemIndex = 0;
-				scrollToActiveItem();
-			}
+			if (refList.value.itemRefs[refList.value.activeItemIndex] !== undefined)
+				refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 		});
 	}
 
@@ -261,31 +260,26 @@
 		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
-	// Arrow Navigation
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex < listLength - 1)
 			refList.value.activeItemIndex++;
 		else
 			refList.value.activeItemIndex = 0;
-		scrollToActiveItem();
+		refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === null)) {
-			openListbox();
-			return;
-		}
+		if ((!showList.value) || (refList.value === null))
+			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
 			refList.value.activeItemIndex = listLength - 1;
 		else if (refList.value.activeItemIndex >= 1)
 			refList.value.activeItemIndex--;
-		scrollToActiveItem();
+		refList.value.itemRefs[refList.value.activeItemIndex].scrollIntoView();
 	}
 
 	function onBackspace() {
@@ -293,67 +287,36 @@
 			openListbox();
 	}
 
-	function onEscape() {
-		if (showList.value) {
-			closeListbox();
-		} else {
-			openListbox();
-		}
-	}
-
-	function onSpace(e: InputEvent) {
-		if (!props.autocomplete) {
-			e.preventDefault();
-			if (!showList.value) {
+	function onSpace() {
+		if (!props.autocomplete)
+			if (!showList.value)
 				openListbox();
-			} else {
+			else
 				selectCurrentActiveItem();
-			}
-		}
 	}
 
-	function onTab(e: InputEvent) {
+	function onTab() {
 		if (props.autocomplete && refList.value !== null) {
-			e.preventDefault();
 			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
 	}
 
-	function scrollToActiveItem() {
-		if (refList.value !== null)
-			(itemRefs.value as HTMLElement[])[refList.value.activeItemIndex]?.scrollIntoView({
-				block: "nearest",
-				inline: "nearest"
-			});
-	}
-
-	const {x, y, strategy} = useFloating(
-		inputEl,
-		refList as Readonly<Ref<MaybeElement<HTMLElement>>>,
-		{
-			placement: 'bottom',
-			middleware: [flip(), shift(), offset(2), size({
-				apply({rects, elements}) {
-					Object.assign(elements.floating.style, {
-						width: `${rects.reference.width}px`
-					});
-				}
-			})],
-			whileElementsMounted: autoUpdate,
-		}
-	);
+	const {x, y, strategy} = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
+		placement: 'bottom',
+		middleware: [flip(), shift(), offset(2), size({ apply({rects, elements}) { Object.assign(elements.floating.style, { width: `${rects.reference.width}px` }); } })],
+		whileElementsMounted: autoUpdate,
+	});
 
 	const floatingTop = computed(() => `${y.value ?? 0}px`);
 	const floatingLeft = computed(() => `${x.value ?? 0}px`);
 
-	const content = computed<InputDataType>(() => {
-		return data.value;
-	});
+	const content = computed<SelectDataType>(() => data.value);
 
 	defineExpose<{
-		content: ComputedRef<InputDataType>,
-	}>({ content });
+		content: ComputedRef<SelectDataType>,
+		reset: () => void,
+	}>({ content, reset });
 
 </script>
 

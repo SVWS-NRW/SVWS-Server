@@ -1,44 +1,32 @@
 <template>
 	<svws-ui-content-card title="Allgemein">
 		<template #actions>
-			<svws-ui-checkbox v-model="inputIstSichtbar"> Ist sichtbar </svws-ui-checkbox>
+			<svws-ui-checkbox :model-value="data.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
 		</template>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel=>doPatch({kuerzel})" type="text" />
-			<svws-ui-text-input placeholder="Parallelität" :model-value="data.parallelitaet" @change="parallelitaet=>doPatch({parallelitaet})" type="text" />
-			<svws-ui-text-input placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung=>doPatch({sortierung: Number(sortierung)})" type="text" />
-			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="mapJahrgaenge" :item-text="(item: JahrgangsListeEintrag) => item.kuerzel ?? ''" />
+			<svws-ui-text-input placeholder="Kürzel" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
+			<svws-ui-text-input placeholder="Parallelität" :model-value="data.parallelitaet" @change="parallelitaet => patch({ parallelitaet })" type="text" />
+			<svws-ui-input-number placeholder="Sortierung" :model-value="data.sortierung" @change="sortierung => (sortierung !== null) && patch({ sortierung })" />
+			<svws-ui-select title="Jahrgang" v-model="jahrgang" :items="klassenListeManager().jahrgaenge.list()" :item-text="item => item.kuerzel ?? ''" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import type { JahrgangsListeEintrag, KlassenDaten } from "@core";
+	import type { JahrgangsListeEintrag, KlassenDaten, KlassenListeManager } from "@core";
 
 	const props = defineProps<{
-		data: KlassenDaten,
-		mapJahrgaenge: Map<number, JahrgangsListeEintrag>
+		patch: (data : Partial<KlassenDaten>) => Promise<void>;
+		klassenListeManager: () => KlassenListeManager;
 	}>();
 
-	const emit = defineEmits<{
-		(e: 'patch', data: Partial<KlassenDaten>): void;
-	}>()
+	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
 
-	function doPatch(data: Partial<KlassenDaten>) {
-		emit('patch', data);
-	}
-
-	const jahrgang: WritableComputedRef<JahrgangsListeEintrag | undefined> = computed({
-		get: () => ((props.data === undefined) || (props.data.idJahrgang === null)) ? undefined : props.mapJahrgaenge.get(props.data.idJahrgang),
-		set: (value) => doPatch({ idJahrgang: value?.id })
-	});
-
-	const inputIstSichtbar: WritableComputedRef<boolean | undefined> = computed({
-		get: () => props.data.istSichtbar,
-		set: (value) => doPatch({ istSichtbar: value })
+	const jahrgang = computed<JahrgangsListeEintrag | null>({
+		get: () => ((data.value === undefined) || (data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
+		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
 	});
 
 </script>

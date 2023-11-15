@@ -3,8 +3,8 @@ import { TestPerson } from "./TestPerson";
 
 export class TestMinComparator implements Comparator<string | number | TestPerson> {
 	public compare(a: unknown, b: unknown) : 1 | -1 | 0 {
-		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
-			return (a.valueOf() < b?.valueOf()) ? -1 : ((a.valueOf() === b?.valueOf()) ? 0 : 1);
+		if ((typeof a === 'string' && typeof b === 'string') || (typeof a === 'number' && typeof b === 'number')) {
+			return (a < b) ? -1 : ((a === b) ? 0 : 1);
 		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
 			return ((a.nachname ?? "") < (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);
@@ -16,8 +16,8 @@ export class TestMinComparator implements Comparator<string | number | TestPerso
 
 export class TestMaxComparator implements Comparator<string | number | TestPerson> {
 	public compare(a: unknown, b: unknown): 1 | -1 | 0 {
-		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
-			return (a.valueOf() > b?.valueOf()) ? -1 : ((a.valueOf() === b?.valueOf()) ? 0 : 1);
+		if ((typeof a === 'string' && typeof b === 'string') || (typeof a === 'number' && typeof b === 'number')) {
+			return (a > b) ? -1 : ((a === b) ? 0 : 1);
 		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
 			return ((a.nachname ?? "") > (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);

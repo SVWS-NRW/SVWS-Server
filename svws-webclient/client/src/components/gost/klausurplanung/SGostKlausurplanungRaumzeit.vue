@@ -2,19 +2,18 @@
 	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 		<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 	</Teleport>
+	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
+		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
+	</Teleport>
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card>
-			<template #title>
-				<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" />
-			</template>
+		<svws-ui-content-card title="In Planung">
 			<div class="mb-2">
-				<div class="text-headline-md">Planung</div>
-				<div class="leading-tight flex flex-col gap-0.5 mt-5" v-if="termine().size() === 0">
+				<div class="leading-tight flex flex-col gap-0.5" v-if="termine().size() === 0">
 					<span>Aktuell keine Klausuren zu planen.</span>
 					<span class="opacity-50">Um Räume und Startzeiten festzulegen, müssen Klausuren einem Termin zugeordnet sein.</span>
 				</div>
 			</div>
-			<ul class="flex flex-col gap-0.5 -mx-3 mt-2">
+			<ul class="flex flex-col gap-0.5 -mx-3">
 				<li v-for="termin in termine()"
 					:key="termin.id"
 					@click="chooseTermin(termin)"
@@ -24,7 +23,7 @@
 					:data="termin"
 					:class="{
 						'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3': selectedTermin?.id === termin.id,
-						'cursor-pointer': selectedTermin?.id !== termin.id,
+						'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': selectedTermin?.id !== termin.id,
 					}">
 					<s-gost-klausurplanung-termin :termin="termin"
 						:kursklausurmanager="kursklausurmanager"
@@ -42,7 +41,7 @@
 			</ul>
 		</svws-ui-content-card>
 		<div v-if="selectedTermin === null">
-			<div class="h-full border-2 border-dashed bg-white dark:bg-black rounded-xl border-black/10 dark:border-white/10 flex items-center justify-center p-3 text-center">
+			<div class="h-full rounded-lg shadow-inner flex items-center justify-center p-3 text-center">
 				<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
 			</div>
 		</div>

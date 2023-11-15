@@ -1,6 +1,7 @@
 package de.svws_nrw.core.data.schule;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import de.svws_nrw.core.data.CoreTypeData;
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -12,12 +13,7 @@ import jakarta.validation.constraints.NotNull;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
 @TranspilerDTO
-public class SchulformKatalogEintrag {
-
-
-	/** Die ID des Katalog-Eintrags. */
-	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
-	public long id;
+public class SchulformKatalogEintrag extends CoreTypeData {
 
 	/** Das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird */
 	@Schema(description = "das Kürzel der Schulform, welches im Rahmen der amtlichen Schulstatistik verwendet wird", example = "GE")
@@ -42,14 +38,6 @@ public class SchulformKatalogEintrag {
 	/** Gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht. */
 	@Schema(description = "gibt an, ob eine Schule der Schulform eine gymnasiale Oberstufe haben kann oder nicht", example = "true")
 	public boolean hatGymOb;
-
-	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")
-	public Integer gueltigVon = null;
-
-	/** Gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt. */
-	@Schema(description = "gibt an, bis zu welchem Schuljahr die Schulform gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
-	public Integer gueltigBis = null;
 
 
 	/**

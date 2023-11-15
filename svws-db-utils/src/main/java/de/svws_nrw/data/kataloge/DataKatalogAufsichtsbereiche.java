@@ -113,9 +113,22 @@ public final class DataKatalogAufsichtsbereiche extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// füge den Aufsichtsbereich in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
 		final ObjLongConsumer<DTOKatalogAufsichtsbereich> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Aufsichtsbereiche mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		final ObjLongConsumer<DTOKatalogAufsichtsbereich> initDTO = (dto, id) -> dto.ID = id;
+		return super.addBasicMultiple(is, DTOKatalogAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 

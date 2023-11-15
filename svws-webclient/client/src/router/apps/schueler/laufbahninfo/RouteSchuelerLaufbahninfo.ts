@@ -25,12 +25,12 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 		if (this.parent === undefined)
 			return routeError.getRoute(new Error("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
 		if (to_params.id === undefined) {
-			await this.data.auswahlSchueler();
+			await this.data.auswahlSchueler(null);
 			return;
 		}
 		const id = parseInt(to_params.id);
 		try {
-			await this.data.auswahlSchueler(this.parent.data.mapSchueler.get(id));
+			await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.liste.get(id));
 		} catch(error) {
 			return routeSchueler.getRoute(id);
 		}

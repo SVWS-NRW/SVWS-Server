@@ -1,0 +1,1 @@
+export type AuswahlChildData = { name: string; text: string; image?: string; }

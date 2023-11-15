@@ -53,6 +53,21 @@ public enum DBDriver {
 
 
 	/**
+	 * Gibt die Datei-Endung für das DBMS zurück, sofern es sich um ein
+	 * Datei-basiertes DBMS handelt.
+	 *
+	 * @return die Datei-Endung
+	 */
+	public String getFileSuffix() {
+		return switch (this) {
+			case MDB -> "mdb";
+			case SQLITE -> "sqlite";
+			default -> null;
+		};
+	}
+
+
+	/**
 	 * Gibt zurück, ob das DBMS eine Unterstützung für mehrere Schemata hat.
 	 *
 	 * @return true, falls das DBMS eine Unterstützung für mehrere Schemata hat und ansonsten false

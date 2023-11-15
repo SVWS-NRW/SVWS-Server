@@ -8,6 +8,7 @@ import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleFremdschluessel;
+import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 
 /**
@@ -88,19 +89,33 @@ public class Tabelle_Gost_Jahrgang_Faecher extends SchemaTabelle {
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Faecher_Abi_Jahrgang_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Faecher_Abi_Jahrgang_FK = addForeignKey(
-			"Gost_Jahrgang_Faecher_Abi_Jahrgang_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
-		);
+		"Gost_Jahrgang_Faecher_Abi_Jahrgang_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Abi_Jahrgang, Schema.tab_Gost_Jahrgangsdaten.col_Abi_Jahrgang)
+	);
 
 	/** Die Definition des Fremdschlüssels Gost_Jahrgang_Faecher_Fach_ID_FK */
 	public SchemaTabelleFremdschluessel fk_Gost_Jahrgang_Faecher_Fach_ID_FK = addForeignKey(
-			"Gost_Jahrgang_Faecher_Fach_ID_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
-		);
+		"Gost_Jahrgang_Faecher_Fach_ID_FK",
+		/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
+		/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
+		new Pair<>(col_Fach_ID, Schema.tab_EigeneSchule_Faecher.col_ID)
+	);
+
+
+	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang */
+	public SchemaTabelleIndex index_Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang = addIndex("Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang",
+		col_Abi_Jahrgang
+	)
+	.setRevision(SchemaRevisionen.REV_12);
+
+	/** Die Definition des Non-Unique-Index Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang_Fach_ID */
+	public SchemaTabelleIndex index_Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang_Fach_ID = addIndex("Gost_Jahrgang_Faecher_IDX_Abi_Jahrgang_Fach_ID",
+		col_Abi_Jahrgang,
+		col_Fach_ID
+	)
+	.setRevision(SchemaRevisionen.REV_12);
 
 
 	/**

@@ -1,5 +1,9 @@
 <template>
-	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border border-black/10 bg-white shadow-lg shadow-black/5 dark:border-white/10 dark:bg-black">
+	<div @dragover="checkDropZone($event)" @drop="onDrop(raum)" class="flex flex-col rounded-xl border bg-white dark:bg-black"
+		:class="{
+			'shadow-lg shadow-black/5 border-black/10 dark:border-white/10': dragData() === undefined,
+			'border-dashed border-svws dark:border-svws ring-4 ring-svws/25': dragData() !== undefined && dragData() instanceof GostKursklausur,
+		}">
 		<div class="flex h-full flex-col p-3">
 			<div class="svws-raum-title flex justify-between">
 				<svws-ui-select :title="stundenplanRaumSelected ? 'Raum' : 'Raum auswählen...'"
@@ -16,7 +20,7 @@
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
 				<template #header><span /></template>
 				<template #body>
-					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr" role="row" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
+					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
 							<i-ri-draggable class="i-ri-draggable -m-0.5 -ml-3" />
 							<span class="svws-ui-badge" :style="`--background-color: ${getBgColor(props.kursmanager.get(klausur.idKurs)!.kuerzel.split('-')[0])};`">{{ props.kursmanager.get(klausur.idKurs)!.kuerzel }}</span>
@@ -128,11 +132,17 @@
 </script>
 
 <style lang="postcss">
-.svws-raum-title .text-input--headless {
-  @apply text-headline-md;
+.svws-raum-title {
+  .text-input--headless {
+    @apply text-headline-md pl-5;
 
-  &::placeholder {
-    @apply font-bold;
+    &::placeholder {
+      @apply font-bold;
+    }
+  }
+
+  .svws-ui-select.svws-headless .svws-dropdown-icon {
+    @apply w-5 h-5 -left-1 text-base top-0.5;
   }
 }
 </style>

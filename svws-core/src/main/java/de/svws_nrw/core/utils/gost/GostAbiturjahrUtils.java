@@ -1,5 +1,8 @@
 package de.svws_nrw.core.utils.gost;
 
+import java.util.Comparator;
+
+import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
@@ -13,6 +16,21 @@ public final class GostAbiturjahrUtils {
 	private GostAbiturjahrUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
+
+
+	/** Ein Default-Comparator für den Vergleich von Abiturjahrgängen in Abiturjahrgangslisten. */
+	public static final @NotNull Comparator<@NotNull GostJahrgang> comparator = (final @NotNull GostJahrgang a, final @NotNull GostJahrgang b) -> {
+		final int cmp = a.abiturjahr - b.abiturjahr;
+		if (cmp != 0)
+			return cmp;
+		if ((a.jahrgang == null) || (b.jahrgang == null)) {
+			if ((a.jahrgang == null) && (b.jahrgang == null))
+				return 0;
+			return (a.jahrgang == null) ? -1 : 1;
+		}
+		return a.jahrgang.compareTo(b.jahrgang);
+	};
+
 
 	/**
 	 * Bestimmt für das übergegebene Schuljahr eines Schülers das Kalenderjahr, in welchem ein Schüler

@@ -632,8 +632,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert eine nach Kursnummer sortiere Liste der Kurse für das angegebenen Fach und die
-	 * angegegebene Kursart.
+	 * Liefert eine nach Kursnummer sortiere Liste der Kurse für das angegebenen Fach und die angegebene Kursart.
 	 *
 	 * @param idFach      die ID des Fachs
 	 * @param idKursart   die ID der Kursart
@@ -741,6 +740,20 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert die Regel, welche die Anzahl der DummySuS eines Kurses definiert oder NULL.
+	 *
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return die Regel, welche die Anzahl der DummySuS eines Kurses definiert oder NULL.
+	 */
+	public GostBlockungRegel kursGetRegelDummySchuelerOrNull(final long idKurs) {
+		for (final @NotNull GostBlockungRegel regel : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
+			if (regel.parameter.get(0) == idKurs)
+				return regel;
+		return null;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Kurs aufgrund der Regel {@link GostKursblockungRegelTyp#KURS_FIXIERE_IN_SCHIENE} in der angegebenen Schiene fixiert ist.
 	 *
 	 * @param idKurs     Die Datenbank-ID des Kurses.
@@ -786,7 +799,7 @@ public class GostBlockungsdatenManager {
 		_list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		_list_kurse_sortiert_kursart_fach_kursnummer.remove(kurs); // Neusortierung nicht nötig.
 		Map2DUtils.removeFromListAndTrimOrException(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart, kurs);
-		_map_idKurs_kurs.remove(idKurs);
+		DeveloperNotificationException.ifMapRemoveFailes(_map_idKurs_kurs, idKurs);
 		_daten.kurse.remove(kurs);
 	}
 

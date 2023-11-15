@@ -1,18 +1,14 @@
 <template>
-	<template v-if="visible">
+	<template v-if="klassenListeManager().hasDaten()">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<svws-ui-tooltip :indicator="false">
-							{{ auswahl?.kuerzel ? 'Klasse ' + auswahl.kuerzel : '—' }}
-							<template #content>
-								<span class="font-mono">
-									ID:
-									{{ auswahl?.id || '—' }}
-								</span>
-							</template>
-						</svws-ui-tooltip>
+						<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+							ID:
+							{{ klassenListeManager().daten().id }}
+						</svws-ui-badge>
 					</h2>
 					<span class="svws-subline">
 						{{ lehrerkuerzel }}
@@ -33,16 +29,15 @@
 <script setup lang="ts">
 
 	import type { KlassenAppProps } from "./SKlassenAppProps";
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = defineProps<KlassenAppProps>();
 
 	const lehrerkuerzel = computed<string>(() => {
 		let s = '';
-		if (props.auswahl)
-			for (const id of props.auswahl.klassenLehrer) {
-				const lehrer = props.mapLehrer.get(id);
+		if (props.klassenListeManager().hasDaten())
+			for (const id of props.klassenListeManager().daten().klassenLeitungen) {
+				const lehrer = props.klassenListeManager().lehrer.get(id);
 				if (lehrer) {
 					if (s.length)
 						s += `, ${lehrer.kuerzel}`;
@@ -51,7 +46,5 @@
 			}
 		return s;
 	});
-
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
 
 </script>

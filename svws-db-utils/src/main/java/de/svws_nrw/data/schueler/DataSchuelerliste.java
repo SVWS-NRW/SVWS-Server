@@ -99,11 +99,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		eintrag.nachname = schueler.Nachname == null ? "" : schueler.Nachname;
 		eintrag.vorname = schueler.Vorname == null ? "" : schueler.Vorname;
 		eintrag.geschlecht = schueler.Geschlecht == null ? "" : schueler.Geschlecht.kuerzel;
-		eintrag.idKlasse = (aktAbschnitt == null) ? -1 : aktAbschnitt.Klassen_ID;
-		eintrag.idJahrgang = (aktAbschnitt == null) ? -1 : aktAbschnitt.Jahrgang_ID;
-		eintrag.jahrgang = (aktAbschnitt == null) ? "" : aktAbschnitt.ASDJahrgang;
+		eintrag.idKlasse = ((aktAbschnitt == null) || (aktAbschnitt.Klassen_ID == null)) ? -1 : aktAbschnitt.Klassen_ID;
+		eintrag.idJahrgang = ((aktAbschnitt == null) || (aktAbschnitt.Jahrgang_ID == null)) ? -1 : aktAbschnitt.Jahrgang_ID;
+		eintrag.jahrgang = ((aktAbschnitt == null) || (aktAbschnitt.ASDJahrgang == null)) ? "" : aktAbschnitt.ASDJahrgang;
 		eintrag.schulgliederung = ((aktAbschnitt == null) || (aktAbschnitt.Schulgliederung == null)) ? "" : aktAbschnitt.Schulgliederung.daten.kuerzel;
 		eintrag.status = schueler.Status.id;
+		eintrag.istDuplikat = schueler.Duplikat;
+		eintrag.externeSchulNr = schueler.ExterneSchulNr;
 		eintrag.idSchuljahresabschnitt = schueler.Schuljahresabschnitts_ID;
 		return eintrag;
 	}

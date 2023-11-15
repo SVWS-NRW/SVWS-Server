@@ -14,7 +14,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.raumzeit", "raumzeit", SGostKlausurplanungRaumzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Klausurräume und -startzeiten";
+		super.text = "Räume und Startzeiten";
 	}
 
 	public checkHidden(params?: RouteParams) {
@@ -29,6 +29,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<unknown, RouteGos
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungRaumzeitProps {
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			faecherManager: routeGostKlausurplanung.data.faecherManager,
 			kursklausurmanager: () => { return routeGostKlausurplanung.data.hatKursklausurManager ? routeGostKlausurplanung.data.kursklausurmanager : new GostKursklausurManager(new Vector(), new Vector())},
 			mapLehrer: routeGostKlausurplanung.data.mapLehrer,

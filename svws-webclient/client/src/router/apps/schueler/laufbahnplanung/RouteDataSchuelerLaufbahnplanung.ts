@@ -1,11 +1,7 @@
 import { shallowRef } from "vue";
-
-import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag,
-	SchuelerListeEintrag } from "@core";
-import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang,
-	GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException } from "@core";
-
 import { api } from "~/router/Api";
+import type { Abiturdaten, ApiFile, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList } from "@core";
 
 
 interface RouteStateSchuelerLaufbahnplanung {
@@ -150,8 +146,17 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	getPdfWahlbogen = async() => {
-		return await api.server.getGostSchuelerPDFWahlbogen(api.schema, this.auswahl.id);
+	getPdfWahlbogen = async(title: string) => {
+		const list = new ArrayList<number>();
+		list.add(this.auswahl.id);
+		switch (title) {
+			case 'Laufbahnwahlbogen':
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogen(list, api.schema);
+			case 'Laufbahnwahlbogen (nur Belegung)':
+				return await api.server.pdfGostLaufbahnplanungSchuelerWahlbogenNurBelegung(list, api.schema);
+			default:
+				throw new DeveloperNotificationException('Es wurde kein passender Parameter zur Erzeugung des PDF übergeben.')
+		}
 	}
 
 	exportLaufbahnplanung = async (): Promise<ApiFile> => {
@@ -205,10 +210,10 @@ export class RouteDataSchuelerLaufbahnplanung {
 		await this.setGostBelegpruefungErgebnis();
 	}
 
-	public async ladeDaten(auswahl?: SchuelerListeEintrag) {
+	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if (auswahl === undefined)
+		if (auswahl === null)
 			this.setPatchedDefaultState({});
 		else {
 			const gostJahrgang = new GostJahrgang();
@@ -227,7 +232,7 @@ export class RouteDataSchuelerLaufbahnplanung {
 				const mapLehrer = new Map<number, LehrerListeEintrag>();
 				for (const l of listLehrer)
 					mapLehrer.set(l.id, l);
-				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer })
+				this.setPatchedState({ auswahl, abiturdaten, gostJahrgang, gostJahrgangsdaten, gostLaufbahnBeratungsdaten, faecherManager, mapLehrer, zwischenspeicher: undefined })
 				await this.setGostBelegpruefungErgebnis();
 			} catch(error) {
 				throw new Error("Die Laufbahndaten konnten nicht eingeholt werden, sind für diesen Schüler Laufbahndaten möglich?")
