@@ -73,8 +73,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	}
 
 	private List<GostKursklausur> getKursKlausuren(final GostHalbjahr halbjahr) {
-		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
+		final Map<Long, GostKlausurvorgabe> mapVorgaben = (new DataGostKlausurenVorgabe(conn, _abiturjahr)).getKlausurvorgaben(halbjahr.id, false).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
+//		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
+//				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
 		if (mapVorgaben.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -96,11 +97,11 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 		final List<GostKursklausur> daten = new ArrayList<>();
 		kursklausuren.stream().forEach(k -> {
-			final DTOGostKlausurenVorgaben v = mapVorgaben.get(k.Vorgabe_ID);
+			final GostKlausurvorgabe v = mapVorgaben.get(k.Vorgabe_ID);
 			final DTOKurs kurs = mapKurse.get(k.Kurs_ID);
 			final List<DTOGostKlausurenSchuelerklausuren> sKlausuren = mapSchuelerklausuren.get(k.ID);
 			if (sKlausuren != null && !sKlausuren.isEmpty()) {
-				final GostKursklausur kk = dtoMapper.apply(k, DataGostKlausurenVorgabe.dtoMapper.apply(v), kurs, sKlausuren);
+				final GostKursklausur kk = dtoMapper.apply(k, v, kurs, sKlausuren);
 				daten.add(kk);
 			}
 		});

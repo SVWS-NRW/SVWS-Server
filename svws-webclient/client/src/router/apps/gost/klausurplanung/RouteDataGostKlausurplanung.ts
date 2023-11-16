@@ -114,6 +114,9 @@ export class RouteDataGostKlausurplanung {
 				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorgaben))
 					view = routeGostKlausurplanungVorgaben;
 			}
+			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, abiturjahr);
+			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, faecherManager);
+
 			// Setze den State neu
 			this.setPatchedDefaultState({
 				abiturjahr: abiturjahr,
@@ -124,6 +127,7 @@ export class RouteDataGostKlausurplanung {
 				halbjahr: this._state.value.halbjahr,
 				kursmanager: kursManager,
 				view: view,
+				klausurvorgabenmanager: klausurvorgabenmanager,
 			});
 		} finally {
 			api.status.stop();
@@ -168,10 +172,11 @@ export class RouteDataGostKlausurplanung {
 			return false;
 		try {
 			api.status.start();
-			const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr.id);
-			const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
+			// const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, this.abiturjahr);
+			// console.log(listKlausurvorgaben.size())
+			// const klausurvorgabenmanager = new GostKlausurvorgabenManager(listKlausurvorgaben, this.faecherManager);
 			const result: Partial<RouteStateGostKlausurplanung> = {
-				klausurvorgabenmanager: klausurvorgabenmanager,
+				// klausurvorgabenmanager: klausurvorgabenmanager,
 				abschnitt: undefined,
 				halbjahr: halbjahr,
 				kursklausurmanager: undefined,
@@ -188,7 +193,7 @@ export class RouteDataGostKlausurplanung {
 				return true;
 			}
 			Object.assign(result, {abschnitt});
-			const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr, klausurvorgabenmanager);
+			const kursklausurmanager = await this.reloadKursklausurmanager(halbjahr, this.klausurvorgabenmanager);
 			Object.assign(result, {kursklausurmanager});
 			const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
 			if (listStundenplaene.isEmpty()) {
