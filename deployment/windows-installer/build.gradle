@@ -93,12 +93,12 @@ repositories {
 	mavenCentral()
 }
 
-
+/*
 dependencies {
 	implementation 'de.svws-nrw:svws-server-app:' + svws_version
 	implementation 'de.svws-nrw:svws-client:' + svws_version
 }
-
+*/
 
 publishing {
 	repositories {
@@ -146,8 +146,8 @@ task printDependencies2 {
 
 
 task downloadJarsAll(type: Copy) {
-	dependsOn "downloadJarsSources"
-	dependsOn "downloadJarsJavadocs"
+	//dependsOn "downloadJarsSources"
+	//dependsOn "downloadJarsJavadocs"
 	dependsOn "downloadSVWSClient"
 	from configurations.runtimeClasspath
 	into "download/svws-" + project.version + "/jar/"
@@ -192,7 +192,7 @@ task downloadSVWSClient(type: Copy) {
 	include "svws-client-${svws_version}.zip"
 }
 
-
+/*
 task downloadJarsSources( type: Copy ) {
 	def sources = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
 		artifact -> project.dependencies.create(
@@ -213,7 +213,7 @@ task downloadJarsJavadocs( type: Copy ) {
 	from configurations.detachedConfiguration( sources as Dependency[] ).resolvedConfiguration.lenientConfiguration.getFiles( Specs.SATISFIES_ALL )
 	into "download/svws-" + project.version + "/jar-javadoc/"
 }
-
+*/
 
 task downloadJDK {
 	doLast {
