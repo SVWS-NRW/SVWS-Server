@@ -8,21 +8,21 @@ public enum AESAlgo {
 	/** Cipher Block Chaining (CBC) mit PKCS #5-Padding */
 	CBC_PKCS5PADDING("AES/CBC/PKCS5Padding");
 
-	/** die Bezeichnung des Verfahrens in der Java-Crypto-Bilbilthek */
-	private String value;
+	/** die Bezeichnung des Verfahrens in der Java-Crypto-Bibliothek */
+	private final String value;
 
 	/**
 	 * Erstellt einen neuen Eintrag für die unterstützen
 	 * AES-Verfahren.
 	 *
-	 * @param value   die Bezeichnung des Verfahrens in der Java-Crypto-Bilbilthek
+	 * @param value   die Bezeichnung des Verfahrens in der Java-Crypto-Bibliothek
 	 */
 	AESAlgo(final String value) {
 		this.value = value;
 	}
 
 	/**
-	 * Gibt die Bezeichnung des Verfahrens in der Java-Crypto-Bilbilthek zurück.
+	 * Gibt die Bezeichnung des Verfahrens in der Java-Crypto-Bibliothek zurück.
 	 *
 	 * @return die Bezeichnung
 	 */
