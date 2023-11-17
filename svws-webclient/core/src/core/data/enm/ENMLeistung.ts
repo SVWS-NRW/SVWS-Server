@@ -27,6 +27,16 @@ export class ENMLeistung extends JavaObject {
 	public tsNote : string | null = null;
 
 	/**
+	 * Das Kürzel der Quartals-Note, die vergeben wurde.
+	 */
+	public noteQuartal : string | null = null;
+
+	/**
+	 * Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note
+	 */
+	public tsNoteQuartal : string | null = null;
+
+	/**
 	 * Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht.
 	 */
 	public istSchriftlich : boolean | null = null;
@@ -111,6 +121,8 @@ export class ENMLeistung extends JavaObject {
 		result.lerngruppenID = obj.lerngruppenID;
 		result.note = typeof obj.note === "undefined" ? null : obj.note === null ? null : obj.note;
 		result.tsNote = typeof obj.tsNote === "undefined" ? null : obj.tsNote === null ? null : obj.tsNote;
+		result.noteQuartal = typeof obj.noteQuartal === "undefined" ? null : obj.noteQuartal === null ? null : obj.noteQuartal;
+		result.tsNoteQuartal = typeof obj.tsNoteQuartal === "undefined" ? null : obj.tsNoteQuartal === null ? null : obj.tsNoteQuartal;
 		result.istSchriftlich = typeof obj.istSchriftlich === "undefined" ? null : obj.istSchriftlich === null ? null : obj.istSchriftlich;
 		result.abiturfach = typeof obj.abiturfach === "undefined" ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		result.fehlstundenFach = typeof obj.fehlstundenFach === "undefined" ? null : obj.fehlstundenFach === null ? null : obj.fehlstundenFach;
@@ -137,6 +149,8 @@ export class ENMLeistung extends JavaObject {
 		result += '"lerngruppenID" : ' + obj.lerngruppenID + ',';
 		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
+		result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
+		result += '"tsNoteQuartal" : ' + ((!obj.tsNoteQuartal) ? 'null' : JSON.stringify(obj.tsNoteQuartal)) + ',';
 		result += '"istSchriftlich" : ' + ((!obj.istSchriftlich) ? 'null' : obj.istSchriftlich) + ',';
 		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
 		result += '"fehlstundenFach" : ' + ((!obj.fehlstundenFach) ? 'null' : obj.fehlstundenFach) + ',';
@@ -179,6 +193,12 @@ export class ENMLeistung extends JavaObject {
 		}
 		if (typeof obj.tsNote !== "undefined") {
 			result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
+		}
+		if (typeof obj.noteQuartal !== "undefined") {
+			result += '"noteQuartal" : ' + ((!obj.noteQuartal) ? 'null' : JSON.stringify(obj.noteQuartal)) + ',';
+		}
+		if (typeof obj.tsNoteQuartal !== "undefined") {
+			result += '"tsNoteQuartal" : ' + ((!obj.tsNoteQuartal) ? 'null' : JSON.stringify(obj.tsNoteQuartal)) + ',';
 		}
 		if (typeof obj.istSchriftlich !== "undefined") {
 			result += '"istSchriftlich" : ' + ((!obj.istSchriftlich) ? 'null' : obj.istSchriftlich) + ',';

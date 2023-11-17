@@ -41,6 +41,15 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
 	public String tsNote;
 
+	/** Die erteilte Quartals-Note */
+	@Convert(converter = NoteConverterFromKuerzel.class)
+	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
+	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
+	public Note noteQuartal;
+
+	/** Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note */
+	public String tsNoteQuartal;
+
 	/** Die allgemeine Kursart des Faches (z.B. GK, LK) */
 	public String kursart;
 
@@ -217,6 +226,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    ld.ID as leistungID,
 				    ld.NotenKrz as note,
 				    enmld.tsNotenKrz as tsNote,
+				    ld.NotenKrzQuartal as noteQuartal,
+				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
 				    ld.Kurs_ID as kursID,
@@ -293,6 +304,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    ld.ID as leistungID,
 				    ld.NotenKrz as note,
 				    enmld.tsNotenKrz as tsNote,
+				    ld.NotenKrzQuartal as noteQuartal,
+				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
 				    ld.Kurs_ID as kursID,
@@ -345,6 +358,7 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 		result = prime * result + ((lernbereich1note == null) ? 0 : lernbereich1note.hashCode());
 		result = prime * result + ((lernbereich2note == null) ? 0 : lernbereich2note.hashCode());
 		result = prime * result + ((note == null) ? 0 : note.hashCode());
+		result = prime * result + ((noteQuartal == null) ? 0 : noteQuartal.hashCode());
 		result = prime * result + ((pruefungsordnung == null) ? 0 : pruefungsordnung.hashCode());
 		result = prime * result + ((BilingualerZweig == null) ? 0 : BilingualerZweig.hashCode());
 		return result;
@@ -454,7 +468,7 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	@Override
 	public String toString() {
-		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", kursart="
+		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", notenKrzQuartal=" + noteQuartal + ", kursart="
 				+ kursart + ", AbiturFach=" + AbiturFach + ", fehlstundenGesamt=" + fehlstundenGesamt
 				+ ", fehlstundenUnentschuldigt=" + fehlstundenUnentschuldigt + ", fachbezogeneBemerkungen="
 				+ fachbezogeneBemerkungen + ", abschnittID=" + abschnittID + ", klasse=" + klasse +  ", pruefungsordnung=" + pruefungsordnung

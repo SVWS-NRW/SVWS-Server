@@ -36,6 +36,14 @@ public class ENMLeistung {
 	@Schema(description = "Der Zeitstempel der letzten Änderung an der erteilten Note.", example = "2013-11-14 13:12:48.774")
 	public String tsNote;
 
+	/** Das Kürzel der Quartals-Note, die vergeben wurde. */
+	@Schema(description = "Das Kürzel der Quartals-Note, die vergeben wurde.", example = "3+")
+	public String noteQuartal;
+
+	/** Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note.", example = "2013-11-14 13:12:48.774")
+	public String tsNoteQuartal;
+
 	/** Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht. */
 	@Schema(description = "Gibt bei Oberstufenkursen an, ob das Fach schriftlich belegt wurde oder nicht.", example = "true")
 	public Boolean istSchriftlich;

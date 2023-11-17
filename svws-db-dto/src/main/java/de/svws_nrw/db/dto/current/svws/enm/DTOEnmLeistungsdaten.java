@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOEnmLeistungsdaten.id.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrz.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrzquartal", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal = :value")
+@NamedQuery(name = "DTOEnmLeistungsdaten.tsnotenkrzquartal.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal IN :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.tsfehlstd.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.tsufehlstd", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = :value")
@@ -35,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOEnmLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1")
 @NamedQuery(name = "DTOEnmLeistungsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOEnmLeistungsdaten.all.migration", query = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL")
-@JsonPropertyOrder({"ID", "tsNotenKrz", "tsFehlStd", "tsuFehlStd", "tsLernentw", "tsWarnung"})
+@JsonPropertyOrder({"ID", "tsNotenKrz", "tsNotenKrzQuartal", "tsFehlStd", "tsuFehlStd", "tsLernentw", "tsWarnung"})
 public final class DTOEnmLeistungsdaten {
 
 	/** ID der Leistungsdaten */
@@ -48,6 +50,11 @@ public final class DTOEnmLeistungsdaten {
 	@Column(name = "tsNotenKrz")
 	@JsonProperty
 	public String tsNotenKrz;
+
+	/** Der Zeitstempel der letzten Änderung an der Note. */
+	@Column(name = "tsNotenKrzQuartal")
+	@JsonProperty
+	public String tsNotenKrzQuartal;
 
 	/** Der Zeitstempel der letzten Änderung an den Fehlstunden. */
 	@Column(name = "tsFehlStd")
@@ -80,17 +87,22 @@ public final class DTOEnmLeistungsdaten {
 	 * Erstellt ein neues Objekt der Klasse DTOEnmLeistungsdaten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param tsNotenKrz   der Wert für das Attribut tsNotenKrz
+	 * @param tsNotenKrzQuartal   der Wert für das Attribut tsNotenKrzQuartal
 	 * @param tsFehlStd   der Wert für das Attribut tsFehlStd
 	 * @param tsuFehlStd   der Wert für das Attribut tsuFehlStd
 	 * @param tsLernentw   der Wert für das Attribut tsLernentw
 	 * @param tsWarnung   der Wert für das Attribut tsWarnung
 	 */
-	public DTOEnmLeistungsdaten(final long ID, final String tsNotenKrz, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
+	public DTOEnmLeistungsdaten(final long ID, final String tsNotenKrz, final String tsNotenKrzQuartal, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
 		this.ID = ID;
 		if (tsNotenKrz == null) {
 			throw new NullPointerException("tsNotenKrz must not be null");
 		}
 		this.tsNotenKrz = tsNotenKrz;
+		if (tsNotenKrzQuartal == null) {
+			throw new NullPointerException("tsNotenKrzQuartal must not be null");
+		}
+		this.tsNotenKrzQuartal = tsNotenKrzQuartal;
 		if (tsFehlStd == null) {
 			throw new NullPointerException("tsFehlStd must not be null");
 		}
@@ -138,7 +150,7 @@ public final class DTOEnmLeistungsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOEnmLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ", tsFehlStd=" + this.tsFehlStd + ", tsuFehlStd=" + this.tsuFehlStd + ", tsLernentw=" + this.tsLernentw + ", tsWarnung=" + this.tsWarnung + ")";
+		return "DTOEnmLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ", tsNotenKrzQuartal=" + this.tsNotenKrzQuartal + ", tsFehlStd=" + this.tsFehlStd + ", tsuFehlStd=" + this.tsuFehlStd + ", tsLernentw=" + this.tsLernentw + ", tsWarnung=" + this.tsWarnung + ")";
 	}
 
 }

@@ -13,7 +13,6 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Diese Klasse stellt Methoden zum Erzeugen von RSA-Schlüsselpaaren
@@ -105,8 +104,7 @@ public class RSA {
 			final int dataLength = input.length - aeskeyEncodedLength;
 			final byte[] tmp = new byte[dataLength];
 			System.arraycopy(input, aeskeyEncodedLength, tmp, 0, dataLength);
-			final SecretKey aeskey = new SecretKeySpec(aeskeyDecoded, "AES");
-			final AES aes = new AES(AESAlgo.CBC_PKCS5PADDING, aeskey);
+			final AES aes = new AES(AESAlgo.CBC_PKCS5PADDING, AES.getKeyFromByteArray(aeskeyDecoded));
 			return aes.decrypt(tmp);
 		} catch (final Exception e) {
 			throw new RSAException("Fehler beim Entschlüsseln der Daten.", e);

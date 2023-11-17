@@ -197,6 +197,7 @@ import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRau
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.dto.current.schueler.DTOSchuelerStatus;
+import de.svws_nrw.db.dto.current.schulbewerbung.DTOSchulbewerbungImporte;
 import de.svws_nrw.db.dto.current.schule.DTOHerkunftKeys;
 import de.svws_nrw.db.dto.current.schule.DTOHerkunftsartKeys;
 import de.svws_nrw.db.dto.current.schule.DTOKAoAAnschlussoptionKeys;
@@ -211,6 +212,7 @@ import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleCredentials;
+import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessource;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
@@ -440,6 +442,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOStundenplanUnterrichtSchiene.class.getSimpleName(), DTOStundenplanUnterrichtSchiene.class);
              mapDTOName2DTOClass.put(DTOStundenplanZeitraster.class.getSimpleName(), DTOStundenplanZeitraster.class);
              mapDTOName2DTOClass.put(DTOSchuelerStatus.class.getSimpleName(), DTOSchuelerStatus.class);
+             mapDTOName2DTOClass.put(DTOSchulbewerbungImporte.class.getSimpleName(), DTOSchulbewerbungImporte.class);
              mapDTOName2DTOClass.put(DTOHerkunftKeys.class.getSimpleName(), DTOHerkunftKeys.class);
              mapDTOName2DTOClass.put(DTOHerkunftsartKeys.class.getSimpleName(), DTOHerkunftsartKeys.class);
              mapDTOName2DTOClass.put(DTOKAoAAnschlussoptionKeys.class.getSimpleName(), DTOKAoAAnschlussoptionKeys.class);
@@ -454,6 +457,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOCredentialsLernplattformen.class.getSimpleName(), DTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(DTOLernplattformen.class.getSimpleName(), DTOLernplattformen.class);
              mapDTOName2DTOClass.put(DTOSchuleCredentials.class.getSimpleName(), DTOSchuleCredentials.class);
+             mapDTOName2DTOClass.put(DTOSchuleOAuthSecrets.class.getSimpleName(), DTOSchuleOAuthSecrets.class);
              mapDTOName2DTOClass.put(DTODavRessource.class.getSimpleName(), DTODavRessource.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollection.class.getSimpleName(), DTODavRessourceCollection.class);
              mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(), DTODavRessourceCollectionsACL.class);
@@ -686,6 +690,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Stundenplan_UnterrichtSchiene", DTOStundenplanUnterrichtSchiene.class);
              mapTablename2DTOClass.put("Stundenplan_Zeitraster", DTOStundenplanZeitraster.class);
              mapTablename2DTOClass.put("SchuelerStatus_Keys", DTOSchuelerStatus.class);
+             mapTablename2DTOClass.put("Schulbewerbung_Importe", DTOSchulbewerbungImporte.class);
              mapTablename2DTOClass.put("Herkunft_Keys", DTOHerkunftKeys.class);
              mapTablename2DTOClass.put("Herkunftsart_Keys", DTOHerkunftsartKeys.class);
              mapTablename2DTOClass.put("KAoA_Anschlussoption_Keys", DTOKAoAAnschlussoptionKeys.class);
@@ -700,6 +705,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("CredentialsLernplattformen", DTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen", DTOLernplattformen.class);
              mapTablename2DTOClass.put("SchuleCredentials", DTOSchuleCredentials.class);
+             mapTablename2DTOClass.put("SchuleOAuthSecrets", DTOSchuleOAuthSecrets.class);
              mapTablename2DTOClass.put("DavRessources", DTODavRessource.class);
              mapTablename2DTOClass.put("DavRessourceCollections", DTODavRessourceCollection.class);
              mapTablename2DTOClass.put("DavRessourceCollectionsACL", DTODavRessourceCollectionsACL.class);

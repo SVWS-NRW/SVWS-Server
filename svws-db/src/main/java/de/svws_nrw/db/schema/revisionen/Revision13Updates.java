@@ -15,7 +15,7 @@ public class Revision13Updates extends SchemaRevisionUpdateSQL {
 	 * für Revision 13.
 	 */
 	public Revision13Updates() {
-		super(SchemaRevisionen.REV_10);
+		super(SchemaRevisionen.REV_13);
 		updateSchuelerNachnameZusatz();
 	}
 

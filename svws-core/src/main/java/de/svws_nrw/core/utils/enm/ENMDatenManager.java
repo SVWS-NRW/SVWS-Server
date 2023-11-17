@@ -466,6 +466,8 @@ public class ENMDatenManager {
 	 *                                        (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
 	 * @param note                            das Kürzel der Note, die vergeben wurde
 	 * @param tsNote                          der Zeitstempe der letzten Änderung an der Note
+	 * @param noteQuartal                     das Kürzel der Quartal-Note, die vergeben wurde
+	 * @param tsNoteQuartal                   der Zeitstempe der letzten Änderung an der Quartal-Note
 	 * @param istSchriftlich                  gibt an, ob das Fach schriftlich belegt wurde oder nicht
 	 * @param abiturfach                      gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
 	 * @param fehlstundenFach                 gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
@@ -483,14 +485,17 @@ public class ENMDatenManager {
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
 	 */
 	public void addSchuelerLeistungsdaten(final @NotNull ENMSchueler schueler, final long leistungID, final long lerngruppenID, final String note,
-				final String tsNote, final boolean istSchriftlich, final Integer abiturfach, final Integer fehlstundenFach, final String tsFehlstundenFach,
-				final Integer fehlstundenUnentschuldigtFach, final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen,
-				final String tsFachbezogeneBemerkungen, final String neueZuweisungKursart, final boolean istGemahnt, final String tsIstGemahnt, final String mahndatum) {
+				final String tsNoteQuartal, final String noteQuartal, final String tsNote, final boolean istSchriftlich, final Integer abiturfach,
+				final Integer fehlstundenFach, final String tsFehlstundenFach, final Integer fehlstundenUnentschuldigtFach,
+				final String tsFehlstundenUnentschuldigtFach, final String fachbezogeneBemerkungen, final String tsFachbezogeneBemerkungen,
+				final String neueZuweisungKursart, final boolean istGemahnt, final String tsIstGemahnt, final String mahndatum) {
 		final @NotNull ENMLeistung enmLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;
 		enmLeistung.tsNote = tsNote;
+		enmLeistung.noteQuartal = noteQuartal;
+		enmLeistung.tsNoteQuartal = tsNoteQuartal;
 		enmLeistung.istSchriftlich = istSchriftlich;
 		enmLeistung.abiturfach = abiturfach;
 		enmLeistung.fehlstundenFach = fehlstundenFach;

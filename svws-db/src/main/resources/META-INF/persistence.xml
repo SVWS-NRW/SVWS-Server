@@ -386,6 +386,7 @@
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtSchiene</class>
         <class>de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster</class>
         <class>de.svws_nrw.db.dto.current.schueler.DTOSchuelerStatus</class>
+        <class>de.svws_nrw.db.dto.current.schulbewerbung.DTOSchulbewerbungImporte</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOHerkunftKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOHerkunftsartKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOKAoAAnschlussoptionKeys</class>
@@ -400,6 +401,7 @@
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOSchuleCredentials</class>
+        <class>de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessource</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>

@@ -461,6 +461,8 @@ export class ENMDatenManager extends JavaObject {
 	 *                                        (Klasse oder Kurs wird erst in der Lerngruppe unterschieden!)
 	 * @param note                            das Kürzel der Note, die vergeben wurde
 	 * @param tsNote                          der Zeitstempe der letzten Änderung an der Note
+	 * @param noteQuartal                     das Kürzel der Quartal-Note, die vergeben wurde
+	 * @param tsNoteQuartal                   der Zeitstempe der letzten Änderung an der Quartal-Note
 	 * @param istSchriftlich                  gibt an, ob das Fach schriftlich belegt wurde oder nicht
 	 * @param abiturfach                      gibt an, ob es sich um ein Abitufach handelt (1,2,3 oder 4) oder nicht (null)
 	 * @param fehlstundenFach                 gibt die Anzahl der gesamten Fehlstunden an, sofern diese fachbezogen ermittel werden
@@ -477,12 +479,14 @@ export class ENMDatenManager extends JavaObject {
 	 * @param tsIstGemahnt                    der Zeitstempel der letzten Änderung an der Angabe, ob ein Fach gemahnt wurde oder nicht
 	 * @param mahndatum                       das Mahndatum bei erfolgter Mahnung
 	 */
-	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenFach : number | null, tsFehlstundenFach : string | null, fehlstundenUnentschuldigtFach : number | null, tsFehlstundenUnentschuldigtFach : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : void {
+	public addSchuelerLeistungsdaten(schueler : ENMSchueler, leistungID : number, lerngruppenID : number, note : string | null, tsNoteQuartal : string | null, noteQuartal : string | null, tsNote : string | null, istSchriftlich : boolean, abiturfach : number | null, fehlstundenFach : number | null, tsFehlstundenFach : string | null, fehlstundenUnentschuldigtFach : number | null, tsFehlstundenUnentschuldigtFach : string | null, fachbezogeneBemerkungen : string | null, tsFachbezogeneBemerkungen : string | null, neueZuweisungKursart : string | null, istGemahnt : boolean, tsIstGemahnt : string | null, mahndatum : string | null) : void {
 		const enmLeistung : ENMLeistung = new ENMLeistung();
 		enmLeistung.id = leistungID;
 		enmLeistung.lerngruppenID = lerngruppenID;
 		enmLeistung.note = note;
 		enmLeistung.tsNote = tsNote;
+		enmLeistung.noteQuartal = noteQuartal;
+		enmLeistung.tsNoteQuartal = tsNoteQuartal;
 		enmLeistung.istSchriftlich = istSchriftlich;
 		enmLeistung.abiturfach = abiturfach;
 		enmLeistung.fehlstundenFach = fehlstundenFach;
