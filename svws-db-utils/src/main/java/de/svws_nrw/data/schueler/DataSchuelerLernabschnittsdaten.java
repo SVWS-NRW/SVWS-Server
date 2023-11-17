@@ -1,10 +1,5 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
@@ -33,9 +28,18 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.json.JsonDaten;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 /**
@@ -63,9 +67,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 		throw new UnsupportedOperationException();
 	}
 
+
 	/**
 	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem
-	 * angegebenen Schuljahresabschnitts
+	 * angegebenen Schuljahresabschnitt
 	 *
 	 * @param schueler_id            die Schüler-ID
 	 * @param schuljahresabschnitt   der Schuljahresabschnitt
@@ -73,135 +78,210 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 * @return die Lernabschnittsdaten
 	 */
 	public Response get(final Long schueler_id, final long schuljahresabschnitt) {
-		// Prüfe, ob der Schüler mit der ID existiert
-		if (schueler_id == null)
-			return OperationError.NOT_FOUND.getResponse();
-    	final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
-    	if (schueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	// Bestimme den aktuellen Lernabschnitt
-    	final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
-    	final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt);
-    	if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
-    		return OperationError.NOT_FOUND.getResponse();
-    	if (lernabschnittsdaten.size() > 1)
-    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-    	final DTOSchuelerLernabschnittsdaten aktuell = lernabschnittsdaten.get(0);
-		return this.get(aktuell.ID);
+		final SchuelerLernabschnittsdaten daten = getFromSchuelerIDUndSchuljahresabschnittID(schueler_id, schuljahresabschnitt);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
+
+	/**
+	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Lernabschnitts-ID
+	 *
+	 * @param id die Lernabschnitt-ID
+	 *
+	 * @return die Lernabschnittsdaten
+	 */
 	@Override
 	public Response get(final Long id) {
+		final SchuelerLernabschnittsdaten daten = getFromID(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Hilfsmethode um anhand der Schüler-ID und Schuljahresabschnitts-ID die zugehörigen Lernabschnittsdaten abzufragen.
+	 *
+	 * @param schueler_id				Schüler-ID
+	 * @param schuljahresabschnitt_id	Schuljahresabschnitts-ID
+	 *
+	 * @return	Lernabschnittsdaten zu den gegebenen IDs.
+	 */
+	private SchuelerLernabschnittsdaten getFromSchuelerIDUndSchuljahresabschnittIDInternal(final Long schueler_id, final long schuljahresabschnitt_id) {
+		final String jpql = "SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 and e.Schuljahresabschnitts_ID = ?2 and e.WechselNr = 0";
+		final List<DTOSchuelerLernabschnittsdaten> lernabschnittsdaten = conn.queryList(jpql, DTOSchuelerLernabschnittsdaten.class, schueler_id, schuljahresabschnitt_id);
+		if ((lernabschnittsdaten == null) || lernabschnittsdaten.isEmpty())
+			throw OperationError.NOT_FOUND.exception("Keine Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+		if (lernabschnittsdaten.size() > 1)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id + " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
+		return getFromID(lernabschnittsdaten.get(0).ID);
+	}
+
+
+	/**
+	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Schüler-ID und dem
+	 * angegebenen Schuljahresabschnitt.
+	 *
+	 * @param schueler_id           	die Schüler-ID
+	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
+	 *
+	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+     */
+	public SchuelerLernabschnittsdaten getFromSchuelerIDUndSchuljahresabschnittID(final Long schueler_id, final long schuljahresabschnitt_id) throws WebApplicationException {
+		// Prüfe, ob der Schüler mit der ID existiert
+		if (schueler_id == null)
+			throw OperationError.NOT_FOUND.exception("Es ist keine Schueler-ID angegeben worden.");
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, schueler_id);
+		if (schueler == null)
+			throw OperationError.NOT_FOUND.exception("Keine Schüler mit der ID " + schueler_id + " gefunden.");
+
+		// Bestimme den aktuellen Lernabschnitt
+		return getFromSchuelerIDUndSchuljahresabschnittIDInternal(schueler_id, schuljahresabschnitt_id);
+	}
+
+
+	/**
+	 * Bestimmt eine Map von den Schüler-IDs auf die Lernabschnittsdaten anhand der übergebenen Schüler-IDs und dem
+	 * angegebenen Schuljahresabschnitt.
+	 *
+	 * @param schueler_ids           	die Liste mit Schüler-IDs
+	 * @param schuljahresabschnitt_id   der Schuljahresabschnitt
+	 *
+	 * @return	die Lernabschnittsdaten zu den übergebenen IDs.
+	 */
+	public Map<Long, SchuelerLernabschnittsdaten> getMapFromSchuelerIDsUndSchuljahresabschnittID(final List<Long> schueler_ids, final long schuljahresabschnitt_id) throws WebApplicationException {
+		// Prüfe, ob der Schüler mit der ID existiert
+		if (schueler_ids == null)
+			throw OperationError.NOT_FOUND.exception("Es sind keine Schueler-ID angegeben worden.");
+
+		final Map<Long, DTOSchueler> mapSchueler = conn.queryNamed("DTOSchueler.id.multiple", schueler_ids, DTOSchueler.class)
+			.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+		for (final Long schuelerID : schueler_ids)
+			if (mapSchueler.get(schuelerID) == null)
+				throw OperationError.NOT_FOUND.exception("Ein Schüler mit der ID %d existiert nicht.".formatted(schuelerID));
+
+		final Map<Long, SchuelerLernabschnittsdaten> result = new HashMap<>();
+
+		// Lese zu den verifizieren Schüler-IDs die Lernabschnitte einzeln ein, um evtl. Fehler dort abzufangen. Füge die Ergebnisse in die Map ein.
+		for (final Long sID : schueler_ids)
+			result.put(sID, getFromSchuelerIDUndSchuljahresabschnittIDInternal(sID, schuljahresabschnitt_id));
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Lernabschnittsdaten zur ID des Abschnitts zurück.
+	 * @param id	die ID des Lernabschnitts.
+	 * @return		die SchuelerLernabschnittsdaten zur ID.
+	 */
+	public SchuelerLernabschnittsdaten getFromID(final Long id) throws WebApplicationException {
 		// Prüfe, ob der Lernabschnitt mit der ID existiert
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
+			throw OperationError.NOT_FOUND.exception("Es ist keine Abschnitt-ID angegeben worden.");
 		final DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
-    	if (aktuell == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	// Ermittle die Fachbemerkungen
-    	final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
-    	if (bemerkungen == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	if (bemerkungen.size() > 1)
-    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		if (aktuell == null)
+			throw OperationError.NOT_FOUND.exception("Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
+		// Ermittle die Fachbemerkungen
+		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryNamed("DTOSchuelerPSFachBemerkungen.abschnitt_id", aktuell.ID, DTOSchuelerPSFachBemerkungen.class);
+		if (bemerkungen == null)
+			throw OperationError.NOT_FOUND.exception("Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
+		if (bemerkungen.size() > 1)
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
 
-    	final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
-    	daten.id = aktuell.ID;
-    	daten.schuelerID = aktuell.Schueler_ID;
-    	daten.schuljahresabschnitt = aktuell.Schuljahresabschnitts_ID;
-    	daten.wechselNr = aktuell.WechselNr;
-    	daten.datumAnfang = aktuell.DatumVon;
-    	daten.datumEnde = aktuell.DatumBis;
-    	daten.datumKonferenz = aktuell.Konferenzdatum;
-    	daten.datumZeugnis = aktuell.ZeugnisDatum;
-    	daten.anzahlSchulbesuchsjahre = aktuell.Schulbesuchsjahre;
-    	daten.istGewertet = aktuell.SemesterWertung == null || aktuell.SemesterWertung;
-    	daten.istWiederholung = aktuell.Wiederholung != null && aktuell.Wiederholung;
-    	daten.pruefungsOrdnung = aktuell.PruefOrdnung;
-    	daten.tutorID = aktuell.Tutor_ID;
-    	daten.klassenID = aktuell.Klassen_ID;
-    	daten.folgeklassenID = aktuell.Folgeklasse_ID;
-    	daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel;
-    	daten.jahrgangID = aktuell.Jahrgang_ID;
-    	daten.fachklasseID = aktuell.Fachklasse_ID;
-    	daten.schwerpunktID = aktuell.Schwerpunkt_ID;
-    	daten.organisationsform = aktuell.OrgFormKrz;
-    	daten.Klassenart = aktuell.Klassenart;
-    	daten.fehlstundenGesamt = aktuell.SumFehlStd == null ? 0 : aktuell.SumFehlStd;
-    	daten.fehlstundenUnentschuldigt = aktuell.SumFehlStdU == null ? 0 : aktuell.SumFehlStdU;
-    	daten.fehlstundenGrenzwert = aktuell.FehlstundenGrenzwert;
-    	daten.hatSchwerbehinderungsNachweis = aktuell.Schwerbehinderung != null && aktuell.Schwerbehinderung;
-    	daten.hatAOSF = aktuell.AOSF != null && aktuell.AOSF;
-    	daten.hatAutismus = aktuell.Autist != null && aktuell.Autist;
-    	daten.hatZieldifferentenUnterricht = aktuell.ZieldifferentesLernen != null && aktuell.ZieldifferentesLernen;
-    	daten.foerderschwerpunkt1ID = aktuell.Foerderschwerpunkt_ID;
-    	daten.foerderschwerpunkt2ID = aktuell.Foerderschwerpunkt2_ID;
-    	daten.sonderpaedagogeID = aktuell.Sonderpaedagoge_ID;
-    	daten.bilingualerZweig = aktuell.BilingualerZweig;
-    	daten.istFachpraktischerAnteilAusreichend = aktuell.FachPraktAnteilAusr;
-    	daten.versetzungsvermerk = aktuell.VersetzungKrz;
-    	daten.noteDurchschnitt = aktuell.DSNote;
-    	daten.noteLernbereichGSbzwAL = aktuell.Gesamtnote_GS == null ? null : aktuell.Gesamtnote_GS.getNoteSekI();
-    	daten.noteLernbereichNW = aktuell.Gesamtnote_NW == null ? null : aktuell.Gesamtnote_NW.getNoteSekI();
-    	daten.abschlussart = aktuell.AbschlussArt;
-    	daten.istAbschlussPrognose = aktuell.AbschlIstPrognose;
-    	daten.abschluss = aktuell.Abschluss;
-    	daten.abschlussBerufsbildend = aktuell.Abschluss_B;
-    	daten.textErgebnisPruefungsalgorithmus = aktuell.PruefAlgoErgebnis;
-    	daten.zeugnisart = aktuell.Zeugnisart;
-    	if (aktuell.MoeglNPFaecher != null) {
-    		final String[] moeglicheNPFaecher = aktuell.MoeglNPFaecher.split(",");
-    		if ((moeglicheNPFaecher.length > 0) && (!"".equals(moeglicheNPFaecher[0].trim()))) {
-    			daten.nachpruefungen = new SchuelerLernabschnittNachpruefungsdaten();
-    			for (final String fach : moeglicheNPFaecher)
-    				daten.nachpruefungen.moegliche.add(fach);
-    			if (aktuell.NPV_Fach_ID != null) {
-    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-    				np.grund = "V";
-    				np.fachID = aktuell.NPV_Fach_ID;
-    				np.datum = aktuell.NPV_Datum;
-    				np.note = aktuell.NPV_NoteKrz;
-    				daten.nachpruefungen.pruefungen.add(np);
-    			}
-    			if (aktuell.NPAA_Fach_ID != null) {
-    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-    				np.grund = "A";
-    				np.fachID = aktuell.NPAA_Fach_ID;
-    				np.datum = aktuell.NPAA_Datum;
-    				np.note = aktuell.NPAA_NoteKrz;
-    				daten.nachpruefungen.pruefungen.add(np);
-    			}
-    			if (aktuell.NPBQ_Fach_ID != null) {
-    				final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-    				np.grund = "B";
-    				np.fachID = aktuell.NPBQ_Fach_ID;
-    				np.datum = aktuell.NPBQ_Datum;
-    				np.note = aktuell.NPBQ_NoteKrz;
-    				daten.nachpruefungen.pruefungen.add(np);
-    			}
-    		}
-    	}
-    	daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem;
-    	if (!bemerkungen.isEmpty()) {
-    		final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
-	    	daten.bemerkungen.zeugnisASV = b.ASV;
-	    	daten.bemerkungen.zeugnisLELS = b.LELS;
-	    	daten.bemerkungen.zeugnisAUE = b.AUE;
-	    	daten.bemerkungen.uebergangESF = b.ESF;
-	    	daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
-	    	daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
-    	}
+		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
+		daten.id = aktuell.ID;
+		daten.schuelerID = aktuell.Schueler_ID;
+		daten.schuljahresabschnitt = aktuell.Schuljahresabschnitts_ID;
+		daten.wechselNr = aktuell.WechselNr;
+		daten.datumAnfang = aktuell.DatumVon;
+		daten.datumEnde = aktuell.DatumBis;
+		daten.datumKonferenz = aktuell.Konferenzdatum;
+		daten.datumZeugnis = aktuell.ZeugnisDatum;
+		daten.anzahlSchulbesuchsjahre = aktuell.Schulbesuchsjahre;
+		daten.istGewertet = aktuell.SemesterWertung == null || aktuell.SemesterWertung;
+		daten.istWiederholung = aktuell.Wiederholung != null && aktuell.Wiederholung;
+		daten.pruefungsOrdnung = aktuell.PruefOrdnung;
+		daten.tutorID = aktuell.Tutor_ID;
+		daten.klassenID = aktuell.Klassen_ID;
+		daten.folgeklassenID = aktuell.Folgeklasse_ID;
+		daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel;
+		daten.jahrgangID = aktuell.Jahrgang_ID;
+		daten.fachklasseID = aktuell.Fachklasse_ID;
+		daten.schwerpunktID = aktuell.Schwerpunkt_ID;
+		daten.organisationsform = aktuell.OrgFormKrz;
+		daten.Klassenart = aktuell.Klassenart;
+		daten.fehlstundenGesamt = aktuell.SumFehlStd == null ? 0 : aktuell.SumFehlStd;
+		daten.fehlstundenUnentschuldigt = aktuell.SumFehlStdU == null ? 0 : aktuell.SumFehlStdU;
+		daten.fehlstundenGrenzwert = aktuell.FehlstundenGrenzwert;
+		daten.hatSchwerbehinderungsNachweis = aktuell.Schwerbehinderung != null && aktuell.Schwerbehinderung;
+		daten.hatAOSF = aktuell.AOSF != null && aktuell.AOSF;
+		daten.hatAutismus = aktuell.Autist != null && aktuell.Autist;
+		daten.hatZieldifferentenUnterricht = aktuell.ZieldifferentesLernen != null && aktuell.ZieldifferentesLernen;
+		daten.foerderschwerpunkt1ID = aktuell.Foerderschwerpunkt_ID;
+		daten.foerderschwerpunkt2ID = aktuell.Foerderschwerpunkt2_ID;
+		daten.sonderpaedagogeID = aktuell.Sonderpaedagoge_ID;
+		daten.bilingualerZweig = aktuell.BilingualerZweig;
+		daten.istFachpraktischerAnteilAusreichend = aktuell.FachPraktAnteilAusr;
+		daten.versetzungsvermerk = aktuell.VersetzungKrz;
+		daten.noteDurchschnitt = aktuell.DSNote;
+		daten.noteLernbereichGSbzwAL = aktuell.Gesamtnote_GS == null ? null : aktuell.Gesamtnote_GS.getNoteSekI();
+		daten.noteLernbereichNW = aktuell.Gesamtnote_NW == null ? null : aktuell.Gesamtnote_NW.getNoteSekI();
+		daten.abschlussart = aktuell.AbschlussArt;
+		daten.istAbschlussPrognose = aktuell.AbschlIstPrognose;
+		daten.abschluss = aktuell.Abschluss;
+		daten.abschlussBerufsbildend = aktuell.Abschluss_B;
+		daten.textErgebnisPruefungsalgorithmus = aktuell.PruefAlgoErgebnis;
+		daten.zeugnisart = aktuell.Zeugnisart;
+		if (aktuell.MoeglNPFaecher != null) {
+			final String[] moeglicheNPFaecher = aktuell.MoeglNPFaecher.split(",");
+			if ((moeglicheNPFaecher.length > 0) && (!moeglicheNPFaecher[0].trim().isBlank())) {
+				daten.nachpruefungen = new SchuelerLernabschnittNachpruefungsdaten();
+                Collections.addAll(daten.nachpruefungen.moegliche, moeglicheNPFaecher);
+				if (aktuell.NPV_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "V";
+					np.fachID = aktuell.NPV_Fach_ID;
+					np.datum = aktuell.NPV_Datum;
+					np.note = aktuell.NPV_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+				if (aktuell.NPAA_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "A";
+					np.fachID = aktuell.NPAA_Fach_ID;
+					np.datum = aktuell.NPAA_Datum;
+					np.note = aktuell.NPAA_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+				if (aktuell.NPBQ_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "B";
+					np.fachID = aktuell.NPBQ_Fach_ID;
+					np.datum = aktuell.NPBQ_Datum;
+					np.note = aktuell.NPBQ_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+			}
+		}
+		daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem;
+		if (!bemerkungen.isEmpty()) {
+			final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
+			daten.bemerkungen.zeugnisASV = b.ASV;
+			daten.bemerkungen.zeugnisLELS = b.LELS;
+			daten.bemerkungen.zeugnisAUE = b.AUE;
+			daten.bemerkungen.uebergangESF = b.ESF;
+			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
+			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
+		}
 
-    	if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(aktuell.ID, daten.leistungsdaten)))
-    		return OperationError.INTERNAL_SERVER_ERROR.getResponse();
+		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(aktuell.ID, daten.leistungsdaten)))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Keine Leistungsdaten zur Abschnitt-ID " + id + " gefunden.");
 
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 	private static final Map<String, DataBasicMapper<DTOSchuelerLernabschnittsdaten>> patchMappings = Map.ofEntries(
 		Map.entry("id", (conn, dto, value, map) -> {
 			final Long patch_id = JSONMapper.convertToLong(value, true);
-			if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+			if ((patch_id == null) || (patch_id != dto.ID))
 				throw OperationError.BAD_REQUEST.exception();
 		}),
 		Map.entry("schuelerID", (conn, dto, value, map) -> {

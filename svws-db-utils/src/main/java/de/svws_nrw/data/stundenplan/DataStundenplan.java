@@ -18,6 +18,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -46,6 +47,30 @@ public final class DataStundenplan extends DataManager<Long> {
 	public Response getList() {
 		throw new UnsupportedOperationException();
 	}
+
+
+	/**
+	 * Prüft, ob ein Stundenplan mit der angegegeben ID vorhanden ist und gibt das Datenbank-DTO
+	 * ggf. zurück. Ist der Stundenplan nicht vorhanden, so wird eine {@link WebApplicationException}
+	 * geworfen.
+	 *
+	 * @param conn   die zu verwendende Datenbank-Verbindung
+	 * @param id     die ID des Stundenplans
+	 *
+	 * @return das Datenbank-DTO
+	 *
+	 * @throws WebApplicationException falls kein Stundenplan mit der ID gefunden wurde
+	 */
+	public static DTOStundenplan getDTOStundenplan(final DBEntityManager conn, final Long id) throws WebApplicationException {
+		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
+		if (id == null)
+			throw OperationError.NOT_FOUND.exception("Die StundenplanID darf nicht null sein.");
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
+		if (stundenplan == null)
+			throw OperationError.NOT_FOUND.exception("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(id));
+		return stundenplan;
+	}
+
 
 	/**
 	 * Gibt den Stundenplan zur angegebenen ID zurück.

@@ -35,6 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOAnkreuzdaten.bezeichnungsonst", query = "SELECT e FROM DTOAnkreuzdaten e WHERE e.BezeichnungSONST = :value")
 @NamedQuery(name = "DTOAnkreuzdaten.bezeichnungsonst.multiple", query = "SELECT e FROM DTOAnkreuzdaten e WHERE e.BezeichnungSONST IN :value")
 @NamedQuery(name = "DTOAnkreuzdaten.primaryKeyQuery", query = "SELECT e FROM DTOAnkreuzdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAnkreuzdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAnkreuzdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOAnkreuzdaten.all.migration", query = "SELECT e FROM DTOAnkreuzdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "TextStufe1", "TextStufe2", "TextStufe3", "TextStufe4", "TextStufe5", "BezeichnungSONST"})
 public final class DTOAnkreuzdaten {

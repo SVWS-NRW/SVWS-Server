@@ -185,6 +185,19 @@ public enum GostHalbjahr implements Comparable<GostHalbjahr> {
 		return hj;
 	}
 
+	/**
+	 * Gibt alle Halbjahre des Schuljahres zurück, in dem das Halbjahr-Objekt liegt.
+	 *
+	 * @return ein Array mit allen Halbjahren des Schuljahres, in dem das Halbjahr-Objekt liegt der gymnasialen Oberstufe
+	 */
+	public @NotNull GostHalbjahr@NotNull [] getSchuljahr() {
+		if (id % 2 == 0) {
+			final @NotNull GostHalbjahr@NotNull [] hjs = { this, nextOrException() };
+			return hjs;
+		}
+		final @NotNull GostHalbjahr@NotNull [] hjs = { previousOrException(), this };
+		return hjs;
+	}
 
 	/**
 	 * Gibt alle Halbjahre der Einführungsphase zurück.

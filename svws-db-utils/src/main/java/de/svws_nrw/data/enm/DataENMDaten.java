@@ -245,7 +245,8 @@ public final class DataENMDaten extends DataManager<Long> {
     		final boolean istGemahnt = (schuelerabschnitt.istGemahnt != null) && schuelerabschnitt.istGemahnt;
     		final String mahndatum = schuelerabschnitt.mahndatum;
     		manager.addSchuelerLeistungsdaten(enmSchueler, schuelerabschnitt.leistungID, lerngruppe.id,
-    				schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote, istSchriftlich, abiFach,
+    				schuelerabschnitt.note.kuerzel, schuelerabschnitt.tsNote,
+    				schuelerabschnitt.noteQuartal.kuerzel, schuelerabschnitt.tsNoteQuartal, istSchriftlich, abiFach,
     				schuelerabschnitt.fehlstundenGesamt, schuelerabschnitt.tsFehlstundenGesamt,
     				schuelerabschnitt.fehlstundenUnentschuldigt, schuelerabschnitt.tsFehlstundenUnentschuldigt,
     				schuelerabschnitt.fachbezogeneBemerkungen, schuelerabschnitt.tsFachbezogeneBemerkungen, null,

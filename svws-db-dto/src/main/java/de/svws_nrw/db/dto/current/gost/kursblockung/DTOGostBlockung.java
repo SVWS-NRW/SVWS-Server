@@ -44,6 +44,7 @@ import de.svws_nrw.csv.converter.current.gost.GOStHalbjahrConverterDeserializer;
 @NamedQuery(name = "DTOGostBlockung.istaktiv", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv = :value")
 @NamedQuery(name = "DTOGostBlockung.istaktiv.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.IstAktiv IN :value")
 @NamedQuery(name = "DTOGostBlockung.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostBlockung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockung.all.migration", query = "SELECT e FROM DTOGostBlockung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Name", "Abi_Jahrgang", "Halbjahr", "IstAktiv"})
 public final class DTOGostBlockung {

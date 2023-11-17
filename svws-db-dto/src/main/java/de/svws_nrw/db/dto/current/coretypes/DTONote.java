@@ -51,6 +51,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTONote.gueltigbis", query = "SELECT e FROM DTONote e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTONote.gueltigbis.multiple", query = "SELECT e FROM DTONote e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTONote.primaryKeyQuery", query = "SELECT e FROM DTONote e WHERE e.ID = ?1")
+@NamedQuery(name = "DTONote.primaryKeyQuery.multiple", query = "SELECT e FROM DTONote e WHERE e.ID IN :value")
 @NamedQuery(name = "DTONote.all.migration", query = "SELECT e FROM DTONote e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "IstTendenznote", "Text", "AufZeugnis", "Notenpunkte", "TextLaufbahnSII", "AufLaufbahnSII", "Sortierung", "gueltigVon", "gueltigBis"})
 public final class DTONote {

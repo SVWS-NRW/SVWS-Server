@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen = :value")
 @NamedQuery(name = "DTODavRessourceCollectionsACL.berechtigungen.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.berechtigungen IN :value")
 @NamedQuery(name = "DTODavRessourceCollectionsACL.primaryKeyQuery", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID = ?1")
+@NamedQuery(name = "DTODavRessourceCollectionsACL.primaryKeyQuery.multiple", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IN :value")
 @NamedQuery(name = "DTODavRessourceCollectionsACL.all.migration", query = "SELECT e FROM DTODavRessourceCollectionsACL e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Benutzer_ID", "RessourceCollection_ID", "berechtigungen"})
 public final class DTODavRessourceCollectionsACL {

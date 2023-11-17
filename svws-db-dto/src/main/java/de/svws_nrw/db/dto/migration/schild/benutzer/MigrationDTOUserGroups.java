@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOUserGroups.schulnreigner", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOUserGroups.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOUserGroups.primaryKeyQuery", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID = ?1")
+@NamedQuery(name = "MigrationDTOUserGroups.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IN :value")
 @NamedQuery(name = "MigrationDTOUserGroups.all.migration", query = "SELECT e FROM MigrationDTOUserGroups e WHERE e.UG_ID IS NOT NULL")
 @JsonPropertyOrder({"UG_ID", "UG_Bezeichnung", "UG_Kompetenzen", "UG_Nr", "SchulnrEigner"})
 public final class MigrationDTOUserGroups {

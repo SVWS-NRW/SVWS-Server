@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung = :value")
 @NamedQuery(name = "DTOSchuelerPSFachBemerkungen.bemerkungversetzung.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.BemerkungVersetzung IN :value")
 @NamedQuery(name = "DTOSchuelerPSFachBemerkungen.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerPSFachBemerkungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerPSFachBemerkungen.all.migration", query = "SELECT e FROM DTOSchuelerPSFachBemerkungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "ASV", "LELS", "AUE", "ESF", "BemerkungFSP", "BemerkungVersetzung"})
 public final class DTOSchuelerPSFachBemerkungen {

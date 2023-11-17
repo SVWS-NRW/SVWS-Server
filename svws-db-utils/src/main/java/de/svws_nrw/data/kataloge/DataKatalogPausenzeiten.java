@@ -108,6 +108,8 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "beginn", "ende");
 
+	private static final ObjLongConsumer<DTOKatalogPausenzeit> initDTO = (dto, id) -> dto.ID = id;
+
 	/**
 	 * Fügt eine Pausenzeit mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
 	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
@@ -117,9 +119,20 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// füge die Pausenzeit in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOKatalogPausenzeit> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Pausenzeiten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		return super.addBasicMultiple(is, DTOKatalogPausenzeit.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 
@@ -132,6 +145,18 @@ public final class DataKatalogPausenzeiten extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOKatalogPausenzeit.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Pausenzeiten
+	 *
+	 * @param ids   die IDs der Pausenzeiten
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogPausenzeit.class, dtoMapper);
 	}
 
 }

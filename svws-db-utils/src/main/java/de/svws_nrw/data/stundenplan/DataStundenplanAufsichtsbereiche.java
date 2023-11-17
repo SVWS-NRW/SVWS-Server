@@ -13,7 +13,6 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanAufsichtsbereich;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 
-	private final Long stundenplanID;
+	private Long stundenplanID = null;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanAufsichtsbereich}.
@@ -110,6 +109,11 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel");
 
+	private final ObjLongConsumer<DTOStundenplanAufsichtsbereich> initDTO = (dto, id) -> {
+		dto.ID = id;
+		dto.Stundenplan_ID = this.stundenplanID;
+	};
+
 	/**
 	 * Fügt einen Aufsichtsbereich mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
 	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
@@ -119,18 +123,22 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
-		if (this.stundenplanID == null)
-			return OperationError.NOT_FOUND.getResponse("Die StundenplanID darf nicht null sein.");
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
-		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(stundenplanID));
-		// füge den Aufsichtsbereich in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOStundenplanAufsichtsbereich> initDTO = (dto, id) -> {
-			dto.ID = id;
-			dto.Stundenplan_ID = this.stundenplanID;
-		};
+		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Aufsichtsbereiche mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
+		return super.addBasicMultiple(is, DTOStundenplanAufsichtsbereich.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 
@@ -143,6 +151,22 @@ public final class DataStundenplanAufsichtsbereiche extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOStundenplanAufsichtsbereich.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Aufsichtsbereiche
+	 *
+	 * @param ids   die IDs der Aufsichtsbereiche
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<DTOStundenplanAufsichtsbereich> dtos = conn.queryNamed("DTOStundenplanAufsichtsbereich.primaryKeyQuery.multiple", ids, DTOStundenplanAufsichtsbereich.class);
+		for (final DTOStundenplanAufsichtsbereich dto : dtos)
+			if (dto.Stundenplan_ID != this.stundenplanID)
+				throw OperationError.BAD_REQUEST.exception("Der Aufsichtsbereich-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanAufsichtsbereich.class, dtoMapper);
 	}
 
 }

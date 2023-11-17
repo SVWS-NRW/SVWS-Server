@@ -89,6 +89,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOSchuelerErzieherAdresse.credentialid", query = "SELECT e FROM MigrationDTOSchuelerErzieherAdresse e WHERE e.CredentialID = :value")
 @NamedQuery(name = "MigrationDTOSchuelerErzieherAdresse.credentialid.multiple", query = "SELECT e FROM MigrationDTOSchuelerErzieherAdresse e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerErzieherAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerErzieherAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerErzieherAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerErzieherAdresse e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerErzieherAdresse.all.migration", query = "SELECT e FROM MigrationDTOSchuelerErzieherAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "ErzieherArt_ID", "Anrede1", "Titel1", "Name1", "Vorname1", "Anrede2", "Titel2", "Name2", "Vorname2", "ErzStrasse", "ErzOrt_ID", "ErzStrassenname", "ErzPLZ", "ErzHausNr", "ErzOrtsteil_ID", "ErzHausNrZusatz", "ErzAnschreiben", "Sortierung", "ErzEmail", "ErzAdrZusatz", "SchulnrEigner", "Erz1StaatKrz", "Erz2StaatKrz", "ErzEmail2", "Erz1ZusatzNachname", "Erz2ZusatzNachname", "Bemerkungen", "CredentialID"})
 public final class MigrationDTOSchuelerErzieherAdresse {

@@ -1,10 +1,7 @@
 package de.svws_nrw.data.gost;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
+import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -16,6 +13,14 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -32,6 +37,20 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 		super(conn);
 	}
 
+
+	/**
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOGostSchueler} in einen Core-DTO {@link StundenplanLehrer}.
+	 */
+	private static final Function<DTOGostSchueler, GostLaufbahnplanungBeratungsdaten> dtoMapper = (final DTOGostSchueler dto) -> {
+		final GostLaufbahnplanungBeratungsdaten daten = new GostLaufbahnplanungBeratungsdaten();
+		daten.beratungslehrerID = dto.Beratungslehrer_ID;
+		daten.beratungsdatum = dto.DatumBeratung;
+		daten.kommentar = dto.Kommentar;
+		daten.ruecklaufdatum = dto.DatumRuecklauf;
+		return daten;
+	};
+
+
 	@Override
 	public Response getAll() {
 		throw new UnsupportedOperationException();
@@ -44,24 +63,56 @@ public final class DataGostSchuelerLaufbahnplanungBeratungsdaten extends DataMan
 
 	@Override
 	public Response get(final Long schueler_id) {
-		if (schueler_id == null)
-	    	return OperationError.NOT_FOUND.getResponse();
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
-    	if (gostSchueler == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final GostLaufbahnplanungBeratungsdaten daten = new GostLaufbahnplanungBeratungsdaten();
-    	daten.beratungslehrerID = gostSchueler.Beratungslehrer_ID;
-    	daten.beratungsdatum = gostSchueler.DatumBeratung;
-    	daten.kommentar = gostSchueler.Kommentar;
-    	daten.ruecklaufdatum = gostSchueler.DatumRuecklauf;
+		final GostLaufbahnplanungBeratungsdaten daten = getFromID(schueler_id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
+
+	/**
+	 * Gibt die Beratungsdaten eines Schülers zur GostLaufbahnplanung zurück.
+	 *
+	 * @param schueler_id	Die ID des Schülers
+	 * @return				Die GostLaufbahnplanungBeratungsdaten des Schülers.
+	 */
+	public GostLaufbahnplanungBeratungsdaten getFromID(final Long schueler_id) throws WebApplicationException {
+		if (schueler_id == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde keine Schüler-ID übergeben.");
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);
+		if (gostSchueler == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Schüler mit Daten zur GOSt mit der ID " + schueler_id + " gefunden.");
+		return dtoMapper.apply(gostSchueler);
+	}
+
+	/**
+	 * Gibt die Beratungsdaten zu mehreren Schülern zur GostLaufbahnplanung zurück.
+	 *
+	 * @param schueler_ids	Die IDs der Schüler
+	 * @return				Die GostLaufbahnplanungBeratungsdaten der Schüler.
+	 */
+	public Map<Long, GostLaufbahnplanungBeratungsdaten> getMapFromIDs(final List<Long> schueler_ids) throws WebApplicationException {
+		if (schueler_ids == null)
+			throw OperationError.NOT_FOUND.exception("Es wurden keine Schüler-IDs übergeben.");
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Map<Long, DTOGostSchueler> mapGostSchueler = conn
+			.queryNamed("DTOGostSchueler.schueler_id.multiple", schueler_ids, DTOGostSchueler.class)
+			.stream().collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
+
+		final Map<Long, GostLaufbahnplanungBeratungsdaten> result = new HashMap<>();
+		for (final Long sID : schueler_ids) {
+			final var schueler = mapGostSchueler.get(sID);
+			if (schueler == null)
+				throw OperationError.NOT_FOUND.exception("Es wurden Schüler-IDs übergeben, die nicht zur GOSt gehören.");
+			result.put(sID, dtoMapper.apply(schueler));
+		}
+		return result;
+	}
+
+
 
 	@Override
 	public Response patch(final Long schueler_id, final InputStream is) {
     	final Map<String, Object> map = JSONMapper.toMap(is);
-    	if (map.size() > 0) {
+    	if (!map.isEmpty()) {
     		try {
     			conn.transactionBegin();
 	    		final DTOGostSchueler gostSchueler = conn.queryByKey(DTOGostSchueler.class, schueler_id);

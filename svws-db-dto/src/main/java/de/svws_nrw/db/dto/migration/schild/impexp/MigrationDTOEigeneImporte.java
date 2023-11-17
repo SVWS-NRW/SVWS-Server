@@ -55,6 +55,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOEigeneImporte.schueleridmode", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode = :value")
 @NamedQuery(name = "MigrationDTOEigeneImporte.schueleridmode.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.SchuelerIDMode IN :value")
 @NamedQuery(name = "MigrationDTOEigeneImporte.primaryKeyQuery", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOEigeneImporte.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOEigeneImporte.all.migration", query = "SELECT e FROM MigrationDTOEigeneImporte e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Title", "DelimiterChar", "TextQuote", "SkipLines", "DateFormat", "BooleanTrue", "AbkWeiblich", "AbkMaennlich", "MainTable", "InsertMode", "LookupTableDir", "SchuelerIDMode"})
 public final class MigrationDTOEigeneImporte {

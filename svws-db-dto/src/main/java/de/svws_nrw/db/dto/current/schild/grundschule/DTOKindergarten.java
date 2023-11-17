@@ -53,6 +53,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDe
 @NamedQuery(name = "DTOKindergarten.sortierung", query = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung = :value")
 @NamedQuery(name = "DTOKindergarten.sortierung.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.Sortierung IN :value")
 @NamedQuery(name = "DTOKindergarten.primaryKeyQuery", query = "SELECT e FROM DTOKindergarten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOKindergarten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOKindergarten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOKindergarten.all.migration", query = "SELECT e FROM DTOKindergarten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "PLZ", "Ort", "Strassenname", "HausNr", "HausNrZusatz", "Tel", "Email", "Bemerkung", "Sichtbar", "Sortierung"})
 public final class DTOKindergarten {

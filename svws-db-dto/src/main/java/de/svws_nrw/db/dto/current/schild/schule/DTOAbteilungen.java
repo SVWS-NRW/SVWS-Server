@@ -47,6 +47,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOAbteilungen.sortierung", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung = :value")
 @NamedQuery(name = "DTOAbteilungen.sortierung.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.Sortierung IN :value")
 @NamedQuery(name = "DTOAbteilungen.primaryKeyQuery", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAbteilungen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOAbteilungen.all.migration", query = "SELECT e FROM DTOAbteilungen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Schuljahresabschnitts_ID", "AbteilungsLeiter_ID", "Sichtbar", "Raum", "Email", "Durchwahl", "Sortierung"})
 public final class DTOAbteilungen {

@@ -2,7 +2,7 @@
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
-			<svws-ui-text-input placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell()" @change="patch({ wochenTypModell: Number($event) })" type="number" />
+			<svws-ui-input-number placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() || 1" @change="wochenTypModell => doPatch(wochenTypModell)" type="number" min="1" />
 			<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
 			<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 			<svws-ui-spacing />
@@ -51,6 +51,13 @@
 		else {
 			await props.removeJahrgang(id);
 		}
+	}
+
+	async function doPatch(wochenTypModell: number | null) {
+		if (wochenTypModell === null || wochenTypModell < 1)
+			return;
+		// 1 ist nicht zulässig, wird zu 0 konvertiert, allgemein
+		await props.patch({wochenTypModell: wochenTypModell === 1 ? 0 : wochenTypModell});
 	}
 
 </script>

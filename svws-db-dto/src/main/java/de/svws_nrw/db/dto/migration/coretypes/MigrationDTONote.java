@@ -51,6 +51,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTONote.gueltigbis", query = "SELECT e FROM MigrationDTONote e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "MigrationDTONote.gueltigbis.multiple", query = "SELECT e FROM MigrationDTONote e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "MigrationDTONote.primaryKeyQuery", query = "SELECT e FROM MigrationDTONote e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTONote.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTONote e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTONote.all.migration", query = "SELECT e FROM MigrationDTONote e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "IstTendenznote", "Text", "AufZeugnis", "Notenpunkte", "TextLaufbahnSII", "AufLaufbahnSII", "Sortierung", "gueltigVon", "gueltigBis"})
 public final class MigrationDTONote {

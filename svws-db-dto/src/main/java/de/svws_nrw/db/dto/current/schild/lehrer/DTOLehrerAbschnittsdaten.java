@@ -47,6 +47,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.reststd", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd = :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.reststd.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.RestStd IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.primaryKeyQuery", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOLehrerAbschnittsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOLehrerAbschnittsdaten.all.migration", query = "SELECT e FROM DTOLehrerAbschnittsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Lehrer_ID", "Schuljahresabschnitts_ID", "Rechtsverhaeltnis", "Beschaeftigungsart", "Einsatzstatus", "StammschulNr", "PflichtstdSoll", "UnterrichtsStd", "MehrleistungStd", "EntlastungStd", "AnrechnungStd", "RestStd"})
 public final class DTOLehrerAbschnittsdaten {

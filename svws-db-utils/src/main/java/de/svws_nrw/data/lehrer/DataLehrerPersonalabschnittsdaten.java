@@ -80,8 +80,14 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
     	if (abschnittsdaten == null)
     		return result;
     	// Konvertiere sie und füge sie zur Liste hinzu
-    	for (final DTOLehrerAbschnittsdaten l : abschnittsdaten)
-    		result.add(dtoMapper.apply(l));
+    	for (final DTOLehrerAbschnittsdaten l : abschnittsdaten) {
+    		final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(l);
+    		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, l.ID));
+    		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
+    		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, l.ID));
+    		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, l.ID));
+    		result.add(daten);
+    	}
     	return result;
 	}
 
@@ -93,6 +99,10 @@ public final class DataLehrerPersonalabschnittsdaten extends DataManager<Long> {
     	if (abschnittsdaten == null)
     		return OperationError.NOT_FOUND.getResponse();
 		final LehrerPersonalabschnittsdaten daten = dtoMapper.apply(abschnittsdaten);
+		daten.anrechnungen.addAll(DataLehrerPersonalabschnittsdatenAnrechungen.getByLehrerabschnittsdatenId(conn, id));
+		daten.mehrleistung.addAll(DataLehrerPersonalabschnittsdatenMehrleistungen.getByLehrerabschnittsdatenId(conn, id));
+		daten.minderleistung.addAll(DataLehrerPersonalabschnittsdatenMinderleistungen.getByLehrerabschnittsdatenId(conn, id));
+		daten.funktionen.addAll(DataLehrerPersonalabschnittsdatenLehrerfunktionen.getByLehrerabschnittsdatenId(conn, id));
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

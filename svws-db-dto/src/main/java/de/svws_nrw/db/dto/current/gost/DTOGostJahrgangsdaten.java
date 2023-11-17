@@ -43,6 +43,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOGostJahrgangsdaten.textmailversand", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand = :value")
 @NamedQuery(name = "DTOGostJahrgangsdaten.textmailversand.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.TextMailversand IN :value")
 @NamedQuery(name = "DTOGostJahrgangsdaten.primaryKeyQuery", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang = ?1")
+@NamedQuery(name = "DTOGostJahrgangsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IN :value")
 @NamedQuery(name = "DTOGostJahrgangsdaten.all.migration", query = "SELECT e FROM DTOGostJahrgangsdaten e WHERE e.Abi_Jahrgang IS NOT NULL")
 @JsonPropertyOrder({"Abi_Jahrgang", "ZusatzkursGEVorhanden", "ZusatzkursGEErstesHalbjahr", "ZusatzkursSWVorhanden", "ZusatzkursSWErstesHalbjahr", "TextBeratungsbogen", "TextMailversand"})
 public final class DTOGostJahrgangsdaten {

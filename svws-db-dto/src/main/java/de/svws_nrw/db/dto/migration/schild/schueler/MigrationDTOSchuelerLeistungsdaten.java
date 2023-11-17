@@ -105,6 +105,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft = :value")
 @NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.zusatzkraft.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.Zusatzkraft IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerLeistungsdaten.all.migration", query = "SELECT e FROM MigrationDTOSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Fach_ID", "Hochrechnung", "Fachlehrer_ID", "Kursart", "KursartAllg", "Kurs_ID", "NotenKrz", "NotenKrzQuartal", "Warnung", "Warndatum", "AbiFach", "Wochenstunden", "AbiZeugnis", "Prognose", "FehlStd", "uFehlStd", "Sortierung", "Lernentw", "Gekoppelt", "VorherAbgeschl", "AbschlussJahrgang", "HochrechnungStatus", "SchulNr", "Zusatzkraft_ID", "WochenstdZusatzkraft", "Prf10Fach", "AufZeugnis", "Gewichtung", "SchulnrEigner", "NoteAbschlussBA", "Umfang", "Fachlehrer", "Zusatzkraft"})
 public final class MigrationDTOSchuelerLeistungsdaten {

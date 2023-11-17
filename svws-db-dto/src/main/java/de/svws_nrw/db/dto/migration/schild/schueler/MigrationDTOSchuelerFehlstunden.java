@@ -52,6 +52,7 @@ import de.svws_nrw.csv.converter.migration.MigrationDatumConverterDeserializer;
 @NamedQuery(name = "MigrationDTOSchuelerFehlstunden.lehrer_id", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
 @NamedQuery(name = "MigrationDTOSchuelerFehlstunden.lehrer_id.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerFehlstunden.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOSchuelerFehlstunden.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOSchuelerFehlstunden.all.migration", query = "SELECT e FROM MigrationDTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulnrEigner", "Abschnitt_ID", "Datum", "Fach_ID", "FehlStd", "VonStd", "BisStd", "Entschuldigt", "Lehrer_ID"})
 public final class MigrationDTOSchuelerFehlstunden {

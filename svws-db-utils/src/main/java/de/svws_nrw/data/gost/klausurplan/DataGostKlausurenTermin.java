@@ -150,7 +150,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * @return die Response
 	 */
 	public Response delete(final List<Long> ids) {
-		return super.deleteAllBasic(ids, DTOGostKlausurenTermine.class, dtoMapper);
+		return super.deleteBasicMultiple(ids, DTOGostKlausurenTermine.class, dtoMapper);
 	}
 
 }

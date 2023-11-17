@@ -170,6 +170,18 @@ public class AES {
 
 
 	/**
+	 * Gibt den AES-Schlüssel für den Schlüssel in dem übergebenen byte-Array zurück.
+	 *
+	 * @param input   das Byte-Array mit dem AES-Schlüssel
+	 *
+	 * @return der AES-Schlüssel
+	 */
+	public static SecretKey getKeyFromByteArray(final byte[] input) {
+		return new SecretKeySpec(input, "AES");
+	}
+
+
+	/**
 	 * Erzeugt einen zufälligen Initialisierungsvektor (IV) der Länge 16 Byte
 	 *
 	 * @return der IV der Länge 16 Byte

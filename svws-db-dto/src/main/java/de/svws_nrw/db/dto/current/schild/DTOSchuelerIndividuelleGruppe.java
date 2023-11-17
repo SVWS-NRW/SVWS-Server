@@ -37,6 +37,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSchuelerIndividuelleGruppe.privat", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat = :value")
 @NamedQuery(name = "DTOSchuelerIndividuelleGruppe.privat.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.Privat IN :value")
 @NamedQuery(name = "DTOSchuelerIndividuelleGruppe.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerIndividuelleGruppe.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerIndividuelleGruppe.all.migration", query = "SELECT e FROM DTOSchuelerIndividuelleGruppe e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Erzeuger", "Privat"})
 public final class DTOSchuelerIndividuelleGruppe {

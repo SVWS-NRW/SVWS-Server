@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOSportbefreiung.aenderbar", query = "SELECT e FROM DTOSportbefreiung e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOSportbefreiung.aenderbar.multiple", query = "SELECT e FROM DTOSportbefreiung e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOSportbefreiung.primaryKeyQuery", query = "SELECT e FROM DTOSportbefreiung e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSportbefreiung.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSportbefreiung e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSportbefreiung.all.migration", query = "SELECT e FROM DTOSportbefreiung e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOSportbefreiung {

@@ -199,6 +199,8 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerZP10;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchuelerZuweisungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schueler_AllgAdr;
 import de.svws_nrw.db.schema.tabellen.Tabelle_SchuleCredentials;
+import de.svws_nrw.db.schema.tabellen.Tabelle_SchuleOAuthSecrets;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Schulbewerbung_Importe;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schulformen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schuljahresabschnitte;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Schulleitung;
@@ -605,6 +607,9 @@ public final class Schema {
 	/** Tabelle SchuleCredentials */
 	public static final Tabelle_SchuleCredentials tab_SchuleCredentials = add(new Tabelle_SchuleCredentials());
 
+	/** Tabelle SchuleOAuthSecrets */
+	public static final Tabelle_SchuleOAuthSecrets tab_SchuleOAuthSecrets = add(new Tabelle_SchuleOAuthSecrets());
+
 	/** Tabelle Schulformen */
 	public static final Tabelle_Schulformen tab_Schulformen = add(new Tabelle_Schulformen());
 
@@ -883,6 +888,9 @@ public final class Schema {
 
     /** Tabelle EnmLernabschnittsdaten */
     public static final Tabelle_EnmLernabschnittsdaten tab_EnmLernabschnittsdaten = add(new Tabelle_EnmLernabschnittsdaten());
+
+    /** Tabelle_Schulbewerbung_Importe */
+    public static final Tabelle_Schulbewerbung_Importe tab_Schulbewerbung_Importe = add(new Tabelle_Schulbewerbung_Importe());
 
     /** Tabelle Gost_Klausuren_Vorgaben */
     public static final Tabelle_Gost_Klausuren_Vorgaben tab_Gost_Klausuren_Vorgaben = add(new Tabelle_Gost_Klausuren_Vorgaben());

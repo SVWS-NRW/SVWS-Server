@@ -51,6 +51,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOAnkreuzfloskeln.aktiv", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv = :value")
 @NamedQuery(name = "DTOAnkreuzfloskeln.aktiv.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.Aktiv IN :value")
 @NamedQuery(name = "DTOAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAnkreuzfloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOAnkreuzfloskeln.all.migration", query = "SELECT e FROM DTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Fach_ID", "IstASV", "Jahrgang", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
 public final class DTOAnkreuzfloskeln {

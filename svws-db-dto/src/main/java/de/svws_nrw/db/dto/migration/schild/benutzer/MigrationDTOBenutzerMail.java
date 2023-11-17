@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOBenutzerMail.computername", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName = :value")
 @NamedQuery(name = "MigrationDTOBenutzerMail.computername.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.ComputerName IN :value")
 @NamedQuery(name = "MigrationDTOBenutzerMail.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzerMail.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IN :value")
 @NamedQuery(name = "MigrationDTOBenutzerMail.all.migration", query = "SELECT e FROM MigrationDTOBenutzerMail e WHERE e.Benutzer_ID IS NOT NULL")
 @JsonPropertyOrder({"Benutzer_ID", "Email", "EmailName", "SMTPUsername", "SMTPPassword", "EMailSignature", "HeartbeatDate", "ComputerName"})
 public final class MigrationDTOBenutzerMail {

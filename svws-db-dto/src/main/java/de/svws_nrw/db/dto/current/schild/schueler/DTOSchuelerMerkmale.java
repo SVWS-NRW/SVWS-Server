@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerMerkmale.datumbis", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis = :value")
 @NamedQuery(name = "DTOSchuelerMerkmale.datumbis.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.DatumBis IN :value")
 @NamedQuery(name = "DTOSchuelerMerkmale.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerMerkmale.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerMerkmale.all.migration", query = "SELECT e FROM DTOSchuelerMerkmale e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "Kurztext", "DatumVon", "DatumBis"})
 public final class DTOSchuelerMerkmale {

@@ -43,6 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID = :value")
 @NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.gu_id.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.GU_ID IN :value")
 @NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOAnsprechpartnerAllgemeineAdresse.all.migration", query = "SELECT e FROM MigrationDTOAnsprechpartnerAllgemeineAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Adresse_ID", "Name", "Vorname", "Anrede", "Telefon", "Email", "Abteilung", "SchulnrEigner", "Titel", "GU_ID"})
 public final class MigrationDTOAnsprechpartnerAllgemeineAdresse {

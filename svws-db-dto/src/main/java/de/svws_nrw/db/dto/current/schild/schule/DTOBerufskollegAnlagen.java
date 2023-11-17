@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOBerufskollegAnlagen.gueltigbis", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTOBerufskollegAnlagen.gueltigbis.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTOBerufskollegAnlagen.primaryKeyQuery", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOBerufskollegAnlagen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOBerufskollegAnlagen.all.migration", query = "SELECT e FROM DTOBerufskollegAnlagen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "gueltigVon", "gueltigBis"})
 public final class DTOBerufskollegAnlagen {

@@ -105,8 +105,20 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOKatalogZeitraster.class, patchMappings);
 	}
 
+	/**
+	 * Führt Patches für mehrere DTOs aus. Die Patches müssen als Liste übergeben werden.
+	 *
+	 * @param is   der Input-Stream mit der Liste der Patches
+	 *
+	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 */
+	public Response patchMultiple(final InputStream is) {
+		return super.patchBasicMultiple("id", is, DTOKatalogZeitraster.class, patchMappings);
+	}
 
 	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "unterrichtstunde", "stundenbeginn", "stundenende");
+
+	private static final ObjLongConsumer<DTOKatalogZeitraster> initDTO = (dto, id) -> dto.ID = id;
 
 	/**
 	 * Fügt einen Zeitrastereintrag mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
@@ -117,9 +129,20 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// füge den Zeitrastereintrag in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOKatalogZeitraster> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Zeitrastereinträge mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		return super.addBasicMultiple(is, DTOKatalogZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 
@@ -132,6 +155,18 @@ public final class DataKatalogZeitraster extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOKatalogZeitraster.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Zeitrastereinträge
+	 *
+	 * @param ids   die IDs der Zeitrastereinträge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogZeitraster.class, dtoMapper);
 	}
 
 }

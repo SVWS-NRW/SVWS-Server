@@ -43,6 +43,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOOrtsteil.ortsteilschluessel", query = "SELECT e FROM DTOOrtsteil e WHERE e.OrtsteilSchluessel = :value")
 @NamedQuery(name = "DTOOrtsteil.ortsteilschluessel.multiple", query = "SELECT e FROM DTOOrtsteil e WHERE e.OrtsteilSchluessel IN :value")
 @NamedQuery(name = "DTOOrtsteil.primaryKeyQuery", query = "SELECT e FROM DTOOrtsteil e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOOrtsteil.primaryKeyQuery.multiple", query = "SELECT e FROM DTOOrtsteil e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOOrtsteil.all.migration", query = "SELECT e FROM DTOOrtsteil e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Ort_ID", "Sortierung", "Sichtbar", "Aenderbar", "OrtsteilSchluessel"})
 public final class DTOOrtsteil {

@@ -79,8 +79,10 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		if (stundenplan == null)
 			throw OperationError.NOT_FOUND.exception("Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final List<DTOKurs> kurse = conn.queryNamed("DTOKurs.schuljahresabschnitts_id", stundenplan.Schuljahresabschnitts_ID, DTOKurs.class);
-		// Schüler bestimmen
+		if (kurse.isEmpty())
+			return new ArrayList<>();
 		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
+		// Schüler bestimmen
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryList("SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Schueler_ID, Collectors.toList())));
 		// Lehrer bestimmen

@@ -53,6 +53,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOAnkreuzfloskeln.aktiv", query = "SELECT e FROM MigrationDTOAnkreuzfloskeln e WHERE e.Aktiv = :value")
 @NamedQuery(name = "MigrationDTOAnkreuzfloskeln.aktiv.multiple", query = "SELECT e FROM MigrationDTOAnkreuzfloskeln e WHERE e.Aktiv IN :value")
 @NamedQuery(name = "MigrationDTOAnkreuzfloskeln.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAnkreuzfloskeln e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAnkreuzfloskeln.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAnkreuzfloskeln e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOAnkreuzfloskeln.all.migration", query = "SELECT e FROM MigrationDTOAnkreuzfloskeln e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "SchulnrEigner", "Fach_ID", "IstASV", "Jahrgang", "Gliederung", "FloskelText", "Sortierung", "FachSortierung", "Abschnitt", "Sichtbar", "Aktiv"})
 public final class MigrationDTOAnkreuzfloskeln {

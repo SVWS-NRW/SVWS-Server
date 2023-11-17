@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOStundenplanPausenaufsichten.lehrer_id", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID = :value")
 @NamedQuery(name = "DTOStundenplanPausenaufsichten.lehrer_id.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.Lehrer_ID IN :value")
 @NamedQuery(name = "DTOStundenplanPausenaufsichten.primaryKeyQuery", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundenplanPausenaufsichten.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOStundenplanPausenaufsichten.all.migration", query = "SELECT e FROM DTOStundenplanPausenaufsichten e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Pausenzeit_ID", "Wochentyp", "Lehrer_ID"})
 public final class DTOStundenplanPausenaufsichten {

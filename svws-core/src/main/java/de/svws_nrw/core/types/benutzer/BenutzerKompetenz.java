@@ -118,6 +118,11 @@ public enum BenutzerKompetenz {
     	46, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Export über XML-Schnittstellen", null
     )),
 
+    /** Es werden Rechte zum Import und Export über die Schulbewerbung.de-Schnittstelle benötigt. */
+    IMPORT_EXPORT_SCHULBEWERBUNG_DE(new BenutzerKompetenzKatalogEintrag(
+    	47, BenutzerKompetenzGruppe.IMPORT_EXPORT, "Datenaustausch mit Schulbewerbung.de", null
+    )),
+
     /** Es werden Rechte zum Ansehen der Schulbezogenen Daten benötigt. */
     SCHULBEZOGENE_DATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
     	61, BenutzerKompetenzGruppe.SCHULBEZOGENE_DATEN, "Ansehen", null

@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-dropdown-list"
+	<div class="svws-ui-dropdown-list" id="svws-ui-dropdown-list-id"
 		:class="{'svws-statistik': statistics, 'svws-type-tags': tags}"
 		:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 		ref="floating">

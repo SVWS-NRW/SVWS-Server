@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.version", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version = :value")
 @NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.version.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.Version IN :value")
 @NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle = ?1")
+@NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IN :value")
 @NamedQuery(name = "MigrationDTOSchemaCoreTypeVersion.all.migration", query = "SELECT e FROM MigrationDTOSchemaCoreTypeVersion e WHERE e.NameTabelle IS NOT NULL")
 @JsonPropertyOrder({"NameTabelle", "Name", "Version"})
 public final class MigrationDTOSchemaCoreTypeVersion {

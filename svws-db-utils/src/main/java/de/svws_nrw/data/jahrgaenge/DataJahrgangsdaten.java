@@ -1,16 +1,16 @@
 package de.svws_nrw.data.jahrgaenge;
 
-import java.io.InputStream;
-import java.util.function.Function;
-
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.OperationError;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
+
+import java.io.InputStream;
+import java.util.function.Function;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -57,13 +57,24 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) {
+		final JahrgangsDaten daten = getFromID(id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+	/**
+	 * Gibt die Jahrgangsdaten zur ID eines Jahrgangs zurück.
+	 *
+ 	 * @param id	Die ID des Jahrgangs.
+	 * @return		Die Jahrgangsdaten zur ID.
+	 */
+	public JahrgangsDaten getFromID(final Long id) {
 		if (id == null)
-			return OperationError.NOT_FOUND.getResponse();
-    	final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
-    	if (jahrgang == null)
-    		return OperationError.NOT_FOUND.getResponse();
-		final JahrgangsDaten daten = dtoMapperJahrgang.apply(jahrgang);
-        return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+			throw OperationError.NOT_FOUND.exception("Keine ID für den Jahrgang übergeben.");
+		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, id);
+		if (jahrgang == null)
+			throw OperationError.NOT_FOUND.exception("Kein Jahrgang zur ID " + id + " gefunden.");
+
+		return dtoMapperJahrgang.apply(jahrgang);
 	}
 
 	@Override

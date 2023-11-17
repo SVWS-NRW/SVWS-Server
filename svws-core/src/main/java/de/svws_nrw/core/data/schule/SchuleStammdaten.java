@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -50,7 +50,6 @@ public class SchuleStammdaten {
 	@Schema(description = "Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.", example = "a-d")
 	public String hausnummerZusatz;
 
-
 	/** Die Postleitzahl des Gebietes in dem die Schule liegt. */
 	@Schema(description = "die Postleitzahl der Schule", example = "42287")
 	public String plz;
@@ -78,14 +77,6 @@ public class SchuleStammdaten {
 	/** Die ID des Schuljahresabschnittes, in welchem sich die Schule befindet. */
 	@Schema(description = "die ID des Schuljahresabschnittes, in welchem sich die Schule befindet", example = "14")
 	public long idSchuljahresabschnitt;
-
-	/** Der Schuljahresabschnittes, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen). */
-	@Schema(description = "der Schuljahresabschnittes, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen)", example = "2023/24.1")
-	public @NotNull String textSchuljahresabschnitt = "";
-
-	/** Das Schuljahr, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen). */
-	@Schema(description = "das Schuljahr, in welchem sich die Schule befindet, in textueller Repräsentation (nur lesen)", example = "2023/24")
-	public @NotNull String textSchuljahr = "";
 
 	/** Die Anzahl der Abschnitte pro Jahrgangsstufe. */
 	@Schema(description = "Anzahl der Abschnitte pro Jahrgangsstufe", example = "1")

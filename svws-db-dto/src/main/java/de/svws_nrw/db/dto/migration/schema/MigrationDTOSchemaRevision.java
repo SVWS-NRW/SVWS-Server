@@ -33,6 +33,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOSchemaRevision.istainted", query = "SELECT e FROM MigrationDTOSchemaRevision e WHERE e.IsTainted = :value")
 @NamedQuery(name = "MigrationDTOSchemaRevision.istainted.multiple", query = "SELECT e FROM MigrationDTOSchemaRevision e WHERE e.IsTainted IN :value")
 @NamedQuery(name = "MigrationDTOSchemaRevision.primaryKeyQuery", query = "SELECT e FROM MigrationDTOSchemaRevision e WHERE e.Revision = ?1")
+@NamedQuery(name = "MigrationDTOSchemaRevision.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOSchemaRevision e WHERE e.Revision IN :value")
 @NamedQuery(name = "MigrationDTOSchemaRevision.all.migration", query = "SELECT e FROM MigrationDTOSchemaRevision e WHERE e.Revision IS NOT NULL")
 @JsonPropertyOrder({"Revision", "IsTainted"})
 public final class MigrationDTOSchemaRevision {

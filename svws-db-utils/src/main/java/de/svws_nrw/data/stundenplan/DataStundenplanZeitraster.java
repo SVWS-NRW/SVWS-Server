@@ -13,7 +13,6 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataStundenplanZeitraster extends DataManager<Long> {
 
-	private final Long stundenplanID;
+	private Long stundenplanID = null;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link StundenplanZeitraster}.
@@ -111,8 +110,24 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 		return super.patchBasic(id, is, DTOStundenplanZeitraster.class, patchMappings);
 	}
 
+	/**
+	 * Führt Patches für mehrere DTOs aus. Die Patches müssen als Liste übergeben werden.
+	 *
+	 * @param is   der Input-Stream mit der Liste der Patches
+	 *
+	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 */
+	public Response patchMultiple(final InputStream is) {
+		return super.patchBasicMultiple("id", is, DTOStundenplanZeitraster.class, patchMappings);
+	}
+
 
 	private static final Set<String> requiredCreateAttributes = Set.of("wochentag", "unterrichtstunde", "stundenbeginn", "stundenende");
+
+	private final ObjLongConsumer<DTOStundenplanZeitraster> initDTO = (dto, id) -> {
+		dto.ID = id;
+		dto.Stundenplan_ID = this.stundenplanID;
+	};
 
 	/**
 	 * Fügt einen Zeitrastereintrag mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
@@ -123,18 +138,22 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		// Prüfe, ob ein Stundenplan mit der stundenplanID existiert und lade diesen
-		if (this.stundenplanID == null)
-			return OperationError.NOT_FOUND.getResponse("Die StundenplanID darf nicht null sein.");
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
-		if (stundenplan == null)
-			return OperationError.NOT_FOUND.getResponse("Ein Stundenplan mit der ID %d ist nicht vorhanden.".formatted(stundenplanID));
-		// füge den Zeitrastereintrag in der Datenbank hinzu und gebe das zugehörige CoreDTO zurück.
-		final ObjLongConsumer<DTOStundenplanZeitraster> initDTO = (dto, id) -> {
-			dto.ID = id;
-			dto.Stundenplan_ID = this.stundenplanID;
-		};
+		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasic(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Fügt mehrere Zeitrastereinträge  mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
+		return super.addBasicMultiple(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
 
@@ -147,6 +166,22 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOStundenplanZeitraster.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Zeitrastereinträge
+	 *
+	 * @param ids   die IDs der Zeitrastereinträge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", ids, DTOStundenplanZeitraster.class);
+		for (final DTOStundenplanZeitraster dto : dtos)
+			if (dto.Stundenplan_ID != this.stundenplanID)
+				throw OperationError.BAD_REQUEST.exception("Der Zeitraster-Eintrag gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanZeitraster.class, dtoMapper);
 	}
 
 }

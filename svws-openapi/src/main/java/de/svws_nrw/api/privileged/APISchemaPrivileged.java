@@ -102,6 +102,7 @@ public class APISchemaPrivileged {
 			// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 			final List<String> all = DTOInformationSchema.queryNames(conn);
 			final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
+			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
 			for (final String schemaname : all) {
 				final DBSchemaStatus status = DBSchemaStatus.read(user, schemaname);
@@ -109,12 +110,13 @@ public class APISchemaPrivileged {
 				if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 					continue;
 				if (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE) {
-					final String schemanameConfig = SVWSKonfiguration.get().getSchemanameCaseConfig(schemaname);
+					final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
 					final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
 					schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
 					schemainfo.revision = version.getRevisionOrDefault(-1);
 					schemainfo.isTainted = version.isTainted();
 					schemainfo.isInConfig = (schemanameConfig != null);
+					schemainfo.isDeactivated = config.isDeactivatedSchema(schemaname);
 					result.add(schemainfo);
 				}
 			}

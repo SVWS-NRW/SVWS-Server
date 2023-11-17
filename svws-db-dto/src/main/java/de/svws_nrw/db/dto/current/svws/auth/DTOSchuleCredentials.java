@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOSchuleCredentials.aes", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES = :value")
 @NamedQuery(name = "DTOSchuleCredentials.aes.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.AES IN :value")
 @NamedQuery(name = "DTOSchuleCredentials.primaryKeyQuery", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer = ?1")
+@NamedQuery(name = "DTOSchuleCredentials.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IN :value")
 @NamedQuery(name = "DTOSchuleCredentials.all.migration", query = "SELECT e FROM DTOSchuleCredentials e WHERE e.Schulnummer IS NOT NULL")
 @JsonPropertyOrder({"Schulnummer", "RSAPublicKey", "RSAPrivateKey", "AES"})
 public final class DTOSchuleCredentials {

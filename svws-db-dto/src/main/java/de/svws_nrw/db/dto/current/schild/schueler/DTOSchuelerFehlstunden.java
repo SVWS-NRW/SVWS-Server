@@ -50,6 +50,7 @@ import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID = :value")
 @NamedQuery(name = "DTOSchuelerFehlstunden.lehrer_id.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.Lehrer_ID IN :value")
 @NamedQuery(name = "DTOSchuelerFehlstunden.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerFehlstunden.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerFehlstunden.all.migration", query = "SELECT e FROM DTOSchuelerFehlstunden e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abschnitt_ID", "Datum", "Fach_ID", "FehlStd", "VonStd", "BisStd", "Entschuldigt", "Lehrer_ID"})
 public final class DTOSchuelerFehlstunden {

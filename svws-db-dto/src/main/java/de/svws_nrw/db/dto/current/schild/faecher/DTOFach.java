@@ -119,6 +119,7 @@ import de.svws_nrw.csv.converter.current.statkue.ZulaessigesFachKuerzelASDConver
 @NamedQuery(name = "DTOFach.maxbemzeichen", query = "SELECT e FROM DTOFach e WHERE e.MaxBemZeichen = :value")
 @NamedQuery(name = "DTOFach.maxbemzeichen.multiple", query = "SELECT e FROM DTOFach e WHERE e.MaxBemZeichen IN :value")
 @NamedQuery(name = "DTOFach.primaryKeyQuery", query = "SELECT e FROM DTOFach e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOFach.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFach e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOFach.all.migration", query = "SELECT e FROM DTOFach e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Bezeichnung", "BezeichnungZeugnis", "BezeichnungUeberweisungsZeugnis", "Zeugnisdatenquelle_ID", "StatistikFach", "IstOberstufenFach", "IstFremdsprache", "SortierungAllg", "SortierungSekII", "IstNachpruefungErlaubt", "Sichtbar", "Aenderbar", "Gewichtung", "Unterichtssprache", "IstSchriftlichZK", "IstSchriftlichBA", "AufZeugnis", "Lernfelder", "IstMoeglichAbiLK", "IstMoeglichAbiGK", "IstMoeglichEF1", "IstMoeglichEF2", "IstMoeglichQ11", "IstMoeglichQ12", "IstMoeglichQ21", "IstMoeglichQ22", "IstMoeglichAlsNeueFremdspracheInSekII", "ProjektKursLeitfach1_ID", "ProjektKursLeitfach2_ID", "WochenstundenEF1", "WochenstundenEF2", "WochenstundenQualifikationsphase", "MussSchriftlichEF1", "MussSchriftlichEF2", "MussMuendlich", "Aufgabenfeld", "AbgeschlFaecherHolen", "GewichtungFHR", "MaxBemZeichen"})
 public final class DTOFach {

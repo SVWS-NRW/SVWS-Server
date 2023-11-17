@@ -109,6 +109,8 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "groesse");
 
+	private static final ObjLongConsumer<DTOKatalogRaum> initDTO = (dto, id) -> dto.ID = id;
+
 	/**
 	 * Fügt einen Raum mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
 	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
@@ -118,7 +120,6 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response add(final InputStream is) {
-		final ObjLongConsumer<DTOKatalogRaum> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasic(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -132,7 +133,6 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 * @return die Response mit den Daten
 	 */
 	public Response addMultiple(final InputStream is) {
-		final ObjLongConsumer<DTOKatalogRaum> initDTO = (dto, id) -> dto.ID = id;
 		return super.addBasicMultiple(is, DTOKatalogRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
 	}
 
@@ -146,6 +146,18 @@ public final class DataKatalogRaeume extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOKatalogRaum.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Räume
+	 *
+	 * @param ids   die IDs der Räume
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOKatalogRaum.class, dtoMapper);
 	}
 
 }

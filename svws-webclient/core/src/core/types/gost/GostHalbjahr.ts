@@ -211,6 +211,20 @@ export class GostHalbjahr extends JavaObject implements JavaEnum<GostHalbjahr> {
 	}
 
 	/**
+	 * Gibt alle Halbjahre des Schuljahres zurück, in dem das Halbjahr-Objekt liegt.
+	 *
+	 * @return ein Array mit allen Halbjahren des Schuljahres, in dem das Halbjahr-Objekt liegt der gymnasialen Oberstufe
+	 */
+	public getSchuljahr() : Array<GostHalbjahr> {
+		if (this.id % 2 === 0) {
+			const hjs : Array<GostHalbjahr> = [this, this.nextOrException()];
+			return hjs;
+		}
+		const hjs : Array<GostHalbjahr> = [this.previousOrException(), this];
+		return hjs;
+	}
+
+	/**
 	 * Gibt alle Halbjahre der Einführungsphase zurück.
 	 *
 	 * @return ein Array mit allen Halbjahren der Einführungsphase der gymnasialen Oberstufe

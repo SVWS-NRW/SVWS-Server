@@ -37,6 +37,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage = :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.istvorlage.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.IstVorlage IN :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOGostBlockungZwischenergebnis.primaryKeyQuery.multiple", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOGostBlockungZwischenergebnis.all.migration", query = "SELECT e FROM DTOGostBlockungZwischenergebnis e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Blockung_ID", "IstMarkiert", "IstVorlage"})
 public final class DTOGostBlockungZwischenergebnis {

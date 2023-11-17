@@ -43,6 +43,7 @@ import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
 @NamedQuery(name = "DTOAlleSchulformen.gueltigbis", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "DTOAlleSchulformen.gueltigbis.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "DTOAlleSchulformen.primaryKeyQuery", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOAlleSchulformen.primaryKeyQuery.multiple", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOAlleSchulformen.all.migration", query = "SELECT e FROM DTOAlleSchulformen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Kuerzel", "Nummer", "Bezeichnung", "HatGymOb", "gueltigVon", "gueltigBis"})
 public final class DTOAlleSchulformen {

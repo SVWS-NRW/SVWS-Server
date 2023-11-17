@@ -41,6 +41,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOErzieherart.exportbez", query = "SELECT e FROM DTOErzieherart e WHERE e.ExportBez = :value")
 @NamedQuery(name = "DTOErzieherart.exportbez.multiple", query = "SELECT e FROM DTOErzieherart e WHERE e.ExportBez IN :value")
 @NamedQuery(name = "DTOErzieherart.primaryKeyQuery", query = "SELECT e FROM DTOErzieherart e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOErzieherart.primaryKeyQuery.multiple", query = "SELECT e FROM DTOErzieherart e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOErzieherart.all.migration", query = "SELECT e FROM DTOErzieherart e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar", "ExportBez"})
 public final class DTOErzieherart {

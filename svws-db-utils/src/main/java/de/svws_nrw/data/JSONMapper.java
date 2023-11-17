@@ -151,20 +151,48 @@ public final class JSONMapper {
 
 
 	/**
+	 * Liest die Daten aus dem InputStream ein und gibt das JSON als String zurück.
+	 *
+	 * @param in   der Input-Stream
+	 *
+	 * @return der String mit dem JSON
+	 */
+	public static String toJsonString(final InputStream in) {
+		return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
+	}
+
+
+	/**
+	 * Liest die Daten aus dem InputStream ein und gibt das JSON als String zurück.
+	 *
+	 * @param in   der Input-Stream
+	 *
+	 * @return der String mit dem JSON
+	 */
+	public static JsonNode toJsonNode(final InputStream in) {
+		final String json = toJsonString(in);
+		try {
+			return mapper.readTree(json);
+		} catch (final JsonProcessingException e) {
+			throw new WebApplicationException("Fehler beim Parsen des JSON-Strings.", e, Response.Status.BAD_REQUEST);
+		}
+	}
+
+
+	/**
 	 * Wandelt die JSON-Daten aus dem {@link InputStream} in eine Liste von Maps von Key-Value-Paaren um.
 	 * Dabei müssen die JSON-Daten ein Array sein.
 	 *
 	 * @param in   der Input-Stream mit dem JSON-Input
 	 *
-	 * @return die Listes von Maps
+	 * @return die Liste von Maps
 	 */
 	public static List<Map<String, Object>> toMultipleMaps(final InputStream in) {
-		final String jsonAll = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("")).trim();
 		try {
+			final JsonNode node = toJsonNode(in);
 			final List<Map<String, Object>> result = new ArrayList<>();
-			final JsonNode node = mapper.readTree(jsonAll);
 			if (!node.isArray())
-				throw OperationError.BAD_REQUEST.exception("Das übergebene JSON ist kein Array bzw. Liste");
+				throw OperationError.BAD_REQUEST.exception("Das übergebene JSON ist kein Array bzw. keine Liste");
 			for (final JsonNode element : node) {
 				final String json = element.toString();
 				result.add(mapper.readValue(json, new TypeReference<Map<String, Object>>() { /**/ }));
@@ -173,6 +201,28 @@ public final class JSONMapper {
 		} catch (final JsonProcessingException e) {
 			throw new WebApplicationException("Fehler beim Parsen des JSON-Strings.", e, Response.Status.BAD_REQUEST);
 		}
+	}
+
+
+	/**
+	 * Wandelt die JSON-Daten aus dem {@link InputStream} in eine Liste von Long-Werten um, sofern dies
+	 * möglich ist. Ist dies nicht möglich, so wird eine entsprechende WebApplicationException erzeugt.
+	 *
+	 * @param in   der Input-Stream mit dem JSON-Input
+	 *
+	 * @return die Liste von Long-Werten
+	 */
+	public static List<Long> toListOfLong(final InputStream in) {
+		final JsonNode node = toJsonNode(in);
+		final List<Long> result = new ArrayList<>();
+		if (!node.isArray())
+			throw OperationError.BAD_REQUEST.exception("Das übergebene JSON ist kein Array bzw. keine Liste");
+		for (final JsonNode element : node) {
+			if (!element.canConvertToLong())
+				throw OperationError.BAD_REQUEST.exception("Das übergebene JSON-Array enthält auch nicht-Long-Werte");
+			result.add(element.asLong());
+		}
+		return result;
 	}
 
 

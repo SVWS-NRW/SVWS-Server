@@ -30,4 +30,8 @@ public class SchemaListeEintrag {
 	@Schema(description = "gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers eingetragen ist.", example = "true")
 	public boolean isInConfig = false;
 
+	/** Gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist. */
+    @Schema(description = "gibt an, ob das Schema in der Konfiguration des aktuellen SVWS-Servers aufgrund von Fehlern deaktiviert ist.", example = "true")
+    public boolean isDeactivated = false;
+
 }

@@ -36,6 +36,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
 import de.svws_nrw.data.kataloge.DataKatalogAufsichtsbereiche;
 import de.svws_nrw.data.kataloge.DataKatalogPausenzeiten;
@@ -69,7 +70,6 @@ import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulstufen;
-import de.svws_nrw.db.DBEntityManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1233,6 +1233,34 @@ public class APISchule {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Räume der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Räume
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Räumen
+     */
+    @DELETE
+    @Path("/raeume/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Räume der Schule.",
+    description = "Entfernt mehrere Räume der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Räume wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Raum.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Räume nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteRaeume(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Räume", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogRaeume(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
 
     /**
      * Die OpenAPI-Methode für die Abfrage der Kataloges der Aufsichtsbereiche der Schule.
@@ -1402,6 +1430,36 @@ public class APISchule {
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Aufsichtsbereiche der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Aufsichtsbereiche
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Aufsichtsbereichen
+     */
+    @DELETE
+    @Path("/aufsichtsbereiche/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Aufsichtsbereiche der Schule.",
+    description = "Entfernt mehrere Aufsichtsbereiche der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Aufsichtsbereiche wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Aufsichtsbereich.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Aufsichtsbereich nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteAufsichtsbereiche(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Aufsichtsbereiche", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogAufsichtsbereiche(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage des Kataloges der Pausenzeiten der Schule.
      *
@@ -1509,9 +1567,38 @@ public class APISchule {
     		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeit ohne ID, welche automatisch generiert wird", required = true, content =
 			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = StundenplanPausenzeit.class))) final InputStream is,
     		@Context final HttpServletRequest request) {
-    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN)) {
-    		return (new DataKatalogPausenzeiten(conn)).add(is);
-    	}
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).add(is),
+       		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Pausenzeiten zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Pausenzeiten
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Pausenzeiten
+     */
+    @POST
+    @Path("/pausenzeiten/create/multiple")
+    @Operation(summary = "Erstellt neue Pausenzeiten für die Schule und gibt die zugehörigen Objekt zurück.",
+    description = "Erstellt neue Pausenzeiten für die Schule und gibt die zugehörigen Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeiten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Pausenzeiten für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addPausenzeiten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Pausenzeiten ohne IDs, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
 
@@ -1538,6 +1625,35 @@ public class APISchule {
     public Response deletePausenzeit(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Pausenzeiten der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Pausenzeiten
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Pausenzeiten
+     */
+    @DELETE
+    @Path("/pausenzeiten/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Pausenzeiten der Schule.",
+    description = "Entfernt mehrere Pausenzeiten der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Pausenzeiten wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanPausenzeit.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Räume nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deletePausenzeiten(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Pausenzeiten", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogPausenzeiten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 
@@ -1623,6 +1739,36 @@ public class APISchule {
     }
 
 
+    /**
+     * Die OpenAPI-Methode für das Patchen mehrerer Zeitraster-Einträge. Die IDs in dem Patch
+     * müssen vorhanden sein, damit die zu patchenden Daten in der DB gefunden werden können.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/zeitraster/patch/multiple")
+    @Operation(summary = "Passt die Zeitrastereinträge an.",
+    description = "Passt die Zeitrastereinträge an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Stundenplandaten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag für mindestens eine der IDs der Daten gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchZeitrasterEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Der Patch für den Zeitrastereintrag", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).patchMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
 
     /**
      * Die OpenAPI-Methode für das Hinzufügen eines neuen Zeitraster-Eintrags zu der Schule.
@@ -1655,6 +1801,36 @@ public class APISchule {
 
 
     /**
+     * Die OpenAPI-Methode für das Hinzufügen mehrerer neuer Zeitraster-Einträge zu der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten der Zeitraster-Einträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Zeitraster-Einträgen
+     */
+    @POST
+    @Path("/zeitraster/create/multiple")
+    @Operation(summary = "Erstellt neue Zeitraster-Einträge für die Schule und gibt die zugehörigen Objekt zurück.",
+    description = "Erstellt neue Zeitraster-Einträge für die Schule und gibt die zugehörigen Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Die Pausenzeiten wurden erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Zeitraster-Einträge für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addZeitrasterEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten der zu erstellenden Zeitraster-Einträge ohne IDs, welche automatisch generiert wird", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).addMultiple(is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
      * Die OpenAPI-Methode für das Entfernen eines Zeitraster-Eintrags der Schule.
      *
      * @param schema       das Datenbankschema
@@ -1677,6 +1853,35 @@ public class APISchule {
     public Response deleteZeitrasterEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Zeitraster-Einträge der Schule.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Zeitraster-Einträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Zeitraster-Einträgen
+     */
+    @DELETE
+    @Path("/zeitraster/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Zeitraster-Einträge der Schule.",
+    description = "Entfernt mehrere Zeitraster-Einträge der Schule."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Zeitraster-Einträge wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = StundenplanZeitraster.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Zeitraster-Einträge nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteZeitrasterEintraege(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Zeitraster-Einträge", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 

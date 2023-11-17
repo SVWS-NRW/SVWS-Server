@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Räume">
-		<svws-ui-table :columns="cols" :items="stundenplanManager().raumGetMengeAsList()" v-model:clicked="raum" selectable :model-value="selected" @blur="selected=$event" count>
+		<svws-ui-table :columns="cols" :items="items" v-model:clicked="raum" selectable v-model="selected" count>
 			<template #cell(kuerzel)="{ rowData }">
 				<svws-ui-text-input :model-value="rowData.kuerzel" @change="patchRaum({kuerzel: String($event)}, rowData.id)" headless required />
 			</template>
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 
 	import type { List, Raum, StundenplanManager, StundenplanRaum } from "@core";
-	import { ref } from "vue";
+	import { ref, watch } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
@@ -37,8 +37,13 @@
 		listRaeume: () => List<Raum>;
 	}>();
 
+	watch(()=>props.stundenplanManager, neu => {
+		items.value = [...neu().raumGetMengeAsList()]
+	})
+
 	const raum = ref<StundenplanRaum | undefined>();
 	const selected = ref<StundenplanRaum[]>([]);
+	const items = ref<StundenplanRaum[]>([])
 
 	const cols = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1}, {key: 'groesse', label: 'Größe', span: 1}, {key: 'beschreibung', label: 'Beschreibung', span: 3}

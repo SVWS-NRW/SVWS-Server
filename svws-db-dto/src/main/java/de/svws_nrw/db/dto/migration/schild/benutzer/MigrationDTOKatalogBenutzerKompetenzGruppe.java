@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_zeile", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile = :value")
 @NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.kg_zeile.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_Zeile IN :value")
 @NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID = ?1")
+@NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IN :value")
 @NamedQuery(name = "MigrationDTOKatalogBenutzerKompetenzGruppe.all.migration", query = "SELECT e FROM MigrationDTOKatalogBenutzerKompetenzGruppe e WHERE e.KG_ID IS NOT NULL")
 @JsonPropertyOrder({"KG_ID", "KG_Bezeichnung", "KG_Spalte", "KG_Zeile"})
 public final class MigrationDTOKatalogBenutzerKompetenzGruppe {

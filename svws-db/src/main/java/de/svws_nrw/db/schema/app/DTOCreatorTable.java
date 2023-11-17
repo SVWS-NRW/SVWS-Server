@@ -284,6 +284,12 @@ public final class DTOCreatorTable {
 				code += "e." + col.javaAttributName() + " = ?" + (i + 1);
 			}
 			code += "\")" + System.lineSeparator();
+			// Generiere Code für eine parametrisierte NamedQuery mit einer Liste von Primärschlüsselwerten als Parameter, wenn es sich um ein DTO mit einem Primärschlüssel mit einem Attribute handelt
+			if (tabelle.pkSpalten().size() == 1) {
+				final SchemaTabelleSpalte col = tabelle.pkSpalten().iterator().next();
+				code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".primaryKeyQuery.multiple\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE "
+					+ "e." + col.javaAttributName() + " IN :value\")" + System.lineSeparator();
+			}
 			// Generiere Code für eine NamedQuery auf alle Datensätze der Tabelle, welche für eine Migration Datensätze entfernt, die nicht der Primary-key-Constraint entsprechen
 			code += "@NamedQuery(name = \"" + tabelle.getJavaKlasse(rev) + ".all.migration\", query = \"SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
 			code += tabelle.pkSpalten().stream()

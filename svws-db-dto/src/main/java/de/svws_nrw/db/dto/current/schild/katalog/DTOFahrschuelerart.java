@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOFahrschuelerart.aenderbar", query = "SELECT e FROM DTOFahrschuelerart e WHERE e.Aenderbar = :value")
 @NamedQuery(name = "DTOFahrschuelerart.aenderbar.multiple", query = "SELECT e FROM DTOFahrschuelerart e WHERE e.Aenderbar IN :value")
 @NamedQuery(name = "DTOFahrschuelerart.primaryKeyQuery", query = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOFahrschuelerart.primaryKeyQuery.multiple", query = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOFahrschuelerart.all.migration", query = "SELECT e FROM DTOFahrschuelerart e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sortierung", "Sichtbar", "Aenderbar"})
 public final class DTOFahrschuelerart {

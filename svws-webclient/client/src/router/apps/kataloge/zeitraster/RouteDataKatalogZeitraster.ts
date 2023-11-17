@@ -81,25 +81,24 @@ export class RouteDataKatalogZeitraster {
 
 	addZeitraster = async (zeitraster: Iterable<Partial<StundenplanZeitraster>>) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>();
+		const list = new ArrayList<Partial<StundenplanZeitraster>>();
 		for (const z of zeitraster) {
 			delete z.id;
-			const item = await api.server.addZeitrasterEintrag(z, api.schema);
-			list.add(item);
+			list.add(z);
 		}
-		this.stundenplanManager.zeitrasterAddAll(list);
+		const items = await api.server.addZeitrasterEintraege(list, api.schema);
+		this.stundenplanManager.zeitrasterAddAll(items);
 		this.commit();
 		api.status.stop();
 	}
 
 	removeZeitraster = async (zeitraster: Iterable<StundenplanZeitraster>) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>();
-		for (const z of zeitraster) {
-			const item = await api.server.deleteZeitrasterEintrag(api.schema, z.id);
-			list.add(item);
-		}
-		this.stundenplanManager.zeitrasterRemoveAll(list);
+		const list = new ArrayList<number>();
+		for (const z of zeitraster)
+			list.add(z.id);
+		const items = await api.server.deleteZeitrasterEintraege(list, api.schema);
+		this.stundenplanManager.zeitrasterRemoveAll(items);
 		this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
@@ -107,12 +106,10 @@ export class RouteDataKatalogZeitraster {
 
 	patchZeitraster = async (zeitraster : Iterable<StundenplanZeitraster>) => {
 		api.status.start();
-		const list = new ArrayList<StundenplanZeitraster>();
-		for (const z of zeitraster) {
-			await api.server.patchZeitrasterEintrag(z, api.schema, z.id);
-			this.stundenplanManager.zeitrasterPatchAttributes(z);
+		const list: List<StundenplanZeitraster> = new ArrayList();
+		for (const z of zeitraster)
 			list.add(z);
-		}
+		await api.server.patchZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();

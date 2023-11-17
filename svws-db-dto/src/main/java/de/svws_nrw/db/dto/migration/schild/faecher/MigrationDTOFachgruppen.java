@@ -55,6 +55,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOFachgruppen.gueltigbis", query = "SELECT e FROM MigrationDTOFachgruppen e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "MigrationDTOFachgruppen.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOFachgruppen e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "MigrationDTOFachgruppen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFachgruppen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOFachgruppen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFachgruppen e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOFachgruppen.all.migration", query = "SELECT e FROM MigrationDTOFachgruppen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Fachbereich", "SchildFgID", "FG_Bezeichnung", "FG_Kuerzel", "Schulformen", "FarbeR", "FarbeG", "FarbeB", "Sortierung", "FuerZeugnis", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOFachgruppen {

@@ -246,6 +246,21 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	}
 
 
+	private void patchInternal(final DTOStundenplanUnterricht dto, final Map<String, Object> map) {
+		applyPatchMappings(conn, dto, map, patchMappings, null);
+		// Persistiere das DTO in der Datenbank
+		if (!conn.transactionPersist(dto))
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		conn.transactionFlush();
+		// Passe ggf. die Listen an
+		patchLehrer(dto.ID, map);
+		patchKlassen(dto.ID, map);
+		patchRaeume(dto.ID, map);
+		patchSchienen(dto.ID, map);
+		conn.transactionFlush();
+	}
+
+
 	@Override
 	public Response patch(final Long id, final InputStream is) {
 		if (id == null)
@@ -256,22 +271,47 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
 		if (dto == null)
 			throw OperationError.NOT_FOUND.exception();
-		applyPatchMappings(conn, dto, map, patchMappings, null);
-		conn.transactionPersist(dto);
-		conn.transactionFlush();
-		// Passe ggf. die Listen an
-		patchLehrer(dto.ID, map);
-		patchKlassen(dto.ID, map);
-		patchRaeume(dto.ID, map);
-		patchSchienen(dto.ID, map);
-		return Response.status(Status.OK).build();
+		patchInternal(dto, map);
+		return Response.status(Status.NO_CONTENT).build();
 	}
+
+
+	/**
+	 * Führt Patches für mehrere DTOs aus. Die Patches müssen als Liste übergeben werden.
+	 *
+	 * @param is   der Input-Stream mit der Liste der Patches
+	 *
+	 * @return eine NO_CONTENT-Response im Erfolgsfall
+	 */
+	public Response patchMultiple(final InputStream is) {
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		for (final Map<String, Object> map : multipleMaps) {
+			final Long id = JSONMapper.convertToLong(map.get("id"), true);
+			if (id == null)
+				throw OperationError.BAD_REQUEST.exception("Ein Patch mit der ID null ist nicht möglich.");
+			if (map.size() == 1)
+				return OperationError.NOT_FOUND.getResponse("In dem Patch sind keine zu patchenden Daten enthalten.");
+			final DTOStundenplanUnterricht dto = conn.queryByKey(DTOStundenplanUnterricht.class, id);
+			if (dto == null)
+				throw OperationError.NOT_FOUND.exception();
+			patchInternal(dto, map);
+		}
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
 
 
 	private static final Set<String> requiredCreateAttributes = Set.of("idZeitraster", "wochentyp", "idKurs", "idFach");
 
 
 	private final Function<DTOStundenplanUnterricht, StundenplanUnterricht> dtoMapper = (final DTOStundenplanUnterricht u) -> getUnterricht(u.ID);
+
+	private StundenplanUnterricht addInternal(final long newID, final Map<String, Object> map) {
+		final DTOStundenplanUnterricht dto = newDTO(DTOStundenplanUnterricht.class, newID, (obj, id) -> obj.ID = id);
+		patchInternal(dto, map);
+		return dtoMapper.apply(dto);
+	}
+
 
 	/**
 	 * Fügt einen Unterricht mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige Core-DTO
@@ -286,19 +326,29 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 		for (final String attr : requiredCreateAttributes)
 			if (!map.containsKey(attr))
 				return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage".formatted(attr));
-		// Erstelle das DTO und initialisiere es mit den übergeben Daten
-		final DTOStundenplanUnterricht dto = newDTO(DTOStundenplanUnterricht.class, (obj, id) -> obj.ID = id);
-		applyPatchMappings(conn, dto, map, patchMappings, null);
-		// Persistiere das DTO in der Datenbank
-		if (!conn.transactionPersist(dto))
-			throw OperationError.INTERNAL_SERVER_ERROR.exception();
-		conn.transactionFlush();
-		// Passe ggf. die Listen an
-		patchLehrer(dto.ID, map);
-		patchKlassen(dto.ID, map);
-		patchRaeume(dto.ID, map);
-		patchSchienen(dto.ID, map);
-		final StundenplanUnterricht daten = dtoMapper.apply(dto);
+		final StundenplanUnterricht daten = addInternal(conn.transactionGetNextID(DTOStundenplanUnterricht.class), map);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Fügt die Unterrichte mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen Core-DTOs
+	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 *
+	 * @param is   der InputStream mit den JSON-Daten
+	 *
+	 * @return die Response mit den Daten
+	 */
+	public Response addMultiple(final InputStream is) {
+		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
+		for (final Map<String, Object> map : multipleMaps)
+			for (final String attr : requiredCreateAttributes)
+				if (!map.containsKey(attr))
+					return OperationError.BAD_REQUEST.getResponse("Das Attribut %s fehlt in der Anfrage bei mindestens einem Unterricht".formatted(attr));
+		final List<StundenplanUnterricht> daten = new ArrayList<>();
+		long newID = conn.transactionGetNextID(DTOStundenplanUnterricht.class);
+		for (final Map<String, Object> map : multipleMaps)
+			daten.add(addInternal(newID++, map));
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -312,6 +362,24 @@ public final class DataStundenplanUnterricht extends DataManager<Long> {
 	 */
 	public Response delete(final Long id) {
 		return super.deleteBasic(id, DTOStundenplanUnterricht.class, dtoMapper);
+	}
+
+
+	/**
+	 * Löscht mehrere Unterrichte
+	 *
+	 * @param ids   die IDs der Unterrichte
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		final List<Long> idsZeitraster = conn.queryNamed("DTOStundenplanUnterricht.primaryKeyQuery.multiple", ids, DTOStundenplanUnterricht.class)
+				.stream().map(u -> u.Zeitraster_ID).toList();
+		final List<DTOStundenplanZeitraster> dtos = conn.queryNamed("DTOStundenplanZeitraster.primaryKeyQuery.multiple", idsZeitraster, DTOStundenplanZeitraster.class);
+		for (final DTOStundenplanZeitraster dto : dtos)
+			if (dto.Stundenplan_ID != this.idStundenplan)
+				throw OperationError.BAD_REQUEST.exception("Der Zeitraster-Eintrag eines Unterrichtes gehört nicht zu dem angegebenen Stundenplan.");
+		return super.deleteBasicMultiple(ids, DTOStundenplanUnterricht.class, dtoMapper);
 	}
 
 }

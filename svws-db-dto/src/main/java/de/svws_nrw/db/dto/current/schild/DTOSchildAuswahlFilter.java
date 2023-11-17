@@ -37,6 +37,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @NamedQuery(name = "DTOSchildAuswahlFilter.bedingungklartext", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext = :value")
 @NamedQuery(name = "DTOSchildAuswahlFilter.bedingungklartext.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.BedingungKlartext IN :value")
 @NamedQuery(name = "DTOSchildAuswahlFilter.primaryKeyQuery", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchildAuswahlFilter.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchildAuswahlFilter.all.migration", query = "SELECT e FROM DTOSchildAuswahlFilter e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Art", "Name", "Beschreibung", "Tabellen", "ZusatzTabellen", "Bedingung", "BedingungKlartext"})
 public final class DTOSchildAuswahlFilter {

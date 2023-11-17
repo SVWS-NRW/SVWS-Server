@@ -36,7 +36,7 @@
 		"unplugin-auto-import": "^0.16.0",
 		"unplugin-icons": "^0.17.0",
 		"unplugin-vue-components": "^0.25.0",
-		"unplugin-vue-markdown": "^0.24.1",
+		"unplugin-vue-markdown": "^0.25.1",
 		"vite": "^4.4.9",
 		"vitest": "^0.34.4",
 		"vue-component-type-helpers": "^1.8.10",

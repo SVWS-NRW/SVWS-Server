@@ -52,6 +52,7 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDes
 @NamedQuery(name = "DTOStundentafelFaecher.gewichtung", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung = :value")
 @NamedQuery(name = "DTOStundentafelFaecher.gewichtung.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.Gewichtung IN :value")
 @NamedQuery(name = "DTOStundentafelFaecher.primaryKeyQuery", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOStundentafelFaecher.primaryKeyQuery.multiple", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOStundentafelFaecher.all.migration", query = "SELECT e FROM DTOStundentafelFaecher e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Stundentafel_ID", "Fach_ID", "KursartAllg", "WochenStd", "Lehrer_ID", "EpochenUnterricht", "Sortierung", "Sichtbar", "Gewichtung"})
 public final class DTOStundentafelFaecher {

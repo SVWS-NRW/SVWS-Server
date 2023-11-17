@@ -39,6 +39,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner = :value")
 @NamedQuery(name = "MigrationDTOAbteilungsKlassen.schulnreigner.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.SchulnrEigner IN :value")
 @NamedQuery(name = "MigrationDTOAbteilungsKlassen.primaryKeyQuery", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOAbteilungsKlassen.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOAbteilungsKlassen.all.migration", query = "SELECT e FROM MigrationDTOAbteilungsKlassen e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Abteilung_ID", "Klasse", "Sichtbar", "SchulnrEigner"})
 public final class MigrationDTOAbteilungsKlassen {

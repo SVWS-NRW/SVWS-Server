@@ -35,6 +35,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOBenutzergruppe.istadmin", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin = :value")
 @NamedQuery(name = "MigrationDTOBenutzergruppe.istadmin.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.IstAdmin IN :value")
 @NamedQuery(name = "MigrationDTOBenutzergruppe.primaryKeyQuery", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOBenutzergruppe.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOBenutzergruppe.all.migration", query = "SELECT e FROM MigrationDTOBenutzergruppe e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "IstAdmin"})
 public final class MigrationDTOBenutzergruppe {

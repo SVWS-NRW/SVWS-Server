@@ -45,6 +45,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @NamedQuery(name = "MigrationDTOKatalogDatenschutz.personart", query = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.PersonArt = :value")
 @NamedQuery(name = "MigrationDTOKatalogDatenschutz.personart.multiple", query = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.PersonArt IN :value")
 @NamedQuery(name = "MigrationDTOKatalogDatenschutz.primaryKeyQuery", query = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOKatalogDatenschutz.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOKatalogDatenschutz.all.migration", query = "SELECT e FROM MigrationDTOKatalogDatenschutz e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Bezeichnung", "Sichtbar", "Schluessel", "SchulnrEigner", "Sortierung", "Beschreibung", "PersonArt"})
 public final class MigrationDTOKatalogDatenschutz {

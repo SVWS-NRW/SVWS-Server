@@ -2,7 +2,7 @@ import { shallowRef } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { Raum} from "@core";
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { ArrayList, BenutzerKompetenz, ReligionEintrag, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -100,11 +100,13 @@ export class RouteDataKatalogRaeume {
 
 	deleteEintraege = async (eintraege: Raum[]) => {
 		const mapKatalogeintraege = this.mapKatalogeintraege;
+		const listID = new ArrayList<number>;
 		for (const eintrag of eintraege) {
-			const raum = await api.server.deleteRaum(api.schema, eintrag.id);
-			mapKatalogeintraege.delete(raum.id);
+			listID.add(eintrag.id);
+			mapKatalogeintraege.delete(eintrag.id);
 		}
 		let auswahl;
+		const raeume = await api.server.deleteRaeume(listID, api.schema);
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
 		this.setPatchedState({mapKatalogeintraege, auswahl});

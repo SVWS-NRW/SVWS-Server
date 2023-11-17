@@ -61,6 +61,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis = :value")
 @NamedQuery(name = "MigrationDTOFaecherKatalog.gueltigbis.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.gueltigBis IN :value")
 @NamedQuery(name = "MigrationDTOFaecherKatalog.primaryKeyQuery", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID = ?1")
+@NamedQuery(name = "MigrationDTOFaecherKatalog.primaryKeyQuery.multiple", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IN :value")
 @NamedQuery(name = "MigrationDTOFaecherKatalog.all.migration", query = "SELECT e FROM MigrationDTOFaecherKatalog e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "KuerzelASD", "Bezeichnung", "Kuerzel", "Aufgabenfeld", "Fachgruppe", "JahrgangAb", "IstFremdsprache", "IstHKFS", "IstAusRegUFach", "IstErsatzPflichtFS", "IstKonfKoop", "NurSII", "ExportASD", "gueltigVon", "gueltigBis"})
 public final class MigrationDTOFaecherKatalog {

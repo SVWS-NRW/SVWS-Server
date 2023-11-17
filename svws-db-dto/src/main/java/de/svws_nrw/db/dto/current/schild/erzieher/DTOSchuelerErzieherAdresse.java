@@ -84,6 +84,7 @@ import de.svws_nrw.csv.converter.current.NationalitaetenConverterDeserializer;
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.credentialid", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.CredentialID = :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.credentialid.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.CredentialID IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.primaryKeyQuery", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ID = ?1")
+@NamedQuery(name = "DTOSchuelerErzieherAdresse.primaryKeyQuery.multiple", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ID IN :value")
 @NamedQuery(name = "DTOSchuelerErzieherAdresse.all.migration", query = "SELECT e FROM DTOSchuelerErzieherAdresse e WHERE e.ID IS NOT NULL")
 @JsonPropertyOrder({"ID", "Schueler_ID", "ErzieherArt_ID", "Anrede1", "Titel1", "Name1", "Vorname1", "Anrede2", "Titel2", "Name2", "Vorname2", "ErzOrt_ID", "ErzStrassenname", "ErzHausNr", "ErzOrtsteil_ID", "ErzHausNrZusatz", "ErzAnschreiben", "Sortierung", "ErzEmail", "ErzAdrZusatz", "Erz1StaatKrz", "Erz2StaatKrz", "ErzEmail2", "Bemerkungen", "CredentialID"})
 public final class DTOSchuelerErzieherAdresse {
