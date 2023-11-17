@@ -213,7 +213,8 @@
 	window.addEventListener('click', function(e) {
 		const vT = document.getElementById('vorgabenTable');
 		const vE = document.getElementById('vorgabenEdit');
-		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list"))
+		const vL = document.getElementById('svws-ui-dropdown-list-id');
+		if (vE !== null && vT !== null && vL === null)
 			activeVorgabe.value = new GostKlausurvorgabe();
 	});
 
