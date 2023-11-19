@@ -214,7 +214,8 @@
 		const vT = document.getElementById('vorgabenTable');
 		const vE = document.getElementById('vorgabenEdit');
 		const vL = document.getElementById('svws-ui-dropdown-list-id');
-		if (vE !== null && vT !== null && vL === null)
+		if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && !(e.target as HTMLElement).parentElement?.parentElement?.parentElement?.classList.contains("svws-ui-dropdown-list"))
+			// if (vE !== null && vT !== null && !vT.contains(e.target as Node) && !vE.contains(e.target as Node) && (vL === null || !vL.contains(e.target as Node)))
 			activeVorgabe.value = new GostKlausurvorgabe();
 	});
 
