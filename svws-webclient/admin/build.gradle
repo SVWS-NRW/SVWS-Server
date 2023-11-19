@@ -32,7 +32,7 @@ task cleanAdminClient(type: Delete) {
 }
 
 clean.dependsOn cleanAdminClient
-/*
+
 task publishNexusAdminClient(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
@@ -60,22 +60,22 @@ project.tasks.withType(PublishToMavenRepository).configureEach {
 	dependsOn ':svws-webclient:core:publishNexusCore'
 	dependsOn ':svws-webclient:ui:publishNexusUi'
 	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusClient
+	dependsOn publishNexusAdminClient
 	dependsOn ':svws-webclient:core:publishNpmCore'
 	dependsOn ':svws-webclient:ui:publishNpmUi'
 	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmClient
+	dependsOn publishNpmAdminClient
 }
 
 project.tasks.withType(Sign).configureEach {
 	dependsOn ':svws-webclient:core:publishNexusCore'
 	dependsOn ':svws-webclient:ui:publishNexusUi'
 	// dependsOn ':svws-webclient:components:publishNexusComponents'
-	dependsOn publishNexusClient
+	dependsOn publishNexusAdminClient
 	dependsOn ':svws-webclient:core:publishNpmCore'
 	dependsOn ':svws-webclient:ui:publishNpmUi'
 	// dependsOn ':svws-webclient:components:publishNpmComponents'
-	dependsOn publishNpmClient
+	dependsOn publishNpmAdminClient
 }
 
 
@@ -120,4 +120,4 @@ publishing {
         }
     }
 }
-*/
+
