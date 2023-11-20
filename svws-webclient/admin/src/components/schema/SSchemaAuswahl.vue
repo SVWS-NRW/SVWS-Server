@@ -5,7 +5,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchema" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="mapSchema().values()"
-				:columns="cols" clickable selectable count scroll-into-view scroll>
+				:columns="cols" clickable :selectable="hasRootPrivileges" count scroll-into-view scroll>
 				<template #cell(name)="{ value }">
 					{{ value }}
 				</template>
@@ -18,8 +18,8 @@
 				<template #cell(isInConfig)="{ value }">
 					<i-ri-settings-2-line v-if="value === true" />
 				</template>
-				<template #actions>
-					<svws-ui-button type="trash" @click="removeSchemata" v-if="selectedItems.length > 0" />
+				<template v-if="hasRootPrivileges" #actions>
+					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" />
 					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">
 						<svws-ui-button @click="openModal()" type="icon" title="SQLite-Schema importieren"> <i-ri-download-2-line /> </svws-ui-button>
 					</s-schema-auswahl-import-modal>

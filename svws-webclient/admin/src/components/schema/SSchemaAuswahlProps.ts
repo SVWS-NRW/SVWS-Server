@@ -1,6 +1,7 @@
 import type { BenutzerKennwort, SchemaListeEintrag } from "@core";
 
 export interface SchemaAuswahlProps {
+	hasRootPrivileges: boolean;
 	auswahl: SchemaListeEintrag | undefined;
 	auswahlGruppe: SchemaListeEintrag[];
 	mapSchema: () => Map<string, SchemaListeEintrag>;

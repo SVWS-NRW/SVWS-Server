@@ -13,6 +13,7 @@ import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
+import { api } from "~/router/Api";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue")
@@ -65,6 +66,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchemaAuswahlProps {
 		return {
+			hasRootPrivileges: api.hasRootPrivileges,
 			auswahl: this.data.auswahl,
 			auswahlGruppe: this.data.auswahlGruppe,
 			mapSchema: () => this.data.mapSchema,
