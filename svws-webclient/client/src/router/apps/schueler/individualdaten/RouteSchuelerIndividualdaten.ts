@@ -38,7 +38,8 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			mapFahrschuelerarten: this.data.mapFahrschuelerarten,
 			mapFoerderschwerpunkte: this.data.mapFoerderschwerpunkte,
 			mapHaltestellen: this.data.mapHaltestellen,
-			mapReligionen: this.data.mapReligionen
+			mapReligionen: this.data.mapReligionen,
+			mapSchulen: this.data.mapSchulen,
 		};
 	}
 
