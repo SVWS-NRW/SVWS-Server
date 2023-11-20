@@ -242,7 +242,7 @@
 
 	const termineOhne = computed(() => {
 		const a = [];
-		for (const termin of props.kursklausurmanager().terminGetMengeByQuartal(props.quartalsauswahl.value, true))
+		for (const termin of props.kursklausurmanager().terminGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, true))
 			if (termin.datum === null)
 				a.push(termin);
 		return a;

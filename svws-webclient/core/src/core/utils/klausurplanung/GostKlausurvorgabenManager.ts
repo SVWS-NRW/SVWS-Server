@@ -1,12 +1,13 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { MapUtils } from '../../../core/utils/MapUtils';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
+import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
@@ -14,6 +15,7 @@ import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostK
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../java/util/List';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { HashMap4D } from '../../../core/adt/map/HashMap4D';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 
 export class GostKlausurvorgabenManager extends JavaObject {
@@ -44,9 +46,9 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	private readonly _vorgabenmenge : List<GostKlausurvorgabe> = new ArrayList();
 
-	private readonly _vorgabenmenge_by_quartal : JavaMap<number, List<GostKlausurvorgabe>> = new HashMap();
+	private readonly _vorgabenmenge_by_halbjahr_and_quartal : HashMap2D<number, number, List<GostKlausurvorgabe>> = new HashMap2D();
 
-	private readonly _vorgabe_by_quartal_and_kursartAllg_and_idFach : HashMap3D<number, string, number, GostKlausurvorgabe> = new HashMap3D();
+	private readonly _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach : HashMap4D<number, number, string, number, GostKlausurvorgabe> = new HashMap4D();
 
 	private readonly _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach : HashMap3D<number, string, number, List<GostKlausurvorgabe>> = new HashMap3D();
 
@@ -65,30 +67,6 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		this.initAll(listVorgaben);
 	}
 
-	/**
-	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-	 *
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal   das Quartal
-	 *
-	 * @return die intern verwendete Quartals-Id
-	 */
-	public static getInternalQuartalIdWithGosthalbjahr(halbjahr : GostHalbjahr, quartal : number) : number {
-		return GostKlausurvorgabenManager.getInternalQuartalsIdWithHalbjahrid(halbjahr.id, quartal);
-	}
-
-	/**
-	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-	 *
-	 * @param halbjahr die Id des Gost-Halbjahres
-	 * @param quartal   das Quartal
-	 *
-	 * @return die intern verwendete Quartals-Id
-	 */
-	public static getInternalQuartalsIdWithHalbjahrid(halbjahr : number, quartal : number) : number {
-		return halbjahr * 10 + quartal;
-	}
-
 	private initAll(listVorgaben : List<GostKlausurvorgabe>) : void {
 		this.vorgabeAddAll(listVorgaben);
 		this.update_all();
@@ -105,23 +83,22 @@ export class GostKlausurvorgabenManager extends JavaObject {
 
 	private update_all() : void {
 		this.update_vorgabemenge();
-		this.update_vorgabenmenge_by_quartal();
-		this.update_vorgabe_by_quartal_and_kursartAllg_and_idFach();
+		this.update_vorgabenmenge_by_halbjahr_and_quartal();
+		this.update_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach();
 		this.update_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach();
 	}
 
-	private update_vorgabenmenge_by_quartal() : void {
-		this._vorgabenmenge_by_quartal.clear();
+	private update_vorgabenmenge_by_halbjahr_and_quartal() : void {
+		this._vorgabenmenge_by_halbjahr_and_quartal.clear();
 		for (const v of this._vorgabenmenge) {
-			MapUtils.getOrCreateArrayList(this._vorgabenmenge_by_quartal, GostKlausurvorgabenManager.getInternalQuartalsIdWithHalbjahrid(v.halbjahr, v.quartal)).add(v);
-			MapUtils.getOrCreateArrayList(this._vorgabenmenge_by_quartal, GostKlausurvorgabenManager.getInternalQuartalsIdWithHalbjahrid(v.halbjahr, 0)).add(v);
+			Map2DUtils.getOrCreateArrayList(this._vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(v);
 		}
 	}
 
-	private update_vorgabe_by_quartal_and_kursartAllg_and_idFach() : void {
-		this._vorgabe_by_quartal_and_kursartAllg_and_idFach.clear();
+	private update_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach() : void {
+		this._vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.clear();
 		for (const v of this._vorgabenmenge)
-			this._vorgabe_by_quartal_and_kursartAllg_and_idFach.put(GostKlausurvorgabenManager.getInternalQuartalsIdWithHalbjahrid(v.halbjahr, v.quartal), v.kursart, v.idFach, v);
+			this._vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.put(v.halbjahr, v.quartal, v.kursart, v.idFach, v);
 	}
 
 	private update_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach() : void {
@@ -241,8 +218,15 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public vorgabeGetMengeByQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurvorgabe> {
-		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_quartal.get(GostKlausurvorgabenManager.getInternalQuartalIdWithGosthalbjahr(halbjahr, quartal));
+	public vorgabeGetMengeByHalbjahrAndQuartal(halbjahr : GostHalbjahr, quartal : number) : List<GostKlausurvorgabe> {
+		if (quartal === 0) {
+			let vorgaben : List<GostKlausurvorgabe> | null = new ArrayList();
+			for (let vQuartal of this._vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				vorgaben.addAll(vQuartal);
+			}
+			return vorgaben;
+		}
+		let vorgaben : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
 		return vorgaben !== null ? vorgaben : new ArrayList();
 	}
 
@@ -256,8 +240,8 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public vorgabeGetByQuartalAndKursartallgAndFachid(halbjahr : GostHalbjahr, quartal : number, kursartAllg : GostKursart, idFach : number) : GostKlausurvorgabe | null {
-		return this._vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(GostKlausurvorgabenManager.getInternalQuartalIdWithGosthalbjahr(halbjahr, quartal), kursartAllg.kuerzel, idFach);
+	public vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr : GostHalbjahr, quartal : number, kursartAllg : GostKursart, idFach : number) : GostKlausurvorgabe | null {
+		return this._vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, quartal, kursartAllg.kuerzel, idFach);
 	}
 
 	/**
@@ -271,10 +255,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public vorgabeGetMengeByQuartalAndKursartallgAndFachid(halbjahr : GostHalbjahr, quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
+	public vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr : GostHalbjahr, quartal : number, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		if (quartal > 0) {
 			const retList : List<GostKlausurvorgabe> | null = new ArrayList();
-			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByQuartalAndKursartallgAndFachid(halbjahr, quartal, kursartAllg, idFach);
+			const vorgabe : GostKlausurvorgabe | null = this.vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr, quartal, kursartAllg, idFach);
 			if (vorgabe !== null)
 				retList.add(vorgabe);
 			return retList;
@@ -295,6 +279,24 @@ export class GostKlausurvorgabenManager extends JavaObject {
 	public vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(halbjahr : GostHalbjahr, kursartAllg : GostKursart, idFach : number) : List<GostKlausurvorgabe> {
 		const list : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, kursartAllg.kuerzel, idFach);
 		return list !== null ? list : new ArrayList();
+	}
+
+	/**
+	 * Gibt die das Klausurvorgabe-Objekt zum übergebenen Parameter zurück (vorhergehendes Quartal des aktuellen Schuljahres).
+	 *
+	 * @param vorgabe das Klausurvorgabe-Objekt, dessen Vorgänger gesucht ist.
+	 *
+	 * @return das GostKlausurvorgabe-Objekt
+	 */
+	public getPrevious(vorgabe : GostKlausurvorgabe) : GostKlausurvorgabe | null {
+		let vorgabenSchuljahr : List<GostKlausurvorgabe> | null = this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
+		if (vorgabe.halbjahr % 2 === 1)
+			vorgabenSchuljahr.addAll(this._vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach));
+		vorgabenSchuljahr.sort(this._compVorgabe);
+		let listIndex : number = vorgabenSchuljahr.indexOf(vorgabe);
+		if (listIndex === 0)
+			return null;
+		return vorgabenSchuljahr.get(listIndex - 1);
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
