@@ -126,6 +126,9 @@ public enum Schulform {
 	/** Ein ArrayList mit allen definierten Schulformen, die eine Statistiknummer zugewiesen haben. */
 	private static final @NotNull HashMap<@NotNull String, Schulform> _schulformenNummer = new HashMap<>();
 
+	/** Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind. */
+	private static final @NotNull HashMap<@NotNull Long, SchulformKatalogEintrag> _mapEintragById = new HashMap<>();
+
 
 	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
@@ -172,6 +175,23 @@ public enum Schulform {
 
 
 	/**
+	 * Gibt eine Map von den IDs der Schulform-Katalog-Einträge auf die zugehörigen
+	 * Schulform-Katalog-Einträge zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den Kürzels der Schulform-Katalog-Einträge auf die zugehörigen Schulform-Katalog-Einträge
+	 */
+	private static @NotNull HashMap<@NotNull Long, SchulformKatalogEintrag> getMapEintragById() {
+		if (_mapEintragById.size() == 0) {
+			for (final Schulform s : Schulform.values()) {
+				for (final SchulformKatalogEintrag e : s.historie)
+					_mapEintragById.put(e.id, e);
+			}
+		}
+		return _mapEintragById;
+	}
+
+
+	/**
 	 * Gibt die Schulform für das angegebene Kürzel zurück.
 	 *
 	 * @param kuerzel   das Kürzel der Schulform
@@ -192,6 +212,18 @@ public enum Schulform {
 	 */
 	public static Schulform getByNummer(final String nummer) {
 		return getMapSchulformenByNummer().get(nummer);
+	}
+
+
+	/**
+	 * Gibt den Schulform-Katalog-Eintrag anhand der angegebenen ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Schulform-Katalog-Eintrag oder null, falls kein Eintrag mit dieser ID vorhanden ist
+	 */
+	public static SchulformKatalogEintrag getEintragByID(final long id) {
+		return getMapEintragById().get(id);
 	}
 
 

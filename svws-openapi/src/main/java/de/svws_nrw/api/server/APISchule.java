@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
@@ -69,6 +70,7 @@ import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
+import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulstufen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -93,6 +95,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -735,6 +738,8 @@ public class APISchule {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patch(id, is),
         	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Religionen bzw. Konfessionen.
      *
@@ -1883,6 +1888,54 @@ public class APISchule {
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Schulen.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste mit dem Katalog der Schulen
+     */
+    @GET
+    @Path("/schulen")
+    @Operation(summary = "Gibt eine Übersicht aller Schulen im schul-spezifischen Katalog zurück.",
+               description = "Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Schulen,
+     * welche ein Kürzel gesetzt haben.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste mit dem Katalog der Schulen, welche ein Kürzel gesetzt haben
+     */
+    @GET
+    @Path("/schulen/kuerzel")
+    @Operation(summary = "Gibt eine Übersicht aller Schulen im schul-spezifischen Katalog zurück, welche ein Kürzel gesetzt haben.",
+               description = "Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen, welche ein Kürzel gesetzt haben. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getSchulenMitKuerzel(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataSchulen.getSchulenMitKuerzel(conn)).build(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
     }
 
 }

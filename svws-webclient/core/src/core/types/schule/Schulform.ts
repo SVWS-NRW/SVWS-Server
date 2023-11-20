@@ -140,6 +140,11 @@ export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 	private static readonly _schulformenNummer : HashMap<string, Schulform | null> = new HashMap();
 
 	/**
+	 * Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind.
+	 */
+	private static readonly _mapEintragById : HashMap<number, SchulformKatalogEintrag | null> = new HashMap();
+
+	/**
 	 * Erzeugt eine neue Schulform in der Aufzählung.
 	 *
 	 * @param historie   die Historie der Schulformen, welches ein Array von {@link SchulformKatalogEintrag} ist
@@ -185,6 +190,22 @@ export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 	}
 
 	/**
+	 * Gibt eine Map von den IDs der Schulform-Katalog-Einträge auf die zugehörigen
+	 * Schulform-Katalog-Einträge zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den Kürzels der Schulform-Katalog-Einträge auf die zugehörigen Schulform-Katalog-Einträge
+	 */
+	private static getMapEintragById() : HashMap<number, SchulformKatalogEintrag | null> {
+		if (Schulform._mapEintragById.size() === 0) {
+			for (const s of Schulform.values()) {
+				for (const e of s.historie)
+					Schulform._mapEintragById.put(e.id, e);
+			}
+		}
+		return Schulform._mapEintragById;
+	}
+
+	/**
 	 * Gibt die Schulform für das angegebene Kürzel zurück.
 	 *
 	 * @param kuerzel   das Kürzel der Schulform
@@ -204,6 +225,17 @@ export class Schulform extends JavaObject implements JavaEnum<Schulform> {
 	 */
 	public static getByNummer(nummer : string | null) : Schulform | null {
 		return Schulform.getMapSchulformenByNummer().get(nummer);
+	}
+
+	/**
+	 * Gibt den Schulform-Katalog-Eintrag anhand der angegebenen ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Schulform-Katalog-Eintrag oder null, falls kein Eintrag mit dieser ID vorhanden ist
+	 */
+	public static getEintragByID(id : number) : SchulformKatalogEintrag | null {
+		return Schulform.getMapEintragById().get(id);
 	}
 
 	/**
