@@ -773,4 +773,60 @@ export class ApiSchemaPrivileged extends BaseApi {
 	}
 
 
+	/**
+	 * Implementierung der POST-Methode updateSchemaToCurrent für den Zugriff auf die URL https://{hostname}/api/schema/update/{schema}
+	 *
+	 * Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Verlauf des Updates
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<String>
+	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Verlauf des Updates
+	 */
+	public async updateSchemaToCurrent(schema : string) : Promise<List<string>> {
+		const path = "/api/schema/update/{schema}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postJSON(path, null);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<string>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateSchema für den Zugriff auf die URL https://{hostname}/api/schema/update/{schema}/{revision : \d+}
+	 *
+	 * Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern diese in der Schema-Definition existiert.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Verlauf des Updates
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<String>
+	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} revision - der Pfad-Parameter revision
+	 *
+	 * @returns Der Log vom Verlauf des Updates
+	 */
+	public async updateSchema(schema : string, revision : number) : Promise<List<string>> {
+		const path = "/api/schema/update/{schema}/{revision : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
+		const result : string = await super.postJSON(path, null);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<string>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
+	}
+
+
 }

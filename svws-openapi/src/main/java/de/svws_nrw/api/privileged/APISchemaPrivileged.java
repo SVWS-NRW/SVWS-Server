@@ -1030,4 +1030,53 @@ public class APISchemaPrivileged {
     	return createSchemaInto(schemaname, -1, request);
     }
 
+
+    /**
+     * Die OpenAPI-Methode um ein Datenbankschema auf eine bestimmte Revision upzudaten.
+     *
+     * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param revision      die Revision, auf die angehoben werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Logmeldung über den Updatevorgang
+     */
+    @POST
+    @Path("/api/schema/update/{schema}/{revision : \\d+}")
+    @Operation(summary = "Aktualisiert das angegebene Schema auf die angegebene Revision.",
+    		   description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern "
+    		   		       + "diese in der Schema-Definition existiert.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
+    		     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+    public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
+    	// Bestimme den angemeldeten priviligierten Benutzer ...
+    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+    	// ... führe das Update aus ...
+    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
+    	// ... und gebe den Log zurück
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
+    }
+
+
+    /**
+     * Die OpenAPI-Methode um ein Datenbankschema auf die neueste Revision upzudaten.
+     *
+     * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Logmeldung über den Updatevorgang
+     */
+    @POST
+    @Path("/api/schema/update/{schema}")
+    @Operation(summary = "Aktualisiert das angegebene Schema auf die neueste Revision.",
+	    description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.")
+	@ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
+		 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+    public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	return updateSchema(schemaname, -1, request);
+    }
+
 }
