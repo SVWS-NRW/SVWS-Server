@@ -1,8 +1,6 @@
 import { ref, shallowRef } from "vue";
 
-import { ApiSchemaPrivileged, BenutzerKennwort, UserNotificationException } from "@core";
-import type { ApiSchema} from "@core";
-import { ApiServer, ServerMode } from "@core";
+import { ApiSchemaPrivileged, BenutzerKennwort, UserNotificationException, OpenApiError, ApiServer, ServerMode } from "@core";
 
 export class ApiConnection {
 
@@ -24,31 +22,21 @@ export class ApiConnection {
 	// Die API für die priviligierten Schema-Zugriffe
 	protected _schema_api_privileged: ApiSchemaPrivileged | undefined = undefined;
 
-	// Die Api für die Schema-Zugriffe
-	protected _schema_api: ApiSchema | undefined = undefined;
-
 	// Die Api selbst
 	protected _api: ApiServer | undefined;
 
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
 
+	// Gibt an, ob es sich um einen Benutzer mit Rechten auf root hat oder nicht
+	protected _hasRootPrivileges: boolean = false;
 
-	public constructor() {
-	}
 
 	// Gibt die Server-API zurück.
 	get api(): ApiServer {
 		if (this._api === undefined)
 			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können nicht erfolgen")
 		return this._api;
-	}
-
-	// Gibt die Schema-API zurück.
-	get api_schema(): ApiSchema {
-		if (this._schema_api === undefined)
-			throw new Error("Es wurde kein Api-Objekt angelegt - Verbindungen zum Server können für den Schema-Zugriff nicht erfolgen")
-		return this._schema_api;
 	}
 
 	// Gibt die API für den priviligierten Schema-Zugriff zurück.
@@ -74,24 +62,14 @@ export class ApiConnection {
 		return this._username;
 	}
 
+	// Gibt zurück, ob der angemeldete Benutzer root-Privilegien besitzt oder nicht
+	get hasRootPrivileges() : boolean {
+		return this._hasRootPrivileges;
+	}
+
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
 	get mode(): ServerMode {
 		return this._serverMode.value;
-	}
-
-	/**
-	 * Stellt eine Verbindung zu dem angebenen Hostnamen her.
-	 *
-	 * @param hostname   der Hostname, evtl. mit Port-Adresse
-	 *
-	 * @returns die Liste der Schemata, welche über die Verbindung zur Verfügung stehen.
-	 */
-	protected async connect(hostname : string): Promise<void> {
-		const url = `https://${hostname}`;
-		const api = new ApiServer(url, "", "");
-		await api.isAlive();
-		this._hostname.value = hostname;
-		this._url = url;
 	}
 
 	/**
@@ -111,22 +89,37 @@ export class ApiConnection {
 	 * @returns {Promise<boolean>}
 	 */
 	connectTo = async (name: string): Promise<boolean> => {
-		const url = new URL('https://' + name);
+		let urlString = `https://${name}`;
+		let url = new URL(urlString);
 		const host = url.host;
 		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {
-			await this.connect(host);
+			const api = new ApiSchemaPrivileged(urlString, "", "");
+			await api.getSchemaListe();
 			return true;
 		} catch (error) {
+			if ((error instanceof OpenApiError) && error.response?.status === 401) {
+				this._hostname.value = host;
+				this._url = urlString;
+				return true;
+			}
 			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
 		const hostname = url.hostname;
+		urlString = `https://${hostname}`;
+		url = new URL(urlString);
 		if (host !== hostname) {
 			console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
 			try {
-				await this.connect(hostname);
+				const api = new ApiSchemaPrivileged(urlString, "", "");
+				await api.getSchemaListe();
 				return true;
 			} catch (error) {
+				if ((error instanceof OpenApiError) && error.response?.status === 401) {
+					this._hostname.value = hostname;
+					this._url = urlString;
+					return true;
+				}
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
 			}
 		}
@@ -150,9 +143,15 @@ export class ApiConnection {
 			const data = new BenutzerKennwort();
 			data.user = username;
 			data.password = password;
-			const isPrivileged = await api_priv.checkDBPassword(data);
-			if ((isPrivileged === null) || (isPrivileged === false))
-				throw new UserNotificationException("Der Datenbank-Benutzer besitzt nicht die nötigen Privilegien.");
+			await api_priv.getSchemaListe();
+			try {
+				const isPrivilegedRoot = await api_priv.checkDBPassword(data);
+				if ((isPrivilegedRoot === null) || (isPrivilegedRoot === false))
+					throw new UserNotificationException("Der Datenbank-Benutzer besitzt nicht die nötigen Privilegien.");
+				this._hasRootPrivileges = true;
+			} catch (error) {
+				this._hasRootPrivileges = false;
+			}
 			this._schema_api_privileged = api_priv;
 			this._username = username;
 			this._password = password;
@@ -165,7 +164,6 @@ export class ApiConnection {
 			this._authenticated.value = false;
 			this._serverMode.value = ServerMode.STABLE;
 			this._api = undefined;
-			this._schema_api = undefined;
 			this._schema_api_privileged = undefined;
 			return false;
 		}
@@ -179,7 +177,6 @@ export class ApiConnection {
 		this._username = "";
 		this._password = "";
 		this._api = undefined;
-		this._schema_api = undefined;
 		this._schema_api_privileged = undefined;
 	}
 
