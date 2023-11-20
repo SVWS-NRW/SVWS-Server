@@ -136,8 +136,10 @@ export class RouteDataSchema {
 
 	removeSchemata = async () => {
 		api.status.start();
-		for (const schema of this.auswahlGruppe)
+		for (const schema of this.auswahlGruppe) {
 			await api.privileged.destroySchema(schema.name);
+			this.mapSchema.delete(schema.name);
+		}
 		api.status.stop();
 		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
 			await this.gotoSchema(undefined);
