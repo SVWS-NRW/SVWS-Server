@@ -210,7 +210,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 	 * Gost-Halbjahr zurück.
 	 *
 	 * @param halbjahr das Gost-Halbjahr
-	 * @param ganzesSchuljahr true, um Vorgaben für das gesamte Schuljahr zu erhalten, fals nur für das übergeben Halbjahr
+	 * @param ganzesSchuljahr true, um Vorgaben für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
 	 *
 	 * @return die Liste der Kursklausuren
 	 */

@@ -218,8 +218,8 @@ export class RouteDataGostKlausurplanung {
 	}
 
 	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
-		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine);
 	}
 

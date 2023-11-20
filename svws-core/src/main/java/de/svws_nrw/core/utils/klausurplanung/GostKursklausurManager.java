@@ -1032,7 +1032,7 @@ public class GostKursklausurManager {
 		if (klausuren == null)
 			return null;
 		for (@NotNull GostKursklausur k : klausuren) {
-			if (k.idKurs == klausur.idKurs)
+			if (k.kursKurzbezeichnung.equals(klausur.kursKurzbezeichnung)) // TODO unsauber, aber KursId geht nicht, weil ggf. in Schuljahresabschnitten unterschiedlich
 				return k;
 		}
 		return null;

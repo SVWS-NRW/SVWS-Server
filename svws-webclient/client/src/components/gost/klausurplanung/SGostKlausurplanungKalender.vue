@@ -84,7 +84,7 @@
 						<div class="opacity-50">Mehr als drei Klausuren in dieser Woche</div>
 					</div>
 					<ul class="flex flex-col gap-5">
-						<li v-for="(konflikt, no) in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()" :class="showMoreKonflikte ? '' : 'opacity-' + (100 - no * 40)">
+						<li v-for="(konflikt, no) in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()" :class="showMoreKonflikte ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
 							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">
@@ -96,7 +96,7 @@
 					</ul>
 				</div>
 			</svws-ui-content-card>
-			<svws-ui-content-card class="border p-2">
+			<svws-ui-content-card class="border p-2 op">
 				<template #title>
 					<span class="text-headline-md leading-none inline-flex gap-1">
 						<template v-if="anzahlProKwKonflikte2(3, true).length == 0">
@@ -115,7 +115,7 @@
 						<div class="opacity-50">Drei Klausuren in dieser Woche</div>
 					</div>
 					<ul class="flex flex-col gap-5">
-						<li v-for="(konflikt, no) in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()" :class="showMoreWarnungen ? '' : 'opacity-' + (100 - no * 40)">
+						<li v-for="(konflikt, no) in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()" :class="showMoreWarnungen ? '' : 'opacity-' + (100 - no * 40 + (no === 2 ? 5 : 0))">
 							<span class="font-bold">{{ mapSchueler.get(konflikt.getKey())?.vorname + ' ' + mapSchueler.get(konflikt.getKey())?.nachname }}</span>
 							<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 								<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${getBgColor(klausur.kursKurzbezeichnung.split('-')[0])};`">

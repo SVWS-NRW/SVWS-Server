@@ -17,7 +17,6 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebn
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnisTermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmus;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -72,10 +71,18 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		return this.getList();
 	}
 
-	private List<GostKursklausur> getKursKlausuren(final GostHalbjahr halbjahr) {
-		final Map<Long, GostKlausurvorgabe> mapVorgaben = (new DataGostKlausurenVorgabe(conn, _abiturjahr)).getKlausurvorgaben(halbjahr.id, false).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
-//		final Map<Long, DTOGostKlausurenVorgaben> mapVorgaben = conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid AND v.Halbjahr = :hj", DTOGostKlausurenVorgaben.class)
-//				.setParameter("jgid", _abiturjahr).setParameter("hj", halbjahr).getResultList().stream().collect(Collectors.toMap(v -> v.ID, v -> v));
+	/**
+	 * Gibt die Liste der Kursklausuren einer Jahrgangsstufe im übergebenen
+	 * Gost-Halbjahr zurück.
+	 *
+	 * @param halbjahr das Gost-Halbjahr
+	 * @param ganzesSchuljahr true, um Klausuren für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
+	 *
+	 * @return die Liste der Kursklausuren
+	 */
+	public List<GostKursklausur> getKursKlausuren(final int halbjahr, final boolean ganzesSchuljahr) {
+
+		final Map<Long, GostKlausurvorgabe> mapVorgaben = (new DataGostKlausurenVorgabe(conn, _abiturjahr)).getKlausurvorgaben(halbjahr, ganzesSchuljahr).stream().collect(Collectors.toMap(v -> v.idVorgabe, v -> v));
 		if (mapVorgaben.isEmpty()) {
 			return new ArrayList<>();
 		}
@@ -215,8 +222,9 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long halbjahr) {
+		throw new UnsupportedOperationException();
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(DataGostKlausurenVorgabe.checkHalbjahr(halbjahr.intValue()))).build();
+//		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKursKlausuren(DataGostKlausurenVorgabe.checkHalbjahr(halbjahr.intValue()))).build();
 	}
 
 	/**

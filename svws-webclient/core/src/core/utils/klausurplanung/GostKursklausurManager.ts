@@ -974,7 +974,7 @@ export class GostKursklausurManager extends JavaObject {
 		if (klausuren === null)
 			return null;
 		for (let k of klausuren) {
-			if (k.idKurs === klausur.idKurs)
+			if (JavaObject.equalsTranspiler(k.kursKurzbezeichnung, (klausur.kursKurzbezeichnung)))
 				return k;
 		}
 		return null;
