@@ -26,6 +26,7 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 	public getProps(to: RouteLocationNormalized): SchemaUebersichtProps {
 		return {
 			data: () => routeSchema.data.auswahl,
+			backupSchema: routeSchema.data.backupSchema,
 		};
 	}
 

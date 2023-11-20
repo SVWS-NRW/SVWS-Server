@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { BenutzerKennwort , Comparator,  List} from "@core";
-import { JavaString, SchemaListeEintrag } from "@core";
+import { DeveloperNotificationException, JavaString, SchemaListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -172,5 +172,14 @@ export class RouteDataSchema {
 				break;
 			}
 		api.status.stop();
+	}
+
+	backupSchema = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.")
+		api.status.start();
+		const data = await api.privileged.exportSQLiteFrom(this.auswahl.name);
+		api.status.stop();
+		return data;
 	}
 }
