@@ -11784,6 +11784,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getServerDBRevision für den Zugriff auf die URL https://{hostname}/status/db/revision
+	 *
+	 * Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Datenbank-Revision
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *
+	 * @returns Die Datenbank-Revision
+	 */
+	public async getServerDBRevision() : Promise<number | null> {
+		const path = "/status/db/revision";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return parseFloat(JSON.parse(text));
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getServerModus für den Zugriff auf die URL https://{hostname}/status/mode
 	 *
 	 * Gibt den Betriebsmodus (stable, alpha, beta oder dev) des SVWS-Servers zurück.

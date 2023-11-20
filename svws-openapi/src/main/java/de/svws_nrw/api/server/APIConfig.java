@@ -9,6 +9,7 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -180,6 +181,30 @@ public class APIConfig {
                  array = @ArraySchema(schema = @Schema(implementation = DBSchemaListeEintrag.class))))
     public List<DBSchemaListeEintrag> getConfigDBSchemata() {
     	return SVWSKonfiguration.get().getSchemaList();
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Datenbank-Revision, welche
+     * der SVWS-Server unterstützt.
+     * Diese muss zwischenzeitlich nicht mit den Revisionen der einzelnen
+     * DB-Schemata übereinstimmen!
+     *
+     * @return die Datenbank-Revision des SVWS-Servers
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/db/revision")
+    @Operation(summary = "Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.",
+               description = "Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.")
+    @ApiResponse(responseCode = "200", description = "Die Datenbank-Revision",
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                 schema = @Schema(implementation = Long.class)))
+    public Response getServerDBRevision() {
+    	final long rev = (SVWSKonfiguration.get().getServerMode() == ServerMode.DEV)
+    			? SchemaRevisionen.maxDeveloperRevision.revision
+    			: SchemaRevisionen.maxRevision.revision;
+    	return JSONMapper.fromLong(rev);
     }
 
 }
