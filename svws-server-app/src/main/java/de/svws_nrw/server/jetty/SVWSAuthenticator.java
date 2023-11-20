@@ -4,26 +4,26 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.WebApplicationException;
-
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.security.UserAuthentication;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.LoginAuthenticator;
 import org.eclipse.jetty.server.Authentication;
-import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.Authentication.User;
+import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.util.security.Constraint;
 
 import de.svws_nrw.api.RestAppAdminClient;
 import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
+import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.WebApplicationException;
 
 /**
  * Implementiert eine Variante des {@link BasicAuthenticator} für den
@@ -51,12 +51,13 @@ public final class SVWSAuthenticator extends LoginAuthenticator {
         final SVWSKonfiguration config = SVWSKonfiguration.get();
         if (config.hatPortHTTPPrivilegedAccess()) {
         	final String pathInfo = request.getPathInfo();
-        	final boolean isDebugAccess = RestAppDebug.checkIsInPathSpecification(pathInfo);
+        	final boolean isCommonAccess = RestAppDebug.checkIsInPathSpecification(pathInfo)
+        			|| RestAppServer.checkIsInPathSpecificationCommon(pathInfo);
         	final boolean needsPriviledgedAccess = RestAppSchemaRoot.checkIsInPathSpecification(pathInfo)
         			|| RestAppAdminClient.checkIsInPathSpecification(pathInfo);
-        	if (!isDebugAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
+        	if (!isCommonAccess && needsPriviledgedAccess && (request.getServerPort() != config.getPortHTTPPrivilegedAccess()))
         		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
-        	if (!isDebugAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
+        	if (!isCommonAccess && !needsPriviledgedAccess && (request.getServerPort() == config.getPortHTTPPrivilegedAccess()))
         		throw new ServerAuthException("Zugriff auf diese API wurde in der Serverkonfiguration unterbunden.");
         }
         // Prüfe die Anmeldenamen...
