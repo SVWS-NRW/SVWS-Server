@@ -76,6 +76,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 			addSchema: this.data.addSchema,
 			importSchema: this.data.importSchema,
 			migrateSchema: this.data.migrateSchema,
+			refresh: this.data.refresh,
 		};
 	}
 

@@ -52,6 +52,7 @@ export class RouteDataSchema {
 	 * Initialisiert die Schema-Liste
 	 */
 	public async init(schemaname : string | undefined) {
+		api.status.start();
 		const mapSchema = new Map<string, SchemaListeEintrag>();
 		const listSchema : List<string> = await api.privileged.getSchemaListe();
 		listSchema.sort(<Comparator<string>>{ compare(s1 : string, s2 : string) { return JavaString.compareToIgnoreCase(s1, s2); } });
@@ -72,6 +73,7 @@ export class RouteDataSchema {
 			auswahl,
 			view
 		});
+		api.status.stop();
 	}
 
 	/**
@@ -216,6 +218,7 @@ export class RouteDataSchema {
 		}
 		if (schema === null || db === null)
 			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
+		api.status.start();
 		try {
 			switch (db) {
 				case 'mariadb':
@@ -265,5 +268,8 @@ export class RouteDataSchema {
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 		}
+		api.status.stop();
 	}
+
+	refresh = async () => await this.init(undefined);
 }

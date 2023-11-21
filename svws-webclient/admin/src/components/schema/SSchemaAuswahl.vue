@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<span>Schema</span>
+			<div class="flex gap-2"><span>Schema</span><svws-ui-button @click="refresh" type="icon" title="Liste aktualisieren"> <i-ri-loop-right-line /> </svws-ui-button></div>
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl" @update:clicked="gotoSchema" :model-value="selectedItems" @update:model-value="setAuswahlGruppe" :items="mapSchema().values()"
