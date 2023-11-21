@@ -1,7 +1,7 @@
 @Page {
-	size: A4 portrait;
+	size: A4 landscape;
 	margin-top: 17mm;
-	margin-left: 15mm;
+	margin-left: 10mm;
 	margin-right: 10mm;
 	margin-bottom: 12mm;
 
@@ -28,7 +28,12 @@
 		padding-bottom: 2mm;
 		padding-left: 2mm;
 	}
-
+	@bottom-center {
+		content: element(pageBottomCenter);
+		padding-bottom: 2mm;
+		padding-left: 2mm;
+		padding-right: 2mm;
+	}
 	@bottom-right {
 		content: element(pageBottomRight);
 		padding-bottom: 2mm;
@@ -63,6 +68,16 @@
 .pageBottomLeft {
 	position: running(pageBottomLeft);
 	text-align: left;
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+	font-size: 7pt;
+	color: grey;
+}
+
+.pageBottomCenter {
+	position: running(pageBottomCenter);
+	text-align: center;
 	padding: 0;
 	margin: 0;
 	font-weight: normal;
@@ -109,8 +124,8 @@ h1 { font-size: 14pt; font-weight: bold; margin-top: 1em; margin-bottom: 0.1em;}
 h2 { font-size: 13pt; font-weight: bold; margin-top: 0.8em; margin-bottom: 0.1em;}
 h3 { font-size: 12pt; font-weight: bold; margin-top: 0.6em; margin-bottom: 0.1em;}
 h4 { font-size: 11pt; font-weight: bold; margin-top: 0.5em; margin-bottom: 0.1em;}
-p	{ margin-top: 0.4em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
-ul 	{ margin-top: 0.4em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
+p	{ margin-top: 0.25em; margin-bottom: 0; margin-left: 0; margin-right: 0; padding: 0;	}
+ul 	{ margin-top: 0.25em; margin-bottom: 0; margin-left: 1em; margin-right: 0; padding: 0;	}
 
 .no-mt { margin-top: 0 }
 
@@ -150,28 +165,6 @@ td.kompakt {
 	margin-bottom: 0;
 }
 
-td.kopffachbezeichnung {
-	text-align: left;
-	font-weight: bold;
-	border-bottom: 1px black solid;
-}
-
-td.kopffachdetails {
-	text-align: center;
-	font-weight: bold;
-	border-bottom: 1px black solid;
-}
-
-td.fachbezeichnung {
-	text-align: left;
-	font-weight: bold;
-	border-bottom: 0.5px solid grey;
-}
-
-td.fachdetails {
-	text-align: center;
-	border-bottom: 0.5px solid grey;
-}
 
 .fixed-layout-100 { width: 100%; table-layout:fixed; }
 .no-space-pad { border-spacing: 0; padding: 0; border-collapse: collapse; }

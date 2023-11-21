@@ -1,0 +1,123 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Schüler-Kurse-Schienen-Zuordnung</title>
+		<link rel="stylesheet" href="SchuelerMitSchienenKursen.css" />
+	</head>
+
+	<body>
+		<div th:switch="${KursplanungSchueler.size()}">
+			<div th:case="0">
+				<div th:with="zeigeExtDummy = ${(AnzahlExterne > 0 || AnzahlDummy > 0)}">
+
+					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+					<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Abiturjahr}">2023</span> - <span th:text="${GostHalbjahr}">Q1.2</span><br/>Gesamt: <span th:text="${AnzahlSchueler}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${AnzahlExterne}">35</span>/<span th:text="${AnzahlDummy}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+					<div class="pageBottomCenter" th:text="${Blockungsbezeichnung + ' (Erg-ID ' + BlockungsergebnisId + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
+					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
+					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+					<table class="fixed-layout-100 no-space-pad">
+						<tr>
+							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + Abiturjahr + ' - ' + GostHalbjahr}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></td>
+						</tr>
+						<tr style="height: 3px;">
+							<td></td>
+						</tr>
+					</table>
+
+					<!--Definiere eine Tabelle mit der Kurse-Schienen-Zuordnung. Um ein lesbares Layout zu erhalten definiere zwei Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+					<table class="fixed-layout-100 no-space-pad"
+						th:with="
+							maxKurse = ${MaxKurseProSchiene},
+							anzSchienen = ${AnzahlSchienen},
+							spaltenzahl = ${maxKurse <= 9 ? 9 : maxKurse},
+							spaltenbreite = ${100/(spaltenzahl + 1)},
+							schriftgroesse = ${(anzSchienen <= 13 && spaltenzahl <= 11) ? '7.5pt' : '6.5pt'}
+						">
+						<colgroup>
+							<col th:each="i : ${#numbers.sequence(0, spaltenzahl)}" th:style="${'width: ' + spaltenbreite + ';'}" />
+						</colgroup>
+						<tr th:each="Schiene : ${Schienen}">
+							<td class="bo-grey" th:style="${Schiene.hatKollisionen ? 'background-color: red;' : 'background-color: white;'}">
+								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung}">Schiene 1</p>
+								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.Kurse.size() + (Schiene.Kurse.size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne + ',' + Schiene.anzahlDummy + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
+							</td>
+							<td class="bo-grey" th:each="Kurs : ${Schiene.Kurse}"
+								th:style="${(Kurs.farbeClientRGB == null || Kurs.farbeClientRGB.isEmpty()) ? '' : ' background-color: rgb(' + Kurs.farbeClientRGB + ');'}">
+								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
+								<p class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart}">GK</p>
+								<p class="no-mt" style="font-size: 6pt;"
+									th:with="summeABs = ${Kurs.anzahlAB12 + Kurs.anzahlAB3 + Kurs.anzahlAB4}"
+									th:utext="${Kurs.anzahlTeilnehmer + ' (' + Kurs.anzahlKlausurteilnehmer + ',' + summeABs + ') (' + Kurs.anzahlExterneTeilnehmer + ',' + Kurs.anzahlDummy + ')' + '<br/>' + Kurs.lehrkraefte}">
+									19 (12,5) (1,2)<br/>ABC
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div th:case="*">
+				<div class="start-new-page"
+					th:with="zeigeExtDummy = ${(AnzahlExterne > 0 || AnzahlDummy > 0)}"
+					th:each="Schueler,iterStatSchueler : ${KursplanungSchueler}">
+
+					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+					<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Abiturjahr}">2023</span> - <span th:text="${GostHalbjahr}">Q1.2</span><br/>Gesamt: <span th:text="${AnzahlSchueler}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${AnzahlExterne}">35</span>/<span th:text="${AnzahlDummy}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+					<div class="pageBottomCenter" th:text="${Blockungsbezeichnung + ' (Erg-ID ' + BlockungsergebnisId + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
+					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
+					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+					<table class="fixed-layout-100 no-space-pad">
+						<tr>
+							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt"  th:text="${'Kurse-Schienen-Zuordnung - ' + Schueler.nachname + ', ' + Schueler.vorname}">Kurse-Schienen-Zuordnung - Mustermann, Max</h3></td>
+						</tr>
+						<tr style="height: 3px;">
+							<td></td>
+						</tr>
+					</table>
+
+					<!--Definiere pro Schüler eine Tabelle mit der Kurse-Schienen-Zuordnung. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
+					<table class="fixed-layout-100 no-space-pad"
+						th:with="
+							maxKurse = ${MaxKurseProSchiene},
+							anzSchienen = ${AnzahlSchienen},
+							spaltenzahl = ${maxKurse <= 9 ? 9 : maxKurse},
+							spaltenbreite = ${100/(spaltenzahl + 1)},
+							schriftgroesse = ${(anzSchienen <= 13 && spaltenzahl <= 11) ? '7.5pt' : '6.5pt'}
+						">
+						<colgroup>
+							<col th:each="i : ${#numbers.sequence(0, spaltenzahl)}" th:style="${'width: ' + spaltenbreite + ';'}" />
+						</colgroup>
+						<tr th:each="Schiene : ${Schienen}">
+							<td class="bo-grey" th:style="${#lists.contains(Schiene.SchuelerIDsMitKollisionen, Schueler.id) ? 'background-color: red;' : 'background-color: white;'}">
+								<p class="fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung}">Schiene 1</p>
+								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.Kurse.size() + (Schiene.Kurse.size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne + ',' + Schiene.anzahlDummy + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>					</td>
+							<td class="bo-grey" th:each="Kurs : ${Schiene.Kurse}"
+								th:with="istBelegt = ${#lists.contains(Schueler.getListeKurseIDs(), Kurs.id)}"
+								th:style="${(!istBelegt || Kurs.farbeClientRGB == null || Kurs.farbeClientRGB.isEmpty()) ? '' : ' background-color: rgb(' + Kurs.farbeClientRGB + ');'}">
+								<p class="no-mt fb" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Kurs.bezeichnung}">M-GK2</p>
+								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.kursart}">GK</p>
+								<div th:if="${istBelegt}" th:each="SchuelerKurs : ${Schueler.Kurse}">
+									<p th:if="${SchuelerKurs.id == Kurs.id}" class="no-mt" style="font-size: 6pt;"
+										th:utext="${Kurs.kursart + '-' + (SchuelerKurs.istSchriftlich ? 's' : 'm') + ((SchuelerKurs.abiturfach == null || SchuelerKurs.abiturfach.isEmpty()) ? '' : ' Abifach ' + SchuelerKurs.abiturfach)}">
+										GK-s Abifach 3
+									</p>
+								</div>
+								<p class="no-mt" style="font-size: 6pt;"
+									th:with="summeABs = ${Kurs.anzahlAB12 + Kurs.anzahlAB3 + Kurs.anzahlAB4}"
+									th:utext="${Kurs.anzahlTeilnehmer + ' (' + Kurs.anzahlKlausurteilnehmer + ',' + summeABs + ') (' + Kurs.anzahlExterneTeilnehmer + ',' + Kurs.anzahlDummy + ')' + '<br/>' + Kurs.lehrkraefte}">
+									19 (12,5) (1,2)<br/>ABC
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

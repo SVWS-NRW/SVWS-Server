@@ -41,8 +41,8 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.pdf.dateien.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht;
-import de.svws_nrw.module.pdf.dateien.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerWahlbogen;
+import de.svws_nrw.module.pdf.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerErgebnisuebersicht;
+import de.svws_nrw.module.pdf.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -896,7 +896,7 @@ public class APIGost {
                 BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
+			return PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
 		}
 	}
 
@@ -941,7 +941,7 @@ public class APIGost {
                 BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
+			return PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
 		}
 	}
 
@@ -987,7 +987,7 @@ public class APIGost {
                 BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
                 BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
+			return PdfGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
 		}
 	}
 

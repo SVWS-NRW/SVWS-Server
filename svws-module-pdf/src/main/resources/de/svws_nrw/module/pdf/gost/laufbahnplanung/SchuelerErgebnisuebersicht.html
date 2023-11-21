@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Kursplanung - Kurs mit Teilnehmern</title>
+		<title>Ergebnisübersicht-Laufbahnplanung</title>
 		<link rel="stylesheet" href="SchuelerErgebnisuebersicht.css" />
 	</head>
 
@@ -69,7 +69,7 @@
 				</tr>
 				<tr class="tc-grey ta-c" style="font-size: 7pt;">
 					<td></td>
-					<td class="ta-l" th:text="'Beratungsdatum: ' + ${Schueler.beratungsdatum}">Beratungsdatum: 16.05.2022</td>
+					<td class="ta-l" th:with="beratungsdatum = ${#svwsDate.toDE(Schueler.beratungsdatum)}" th:text="'Beratungsdatum: ' + ${#strings.isEmpty(beratungsdatum) ? '-----' : beratungsdatum}">Beratungsdatum: 16.05.2022</td>
 					<td colspan="7">anrechenbare Kurse</td>
 					<td></td>
 					<td colspan="9">Wochenstunden (gesamt und Durchschnitt EF + QPh)</td>
@@ -80,7 +80,7 @@
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Fehler und Kommentare zur Gesamtlaufbahn:</u></p>
 						<ul th:if="${!(#strings.isEmpty(Schueler.kommentar) && #lists.isEmpty(Schueler.Fehler))}">
-							<li th:if="${!#lists.isEmpty(Schueler.Fehler)}" th:each="FehlerBelegung : ${Schueler.Fehler}" th:text="${FehlerBelegung.belegungsfehler}">Fehlertext</li>
+							<li th:if="${!#lists.isEmpty(Schueler.Fehler)}" th:each="FehlerBelegung : ${Schueler.Fehler}" th:text="${FehlerBelegung.meldung}">Fehlertext</li>
 							<li th:if="${!#strings.isEmpty(Schueler.kommentar)}" th:text="${Schueler.kommentar}">Kommentar</li>
 						</ul>
 					</td>
@@ -90,7 +90,7 @@
 					<td></td>
 					<td colspan="19" class="tc-grey ta-l" style="font-size: 8pt;"><p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 						<ul>
-							<li th:each="HinweisBelegung : ${Schueler.Hinweise}" th:text="${HinweisBelegung.belegungshinweis}">Hinweistext</li>
+							<li th:each="HinweisBelegung : ${Schueler.Hinweise}" th:text="${HinweisBelegung.meldung}">Hinweistext</li>
 						</ul>
 					</td>
 					<td></td>
