@@ -187,9 +187,8 @@ task downloadJarsAll(type: Copy) {
 
 
 task downloadSVWSClient(type: Copy) {
-	from configurations.runtimeClasspath
+	from "../../svws-webclient/client/build/SVWS-Client.zip"
 	into "download/svws-" + project.version + "/"
-	include "svws-client-${svws_version}.zip"
 }
 
 /*
