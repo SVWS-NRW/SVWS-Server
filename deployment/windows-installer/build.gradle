@@ -442,7 +442,7 @@ task buildCreateInstaller(type:Exec) {
 task doZip(type: Zip) {
 	archiveFileName = "SVWS-Server-Installer-win.zip"
 	destinationDirectory = file("$buildDir")
-	from "$buildDir/output/SetupSVWSServer_v${version}.exe"
+	from "$buildDir/output/win64-installer-${version}.exe"
 }
 
 doZip.dependsOn buildCreateInstaller
