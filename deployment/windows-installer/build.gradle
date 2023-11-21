@@ -93,12 +93,10 @@ repositories {
 	mavenCentral()
 }
 
-/*
 dependencies {
-	implementation 'de.svws-nrw:svws-server-app:' + svws_version
-	implementation 'de.svws-nrw:svws-client:' + svws_version
+	implementation project(':svws-server-app')
 }
-*/
+
 
 publishing {
 	repositories {
@@ -143,7 +141,6 @@ task printDependencies2 {
 		configurations.runtimeClasspath.each { println it }
 	}
 }
-
 
 task downloadJarsAll(type: Copy) {
 	//dependsOn "downloadJarsSources"
@@ -355,7 +352,7 @@ task extract(type:Copy) {
 
 task extractClient(type:Copy) {
 	dependsOn "extract"
-	from zipTree(file("${projectDir}/download/svws-${project.version}/svws-client-${svws_version}.zip"))
+	from zipTree(file("${projectDir}/download/svws-${project.version}/SVWS-Client.zip"))
 	into "${buildDir}/installer/files/client/"
 }
 
