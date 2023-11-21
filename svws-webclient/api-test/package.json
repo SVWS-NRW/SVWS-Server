@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: API Tests",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.7.9-SNAPSHOT",
+	"version": "0.7.9",
 	"files": [ "dist" ],
 	"main": "./dist/index.js",
 	"type": "module",
