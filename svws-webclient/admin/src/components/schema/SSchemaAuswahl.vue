@@ -20,11 +20,14 @@
 				</template>
 				<template v-if="hasRootPrivileges" #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" />
+					<s-schema-migrate-modal v-slot="{ openModal }" :migrate-schema="migrateSchema">
+						<svws-ui-button type="icon" @click="openModal" title="Schild2-Schema migrieren"> <i-ri-share-forward-2-line />  </svws-ui-button>
+					</s-schema-migrate-modal>
 					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">
-						<svws-ui-button @click="openModal()" type="icon" title="SQLite-Schema importieren"> <i-ri-upload-2-line /> </svws-ui-button>
+						<svws-ui-button @click="openModal" type="icon" title="SQLite-Schema importieren"> <i-ri-upload-2-line /> </svws-ui-button>
 					</s-schema-auswahl-import-modal>
 					<s-schema-auswahl-neu-modal v-slot="{ openModal }" :add-schema="addSchema">
-						<svws-ui-button @click="openModal()" type="icon" title="Schema hinzufügen"> <i-ri-add-line /> </svws-ui-button>
+						<svws-ui-button @click="openModal" type="icon" title="Schema hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 					</s-schema-auswahl-neu-modal>
 				</template>
 			</svws-ui-table>

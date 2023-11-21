@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { BenutzerKennwort , Comparator,  List} from "@core";
-import { DeveloperNotificationException, JavaString, SchemaListeEintrag } from "@core";
+import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -176,10 +176,94 @@ export class RouteDataSchema {
 
 	backupSchema = async () => {
 		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.")
+			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		const data = await api.privileged.exportSQLiteFrom(this.auswahl.name);
 		api.status.stop();
 		return data;
+	}
+
+	restoreSchema = async (data: FormData) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		try {
+			await api.privileged.importSQLiteInto(data, this.auswahl.name)
+		} catch (error) {
+			throw new DeveloperNotificationException("Die Wiederherstellung der übergebenen SQLite-Datenbank war nicht erfolgreich");
+		}
+		api.status.stop();
+	}
+
+	migrateSchema = async (formData: FormData) => {
+		const currSchema = this.auswahl?.name;
+		const migrateBody = new MigrateBody();
+		const datenbankVerbindungsdaten = new DatenbankVerbindungsdaten();
+		const db = formData.get('db')?.toString() || null;
+		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
+		const schema = formData.get('schema')?.toString() || null;
+		if (schema === currSchema) {
+			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() || null;
+			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() || null;
+			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() || null;
+		} else {
+			migrateBody.srcLocation = formData.get('srcLocation')?.toString() || null;
+			migrateBody.srcSchema = formData.get('srcSchema')?.toString() || null;
+			migrateBody.srcUsername = formData.get('srcUsername')?.toString() || null;
+			migrateBody.srcPassword = formData.get('srcPassword')?.toString() || null;
+			migrateBody.schemaUsername = formData.get('schemaUsername')?.toString() || api.username;
+			migrateBody.schemaUserPassword = formData.get('schemaUserPassword')?.toString() || null;
+		}
+		if (schema === null || db === null)
+			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
+		try {
+			switch (db) {
+				case 'mariadb':
+					if (schulnummer)
+						if (schema === currSchema)
+							await api.privileged.migrateMariaDBSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+						else
+							await api.privileged.migrateMariaDB2SchemaSchulnummer(migrateBody, schema, schulnummer);
+					else
+						if (schema === currSchema)
+							await api.privileged.migrateMariaDBInto(datenbankVerbindungsdaten, schema);
+						else
+							await api.privileged.migrateMariaDB2Schema(migrateBody, schema);
+					break;
+				case 'mysql':
+					if (schulnummer)
+						if (schema === currSchema)
+							await api.privileged.migrateMySqlSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+						else
+							await api.privileged.migrateMySQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
+					else
+						if (schema === currSchema)
+							await api.privileged.migrateMySqlInto(datenbankVerbindungsdaten, schema);
+						else
+							await api.privileged.migrateMySQL2Schema(migrateBody, schema);
+					break;
+				case 'mssql':
+					if (schulnummer)
+						if (schema === currSchema)
+							await api.privileged.migrateMsSqlServerSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+						else
+							await api.privileged.migrateMSSQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
+					else
+						if (schema === currSchema)
+							await api.privileged.migrateMsSqlServerInto(datenbankVerbindungsdaten, schema);
+						else
+							await api.privileged.migrateMSSQL2Schema(migrateBody, schema);
+					break;
+				case 'mdb':
+					if (schema === currSchema)
+						await api.privileged.migrateMDBInto(formData, schema);
+					else
+						await api.privileged.migrateMDB2Schema(formData, schema);
+					break;
+			}
+			await this.init(schema);
+		} catch(error) {
+			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
+		}
 	}
 }
