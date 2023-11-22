@@ -326,13 +326,8 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	private static LinkedHashMap<String, DataSchildReportingDatenquelle<?, ?>> getMapDatenquellen() {
         if (datenquellen == null) {
             datenquellen = new LinkedHashMap<>();
-            new DataSchildReportingDatenquelleSchuelerlernabschnitte();
-            new DataSchildReportingDatenquelleSchuelerleistungsdaten();
-			new DataSchildReportingDatenquelleSchuelerGOStGrunddaten();
-			new DataSchildReportingDatenquelleSchuelerGOStSummen();
-			new DataSchildReportingDatenquelleSchuelerGOStFachwahlen();
-			new DataSchildReportingDatenquelleSchuelerGOStFehler();
-			new DataSchildReportingDatenquelleSchuelerGOStHinweise();
+            new DataSchildReportingDatenquelleSchuelerLernabschnitte();
+            new DataSchildReportingDatenquelleSchuelerLeistungsdaten();
 			new DataSchildReportingDatenquelleSchuelerSprachpruefungen();
         }
         return datenquellen;

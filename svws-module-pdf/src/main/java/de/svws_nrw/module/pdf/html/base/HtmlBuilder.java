@@ -34,7 +34,9 @@ public class HtmlBuilder {
 
 
     /**
-     * @param htmlVorlageDateipfad  Pfad zur html-Vorlagendatei, die mit Daten gefüllt werden soll
+     * Erstellt einen neunen html-Builder und initialisiert die Variablen
+	 *
+	 * @param htmlVorlageDateipfad  Pfad zur html-Vorlagendatei, die mit Daten gefüllt werden soll
      * @param contexts 		        Liste mit Daten-Contexts, die zu einem finalen Context zusammengefügt werden, um damit das html-Template zu füllen.
      * @param variables		        Variablen, die dem finalen Daten-Context hinzugefügt werden sollen, bevor damit das html-Template gefüllt wird.
      */

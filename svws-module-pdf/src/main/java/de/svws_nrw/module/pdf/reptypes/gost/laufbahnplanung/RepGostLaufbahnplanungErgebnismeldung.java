@@ -2,7 +2,7 @@ package de.svws_nrw.module.pdf.reptypes.gost.laufbahnplanung;
 
 
 /**
- *
+ * Klasse für eine Ergebnismeldung der GOSt-Laufbahnplanung
  */
 public class RepGostLaufbahnplanungErgebnismeldung {
 

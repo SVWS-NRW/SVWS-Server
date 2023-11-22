@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 
-export class SchildReportingSchuelerlernabschnitt extends JavaObject {
+export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 
 	/**
 	 * Die ID des Lernabschnitts
@@ -83,12 +83,12 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerlernabschnitt'].includes(name);
+		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt'].includes(name);
 	}
 
-	public static transpilerFromJSON(json : string): SchildReportingSchuelerlernabschnitt {
+	public static transpilerFromJSON(json : string): SchildReportingSchuelerLernabschnitt {
 		const obj = JSON.parse(json);
-		const result = new SchildReportingSchuelerlernabschnitt();
+		const result = new SchildReportingSchuelerLernabschnitt();
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -137,7 +137,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSON(obj : SchildReportingSchuelerlernabschnitt) : string {
+	public static transpilerToJSON(obj : SchildReportingSchuelerLernabschnitt) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
 		result += '"schuelerID" : ' + obj.schuelerID + ',';
@@ -159,7 +159,7 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 		return result;
 	}
 
-	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerlernabschnitt>) : string {
+	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerLernabschnitt>) : string {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
@@ -213,6 +213,6 @@ export class SchildReportingSchuelerlernabschnitt extends JavaObject {
 
 }
 
-export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerlernabschnitt(obj : unknown) : SchildReportingSchuelerlernabschnitt {
-	return obj as SchildReportingSchuelerlernabschnitt;
+export function cast_de_svws_nrw_core_data_schild3_reporting_SchildReportingSchuelerLernabschnitt(obj : unknown) : SchildReportingSchuelerLernabschnitt {
+	return obj as SchildReportingSchuelerLernabschnitt;
 }

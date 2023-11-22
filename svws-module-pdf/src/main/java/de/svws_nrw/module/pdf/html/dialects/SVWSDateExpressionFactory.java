@@ -21,6 +21,13 @@ public class SVWSDateExpressionFactory implements IExpressionObjectFactory {
 	private static final Set<String> allExpressionNames = Set.of(expressionName);
 
 	/**
+	 * Erstellt einen neue SVWSDateExpressionFactory
+	 */
+	public SVWSDateExpressionFactory() {
+		// leerer Konstruktor, um diesen mit einem JavaDoc-Kommentar versehen zu können.
+	}
+
+	/**
 	 * Überschreibt die getAllExpressionObjectNames Methode des IExpressionObjectFactory Interfaces.
 	 * @return Alle Expression-Namen dieser Klasse
 	 */

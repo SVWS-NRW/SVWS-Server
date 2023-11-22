@@ -9,15 +9,23 @@ public abstract class HtmlContext {
 
     private Context context;
 
+	/**
+	 * Erstellt einen neuen Thymeleaf-Daten-Context
+	 */
+	protected HtmlContext() {
+	}
+
     /**
-     * @return Gibt des Thymeleaf-Daten-Context zurück.
+	 * Rückgabe des Thymeleaf-Daten-Context
+     * @return Gibt einen Thymeleaf-Daten-Context zurück.
      */
     public Context getContext() {
         return context;
     }
 
     /**
-     * @param context Thymeleaf-Daten-Context mit den Daten.
+     * Setzen des Thymeleaf-Daten-Context
+	 * @param context Thymeleaf-Daten-Context mit den Daten.
      */
     public void setContext(final Context context) {
         this.context = context;

@@ -52,6 +52,7 @@ public class PdfBuilder {
 
 
 	/**
+	 * Gibt den Dateinamen der PDF-Datei zurück.
 	 * @return Dateiname der PDF-Datei.
 	 */
 	public String getPdfDateiname() {

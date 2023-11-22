@@ -11,7 +11,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "Datenquelle Schuelerleistungsdaten.")
 @TranspilerDTO
-public class SchildReportingSchuelerleistungsdaten {
+public class SchildReportingSchuelerLeistungsdaten {
 
     /** Die ID der Leistungsdaten */
     @Schema(description = "die ID der Leistungsdaten", example = "126784")

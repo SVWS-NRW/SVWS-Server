@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerleistungsdaten;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLeistungsdaten;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -20,20 +20,20 @@ import de.svws_nrw.db.utils.OperationError;
 /**
  * Die Definition der Schild-Reporting-Datenquelle "Schuelerleistungsdaten"
  */
-public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends DataSchildReportingDatenquelle<SchildReportingSchuelerleistungsdaten, Long> {
+public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends DataSchildReportingDatenquelle<SchildReportingSchuelerLeistungsdaten, Long> {
 
     /**
      * Erstelle eine die Datenquelle Schuelerleistungsdaten
      */
-    DataSchildReportingDatenquelleSchuelerleistungsdaten() {
-        super(SchildReportingSchuelerleistungsdaten.class);
+    DataSchildReportingDatenquelleSchuelerLeistungsdaten() {
+        super(SchildReportingSchuelerLeistungsdaten.class);
         this.setMaster("abschnittID", "Schuelerlernabschnitte", "id", SchildReportingAttributTyp.INT, Long.class);
         // Beispiel für die Einschränkung auf Schulformen: this.restrictTo(Schulform.GY, Schulform.GE)
     }
 
 
     @Override
-    List<SchildReportingSchuelerleistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) {
+    List<SchildReportingSchuelerLeistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) {
         // Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
         final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn
                 .queryNamed("DTOSchuelerLernabschnittsdaten.id.multiple", params, DTOSchuelerLernabschnittsdaten.class)
@@ -43,7 +43,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
                 throw OperationError.NOT_FOUND.exception("Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
 
 		// Erzeuge die Core-DTOs für das Ergebnis der Datenquelle
-		final ArrayList<SchildReportingSchuelerleistungsdaten> result = new ArrayList<>();
+		final ArrayList<SchildReportingSchuelerLeistungsdaten> result = new ArrayList<>();
 
 		// Aggregiere die benötigten Daten aus der Datenbank
         final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryNamed("DTOSchuelerLeistungsdaten.abschnitt_id.multiple", params, DTOSchuelerLeistungsdaten.class);
@@ -76,7 +76,7 @@ public final class DataSchildReportingDatenquelleSchuelerleistungsdaten extends 
 	            lehrerKuerzel = dtoLehrer.Kuerzel;
             }
         	final DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);
-            final SchildReportingSchuelerleistungsdaten data = new SchildReportingSchuelerleistungsdaten();
+            final SchildReportingSchuelerLeistungsdaten data = new SchildReportingSchuelerLeistungsdaten();
             data.id = dto.ID;
             data.abschnittID = dto.Abschnitt_ID;
             data.fachID = dto.Fach_ID;

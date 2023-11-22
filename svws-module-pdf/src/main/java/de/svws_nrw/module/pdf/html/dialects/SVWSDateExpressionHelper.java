@@ -15,6 +15,13 @@ import java.util.Date;
 public class SVWSDateExpressionHelper {
 
 	/**
+	 * Erstellt einen neuen SVWSDateExpressionHelper
+	 */
+	public SVWSDateExpressionHelper() {
+		// leerer Konstruktor, um diesen mit einem JavaDoc-Kommentar versehen zu können.
+	}
+
+	/**
 	 * Gibt ein als String im ISO-Format vorliegendes Datum als Objekt vom Typ Date zurück.
 	 * @param dateISO8601		Der String, der das im ISO-Format yyyy-MM-dd vorliegende Datum enthält.
 	 * @return					Das übergebene Datum als Date-Objekt.

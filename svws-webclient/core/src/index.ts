@@ -258,14 +258,9 @@ export { Schild3KatalogEintragUnicodeUmwandlung } from './core/data/schild3/Schi
 export { Schild3KatalogEintragVersetzungsvermerke } from './core/data/schild3/Schild3KatalogEintragVersetzungsvermerke';
 export { SchildReportingDatenquelle } from './core/data/schild3/reporting/SchildReportingDatenquelle';
 export { SchildReportingDatenquelleAttribut } from './core/data/schild3/reporting/SchildReportingDatenquelleAttribut';
-export { SchildReportingGostLaufbahnplanungSchuelerFachwahlen } from './core/data/schild3/reporting/SchildReportingGostLaufbahnplanungSchuelerFachwahlen';
-export { SchildReportingGostLaufbahnplanungSchuelerFehler } from './core/data/schild3/reporting/SchildReportingGostLaufbahnplanungSchuelerFehler';
-export { SchildReportingGostLaufbahnplanungSchuelerGrunddaten } from './core/data/schild3/reporting/SchildReportingGostLaufbahnplanungSchuelerGrunddaten';
-export { SchildReportingGostLaufbahnplanungSchuelerHinweise } from './core/data/schild3/reporting/SchildReportingGostLaufbahnplanungSchuelerHinweise';
-export { SchildReportingGostLaufbahnplanungSchuelerSummen } from './core/data/schild3/reporting/SchildReportingGostLaufbahnplanungSchuelerSummen';
+export { SchildReportingSchuelerLeistungsdaten } from './core/data/schild3/reporting/SchildReportingSchuelerLeistungsdaten';
+export { SchildReportingSchuelerLernabschnitt } from './core/data/schild3/reporting/SchildReportingSchuelerLernabschnitt';
 export { SchildReportingSchuelerSprachpruefungen } from './core/data/schild3/reporting/SchildReportingSchuelerSprachpruefungen';
-export { SchildReportingSchuelerleistungsdaten } from './core/data/schild3/reporting/SchildReportingSchuelerleistungsdaten';
-export { SchildReportingSchuelerlernabschnitt } from './core/data/schild3/reporting/SchildReportingSchuelerlernabschnitt';
 export { Schueler } from './core/data/schueler/Schueler';
 export { SchuelerBetriebsdaten } from './core/data/schueler/SchuelerBetriebsdaten';
 export { SchuelerKAoADaten } from './core/data/schueler/SchuelerKAoADaten';
