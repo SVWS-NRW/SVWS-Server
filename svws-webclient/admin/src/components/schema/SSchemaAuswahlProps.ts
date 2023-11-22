@@ -11,6 +11,7 @@ export interface SchemaAuswahlProps {
 	addSchema: (data: BenutzerKennwort, schema: string) => Promise<void>;
 	importSchema: (formData: FormData, schema: string) => Promise<void>;
 	migrateSchema: (data: FormData) => Promise<void>;
+	duplicateSchema: (formData: FormData, duplikat: string) => Promise<void>;
 	refresh: () => Promise<void>;
 }
 

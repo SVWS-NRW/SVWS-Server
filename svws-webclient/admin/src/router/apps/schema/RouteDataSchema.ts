@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , Comparator,  List} from "@core";
+import type { BenutzerKennwort , Comparator,  List } from "@core";
 import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag } from "@core";
 
 import { api } from "~/router/Api";
@@ -194,6 +194,16 @@ export class RouteDataSchema {
 		} catch (error) {
 			throw new DeveloperNotificationException("Die Wiederherstellung der übergebenen SQLite-Datenbank war nicht erfolgreich");
 		}
+		api.status.stop();
+	}
+
+	duplicateSchema = async (formData: FormData, duplikat: string) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Duplikat angelegt werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		const { data } = await api.privileged.exportSQLiteFrom(this.auswahl.name);
+		formData.append("database", data);
+		await this.importSchema(formData, duplikat);
 		api.status.stop();
 	}
 

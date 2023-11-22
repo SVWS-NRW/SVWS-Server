@@ -26,6 +26,9 @@
 					<s-schema-auswahl-import-modal v-slot="{ openModal }" :import-schema="importSchema">
 						<svws-ui-button @click="openModal" type="icon" title="SQLite-Schema importieren"> <i-ri-upload-2-line /> </svws-ui-button>
 					</s-schema-auswahl-import-modal>
+					<s-schema-duplicate-modal v-slot="{ openModal }" :duplicate-schema="duplicateSchema">
+						<svws-ui-button @click="openModal" type="icon" title="Schema duplizieren"> <i-ri-file-copy-line /> </svws-ui-button>
+					</s-schema-duplicate-modal>
 					<s-schema-auswahl-neu-modal v-slot="{ openModal }" :add-schema="addSchema">
 						<svws-ui-button @click="openModal" type="icon" title="Schema hinzufügen"> <i-ri-add-line /> </svws-ui-button>
 					</s-schema-auswahl-neu-modal>
