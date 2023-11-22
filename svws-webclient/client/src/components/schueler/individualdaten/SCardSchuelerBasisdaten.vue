@@ -2,7 +2,6 @@
 	<svws-ui-content-card title="Allgemein">
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-text-input placeholder="Nachname" :model-value="data.nachname" @change="nachname => patch({ nachname })" type="text" />
-			<svws-ui-text-input placeholder="Zusatz" type="text" />
 			<svws-ui-text-input placeholder="Rufname" :model-value="data.vorname" @change="vorname => patch({ vorname })" type="text" />
 			<svws-ui-text-input placeholder="Alle Vornamen" :model-value="data.alleVornamen" @change="alleVornamen => patch({ alleVornamen })" type="text" />
 			<svws-ui-spacing />
