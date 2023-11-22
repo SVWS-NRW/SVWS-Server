@@ -5,4 +5,6 @@ export interface SchemaUebersichtProps {
 	backupSchema: () => Promise<ApiFile>;
 	restoreSchema: (data: FormData) => Promise<void>;
 	migrateSchema: (data: FormData) => Promise<void>;
+	upgradeSchema: () => Promise<void>;
+	revision: number | null;
 }

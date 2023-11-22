@@ -29,6 +29,8 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 			backupSchema: routeSchema.data.backupSchema,
 			restoreSchema: routeSchema.data.restoreSchema,
 			migrateSchema: routeSchema.data.migrateSchema,
+			upgradeSchema: routeSchema.data.upgradeSchema,
+			revision: routeSchema.data.revision,
 		};
 	}
 

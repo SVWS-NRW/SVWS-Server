@@ -14,6 +14,7 @@ interface RouteStateSchema {
 	auswahl: SchemaListeEintrag | undefined;
 	auswahlGruppe: SchemaListeEintrag[];
 	mapSchema: Map<string, SchemaListeEintrag>;
+	revision: number | null;
 	view: RouteNode<any, any>;
 }
 
@@ -23,6 +24,7 @@ export class RouteDataSchema {
 		auswahl: undefined,
 		auswahlGruppe: [],
 		mapSchema: new Map(),
+		revision: null,
 		view: routeSchemaUebersicht,
 	};
 
@@ -67,10 +69,12 @@ export class RouteDataSchema {
 			if (auswahl === undefined)
 				auswahl = mapSchema.values().next().value;
 		}
+		const revision = await api.server.getServerDBRevision();
 		const view = routeSchemaUebersicht;
 		this.setPatchedDefaultState({
 			mapSchema,
 			auswahl,
+			revision,
 			view
 		});
 		api.status.stop();
@@ -125,6 +129,10 @@ export class RouteDataSchema {
 		return this._state.value.mapSchema;
 	}
 
+	get revision(): number | null {
+		return this._state.value.revision;
+	}
+
 	gotoSchema = async (value: SchemaListeEintrag | undefined) => {
 		if (value === undefined || value === null) {
 			await RouteManager.doRoute({ name: routeSchema.name, params: { } });
@@ -135,6 +143,14 @@ export class RouteDataSchema {
 	}
 
 	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	this.setPatchedState({ auswahlGruppe });
+
+	upgradeSchema = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		await api.privileged.updateSchemaToCurrent(this.auswahl.name);
+		api.status.stop();
+	}
 
 	removeSchemata = async () => {
 		api.status.start();
