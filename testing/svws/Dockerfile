@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 
 RUN apt update && apt-get -y install gettext zip mariadb-client
 

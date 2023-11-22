@@ -74,7 +74,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param id    die ID der Abiturfachart
 	 *
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
-	 *
 	 */
 	public static fromID(id : number | null) : GostAbiturFach | null {
 		if (id === null)
@@ -104,7 +103,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param strID    die ID der Abiturfachart (als String)
 	 *
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
-	 *
 	 */
 	public static fromIDString(strID : string | null) : GostAbiturFach | null {
 		if (strID === null)
@@ -134,7 +132,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param kuerzel    das Kürzel der Abiturfachart
 	 *
 	 * @return die Abiturfachart oder null, falls das Kürzel ungültig ist
-	 *
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostAbiturFach | null {
 		switch (kuerzel) {

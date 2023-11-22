@@ -89,11 +89,11 @@ public final class ExpressionClassType extends ExpressionType {
 	 * @throws TranspilerException   an exception if analyzing the type arguments fails
 	 */
 	public static ExpressionClassType getExpressionClassType(final Transpiler transpiler, final TypeMirror type) throws TranspilerException {
-		if (type instanceof final DeclaredType dt) {
+		if ((type instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te)) {
 			final ExpressionClassType result = new ExpressionClassType(
 				dt.getTypeArguments().isEmpty() ? Kind.CLASS : Kind.PARAMETERIZED_TYPE,
-				getClassName(dt.toString()),
-				getPackageName(dt.toString())
+				te.getSimpleName().toString(),
+				getPackageName(te.getQualifiedName().toString())
 			);
 			for (final TypeMirror typeArg : dt.getTypeArguments()) {
 				if (typeArg instanceof DeclaredType) {

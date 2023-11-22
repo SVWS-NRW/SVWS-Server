@@ -33,6 +33,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -566,7 +567,7 @@ public final class TranspilerUnit {
 			final TreePath path = entry.getValue();
 			final Tree parent = path.getParentPath().getLeaf();
 			// skip annotations and add all non local identifiers to the import map, also skip case trees
-			if (!((parent instanceof CaseTree) || (parent instanceof AnnotationTree) || (isLocal(path, node)) || ("super".equals(node.getName().toString())) || typeParameters.contains(node.getName().toString()))) {
+			if (!((parent instanceof CaseTree) || (parent instanceof ConstantCaseLabelTree) || (parent instanceof AnnotationTree) || (isLocal(path, node)) || ("super".equals(node.getName().toString())) || typeParameters.contains(node.getName().toString()))) {
 				allImports.put(node, getPackageName(node, path, true));
 				// TODO handle static imports...
 			} else if (parent instanceof AnnotationTree) {
@@ -670,7 +671,7 @@ public final class TranspilerUnit {
 
 		// check whether its a case tree in a switch expression
 		final TreePath parent = path.getParentPath();
-		if ((parent.getLeaf() instanceof CaseTree) && ((parent.getParentPath().getLeaf() instanceof final SwitchTree st)
+		if ((parent.getLeaf() instanceof ConstantCaseLabelTree) && (parent.getParentPath().getLeaf() instanceof CaseTree) && ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st)
 				&& ((st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it))))) {
 			return getIdentifierType(it);
 		}

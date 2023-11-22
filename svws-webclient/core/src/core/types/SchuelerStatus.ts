@@ -143,7 +143,6 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 	 * @param status	die id des Schülerstatus
 	 *
 	 * @return der Schülerstatus oder null, falls die ID ungültig ist
-	 *
 	 */
 	public static fromID(status : number) : SchuelerStatus | null {
 		return SchuelerStatus.getMapID().get(status);
@@ -155,7 +154,6 @@ export class SchuelerStatus extends JavaObject implements JavaEnum<SchuelerStatu
 	 * @param value	  die Bezeichnung des Schülerstatus
 	 *
 	 * @return der Schülerstatus oder null, falls die Bezeichnung ungültig ist
-	 *
 	 */
 	public static fromBezeichnung(value : string | null) : SchuelerStatus | null {
 		if (value === null)

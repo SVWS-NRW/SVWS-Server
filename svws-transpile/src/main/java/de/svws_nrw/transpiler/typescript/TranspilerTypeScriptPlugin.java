@@ -35,6 +35,7 @@ import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
@@ -394,7 +395,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				valueOf = "!";
 		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
-		if ((type instanceof final ExpressionClassType classType) && (transpiler.getParent(node) instanceof CaseTree)) {
+		if ((type instanceof final ExpressionClassType classType) && ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
 			return classType.toString() + "." + node.getName().toString() + valueOf;
 		}
 		if (!transpiler.isClassMember(node))
@@ -2097,6 +2098,35 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
+		if (unit.superTypes.contains("java.util.Deque")) {
+			sb.append(getIndent()).append("public reversed() : Deque<E> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tthrow new UnsupportedOperationException(\"Der Transpiler unterstützt diese Methode noch nicht.\");").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+		if (unit.superTypes.contains("java.util.NavigableSet")) {
+			String strType = "E";
+			if (transpiler.getElement(node) instanceof final TypeElement te) {
+				for (final TypeMirror tm: te.getInterfaces()) {
+					if ((tm instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement ste)
+							&& ("java.util.NavigableSet".equals(ste.getQualifiedName().toString()))
+							&& (dt.getTypeArguments().get(0) instanceof final TypeVariable tv)) {
+						final String[] parts = tv.toString().split(" ");
+						strType = parts[parts.length - 1];
+					}
+				}
+			}
+			sb.append(getIndent()).append("public reversed() : NavigableSet<" + strType + "> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\treturn this.descendingSet();").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+		if (unit.superTypes.contains("java.util.NavigableMap")) {
+			sb.append(getIndent()).append("public reversed() : NavigableMap<K, V> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\treturn this.descendingMap();").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
 		if (unit.superTypes.contains("java.util.Map")) { // TODO check only if the class directly implements Map and not indirectly
 			// TODO determine the name of both type parameter and replace K and V in the following code...
 			sb.append(getIndent()).append("public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {").append(System.lineSeparator());
@@ -2437,6 +2467,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			entries.add(0, new AbstractMap.SimpleEntry<>(strObject, "java.lang"));
 		if ((unit.isEnum()) && (!unit.imports.containsKey("Enum")))
 			entries.add(0, new AbstractMap.SimpleEntry<>("Enum", "java.lang"));
+		if (unit.superTypes.contains("java.util.Deque"))
+			entries.add(0, new AbstractMap.SimpleEntry<>("UnsupportedOperationException", "java.lang"));
 		if (unit.superTypes.contains("java.util.Map")) {
 			final String pkg = unit.imports.get("Function");
 			if ((pkg == null) || (!"java.util.function".equals(pkg)))

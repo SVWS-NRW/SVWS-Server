@@ -135,7 +135,6 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param bezeichnung   die Bezeichnung des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
-	 *
 	 */
 	public static fromBezeichnung(bezeichnung : string | null) : PersonalTyp | null {
 		return PersonalTyp.getMapBezeichnungen().get(bezeichnung);
@@ -147,7 +146,6 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param id   die ID des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die ID ungültig ist
-	 *
 	 */
 	public static fromID(id : number | null) : PersonalTyp | null {
 		return PersonalTyp.getMapID().get(id);

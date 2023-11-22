@@ -1,10 +1,10 @@
 import type { Collection } from './Collection';
 import type { Comparator } from './Comparator';
 import type { JavaSet } from './JavaSet';
-import type { JavaMap } from './JavaMap';
+import type { SequencedMap } from './SequencedMap';
 import type { JavaMapEntry } from './JavaMapEntry';
 
-export interface SortedMap<K, V> extends JavaMap<K, V> {
+export interface SortedMap<K, V> extends SequencedMap<K,V> {
 
     comparator() : Comparator<K>;
 

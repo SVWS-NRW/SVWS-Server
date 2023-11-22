@@ -1165,7 +1165,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the java compiler element
 	 */
-	Element getElement(final Tree node) {
+	public Element getElement(final Tree node) {
 		return trees.getElement(getTreePath(node));
 	}
 
@@ -1554,9 +1554,9 @@ public final class Transpiler extends AbstractProcessor {
 				if ((found == null) || (rated < found_rated)) {
 					final TypeMirror returnType = ee.getReturnType();
 					if (returnType.getKind() == TypeKind.TYPEVAR) {
-						found = mapClassTypeArgs.get(returnType.toString());
+						found = mapClassTypeArgs.get(returnType.toString().trim());
 						if (found == null) {
-							found = mapMethodTypeArgs.get(returnType.toString());
+							found = mapMethodTypeArgs.get(returnType.toString().trim());
 							// TODO improve the above analysis for mapMethodTypeArgs
 						}
 					} else {
