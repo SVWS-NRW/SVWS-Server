@@ -37,6 +37,7 @@ stages:
     - integration-tests
     - analyze
     - publish
+    - publish_windows
 
 publish:
     stage: publish
@@ -57,6 +58,26 @@ publish:
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
         - ./gradlew :deployment:linux-installer:buildLinuxInstaller
         - ./gradlew :deployment:githubRelease
+    when: on_success
+
+publish_windows:
+    stage: publish
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+          when: manual
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: build
+    tags:
+        - windows
+    script:
+        - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
+        - cat gradle_secure.properties >> gradle.properties
+        - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew :deployment:windows-installer:doZip
     when: on_success
 
 integration-tests:
