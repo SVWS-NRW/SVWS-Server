@@ -71,7 +71,7 @@ publish_windows:
         - job: build
     tags:
         - windows
-    image: mcr.microsoft.com/windows
+    image: mcr.microsoft.com/windows:20H2
     script:
         #- curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         #- cat gradle_secure.properties >> gradle.properties
