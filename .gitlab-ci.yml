@@ -78,7 +78,8 @@ publish_windows:
         #- cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         #- chmod +x ./deployment/setupVersion.sh
         #- ./deployment/setupVersion.sh
-        - ./gradlew :deployment:windows-installer:doZip
+        #- gradlew :deployment:windows-installer:doZip
+        - echo test
     when: on_success
 
 integration-tests:
