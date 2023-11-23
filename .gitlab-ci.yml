@@ -28,9 +28,9 @@ cache: &global_cache
         - .gradle
 
 before_script:
-   # - export GRADLE_USER_HOME=`pwd`/.gradle_user
-   # - ./gradlew --version
-   # - java --version
+    - export GRADLE_USER_HOME=`pwd`/.gradle_user
+    - ./gradlew --version
+    - java --version
 
 stages:
     - build
@@ -79,7 +79,7 @@ publish_windows:
         #- chmod +x ./deployment/setupVersion.sh
         #- ./deployment/setupVersion.sh
         #- gradlew :deployment:windows-installer:doZip
-        - echo test
+        - C:\Windows\System32\cmd.exe /c echo test
     when: on_success
 
 integration-tests:
