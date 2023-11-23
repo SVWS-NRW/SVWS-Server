@@ -693,16 +693,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// TODO return type
 		// generate the lambda body
 		sb.append(" => ");
-		final Tree body = node.getBody();
-		if (body instanceof final StatementTree bodyStatement) {
-			sb.append(convertStatement(bodyStatement, false)).append(" }");
-			return sb.toString();
+		switch (node.getBody()) {
+			case final StatementTree bodyStatement -> sb.append(convertStatement(bodyStatement, false)).append(" }");
+			case final ExpressionTree bodyExpression -> sb.append(convertExpression(bodyExpression)).append(" }");
+			default -> throw new TranspilerException("Transpiler Error: Lambda Expression Type of body kind " + node.getBodyKind() + " not yet supported");
 		}
-		if (body instanceof final ExpressionTree bodyExpression) {
-			sb.append(convertExpression(bodyExpression)).append(" }");
-			return sb.toString();
-		}
-		throw new TranspilerException("Transpiler Error: Lambda Expression Type of body kind " + node.getBodyKind() + " not yet supported");
+		return sb.toString();
 	}
 
 
@@ -714,41 +710,25 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled string if the expression was transpiled successfully and null otherwise
 	 */
 	public String convertExpression(final ExpressionTree node) {
-		if (node instanceof final BinaryTree b)
-			return convertBinaryOperator(b);
-		if (node instanceof final AssignmentTree a)
-			return convertAssignment(a);
-		if (node instanceof final CompoundAssignmentTree ca)
-			return convertCompoundAssignment(ca);
-		if (node instanceof final MethodInvocationTree mi)
-			return convertMethodInvocation(mi);
-		if (node instanceof final LiteralTree lit)
-			return convertLiteral(lit);
-		if (node instanceof final IdentifierTree ident)
-			return convertIdentifier(ident);
-		if (node instanceof final MemberSelectTree ms)
-			return convertMemberSelect(ms);
-		if (node instanceof final ParenthesizedTree paren)
-			return convertParenthesized(paren);
-		if (node instanceof final MethodInvocationTree mi)
-			return convertMethodInvocation(mi);
-		if (node instanceof final NewClassTree nc)
-			return convertNewClass(nc);
-		if (node instanceof final NewArrayTree na)
-			return convertNewArray(na);
-		if (node instanceof final ConditionalExpressionTree ce)
-			return convertConditionalExpression(ce);
-		if (node instanceof final UnaryTree unary)
-			return convertUnaryOperator(unary);
-		if (node instanceof final ArrayAccessTree aa)
-			return convertArrayAccess(aa);
-		if (node instanceof final TypeCastTree tc)
-			return convertTypeCast(tc);
-		if (node instanceof final LambdaExpressionTree le)
-			return convertLambdaExpression(le);
-		if (node instanceof final InstanceOfTree io)
-			return convertInstanceOf(io);
-		throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
+		return switch (node) {
+			case final BinaryTree b -> convertBinaryOperator(b);
+			case final AssignmentTree a -> convertAssignment(a);
+			case final CompoundAssignmentTree ca -> convertCompoundAssignment(ca);
+			case final MethodInvocationTree mi -> convertMethodInvocation(mi);
+			case final LiteralTree lit -> convertLiteral(lit);
+			case final IdentifierTree ident -> convertIdentifier(ident);
+			case final MemberSelectTree ms -> convertMemberSelect(ms);
+			case final ParenthesizedTree paren -> convertParenthesized(paren);
+			case final NewClassTree nc -> convertNewClass(nc);
+			case final NewArrayTree na -> convertNewArray(na);
+			case final ConditionalExpressionTree ce -> convertConditionalExpression(ce);
+			case final UnaryTree unary -> convertUnaryOperator(unary);
+			case final ArrayAccessTree aa -> convertArrayAccess(aa);
+			case final TypeCastTree tc -> convertTypeCast(tc);
+			case final LambdaExpressionTree le -> convertLambdaExpression(le);
+			case final InstanceOfTree io -> convertInstanceOf(io);
+			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
+		};
 	}
 
 
@@ -816,17 +796,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the default value as String
 	 */
 	public static String getDefaultValueForType(final Tree node) {
-		if (node instanceof final PrimitiveTypeTree primitiveTypeTree) {
-			return getDefaultValueForPrimitiveType(primitiveTypeTree);
-		} else if (node instanceof ArrayTypeTree) {
-			return null;
-		} else if (node instanceof ParameterizedTypeTree) {
-			return null;
-		} else if (node instanceof IdentifierTree) {
-			return null;
-		} else {
-			throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
-		}
+		return switch (node) {
+			case final PrimitiveTypeTree primitiveTypeTree -> getDefaultValueForPrimitiveType(primitiveTypeTree);
+			case final ArrayTypeTree att -> null;
+			case final ParameterizedTypeTree ptt -> null;
+			case final IdentifierTree it -> null;
+			default -> throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		};
 	}
 
 
@@ -919,61 +895,57 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		indentC++;
 		final String tmpIndent = (noIndent ? "" : System.lineSeparator() + getIndent());
 		indentC--;
-		if (node instanceof final ExpressionStatementTree es) {
-			final String expr = convertExpressionStatement(es);
-			if (expr == null)
-				return "";
-			return tmpIndent + expr + ";";
-		}
-		if (node instanceof final ReturnTree ret)
-			return tmpIndent + convertReturn(ret);
-		if (node instanceof final BreakTree brk)
-			return tmpIndent + convertBreak(brk);
-		if (node instanceof final ThrowTree tt)
-			return tmpIndent + convertThrow(tt);
-		if (node instanceof final ContinueTree cont)
-			return tmpIndent + convertContinue(cont);
-		if (node instanceof final VariableTree variable)
-			return tmpIndent + convertBlockVariable(variable);
-		if (node instanceof final IfTree ifTree) {
-			indentC++;
-			final String ifConverted = convertIf(ifTree);
-			indentC--;
-			return tmpIndent + ifConverted;
-		}
-		if (node instanceof final DoWhileLoopTree dwlTree) {
-			indentC++;
-			final String dwlConverted = convertDoWhileLoop(dwlTree);
-			indentC--;
-			return tmpIndent + dwlConverted;
-		}
-		if (node instanceof final WhileLoopTree wlTree) {
-			indentC++;
-			final String wlConverted = convertWhileLoop(wlTree);
-			indentC--;
-			return tmpIndent + wlConverted;
-		}
-		if (node instanceof final ForLoopTree flTree) {
-			indentC++;
-			final String flConverted = convertForLoop(flTree);
-			indentC--;
-			return tmpIndent + flConverted;
-		}
-		if (node instanceof final EnhancedForLoopTree eflTree) {
-			indentC++;
-			final String eflConverted = convertEnhancedForLoop(eflTree);
-			indentC--;
-			return tmpIndent + eflConverted;
-		}
-		if (node instanceof final TryTree ttTree) {
-			indentC++;
-			final String ttConverted = convertTry(ttTree);
-			indentC--;
-			return tmpIndent + ttConverted;
-		}
-		if (node instanceof EmptyStatementTree)
-			return ";";
-		throw new TranspilerException("Transpiler Error: Statement node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		return switch (node) {
+			case final ExpressionStatementTree es -> {
+				final String expr = convertExpressionStatement(es);
+				if (expr == null)
+					yield "";
+				yield tmpIndent + expr + ";";
+			}
+			case final ReturnTree ret -> tmpIndent + convertReturn(ret);
+			case final BreakTree brk -> tmpIndent + convertBreak(brk);
+			case final ThrowTree tt -> tmpIndent + convertThrow(tt);
+			case final ContinueTree cont -> tmpIndent + convertContinue(cont);
+			case final VariableTree variable -> tmpIndent + convertBlockVariable(variable);
+			case final IfTree ifTree -> {
+				indentC++;
+				final String ifConverted = convertIf(ifTree);
+				indentC--;
+				yield tmpIndent + ifConverted;
+			}
+			case final DoWhileLoopTree dwlTree -> {
+				indentC++;
+				final String dwlConverted = convertDoWhileLoop(dwlTree);
+				indentC--;
+				yield tmpIndent + dwlConverted;
+			}
+			case final WhileLoopTree wlTree -> {
+				indentC++;
+				final String wlConverted = convertWhileLoop(wlTree);
+				indentC--;
+				yield tmpIndent + wlConverted;
+			}
+			case final ForLoopTree flTree -> {
+				indentC++;
+				final String flConverted = convertForLoop(flTree);
+				indentC--;
+				yield tmpIndent + flConverted;
+			}
+			case final EnhancedForLoopTree eflTree -> {
+				indentC++;
+				final String eflConverted = convertEnhancedForLoop(eflTree);
+				indentC--;
+				yield tmpIndent + eflConverted;
+			}
+			case final TryTree ttTree -> {
+				indentC++;
+				final String ttConverted = convertTry(ttTree);
+				indentC--;
+				yield tmpIndent + ttConverted;
+			}
+			case final EmptyStatementTree est -> ";";
+			default -> throw new TranspilerException("Transpiler Error: Statement node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		};
 	}
 
 
