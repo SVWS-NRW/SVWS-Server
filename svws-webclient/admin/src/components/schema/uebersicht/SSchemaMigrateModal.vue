@@ -37,10 +37,11 @@
 
 <script setup lang="ts">
 
+	import type { SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		migrateSchema:  (formData: FormData) => Promise<void>;
+		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 	}>();
 

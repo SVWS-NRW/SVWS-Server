@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , Comparator,  List } from "@core";
-import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag } from "@core";
+import type { BenutzerKennwort , Comparator,  List} from "@core";
+import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -148,8 +148,12 @@ export class RouteDataSchema {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
-		await api.privileged.updateSchemaToCurrent(this.auswahl.name);
+		const result = new SimpleOperationResponse();
+		const list = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
+		result.log = list;
+		result.success = true;
 		api.status.stop();
+		return result;
 	}
 
 	removeSchemata = async () => {
@@ -166,7 +170,7 @@ export class RouteDataSchema {
 
 	addSchema = async (data: BenutzerKennwort, schema: string) => {
 		api.status.start();
-		await api.privileged.createSchemaCurrent(data, schema);
+		const result = await api.privileged.createSchemaCurrent(data, schema);
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
@@ -176,11 +180,12 @@ export class RouteDataSchema {
 				break;
 			}
 		api.status.stop();
+		return result;
 	}
 
 	importSchema = async (data: FormData, schema: string) => {
 		api.status.start();
-		await api.privileged.importSQLite2Schema(data, schema);
+		const result = await api.privileged.importSQLite2Schema(data, schema);
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
@@ -190,6 +195,7 @@ export class RouteDataSchema {
 				break;
 			}
 		api.status.stop();
+		return result;
 	}
 
 	backupSchema = async () => {
@@ -206,11 +212,13 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		try {
-			await api.privileged.importSQLiteInto(data, this.auswahl.name)
+			const result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
+			api.status.stop();
+			return result;
 		} catch (error) {
+			api.status.stop();
 			throw new DeveloperNotificationException("Die Wiederherstellung der übergebenen SQLite-Datenbank war nicht erfolgreich");
 		}
-		api.status.stop();
 	}
 
 	duplicateSchema = async (formData: FormData, duplikat: string) => {
@@ -219,8 +227,9 @@ export class RouteDataSchema {
 		api.status.start();
 		const { data } = await api.privileged.exportSQLiteFrom(this.auswahl.name);
 		formData.append("database", data);
-		await this.importSchema(formData, duplikat);
+		const result = await this.importSchema(formData, duplikat);
 		api.status.stop();
+		return result;
 	}
 
 	migrateSchema = async (formData: FormData) => {
@@ -245,56 +254,60 @@ export class RouteDataSchema {
 		if (schema === null || db === null)
 			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
 		api.status.start();
+		let result = new SimpleOperationResponse();
 		try {
 			switch (db) {
 				case 'mariadb':
 					if (schulnummer)
 						if (schema === currSchema)
-							await api.privileged.migrateMariaDBSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+							result = await api.privileged.migrateMariaDBSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
-							await api.privileged.migrateMariaDB2SchemaSchulnummer(migrateBody, schema, schulnummer);
+							result = await api.privileged.migrateMariaDB2SchemaSchulnummer(migrateBody, schema, schulnummer);
 					else
 						if (schema === currSchema)
-							await api.privileged.migrateMariaDBInto(datenbankVerbindungsdaten, schema);
+							result = await api.privileged.migrateMariaDBInto(datenbankVerbindungsdaten, schema);
 						else
-							await api.privileged.migrateMariaDB2Schema(migrateBody, schema);
+							result = await api.privileged.migrateMariaDB2Schema(migrateBody, schema);
 					break;
 				case 'mysql':
 					if (schulnummer)
 						if (schema === currSchema)
-							await api.privileged.migrateMySqlSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+							result = await api.privileged.migrateMySqlSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
-							await api.privileged.migrateMySQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
+							result = await api.privileged.migrateMySQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
 					else
 						if (schema === currSchema)
-							await api.privileged.migrateMySqlInto(datenbankVerbindungsdaten, schema);
+							result = await api.privileged.migrateMySqlInto(datenbankVerbindungsdaten, schema);
 						else
-							await api.privileged.migrateMySQL2Schema(migrateBody, schema);
+							result = await api.privileged.migrateMySQL2Schema(migrateBody, schema);
 					break;
 				case 'mssql':
 					if (schulnummer)
 						if (schema === currSchema)
-							await api.privileged.migrateMsSqlServerSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
+							result = await api.privileged.migrateMsSqlServerSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
-							await api.privileged.migrateMSSQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
+							result = await api.privileged.migrateMSSQL2SchemaSchulnummer(migrateBody, schema, schulnummer);
 					else
 						if (schema === currSchema)
-							await api.privileged.migrateMsSqlServerInto(datenbankVerbindungsdaten, schema);
+							result = await api.privileged.migrateMsSqlServerInto(datenbankVerbindungsdaten, schema);
 						else
-							await api.privileged.migrateMSSQL2Schema(migrateBody, schema);
+							result = await api.privileged.migrateMSSQL2Schema(migrateBody, schema);
 					break;
 				case 'mdb':
 					if (schema === currSchema)
-						await api.privileged.migrateMDBInto(formData, schema);
+						result = await api.privileged.migrateMDBInto(formData, schema);
 					else
-						await api.privileged.migrateMDB2Schema(formData, schema);
+						result = await api.privileged.migrateMDB2Schema(formData, schema);
 					break;
+				default:
+					throw new DeveloperNotificationException("Es ist ein Fehler aufgetreten bei der Migration");
 			}
 			await this.init(schema);
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 		}
 		api.status.stop();
+		return result;
 	}
 
 	refresh = async () => await this.init(undefined);

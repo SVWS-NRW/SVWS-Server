@@ -26,11 +26,12 @@
 
 <script setup lang="ts">
 
+	import type { SimpleOperationResponse } from "@core";
 	import { BenutzerKennwort } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		addSchema:  (data: BenutzerKennwort, schema: string) => Promise<void>;
+		addSchema:  (data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>;
 	}>();
 
 	const schema = ref<string>('');

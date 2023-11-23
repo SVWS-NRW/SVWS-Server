@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal">
+	<svws-ui-modal :show="showModal" size="big">
 		<template #modalTitle>Schema wiederherstellen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-1">
@@ -19,22 +19,37 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> Wiederherstellen </svws-ui-button>
+			<template v-if="status !== true">
+				<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> Wiederherstellen </svws-ui-button>
+			</template>
+			<template v-else>
+				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
+			</template>
+		</template>
+		<template #modalLogs>
+			<svws-ui-notification v-if="logs" :type="status === true ? 'success' : 'error'">
+				<template #header>Import {{ status === true ? "erfolgreich" : "fehlgeschlagen" }}</template>
+				<template #stack>
+					<log-box :logs="logs" :status="status" />
+				</template>
+			</svws-ui-notification>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
+	import type { List, SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		restoreSchema:  (formData: FormData) => Promise<void>;
+		restoreSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
 	}>();
 
 	const file = ref<File | null>(null);
-
+	const logs = ref<List<string|null>>();
+	const status = ref<boolean>();
 
 	const loading = ref<boolean>(false);
 
@@ -52,15 +67,22 @@
 		}
 	}
 
-	async function add(event: Event) {
+	async function add() {
 		if (file.value === null)
 			return;
 		loading.value = true;
 		const formData = new FormData();
 		formData.append("database", file.value);
-		await props.restoreSchema(formData);
+		const result = await props.restoreSchema(formData);
+		logs.value = result.log;
+		status.value = result.success;
 		file.value = null;
-		showModal().value = false;
 		loading.value = false;
+	}
+
+	function close() {
+		showModal().value = false;
+		logs.value = undefined;
+		status.value = undefined;
 	}
 </script>

@@ -26,10 +26,11 @@
 
 <script setup lang="ts">
 
+	import type { SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		duplicateSchema:  (formData: FormData, schema: string) => Promise<void>;
+		duplicateSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 	}>();
 
 	const schema = ref<string>("");

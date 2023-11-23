@@ -8,17 +8,12 @@
 					<input type="file" accept=".lup" @change="import_file" :disabled="loading">
 					<svws-ui-spinner :spinning="loading" />
 				</div>
-				<div v-if="log != null" class="mt-4">
-					<div :class="{ 'text-error': status === false, 'text-success': status === true }">
-						<span class="flex mb-4 text-headline-md">
-							<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-1" />
-							<i-ri-alert-line v-else-if="(status === false)" class="mr-1" />
-							Log
-						</span>
-					</div>
-					<pre v-if="(status !== undefined)">{{ log }}</pre>
-				</div>
 			</div>
+			<svws-ui-notification v-if="logs" :type="status === true ? 'success' : 'error'">
+				<template #stack>
+					<log-box :logs="logs" :status="status" />
+				</template>
+			</svws-ui-notification>
 		</div>
 	</div>
 </template>
@@ -26,7 +21,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { type List, type SimpleOperationResponse } from "@core";
+	import type { List, SimpleOperationResponse } from "@core";
 
 	const props = defineProps<{
 		setGostLupoImportMDBFuerJahrgang: (formData: FormData, mode: 'none' | 'schueler' | 'all') => Promise<SimpleOperationResponse>;
@@ -46,15 +41,7 @@
 
 	const status = ref<boolean | undefined>(undefined);
 	const loading = ref<boolean>(false);
-	const log = ref<string | null>(null);
-
-	function log2str(log: List<string | null>) : string {
-		let result = "";
-		for (const s of log)
-			if (s !== null)
-				result += s + "\n";
-		return result;
-	}
+	const logs = ref<List<string|null>>();
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
@@ -68,7 +55,7 @@
 		const formData = new FormData();
 		formData.append("data", file);
 		const result = await props.setGostLupoImportMDBFuerJahrgang(formData, mode.value);
-		log.value = log2str(result.log);
+		logs.value = result.log;
 		status.value = result.success;
 		loading.value = false;
 	}
