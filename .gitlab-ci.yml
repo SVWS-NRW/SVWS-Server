@@ -28,9 +28,9 @@ cache: &global_cache
         - .gradle
 
 before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle_user
-    - ./gradlew --version
-    - java --version
+   # - export GRADLE_USER_HOME=`pwd`/.gradle_user
+   # - ./gradlew --version
+   # - java --version
 
 stages:
     - build
