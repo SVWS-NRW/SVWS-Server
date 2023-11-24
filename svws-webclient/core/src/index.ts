@@ -315,6 +315,7 @@ export { SchuelerstatusKatalogEintrag } from './core/data/schule/SchuelerstatusK
 export { SchulabschlussAllgemeinbildendKatalogEintrag } from './core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 export { SchulabschlussBerufsbildendKatalogEintrag } from './core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 export { SchuleAbschnitte } from './core/data/schule/SchuleAbschnitte';
+export { SchuleInfo } from './core/data/schule/SchuleInfo';
 export { SchuleStammdaten } from './core/data/schule/SchuleStammdaten';
 export { SchulenKatalogEintrag } from './core/data/schule/SchulenKatalogEintrag';
 export { SchulformGliederungJahrgaenge } from './core/data/schule/SchulformGliederungJahrgaenge';

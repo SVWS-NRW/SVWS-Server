@@ -1,7 +1,11 @@
 package de.svws_nrw.data.schema;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
+import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
@@ -10,7 +14,10 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.schema.SchemaRevisionen;
+import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
+import de.svws_nrw.db.utils.schema.DBSchemaStatus;
+import de.svws_nrw.db.utils.schema.DBSchemaVersion;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -110,5 +117,37 @@ public final class DBUtilsSchema {
 		return log;
     }
 
+
+    /**
+     * Bestimmt die Liste der über die Datenbankverbindung verfügbaren SVWS-Schemata.
+     *
+     * @param conn   die Datenbankverbindung
+     *
+     * @return die Liste der SVWS-Schema-Einträge
+     */
+    public static List<SchemaListeEintrag> getSVWSSchemaListe(final DBEntityManager conn) {
+		// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
+		final List<String> all = DTOInformationSchema.queryNames(conn);
+		final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
+		final SVWSKonfiguration config = SVWSKonfiguration.get();
+		// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
+		for (final String schemaname : all) {
+			final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
+			final DBSchemaVersion version = status.getVersion();
+			if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
+				continue;
+			if (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE) {
+				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
+				final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
+				schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
+				schemainfo.revision = version.getRevisionOrDefault(-1);
+				schemainfo.isTainted = version.isTainted();
+				schemainfo.isInConfig = (schemanameConfig != null);
+				schemainfo.isDeactivated = config.isDeactivatedSchema(schemaname);
+				result.add(schemainfo);
+			}
+		}
+		return result;
+    }
 
 }
