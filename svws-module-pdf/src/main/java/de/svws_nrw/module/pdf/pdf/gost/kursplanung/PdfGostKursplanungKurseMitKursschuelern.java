@@ -3,11 +3,10 @@ package de.svws_nrw.module.pdf.pdf.gost.kursplanung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.module.pdf.html.base.HtmlBuilder;
 import de.svws_nrw.module.pdf.html.base.HtmlContext;
-import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungBlockungsergebnis;
-import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
-import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungKurse;
 import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchule;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungBlockungsergebnis;
+import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungKurse;
+import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -41,13 +40,8 @@ public final class PdfGostKursplanungKurseMitKursschuelern {
 	 * @return 						HTTP-Response mit der PDF-Datei oder bei Fehler eine WebApplicationException-Response
 	 */
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> kursIDs) {
-
-		try {
-			final PdfBuilder pdfBuilder = getPdfBuilder(conn, blockungsergebnisID, kursIDs);
-			return pdfBuilder.getPdfResponse();
-		} catch (WebApplicationException ex) {
-			return ex.getResponse();
-		}
+		final PdfBuilder pdfBuilder = getPdfBuilder(conn, blockungsergebnisID, kursIDs);
+		return pdfBuilder.getPdfResponse();
 	}
 
 

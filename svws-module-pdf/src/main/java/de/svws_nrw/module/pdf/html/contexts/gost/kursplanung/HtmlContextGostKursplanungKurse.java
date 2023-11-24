@@ -91,13 +91,10 @@ public final class HtmlContextGostKursplanungKurse extends HtmlContext {
 
 		// ####### Daten sind valide. Erzeuge nun Datenstruktur und daraus den Daten-Context. #################################################################
 
-		// Bei leerer Liste von Kurs-IDs sollen alle Kurse der Blockung verwendet werden.
-		final List<Long> kursplanungKursIds = !kursIDs.isEmpty() ? new ArrayList<>(kursIDs) : new ArrayList<>(datenManager.kursGetListeSortiertNachFachKursartNummer().stream().map(k -> k.id).toList());
-
 		// Liste der Kurse aus dem Blockungsergebnis
 		kursplanungKurse = new ArrayList<>();
 
-		for (final Long kursID : kursplanungKursIds) {
+		for (final Long kursID : kursIDs) {
 			kursplanungKurse.add(
 				HtmlContextUtils.getDruckGostKursplanungKurs(conn, datenManager, ergebnisManager, kursID)
 			);

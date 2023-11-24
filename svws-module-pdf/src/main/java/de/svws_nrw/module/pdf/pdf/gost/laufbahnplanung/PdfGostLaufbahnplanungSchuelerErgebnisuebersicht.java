@@ -5,9 +5,8 @@ import de.svws_nrw.module.pdf.html.base.HtmlBuilder;
 import de.svws_nrw.module.pdf.html.base.HtmlContext;
 import de.svws_nrw.module.pdf.html.contexts.HtmlContextSchule;
 import de.svws_nrw.module.pdf.html.contexts.gost.laufbahnplanung.HtmlContextGostLaufbahnplanungSchueler;
-import de.svws_nrw.module.pdf.reptypes.gost.laufbahnplanung.RepGostLaufbahnplanungSchueler;
 import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
-import jakarta.ws.rs.WebApplicationException;
+import de.svws_nrw.module.pdf.reptypes.gost.laufbahnplanung.RepGostLaufbahnplanungSchueler;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -42,13 +41,8 @@ public final class PdfGostLaufbahnplanungSchuelerErgebnisuebersicht {
 	 * @return 				HTTP-Response mit der PDF-Datei oder bei Fehler eine WebApplicationException-Response
 	 */
 	public static Response query(final DBEntityManager conn, final List<Long> schuelerIDs, final int detaillevel) {
-
-		try {
-			final PdfBuilder pdfBuilder = getPdfBuilder(conn, schuelerIDs, detaillevel);
-			return pdfBuilder.getPdfResponse();
-		} catch (WebApplicationException ex) {
-			return ex.getResponse();
-		}
+		final PdfBuilder pdfBuilder = getPdfBuilder(conn, schuelerIDs, detaillevel);
+		return pdfBuilder.getPdfResponse();
 	}
 
 

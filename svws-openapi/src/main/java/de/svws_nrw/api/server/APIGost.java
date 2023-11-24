@@ -889,15 +889,12 @@ public class APIGost {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -934,15 +931,12 @@ public class APIGost {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -980,15 +974,12 @@ public class APIGost {
             final List<Long> schuelerids,
             @PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 

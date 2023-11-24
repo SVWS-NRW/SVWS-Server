@@ -8,7 +8,6 @@ import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKurs
 import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungSchienen;
 import de.svws_nrw.module.pdf.html.contexts.gost.kursplanung.HtmlContextGostKursplanungSchueler;
 import de.svws_nrw.module.pdf.pdf.base.PdfBuilder;
-import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 
 import java.util.ArrayList;
@@ -42,13 +41,8 @@ public final class PdfGostKursplanungSchuelerMitSchienenKursen {
 	 * @return 						HTTP-Response mit der PDF-Datei oder bei Fehler eine WebApplicationException-Response
 	 */
 	public static Response query(final DBEntityManager conn, final Long blockungsergebnisID, final List<Long> schuelerIDs) {
-
-		try {
-			final PdfBuilder pdfBuilder = getPdfBuilder(conn, blockungsergebnisID, schuelerIDs);
-			return pdfBuilder.getPdfResponse();
-		} catch (WebApplicationException ex) {
-			return ex.getResponse();
-		}
+		final PdfBuilder pdfBuilder = getPdfBuilder(conn, blockungsergebnisID, schuelerIDs);
+		return pdfBuilder.getPdfResponse();
 	}
 
 
