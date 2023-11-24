@@ -15,8 +15,9 @@
 				<template #cell(isTainted)="{ value }">
 					<i-ri-file-damage-line v-if="value === true" />
 				</template>
-				<template #cell(isInConfig)="{ value }">
+				<template #cell(isInConfig)="{ value, rowData }">
 					<i-ri-settings-2-line v-if="value === true" />
+					<i-ri-alert-fill v-if="rowData.isDeactivated === true" class="text-error" />
 				</template>
 				<template v-if="hasRootPrivileges" #actions>
 					<svws-ui-button v-if="selectedItems.length > 0" type="trash" @click="removeSchemata" />
