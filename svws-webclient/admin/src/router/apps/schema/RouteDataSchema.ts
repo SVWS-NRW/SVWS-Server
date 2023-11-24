@@ -148,10 +148,7 @@ export class RouteDataSchema {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
-		const result = new SimpleOperationResponse();
-		const list = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
-		result.log = list;
-		result.success = true;
+		const result = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
 		api.status.stop();
 		return result;
 	}
