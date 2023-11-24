@@ -84,7 +84,7 @@ export class ApiConnection {
 	/**
 	 * Versucht eine Verbindung zu dem SVWS-Server mit dem angegebenen Hostnamen aufzubauen.
 	 *
-	 * @param {string} hostname Der Hostname unter der der SVWS-Server erreichbar sein soll
+	 * @param {string} name Der Hostname unter der der SVWS-Server erreichbar sein soll
 	 *
 	 * @returns {Promise<boolean>}
 	 */
@@ -92,35 +92,32 @@ export class ApiConnection {
 		let urlString = `https://${name}`;
 		let url = new URL(urlString);
 		const host = url.host;
-		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
+		console.log(`1. Versuch – Verbindung zum SVWS-Server unter https://${host} ...`);
 		try {
-			const api = new ApiSchemaPrivileged(urlString, "", "");
-			await api.getSchemaListe();
+			const api = new ApiServer(urlString, "", "");
+			await api.isAlivePrivileged();
+			this._hostname.value = host;
+			this._url = urlString;
+			console.log(`Verbindung erfolgreich hergestellt.`);
 			return true;
 		} catch (error) {
-			if ((error instanceof OpenApiError) && error.response?.status === 401) {
-				this._hostname.value = host;
-				this._url = urlString;
-				return true;
-			}
 			console.log(`Verbindung zum SVWS-Server unter https://${host} fehlgeschlagen`);
 		}
 		const hostname = url.hostname;
 		urlString = `https://${hostname}`;
 		url = new URL(urlString);
 		if (host !== hostname) {
-			console.log(`Verbinde zum SVWS-Server unter https://${hostname}...`);
+			console.log(`2. Versuch – Verbindung zum SVWS-Server unter https://${hostname} ...`);
 			try {
-				const api = new ApiSchemaPrivileged(urlString, "", "");
-				await api.getSchemaListe();
+				const api = new ApiServer(urlString, "", "");
+				await api.isAlivePrivileged();
+				this._hostname.value = hostname;
+				this._url = urlString;
+				console.log(`Verbindung erfolgreich hergestellt.`);
 				return true;
 			} catch (error) {
-				if ((error instanceof OpenApiError) && error.response?.status === 401) {
-					this._hostname.value = hostname;
-					this._url = urlString;
-					return true;
-				}
 				console.log(`Verbindung zum SVWS-Server unter https://${hostname} fehlgeschlagen.`);
+				console.log(`Bitte geben Sie einen anderen Hostnamen ein.`);
 			}
 		}
 		return false;
