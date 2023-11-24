@@ -50,9 +50,11 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -1046,16 +1048,34 @@ public class APISchemaPrivileged {
     		   description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern "
     		   		       + "diese in der Schema-Definition existiert.")
     @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
-    		     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
-	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
-	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
-    	// Bestimme den angemeldeten priviligierten Benutzer ...
-    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-    	// ... führe das Update aus ...
-    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
-    	// ... und gebe den Log zurück
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
+    	final SimpleOperationResponse response = new SimpleOperationResponse();
+    	response.success = true;
+    	ResponseBuilder rb;
+    	try {
+	    	// Bestimme den angemeldeten priviligierten Benutzer ...
+	    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	    	// ... führe das Update aus ...
+	    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
+	    	// ... und gebe den Log zurück
+	    	response.log = log.getStrings();
+	    	rb = Response.status(Status.OK);
+    	} catch (final WebApplicationException wae) {
+        	response.success = false;
+        	response.log.add("Fehler beim Aktualisieren des Schemas.");
+        	@SuppressWarnings("resource")
+			final Response resp = wae.getResponse();
+        	rb = (resp == null) ? Response.status(Status.INTERNAL_SERVER_ERROR) : Response.fromResponse(resp);
+        	wae.printStackTrace();
+    	}
+    	return rb.type(MediaType.APPLICATION_JSON).entity(response).build();
     }
 
 
@@ -1071,10 +1091,14 @@ public class APISchemaPrivileged {
     @Path("/api/schema/update/{schema}")
     @Operation(summary = "Aktualisiert das angegebene Schema auf die neueste Revision.",
 	    description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.")
-	@ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
-		 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = String.class))))
-	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
-	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return updateSchema(schemaname, -1, request);
     }

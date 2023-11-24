@@ -781,22 +781,27 @@ export class ApiSchemaPrivileged extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Verlauf des Updates
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<String>
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchemaToCurrent(schema : string) : Promise<List<string>> {
+	public async updateSchemaToCurrent(schema : string) : Promise<SimpleOperationResponse> {
 		const path = "/api/schema/update/{schema}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema);
 		const result : string = await super.postJSON(path, null);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
-		return ret;
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
@@ -808,24 +813,29 @@ export class ApiSchemaPrivileged extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Log vom Verlauf des Updates
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<String>
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} revision - der Pfad-Parameter revision
 	 *
 	 * @returns Der Log vom Verlauf des Updates
 	 */
-	public async updateSchema(schema : string, revision : number) : Promise<List<string>> {
+	public async updateSchema(schema : string, revision : number) : Promise<SimpleOperationResponse> {
 		const path = "/api/schema/update/{schema}/{revision : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
 		const result : string = await super.postJSON(path, null);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<string>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
-		return ret;
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 
