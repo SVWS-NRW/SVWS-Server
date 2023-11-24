@@ -11839,6 +11839,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode isAlivePrivileged für den Zugriff auf die URL https://{hostname}/status/alive/privileged
+	 *
+	 * Eine Test-Methode zum Prüfen, ob die Privileged-API des Serves erreichbar ist oder nicht.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Server ist über die Privileged API erreichbar!
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *
+	 * @returns Der Server ist über die Privileged API erreichbar!
+	 */
+	public async isAlivePrivileged() : Promise<boolean | null> {
+		const path = "/status/alive/privileged";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getServerDBRevision für den Zugriff auf die URL https://{hostname}/status/db/revision
 	 *
 	 * Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.
