@@ -608,9 +608,10 @@ public class GostKursklausurManager {
 				termine.addAll(_terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, 0));
 			return termine;
 		}
-		for (@NotNull List<@NotNull GostKlausurtermin> qTermine : _terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
-			termine.addAll(qTermine);
-		}
+		if (_terminmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
+			for (@NotNull List<@NotNull GostKlausurtermin> qTermine : _terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				termine.addAll(qTermine);
+			}
 		return termine;
 	}
 

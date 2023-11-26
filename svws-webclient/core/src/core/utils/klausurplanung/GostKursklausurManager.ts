@@ -556,9 +556,10 @@ export class GostKursklausurManager extends JavaObject {
 				termine.addAll(this._terminmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, 0));
 			return termine;
 		}
-		for (let qTermine of this._terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
-			termine.addAll(qTermine);
-		}
+		if (this._terminmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
+			for (let qTermine of this._terminmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				termine.addAll(qTermine);
+			}
 		return termine;
 	}
 
