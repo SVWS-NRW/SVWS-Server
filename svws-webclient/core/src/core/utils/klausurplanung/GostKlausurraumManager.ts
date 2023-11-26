@@ -11,17 +11,21 @@ import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKlausurenCollectionSkrsKrs } from '../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrs';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
+import { GostKlausurvorgabe } from '../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostKursklausurManager, cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager } from '../../../core/utils/klausurplanung/GostKursklausurManager';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
 import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum } from '../../../core/data/gost/klausurplanung/GostKlausurraum';
 import type { JavaMap } from '../../../java/util/JavaMap';
+import { GostKlausurtermin, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin } from '../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { GostSchuelerklausurraumstunde } from '../../../core/data/gost/klausurplanung/GostSchuelerklausurraumstunde';
 
 export class GostKlausurraumManager extends JavaObject {
 
 	private readonly _kursklausurManager : GostKursklausurManager;
+
+	private readonly _termin : GostKlausurtermin;
 
 	/**
 	 * Ein Comparator für die GostKlausurräume.
@@ -75,8 +79,9 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
+	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager);
+	public constructor(raum : GostKlausurraum, stunden : List<GostKlausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen GostKursklausuren
@@ -90,30 +95,35 @@ export class GostKlausurraumManager extends JavaObject {
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
+	 * @param termin              der Gost-Klausurtermin
 	 */
-	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager);
+	public constructor(raeume : List<GostKlausurraum>, listRs : List<GostKlausurraumstunde>, listSkrs : List<GostSchuelerklausurraumstunde>, schuelerklausuren : List<GostSchuelerklausur>, kursklausurmanager : GostKursklausurManager, termin : GostKlausurtermin);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausur>, __param4? : GostKursklausurManager) {
+	public constructor(__param0 : GostKlausurraum | List<GostKlausurraum>, __param1 : List<GostKlausurraumstunde>, __param2 : List<GostSchuelerklausur> | List<GostSchuelerklausurraumstunde>, __param3 : GostKursklausurManager | List<GostSchuelerklausur>, __param4 : GostKlausurtermin | GostKursklausurManager, __param5? : GostKlausurtermin) {
 		super();
-		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && (typeof __param4 === "undefined")) {
+		if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum')))) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin')))) && (typeof __param5 === "undefined")) {
 			const raum : GostKlausurraum = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum(__param0);
 			const stunden : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param2);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param3);
+			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param4);
 			this._kursklausurManager = kursklausurmanager;
+			this._termin = termin;
 			const raeume : List<GostKlausurraum> | null = new ArrayList();
 			raeume.add(raum);
 			this.initAll(raeume, stunden, new ArrayList(), schuelerklausuren);
-		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager'))))) {
+		} else if (((typeof __param0 !== "undefined") && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((typeof __param1 !== "undefined") && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((typeof __param2 !== "undefined") && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((typeof __param3 !== "undefined") && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((typeof __param4 !== "undefined") && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager')))) && ((typeof __param5 !== "undefined") && ((__param5 instanceof JavaObject) && ((__param5 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin'))))) {
 			const raeume : List<GostKlausurraum> = cast_java_util_List(__param0);
 			const listRs : List<GostKlausurraumstunde> = cast_java_util_List(__param1);
 			const listSkrs : List<GostSchuelerklausurraumstunde> = cast_java_util_List(__param2);
 			const schuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param3);
 			const kursklausurmanager : GostKursklausurManager = cast_de_svws_nrw_core_utils_klausurplanung_GostKursklausurManager(__param4);
+			const termin : GostKlausurtermin = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurtermin(__param5);
 			this._kursklausurManager = kursklausurmanager;
+			this._termin = termin;
 			this.initAll(raeume, listRs, listSkrs, schuelerklausuren);
 		} else throw new Error('invalid method overload');
 	}
@@ -830,6 +840,54 @@ export class GostKlausurraumManager extends JavaObject {
 	 */
 	public containsKlausurraumKursklausur(idRaum : number, idKursklausur : number) : boolean {
 		return this._schuelerklausurmenge_by_idRaum_and_idKursklausur.contains(idRaum, idKursklausur);
+	}
+
+	/**
+	 * Liefert den enthaltenen Gost-KursklausurManager zurück
+	 *
+	 * @return den KursklausurManager
+	 */
+	public getKursklausurManager() : GostKursklausurManager {
+		return this._kursklausurManager;
+	}
+
+	/**
+	 * Liefert die gemeinsame Klausurdauer aller Kursklausuren, die im übergebenen Raum geschrieben werden.
+	 * Falls die Dauern sich unterscheiden, wird null zurückgegeben.
+	 *
+	 * @param raum der Klausurraum, dessen Klausurdauern überprüft werden.
+	 *
+	 * @return die gemeinsame Klausurdauer aller Kursklausuren, falls keine solche existiert, null
+	 */
+	public getGemeinsameKursklausurdauerByKlausurraum(raum : GostKlausurraum) : number | null {
+		let dauer : number = -1;
+		for (let klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
+			let vorgabe : GostKlausurvorgabe = this._kursklausurManager.vorgabeByKursklausur(klausur);
+			if (dauer === -1)
+				dauer = vorgabe.dauer;
+			if (dauer !== vorgabe.dauer)
+				return null;
+		}
+		return dauer;
+	}
+
+	/**
+	 * Liefert die gemeinsame Klausurdauer aller Kursklausuren, die im übergebenen Raum geschrieben werden.
+	 * Falls die Dauern sich unterscheiden, wird null zurückgegeben.
+	 *
+	 * @param raum der Klausurraum, dessen Klausurdauern überprüft werden.
+	 *
+	 * @return die gemeinsame Klausurdauer aller Kursklausuren, falls keine solche existiert, null
+	 */
+	public getGemeinsamerKursklausurstartByKlausurraum(raum : GostKlausurraum) : number | null {
+		let start : number | null = -1;
+		for (let klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
+			if (start !== null && start === -1)
+				start = klausur.startzeit;
+			if (start === null && klausur.startzeit !== null && !JavaObject.equalsTranspiler(klausur.startzeit, (this._termin.startzeit)) || start !== null && !JavaObject.equalsTranspiler(start, (klausur.startzeit)) && !JavaObject.equalsTranspiler(klausur.startzeit, (this._termin.startzeit)))
+				return null;
+		}
+		return start === null ? this._termin.startzeit : start;
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {

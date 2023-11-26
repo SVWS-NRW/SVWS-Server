@@ -10,6 +10,8 @@ import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrs;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurraumstunde;
@@ -27,6 +29,7 @@ import jakarta.validation.constraints.NotNull;
 public class GostKlausurraumManager {
 
 	private final @NotNull GostKursklausurManager _kursklausurManager;
+	private final @NotNull GostKlausurtermin _termin;
 
 	/** Ein Comparator für die GostKlausurräume. */
 	private static final @NotNull Comparator<@NotNull GostKlausurraum> _compRaum = (final @NotNull GostKlausurraum a, final @NotNull GostKlausurraum b) -> Long.compare(a.id, b.id);
@@ -67,10 +70,12 @@ public class GostKlausurraumManager {
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
+	 * @param termin              der Gost-Klausurtermin
 	 */
 	public GostKlausurraumManager(final @NotNull GostKlausurraum raum, final @NotNull List<@NotNull GostKlausurraumstunde> stunden,
-			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager) {
+			final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
 		_kursklausurManager = kursklausurmanager;
+		_termin = termin;
 		final List<@NotNull GostKlausurraum> raeume = new ArrayList<>();
 		raeume.add(raum);
 		initAll(raeume, stunden, new ArrayList<>(), schuelerklausuren);
@@ -88,10 +93,12 @@ public class GostKlausurraumManager {
 	 * @param schuelerklausuren die Liste der GostSchuelerklausuren des
 	 *                          Gost-Klausurtermins
 	 * @param kursklausurmanager der Kursklausur-Manager
+	 * @param termin              der Gost-Klausurtermin
 	 */
 	public GostKlausurraumManager(final @NotNull List<@NotNull GostKlausurraum> raeume, final @NotNull List<@NotNull GostKlausurraumstunde> listRs,
-			final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager) {
+			final @NotNull List<@NotNull GostSchuelerklausurraumstunde> listSkrs, final @NotNull List<@NotNull GostSchuelerklausur> schuelerklausuren, final @NotNull GostKursklausurManager kursklausurmanager, final @NotNull GostKlausurtermin termin) {
 		_kursklausurManager = kursklausurmanager;
+		_termin = termin;
 		initAll(raeume, listRs, listSkrs, schuelerklausuren);
 	}
 
@@ -867,6 +874,54 @@ public class GostKlausurraumManager {
 	 */
 	public boolean containsKlausurraumKursklausur(final long idRaum, final long idKursklausur) {
 		return _schuelerklausurmenge_by_idRaum_and_idKursklausur.contains(idRaum, idKursklausur);
+	}
+
+	/**
+	 * Liefert den enthaltenen Gost-KursklausurManager zurück
+	 *
+	 * @return den KursklausurManager
+	 */
+	public @NotNull GostKursklausurManager getKursklausurManager() {
+		return _kursklausurManager;
+	}
+
+	/**
+	 * Liefert die gemeinsame Klausurdauer aller Kursklausuren, die im übergebenen Raum geschrieben werden.
+	 * Falls die Dauern sich unterscheiden, wird null zurückgegeben.
+	 *
+	 * @param raum der Klausurraum, dessen Klausurdauern überprüft werden.
+	 *
+	 * @return die gemeinsame Klausurdauer aller Kursklausuren, falls keine solche existiert, null
+	 */
+	public Integer getGemeinsameKursklausurdauerByKlausurraum(final @NotNull GostKlausurraum raum) {
+		int dauer = -1;
+		for (@NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
+			@NotNull GostKlausurvorgabe vorgabe = _kursklausurManager.vorgabeByKursklausur(klausur);
+			if (dauer == -1)
+				dauer = vorgabe.dauer;
+			if (dauer != vorgabe.dauer)
+				return null;
+		}
+		return dauer;
+	}
+
+	/**
+	 * Liefert die gemeinsame Klausurdauer aller Kursklausuren, die im übergebenen Raum geschrieben werden.
+	 * Falls die Dauern sich unterscheiden, wird null zurückgegeben.
+	 *
+	 * @param raum der Klausurraum, dessen Klausurdauern überprüft werden.
+	 *
+	 * @return die gemeinsame Klausurdauer aller Kursklausuren, falls keine solche existiert, null
+	 */
+	public Integer getGemeinsamerKursklausurstartByKlausurraum(final @NotNull GostKlausurraum raum) {
+		Integer start = -1;
+		for (@NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
+			if (start != null && start == -1)
+				start = klausur.startzeit;
+			if (start == null && klausur.startzeit != null && !klausur.startzeit.equals(_termin.startzeit) || start != null && !start.equals(klausur.startzeit) && !klausur.startzeit.equals(_termin.startzeit))
+				return null;
+		}
+		return start == null ? _termin.startzeit : start;
 	}
 
 }

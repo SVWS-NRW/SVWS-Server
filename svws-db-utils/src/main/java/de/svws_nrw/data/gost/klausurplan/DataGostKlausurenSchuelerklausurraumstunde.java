@@ -182,7 +182,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				.map(DataGostKlausurenVorgabe.dtoMapper::apply).toList();
 		final GostKlausurvorgabenManager vorgabenManager = new GostKlausurvorgabenManager(listVorgaben, null);
 		final GostKursklausurManager kursklausurManager = new GostKursklausurManager(vorgabenManager, listKursklausuren, null);
-		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren, kursklausurManager);
+		final GostKlausurraumManager raumManager = new GostKlausurraumManager(raum, listRaumstunden, listSchuelerklausuren, kursklausurManager, DataGostKlausurenTermin.dtoMapper.apply(termin));
 		final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.Datum);
 		final StundenplanManager stundenplanManager = new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
 
