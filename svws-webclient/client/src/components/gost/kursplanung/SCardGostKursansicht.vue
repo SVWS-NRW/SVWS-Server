@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card overflow-scroll :class="{'mr-16': blockungstabelleVisible}">
-		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''" style="scrollbar-gutter: stable;">
+		<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" class="svws-ui-td svws-divider" :class="allow_regeln ? 'col-span-7' : 'col-span-6'">
