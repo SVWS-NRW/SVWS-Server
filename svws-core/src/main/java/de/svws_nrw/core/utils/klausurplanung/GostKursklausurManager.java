@@ -1067,13 +1067,6 @@ public class GostKursklausurManager {
 	 */
 	public boolean hatAbweichendeStartzeitByKursklausur(final @NotNull GostKursklausur klausur) {
 		GostKlausurtermin termin = terminByKursklausur(klausur);
-//		if (klausur.startzeit == null)
-//			return false;
-//		if (termin == null || termin.startzeit == null)
-//			return false;
-//		if (termin.startzeit.equals(klausur.startzeit))
-//			return false;
-//		return true;
 		return !(klausur.startzeit == null || termin == null || termin.startzeit == null || termin.startzeit.equals(klausur.startzeit));
 	}
 

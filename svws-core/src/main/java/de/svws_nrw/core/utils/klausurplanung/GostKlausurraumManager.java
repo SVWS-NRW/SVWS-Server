@@ -918,7 +918,6 @@ public class GostKlausurraumManager {
 		for (@NotNull GostKursklausur klausur : kursklausurGetMengeByRaumid(raum.id)) {
 			if (start != null && start == -1)
 				start = klausur.startzeit;
-			//if (start == null && klausur.startzeit != null && !klausur.startzeit.equals(_termin.startzeit) || start != null && !start.equals(klausur.startzeit) && !klausur.startzeit.equals(_termin.startzeit))
 			if (_kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))
 				return null;
 		}

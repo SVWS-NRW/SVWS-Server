@@ -306,9 +306,9 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs | undefined> => {
-		if ('id' in klausur)
-			return await this.patchKursklausur(id, klausur);
+	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
+		// if ('id' in klausur)
+		return await this.patchKursklausur(id, klausur);
 	}
 
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {

@@ -73,9 +73,9 @@
 		terminStartzeit?: string;
 	}>();
 
-	const klausurenImRaum = () => props.raummanager().kursklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager());
+	const klausurenImRaum = () => props.raummanager().kursklausurGetMengeByRaumid(props.raum.id);
 
-	const anzahlSuS = () => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id, props.kursklausurmanager()).size();
+	const anzahlSuS = () => props.raummanager().schuelerklausurGetMengeByRaumid(props.raum.id).size();
 
 	const anzahlRaumstunden = computed(() => {
 		return props.raummanager().klausurraumstundeGetMengeByRaumid(props.raum.id).size();
