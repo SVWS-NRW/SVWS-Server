@@ -99,7 +99,7 @@ public final class MethodNode {
 		this.returnType = "constructor".equals(this.name) ? null : new TypeNode(plugin, method.getReturnType(), true, isNotNull);
 		plugin.indentC++;
 		this.superConstructorCall = getConstructorSuperCall();
-		this.body = plugin.convertBlock(method.getBody(), this.superConstructorCall != null);
+		this.body = plugin.convertBlock(method.getBody(), this.superConstructorCall != null, null);
 		plugin.indentC--;
 	}
 

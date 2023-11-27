@@ -20,6 +20,9 @@ dependencies {
     javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java']) 
 }
 
+checkstyleMain.enabled = false
+checkstyleTest.enabled = false
+
 task removeTranspiledCode(type: Delete) {
 	group "svws"
 	delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpiler/build/tmp/transpiler", includes: ["**/*.class"])

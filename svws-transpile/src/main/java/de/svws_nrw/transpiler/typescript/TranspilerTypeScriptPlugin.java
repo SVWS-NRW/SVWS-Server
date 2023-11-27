@@ -27,8 +27,10 @@ import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
+import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
@@ -37,6 +39,7 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -55,9 +58,11 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
@@ -82,6 +87,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -703,6 +709,94 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Transpiles the switch expression.
+	 *
+	 * @param node   the switch expression tree node
+	 *
+	 * @return the transpiled switch expression
+	 */
+	public String convertSwitchExpression(final SwitchExpressionTree node) {
+		final String tmpVar = "_sevar_" + node.hashCode();
+		final String tmpExprVar = "_seexpr_" + node.hashCode();
+		final StringBuilder sb = new StringBuilder();
+		sb.append("let ").append(tmpVar).append(";").append(System.lineSeparator());
+		sb.append(getIndent()).append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
+		boolean first = true;
+		for (final CaseTree ct : node.getCases()) {
+			if (ct.getCaseKind() == CaseKind.STATEMENT)
+				throw new TranspilerException("Transpiler Error: Cases of kind STATEMENT are not yet supported in switch expression trees");
+			for (final CaseLabelTree clt : ct.getLabels()) {
+				switch (clt) {
+					case final PatternCaseLabelTree pclt when (pclt.getPattern() instanceof final BindingPatternTree bpt) -> {
+						final VariableTree varNode = bpt.getVariable();
+						final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
+						if (first) {
+							sb.append(System.lineSeparator()).append(getIndent());
+							first = false;
+						} else {
+							sb.append(" else ");
+						}
+						sb.append("if (").append(tmpExprVar).append(" instanceof ").append(typeNode.transpile(false)).append(") {");
+						indentC++;
+						sb.append(System.lineSeparator()).append(getIndent());
+						sb.append("const ").append(varNode.getName()).append(" = ").append(tmpExprVar).append(" as ").append(typeNode.transpile(false)).append(";");
+						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						sb.append(System.lineSeparator());
+						if (!isBlock)
+							sb.append(getIndent()).append(tmpVar).append(" = ");
+						switch (ct.getBody()) {
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final StatementTree st -> sb.append(convertStatement(st, true));
+							case final ExpressionTree et -> sb.append(convertExpression(et));
+							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+						}
+						indentC--;
+						if (!isBlock)
+							sb.append(";").append(System.lineSeparator());
+						sb.append(getIndent());
+						sb.append("}");
+					}
+					case final ConstantCaseLabelTree cclt -> throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					case final DefaultCaseLabelTree dclt -> { /* Der Default Case muss immer der letzte in TS sein */ }
+					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
+				}
+			}
+			for (final CaseLabelTree clt : ct.getLabels()) {
+				switch (clt) {
+					case final PatternCaseLabelTree pclt -> { /* siehe oben */ }
+					case final ConstantCaseLabelTree cclt -> { /* siehe oben */ }
+					case final DefaultCaseLabelTree dclt -> {
+						if (first) {
+							throw new TranspilerException("Transpiler Error: Switch Expression with only a default case is not supported");
+						}
+						sb.append(" else {");
+						indentC++;
+						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						sb.append(System.lineSeparator());
+						if (!isBlock)
+							sb.append(getIndent()).append(tmpVar).append(" = ");
+						switch (ct.getBody()) {
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final StatementTree st -> sb.append(convertStatement(st, true));
+							case final ExpressionTree et -> sb.append(convertExpression(et));
+							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+						}
+						indentC--;
+						if (!isBlock)
+							sb.append(";").append(System.lineSeparator());
+						sb.append(getIndent());
+						sb.append("}");
+					}
+					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
+				}
+			}
+		}
+		sb.append(System.lineSeparator()).append(getIndent());
+		return sb.toString();
+	}
+
+
+	/**
 	 * Transpiles the expression.
 	 *
 	 * @param node   the expression
@@ -727,6 +821,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case final TypeCastTree tc -> convertTypeCast(tc);
 			case final LambdaExpressionTree le -> convertLambdaExpression(le);
 			case final InstanceOfTree io -> convertInstanceOf(io);
+			case final SwitchExpressionTree se -> convertSwitchExpression(se);
 			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
 		};
 	}
@@ -888,7 +983,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertStatement(final StatementTree node, final boolean noIndent) {
 		if ((node instanceof final BlockTree block) && (!noIndent)) {
 			indentC++;
-			final String blockConverted = convertBlock(block, false);
+			final String blockConverted = convertBlock(block, false, null);
 			indentC--;
 			return "{%s%s%s}".formatted(System.lineSeparator(), blockConverted, getIndent());
 		}
@@ -1045,7 +1140,23 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
 		}
+		if (node.getExpression() instanceof final SwitchExpressionTree set)
+			return converted + "return _sevar_" + set.hashCode() + ";";
 		return "return %s;".formatted(converted);
+	}
+
+
+	/**
+	 * Transpiles the yield statement.
+	 *
+	 * @param node       the yield statement
+	 * @param yieldVar   the temporary variable for the switch-yield-expression
+	 *
+	 * @return the transpiled yield statement
+	 */
+	public String convertYield(final YieldTree node, final String yieldVar) {
+		final String converted = convertExpression(node.getValue());
+		return "%s = %s;".formatted(yieldVar, converted);
 	}
 
 
@@ -1090,7 +1201,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Catch clause without a parameter variable is not supported.");
 		String result = "catch(" + param.getName().toString() + ") {" + System.lineSeparator();
 		indentC++;
-		result += convertBlock(node.getBlock(), false);
+		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
 		result += getIndent() + "}";
 		return result;
@@ -1111,7 +1222,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Try with multiple catch clauses currently not supported.");
 		String result = "try {" + System.lineSeparator();
 		indentC++;
-		result += convertBlock(node.getBlock(), false);
+		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
 		result += getIndent() + "}";
 		if (node.getCatches() != null)
@@ -1120,7 +1231,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (finallyBlock != null) {
 			result += " finally {" + System.lineSeparator();
 			indentC++;
-			result += convertBlock(finallyBlock, false);
+			result += convertBlock(finallyBlock, false, null);
 			indentC--;
 			result += getIndent() + "}";
 		}
@@ -1134,10 +1245,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @param node          the statement block
 	 * @param ignoreFirst   if set, the first statement is ignored
 	 *                      (sometimes super constructor calls must be ignored)
+	 * @param yieldVar      the name of the temporary yield variable if yield is used
 	 *
 	 * @return the transpiled block
 	 */
-	public String convertBlock(final BlockTree node, final boolean ignoreFirst) {
+	public String convertBlock(final BlockTree node, final boolean ignoreFirst, final String yieldVar) {
 		if (node == null)
 			return null;
 		final List<? extends StatementTree> childs = node.getStatements();
@@ -1167,6 +1279,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					case TRY -> convertTry((TryTree) child);
 					case THROW -> convertThrow((ThrowTree) child);
 					case EMPTY_STATEMENT -> "";
+					case YIELD -> convertYield((YieldTree) child, yieldVar);
 					default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind() + " currently not supported in statement blocks.");
 				};
 				if (strChild != null)
