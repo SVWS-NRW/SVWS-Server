@@ -1042,4 +1042,39 @@ public class GostKursklausurManager {
 //		return kursklausurByKursidAndHalbjahrAndQuartal(klausur.idKurs, klausur.quartal - 1 == 0 && halbjahr.id % 2 == 1 ? halbjahr.previousOrException() : halbjahr, klausur.quartal - 1 == 0 ? 2 : klausur.quartal - 1);
 	}
 
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public Integer startzeitByKursklausur(final @NotNull GostKursklausur klausur) {
+		GostKlausurtermin termin = terminByKursklausur(klausur);
+		if (klausur.startzeit != null)
+			return klausur.startzeit;
+		return termin == null ? null : termin.startzeit;
+	}
+
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public boolean hatAbweichendeStartzeitByKursklausur(final @NotNull GostKursklausur klausur) {
+		GostKlausurtermin termin = terminByKursklausur(klausur);
+//		if (klausur.startzeit == null)
+//			return false;
+//		if (termin == null || termin.startzeit == null)
+//			return false;
+//		if (termin.startzeit.equals(klausur.startzeit))
+//			return false;
+//		return true;
+		return !(klausur.startzeit == null || termin == null || termin.startzeit == null || termin.startzeit.equals(klausur.startzeit));
+	}
+
 }

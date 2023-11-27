@@ -981,6 +981,34 @@ export class GostKursklausurManager extends JavaObject {
 		return null;
 	}
 
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public startzeitByKursklausur(klausur : GostKursklausur) : number | null {
+		let termin : GostKlausurtermin | null = this.terminByKursklausur(klausur);
+		if (klausur.startzeit !== null)
+			return klausur.startzeit;
+		return termin === null ? null : termin.startzeit;
+	}
+
+	/**
+	 * Gibt die Startzeit der übergebenen Klausur aus. Falls keine individuelle gesetzt ist, wird die des Termins zurückgegeben.
+	 * Sollte kein Termin gesetzt sein oder der Termin keine Startzeit definiert haben, wird null zurückgegeben.
+	 *
+	 * @param klausur die Kursklausur, deren Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit der Klausur
+	 */
+	public hatAbweichendeStartzeitByKursklausur(klausur : GostKursklausur) : boolean {
+		let termin : GostKlausurtermin | null = this.terminByKursklausur(klausur);
+		return !(klausur.startzeit === null || termin === null || termin.startzeit === null || JavaObject.equalsTranspiler(termin.startzeit, (klausur.startzeit)));
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager'].includes(name);
 	}

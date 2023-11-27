@@ -884,7 +884,7 @@ export class GostKlausurraumManager extends JavaObject {
 		for (let klausur of this.kursklausurGetMengeByRaumid(raum.id)) {
 			if (start !== null && start === -1)
 				start = klausur.startzeit;
-			if (start === null && klausur.startzeit !== null && !JavaObject.equalsTranspiler(klausur.startzeit, (this._termin.startzeit)) || start !== null && !JavaObject.equalsTranspiler(start, (klausur.startzeit)) && !JavaObject.equalsTranspiler(klausur.startzeit, (this._termin.startzeit)))
+			if (this._kursklausurManager.hatAbweichendeStartzeitByKursklausur(klausur))
 				return null;
 		}
 		return start === null ? this._termin.startzeit : start;
