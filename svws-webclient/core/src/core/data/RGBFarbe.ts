@@ -45,7 +45,7 @@ export class RGBFarbe extends JavaObject {
 	public constructor(__param0? : number, __param1? : number, __param2? : number) {
 		super();
 		if ((typeof __param0 === "undefined") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
-			// empty block
+			// empty method body
 		} else if (((typeof __param0 !== "undefined") && typeof __param0 === "number") && (typeof __param1 === "undefined") && (typeof __param2 === "undefined")) {
 			const color24Bit : number = __param0 as number;
 			this.red = color24Bit & 255;

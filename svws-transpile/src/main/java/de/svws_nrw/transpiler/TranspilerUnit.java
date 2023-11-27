@@ -573,20 +573,16 @@ public final class TranspilerUnit {
 		for (final AbstractMap.SimpleEntry<IdentifierTree, TreePath> entry : allIdentifier) {
 			final IdentifierTree node = entry.getKey();
 			final TreePath path = entry.getValue();
-			final Tree parent = path.getParentPath().getLeaf();
-			// skip annotations and add all non local identifiers to the import map, also skip case trees
-			if (!((parent instanceof CaseTree) || (parent instanceof ConstantCaseLabelTree) || (parent instanceof AnnotationTree) || (isLocal(path, node)) || ("super".equals(node.getName().toString())) || typeParameters.contains(node.getName().toString()))) {
-				allImports.put(node, getPackageName(node, path, true));
-				// TODO handle static imports...
-			} else if (parent instanceof AnnotationTree) {
-				allAnnotations.put(node, getPackageName(node, path, false));
-			} else if (transpiler.isAnnotationArgument(node)) {
-				switch (parent.getKind()) {
-					case ASSIGNMENT:
-						break;
-					default:
-						allImportsForAnnotations.put(node, getPackageName(node, path, true));
-						break;
+			final Element elem = transpiler.getElement(node);
+			if (elem instanceof TypeElement) {
+				if (transpiler.isAnnotationArgument(node)) {
+					allImportsForAnnotations.put(node, getPackageName(node, path, true));
+				} else {
+					switch (elem.getKind()) {
+						case CLASS, ENUM, INTERFACE -> allImports.put(node, getPackageName(node, path, true));
+						case ANNOTATION_TYPE -> allAnnotations.put(node, getPackageName(node, path, false));
+						default -> throw new TranspilerException("Transpiler Error: Unhandled TypeElement: " + elem.getKind());
+					}
 				}
 			}
 		}
