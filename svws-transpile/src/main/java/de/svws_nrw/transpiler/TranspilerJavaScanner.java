@@ -337,6 +337,7 @@ public final class TranspilerJavaScanner extends TreePathScanner<Object, Transpi
 	@Override
 	public Object visitBindingPattern(final BindingPatternTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
+		transpiler.visitBindingPattern(getCurrentPath(), node);
 		return super.visitBindingPattern(node, transpiler);
 	}
 
