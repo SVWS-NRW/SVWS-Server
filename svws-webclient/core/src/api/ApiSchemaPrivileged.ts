@@ -5,6 +5,7 @@ import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindu
 import { List } from '../java/util/List';
 import { MigrateBody } from '../core/data/db/MigrateBody';
 import { SchemaListeEintrag } from '../core/data/db/SchemaListeEintrag';
+import { SchuleInfo } from '../core/data/schule/SchuleInfo';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 
 export class ApiSchemaPrivileged extends BaseApi {
@@ -149,6 +150,31 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const ret = new ArrayList<string>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuleInfo für den Zugriff auf die URL https://{hostname}/api/schema/liste/info/{schema}/schule
+	 *
+	 * Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zur Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuleInfo
+	 *   Code 400: Das angegebene Schema ist kein SVWS-Schema
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Informationen zur Schule
+	 */
+	public async getSchuleInfo(schema : string) : Promise<SchuleInfo> {
+		const path = "/api/schema/liste/info/{schema}/schule"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuleInfo.transpilerFromJSON(text);
 	}
 
 

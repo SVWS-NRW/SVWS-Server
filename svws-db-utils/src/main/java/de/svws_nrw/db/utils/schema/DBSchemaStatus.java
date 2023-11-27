@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.schule.SchuleInfo;
+import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
@@ -34,6 +36,9 @@ public final class DBSchemaStatus {
 
 	/** Eine Liste mit den aktuellen Versionen der Core-Types in der Datenbank */
 	Map<String, DTOSchemaCoreTypeVersion> coreTypeVersionen = null;
+
+	/** Die Informationen zu der Schule des Schemas */
+	SchuleInfo schuleInfo;
 
 
 	/**
@@ -115,7 +120,8 @@ public final class DBSchemaStatus {
 	public void update(final DBEntityManager conn) {
 		tabellen = DTOInformationSchemaTables.queryNames(conn, schemaName);
 		version = leseDBSchemaVersion(conn);
-		coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen initial eingelesen werden
+		coreTypeVersionen = null; // Muss neu eingelesen werden... darf aber z.B. wegen Migrationen nicht initial eingelesen werden
+		schuleInfo = leseSchuleInfo(conn);
 		// TODO
 	}
 
@@ -157,6 +163,48 @@ public final class DBSchemaStatus {
 
 
 	/**
+	 * Liest die Informationen zu der Schule des Schemas ein.
+	 *
+	 * @param conn   die aktuelle Datenbankverbindung
+	 *
+	 * @return die Informationen zu der Schule
+	 */
+	private SchuleInfo leseSchuleInfo(final DBEntityManager conn) {
+		try {
+			final List<Object[]> results = conn.query("SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM %s.EigeneSchule".formatted(schemaName));
+			if (results.isEmpty())
+				return null;
+			if (results.size() > 1)
+				return null;
+			final Object[] result = results.get(0);
+			if ((result[1] == null) || (result[2] == null))
+				return null;
+			final SchuleInfo info = new SchuleInfo();
+			info.schulNr = (result[1] instanceof final String str) ? Integer.parseInt(str) : -1;
+			if (info.schulNr < 0)
+				return null;
+			final Schulform sf = (result[2] instanceof final String str) ? Schulform.getByKuerzel(str) : null;
+			if (sf == null)
+				return null;
+			info.schulform = sf.daten.kuerzel;
+			info.bezeichnung = (result[3] instanceof final String str) ? str : "???";
+			if (result[4] instanceof final String str)
+				info.bezeichnung += "\n" + str;
+			if (result[5] instanceof final String str)
+				info.bezeichnung += "\n" + str;
+			info.strassenname = (result[6] instanceof final String str) ? str : "";
+			info.hausnummer = (result[7] instanceof final String str) ? str : "";
+			info.hausnummerZusatz = (result[8] instanceof final String str) ? str : "";
+			info.plz = (result[9] instanceof final String str) ? str : "";
+			info.ort = (result[10] instanceof final String str) ? str : "";
+			return info;
+		} catch (@SuppressWarnings("unused") final Exception e) {
+			return null;
+		}
+	}
+
+
+	/**
 	 * Prüft, ob der angegebene Tabellenname in der Datenbank vorhanden ist.
 	 * Dabei ist die Groß- und Klein-Schreibung nicht relevant.
 	 *
@@ -188,6 +236,16 @@ public final class DBSchemaStatus {
 				.collect(Collectors.toMap(dto -> dto.NameTabelle, dto -> dto));
 		}
 		return coreTypeVersionen.get(tabname);
+	}
+
+
+	/**
+	 * Gibt die Informationen zu der Schule zurück.
+	 *
+	 * @return die Informationen zu der Schule
+	 */
+	public SchuleInfo getSchuleInfo() {
+		return schuleInfo;
 	}
 
 

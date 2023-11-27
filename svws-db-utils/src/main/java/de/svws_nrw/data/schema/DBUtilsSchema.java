@@ -2,10 +2,13 @@ package de.svws_nrw.data.schema;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
+import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
@@ -15,6 +18,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
+import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import de.svws_nrw.db.utils.schema.DBSchemaStatus;
 import de.svws_nrw.db.utils.schema.DBSchemaVersion;
@@ -148,6 +152,27 @@ public final class DBUtilsSchema {
 			}
 		}
 		return result;
+    }
+
+
+    /**
+     * Ermittelt die Informationen zu der Schule aus einem SVWS-Schema
+     *
+     * @param conn         die Datenbankverbindung
+     * @param schemaname   der Name des Schemas
+     *
+     * @return die Informationen zu der Schule in dem SVWS-Schema
+     */
+    public static SchuleInfo getSchuleInfo(final DBEntityManager conn, final String schemaname) {
+    	final List<String> schemata = DTOInformationSchema.queryNames(conn);
+    	final Set<String> setSchemata = schemata.stream().map(s -> s.toLowerCase()).collect(Collectors.toSet());
+    	if (!setSchemata.contains(schemaname.toLowerCase()))
+    		throw OperationError.FORBIDDEN.exception("Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
+		final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
+		final DBSchemaVersion version = status.getVersion();
+		if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
+			throw OperationError.BAD_REQUEST.exception("Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
+		return status.getSchuleInfo();
     }
 
 }

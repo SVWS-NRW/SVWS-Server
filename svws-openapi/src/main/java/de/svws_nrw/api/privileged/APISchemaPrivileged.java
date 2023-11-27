@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
+import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -123,6 +124,29 @@ public class APISchemaPrivileged {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Informationen eines SVWS-Schema bezüglich
+     * der Schule.
+     *
+     * @param schemaname   der Name des SVWS-Schema
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Informationen zur Schule
+     */
+    @GET
+    @Path("/api/schema/liste/info/{schema}/schule")
+    @Operation(summary = "Liefert die Informationen zu einer Schule eines SVWS-Schema.",
+    description = "Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
+    @ApiResponse(responseCode = "200", description = "Die Informationen zur Schule",
+    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
+	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein SVWS-Schema")
+	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
+    public SchuleInfo getSchuleInfo(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+			return DBUtilsSchema.getSchuleInfo(conn, schemaname);
+    	}
+    }
 
 
     /**
