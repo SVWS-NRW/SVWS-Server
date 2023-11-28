@@ -66,13 +66,9 @@ publish_windows:
         - job: build
     tags:
         - windows
-    image: eclipse-temurin:17
+    image: svwsnrw/dockerrunner-win
     script:
-        #- curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
-        #- cat gradle_secure.properties >> gradle.properties
-        #- cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
-        #- chmod +x ./deployment/setupVersion.sh
-        #- ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:windows-installer:doZip
     when: on_success
 
