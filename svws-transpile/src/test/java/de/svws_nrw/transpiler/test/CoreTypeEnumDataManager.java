@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> {
 
 	/** Eine Map mit den Daten der initisierten Core-Types */
-	private static @NotNull Map<@NotNull String, @NotNull CoreTypeEnumDataManager<?, ?>> _data = new HashMap<>();
+	private static @NotNull Map<@NotNull String, @NotNull CoreTypeEnumDataManager<? extends @NotNull CoreTypeData, ?>> _data = new HashMap<>();
 
 	/**
 	 * Fügt für den Core-Type einen Core-Type-Manager hinzu
@@ -73,10 +71,10 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	private final @NotNull Map<@NotNull String, @NotNull List<@NotNull T>> _mapBezeichnerToHistorie;
 
 	/** Eine Map mit der Zuordnung der Enum-Einträge zu den Bezeichnern */
-	private final @NotNull LinkedHashMap<@NotNull String, @NotNull U> _mapBezeichnerToEnum = new LinkedHashMap<>();
+	private final @NotNull HashMap<@NotNull String, @NotNull U> _mapBezeichnerToEnum = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Historieneinträge zu den Enum-Einträgen */
-	private final @NotNull LinkedHashMap<@NotNull U, @NotNull List<@NotNull T>> _mapEnumToHistorie = new LinkedHashMap<>();
+	private final @NotNull HashMap<@NotNull U, @NotNull List<@NotNull T>> _mapEnumToHistorie = new HashMap<>();
 
 	/** Eine Map mit der Zuordnung der Historieneinträge zu deren ID */
 	private final @NotNull Map<@NotNull Long, @NotNull T> _mapIDToEintrag = new HashMap<>();
@@ -94,10 +92,10 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
 
 	/** Eine Map mit der Zuordnung der Liste der Werte zu einem Schuljahr */
-	private final @NotNull LinkedHashMap<@NotNull Integer, @NotNull List<@NotNull U>> _mapSchuljahrToWerte = new LinkedHashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, @NotNull List<@NotNull U>> _mapSchuljahrToWerte = new HashMap<>();
 
 	/** Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Core-Type-Wert */
-	private final @NotNull LinkedHashMap<@NotNull Integer, @NotNull LinkedHashMap<@NotNull U, @NotNull T>> _mapWertAndSchuljahrToEintrag = new LinkedHashMap<>();
+	private final @NotNull HashMap<@NotNull Integer, @NotNull HashMap<@NotNull U, @NotNull T>> _mapWertAndSchuljahrToEintrag = new HashMap<>();
 
 
 	/**
@@ -108,7 +106,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 * @param values    ein Array mit allen Werten des Core-Types
 	 * @param data      die Daten für den Core-Type
 	 */
-	public CoreTypeEnumDataManager(final long version, final @NotNull Class<U> clazz,
+	public CoreTypeEnumDataManager(final long version, final @NotNull Class<@NotNull U> clazz,
 			final @NotNull U@NotNull[] values,
 			final @NotNull Map<@NotNull String, @NotNull List<@NotNull T>> data) {
 		_name = clazz.getSimpleName();
@@ -241,7 +239,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 * @return das Set der Core-Type-Werte
 	 */
 	public @NotNull Set<@NotNull U> getWerteByBezeichnerAsSet(final @NotNull List<@NotNull String> bezeichner) {
-		final @NotNull Set<@NotNull U> result = new LinkedHashSet<>();
+		final @NotNull Set<@NotNull U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -258,7 +256,7 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	public @NotNull Set<@NotNull U> getWerteByBezeichnerAsNonEmptySet(final @NotNull List<@NotNull String> bezeichner) {
 		if (bezeichner.isEmpty())
 			throw new RuntimeException(_name + ": Die Liste der Bezeichner " + bezeichner + " ist leer.");
-		final @NotNull Set<@NotNull U> result = new LinkedHashSet<>();
+		final @NotNull Set<@NotNull U> result = new HashSet<>();
 		for (final @NotNull String b : bezeichner)
 			result.add(getWertByBezeichner(b));
 		return result;
@@ -353,10 +351,10 @@ public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @
 	 * @return die Daten aus der Historie
 	 */
 	public T getEintragBySchuljahrUndWert(final int schuljahr, final @NotNull U value) {
-		LinkedHashMap<@NotNull U, @NotNull T> mapEintraege = _mapWertAndSchuljahrToEintrag.get(schuljahr);
+		HashMap<@NotNull U, @NotNull T> mapEintraege = _mapWertAndSchuljahrToEintrag.get(schuljahr);
 		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
 		if (mapEintraege == null) {
-			mapEintraege = new LinkedHashMap<>();
+			mapEintraege = new HashMap<>();
 			// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
 			for (final @NotNull U wert: _listWerte) {
 				// Bestimme zunächst die Historie des Core-Type-Wertes

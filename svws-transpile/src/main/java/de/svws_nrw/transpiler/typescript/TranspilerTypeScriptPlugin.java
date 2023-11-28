@@ -367,6 +367,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + node.getName().toString());
 		final String result = switch (node.getName().toString()) {
 			case strString -> strTsString;
+			case "Enum" -> "JavaEnum";
 			case strLong, strInteger, strShort, strByte, strFloat, strDouble -> strTsNumber;
 			case strBoolean -> "boolean";
 			case strCharacter -> strTsString;
@@ -2469,7 +2470,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		return switch (packageName) {
 			case "java.lang" -> switch (className) {
 				case strObject -> "JavaObject";
-				case "Enum" -> "JavaEnum";
 				case strBoolean -> "JavaBoolean";
 				case strByte -> "JavaByte";
 				case strShort -> "JavaShort";
@@ -2477,6 +2477,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strLong -> "JavaLong";
 				case strFloat -> "JavaFloat";
 				case strDouble -> "JavaDouble";
+				case "Enum" -> "JavaEnum";
 				default -> className;
 			};
 			case "java.util" -> switch (className) {
