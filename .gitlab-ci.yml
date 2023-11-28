@@ -66,7 +66,7 @@ publish_windows:
         - job: build
     tags:
         - windows
-    image: svwsnrw/dockerrunner-win
+    image: eclipse-temurin:17
     script:
         - ./deployment/setupVersion.sh
         - ./gradlew :deployment:windows-installer:doZip
