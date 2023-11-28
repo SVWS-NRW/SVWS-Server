@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <T>   der Type der geladenen Daten
  * @param <U>   der Core-Type
  */
-public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> & CoreType<T, U>> {
+public class CoreTypeEnumDataManager<@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> {
 
 	/** Eine Map mit den Daten der initisierten Core-Types */
 	private static @NotNull Map<@NotNull String, @NotNull CoreTypeEnumDataManager<?, ?>> _data = new HashMap<>();
@@ -33,7 +33,7 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 * @param clazz     die Klassen des Core-Types
 	 * @param manager   der Core-Type-Manager
 	 */
-	public static <T extends CoreTypeData, U extends Enum<U> & CoreType<T, U>> void putManager(final @NotNull Class<U> clazz, final @NotNull CoreTypeEnumDataManager<T, U> manager) {
+	public static <@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> void putManager(final @NotNull Class<@NotNull U> clazz, final @NotNull CoreTypeEnumDataManager<@NotNull T, @NotNull U> manager) {
 		if (_data.containsKey(clazz.getCanonicalName()))
 			throw new RuntimeException("Der Core-Type %s wurde bereits initialisiert. Der erneute Aufruf der Initialisierung ist ein Programmierfehler.".formatted(clazz.getCanonicalName()));
 		_data.put(clazz.getCanonicalName(), manager);
@@ -49,7 +49,7 @@ public class CoreTypeEnumDataManager<T extends CoreTypeData, U extends Enum<U> &
 	 *
 	 * @return der Core-Type-Manager
 	 */
-	public static <T extends CoreTypeData, U extends Enum<U> & CoreType<T, U>> @NotNull CoreTypeEnumDataManager<T, U> getManager(final @NotNull Class<U> clazz) {
+	public static <@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> @NotNull CoreTypeEnumDataManager<@NotNull T, @NotNull U> getManager(final @NotNull Class<@NotNull U> clazz) {
 		@SuppressWarnings("unchecked")
 		final CoreTypeEnumDataManager<T, U> manager = (CoreTypeEnumDataManager<T, U>) _data.get(clazz.getCanonicalName());
 		if (manager == null)
