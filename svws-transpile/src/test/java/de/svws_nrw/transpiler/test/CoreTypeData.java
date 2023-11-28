@@ -2,6 +2,7 @@ package de.svws_nrw.transpiler.test;
 
 import de.svws_nrw.core.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -21,6 +22,22 @@ public class CoreTypeData {
 	/** Die ID des Core-Type-Daten-Eintrags */
 	@Schema(description = "die ID des Core-Type-Daten-Eintrags", example = "4711")
 	public long id = -1;
+
+	/**
+	 * Der numerische Schlüssel als Zeichenkette, welcher im Rahmen der ASD verwendet wird, für eine Historie eindeutig sein muss,
+	 * in einer Historie aber dennoch abweichen kann.
+	 */
+	@Schema(description = "der numerische Schlüssel als Zeichenkette, welcher im Rahmen der ASD verwendet wird, für eine Historie eindeutig sein muss, "
+			+ "in einer Historie aber dennoch abweichen kann", example = "17")
+	public @NotNull String schluessel = "";
+
+	/** Das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
+	@Schema(description = "das Kürzel, welches als Kurztext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "GE")
+	public @NotNull String kuerzel = "";
+
+	/** Die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden. */
+	@Schema(description = "die Bezeichnung, welche als Langtext zu Visualisierung verwendet wird. Sollte nicht als identifizierendes Merkmal verwendet werden", example = "Gesamtschule")
+	public @NotNull String text = "";
 
 	/** Gibt an, in welchem Schuljahr die Schulform einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt. */
 	@Schema(description = "gibt an, in welchem schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "null")

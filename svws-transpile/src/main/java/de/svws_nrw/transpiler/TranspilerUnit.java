@@ -257,7 +257,7 @@ public final class TranspilerUnit {
 		// Check for Classes in java.lang and java.io
 		switch (name) {
 			case "Comparable", "Cloneable", "Override", "System",
-				"Object",
+				"Object", "Class",
 				"Enum",
 				"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
 				"Math", "String", "StringBuilder",
@@ -386,16 +386,18 @@ public final class TranspilerUnit {
 			index = te.getQualifiedName().toString().lastIndexOf('.');
 			enclosing = enclosing.getEnclosingElement();
 		}
-		final String packageName = qualifiedName.substring(0, index);
-		final String className = qualifiedName.substring(index + 1);
-		final String[] classNameParts = className.split("\\.");
-		String tmp = null;
-		for (int i = classNameParts.length - 1; i >= 0; i--) {
-			tmp = (tmp == null) ? classNameParts[i] : classNameParts[i] + "." + tmp;
-			final String old = this.importsSuper.put(tmp, packageName);
-			this.importsFullClassnames.put(tmp, className);
-			if (old != null)  // skip inserting type - it is already known from a previous call - avoid problem due to circular dependencies
-				return;
+		if (index >= 0) {
+			final String packageName = qualifiedName.substring(0, index);
+			final String className = qualifiedName.substring(index + 1);
+			final String[] classNameParts = className.split("\\.");
+			String tmp = null;
+			for (int i = classNameParts.length - 1; i >= 0; i--) {
+				tmp = (tmp == null) ? classNameParts[i] : classNameParts[i] + "." + tmp;
+				final String old = this.importsSuper.put(tmp, packageName);
+				this.importsFullClassnames.put(tmp, className);
+				if (old != null)  // skip inserting type - it is already known from a previous call - avoid problem due to circular dependencies
+					return;
+			}
 		}
 		for (final Element enclosed : elem.getEnclosedElements())
 			if (enclosed instanceof final TypeElement enclosedElem)
