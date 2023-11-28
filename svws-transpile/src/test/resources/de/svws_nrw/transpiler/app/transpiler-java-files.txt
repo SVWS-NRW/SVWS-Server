@@ -1,6 +1,3 @@
-src/test/java/de/svws_nrw/transpiler/test/CoreType.java,
-src/test/java/de/svws_nrw/transpiler/test/Schulform.java,
-src/test/java/de/svws_nrw/transpiler/test/CoreTypeEnumDataManager.java,
 src/test/java/de/svws_nrw/transpiler/test/CoreTypeData.java,
 src/test/java/de/svws_nrw/transpiler/test/SchulformKatalogEintrag.java,
 src/test/java/de/svws_nrw/transpiler/test/BKFBFach.java,
