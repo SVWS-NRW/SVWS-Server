@@ -2277,7 +2277,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append("export ");
 		sb.append("class ");
 		sb.append(node.getSimpleName());
-		sb.append(" extends JavaObject implements JavaEnum<");
+		sb.append(" extends JavaEnum<");
 		sb.append(node.getSimpleName());
 		sb.append("> {");
 		sb.append(System.lineSeparator());
@@ -2285,12 +2285,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		// Generate Attributes
 		indentC++;
-		sb.append(getIndent()).append("/** the name of the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("readonly __name : string;").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-		sb.append(getIndent()).append("/** the ordinal value for the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("readonly __ordinal : number;").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration */").append(System.lineSeparator());
 		sb.append(getIndent()).append("static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -2328,11 +2322,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				.map(method -> new MethodNode(this, node, method, getIndent()))
 				.toList();
 		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		boolean hasToString = false;
 		for (final MethodNode method : methods) {
 			final String methodName = method.getName();
-			if ("toString".equals(methodName))
-				hasToString = true;
 			final List<MethodNode> methodList = mapMethods.get(methodName);
 			if (methodList == null)
 				continue;
@@ -2350,97 +2341,34 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the name of this enumeration value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public name() : string {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
+		sb.append(
+			"""
+			%1$s/**
+			%1$s * Returns an array with enumeration values.
+			%1$s *
+			%1$s * @returns the array with enumeration values
+			%1$s */
+			%1$spublic static values() : Array<%2$s> {
+			%1$s\treturn [...this.all_values_by_ordinal];
+			%1$s}
+			""".formatted(getIndent(), node.getSimpleName())
+		).append(System.lineSeparator());
 
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the ordinal value of this enumeration value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the ordinal value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public ordinal() : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		if (!hasToString) {
-			sb.append(getIndent()).append("/**").append(System.lineSeparator());
-			sb.append(getIndent()).append(" * Returns the name of this enumeration value.").append(System.lineSeparator());
-			sb.append(getIndent()).append(" *").append(System.lineSeparator());
-			sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
-			sb.append(getIndent()).append(" */").append(System.lineSeparator());
-			sb.append(getIndent()).append("public toString() : string {").append(System.lineSeparator());
-			sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
-			sb.append(getIndent()).append("}").append(System.lineSeparator());
-			sb.append(System.lineSeparator());
-		}
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns true if this and the other enumeration values are equal.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param other   the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns true if they are equal and false otherwise").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public equals(other : JavaObject) : boolean {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\tif (!(other instanceof ").append(node.getSimpleName()).append("))").append(System.lineSeparator());
-		sb.append(getIndent()).append("\t\treturn false;").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this === other;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the ordinal value as hashcode, since the ordinal value is unique.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the ordinal value as hashcode").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public hashCode() : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Compares this enumeration value with the other enumeration value by their ordinal value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param other   the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns a negative, zero or postive value as this enumeration value is less than, equal to").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *          or greater than the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public compareTo(other : ").append(node.getSimpleName()).append(") : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal - other.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns an array with enumeration values.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the array with enumeration values").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public static values() : Array<").append(node.getSimpleName()).append("> {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn [...this.all_values_by_ordinal];").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the enumeration value with the specified name.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param name   the name of the enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the enumeration values or null").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public static valueOf(name : string) : ").append(node.getSimpleName()).append(" | null {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\tconst tmp : ").append(node.getSimpleName()).append(" | undefined = this.all_values_by_name.get(name);").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn (!tmp) ? null : tmp;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
+		sb.append(
+			"""
+			%1$s/**
+			%1$s * Returns the enumeration value with the specified name.
+			%1$s *
+			%1$s * @param name   the name of the enumeration value
+			%1$s *
+			%1$s * @returns the enumeration values or null
+			%1$s */
+			%1$spublic static valueOf(name : string) : %2$s | null {
+			%1$s\tconst tmp = this.all_values_by_name.get(name);
+			%1$s\treturn (!tmp) ? null : tmp;
+			%1$s}
+			""".formatted(getIndent(), node.getSimpleName())
+		).append(System.lineSeparator());
 
 		// TODO Typescript code for Iterable (see transpileClass - public [Symbol.iterator](): Iterator ...)
 
@@ -2532,7 +2460,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	}
 
 	/** Ein Set mit allen im Transpiler umbenannten interfaces */
-	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.lang.TranspiledObject",
+	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaIterable", "java.lang.TranspiledObject",
 			"java.util.JavaIterator", "java.util.JavaMap", "java.util.JavaSet", "java.util.function.JavaFunction");
 
 	/**
@@ -2566,7 +2494,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final String value = entry.getValue();
 			final String importCast = "cast_" + value.replace('.', '_') +  "_" + key.replace('.', '_');
 			switch (value + "." + key) {
-				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean" -> {
+				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean",
+						"java.lang.Enum" -> {
 					final String importName = "Java" + key;
 					final String importLocation = importPathPrefix + "java/lang/Java" + key;
 					final boolean hasClass = body.contains(importName);

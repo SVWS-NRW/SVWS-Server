@@ -1,18 +1,11 @@
-import type { JavaEnum } from '../../../java/lang/JavaEnum';
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { Schulstufe } from '../../../core/types/schule/Schulstufe';
 import { HashMap } from '../../../java/util/HashMap';
 import { KAOAAnschlussoptionEintrag } from '../../../core/data/kaoa/KAOAAnschlussoptionEintrag';
 import { Arrays } from '../../../java/util/Arrays';
 import { KAOAZusatzmerkmal } from '../../../core/types/kaoa/KAOAZusatzmerkmal';
 
-export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAnschlussoptionen> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<KAOAAnschlussoptionen> = [];
@@ -236,9 +229,7 @@ export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAn
 	 * @param historie   die Historie der Einträge, welche ein Array von {@link KAOAAnschlussoptionEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<KAOAAnschlussoptionEintrag>) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		KAOAAnschlussoptionen.all_values_by_ordinal.push(this);
 		KAOAAnschlussoptionen.all_values_by_name.set(name, this);
 		this.historie = historie;
@@ -294,67 +285,6 @@ export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAn
 	}
 
 	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public toString() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof KAOAAnschlussoptionen))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : KAOAAnschlussoptionen) : number {
-		return this.__ordinal - other.__ordinal;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values
@@ -371,7 +301,7 @@ export class KAOAAnschlussoptionen extends JavaObject implements JavaEnum<KAOAAn
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : KAOAAnschlussoptionen | null {
-		const tmp : KAOAAnschlussoptionen | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

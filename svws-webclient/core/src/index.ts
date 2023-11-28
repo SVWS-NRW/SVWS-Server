@@ -587,7 +587,7 @@ export { IndexOutOfBoundsException } from './java/lang/IndexOutOfBoundsException
 export { JavaBoolean } from './java/lang/JavaBoolean';
 export { JavaByte } from './java/lang/JavaByte';
 export { JavaDouble } from './java/lang/JavaDouble';
-export type { JavaEnum } from './java/lang/JavaEnum';
+export { JavaEnum } from './java/lang/JavaEnum';
 export { JavaFloat } from './java/lang/JavaFloat';
 export { JavaInteger } from './java/lang/JavaInteger';
 export type { JavaIterable } from './java/lang/JavaIterable';

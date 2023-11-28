@@ -1,15 +1,8 @@
-import type { JavaEnum } from '../../../java/lang/JavaEnum';
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { VerkehrsspracheKatalogEintrag } from '../../../core/data/schule/VerkehrsspracheKatalogEintrag';
 
-export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrssprache> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class Verkehrssprache extends JavaEnum<Verkehrssprache> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<Verkehrssprache> = [];
@@ -2383,9 +2376,7 @@ export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrsspra
 	 * @param historie   die Historie der Verkehrssprache, welches ein Array von {@link VerkehrsspracheKatalogEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<VerkehrsspracheKatalogEintrag>) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		Verkehrssprache.all_values_by_ordinal.push(this);
 		Verkehrssprache.all_values_by_name.set(name, this);
 		this.historie = historie;
@@ -2464,67 +2455,6 @@ export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrsspra
 	}
 
 	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public toString() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof Verkehrssprache))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : Verkehrssprache) : number {
-		return this.__ordinal - other.__ordinal;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values
@@ -2541,7 +2471,7 @@ export class Verkehrssprache extends JavaObject implements JavaEnum<Verkehrsspra
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : Verkehrssprache | null {
-		const tmp : Verkehrssprache | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

@@ -1,4 +1,4 @@
-import type { JavaEnum } from '../../../java/lang/JavaEnum';
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
 import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
@@ -8,13 +8,7 @@ import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
-export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbereich> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class GostFachbereich extends JavaEnum<GostFachbereich> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<GostFachbereich> = [];
@@ -140,9 +134,7 @@ export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbere
 	 * @param faecher        die Fächer des Fachbereichs
 	 */
 	private constructor(name : string, ordinal : number, fachbereiche : List<GostFachbereich> | null, ...faecher : Array<ZulaessigesFach>) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		GostFachbereich.all_values_by_ordinal.push(this);
 		GostFachbereich.all_values_by_name.set(name, this);
 		if (fachbereiche !== null) {
@@ -241,67 +233,6 @@ export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbere
 	}
 
 	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public toString() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof GostFachbereich))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : GostFachbereich) : number {
-		return this.__ordinal - other.__ordinal;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values
@@ -318,7 +249,7 @@ export class GostFachbereich extends JavaObject implements JavaEnum<GostFachbere
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostFachbereich | null {
-		const tmp : GostFachbereich | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 
