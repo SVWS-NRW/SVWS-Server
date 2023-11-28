@@ -68,7 +68,7 @@ publish_windows:
         - windows
     image: eclipse-temurin:17
     script:
-        - ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.bat
         - ./gradlew :deployment:windows-installer:doZip
     when: on_success
 
