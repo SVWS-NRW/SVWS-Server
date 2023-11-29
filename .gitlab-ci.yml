@@ -89,7 +89,7 @@ build_windows:
         - job: build
     tags:
         - windows
-    image: eclipse-temurin:17
+    image: eclipse-temurin:21
     script:
         - ./deployment/setupVersion.ps1
         - ./gradlew :deployment:windows-installer:doZip
