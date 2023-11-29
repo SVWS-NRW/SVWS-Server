@@ -1,6 +1,6 @@
 {
 	"name": "svws-test",
-	"version": "0.8.1-SNAPSHOT",
+	"version": "0.8.1",
 	"description": "",
 	"main": "index.js",
 	"type": "module",
