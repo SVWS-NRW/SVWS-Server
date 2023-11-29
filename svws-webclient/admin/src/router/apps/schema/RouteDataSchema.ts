@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , Comparator,  List, SchuleInfo } from "@core";
-import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
+import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo } from "@core";
+import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -16,6 +16,7 @@ interface RouteStateSchema {
 	mapSchema: Map<string, SchemaListeEintrag>;
 	revision: number | null;
 	schuleInfo: SchuleInfo | undefined;
+	admins: List<BenutzerListeEintrag>;
 	view: RouteNode<any, any>;
 }
 
@@ -27,6 +28,7 @@ export class RouteDataSchema {
 		mapSchema: new Map(),
 		revision: null,
 		schuleInfo: undefined,
+		admins: new ArrayList<BenutzerListeEintrag>(),
 		view: routeSchemaUebersicht,
 	};
 
@@ -94,18 +96,18 @@ export class RouteDataSchema {
 			return;
 		const auswahl = this.mapSchema.has(schema.name) ? schema : undefined;
 		let schuleInfo = undefined;
-		if (auswahl !== undefined)
-			try {
-				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
-			} catch(e) {
-				schuleInfo = undefined;
-			}
-		this.setPatchedState({ auswahl, schuleInfo });
+		let admins: List<BenutzerListeEintrag> = new ArrayList();
+		if (auswahl !== undefined && auswahl.revision > 0) {
+			schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			if (auswahl.revision === this.revision)
+				admins = await api.privileged.getSchemaAdmins(auswahl.name);
+		}
+		this.setPatchedState({ auswahl, schuleInfo, admins });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
 		if (routeSchema.children.includes(view))
-			this.setPatchedState({ view: view });
+			this.setPatchedState({ view });
 		else
 			throw new Error("Diese für das Schema gewählte Ansicht wird nicht unterstützt.");
 	}
@@ -116,6 +118,10 @@ export class RouteDataSchema {
 
 	get auswahl(): SchemaListeEintrag | undefined {
 		return this._state.value.auswahl;
+	}
+
+	get admins(): List<BenutzerListeEintrag> {
+		return new ArrayList<BenutzerListeEintrag>(this._state.value.admins);
 	}
 
 	get auswahlGruppe(): SchemaListeEintrag[] {
