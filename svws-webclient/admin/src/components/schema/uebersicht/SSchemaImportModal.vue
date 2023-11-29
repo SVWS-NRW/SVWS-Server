@@ -19,7 +19,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<template v-if="status !== true">
+			<template v-if="status !== undefined">
 				<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
 				<svws-ui-button type="secondary" @click="add" :disabled="!file || loading"> Wiederherstellen </svws-ui-button>
 			</template>

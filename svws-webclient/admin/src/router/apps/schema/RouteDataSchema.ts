@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
 import type { BenutzerKennwort , Comparator,  List, SchuleInfo } from "@core";
-import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag, SimpleOperationResponse } from "@core";
+import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -227,9 +227,23 @@ export class RouteDataSchema {
 			return result;
 		} catch (error) {
 			api.status.stop();
-			if (error instanceof SimpleOperationResponse)
-				return error;
-			else throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es gabe einen unterwarteten Fehler.");
+			if (error instanceof OpenApiError) {
+				if (error.response instanceof Response) {
+					try {
+						const json = await error.response.text();
+						return SimpleOperationResponse.transpilerFromJSON(json);
+					} catch(e) {
+						const res = new SimpleOperationResponse();
+						res.success = false;
+						res.log.add("Fehler beim Aufruf der API-Methode " + error.response.statusText + " (" + error.response.status + ")");
+						return res;
+					}
+				}
+			}
+			const res = new SimpleOperationResponse();
+			res.success = false;
+			res.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unterwarteten Fehler: " + error);
+			return res;
 		}
 	}
 
