@@ -26,11 +26,6 @@ cache: &global_cache
         - .gradle_user
         - .gradle
 
-before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle_user
-    - ./gradlew --version
-    - java --version
-
 stages:
     - build
     - integration-tests
@@ -130,6 +125,10 @@ build:
         when: always
         reports:
             junit: ./**/build/test-results/test/**/TEST-*.xml
+        paths:
+            - "./build/**"
+            - "./**/build/**"
+        expire_in: "1 days"
 
 sonarqube_analysis:
     stage: analyze
