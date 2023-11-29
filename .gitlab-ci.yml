@@ -31,8 +31,9 @@ stages:
     - build
     - integration-tests
     - analyze
+    - build_linux
+    - build_windows
     - publish
-    - publish_windows
 
 publish:
     stage: publish
@@ -49,14 +50,36 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew signJar publishReleaseAllAndCloseSonatype
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        #- ./gradlew signJar publishReleaseAllAndCloseSonatype
+        #- ./gradlew :deployment:docker:dockerPushAllDockerhub
+        #- ./gradlew :deployment:githubRelease
+        - ls ./artifacts
+    when: on_success
+    dependencies:
+        - build_linux
+        - build_windows
+build_linux:
+    stage: build_linux
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+          when: manual
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+    needs:
+        - job: build
+    script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
         - ./gradlew :deployment:linux-installer:buildLinuxInstaller
-        - ./gradlew :deployment:githubRelease
+        - mkdir artifacts
+        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts
+    artifacts:
+        paths:
+            - artifacts/
     when: on_success
 
-publish_windows:
-    stage: publish_windows
+build_windows:
+    stage: build_windows
     rules:
         - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
           when: manual
@@ -70,6 +93,11 @@ publish_windows:
     script:
         - ./deployment/setupVersion.ps1
         - ./gradlew :deployment:windows-installer:doZip
+        - mkdir artifacts
+            - cp -r ./deployment/windows-installer/build/SVWS-Server-Installer-win.zip ./artifacts
+    artifacts:
+        paths:
+            - artifacts/
     when: on_success
 
 integration-tests:
