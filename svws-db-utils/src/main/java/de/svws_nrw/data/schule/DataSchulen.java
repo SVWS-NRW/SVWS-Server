@@ -197,4 +197,16 @@ public final class DataSchulen extends DataManager<Long> {
 		return super.deleteBasic(id, DTOSchuleNRW.class, dtoMapper);
 	}
 
+
+	/**
+	 * Löscht mehrere Schul-Katalog-Einträge
+	 *
+	 * @param ids   die IDs der Einträge
+	 *
+	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
+	 */
+	public Response deleteMultiple(final List<Long> ids) {
+		return super.deleteBasicMultiple(ids, DTOSchuleNRW.class, dtoMapper);
+	}
+
 }
