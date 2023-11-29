@@ -27,7 +27,6 @@ interface RouteState {
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
-	gostLaufbahnBeratungsdaten: GostLaufbahnplanungBeratungsdaten;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: Abiturdaten | undefined;
@@ -47,7 +46,6 @@ export class RouteData {
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
-		gostLaufbahnBeratungsdaten: new GostLaufbahnplanungBeratungsdaten(),
 		mapFachkombinationen: new Map(),
 		mapLehrer: new Map(),
 		zwischenspeicher: undefined,
@@ -138,9 +136,6 @@ export class RouteData {
 		}
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
 		const faecherManager = new GostFaecherManager(daten.faecher);
-		// Initialisiere die Beratungsdaten für den Schüler
-		const gostLaufbahnBeratungsdaten = new GostLaufbahnplanungBeratungsdaten();
-		gostLaufbahnBeratungsdaten.kommentar = daten.anmerkungen;
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
 		// Erstelle das Schüler-Objekt für die Anzeige
@@ -220,7 +215,6 @@ export class RouteData {
 		for (const bl of this._state.value.gostJahrgangsdaten.beratungslehrer)
 			daten.beratungslehrer.add(bl);
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
-		daten.anmerkungen = (this._state.value.gostLaufbahnBeratungsdaten.kommentar === null) ? "" : this._state.value.gostLaufbahnBeratungsdaten.kommentar;
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
 		s.vorname = this._state.value.auswahl.vorname;
@@ -248,7 +242,6 @@ export class RouteData {
 		return daten;
 	}
 
-
 	get hatAuswahl(): boolean {
 		return (this._state.value.auswahl !== undefined);
 	}
@@ -273,10 +266,6 @@ export class RouteData {
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
 		return this._state.value.gostBelegpruefungsArt;
-	}
-
-	get gostLaufbahnBeratungsdaten(): GostLaufbahnplanungBeratungsdaten {
-		return this._state.value.gostLaufbahnBeratungsdaten;
 	}
 
 	get mapLehrer(): Map<number, LehrerListeEintrag> {
@@ -407,11 +396,6 @@ export class RouteData {
 			throw new UserNotificationException(e instanceof Error ? e.message : "Unbekannter Fehler aufgetreten.");
 		}
 	}
-
-	patchBeratungsdaten = async (data : Partial<GostLaufbahnplanungBeratungsdaten>) => {
-		// Hier ist nichts zu tun, da nicht mit der API des SVWS-Server kommuniziert wird
-	}
-
 
 	get zwischenspeicher(): Abiturdaten | undefined {
 		return this._state.value.zwischenspeicher;

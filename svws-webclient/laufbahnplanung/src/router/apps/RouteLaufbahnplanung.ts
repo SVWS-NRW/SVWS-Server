@@ -41,8 +41,6 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 			importLaufbahnplanung: routeApp.data.importLaufbahnplanung,
 			schueler: routeApp.data.auswahl,
 			gostJahrgangsdaten: routeApp.data.gostJahrgangsdaten,
-			gostLaufbahnBeratungsdaten: () => routeApp.data.gostLaufbahnBeratungsdaten,
-			patchBeratungsdaten: routeApp.data.patchBeratungsdaten,
 			gostBelegpruefungsArt: () => routeApp.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => routeApp.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => routeApp.data.abiturdatenManager,

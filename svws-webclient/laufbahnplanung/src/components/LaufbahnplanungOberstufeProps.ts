@@ -8,8 +8,6 @@ export interface LaufbahnplanungOberstufeProps {
 	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
 	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;
-	gostLaufbahnBeratungsdaten: () => GostLaufbahnplanungBeratungsdaten;
-	patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
