@@ -84,6 +84,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	public getProps(to: RouteLocationNormalized): SchemaAppProps {
 		return {
 			auswahl: this.data.auswahl,
+			schuleInfo: this.data.schuleInfo,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),

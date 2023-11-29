@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , Comparator,  List} from "@core";
+import type { BenutzerKennwort , Comparator,  List, SchuleInfo } from "@core";
 import { DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
@@ -15,6 +15,7 @@ interface RouteStateSchema {
 	auswahlGruppe: SchemaListeEintrag[];
 	mapSchema: Map<string, SchemaListeEintrag>;
 	revision: number | null;
+	schuleInfo: SchuleInfo | undefined;
 	view: RouteNode<any, any>;
 }
 
@@ -25,6 +26,7 @@ export class RouteDataSchema {
 		auswahlGruppe: [],
 		mapSchema: new Map(),
 		revision: null,
+		schuleInfo: undefined,
 		view: routeSchemaUebersicht,
 	};
 
@@ -91,7 +93,14 @@ export class RouteDataSchema {
 		if ((schema === undefined) || (this.mapSchema.size === 0))
 			return;
 		const auswahl = this.mapSchema.has(schema.name) ? schema : undefined;
-		this.setPatchedState({ auswahl });
+		let schuleInfo = undefined;
+		if (auswahl !== undefined)
+			try {
+				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			} catch(e) {
+				schuleInfo = undefined;
+			}
+		this.setPatchedState({ auswahl, schuleInfo });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -131,6 +140,10 @@ export class RouteDataSchema {
 
 	get revision(): number | null {
 		return this._state.value.revision;
+	}
+
+	get schuleInfo(): SchuleInfo | undefined {
+		return this._state.value.schuleInfo;
 	}
 
 	gotoSchema = async (value: SchemaListeEintrag | undefined) => {
