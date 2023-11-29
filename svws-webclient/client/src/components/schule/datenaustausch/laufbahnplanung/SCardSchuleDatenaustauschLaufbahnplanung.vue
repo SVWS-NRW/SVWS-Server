@@ -9,11 +9,7 @@
 					<svws-ui-spinner :spinning="loading" />
 				</div>
 			</div>
-			<svws-ui-notification v-if="logs" :type="status === true ? 'success' : 'error'">
-				<template #stack>
-					<log-box :logs="logs" :status="status" />
-				</template>
-			</svws-ui-notification>
+			<log-box :logs="logs" :status="status" />
 		</div>
 	</div>
 </template>

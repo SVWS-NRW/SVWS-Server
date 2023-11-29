@@ -28,12 +28,7 @@
 			</template>
 		</template>
 		<template #modalLogs>
-			<svws-ui-notification v-if="logs" :type="status === true ? 'success' : 'error'">
-				<template #header>Import {{ status === true ? "erfolgreich" : "fehlgeschlagen" }}</template>
-				<template #stack>
-					<log-box :logs="logs" :status="status" />
-				</template>
-			</svws-ui-notification>
+			<log-box :logs="logs" :status="status" />
 		</template>
 	</svws-ui-modal>
 </template>
