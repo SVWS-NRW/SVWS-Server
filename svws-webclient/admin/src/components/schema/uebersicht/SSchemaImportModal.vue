@@ -8,7 +8,7 @@
 					Achtung, bei der Wiederherstellung eines Schemas werden alle aktuell in diesem Schema hinterlegten Daten gelöscht.
 					<div class="flex gap-3">
 						SQLite-Datei auswählen:
-						<input type="file" @change="onFileChanged" :disabled="loading">
+						<input type="file" accept=".sqlite" @change="onFileChanged" :disabled="loading">
 					</div>
 					<template v-if="loading">
 						<div class="flex">

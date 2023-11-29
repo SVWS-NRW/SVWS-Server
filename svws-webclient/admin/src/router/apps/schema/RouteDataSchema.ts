@@ -219,7 +219,7 @@ export class RouteDataSchema {
 
 	restoreSchema = async (data: FormData) => {
 		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Es soll ein Backup angelegt werden, aber es ist kein Schema ausgewählt.");
+			throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		try {
 			const result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
@@ -227,7 +227,9 @@ export class RouteDataSchema {
 			return result;
 		} catch (error) {
 			api.status.stop();
-			throw new DeveloperNotificationException("Die Wiederherstellung der übergebenen SQLite-Datenbank war nicht erfolgreich");
+			if (error instanceof SimpleOperationResponse)
+				return error;
+			else throw new DeveloperNotificationException("Es soll ein Backup wiederhergestellt werden, aber es gabe einen unterwarteten Fehler.");
 		}
 	}
 

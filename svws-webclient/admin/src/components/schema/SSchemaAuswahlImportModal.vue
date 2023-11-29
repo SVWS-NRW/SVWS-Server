@@ -8,7 +8,7 @@
 					<svws-ui-text-input v-model="schema" required placeholder="Schemaname" />
 					<div class="flex gap-3">
 						SQLite-Datei auswählen:
-						<input type="file" @change="onFileChanged" :disabled="loading">
+						<input type="file" accept=".sqlite" @change="onFileChanged" :disabled="loading">
 					</div>
 					<template v-if="loading">
 						<div class="flex">
@@ -22,15 +22,20 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
+			<template v-if="status !== true">
+				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
+			</template>
+			<template v-else>
+				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
+			</template>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { SimpleOperationResponse } from "@core";
+	import type { List, SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -44,6 +49,8 @@
 
 
 	const loading = ref<boolean>(false);
+	const logs = ref<List<string|null>>();
+	const status = ref<boolean>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
@@ -67,11 +74,19 @@
 		formData.append("database", file.value);
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
-		await props.importSchema(formData, schema.value);
+		const result = await props.importSchema(formData, schema.value);
+		logs.value = result.log;
+		status.value = result.success;
 		schema.value = '';
 		user.value = '';
 		password.value = '';
 		showModal().value = false;
 		loading.value = false;
+	}
+
+	function close() {
+		showModal().value = false;
+		logs.value = undefined;
+		status.value = undefined;
 	}
 </script>

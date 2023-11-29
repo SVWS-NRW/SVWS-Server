@@ -1,5 +1,5 @@
 <template>
-	<div v-if="logs != null" class="mt-4">
+	<div v-if="logs != null" class="mt-4 h-84">
 		<div :class="{ 'text-error': status === false, 'text-success': status === true }">
 			<span class="flex mb-4 text-headline-md">
 				<i-ri-checkbox-circle-fill v-if="(status === true)" class="mr-1" />

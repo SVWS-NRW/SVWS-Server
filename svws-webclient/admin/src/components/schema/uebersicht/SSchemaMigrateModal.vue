@@ -29,15 +29,23 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="migrate" :disabled="loading"> Migrieren </svws-ui-button>
+			<template v-if="status !== true">
+				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="migrate" :disabled="loading"> Migrieren </svws-ui-button>
+			</template>
+			<template v-else>
+				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
+			</template>
+		</template>
+		<template #modalLogs>
+			<log-box :logs="logs" :status="status" />
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { SimpleOperationResponse } from "@core";
+	import type { List, SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -64,6 +72,8 @@
 	const zielUsername = ref("");
 	const zielUserPassword = ref("");
 	const loading = ref<boolean>(false);
+	const logs = ref<List<string|null>>();
+	const status = ref<boolean>();
 
 	async function migrate() {
 		loading.value = true;
@@ -82,12 +92,22 @@
 		formData.append('schemaUsername', zielUsername.value);
 		formData.append('schemaUserPassword', zielUserPassword.value);
 		try {
-			await props.migrateSchema(formData);
+			const result = await props.migrateSchema(formData);
+			logs.value = result.log;
+			status.value = result.success;
 		} catch (e) {
 			console.log(e);
+			status.value = false;
 		}
 		loading.value = false;
-		showModal().value = false;
+		schema.value = '';
+		user.value = '';
+		password.value = '';
+		location.value = '';
+		schulnummer.value = '';
+		zielSchema.value = '';
+		zielUserPassword.value = '';
+		zielUsername.value = '';
 	}
 
 	const file = ref<File | null>(null);
@@ -104,5 +124,20 @@
 		if (target && target.files) {
 			file.value = target.files[0];
 		}
+	}
+
+	function close() {
+		showModal().value = false;
+		loading.value = false;
+		logs.value = undefined;
+		status.value = undefined;
+		schema.value = '';
+		user.value = '';
+		password.value = '';
+		location.value = '';
+		schulnummer.value = '';
+		zielSchema.value = '';
+		zielUserPassword.value = '';
+		zielUsername.value = '';
 	}
 </script>

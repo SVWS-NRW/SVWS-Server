@@ -18,15 +18,23 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="duplicate" :disabled="schema === '' || loading"> Duplizieren </svws-ui-button>
+			<template v-if="status !== true">
+				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="duplicate" :disabled="loading"> Duplizieren </svws-ui-button>
+			</template>
+			<template v-else>
+				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
+			</template>
+		</template>
+		<template #modalLogs>
+			<log-box :logs="logs" :status="status" />
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { SimpleOperationResponse } from "@core";
+	import type { List, SimpleOperationResponse } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
@@ -37,6 +45,8 @@
 	const user = ref<string>('');
 	const password = ref<string>('');
 	const loading = ref<boolean>(false);
+	const logs = ref<List<string|null>>();
+	const status = ref<boolean>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
@@ -50,9 +60,16 @@
 		const formData = new FormData();
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
-		await props.duplicateSchema(formData, schema.value);
-		showModal().value = false;
+		const result = await props.duplicateSchema(formData, schema.value);
+		logs.value = result.log;
+		status.value = result.success;
 		loading.value = false;
+		schema.value = '';
 	}
 
+	function close() {
+		showModal().value = false;
+		logs.value = undefined;
+		status.value = undefined;
+	}
 </script>
