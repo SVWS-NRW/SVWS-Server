@@ -75,8 +75,15 @@ public enum Religion {
 	/** Die Historie mit den Einträgen der Religionen */
 	public final @NotNull ReligionKatalogEintrag@NotNull[] historie;
 
-	/** Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln */
-	private static final @NotNull HashMap<@NotNull String, Religion> _mapKuerzel = new HashMap<>();
+	/** Eine Hashmap mit allen definierten Religionen, zugeordnet zu ihren Kürzeln */
+	private static final @NotNull HashMap<@NotNull String, @NotNull Religion> _mapByKuerzel = new HashMap<>();
+
+	/** Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind. */
+	private static final @NotNull HashMap<@NotNull Long, @NotNull ReligionKatalogEintrag> _mapEintragById = new HashMap<>();
+
+	/** Eine Hashmap mit allen definierten Religionen, zugeordnet zu den IDs der Historieneinträgen */
+	private static final @NotNull HashMap<@NotNull Long, @NotNull Religion> _mapById = new HashMap<>();
+
 
 
 	/**
@@ -99,14 +106,49 @@ public enum Religion {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
-	private static @NotNull HashMap<@NotNull String, Religion> getMapByKuerzel() {
-		if (_mapKuerzel.size() == 0) {
-			for (final Religion s : Religion.values()) {
+	private static @NotNull HashMap<@NotNull String, @NotNull Religion> getMapByKuerzel() {
+		if (_mapByKuerzel.size() == 0) {
+			for (final @NotNull Religion s : Religion.values()) {
 				if (s.daten != null)
-					_mapKuerzel.put(s.daten.kuerzel, s);
+					_mapByKuerzel.put(s.daten.kuerzel, s);
 			}
 		}
-		return _mapKuerzel;
+		return _mapByKuerzel;
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs der Historien-Einträge der Religionen auf die
+	 * zugehörigen Religionen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs der Religion-Katalog-Einträge auf die zugehörigen Religionen
+	 */
+	private static @NotNull HashMap<@NotNull Long, @NotNull Religion> getMapById() {
+		if (_mapById.size() == 0) {
+			for (final @NotNull Religion s : Religion.values()) {
+				for (final @NotNull ReligionKatalogEintrag e : s.historie)
+					_mapById.put(e.id, s);
+			}
+		}
+		return _mapById;
+	}
+
+
+	/**
+	 * Gibt eine Map von den IDs der Religion-Katalog-Einträge auf die zugehörigen
+	 * Religion-Katalog-Einträge zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den Kürzels der Religion-Katalog-Einträge auf die zugehörigen Religion-Katalog-Einträge
+	 */
+	private static @NotNull HashMap<@NotNull Long, @NotNull ReligionKatalogEintrag> getMapEintragById() {
+		if (_mapEintragById.size() == 0) {
+			for (final Religion s : Religion.values()) {
+				for (final @NotNull ReligionKatalogEintrag e : s.historie)
+					_mapEintragById.put(e.id, e);
+			}
+		}
+		return _mapEintragById;
 	}
 
 
@@ -120,5 +162,30 @@ public enum Religion {
 	public static Religion getByKuerzel(final String kuerzel) {
 		return getMapByKuerzel().get(kuerzel);
 	}
+
+
+	/**
+	 * Gibt die Religion für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Religion
+	 *
+	 * @return die Religion oder null, falls die ID ungültig ist
+	 */
+	public static Religion getByID(final long id) {
+		return getMapById().get(id);
+	}
+
+
+	/**
+	 * Gibt den Religion-Katalog-Eintrag anhand der angegebenen ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Religion-Katalog-Eintrag oder null, falls kein Eintrag mit dieser ID vorhanden ist
+	 */
+	public static ReligionKatalogEintrag getEintragByID(final long id) {
+		return getMapEintragById().get(id);
+	}
+
 
 }

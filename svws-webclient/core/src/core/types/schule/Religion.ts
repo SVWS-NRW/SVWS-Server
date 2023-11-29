@@ -81,9 +81,19 @@ export class Religion extends JavaEnum<Religion> {
 	public readonly historie : Array<ReligionKatalogEintrag>;
 
 	/**
-	 * Eine Hashmap mit allen definierten Einschulungsarten, zugeordnet zu ihren Kürzeln
+	 * Eine Hashmap mit allen definierten Religionen, zugeordnet zu ihren Kürzeln
 	 */
-	private static readonly _mapKuerzel : HashMap<string, Religion | null> = new HashMap();
+	private static readonly _mapByKuerzel : HashMap<string, Religion> = new HashMap();
+
+	/**
+	 * Eine Map mit allen Historien-Einträgen, welche ihrer ID zugeordnet sind.
+	 */
+	private static readonly _mapEintragById : HashMap<number, ReligionKatalogEintrag> = new HashMap();
+
+	/**
+	 * Eine Hashmap mit allen definierten Religionen, zugeordnet zu den IDs der Historieneinträgen
+	 */
+	private static readonly _mapById : HashMap<number, Religion> = new HashMap();
 
 	/**
 	 * Erzeugt eine neue Religion in der Aufzählung.
@@ -106,14 +116,47 @@ export class Religion extends JavaEnum<Religion> {
 	 *
 	 * @return die Map von den Kürzeln auf die zugehörigen Religionen
 	 */
-	private static getMapByKuerzel() : HashMap<string, Religion | null> {
-		if (Religion._mapKuerzel.size() === 0) {
+	private static getMapByKuerzel() : HashMap<string, Religion> {
+		if (Religion._mapByKuerzel.size() === 0) {
 			for (const s of Religion.values()) {
 				if (s.daten !== null)
-					Religion._mapKuerzel.put(s.daten.kuerzel, s);
+					Religion._mapByKuerzel.put(s.daten.kuerzel, s);
 			}
 		}
-		return Religion._mapKuerzel;
+		return Religion._mapByKuerzel;
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der Historien-Einträge der Religionen auf die
+	 * zugehörigen Religionen zurück.
+	 * Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den IDs der Religion-Katalog-Einträge auf die zugehörigen Religionen
+	 */
+	private static getMapById() : HashMap<number, Religion> {
+		if (Religion._mapById.size() === 0) {
+			for (const s of Religion.values()) {
+				for (const e of s.historie)
+					Religion._mapById.put(e.id, s);
+			}
+		}
+		return Religion._mapById;
+	}
+
+	/**
+	 * Gibt eine Map von den IDs der Religion-Katalog-Einträge auf die zugehörigen
+	 * Religion-Katalog-Einträge zurück. Sollte diese noch nicht initialisiert sein, so wird sie initialisiert.
+	 *
+	 * @return die Map von den Kürzels der Religion-Katalog-Einträge auf die zugehörigen Religion-Katalog-Einträge
+	 */
+	private static getMapEintragById() : HashMap<number, ReligionKatalogEintrag> {
+		if (Religion._mapEintragById.size() === 0) {
+			for (const s of Religion.values()) {
+				for (const e of s.historie)
+					Religion._mapEintragById.put(e.id, e);
+			}
+		}
+		return Religion._mapEintragById;
 	}
 
 	/**
@@ -125,6 +168,28 @@ export class Religion extends JavaEnum<Religion> {
 	 */
 	public static getByKuerzel(kuerzel : string | null) : Religion | null {
 		return Religion.getMapByKuerzel().get(kuerzel);
+	}
+
+	/**
+	 * Gibt die Religion für die angegebene ID zurück.
+	 *
+	 * @param id   die ID der Religion
+	 *
+	 * @return die Religion oder null, falls die ID ungültig ist
+	 */
+	public static getByID(id : number) : Religion | null {
+		return Religion.getMapById().get(id);
+	}
+
+	/**
+	 * Gibt den Religion-Katalog-Eintrag anhand der angegebenen ID zurück.
+	 *
+	 * @param id   die ID
+	 *
+	 * @return der Religion-Katalog-Eintrag oder null, falls kein Eintrag mit dieser ID vorhanden ist
+	 */
+	public static getEintragByID(id : number) : ReligionKatalogEintrag | null {
+		return Religion.getMapEintragById().get(id);
 	}
 
 	/**
