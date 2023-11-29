@@ -73,8 +73,8 @@ public class Tabelle_K_Ortsteil extends SchemaTabelle {
 
 	/** Die Definition des Unique-Index K_Ortsteil_UC1 */
 	public SchemaTabelleUniqueIndex unique_K_Ortsteil_UC1 = addUniqueIndex("K_Ortsteil_UC1",
-			col_Bezeichnung
-		)
+		col_Ort_ID,
+		col_Bezeichnung)
 		.setRevision(SchemaRevisionen.REV_1);
 
 
