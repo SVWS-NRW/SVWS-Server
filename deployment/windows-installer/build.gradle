@@ -20,8 +20,8 @@ println "Version " + project.ext.svwsArtifactVersion
 
 group = 'de.svws-nrw'
 version = project.ext.svwsArtifactVersion
-sourceCompatibility = 17
-targetCompatibility = 17
+sourceCompatibility = 21
+targetCompatibility = 21
 
 ext.svws_version = version
 
