@@ -44,7 +44,6 @@ export class RouteLaufbahnplanung extends RouteNode<unknown, RouteApp> {
 			gostBelegpruefungsArt: () => routeApp.data.gostBelegpruefungsArt,
 			gostBelegpruefungErgebnis: () => routeApp.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => routeApp.data.abiturdatenManager,
-			mapLehrer: routeApp.data.mapLehrer,
 			id: undefined,
 			zwischenspeicher: routeApp.data.zwischenspeicher === undefined ? undefined : new GostLaufbahnplanungDaten(),
 			saveLaufbahnplanung: routeApp.data.saveLaufbahnplanung,

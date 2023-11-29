@@ -11,7 +11,6 @@ export interface LaufbahnplanungOberstufeProps {
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	gostBelegpruefungErgebnis: () => GostBelegpruefungErgebnis;
 	abiturdatenManager: () => AbiturdatenManager;
-	mapLehrer: Map<number, LehrerListeEintrag>;
 	id?: number;
 	zwischenspeicher?: GostLaufbahnplanungDaten;
 	saveLaufbahnplanung: () => Promise<void>;

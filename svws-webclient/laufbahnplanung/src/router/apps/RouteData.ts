@@ -5,15 +5,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
 import type { ApiFile, GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
-import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr,
-	LehrerListeEintrag,
-	AbiturFachbelegungHalbjahr,
-	DeveloperNotificationException,
-	GostKursart,
-	SchuleStammdaten,
-	GostLaufbahnplanungDatenSchueler,
-	GostLaufbahnplanungDatenFachbelegung} from "@core";
+import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung} from "@core";
 
 
 interface RouteState {
@@ -28,7 +20,6 @@ interface RouteState {
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
-	mapLehrer: Map<number, LehrerListeEintrag>;
 	zwischenspeicher: Abiturdaten | undefined;
 	view: RouteNode<any, any>;
 }
@@ -47,7 +38,6 @@ export class RouteData {
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
 		mapFachkombinationen: new Map(),
-		mapLehrer: new Map(),
 		zwischenspeicher: undefined,
 		view: routeLadeDaten
 	}
@@ -122,18 +112,6 @@ export class RouteData {
 		gostJahrgangsdaten.beginnZusatzkursSW = daten.beginnZusatzkursSW;
 		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
 		gostJahrgangsdaten.textMailversand = null;
-		for (const bl of daten.beratungslehrer)
-			gostJahrgangsdaten.beratungslehrer.add(bl);
-		// Initialisiere die Map für die Beratungslehrer
-		const mapLehrer = new Map<number, LehrerListeEintrag>();
-		for (const bl of daten.beratungslehrer) {
-			const l = new LehrerListeEintrag();
-			l.id = bl.id;
-			l.kuerzel = bl.kuerzel === null ? "???" : bl.kuerzel;
-			l.nachname = bl.nachname === null ? "???" : bl.nachname;
-			l.vorname = bl.vorname === null ? "???" : bl.vorname;
-			mapLehrer.set(l.id, l);
-		}
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
 		const faecherManager = new GostFaecherManager(daten.faecher);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
@@ -186,7 +164,6 @@ export class RouteData {
 			mapFachkombinationen,
 			gostJahrgang,
 			gostJahrgangsdaten,
-			mapLehrer,
 			faecherManager,
 			abiturdaten,
 			abiturdatenManager: abiturdatenManager,
@@ -212,8 +189,6 @@ export class RouteData {
 		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
 		for (const fk of this._state.value.mapFachkombinationen)
 			daten.fachkombinationen.add(fk[1]);
-		for (const bl of this._state.value.gostJahrgangsdaten.beratungslehrer)
-			daten.beratungslehrer.add(bl);
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
@@ -266,10 +241,6 @@ export class RouteData {
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
 		return this._state.value.gostBelegpruefungsArt;
-	}
-
-	get mapLehrer(): Map<number, LehrerListeEintrag> {
-		return this._state.value.mapLehrer;
 	}
 
 	get faechermanager(): GostFaecherManager {
