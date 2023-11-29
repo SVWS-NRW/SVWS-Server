@@ -155,8 +155,6 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	        // Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 	        final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, kurs.Blockung_ID);
 	        final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-	        if (vorlage == null)
-	        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 	    	for (final Entry<String, Object> entry : map.entrySet()) {
 	    		final String key = entry.getKey();
 	    		final Object value = entry.getValue();
@@ -184,10 +182,14 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 	    			case "istKoopKurs" -> kurs.IstKoopKurs = JSONMapper.convertToBoolean(value, false);
 	    			case "suffix" -> kurs.BezeichnungSuffix = JSONMapper.convertToString(value, false, true, Schema.tab_Gost_Blockung_Kurse.col_BezeichnungSuffix.datenlaenge());
 	    			case "anzahlSchienen" -> {
+	    		        if (vorlage == null)
+	    		        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 	    			    final int schienenAnzahl = JSONMapper.convertToInteger(value, false);
     			    	updateSchienenAnzahl(kurs, vorlage.ID, schienenAnzahl);
 	    			}
 	    			case "wochenstunden" -> {
+	    		        if (vorlage == null)
+	    		        	throw OperationError.BAD_REQUEST.exception("Der Kurs kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
 	    				kurs.Wochenstunden = JSONMapper.convertToInteger(value, false);
 	    				if ((kurs.Wochenstunden < 1) || (kurs.Wochenstunden > 40))
 	    					throw OperationError.BAD_REQUEST.exception();
