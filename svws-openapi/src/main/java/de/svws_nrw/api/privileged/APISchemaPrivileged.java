@@ -6,6 +6,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
@@ -137,14 +138,37 @@ public class APISchemaPrivileged {
     @GET
     @Path("/api/schema/liste/info/{schema}/schule")
     @Operation(summary = "Liefert die Informationen zu einer Schule eines SVWS-Schema.",
-    description = "Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
+    	description = "Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
     @ApiResponse(responseCode = "200", description = "Die Informationen zur Schule",
-    content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
 	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein SVWS-Schema")
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
     public SchuleInfo getSchuleInfo(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 			return DBUtilsSchema.getSchuleInfo(conn, schemaname);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der administrativen Benutzer in einem aktuellen SVWS-Schema.
+     *
+     * @param schemaname   der Name des SVWS-Schema
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste der administrativen Benutzer
+     */
+    @GET
+    @Path("/api/schema/liste/info/{schema}/admins")
+    @Operation(summary = "Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.",
+    	description = "Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.")
+    @ApiResponse(responseCode = "200", description = "Die Informationen zu den administrativen Benutzern",
+    	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerListeEintrag.class))))
+	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein aktuelles SVWS-Schema")
+	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
+    public List<BenutzerListeEintrag> getSchemaAdmins(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+			return DBUtilsSchema.getAdmins(conn, schemaname);
     	}
     }
 

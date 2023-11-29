@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
+import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -16,6 +17,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.utils.OperationError;
@@ -165,7 +167,7 @@ public final class DBUtilsSchema {
      */
     public static SchuleInfo getSchuleInfo(final DBEntityManager conn, final String schemaname) {
     	final List<String> schemata = DTOInformationSchema.queryNames(conn);
-    	final Set<String> setSchemata = schemata.stream().map(s -> s.toLowerCase()).collect(Collectors.toSet());
+    	final Set<String> setSchemata = schemata.stream().map(String::toLowerCase).collect(Collectors.toSet());
     	if (!setSchemata.contains(schemaname.toLowerCase()))
     		throw OperationError.FORBIDDEN.exception("Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
 		final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
@@ -173,6 +175,55 @@ public final class DBUtilsSchema {
 		if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 			throw OperationError.BAD_REQUEST.exception("Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
 		return status.getSchuleInfo();
+    }
+
+
+    /**
+     * Ermittelt die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema
+     *
+     * @param conn         die Datenbankverbindung
+     * @param schemaname   der Name des Schemas
+     *
+     * @return die Informationen zu den administrativen Benutzern in dem SVWS-Schema
+     */
+    public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) {
+    	final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn);
+    	SchemaListeEintrag schema = null;
+    	for (final SchemaListeEintrag s : schemata) {
+    		if (s.name.equalsIgnoreCase(schemaname)) {
+    			schema = s;
+    			break;
+    		}
+    	}
+    	if (schema == null)
+    		throw OperationError.BAD_REQUEST.exception("Es existiert kein SVWS-Schema mit dem Namen %s.".formatted(schemaname));
+    	final SchemaRevisionen rev = SVWSKonfiguration.get().getServerMode() == ServerMode.DEV ? SchemaRevisionen.maxDeveloperRevision : SchemaRevisionen.maxRevision;
+    	if (schema.revision < rev.revision)
+    		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist nicht aktuell (%d).".formatted(schemaname, schema.revision));
+    	if (schema.revision > rev.revision)
+    		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist neuer (%d) als die vom Server unterstützte Version (%d).".formatted(schemaname, schema.revision, rev.revision));
+
+    	try {
+			final Benutzer neu = conn.getUser().connectTo(schemaname);
+			try (DBEntityManager schemaConn = neu.getEntityManager()) {
+		    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryNamed("DTOViewBenutzerdetails.istadmin", true, DTOViewBenutzerdetails.class);
+		    	final List<BenutzerListeEintrag> result = new ArrayList<>();
+		    	for (final DTOViewBenutzerdetails admin : admins) {
+		    		final BenutzerListeEintrag b = new BenutzerListeEintrag();
+		    		b.id = admin.ID;
+		    		b.typ = admin.Typ.id;
+		    		b.typID = admin.TypID;
+		    		b.anzeigename = admin.AnzeigeName;
+		    		b.name = admin.Benutzername;
+		    		b.istAdmin = admin.IstAdmin;
+		    		b.idCredentials = admin.credentialID;
+		    		result.add(b);
+		    	}
+		    	return result;
+			}
+		} catch (@SuppressWarnings("unused") final DBException e) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Zugriff auf das SVWS-Schema %s.".formatted(schemaname));
+		}
     }
 
 }

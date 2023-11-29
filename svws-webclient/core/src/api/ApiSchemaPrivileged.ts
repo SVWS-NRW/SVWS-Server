@@ -1,6 +1,7 @@
 import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { ArrayList } from '../java/util/ArrayList';
 import { BenutzerKennwort } from '../core/data/BenutzerKennwort';
+import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { List } from '../java/util/List';
 import { MigrateBody } from '../core/data/db/MigrateBody';
@@ -149,6 +150,33 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<string>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchemaAdmins für den Zugriff auf die URL https://{hostname}/api/schema/liste/info/{schema}/admins
+	 *
+	 * Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zu den administrativen Benutzern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BenutzerListeEintrag>
+	 *   Code 400: Das angegebene Schema ist kein aktuelles SVWS-Schema
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Informationen zu den administrativen Benutzern
+	 */
+	public async getSchemaAdmins(schema : string) : Promise<List<BenutzerListeEintrag>> {
+		const path = "/api/schema/liste/info/{schema}/admins"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<BenutzerListeEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
