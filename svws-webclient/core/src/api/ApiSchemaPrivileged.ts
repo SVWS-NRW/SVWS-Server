@@ -1,10 +1,12 @@
 import { BaseApi, type ApiFile } from '../api/BaseApi';
 import { ArrayList } from '../java/util/ArrayList';
 import { BenutzerKennwort } from '../core/data/BenutzerKennwort';
+import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { List } from '../java/util/List';
 import { MigrateBody } from '../core/data/db/MigrateBody';
 import { SchemaListeEintrag } from '../core/data/db/SchemaListeEintrag';
+import { SchuleInfo } from '../core/data/schule/SchuleInfo';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 
 export class ApiSchemaPrivileged extends BaseApi {
@@ -149,6 +151,58 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const ret = new ArrayList<string>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JSON.parse(text).toString()); });
 		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchemaAdmins für den Zugriff auf die URL https://{hostname}/api/schema/liste/info/{schema}/admins
+	 *
+	 * Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zu den administrativen Benutzern
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<BenutzerListeEintrag>
+	 *   Code 400: Das angegebene Schema ist kein aktuelles SVWS-Schema
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Informationen zu den administrativen Benutzern
+	 */
+	public async getSchemaAdmins(schema : string) : Promise<List<BenutzerListeEintrag>> {
+		const path = "/api/schema/liste/info/{schema}/admins"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<BenutzerListeEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(BenutzerListeEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuleInfo für den Zugriff auf die URL https://{hostname}/api/schema/liste/info/{schema}/schule
+	 *
+	 * Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Informationen zur Schule
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuleInfo
+	 *   Code 400: Das angegebene Schema ist kein SVWS-Schema
+	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Informationen zur Schule
+	 */
+	public async getSchuleInfo(schema : string) : Promise<SchuleInfo> {
+		const path = "/api/schema/liste/info/{schema}/schule"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchuleInfo.transpilerFromJSON(text);
 	}
 
 
@@ -770,6 +824,72 @@ export class ApiSchemaPrivileged extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return (text === "true");
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateSchemaToCurrent für den Zugriff auf die URL https://{hostname}/api/schema/update/{schema}
+	 *
+	 * Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Verlauf des Updates
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Verlauf des Updates
+	 */
+	public async updateSchemaToCurrent(schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/update/{schema}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode updateSchema für den Zugriff auf die URL https://{hostname}/api/schema/update/{schema}/{revision : \d+}
+	 *
+	 * Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern diese in der Schema-Definition existiert.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Verlauf des Updates
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 400: Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 404: Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein interner-Server-Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} revision - der Pfad-Parameter revision
+	 *
+	 * @returns Der Log vom Verlauf des Updates
+	 */
+	public async updateSchema(schema : string, revision : number) : Promise<SimpleOperationResponse> {
+		const path = "/api/schema/update/{schema}/{revision : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{revision\s*(:[^}]+)?}/g, revision.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
 	}
 
 

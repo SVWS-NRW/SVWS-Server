@@ -2,17 +2,17 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Kursplanung - Kurs mit Teilnehmern</title>
+		<title>Kurse mit Schülern</title>
 		<link rel="stylesheet" href="KursMitKursschuelern.css" />
 	</head>
 
 	<body>
-		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Kursplanungskurse}">
+		<div class="start-new-page" th:each="Kurs,itStatKurs : ${KursplanungKurse}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${(Schule.bezeichnung1 != null) ? Schule.bezeichnung1 : ''} + '<br/>' + ${(Schule.bezeichnung2 != null) ? Schule.bezeichnung2 : ''} + '<br/>' + ${(Schule.bezeichnung3 != null) ? Schule.bezeichnung3 : ''}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.Bezeichnung} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefte} + '<br/>Schulnummer: ' + ${Schule.schulNr}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
+			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefte} + '<br/>Schulnummer: ' + ${Schule.schulNr}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(Kursplanungskurse)}">Gesamtdruck Kurs 13/57</span></div>
+			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(KursplanungKurse)}">Gesamtdruck Kurs 13/57</span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 			<table class="fixed-layout-100 no-space-pad">
@@ -41,9 +41,9 @@
 				<tbody>
 					<tr><td colspan="15" class="pad-top"></td></tr>
 					<tr>
-						<td class="fb" th:text="${Kurs.Bezeichnung}">GE-GK2</td>
+						<td class="fb" th:text="${Kurs.bezeichnung}">GE-GK2</td>
 						<td></td>
-						<td class="fb" th:text="${Kurs.lehrkraefte}">ABCD</td>
+						<td class="fb" th:text="${Kurs.lehrkraefte}">ABC</td>
 						<td></td>
 						<td class="fb" th:text="${Kurs.kursart}">GK</td>
 						<td></td>
@@ -100,13 +100,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Schueler,itStatSchueler : ${Kurs.Kursschueler}" th:classappend="${itStatSchueler.odd} ? 'bg-lightgrey'">
-						<td class="bob-grey tc-grey" th:text="${#numbers.formatInteger(itStatSchueler.count,2)} + '.'">Nr.</td>
+					<tr th:each="Schueler,iterStatSchueler : ${Kurs.Kursschueler}" th:classappend="${iterStatSchueler.odd} ? 'bg-lightgrey'">
+						<td class="bob-grey tc-grey" th:text="${#numbers.formatInteger(iterStatSchueler.count,2)} + '.'">Nr.</td>
 						<td class="bob-grey" th:text="${Schueler.nachname} + ', ' + ${Schueler.vorname}">Mustermann, Max</td>
 						<td th:if="(${Kurs.anzahlExterneTeilnehmer} != 0)" class="bob-grey ta-c" th:text="${Schueler.externeSchulNr}">123456</td>
-						<td class="bob-grey ta-c" th:text="${Schueler.belegung}">s</td>
+						<td class="bob-grey ta-c" th:text="${Schueler.istSchriftlich ? 's' : 'm'}">s</td>
 						<td class="bob-grey ta-c" th:text="${Schueler.abiturfach}">3</td>
-						<td class="bob-grey ta-c" th:text="${Schueler.getGeburtsdatum()}">22.08.2008</td>
+						<td class="bob-grey ta-c" th:text="${#svwsDate.toDE(Schueler.geburtsdatum)}">22.08.2008</td>
 						<td class="bob-grey ta-c" th:text="${Schueler.getGeschlecht().kuerzel}">w</td>
 					</tr>
 				</tbody>

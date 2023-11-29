@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost.klausurplan;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -16,9 +18,7 @@ import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.OperationError;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
@@ -70,7 +70,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
 	 * {@link DTOGostKlausurenTermine} in einen Core-DTO {@link GostKlausurtermin}.
 	 */
-	private final Function<DTOGostKlausurenTermine, GostKlausurtermin> dtoMapper = (final DTOGostKlausurenTermine z) -> {
+	public static final Function<DTOGostKlausurenTermine, GostKlausurtermin> dtoMapper = (final DTOGostKlausurenTermine z) -> {
 		final GostKlausurtermin daten = new GostKlausurtermin();
 		daten.id = z.ID;
 		daten.abijahr = z.Abi_Jahrgang;
@@ -88,24 +88,35 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 	 * Gost-Halbjahr zurück.
 	 *
 	 * @param halbjahr das Gost-Halbjahr
+	 * @param ganzesSchuljahr true, um Termine für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
 	 *
 	 * @return die Liste der Kursklausuren
 	 */
-	private List<GostKlausurtermin> getKlausurtermine(final int halbjahr) {
-		DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
-		return conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr = :hj", DTOGostKlausurenTermine.class)
+	public List<GostKlausurtermin> getKlausurtermine(final int halbjahr, final boolean ganzesSchuljahr) {
+		final GostHalbjahr ghj = DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
+		List<GostKlausurtermin> termine = null;
+		if (halbjahr <= 0)
+			termine = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid", DTOGostKlausurenTermine.class)
 				.setParameter("jgid", _abiturjahr)
-				.setParameter("hj", DataGostKlausurenVorgabe.checkHalbjahr(halbjahr))
-				.getResultList()
-				.stream()
+				.getResultList().stream()
 				.map(dtoMapper::apply)
 				.toList();
+		else {
+			termine = conn.query("SELECT t FROM DTOGostKlausurenTermine t WHERE t.Abi_Jahrgang = :jgid AND t.Halbjahr IN :hj", DTOGostKlausurenTermine.class)
+			.setParameter("jgid", _abiturjahr)
+			.setParameter("hj", Arrays.asList(ganzesSchuljahr ? ghj.getSchuljahr() : new GostHalbjahr[]{ghj}))
+			.getResultList().stream()
+			.map(dtoMapper::apply)
+			.toList();
+		}
+		return termine;
 	}
 
 	@Override
 	public Response get(final Long halbjahr) {
+		throw new UnsupportedOperationException();
 		// Kursklausuren für einen Abiturjahrgang in einem Gost-Halbjahr
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurtermine(halbjahr.intValue())).build();
+		// return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(this.getKlausurtermine(halbjahr.intValue())).build();
 	}
 
 	@Override

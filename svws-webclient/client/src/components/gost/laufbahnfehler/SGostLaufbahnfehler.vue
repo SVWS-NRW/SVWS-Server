@@ -14,7 +14,7 @@
 			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
 				<div class="flex flex-wrap gap-x-5">
 					<svws-ui-checkbox type="toggle" v-model="filterFehler">Nur Fehler</svws-ui-checkbox>
-					<svws-ui-checkbox type="toggle" v-model="filterExterne">Externe</svws-ui-checkbox>
+					<svws-ui-checkbox type="toggle" v-model="filterExterne">Externe ausblenden</svws-ui-checkbox>
 				</div>
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			</div>

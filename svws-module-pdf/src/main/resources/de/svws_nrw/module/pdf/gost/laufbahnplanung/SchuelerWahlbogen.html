@@ -2,7 +2,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Kursplanung - Kurs mit Teilnehmern</title>
+		<title>Wahlbogen-Laufbahnplanung</title>
 		<link rel="stylesheet" href="SchuelerWahlbogen.css" />
 	</head>
 
@@ -53,21 +53,21 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="Fachwahl : ${Schueler.Fachwahlen}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.FachIstBelegtInGOSt}"  th:style="'background-color: rgb(' + ${Fachwahl.FarbeClientRGB} + ');'">
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.Kuerzel}"><b>D</b></td>
-						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.Bezeichnung}"><b>Deutsch</b></td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.JahrgangFremdsprachenbeginn}">
+					<tr th:each="Fachwahl : ${Schueler.Fachwahlen}" th:if="${!DruckparameterNurBelegteFaecher || Fachwahl.fachIstBelegtInGOSt}"  th:style="'background-color: rgb(' + ${Fachwahl.farbeClientRGB} + ');'">
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.kuerzel}"><b>D</b></td>
+						<td class="fachbezeichnung kompakt" th:text="${Fachwahl.bezeichnung}"><b>Deutsch</b></td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:switch="${Fachwahl.jahrgangFremdsprachenbeginn}">
 							<span th:case="'HSU'">HSU-Prüfung</span>
 							<span th:case="'SFP'">Festst.prüf.</span>
-							<span th:case="*" th:if="${!#strings.isEmpty(Fachwahl.JahrgangFremdsprachenbeginn)}" th:text="${Fachwahl.PositionFremdsprachenfolge} + ' (ab Jg. ' + ${Fachwahl.JahrgangFremdsprachenbeginn} + ')'">2 (ab Jg. 7)</span>
+							<span th:case="*" th:if="${!#strings.isEmpty(Fachwahl.jahrgangFremdsprachenbeginn)}" th:text="${Fachwahl.positionFremdsprachenfolge} + ' (ab Jg. ' + ${Fachwahl.jahrgangFremdsprachenbeginn} + ')'">2 (ab Jg. 7)</span>
 						</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.BelegungEF1}">S</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.BelegungEF2}">S</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.BelegungQ11}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.BelegungQ12}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.BelegungQ21}">LK</td>
-						<td class="fachdetails kompakt" th:text="${Fachwahl.BelegungQ22}">LK</td>
-						<td class="fachdetails kompakt" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${Fachwahl.Abiturfach}">1</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungEF1}">S</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungEF2}">S</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid;" th:text="${Fachwahl.belegungQ11}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ12}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ21}">LK</td>
+						<td class="fachdetails kompakt" th:text="${Fachwahl.belegungQ22}">LK</td>
+						<td class="fachdetails kompakt" style="border-left: 1px grey solid; border-right: 1px grey solid;" th:text="${Fachwahl.abiturfach}">1</td>
 					</tr>
 				</tbody>
 				<tfoot>
@@ -105,7 +105,7 @@
 					</tr>
 					<tr th:if="${DruckparameterNurBelegteFaecher}">
 						<td colspan="10" class="tiny" style="font-style: italic">
-							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${Schueler.Fachwahlen}" th:text="${Fachwahl.Bezeichnung} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
+							<p>Wählbare Fächer des Abiturjahrgangs: <span th:each="Fachwahl,iterStatFach : ${Schueler.Fachwahlen}" th:text="${Fachwahl.bezeichnung} + ${iterStatFach.count != iterStatFach.size ? ', ' : ''}">Deutsch, Englisch</span></p>
 						</td>
 					</tr>
 				</tfoot>
@@ -114,7 +114,7 @@
 				<p><u>Bemerkungen der Schule zur Gesamtlaufbahn:</u></p>
 				<p th:if="${#strings.isEmpty(Schueler.kommentar) && #lists.isEmpty(Schueler.Fehler)}"><i>- keine -</i></p>
 				<ul th:if="${!(#strings.isEmpty(Schueler.kommentar) && #lists.isEmpty(Schueler.Fehler))}">
-					<li th:if="${!#lists.isEmpty(Schueler.Fehler)}" th:each="FehlerBelegung : ${Schueler.Fehler}" th:text="${FehlerBelegung.belegungsfehler}">Fehlertext</li>
+					<li th:if="${!#lists.isEmpty(Schueler.Fehler)}" th:each="FehlerBelegung : ${Schueler.Fehler}" th:text="${FehlerBelegung.meldung}">Fehlertext</li>
 					<li th:if="${!#strings.isEmpty(Schueler.kommentar)}" th:text="${Schueler.kommentar}">Kommentar</li>
 				</ul>
 			</div>
@@ -122,7 +122,7 @@
 				<p><u>Sonstige Hinweise zur Gesamtlaufbahn:</u></p>
 				<p th:if="${#lists.isEmpty(Schueler.Hinweise)}"><i>- keine -</i></p>
 				<ul th:if="${!#lists.isEmpty(Schueler.Hinweise)}">
-					<li th:each="HinweisBelegung : ${Schueler.Hinweise}" th:text="${HinweisBelegung.belegungshinweis}">Hinweistext</li>
+					<li th:each="HinweisBelegung : ${Schueler.Hinweise}" th:text="${HinweisBelegung.meldung}">Hinweistext</li>
 				</ul>
 			</div>
 			<div style="page-break-inside: avoid;">

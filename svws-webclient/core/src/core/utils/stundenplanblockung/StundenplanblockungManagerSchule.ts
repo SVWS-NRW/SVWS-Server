@@ -12,7 +12,6 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 	 */
 	public constructor() {
 		super();
-		// empty block
 	}
 
 	/**

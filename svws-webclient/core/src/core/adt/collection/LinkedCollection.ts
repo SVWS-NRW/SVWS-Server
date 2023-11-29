@@ -1,3 +1,4 @@
+import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { IndexOutOfBoundsException } from '../../../java/lang/IndexOutOfBoundsException';
 import type { Deque } from '../../../java/util/Deque';
@@ -623,7 +624,11 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable'].includes(name);
+		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
+	}
+
+	public reversed() : Deque<E> {
+		throw new UnsupportedOperationException("Der Transpiler unterstützt diese Methode noch nicht.");
 	}
 
 	public [Symbol.iterator](): Iterator<E> {

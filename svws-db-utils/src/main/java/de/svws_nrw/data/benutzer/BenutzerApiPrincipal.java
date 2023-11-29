@@ -113,6 +113,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 				|| path.matches("/api/schema/create/.*")
 				|| path.matches("/api/schema/import/.*")
 				|| path.matches("/api/schema/export/.*")
+				|| path.matches("/api/schema/update/.*")
 				|| path.matches("/api/schema/migrate/.*");
 
 		// Bestimme das Schema, auf welches zugegriffen wird anhand des aktuellen Pfades - gehe zunächst davon aus, dass kein Schema gewählt ist

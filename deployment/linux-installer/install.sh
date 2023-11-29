@@ -277,7 +277,16 @@ echo "Lade Abhängigkeiten ..."
 # Paketliste aktualisieren ohne Ausgabe
 apt update
 # Installieren von Abhängigkeiten in ruhigem Modus (-qq)
-apt-get -y install gettext zip wget openjdk-17-jre curl software-properties-common dirmngr gnupg2
+apt-get -y install gettext zip wget curl software-properties-common dirmngr gnupg2 apt-transport-https sed grep
+mkdir -p /etc/apt/keyrings
+wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc
+if [ `cat /etc/os-release | grep ^NAME= | sed -e "s/NAME=//g"` = "Debian GNU/Linux" ]; then
+	echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+else
+	echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^UBUNTU_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+fi
+apt -y update
+apt -y install temurin-21-jdk
 
 # Installation der Datenbank
 

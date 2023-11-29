@@ -9,8 +9,7 @@
 # https://gradle.org/
 # https://github.com/gradle/gradle
 
-
-image: svwsnrw/dockerrunner
+image: svwsnrw/dockerrunner:21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
 # is usually a priority over speed in CI environments. Using a fresh
@@ -26,6 +25,11 @@ cache: &global_cache
         - ./**/build
         - .gradle_user
         - .gradle
+
+before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle_user
+    - ./gradlew --version
+    - java --version
 
 stages:
     - build

@@ -1,4 +1,4 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt, List} from "@core";
+import type { SchuelerListeEintrag, SchuelerStammdaten, KlassenListeEintrag, JahrgangsListeEintrag, KursListeEintrag, GostJahrgang, Schuljahresabschnitt } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
 import { shallowRef } from "vue";
 
@@ -19,6 +19,7 @@ interface RouteStateSchueler {
 }
 
 export class RouteDataSchueler {
+	
 	private static _defaultState : RouteStateSchueler = {
 		idSchuljahresabschnitt: -1,
 		schuelerListeManager: new SchuelerListeManager(null, new ArrayList<SchuelerListeEintrag>(), new ArrayList<JahrgangsListeEintrag>, new ArrayList<KlassenListeEintrag>, new ArrayList<KursListeEintrag>(), new ArrayList<Schuljahresabschnitt>(), new ArrayList<GostJahrgang>()),

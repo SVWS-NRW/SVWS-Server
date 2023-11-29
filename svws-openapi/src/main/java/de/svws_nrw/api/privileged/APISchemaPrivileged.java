@@ -1,16 +1,16 @@
 package de.svws_nrw.api.privileged;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.BenutzerKennwort;
 import de.svws_nrw.core.data.SimpleOperationResponse;
+import de.svws_nrw.core.data.benutzer.BenutzerListeEintrag;
 import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
+import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -34,8 +34,6 @@ import de.svws_nrw.db.utils.OperationError;
 import de.svws_nrw.db.utils.schema.DBMigrationManager;
 import de.svws_nrw.db.utils.schema.DBRootManager;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
-import de.svws_nrw.db.utils.schema.DBSchemaStatus;
-import de.svws_nrw.db.utils.schema.DBSchemaVersion;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -50,9 +48,11 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.ResponseBuilder;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -99,28 +99,7 @@ public class APISchemaPrivileged {
     public List<SchemaListeEintrag> getSVWSSchemaListe(@Context final HttpServletRequest request) {
     	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     	try (DBEntityManager conn = user.getEntityManager()) {
-			// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
-			final List<String> all = DTOInformationSchema.queryNames(conn);
-			final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
-			final SVWSKonfiguration config = SVWSKonfiguration.get();
-			// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
-			for (final String schemaname : all) {
-				final DBSchemaStatus status = DBSchemaStatus.read(user, schemaname);
-				final DBSchemaVersion version = status.getVersion();
-				if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
-					continue;
-				if (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE) {
-					final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
-					final SchemaListeEintrag schemainfo = new SchemaListeEintrag();
-					schemainfo.name = (schemanameConfig == null) ? schemaname : schemanameConfig;
-					schemainfo.revision = version.getRevisionOrDefault(-1);
-					schemainfo.isTainted = version.isTainted();
-					schemainfo.isInConfig = (schemanameConfig != null);
-					schemainfo.isDeactivated = config.isDeactivatedSchema(schemaname);
-					result.add(schemainfo);
-				}
-			}
-			return result;
+    		return DBUtilsSchema.getSVWSSchemaListe(conn);
     	}
     }
 
@@ -146,6 +125,52 @@ public class APISchemaPrivileged {
     	}
     }
 
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Informationen eines SVWS-Schema bezüglich
+     * der Schule.
+     *
+     * @param schemaname   der Name des SVWS-Schema
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Informationen zur Schule
+     */
+    @GET
+    @Path("/api/schema/liste/info/{schema}/schule")
+    @Operation(summary = "Liefert die Informationen zu einer Schule eines SVWS-Schema.",
+    	description = "Liefert die Informationen zu einer Schule eines SVWS-Schema. Hierfür werden Datenbank-Rechte auf dem Schema benötigt.")
+    @ApiResponse(responseCode = "200", description = "Die Informationen zur Schule",
+    	content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
+	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein SVWS-Schema")
+	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
+    public SchuleInfo getSchuleInfo(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+			return DBUtilsSchema.getSchuleInfo(conn, schemaname);
+    	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der administrativen Benutzer in einem aktuellen SVWS-Schema.
+     *
+     * @param schemaname   der Name des SVWS-Schema
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste der administrativen Benutzer
+     */
+    @GET
+    @Path("/api/schema/liste/info/{schema}/admins")
+    @Operation(summary = "Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.",
+    	description = "Liefert die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema.")
+    @ApiResponse(responseCode = "200", description = "Die Informationen zu den administrativen Benutzern",
+    	content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = BenutzerListeEintrag.class))))
+	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein aktuelles SVWS-Schema")
+	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
+    public List<BenutzerListeEintrag> getSchemaAdmins(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
+			return DBUtilsSchema.getAdmins(conn, schemaname);
+    	}
+    }
 
 
     /**
@@ -1028,6 +1053,77 @@ public class APISchemaPrivileged {
     @ApiResponse(responseCode = "500", description = "Der Datenbankzugriff auf das neue Schema mit dem neuen zugehörigen Admin-Benutzer ist fehlgeschlagen oder das SVWS-Schema mit der aktuellen Revision konnte nicht angelegt werden.")
     public SimpleOperationResponse createSchemaCurrentInto(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return createSchemaInto(schemaname, -1, request);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode um ein Datenbankschema auf eine bestimmte Revision upzudaten.
+     *
+     * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param revision      die Revision, auf die angehoben werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Logmeldung über den Updatevorgang
+     */
+    @POST
+    @Path("/api/schema/update/{schema}/{revision : \\d+}")
+    @Operation(summary = "Aktualisiert das angegebene Schema auf die angegebene Revision.",
+    		   description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die übergebene Revision, sofern "
+    		   		       + "diese in der Schema-Definition existiert.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
+    	final SimpleOperationResponse response = new SimpleOperationResponse();
+    	response.success = true;
+    	ResponseBuilder rb;
+    	try {
+	    	// Bestimme den angemeldeten priviligierten Benutzer ...
+	    	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+	    	// ... führe das Update aus ...
+	    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
+	    	// ... und gebe den Log zurück
+	    	response.log = log.getStrings();
+	    	rb = Response.status(Status.OK);
+    	} catch (final WebApplicationException wae) {
+        	response.success = false;
+        	response.log.add("Fehler beim Aktualisieren des Schemas.");
+        	@SuppressWarnings("resource")
+			final Response resp = wae.getResponse();
+        	rb = (resp == null) ? Response.status(Status.INTERNAL_SERVER_ERROR) : Response.fromResponse(resp);
+        	wae.printStackTrace();
+    	}
+    	return rb.type(MediaType.APPLICATION_JSON).entity(response).build();
+    }
+
+
+    /**
+     * Die OpenAPI-Methode um ein Datenbankschema auf die neueste Revision upzudaten.
+     *
+     * @param schemaname    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Logmeldung über den Updatevorgang
+     */
+    @POST
+    @Path("/api/schema/update/{schema}")
+    @Operation(summary = "Aktualisiert das angegebene Schema auf die neueste Revision.",
+	    description = "Prüft das Schema bezüglich der aktuellen Revision und aktualisiert das Schema ggf. auf die neueste Revision.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Verlauf des Updates",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein interner-Server-Fehler aufgetreten.",
+		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
+    	return updateSchema(schemaname, -1, request);
     }
 
 }

@@ -5,9 +5,11 @@
 		</template>
 		<svws-ui-input-wrapper :grid="2">
 			<svws-ui-select title="Status" v-model="inputStatus" :items="SchuelerStatus.values()" :item-text="(i: SchuelerStatus) => i.bezeichnung" statistics />
-			<div />
-			<svws-ui-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i=>i.text ?? ''" />
-			<svws-ui-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i=>i.text ?? ''" />
+			<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.id"
+				title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" />
+			<div v-else />
+			<svws-ui-select title="Fahrschüler" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten" :item-text="i => i.text ?? ''" />
+			<svws-ui-select title="Haltestelle" v-model="inputHaltestelleID" :items="mapHaltestellen" :item-text="i => i.text ?? ''" />
 			<svws-ui-text-input placeholder="Anmeldedatum" :model-value="data.anmeldedatum" @change="anmeldedatum => patch({anmeldedatum})" type="date" />
 			<svws-ui-text-input placeholder="Aufnahmedatum" :model-value="data.aufnahmedatum" @change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
 			<svws-ui-spacing />
@@ -25,7 +27,7 @@
 
 <script setup lang="ts">
 
-	import type { KatalogEintrag, SchuelerListeManager, SchuelerStammdaten} from "@core";
+	import type { HashMap, KatalogEintrag, SchuelerListeManager, SchuelerStammdaten, SchulEintrag } from "@core";
 	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 	import { SchuelerStatus } from "@core";
@@ -34,7 +36,8 @@
 		schuelerListeManager: () => SchuelerListeManager;
 		patch: (data: Partial<SchuelerStammdaten>) => Promise<void>;
 		mapFahrschuelerarten: Map<number, KatalogEintrag>;
-		mapHaltestellen: Map<number, KatalogEintrag>
+		mapHaltestellen: Map<number, KatalogEintrag>;
+		mapSchulen: HashMap<string, SchulEintrag>;
 	}>();
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
@@ -42,6 +45,11 @@
 	const inputStatus: WritableComputedRef<SchuelerStatus | undefined> = computed({
 		get: () => (SchuelerStatus.fromID(data.value.status) || undefined),
 		set: (value) => void props.patch({ status: value?.id })
+	});
+
+	const inputStammschule: WritableComputedRef<SchulEintrag | undefined> = computed({
+		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) || undefined),
+		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummer })
 	});
 
 	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({

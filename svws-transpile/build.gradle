@@ -20,6 +20,9 @@ dependencies {
     javaapi fileTree(dir: "$rootDir/svws-openapi/src/main/java", includes: ['**/svws_nrw/api/server/*.java', '**/svws_nrw/api/privileged/API*.java']) 
 }
 
+checkstyleMain.enabled = false
+checkstyleTest.enabled = false
+
 task removeTranspiledCode(type: Delete) {
 	group "svws"
 	delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"]), fileTree(dir: "$rootDir/svws-transpiler/build/tmp/transpiler", includes: ["**/*.class"])
@@ -63,7 +66,8 @@ task testTranspilerCore(type: NpmRun) {
 	dependsOn rootProject.npmPrepare, test
 	mustRunAfter test
 	workingDir file("$projectDir/src/test/ts")
-	inputs.files fileTree(dir: "$projectDir/src/main/resources/typescript", includes: ["**/*.ts"]), 
+	inputs.files fileTree(dir: "$projectDir/src/main/resources/typescript", includes: ["**/*.ts"]),
+		fileTree(dir: "$projectDir/build/tests/ts", includes: ["**/*.ts"]),
 		fileTree(dir: "$projectDir/src/test/ts/src", includes: ["**/*.test.ts", "**/*.bench.ts"]),
 		file("$projectDir/src/test/ts/package.json"), file("$projectDir/src/test/ts/tsconfig.json"), file("$projectDir/src/test/ts/vitest.config.ts")
 	outputs.dir file("$projectDir/build/coverage")

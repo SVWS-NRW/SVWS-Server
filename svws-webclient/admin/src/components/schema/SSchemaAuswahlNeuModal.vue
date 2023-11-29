@@ -18,25 +18,33 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModal().value = false" :disabled="loading"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
+			<template v-if="status !== undefined">
+				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
+				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
+			</template>
+			<template v-else>
+				<svws-ui-button type="secondary" @click="close"> Schließen </svws-ui-button>
+			</template>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
+	import type { List, SimpleOperationResponse } from "@core";
 	import { BenutzerKennwort } from "@core";
 	import { ref } from "vue";
 
 	const props = defineProps<{
-		addSchema:  (data: BenutzerKennwort, schema: string) => Promise<void>;
+		addSchema:  (data: BenutzerKennwort, schema: string) => Promise<SimpleOperationResponse>;
 	}>();
 
 	const schema = ref<string>('');
 	const user = ref<string>('');
 	const password = ref<string>('');
 	const loading = ref<boolean>(false);
+	const logs = ref<List<string|null>>();
+	const status = ref<boolean>();
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
@@ -50,11 +58,21 @@
 		data.user = user.value;
 		data.password = password.value;
 		loading.value = true;
-		await props.addSchema(data, schema.value);
+		const result = await props.addSchema(data, schema.value);
+		logs.value = result.log;
+		status.value = result.success;
 		schema.value = '';
 		user.value = '';
 		password.value = '';
-		showModal().value = false;
 		loading.value = false;
+		schema.value = '';
+		user.value = '';
+		password.value = '';
+	}
+
+	function close() {
+		showModal().value = false;
+		logs.value = undefined;
+		status.value = undefined;
 	}
 </script>

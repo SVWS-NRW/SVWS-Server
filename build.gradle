@@ -65,6 +65,7 @@ allprojects {
 	    options.addStringOption('Xmaxwarns', '10000')
 	    if (JavaVersion.current().isJava9Compatible()) {
 	        options.addBooleanOption('html5', true)
+	    	options.addStringOption('Xdoclint:none', '-quiet')
 	    }
 	}
 
@@ -84,6 +85,7 @@ allprojects {
 	    options.addStringOption('Xmaxwarns', '10000')
 		if (JavaVersion.current().isJava9Compatible()) {
 			options.addBooleanOption('html5', true)
+	    	options.addStringOption('Xdoclint:none', '-quiet')
 		}
 		source = sourceSets.test.allJava
 		classpath = sourceSets.test.compileClasspath

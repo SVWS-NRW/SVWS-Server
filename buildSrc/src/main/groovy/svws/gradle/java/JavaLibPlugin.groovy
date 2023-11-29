@@ -126,8 +126,8 @@ class JavaLibPlugin implements Plugin<Project> {
     	project.dependencies.add('testImplementation', 'org.junit.jupiter:junit-jupiter:5.10.0');
     	project.dependencies.add('testImplementation', 'org.junit.platform:junit-platform-launcher:1.10.0');
 
-		project.java.sourceCompatibility = JavaVersion.VERSION_17
-		project.java.targetCompatibility = JavaVersion.VERSION_17
+		project.java.sourceCompatibility = JavaVersion.VERSION_21
+		project.java.targetCompatibility = JavaVersion.VERSION_21
 
 		project.tasks.withType(JavaCompile.class, {
 			options.encoding = 'UTF-8'

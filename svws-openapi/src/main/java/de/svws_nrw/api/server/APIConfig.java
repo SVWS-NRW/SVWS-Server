@@ -9,6 +9,7 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.utils.OperationError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -16,10 +17,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -51,6 +54,30 @@ public class APIConfig {
     		     content = @Content(mediaType = MediaType.TEXT_PLAIN, schema = @Schema(implementation = String.class)))
     public Response isAlive() {
     	return Response.ok("SVWS-Server erreichbar").build();
+    }
+
+
+	/**
+	 * Diese Methode kann genutzt werden, um die Verfügbarkeit des SVWS-Server über die Privileged-API zu testen.
+	 *
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+	 * @return die HTTP-Response mit true oder false
+	 */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/alive/privileged")
+    @Operation(summary = "Eine Test-Methode zum Prüfen, ob die Privileged-API des Serves erreichbar ist oder nicht.",
+    	       description = "Eine Test-Methode zum Prüfen, ob die Privileged-API des Serves erreichbar ist oder nicht.")
+    @ApiResponse(responseCode = "200", description = "Der Server ist über die Privileged API erreichbar!",
+    		     content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Boolean.class)))
+    public Response isAlivePrivileged(@Context final HttpServletRequest request) {
+    	final var config = SVWSKonfiguration.get();
+    	if (config.isDBRootAccessDisabled())
+    		return Response.ok(false).build();
+    	if ((config.hatPortHTTPPrivilegedAccess()) && (config.getPortHTTPPrivilegedAccess() != request.getLocalPort()))
+    		return Response.ok(false).build();
+    	return Response.ok(true).build();
     }
 
 
@@ -180,6 +207,30 @@ public class APIConfig {
                  array = @ArraySchema(schema = @Schema(implementation = DBSchemaListeEintrag.class))))
     public List<DBSchemaListeEintrag> getConfigDBSchemata() {
     	return SVWSKonfiguration.get().getSchemaList();
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage der Datenbank-Revision, welche
+     * der SVWS-Server unterstützt.
+     * Diese muss zwischenzeitlich nicht mit den Revisionen der einzelnen
+     * DB-Schemata übereinstimmen!
+     *
+     * @return die Datenbank-Revision des SVWS-Servers
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/status/db/revision")
+    @Operation(summary = "Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.",
+               description = "Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.")
+    @ApiResponse(responseCode = "200", description = "Die Datenbank-Revision",
+                 content = @Content(mediaType = MediaType.APPLICATION_JSON,
+                 schema = @Schema(implementation = Long.class)))
+    public Response getServerDBRevision() {
+    	final long rev = (SVWSKonfiguration.get().getServerMode() == ServerMode.DEV)
+    			? SchemaRevisionen.maxDeveloperRevision.revision
+    			: SchemaRevisionen.maxRevision.revision;
+    	return JSONMapper.fromLong(rev);
     }
 
 }

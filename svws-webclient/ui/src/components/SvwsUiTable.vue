@@ -62,7 +62,7 @@
 			'overflow-visible': !scroll,
 			'overflow-auto': scroll,
 		}"
-		v-bind="$attrs">
+		v-bind="$attrs" style="scrollbar-gutter: stable;">
 		<div v-if="!disableHeader" class="svws-ui-thead" role="rowgroup" aria-label="Tabellenkopf">
 			<slot name="header" :all-rows-selected="allRowsSelected" :toggle-all-rows="toggleBulkSelection" :columns="columnsComputed">
 				<div role="row" class="svws-ui-tr">

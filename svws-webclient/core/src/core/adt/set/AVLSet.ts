@@ -218,7 +218,11 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable'].includes(name);
+		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
+	}
+
+	public reversed() : NavigableSet<E> {
+		return this.descendingSet();
 	}
 
 	public [Symbol.iterator](): Iterator<E> {

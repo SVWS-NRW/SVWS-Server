@@ -32,7 +32,7 @@ task cleanLaufbahnplanung(type: Delete) {
 }
 
 clean.dependsOn cleanLaufbahnplanung
-/*
+
 task publishNexusLaufbahnplanung(type: NpmPublish) {
 	dependsOn assemble
 	group "publishing"
@@ -57,24 +57,24 @@ publishReleaseAll.dependsOn publishNexusLaufbahnplanung
 publishReleaseAll.dependsOn publishNpmLaufbahnplanung
 
 project.tasks.withType(PublishToMavenRepository).configureEach {
-	dependsOn 'svws-webclient:core:publishNexusCore'
-	dependsOn 'svws-webclient:ui:publishNexusUi'
-	// dependsOn 'svws-webclient:components:publishNexusComponents'
+	dependsOn ':svws-webclient:core:publishNexusCore'
+	dependsOn ':svws-webclient:ui:publishNexusUi'
+//	dependsOn ':svws-webclient:components:publishNexusComponents'
 	dependsOn publishNexusLaufbahnplanung
-	dependsOn 'svws-webclient:core:publishNpmCore'
-	dependsOn 'svws-webclient:ui:publishNpmUi'
-	// dependsOn 'svws-webclient:components:publishNpmComponents'
+	dependsOn ':svws-webclient:core:publishNpmCore'
+	dependsOn ':svws-webclient:ui:publishNpmUi'
+//	dependsOn ':svws-webclient:components:publishNpmComponents'
 	dependsOn publishNpmLaufbahnplanung
 }
 
 project.tasks.withType(Sign).configureEach {
-	dependsOn 'svws-webclient:core:publishNexusCore'
-	dependsOn 'svws-webclient:ui:publishNexusUi'
-	// dependsOn 'svws-webclient:components:publishNexusComponents'
+	dependsOn ':svws-webclient:core:publishNexusCore'
+	dependsOn ':svws-webclient:ui:publishNexusUi'
+//	dependsOn ':svws-webclient:components:publishNexusComponents'
 	dependsOn publishNexusLaufbahnplanung
-	dependsOn 'svws-webclient:core:publishNpmCore'
-	dependsOn 'svws-webclient:ui:publishNpmUi'
-	// dependsOn 'svws-webclient:components:publishNpmComponents'
+	dependsOn ':svws-webclient:core:publishNpmCore'
+	dependsOn ':svws-webclient:ui:publishNpmUi'
+//	dependsOn ':svws-webclient:components:publishNpmComponents'
 	dependsOn publishNpmLaufbahnplanung
 }
 
@@ -120,4 +120,3 @@ publishing {
         }
     }
 }
-*/

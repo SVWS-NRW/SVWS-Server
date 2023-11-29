@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.7.9-SNAPSHOT",
+	"version": "0.8.2-SNAPSHOT",
 	"scripts": {
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",

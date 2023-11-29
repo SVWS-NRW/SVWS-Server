@@ -1,7 +1,8 @@
 import type { JavaSet } from './JavaSet';
+import type { SequencedSet } from './SequencedSet';
 import type { Comparator } from './Comparator';
 
-export interface SortedSet<E> extends JavaSet<E> {
+export interface SortedSet<E> extends JavaSet<E>, SequencedSet<E> {
 
     comparator() : Comparator<E>;
 

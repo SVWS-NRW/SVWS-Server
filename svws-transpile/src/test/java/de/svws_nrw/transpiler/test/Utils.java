@@ -35,4 +35,21 @@ public class Utils {
 			System.out.println("Fehler: Die Werte sind nicht gleich!");
 	}
 
+	/**
+	 * Testet das Transpilieren der neuen Switch-Pattern-Anweisungen
+	 *
+	 * @param data   ein Basis-Typ für das Testen
+	 *
+	 * @return ein String
+	 */
+	public static String switchByType(final @NotNull CoreTypeData data) {
+		return switch (data) {
+			case @NotNull final SchulformKatalogEintrag sfke -> "Schulform: " + sfke.kuerzel;
+			case @NotNull final SchulstufeKatalogEintrag sske -> "Schulstufe: " + sske.kuerzel;
+			default -> {
+				yield "None";
+			}
+		};
+	}
+
 }

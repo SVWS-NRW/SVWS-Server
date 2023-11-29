@@ -1,11 +1,9 @@
+src/test/java/de/svws_nrw/transpiler/test/CoreTypeData.java,
+src/test/java/de/svws_nrw/transpiler/test/SchulformKatalogEintrag.java,
 src/test/java/de/svws_nrw/transpiler/test/BKFBFach.java,
 src/test/java/de/svws_nrw/transpiler/test/BKLehrplan.java,
 src/test/java/de/svws_nrw/transpiler/test/BKLernfeld.java,
 src/test/java/de/svws_nrw/transpiler/test/BKFachklassenSchluessel.java,
 src/test/java/de/svws_nrw/transpiler/test/EmptyDTO.java,
 src/test/java/de/svws_nrw/transpiler/test/Utils.java,
-src/test/java/de/svws_nrw/transpiler/test/CoreTypeData.java,
-src/test/java/de/svws_nrw/transpiler/test/Schulform.java,
-src/test/java/de/svws_nrw/transpiler/test/SchulstufeKatalogEintrag.java,
-src/test/java/de/svws_nrw/transpiler/test/SchulformKatalogEintrag.java
-
+src/test/java/de/svws_nrw/transpiler/test/SchulstufeKatalogEintrag.java

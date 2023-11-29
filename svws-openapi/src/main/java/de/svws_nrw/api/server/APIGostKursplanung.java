@@ -19,9 +19,9 @@ import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostBlockungsliste;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.module.pdf.dateien.gost.PDFGostKurseSchienenZuordnung;
-import de.svws_nrw.module.pdf.dateien.gost.PDFGostSchuelerKurseListe;
-import de.svws_nrw.module.pdf.dateien.gost.kursplanung.PdfDateiGostKursplanungKurseMitKursschuelern;
+import de.svws_nrw.module.pdf.pdf.gost.kursplanung.PdfGostKursplanungKurseMitKursschuelern;
+import de.svws_nrw.module.pdf.pdf.gost.kursplanung.PdfGostKursplanungSchuelerMitKursen;
+import de.svws_nrw.module.pdf.pdf.gost.kursplanung.PdfGostKursplanungSchuelerMitSchienenKursen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1012,15 +1012,12 @@ public class APIGostKursplanung {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFGostKurseSchienenZuordnung.query(conn, blockungsergebnisid, schuelerids);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostKursplanungSchuelerMitSchienenKursen.query(conn, blockungsergebnisid, schuelerids),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -1060,15 +1057,12 @@ public class APIGostKursplanung {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-        try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PDFGostSchuelerKurseListe.query(conn, blockungsergebnisid, schuelerids);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostKursplanungSchuelerMitKursen.query(conn, blockungsergebnisid, schuelerids),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -1110,15 +1104,12 @@ public class APIGostKursplanung {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> kursids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostKursplanungKurseMitKursschuelern.query(conn, blockungsergebnisid, kursids);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostKursplanungKurseMitKursschuelern.query(conn, blockungsergebnisid, kursids),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 	/**

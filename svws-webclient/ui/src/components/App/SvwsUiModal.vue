@@ -42,6 +42,10 @@
 						<div class="modal--actions">
 							<slot name="modalActions" />
 						</div>
+
+						<div class="modal--logs">
+							<slot name="modalLogs" />
+						</div>
 					</div>
 				</TransitionChild>
 			</div>
@@ -165,6 +169,10 @@
 		}
 
 		&--actions {
+			@apply flex items-center justify-center p-4 pb-6 gap-2;
+		}
+
+		&--logs {
 			@apply flex items-center justify-center p-4 pb-6 gap-2;
 		}
 

@@ -41,8 +41,8 @@ import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.OperationError;
-import de.svws_nrw.module.pdf.dateien.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht;
-import de.svws_nrw.module.pdf.dateien.gost.laufbahnplanung.PdfDateiGostLaufbahnplanungSchuelerWahlbogen;
+import de.svws_nrw.module.pdf.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerErgebnisuebersicht;
+import de.svws_nrw.module.pdf.pdf.gost.laufbahnplanung.PdfGostLaufbahnplanungSchuelerWahlbogen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -889,15 +889,12 @@ public class APIGost {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, false),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -934,15 +931,12 @@ public class APIGost {
                     content = @Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class))))
             final List<Long> schuelerids,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerWahlbogen.query(conn, schuelerids, true),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 
@@ -980,15 +974,12 @@ public class APIGost {
             final List<Long> schuelerids,
             @PathParam("detaillevel") final int detaillevel,
             @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(
-                request,
-                ServerMode.STABLE,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-                BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)) {
-			return PdfDateiGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel);
-		}
+		return DBBenutzerUtils.runWithTransaction(conn -> PdfGostLaufbahnplanungSchuelerErgebnisuebersicht.query(conn, schuelerids, detaillevel),
+			request, ServerMode.STABLE,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN);
 	}
 
 

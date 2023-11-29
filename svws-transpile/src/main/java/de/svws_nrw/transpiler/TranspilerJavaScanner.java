@@ -16,7 +16,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -44,6 +47,7 @@ import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
@@ -165,25 +169,6 @@ public final class TranspilerJavaScanner extends TreePathScanner<Object, Transpi
 		transpiler.visitExpressionTree(getCurrentPath(), node);
 		return super.visitSwitchExpression(node, transpiler);
 	}
-
-// Java 17 Preview Features
-//	@Override
-//	public Object visitDefaultCaseLabel(DefaultCaseLabelTree node, Transpiler transpiler) {
-//		transpiler.visitTree(getCurrentPath(), node);
-//		return super.visitDefaultCaseLabel(node, transpiler);
-//	}
-//
-//	@Override
-//	public Object visitParenthesizedPattern(ParenthesizedPatternTree node, Transpiler transpiler) {
-//		transpiler.visitTree(getCurrentPath(), node);
-//		return super.visitParenthesizedPattern(node, transpiler);
-//	}
-//
-//	@Override
-//	public Object visitGuardedPattern(GuardedPatternTree node, Transpiler transpiler) {
-//		transpiler.visitTree(getCurrentPath(), node);
-//		return super.visitGuardedPattern(node, transpiler);
-//	}
 
 	@Override
 	public Object visitCase(final CaseTree node, final Transpiler transpiler) {
@@ -335,10 +320,49 @@ public final class TranspilerJavaScanner extends TreePathScanner<Object, Transpi
 		return super.visitInstanceOf(node, transpiler);
 	}
 
+//	// Preview feature in Java 21
+//	@Override
+//	public Object visitAnyPattern(final AnyPatternTree node, final Transpiler transpiler) {
+//		transpiler.visitTree(getCurrentPath(), node);
+//		return super.visitAnyPattern(node, transpiler);
+//	}
+
+//	// Preview feature in Java 21
+//	@Override
+//	public Object visitStringTemplate(StringTemplateTree node, final Transpiler transpiler) {
+//		transpiler.visitTree(getCurrentPath(), node);
+//		return super.visitStringTemplate(node, transpiler);
+//	}
+
 	@Override
 	public Object visitBindingPattern(final BindingPatternTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);
+		transpiler.visitBindingPattern(getCurrentPath(), node);
 		return super.visitBindingPattern(node, transpiler);
+	}
+
+	@Override
+	public Object visitDefaultCaseLabel(final DefaultCaseLabelTree node, final Transpiler transpiler) {
+		transpiler.visitTree(getCurrentPath(), node);
+		return super.visitDefaultCaseLabel(node, transpiler);
+	}
+
+	@Override
+	public Object visitConstantCaseLabel(final ConstantCaseLabelTree node, final Transpiler transpiler) {
+		transpiler.visitTree(getCurrentPath(), node);
+		return super.visitConstantCaseLabel(node, transpiler);
+	}
+
+	@Override
+	public Object visitPatternCaseLabel(final PatternCaseLabelTree node, final Transpiler transpiler) {
+		transpiler.visitTree(getCurrentPath(), node);
+		return super.visitPatternCaseLabel(node, transpiler);
+	}
+
+	@Override
+	public Object visitDeconstructionPattern(final DeconstructionPatternTree node, final Transpiler transpiler) {
+		transpiler.visitTree(getCurrentPath(), node);
+		return super.visitDeconstructionPattern(node, transpiler);
 	}
 
 	@Override

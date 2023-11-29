@@ -218,8 +218,8 @@ export class RouteDataGostKlausurplanung {
 	}
 
 	public async reloadKursklausurmanager(halbjahr: GostHalbjahr | null, vorgabenmanager: GostKlausurvorgabenManager) : Promise<GostKursklausurManager> {
-		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
-		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangHalbjahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const listKlausurtermine = await api.server.getGostKlausurenKlausurtermineJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
+		const listKursklausuren = await api.server.getGostKlausurenKursklausurenJahrgangSchuljahr(api.schema, this.abiturjahr, halbjahr !== null ? halbjahr.id : this._state.value.halbjahr.id);
 		return new GostKursklausurManager(vorgabenmanager, listKursklausuren, listKlausurtermine);
 	}
 
@@ -306,9 +306,9 @@ export class RouteDataGostKlausurplanung {
 		api.status.stop();
 	}
 
-	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs | undefined> => {
-		if ('id' in klausur)
-			return await this.patchKursklausur(id, klausur);
+	patchKlausur = async (id: number, klausur: Partial<GostKursklausur | GostSchuelerklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
+		// if ('id' in klausur)
+		return await this.patchKursklausur(id, klausur);
 	}
 
 	patchKursklausur = async (id: number, klausur: Partial<GostKursklausur>): Promise<GostKlausurenCollectionSkrsKrs> => {
@@ -427,7 +427,7 @@ export class RouteDataGostKlausurplanung {
 		const schuelerklausuren = await api.server.getGostKlausurenSchuelerklausuren(api.schema, termin.id);
 		this.commit();
 		api.status.stop();
-		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren, this.kursklausurmanager);
+		return new GostKlausurraumManager(raeume, krsCollection.raumstunden, krsCollection.skRaumstunden, schuelerklausuren, this.kursklausurmanager, termin);
 	}
 
 	setzeRaumZuSchuelerklausuren = async (raum: GostKlausurraum | null, sks: List<GostSchuelerklausur>, manager: GostKlausurraumManager): Promise<GostKlausurenCollectionSkrsKrs> => {

@@ -86,7 +86,7 @@
 
 	const selectedTermin = ref<GostKlausurtermin | null>(null);
 
-	const termine = () => props.kursklausurmanager().terminMitDatumGetMengeByQuartal(props.quartalsauswahl.value, false);
+	const termine = () => props.kursklausurmanager().terminMitDatumGetMengeByHalbjahrAndQuartal(props.halbjahr, props.quartalsauswahl.value, false);
 
 	const calculatCssClassesKlausur = (klausur: GostKursklausur) => {
 		return raummanager.value !== null

@@ -27,15 +27,19 @@ import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
+import com.sun.source.tree.CaseLabelTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -54,9 +58,11 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
@@ -81,6 +87,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.tree.YieldTree;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -360,6 +367,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Cannot retrieve the type information for the identifier " + node.getName().toString());
 		final String result = switch (node.getName().toString()) {
 			case strString -> strTsString;
+			case "Enum" -> "JavaEnum";
 			case strLong, strInteger, strShort, strByte, strFloat, strDouble -> strTsNumber;
 			case strBoolean -> "boolean";
 			case strCharacter -> strTsString;
@@ -394,7 +402,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				valueOf = "!";
 		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
-		if ((type instanceof final ExpressionClassType classType) && (transpiler.getParent(node) instanceof CaseTree)) {
+		if ((type instanceof final ExpressionClassType classType) && ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
 			return classType.toString() + "." + node.getName().toString() + valueOf;
 		}
 		if (!transpiler.isClassMember(node))
@@ -692,16 +700,100 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// TODO return type
 		// generate the lambda body
 		sb.append(" => ");
-		final Tree body = node.getBody();
-		if (body instanceof final StatementTree bodyStatement) {
-			sb.append(convertStatement(bodyStatement, false)).append(" }");
-			return sb.toString();
+		switch (node.getBody()) {
+			case final StatementTree bodyStatement -> sb.append(convertStatement(bodyStatement, false)).append(" }");
+			case final ExpressionTree bodyExpression -> sb.append(convertExpression(bodyExpression)).append(" }");
+			default -> throw new TranspilerException("Transpiler Error: Lambda Expression Type of body kind " + node.getBodyKind() + " not yet supported");
 		}
-		if (body instanceof final ExpressionTree bodyExpression) {
-			sb.append(convertExpression(bodyExpression)).append(" }");
-			return sb.toString();
+		return sb.toString();
+	}
+
+
+	/**
+	 * Transpiles the switch expression.
+	 *
+	 * @param node   the switch expression tree node
+	 *
+	 * @return the transpiled switch expression
+	 */
+	public String convertSwitchExpression(final SwitchExpressionTree node) {
+		final String tmpVar = "_sevar_" + node.hashCode();
+		final String tmpExprVar = "_seexpr_" + node.hashCode();
+		final StringBuilder sb = new StringBuilder();
+		sb.append("let ").append(tmpVar).append(";").append(System.lineSeparator());
+		sb.append(getIndent()).append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
+		boolean first = true;
+		for (final CaseTree ct : node.getCases()) {
+			if (ct.getCaseKind() == CaseKind.STATEMENT)
+				throw new TranspilerException("Transpiler Error: Cases of kind STATEMENT are not yet supported in switch expression trees");
+			for (final CaseLabelTree clt : ct.getLabels()) {
+				switch (clt) {
+					case final PatternCaseLabelTree pclt when (pclt.getPattern() instanceof final BindingPatternTree bpt) -> {
+						final VariableTree varNode = bpt.getVariable();
+						final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
+						if (first) {
+							sb.append(System.lineSeparator()).append(getIndent());
+							first = false;
+						} else {
+							sb.append(" else ");
+						}
+						sb.append("if (").append(tmpExprVar).append(" instanceof ").append(typeNode.transpile(false)).append(") {");
+						indentC++;
+						sb.append(System.lineSeparator()).append(getIndent());
+						sb.append("const ").append(varNode.getName()).append(" = ").append(tmpExprVar).append(" as ").append(typeNode.transpile(false)).append(";");
+						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						sb.append(System.lineSeparator());
+						if (!isBlock)
+							sb.append(getIndent()).append(tmpVar).append(" = ");
+						switch (ct.getBody()) {
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final StatementTree st -> sb.append(convertStatement(st, true));
+							case final ExpressionTree et -> sb.append(convertExpression(et));
+							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+						}
+						indentC--;
+						if (!isBlock)
+							sb.append(";").append(System.lineSeparator());
+						sb.append(getIndent());
+						sb.append("}");
+					}
+					case final ConstantCaseLabelTree cclt -> throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					case final DefaultCaseLabelTree dclt -> { /* Der Default Case muss immer der letzte in TS sein */ }
+					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
+				}
+			}
+			for (final CaseLabelTree clt : ct.getLabels()) {
+				switch (clt) {
+					case final PatternCaseLabelTree pclt -> { /* siehe oben */ }
+					case final ConstantCaseLabelTree cclt -> { /* siehe oben */ }
+					case final DefaultCaseLabelTree dclt -> {
+						if (first) {
+							throw new TranspilerException("Transpiler Error: Switch Expression with only a default case is not supported");
+						}
+						sb.append(" else {");
+						indentC++;
+						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						sb.append(System.lineSeparator());
+						if (!isBlock)
+							sb.append(getIndent()).append(tmpVar).append(" = ");
+						switch (ct.getBody()) {
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final StatementTree st -> sb.append(convertStatement(st, true));
+							case final ExpressionTree et -> sb.append(convertExpression(et));
+							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+						}
+						indentC--;
+						if (!isBlock)
+							sb.append(";").append(System.lineSeparator());
+						sb.append(getIndent());
+						sb.append("}");
+					}
+					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
+				}
+			}
 		}
-		throw new TranspilerException("Transpiler Error: Lambda Expression Type of body kind " + node.getBodyKind() + " not yet supported");
+		sb.append(System.lineSeparator()).append(getIndent());
+		return sb.toString();
 	}
 
 
@@ -713,41 +805,26 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled string if the expression was transpiled successfully and null otherwise
 	 */
 	public String convertExpression(final ExpressionTree node) {
-		if (node instanceof final BinaryTree b)
-			return convertBinaryOperator(b);
-		if (node instanceof final AssignmentTree a)
-			return convertAssignment(a);
-		if (node instanceof final CompoundAssignmentTree ca)
-			return convertCompoundAssignment(ca);
-		if (node instanceof final MethodInvocationTree mi)
-			return convertMethodInvocation(mi);
-		if (node instanceof final LiteralTree lit)
-			return convertLiteral(lit);
-		if (node instanceof final IdentifierTree ident)
-			return convertIdentifier(ident);
-		if (node instanceof final MemberSelectTree ms)
-			return convertMemberSelect(ms);
-		if (node instanceof final ParenthesizedTree paren)
-			return convertParenthesized(paren);
-		if (node instanceof final MethodInvocationTree mi)
-			return convertMethodInvocation(mi);
-		if (node instanceof final NewClassTree nc)
-			return convertNewClass(nc);
-		if (node instanceof final NewArrayTree na)
-			return convertNewArray(na);
-		if (node instanceof final ConditionalExpressionTree ce)
-			return convertConditionalExpression(ce);
-		if (node instanceof final UnaryTree unary)
-			return convertUnaryOperator(unary);
-		if (node instanceof final ArrayAccessTree aa)
-			return convertArrayAccess(aa);
-		if (node instanceof final TypeCastTree tc)
-			return convertTypeCast(tc);
-		if (node instanceof final LambdaExpressionTree le)
-			return convertLambdaExpression(le);
-		if (node instanceof final InstanceOfTree io)
-			return convertInstanceOf(io);
-		throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
+		return switch (node) {
+			case final BinaryTree b -> convertBinaryOperator(b);
+			case final AssignmentTree a -> convertAssignment(a);
+			case final CompoundAssignmentTree ca -> convertCompoundAssignment(ca);
+			case final MethodInvocationTree mi -> convertMethodInvocation(mi);
+			case final LiteralTree lit -> convertLiteral(lit);
+			case final IdentifierTree ident -> convertIdentifier(ident);
+			case final MemberSelectTree ms -> convertMemberSelect(ms);
+			case final ParenthesizedTree paren -> convertParenthesized(paren);
+			case final NewClassTree nc -> convertNewClass(nc);
+			case final NewArrayTree na -> convertNewArray(na);
+			case final ConditionalExpressionTree ce -> convertConditionalExpression(ce);
+			case final UnaryTree unary -> convertUnaryOperator(unary);
+			case final ArrayAccessTree aa -> convertArrayAccess(aa);
+			case final TypeCastTree tc -> convertTypeCast(tc);
+			case final LambdaExpressionTree le -> convertLambdaExpression(le);
+			case final InstanceOfTree io -> convertInstanceOf(io);
+			case final SwitchExpressionTree se -> convertSwitchExpression(se);
+			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
+		};
 	}
 
 
@@ -815,17 +892,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the default value as String
 	 */
 	public static String getDefaultValueForType(final Tree node) {
-		if (node instanceof final PrimitiveTypeTree primitiveTypeTree) {
-			return getDefaultValueForPrimitiveType(primitiveTypeTree);
-		} else if (node instanceof ArrayTypeTree) {
-			return null;
-		} else if (node instanceof ParameterizedTypeTree) {
-			return null;
-		} else if (node instanceof IdentifierTree) {
-			return null;
-		} else {
-			throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
-		}
+		return switch (node) {
+			case final PrimitiveTypeTree primitiveTypeTree -> getDefaultValueForPrimitiveType(primitiveTypeTree);
+			case final ArrayTypeTree att -> null;
+			case final ParameterizedTypeTree ptt -> null;
+			case final IdentifierTree it -> null;
+			default -> throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		};
 	}
 
 
@@ -911,68 +984,64 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertStatement(final StatementTree node, final boolean noIndent) {
 		if ((node instanceof final BlockTree block) && (!noIndent)) {
 			indentC++;
-			final String blockConverted = convertBlock(block, false);
+			final String blockConverted = convertBlock(block, false, null);
 			indentC--;
 			return "{%s%s%s}".formatted(System.lineSeparator(), blockConverted, getIndent());
 		}
 		indentC++;
 		final String tmpIndent = (noIndent ? "" : System.lineSeparator() + getIndent());
 		indentC--;
-		if (node instanceof final ExpressionStatementTree es) {
-			final String expr = convertExpressionStatement(es);
-			if (expr == null)
-				return "";
-			return tmpIndent + expr + ";";
-		}
-		if (node instanceof final ReturnTree ret)
-			return tmpIndent + convertReturn(ret);
-		if (node instanceof final BreakTree brk)
-			return tmpIndent + convertBreak(brk);
-		if (node instanceof final ThrowTree tt)
-			return tmpIndent + convertThrow(tt);
-		if (node instanceof final ContinueTree cont)
-			return tmpIndent + convertContinue(cont);
-		if (node instanceof final VariableTree variable)
-			return tmpIndent + convertBlockVariable(variable);
-		if (node instanceof final IfTree ifTree) {
-			indentC++;
-			final String ifConverted = convertIf(ifTree);
-			indentC--;
-			return tmpIndent + ifConverted;
-		}
-		if (node instanceof final DoWhileLoopTree dwlTree) {
-			indentC++;
-			final String dwlConverted = convertDoWhileLoop(dwlTree);
-			indentC--;
-			return tmpIndent + dwlConverted;
-		}
-		if (node instanceof final WhileLoopTree wlTree) {
-			indentC++;
-			final String wlConverted = convertWhileLoop(wlTree);
-			indentC--;
-			return tmpIndent + wlConverted;
-		}
-		if (node instanceof final ForLoopTree flTree) {
-			indentC++;
-			final String flConverted = convertForLoop(flTree);
-			indentC--;
-			return tmpIndent + flConverted;
-		}
-		if (node instanceof final EnhancedForLoopTree eflTree) {
-			indentC++;
-			final String eflConverted = convertEnhancedForLoop(eflTree);
-			indentC--;
-			return tmpIndent + eflConverted;
-		}
-		if (node instanceof final TryTree ttTree) {
-			indentC++;
-			final String ttConverted = convertTry(ttTree);
-			indentC--;
-			return tmpIndent + ttConverted;
-		}
-		if (node instanceof EmptyStatementTree)
-			return ";";
-		throw new TranspilerException("Transpiler Error: Statement node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		return switch (node) {
+			case final ExpressionStatementTree es -> {
+				final String expr = convertExpressionStatement(es);
+				if (expr == null)
+					yield "";
+				yield tmpIndent + expr + ";";
+			}
+			case final ReturnTree ret -> tmpIndent + convertReturn(ret);
+			case final BreakTree brk -> tmpIndent + convertBreak(brk);
+			case final ThrowTree tt -> tmpIndent + convertThrow(tt);
+			case final ContinueTree cont -> tmpIndent + convertContinue(cont);
+			case final VariableTree variable -> tmpIndent + convertBlockVariable(variable);
+			case final IfTree ifTree -> {
+				indentC++;
+				final String ifConverted = convertIf(ifTree);
+				indentC--;
+				yield tmpIndent + ifConverted;
+			}
+			case final DoWhileLoopTree dwlTree -> {
+				indentC++;
+				final String dwlConverted = convertDoWhileLoop(dwlTree);
+				indentC--;
+				yield tmpIndent + dwlConverted;
+			}
+			case final WhileLoopTree wlTree -> {
+				indentC++;
+				final String wlConverted = convertWhileLoop(wlTree);
+				indentC--;
+				yield tmpIndent + wlConverted;
+			}
+			case final ForLoopTree flTree -> {
+				indentC++;
+				final String flConverted = convertForLoop(flTree);
+				indentC--;
+				yield tmpIndent + flConverted;
+			}
+			case final EnhancedForLoopTree eflTree -> {
+				indentC++;
+				final String eflConverted = convertEnhancedForLoop(eflTree);
+				indentC--;
+				yield tmpIndent + eflConverted;
+			}
+			case final TryTree ttTree -> {
+				indentC++;
+				final String ttConverted = convertTry(ttTree);
+				indentC--;
+				yield tmpIndent + ttConverted;
+			}
+			case final EmptyStatementTree est -> ";";
+			default -> throw new TranspilerException("Transpiler Error: Statement node of kind " + node.getKind() + " not yet supported by the transpiler.");
+		};
 	}
 
 
@@ -1072,7 +1141,23 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
 		}
+		if (node.getExpression() instanceof final SwitchExpressionTree set)
+			return converted + "return _sevar_" + set.hashCode() + ";";
 		return "return %s;".formatted(converted);
+	}
+
+
+	/**
+	 * Transpiles the yield statement.
+	 *
+	 * @param node       the yield statement
+	 * @param yieldVar   the temporary variable for the switch-yield-expression
+	 *
+	 * @return the transpiled yield statement
+	 */
+	public String convertYield(final YieldTree node, final String yieldVar) {
+		final String converted = convertExpression(node.getValue());
+		return "%s = %s;".formatted(yieldVar, converted);
 	}
 
 
@@ -1117,7 +1202,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Catch clause without a parameter variable is not supported.");
 		String result = "catch(" + param.getName().toString() + ") {" + System.lineSeparator();
 		indentC++;
-		result += convertBlock(node.getBlock(), false);
+		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
 		result += getIndent() + "}";
 		return result;
@@ -1138,7 +1223,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Try with multiple catch clauses currently not supported.");
 		String result = "try {" + System.lineSeparator();
 		indentC++;
-		result += convertBlock(node.getBlock(), false);
+		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
 		result += getIndent() + "}";
 		if (node.getCatches() != null)
@@ -1147,7 +1232,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		if (finallyBlock != null) {
 			result += " finally {" + System.lineSeparator();
 			indentC++;
-			result += convertBlock(finallyBlock, false);
+			result += convertBlock(finallyBlock, false, null);
 			indentC--;
 			result += getIndent() + "}";
 		}
@@ -1161,10 +1246,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @param node          the statement block
 	 * @param ignoreFirst   if set, the first statement is ignored
 	 *                      (sometimes super constructor calls must be ignored)
+	 * @param yieldVar      the name of the temporary yield variable if yield is used
 	 *
 	 * @return the transpiled block
 	 */
-	public String convertBlock(final BlockTree node, final boolean ignoreFirst) {
+	public String convertBlock(final BlockTree node, final boolean ignoreFirst, final String yieldVar) {
 		if (node == null)
 			return null;
 		final List<? extends StatementTree> childs = node.getStatements();
@@ -1194,6 +1280,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					case TRY -> convertTry((TryTree) child);
 					case THROW -> convertThrow((ThrowTree) child);
 					case EMPTY_STATEMENT -> "";
+					case YIELD -> convertYield((YieldTree) child, yieldVar);
 					default -> throw new TranspilerException("Transpiler Error: Child of type " + child.getKind() + " currently not supported in statement blocks.");
 				};
 				if (strChild != null)
@@ -2097,6 +2184,35 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
+		if (unit.superTypes.contains("java.util.Deque")) {
+			sb.append(getIndent()).append("public reversed() : Deque<E> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\tthrow new UnsupportedOperationException(\"Der Transpiler unterstützt diese Methode noch nicht.\");").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+		if (unit.superTypes.contains("java.util.NavigableSet")) {
+			String strType = "E";
+			if (transpiler.getElement(node) instanceof final TypeElement te) {
+				for (final TypeMirror tm: te.getInterfaces()) {
+					if ((tm instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement ste)
+							&& ("java.util.NavigableSet".equals(ste.getQualifiedName().toString()))
+							&& (dt.getTypeArguments().get(0) instanceof final TypeVariable tv)) {
+						final String[] parts = tv.toString().split(" ");
+						strType = parts[parts.length - 1];
+					}
+				}
+			}
+			sb.append(getIndent()).append("public reversed() : NavigableSet<" + strType + "> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\treturn this.descendingSet();").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+		if (unit.superTypes.contains("java.util.NavigableMap")) {
+			sb.append(getIndent()).append("public reversed() : NavigableMap<K, V> {").append(System.lineSeparator());
+			sb.append(getIndent()).append("\treturn this.descendingMap();").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
 		if (unit.superTypes.contains("java.util.Map")) { // TODO check only if the class directly implements Map and not indirectly
 			// TODO determine the name of both type parameter and replace K and V in the following code...
 			sb.append(getIndent()).append("public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {").append(System.lineSeparator());
@@ -2161,7 +2277,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append("export ");
 		sb.append("class ");
 		sb.append(node.getSimpleName());
-		sb.append(" extends JavaObject implements JavaEnum<");
+		sb.append(" extends JavaEnum<");
 		sb.append(node.getSimpleName());
 		sb.append("> {");
 		sb.append(System.lineSeparator());
@@ -2169,12 +2285,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		// Generate Attributes
 		indentC++;
-		sb.append(getIndent()).append("/** the name of the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("readonly __name : string;").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-		sb.append(getIndent()).append("/** the ordinal value for the enumeration value */").append(System.lineSeparator());
-		sb.append(getIndent()).append("readonly __ordinal : number;").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
 		sb.append(getIndent()).append("/** an array containing all values of this enumeration */").append(System.lineSeparator());
 		sb.append(getIndent()).append("static readonly all_values_by_ordinal : Array<").append(node.getSimpleName()).append("> = [];").append(System.lineSeparator());
 		sb.append(System.lineSeparator());
@@ -2212,11 +2322,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				.map(method -> new MethodNode(this, node, method, getIndent()))
 				.toList();
 		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		boolean hasToString = false;
 		for (final MethodNode method : methods) {
 			final String methodName = method.getName();
-			if ("toString".equals(methodName))
-				hasToString = true;
 			final List<MethodNode> methodList = mapMethods.get(methodName);
 			if (methodList == null)
 				continue;
@@ -2234,97 +2341,34 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the name of this enumeration value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public name() : string {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
+		sb.append(
+			"""
+			%1$s/**
+			%1$s * Returns an array with enumeration values.
+			%1$s *
+			%1$s * @returns the array with enumeration values
+			%1$s */
+			%1$spublic static values() : Array<%2$s> {
+			%1$s\treturn [...this.all_values_by_ordinal];
+			%1$s}
+			""".formatted(getIndent(), node.getSimpleName())
+		).append(System.lineSeparator());
 
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the ordinal value of this enumeration value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the ordinal value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public ordinal() : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		if (!hasToString) {
-			sb.append(getIndent()).append("/**").append(System.lineSeparator());
-			sb.append(getIndent()).append(" * Returns the name of this enumeration value.").append(System.lineSeparator());
-			sb.append(getIndent()).append(" *").append(System.lineSeparator());
-			sb.append(getIndent()).append(" * @returns the name").append(System.lineSeparator());
-			sb.append(getIndent()).append(" */").append(System.lineSeparator());
-			sb.append(getIndent()).append("public toString() : string {").append(System.lineSeparator());
-			sb.append(getIndent()).append("\treturn this.__name;").append(System.lineSeparator());
-			sb.append(getIndent()).append("}").append(System.lineSeparator());
-			sb.append(System.lineSeparator());
-		}
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns true if this and the other enumeration values are equal.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param other   the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns true if they are equal and false otherwise").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public equals(other : JavaObject) : boolean {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\tif (!(other instanceof ").append(node.getSimpleName()).append("))").append(System.lineSeparator());
-		sb.append(getIndent()).append("\t\treturn false;").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this === other;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the ordinal value as hashcode, since the ordinal value is unique.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the ordinal value as hashcode").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public hashCode() : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Compares this enumeration value with the other enumeration value by their ordinal value.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param other   the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns a negative, zero or postive value as this enumeration value is less than, equal to").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *          or greater than the other enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public compareTo(other : ").append(node.getSimpleName()).append(") : number {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn this.__ordinal - other.__ordinal;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns an array with enumeration values.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the array with enumeration values").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public static values() : Array<").append(node.getSimpleName()).append("> {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn [...this.all_values_by_ordinal];").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
-
-		sb.append(getIndent()).append("/**").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * Returns the enumeration value with the specified name.").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @param name   the name of the enumeration value").append(System.lineSeparator());
-		sb.append(getIndent()).append(" *").append(System.lineSeparator());
-		sb.append(getIndent()).append(" * @returns the enumeration values or null").append(System.lineSeparator());
-		sb.append(getIndent()).append(" */").append(System.lineSeparator());
-		sb.append(getIndent()).append("public static valueOf(name : string) : ").append(node.getSimpleName()).append(" | null {").append(System.lineSeparator());
-		sb.append(getIndent()).append("\tconst tmp : ").append(node.getSimpleName()).append(" | undefined = this.all_values_by_name.get(name);").append(System.lineSeparator());
-		sb.append(getIndent()).append("\treturn (!tmp) ? null : tmp;").append(System.lineSeparator());
-		sb.append(getIndent()).append("}").append(System.lineSeparator());
-		sb.append(System.lineSeparator());
+		sb.append(
+			"""
+			%1$s/**
+			%1$s * Returns the enumeration value with the specified name.
+			%1$s *
+			%1$s * @param name   the name of the enumeration value
+			%1$s *
+			%1$s * @returns the enumeration values or null
+			%1$s */
+			%1$spublic static valueOf(name : string) : %2$s | null {
+			%1$s\tconst tmp = this.all_values_by_name.get(name);
+			%1$s\treturn (!tmp) ? null : tmp;
+			%1$s}
+			""".formatted(getIndent(), node.getSimpleName())
+		).append(System.lineSeparator());
 
 		// TODO Typescript code for Iterable (see transpileClass - public [Symbol.iterator](): Iterator ...)
 
@@ -2354,7 +2398,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		return switch (packageName) {
 			case "java.lang" -> switch (className) {
 				case strObject -> "JavaObject";
-				case "Enum" -> "JavaEnum";
 				case strBoolean -> "JavaBoolean";
 				case strByte -> "JavaByte";
 				case strShort -> "JavaShort";
@@ -2362,6 +2405,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strLong -> "JavaLong";
 				case strFloat -> "JavaFloat";
 				case strDouble -> "JavaDouble";
+				case "Enum" -> "JavaEnum";
 				default -> className;
 			};
 			case "java.util" -> switch (className) {
@@ -2416,7 +2460,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	}
 
 	/** Ein Set mit allen im Transpiler umbenannten interfaces */
-	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaEnum", "java.lang.JavaIterable", "java.lang.TranspiledObject",
+	public static final Set<String> renamedInterfaces = Set.of("java.lang.JavaIterable", "java.lang.TranspiledObject",
 			"java.util.JavaIterator", "java.util.JavaMap", "java.util.JavaSet", "java.util.function.JavaFunction");
 
 	/**
@@ -2437,6 +2481,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			entries.add(0, new AbstractMap.SimpleEntry<>(strObject, "java.lang"));
 		if ((unit.isEnum()) && (!unit.imports.containsKey("Enum")))
 			entries.add(0, new AbstractMap.SimpleEntry<>("Enum", "java.lang"));
+		if (unit.superTypes.contains("java.util.Deque"))
+			entries.add(0, new AbstractMap.SimpleEntry<>("UnsupportedOperationException", "java.lang"));
 		if (unit.superTypes.contains("java.util.Map")) {
 			final String pkg = unit.imports.get("Function");
 			if ((pkg == null) || (!"java.util.function".equals(pkg)))
@@ -2448,7 +2494,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final String value = entry.getValue();
 			final String importCast = "cast_" + value.replace('.', '_') +  "_" + key.replace('.', '_');
 			switch (value + "." + key) {
-				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean" -> {
+				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double", "java.lang.Boolean",
+						"java.lang.Enum" -> {
 					final String importName = "Java" + key;
 					final String importLocation = importPathPrefix + "java/lang/Java" + key;
 					final boolean hasClass = body.contains(importName);

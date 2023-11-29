@@ -1,8 +1,9 @@
 import type { JavaIterator } from './JavaIterator';
 import type { Collection } from './Collection';
+import type { SequencedCollection } from './SequencedCollection';
 import type { Queue } from './Queue';
 
-export interface Deque<E> extends Queue<E> {
+export interface Deque<E> extends Queue<E>, SequencedCollection<E> {
 
     size() : number;
 

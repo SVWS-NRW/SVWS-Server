@@ -33,6 +33,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
@@ -256,7 +257,7 @@ public final class TranspilerUnit {
 		// Check for Classes in java.lang and java.io
 		switch (name) {
 			case "Comparable", "Cloneable", "Override", "System",
-				"Object",
+				"Object", "Class",
 				"Enum",
 				"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
 				"Math", "String", "StringBuilder",
@@ -341,24 +342,32 @@ public final class TranspilerUnit {
 			return;
 		if (!added.add(type))
 			return;
-		if (type instanceof final DeclaredType dt) {
-			final Element e = dt.asElement();
-			if (e instanceof final TypeElement elem)
-				addImport(elem);
-			for (final TypeMirror t : dt.getTypeArguments())
-				addImport(t, added);
-		} else if (type instanceof final WildcardType wt) {
-			addImport(wt.getExtendsBound(), added);
-			addImport(wt.getSuperBound(), added);
-		} else if (type instanceof final TypeVariable tv) {
-			addImport(tv.getUpperBound(), added);
-			addImport(tv.getLowerBound(), added);
-		} else if (type instanceof final UnionType ut) {
-			for (final TypeMirror t : ut.getAlternatives())
-				addImport(t, added);
-		} else if (type instanceof final IntersectionType it) {
-			for (final TypeMirror t : it.getBounds())
-				addImport(t, added);
+		switch (type) {
+			case final DeclaredType dt -> {
+				final Element e = dt.asElement();
+				if (e instanceof final TypeElement elem)
+					addImport(elem);
+				for (final TypeMirror t : dt.getTypeArguments())
+					addImport(t, added);
+			}
+			case final WildcardType wt -> {
+				addImport(wt.getExtendsBound(), added);
+				addImport(wt.getSuperBound(), added);
+			}
+			case final TypeVariable tv -> {
+				addImport(tv.getUpperBound(), added);
+				addImport(tv.getLowerBound(), added);
+			}
+			case final UnionType ut -> {
+				for (final TypeMirror t : ut.getAlternatives())
+					addImport(t, added);
+			}
+			case final IntersectionType it -> {
+				for (final TypeMirror t : it.getBounds())
+					addImport(t, added);
+			}
+			default -> { /* do nothing */ }
+			//default -> throw new TranspilerException("Unhandled type of kind " + type.getKind());
 		}
 	}
 
@@ -377,16 +386,18 @@ public final class TranspilerUnit {
 			index = te.getQualifiedName().toString().lastIndexOf('.');
 			enclosing = enclosing.getEnclosingElement();
 		}
-		final String packageName = qualifiedName.substring(0, index);
-		final String className = qualifiedName.substring(index + 1);
-		final String[] classNameParts = className.split("\\.");
-		String tmp = null;
-		for (int i = classNameParts.length - 1; i >= 0; i--) {
-			tmp = (tmp == null) ? classNameParts[i] : classNameParts[i] + "." + tmp;
-			final String old = this.importsSuper.put(tmp, packageName);
-			this.importsFullClassnames.put(tmp, className);
-			if (old != null)  // skip inserting type - it is already known from a previous call - avoid problem due to circular dependencies
-				return;
+		if (index >= 0) {
+			final String packageName = qualifiedName.substring(0, index);
+			final String className = qualifiedName.substring(index + 1);
+			final String[] classNameParts = className.split("\\.");
+			String tmp = null;
+			for (int i = classNameParts.length - 1; i >= 0; i--) {
+				tmp = (tmp == null) ? classNameParts[i] : classNameParts[i] + "." + tmp;
+				final String old = this.importsSuper.put(tmp, packageName);
+				this.importsFullClassnames.put(tmp, className);
+				if (old != null)  // skip inserting type - it is already known from a previous call - avoid problem due to circular dependencies
+					return;
+			}
 		}
 		for (final Element enclosed : elem.getEnclosedElements())
 			if (enclosed instanceof final TypeElement enclosedElem)
@@ -564,20 +575,16 @@ public final class TranspilerUnit {
 		for (final AbstractMap.SimpleEntry<IdentifierTree, TreePath> entry : allIdentifier) {
 			final IdentifierTree node = entry.getKey();
 			final TreePath path = entry.getValue();
-			final Tree parent = path.getParentPath().getLeaf();
-			// skip annotations and add all non local identifiers to the import map, also skip case trees
-			if (!((parent instanceof CaseTree) || (parent instanceof AnnotationTree) || (isLocal(path, node)) || ("super".equals(node.getName().toString())) || typeParameters.contains(node.getName().toString()))) {
-				allImports.put(node, getPackageName(node, path, true));
-				// TODO handle static imports...
-			} else if (parent instanceof AnnotationTree) {
-				allAnnotations.put(node, getPackageName(node, path, false));
-			} else if (transpiler.isAnnotationArgument(node)) {
-				switch (parent.getKind()) {
-					case ASSIGNMENT:
-						break;
-					default:
-						allImportsForAnnotations.put(node, getPackageName(node, path, true));
-						break;
+			final Element elem = transpiler.getElement(node);
+			if (elem instanceof TypeElement) {
+				if (transpiler.isAnnotationArgument(node)) {
+					allImportsForAnnotations.put(node, getPackageName(node, path, true));
+				} else {
+					switch (elem.getKind()) {
+						case CLASS, ENUM, INTERFACE -> allImports.put(node, getPackageName(node, path, true));
+						case ANNOTATION_TYPE -> allAnnotations.put(node, getPackageName(node, path, false));
+						default -> throw new TranspilerException("Transpiler Error: Unhandled TypeElement: " + elem.getKind());
+					}
 				}
 			}
 		}
@@ -670,7 +677,7 @@ public final class TranspilerUnit {
 
 		// check whether its a case tree in a switch expression
 		final TreePath parent = path.getParentPath();
-		if ((parent.getLeaf() instanceof CaseTree) && ((parent.getParentPath().getLeaf() instanceof final SwitchTree st)
+		if ((parent.getLeaf() instanceof ConstantCaseLabelTree) && (parent.getParentPath().getLeaf() instanceof CaseTree) && ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st)
 				&& ((st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it))))) {
 			return getIdentifierType(it);
 		}
@@ -862,53 +869,40 @@ public final class TranspilerUnit {
 	public void determineExpressionTypes() {
 		// cycle through all expressions in reverse order, i.e. from the tree leaves to the tree root
 		for (int i = allExpressions.size() - 1; i >= 0; i--) {
-			final ExpressionTree expr = allExpressions.get(i);
-			if (expr instanceof final IdentifierTree ident) {
-				allExpressionTypes.put(ident, getIdentifierType(ident));
-			} else if (expr instanceof final AssignmentTree assignment) {
-				allExpressionTypes.put(assignment, allExpressionTypes.get(assignment.getExpression()));
-			} else if (expr instanceof final AnnotatedTypeTree annotatedType) {
-				if (annotatedType.getUnderlyingType() instanceof final ArrayTypeTree att)
-					allExpressionTypes.put(annotatedType, ExpressionType.getExpressionType(transpiler, att));
-				else
-					allExpressionTypes.put(annotatedType, allExpressionTypes.get(annotatedType.getUnderlyingType()));
-			} else if (expr instanceof final AnnotationTree annotation) {
-				allExpressionTypes.put(annotation, allExpressionTypes.get(annotation.getAnnotationType()));
-			} else if (expr instanceof final ArrayAccessTree arrayAccess) {
-				final ExpressionType type = allExpressionTypes.get(arrayAccess.getExpression());
-				if (type instanceof final ExpressionArrayType exprArrayType) {
-					allExpressionTypes.put(arrayAccess, exprArrayType.getAccessed());
-				} else {
-					throw new TranspilerException("Transpiler Error: Unexpected Expression Type.");
+			switch (allExpressions.get(i)) {
+				case final IdentifierTree ident -> allExpressionTypes.put(ident, getIdentifierType(ident));
+				case final AssignmentTree assignment -> allExpressionTypes.put(assignment, allExpressionTypes.get(assignment.getExpression()));
+				case final AnnotatedTypeTree annotatedType -> {
+					if (annotatedType.getUnderlyingType() instanceof final ArrayTypeTree att)
+						allExpressionTypes.put(annotatedType, ExpressionType.getExpressionType(transpiler, att));
+					else
+						allExpressionTypes.put(annotatedType, allExpressionTypes.get(annotatedType.getUnderlyingType()));
 				}
-			} else if (expr instanceof final UnaryTree unary) {
-				allExpressionTypes.put(unary, allExpressionTypes.get(unary.getExpression()));
-			} else if (expr instanceof final BinaryTree binary) {
-				allExpressionTypes.put(binary, getBinaryOperationResultTyp(binary));
-			} else if (expr instanceof final ConditionalExpressionTree conditionalExpr) {
-				allExpressionTypes.put(conditionalExpr, allExpressionTypes.get(conditionalExpr.getTrueExpression()));
-			} else if (expr instanceof final InstanceOfTree exprInstanceOf) {
-				allExpressionTypes.put(exprInstanceOf, new ExpressionPrimitiveType(TypeKind.BOOLEAN));
-			} else if (expr instanceof final CompoundAssignmentTree compoundAssignment) {
-				allExpressionTypes.put(compoundAssignment, allExpressionTypes.get(compoundAssignment.getVariable()));
-			} else if (expr instanceof final LiteralTree literal) {
-				allExpressionTypes.put(literal, ExpressionType.getExpressionType(transpiler, literal));
-			} else if (expr instanceof final MemberSelectTree memberSelect) {
-				allExpressionTypes.put(memberSelect, getMemberSelectType(memberSelect));
-			} else if (expr instanceof final MethodInvocationTree methodInvocation) {
-				allExpressionTypes.put(methodInvocation, getMethodInvocationType(methodInvocation));
-			} else if (expr instanceof final NewArrayTree newArray) {
-				allExpressionTypes.put(newArray, ExpressionType.getExpressionType(transpiler, newArray));
-			} else if (expr instanceof final NewClassTree newClass) {
-				allExpressionTypes.put(newClass, ExpressionType.getExpressionType(transpiler, newClass.getIdentifier()));
-			} else if (expr instanceof final ParenthesizedTree parenthesizedTree) {
-				allExpressionTypes.put(parenthesizedTree, allExpressionTypes.get(parenthesizedTree.getExpression()));
-			} else if (expr instanceof final TypeCastTree typeCast) {
-				allExpressionTypes.put(typeCast, ExpressionType.getExpressionType(transpiler, typeCast.getType()));
-			} else if (expr instanceof final LambdaExpressionTree lambdaExpression) {
-				allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
+				case final AnnotationTree annotation -> allExpressionTypes.put(annotation, allExpressionTypes.get(annotation.getAnnotationType()));
+				case final ArrayAccessTree arrayAccess -> {
+					final ExpressionType type = allExpressionTypes.get(arrayAccess.getExpression());
+					if (type instanceof final ExpressionArrayType exprArrayType) {
+						allExpressionTypes.put(arrayAccess, exprArrayType.getAccessed());
+					} else {
+						throw new TranspilerException("Transpiler Error: Unexpected Expression Type.");
+					}
+				}
+				case final UnaryTree unary -> allExpressionTypes.put(unary, allExpressionTypes.get(unary.getExpression()));
+				case final BinaryTree binary -> allExpressionTypes.put(binary, getBinaryOperationResultTyp(binary));
+				case final ConditionalExpressionTree conditionalExpr -> allExpressionTypes.put(conditionalExpr, allExpressionTypes.get(conditionalExpr.getTrueExpression()));
+				case final InstanceOfTree exprInstanceOf -> allExpressionTypes.put(exprInstanceOf, new ExpressionPrimitiveType(TypeKind.BOOLEAN));
+				case final CompoundAssignmentTree compoundAssignment -> allExpressionTypes.put(compoundAssignment, allExpressionTypes.get(compoundAssignment.getVariable()));
+				case final LiteralTree literal -> allExpressionTypes.put(literal, ExpressionType.getExpressionType(transpiler, literal));
+				case final MemberSelectTree memberSelect -> allExpressionTypes.put(memberSelect, getMemberSelectType(memberSelect));
+				case final MethodInvocationTree methodInvocation -> allExpressionTypes.put(methodInvocation, getMethodInvocationType(methodInvocation));
+				case final NewArrayTree newArray -> allExpressionTypes.put(newArray, ExpressionType.getExpressionType(transpiler, newArray));
+				case final NewClassTree newClass -> allExpressionTypes.put(newClass, ExpressionType.getExpressionType(transpiler, newClass.getIdentifier()));
+				case final ParenthesizedTree parenthesizedTree -> allExpressionTypes.put(parenthesizedTree, allExpressionTypes.get(parenthesizedTree.getExpression()));
+				case final TypeCastTree typeCast -> allExpressionTypes.put(typeCast, ExpressionType.getExpressionType(transpiler, typeCast.getType()));
+				case final LambdaExpressionTree lambdaExpression -> allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
+				// TODO MemberReferenceTree
+				default -> { /* do nothing */ }
 			}
-			// TODO MemberReferenceTree
 		}
 	}
 

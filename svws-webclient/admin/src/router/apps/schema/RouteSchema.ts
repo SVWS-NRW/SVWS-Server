@@ -13,6 +13,7 @@ import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
+import { api } from "~/router/Api";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue")
@@ -65,6 +66,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 
 	public getAuswahlProps(to: RouteLocationNormalized): SchemaAuswahlProps {
 		return {
+			hasRootPrivileges: api.hasRootPrivileges,
 			auswahl: this.data.auswahl,
 			auswahlGruppe: this.data.auswahlGruppe,
 			mapSchema: () => this.data.mapSchema,
@@ -73,12 +75,16 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 			removeSchemata: this.data.removeSchemata,
 			addSchema: this.data.addSchema,
 			importSchema: this.data.importSchema,
+			migrateSchema: this.data.migrateSchema,
+			duplicateSchema: this.data.duplicateSchema,
+			refresh: this.data.refresh,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchemaAppProps {
 		return {
 			auswahl: this.data.auswahl,
+			schuleInfo: this.data.schuleInfo,
 			// Props für die Navigation
 			setTab: this.setTab,
 			tab: this.getTab(),

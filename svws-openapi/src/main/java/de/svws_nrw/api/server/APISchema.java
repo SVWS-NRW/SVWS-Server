@@ -1,15 +1,12 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.LogConsumerList;
-import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.schema.DBUtilsSchema;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaRevision;
-import de.svws_nrw.db.schema.SchemaRevisionen;
-import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -59,41 +56,11 @@ public class APISchema {
 	@ApiResponse(responseCode = "400", description = "Es wurde ein ungültiger Schema-Name oder eine ungültige Revision angegeben.")
 	@ApiResponse(responseCode = "404", description = "Die Schema-Datenbank konnte nicht geladen werden. Die Server-Konfiguration ist fehlerhaft.")
     public Response updateSchema(@PathParam("schema") final String schemaname, @PathParam("revision") final long revision, @Context final HttpServletRequest request) {
-    	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates
+    	// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates ...
     	final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);
-		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
-		final long max_revision = SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE
-		        ? SchemaRevisionen.maxRevision.revision
-		        : SchemaRevisionen.maxDeveloperRevision.revision;
-		long rev = revision;
-		if (rev < 0)
-			rev = max_revision;
-		if (rev > max_revision)
-			throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
-
-		// Erzeuge einen Logger für das Update
-		final Logger logger = new Logger();
-		final LogConsumerList log = new LogConsumerList();
-		logger.addConsumer(log);
-
-		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
-		final DBSchemaManager manager = DBSchemaManager.create(user, true, logger);
-		if (manager == null)
-			throw new WebApplicationException(Status.FORBIDDEN.getStatusCode());
-
-		// Prüfe, ob das Schema aktuell ist
-		if (!manager.updater.isUptodate(rev, false)) {
-			// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
-			if (!manager.updater.isUpdatable(rev, false))
-				throw new WebApplicationException(Status.BAD_REQUEST.getStatusCode());
-
-			// Führe die Aktualisierung durch
-			final boolean success = manager.updater.update(user, rev, false, true);
-			if (!success)
-				throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		}
-
-		// return log from logger
+    	// ... führe das Update aus ...
+    	final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
+    	// ... und gebe den Log zurück
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
     }
 

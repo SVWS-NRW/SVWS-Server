@@ -99,7 +99,7 @@ public final class MethodNode {
 		this.returnType = "constructor".equals(this.name) ? null : new TypeNode(plugin, method.getReturnType(), true, isNotNull);
 		plugin.indentC++;
 		this.superConstructorCall = getConstructorSuperCall();
-		this.body = plugin.convertBlock(method.getBody(), this.superConstructorCall != null);
+		this.body = plugin.convertBlock(method.getBody(), this.superConstructorCall != null, null);
 		plugin.indentC--;
 	}
 
@@ -528,7 +528,7 @@ public final class MethodNode {
 
 		// print the implementation for all methods
 		final String blockIndent = indent + "\t";
-		if (methods.get(0).isConstructor()) {
+		if (methods.get(0).isConstructor() && !isEnumConstructor) {
 			if (methods.get(0)._class.getExtendsClause() == null) {
 				sb.append(blockIndent);
 				sb.append("super();");
@@ -547,10 +547,7 @@ public final class MethodNode {
 
 		if (isEnumConstructor) {
 			sb.append(blockIndent);
-			sb.append("this.__name = name;");
-			sb.append(System.lineSeparator());
-			sb.append(blockIndent);
-			sb.append("this.__ordinal = ordinal;");
+			sb.append("super(name, ordinal);");
 			sb.append(System.lineSeparator());
 			sb.append(blockIndent);
 			sb.append(className).append(".all_values_by_ordinal.push(this);");
@@ -672,7 +669,7 @@ public final class MethodNode {
 		} else {
 			sb.append(" {");
 			sb.append(System.lineSeparator());
-			if (isConstructor()) {
+			if (isConstructor() && !isEnumConstructor) {
 				if (_class.getExtendsClause() == null) {
 					sb.append(indent + "\t");
 					sb.append("super();");
@@ -685,10 +682,7 @@ public final class MethodNode {
 			}
 			if (isEnumConstructor) {
 				sb.append(indent + "\t");
-				sb.append("this.__name = name;");
-				sb.append(System.lineSeparator());
-				sb.append(indent + "\t");
-				sb.append("this.__ordinal = ordinal;");
+				sb.append("super(name, ordinal);");
 				sb.append(System.lineSeparator());
 				sb.append(indent + "\t");
 				sb.append(className).append(".all_values_by_ordinal.push(this);");

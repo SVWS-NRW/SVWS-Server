@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
@@ -69,6 +70,7 @@ import de.svws_nrw.data.schule.DataKatalogVerkehrssprachen;
 import de.svws_nrw.data.schule.DataReligionen;
 import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
+import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulstufen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -93,6 +95,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -735,6 +738,8 @@ public class APISchule {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataReligionen(conn).patch(id, is),
         	request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
+
+
     /**
      * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Religionen bzw. Konfessionen.
      *
@@ -1882,6 +1887,199 @@ public class APISchule {
 				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
     		@Context final HttpServletRequest request) {
     	return DBBenutzerUtils.runWithTransaction(conn -> new DataKatalogZeitraster(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Schulen.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste mit dem Katalog der Schulen
+     */
+    @GET
+    @Path("/schulen")
+    @Operation(summary = "Gibt eine Übersicht aller Schulen im schul-spezifischen Katalog zurück.",
+               description = "Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getSchulen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).getAll(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    }
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des schulspezifischen Kataloges für die Schulen,
+     * welche ein Kürzel gesetzt haben.
+     *
+     * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return          die Liste mit dem Katalog der Schulen, welche ein Kürzel gesetzt haben
+     */
+    @GET
+    @Path("/schulen/kuerzel")
+    @Operation(summary = "Gibt eine Übersicht aller Schulen im schul-spezifischen Katalog zurück, welche ein Kürzel gesetzt haben.",
+               description = "Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen, welche ein Kürzel gesetzt haben. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
+    public Response getSchulenMitKuerzel(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataSchulen.getSchulenMitKuerzel(conn)).build(),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage eines Eintrags des schulspezifischen Kataloges
+     * für die Schulen.
+     *
+     * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+     * @param id            die ID des Eintrags
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Pausenzeit der Schule
+     */
+    @GET
+    @Path("/schulen/{id : \\d+}")
+    @Operation(summary = "Gibt den Eintrag im schulspezifischen Katalog der Schulen zurück.",
+               description = "Gibt den Eintrag im schulspezifischen Katalog der Schulen zurück. "
+               		       + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen "
+               		       + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Eintrag im schulspezifischen Katalog der Schulen",
+                 content = @Content(mediaType = "application/json",
+                 schema = @Schema(implementation = SchulEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    public Response getSchuleAusKatalog(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).get(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Patchen eines Eintrags des schulspezifischen Kataloges.
+     *
+     * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
+     * @param id        die Datenbank-ID zur Identifikation des Eintrags
+     * @param is        der InputStream, mit dem JSON-Patch-Objekt nach RFC 7386
+     * @param request   die Informationen zur HTTP-Anfrage
+     *
+     * @return das Ergebnis der Patch-Operation
+     */
+    @PATCH
+    @Path("/schulen/{id : \\d+}")
+    @Operation(summary = "Passt den Eintrag des schulspezifischen Kataloges der Schulen mit der angebenen ID an.",
+    description = "Passt den Eintrag des schulspezifischen Kataloges der Schulen mit der angebenen ID an. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich integriert.")
+    @ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag mit der angegebenen ID gefunden")
+    @ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response patchSchuleAusKatalog(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@RequestBody(description = "Der Patch für den Eintrag", required = true, content =
+    			@Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulEintrag.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).patch(id, is),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+
+    /**
+     * Die OpenAPI-Methode für das Hinzufügen eines Eintrags zum schulspezifischen Katalog der Schulen.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           der Input-Stream mit den Daten des Eintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem neuen Eintrag
+     */
+    @POST
+    @Path("/schulen/create")
+    @Operation(summary = "Erstellt einen neuen Eintrag für den schulspezifischen Katalog der Schulen und gibt das zugehörige Objekt zurück.",
+    description = "Erstellt einen neuen Eintrag für den schulspezifischen Katalog der Schulen und gibt das zugehörige Objekt zurück. "
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs "
+    		    + "besitzt.")
+    @ApiResponse(responseCode = "201", description = "Der Eintrag wurde erfolgreich hinzugefügt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = SchulEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Eintrag für die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Die Katalogdaten wurden nicht gefunden")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response addSchuleZuKatalog(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die Daten des zu erstellenden Eintrags ohne ID, welche automatisch generiert wird", required = true, content =
+			   @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SchulEintrag.class))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).add(is),
+       		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen eines Eintrags aus dem schulspezifischen Katalog der Schulen.
+     *
+     * @param schema       das Datenbankschema
+     * @param id           die ID des Eintrags
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. dem gelöschten Eintrag
+     */
+    @DELETE
+    @Path("/schulen/{id : \\d+}")
+    @Operation(summary = "Entfernt einen Eintrag aus dem schulspezifischen Katalog der Schulen.",
+    description = "aus dem schulspezifischen Katalog der Schulen."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Der Eintrag wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchulEintrag.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Kein Eintrag vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteSchuleVonKatalog(@PathParam("schema") final String schema, @PathParam("id") final long id,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).delete(id),
+    		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Entfernen mehrerer Einträge aus dem schulspezifischen Katalog der Schulen.
+     *
+     * @param schema       das Datenbankschema
+     * @param is           die IDs der Einträge
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit dem Status und ggf. den gelöschten Einträgen
+     */
+    @DELETE
+    @Path("/schulen/delete/multiple")
+    @Operation(summary = "Entfernt mehrere Einträge aus dem schulspezifischen Katalog der Schulen.",
+    description = "Entfernt mehrere Einträge aus dem schulspezifischen Katalog der Schulen."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.")
+    @ApiResponse(responseCode = "200", description = "Die Einträge wurde erfolgreich entfernt.",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.")
+    @ApiResponse(responseCode = "404", description = "Räume nicht vorhanden")
+    @ApiResponse(responseCode = "409", description = "Die übergebenen Daten sind fehlerhaft")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response deleteSchulenVonKatalog(@PathParam("schema") final String schema,
+    		@RequestBody(description = "Die IDs der zu löschenden Einträge", required = true, content =
+				@Content(mediaType = MediaType.APPLICATION_JSON, array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> new DataSchulen(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
     		request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
     }
 

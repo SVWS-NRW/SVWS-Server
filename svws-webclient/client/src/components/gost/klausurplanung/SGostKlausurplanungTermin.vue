@@ -1,5 +1,5 @@
 <template>
-	<div @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin(termin);" class="svws-ui-termin h-full flex flex-col group">
+	<div :id="'gost-klausurtermin-' + termin.id" @dragover="if (onDropTermin !== undefined) $event.preventDefault();" @drop="if (onDropTermin !== undefined) onDropTermin(termin);" class="svws-ui-termin h-full flex flex-col group">
 		<slot name="header">
 			<section class="text-headline-md leading-none px-3 pt-3" :class="{'pb-2': !$slots.tableTitle, 'text-svws': terminSelected}">
 				<template v-if="!$slots.tableTitle">

@@ -38,7 +38,7 @@ public final class Revision14Updates extends SchemaRevisionUpdateSQL {
 		final List<String> rows = conn.queryNative("SELECT SchulNr FROM EigeneSchule");
 		if ((rows == null) || (rows.size() != 1)) {
 			logger.logLn(2, "Es konnte keine Schulnummer ermittelt werden.");
-			return false;
+			return true;
 		}
 		final int schulnummer;
 		try {

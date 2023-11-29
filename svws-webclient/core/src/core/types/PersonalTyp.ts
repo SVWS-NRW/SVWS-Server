@@ -1,14 +1,7 @@
-import type { JavaEnum } from '../../java/lang/JavaEnum';
-import { JavaObject } from '../../java/lang/JavaObject';
+import { JavaEnum } from '../../java/lang/JavaEnum';
 import { HashMap } from '../../java/util/HashMap';
 
-export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class PersonalTyp extends JavaEnum<PersonalTyp> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<PersonalTyp> = [];
@@ -91,9 +84,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param gueltigBis   gibt an, bis zu welchem Schuljahr der Personaltyp gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 */
 	private constructor(name : string, ordinal : number, id : number, kuerzel : string, bezeichnung : string, gueltigVon : number | null, gueltigBis : number | null) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		PersonalTyp.all_values_by_ordinal.push(this);
 		PersonalTyp.all_values_by_name.set(name, this);
 		this.id = id;
@@ -135,7 +126,6 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param bezeichnung   die Bezeichnung des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die Bezeichnung ungültig ist
-	 *
 	 */
 	public static fromBezeichnung(bezeichnung : string | null) : PersonalTyp | null {
 		return PersonalTyp.getMapBezeichnungen().get(bezeichnung);
@@ -147,7 +137,6 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @param id   die ID des Personal-Typs
 	 *
 	 * @return der Personal-Typ oder null, falls die ID ungültig ist
-	 *
 	 */
 	public static fromID(id : number | null) : PersonalTyp | null {
 		return PersonalTyp.getMapID().get(id);
@@ -155,58 +144,6 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 
 	public toString() : string {
 		return this.kuerzel;
-	}
-
-	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof PersonalTyp))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : PersonalTyp) : number {
-		return this.__ordinal - other.__ordinal;
 	}
 
 	/**
@@ -226,7 +163,7 @@ export class PersonalTyp extends JavaObject implements JavaEnum<PersonalTyp> {
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : PersonalTyp | null {
-		const tmp : PersonalTyp | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

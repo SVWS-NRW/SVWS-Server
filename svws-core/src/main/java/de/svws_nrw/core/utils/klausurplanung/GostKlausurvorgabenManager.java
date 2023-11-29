@@ -6,14 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
+import de.svws_nrw.core.adt.map.HashMap4D;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.utils.Map2DUtils;
 import de.svws_nrw.core.utils.Map3DUtils;
-import de.svws_nrw.core.utils.MapUtils;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -49,34 +51,34 @@ public class GostKlausurvorgabenManager {
 	// GostKlausurvorgabe
 	private final @NotNull Map<@NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_id = new HashMap<>();
 	private final @NotNull List<@NotNull GostKlausurvorgabe> _vorgabenmenge = new ArrayList<>();
-	private final @NotNull Map<@NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_quartal = new HashMap<>();
-	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_quartal_and_kursartAllg_and_idFach = new HashMap3D<>();
+	private final @NotNull HashMap2D<@NotNull Integer, @NotNull Integer, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_quartal = new HashMap2D<>();
+	private final @NotNull HashMap4D<@NotNull Integer, @NotNull Integer, @NotNull String, @NotNull Long, @NotNull GostKlausurvorgabe> _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach = new HashMap4D<>();
 	private final @NotNull HashMap3D<@NotNull Integer, @NotNull String, @NotNull Long, @NotNull List<@NotNull GostKlausurvorgabe>> _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach = new HashMap3D<>();
 
 
-	/**
-	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-	 *
-	 * @param halbjahr das Gost-Halbjahr
-	 * @param quartal   das Quartal
-	 *
-	 * @return die intern verwendete Quartals-Id
-	 */
-	public static int getInternalQuartalIdWithGosthalbjahr(final @NotNull GostHalbjahr halbjahr, final int quartal) {
-		return getInternalQuartalsIdWithHalbjahrid(halbjahr.id, quartal);
-	}
-
-	/**
-	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
-	 *
-	 * @param halbjahr die Id des Gost-Halbjahres
-	 * @param quartal   das Quartal
-	 *
-	 * @return die intern verwendete Quartals-Id
-	 */
-	public static int getInternalQuartalsIdWithHalbjahrid(final int halbjahr, final int quartal) {
-		return halbjahr * 10 + quartal;
-	}
+//	/**
+//	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
+//	 *
+//	 * @param halbjahr das Gost-Halbjahr
+//	 * @param quartal   das Quartal
+//	 *
+//	 * @return die intern verwendete Quartals-Id
+//	 */
+//	public static int getInternalQuartalIdWithGosthalbjahr(final @NotNull GostHalbjahr halbjahr, final int quartal) {
+//		return getInternalQuartalsIdWithHalbjahrid(halbjahr.id, quartal);
+//	}
+//
+//	/**
+//	 * Berechnet die intern verwendete Quartal-Id, die aus Gost-Halbjahr und Quartal berechnet wird.
+//	 *
+//	 * @param halbjahr die Id des Gost-Halbjahres
+//	 * @param quartal   das Quartal
+//	 *
+//	 * @return die intern verwendete Quartals-Id
+//	 */
+//	public static int getInternalQuartalsIdWithHalbjahrid(final int halbjahr, final int quartal) {
+//		return halbjahr * 10 + quartal;
+//	}
 
 
 	/**
@@ -113,25 +115,25 @@ public class GostKlausurvorgabenManager {
 
 		update_vorgabemenge();
 
-		update_vorgabenmenge_by_quartal();
-		update_vorgabe_by_quartal_and_kursartAllg_and_idFach();
+		update_vorgabenmenge_by_halbjahr_and_quartal();
+		update_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach();
 		update_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach();
 
 	}
 
 
-	private void update_vorgabenmenge_by_quartal() {
-		_vorgabenmenge_by_quartal.clear();
+	private void update_vorgabenmenge_by_halbjahr_and_quartal() {
+		_vorgabenmenge_by_halbjahr_and_quartal.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge) {
-			MapUtils.getOrCreateArrayList(_vorgabenmenge_by_quartal, getInternalQuartalsIdWithHalbjahrid(v.halbjahr, v.quartal)).add(v);
-			MapUtils.getOrCreateArrayList(_vorgabenmenge_by_quartal, getInternalQuartalsIdWithHalbjahrid(v.halbjahr, 0)).add(v);
+			Map2DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, v.quartal).add(v);
+//			Map2DUtils.getOrCreateArrayList(_vorgabenmenge_by_halbjahr_and_quartal, v.halbjahr, 0).add(v);
 		}
 	}
 
-	private void update_vorgabe_by_quartal_and_kursartAllg_and_idFach() {
-		_vorgabe_by_quartal_and_kursartAllg_and_idFach.clear();
+	private void update_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach() {
+		_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.clear();
 		for (final @NotNull GostKlausurvorgabe v : _vorgabenmenge)
-			_vorgabe_by_quartal_and_kursartAllg_and_idFach.put(getInternalQuartalsIdWithHalbjahrid(v.halbjahr, v.quartal), v.kursart, v.idFach, v);
+			_vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.put(v.halbjahr, v.quartal, v.kursart, v.idFach, v);
 	}
 
 	private void update_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach() {
@@ -266,10 +268,15 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste von GostKlausurvorgabe-Objekten
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
-//		if (quartal == 0)
-//			return new ArrayList<>(vorgabeGetMengeAsList()); // new ArrayList als Workaround für DataTable, der sonst nicht aktualisiert
-		List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_quartal.get(getInternalQuartalIdWithGosthalbjahr(halbjahr, quartal));
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
+		if (quartal == 0) {
+			List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
+			for (@NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+				vorgaben.addAll(vQuartal);
+			}
+			return vorgaben;
+		}
+		List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
 		return vorgaben != null ? vorgaben : new ArrayList<>();
 	}
 
@@ -283,8 +290,8 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return das GostKlausurvorgabe-Objekt
 	 */
-	public GostKlausurvorgabe vorgabeGetByQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
-		return _vorgabe_by_quartal_and_kursartAllg_and_idFach.getOrNull(getInternalQuartalIdWithGosthalbjahr(halbjahr, quartal), kursartAllg.kuerzel, idFach);
+	public GostKlausurvorgabe vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+		return _vorgabe_by_halbjahr_and_quartal_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, quartal, kursartAllg.kuerzel, idFach);
 	}
 
 	/**
@@ -298,10 +305,10 @@ public class GostKlausurvorgabenManager {
 	 *
 	 * @return die Liste der GostKlausurvorgabe-Objekte
 	 */
-	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
+	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final int quartal, final @NotNull GostKursart kursartAllg, final long idFach) {
 		if (quartal > 0) {
 			final List<@NotNull GostKlausurvorgabe> retList = new ArrayList<>();
-			final GostKlausurvorgabe vorgabe = vorgabeGetByQuartalAndKursartallgAndFachid(halbjahr, quartal, kursartAllg, idFach);
+			final GostKlausurvorgabe vorgabe = vorgabeGetByHalbjahrAndQuartalAndKursartallgAndFachid(halbjahr, quartal, kursartAllg, idFach);
 			if (vorgabe != null)
 				retList.add(vorgabe);
 			return retList;
@@ -322,6 +329,24 @@ public class GostKlausurvorgabenManager {
 	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndKursartallgAndFachid(final @NotNull GostHalbjahr halbjahr, final @NotNull GostKursart kursartAllg, final long idFach) {
 		final List<@NotNull GostKlausurvorgabe> list = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getOrNull(halbjahr.id, kursartAllg.kuerzel, idFach);
 		return list != null ? list : new ArrayList<>();
+	}
+
+	/**
+	 * Gibt die das Klausurvorgabe-Objekt zum übergebenen Parameter zurück (vorhergehendes Quartal des aktuellen Schuljahres).
+	 *
+	 * @param vorgabe das Klausurvorgabe-Objekt, dessen Vorgänger gesucht ist.
+	 *
+	 * @return das GostKlausurvorgabe-Objekt
+	 */
+	public GostKlausurvorgabe getPrevious(final @NotNull GostKlausurvorgabe vorgabe) {
+		List<@NotNull GostKlausurvorgabe> vorgabenSchuljahr = _vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr, vorgabe.kursart, vorgabe.idFach);
+		if (vorgabe.halbjahr % 2 == 1)
+			vorgabenSchuljahr.addAll(_vorgabenmenge_by_halbjahr_and_kursartAllg_and_idFach.getNonNullOrException(vorgabe.halbjahr - 1, vorgabe.kursart, vorgabe.idFach));
+		vorgabenSchuljahr.sort(_compVorgabe);
+		int listIndex = vorgabenSchuljahr.indexOf(vorgabe);
+		if (listIndex == 0)
+			return null;
+		return vorgabenSchuljahr.get(listIndex - 1);
 	}
 
 }

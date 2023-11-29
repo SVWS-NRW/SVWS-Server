@@ -43,6 +43,8 @@ import javax.tools.ToolProvider;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BindingPatternTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -52,6 +54,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
@@ -330,6 +333,38 @@ public final class Transpiler extends AbstractProcessor {
 			getTranspilerUnit(path).allLocalVariablesByScope.put(parent, vars);
 		}
 		vars.put("" + node.getName(), node);
+	}
+
+
+	/**
+	 * This method is called by the {@link TranspilerJavaScanner} for registering
+	 * a variable identifier from a binding pattern.
+	 *
+	 * @param path   the tree path of the tree node
+	 * @param node   the binding pattern tree node
+	 */
+	void visitBindingPattern(final TreePath path, final BindingPatternTree node) {
+		final VariableTree varNode = node.getVariable();
+		final Tree parent = path.getParentPath().getLeaf();
+		switch (parent) {
+			case final PatternCaseLabelTree pclt -> {
+				if (path.getParentPath().getParentPath().getLeaf() instanceof final CaseTree ct) {
+					Set<Tree> scopes = getTranspilerUnit(path).allLocalVariables.get("" + varNode.getName());
+					if (scopes == null) {
+						scopes = new HashSet<>();
+						getTranspilerUnit(path).allLocalVariables.put("" + varNode.getName(), scopes);
+					}
+					scopes.add(ct);
+					Map<String, VariableTree> vars = getTranspilerUnit(path).allLocalVariablesByScope.get(ct);
+					if (vars == null) {
+						vars = new HashMap<>();
+						getTranspilerUnit(path).allLocalVariablesByScope.put(ct, vars);
+					}
+					vars.put("" + varNode.getName(), varNode);
+				}
+			}
+			default -> throw new TranspilerException("Transpiler Exception: Unhandled binding pattern tree type - " + node.toString());
+		}
 	}
 
 
@@ -1165,7 +1200,7 @@ public final class Transpiler extends AbstractProcessor {
 	 *
 	 * @return the java compiler element
 	 */
-	Element getElement(final Tree node) {
+	public Element getElement(final Tree node) {
 		return trees.getElement(getTreePath(node));
 	}
 
@@ -1554,9 +1589,9 @@ public final class Transpiler extends AbstractProcessor {
 				if ((found == null) || (rated < found_rated)) {
 					final TypeMirror returnType = ee.getReturnType();
 					if (returnType.getKind() == TypeKind.TYPEVAR) {
-						found = mapClassTypeArgs.get(returnType.toString());
+						found = mapClassTypeArgs.get(returnType.toString().trim());
 						if (found == null) {
-							found = mapMethodTypeArgs.get(returnType.toString());
+							found = mapMethodTypeArgs.get(returnType.toString().trim());
 							// TODO improve the above analysis for mapMethodTypeArgs
 						}
 					} else {

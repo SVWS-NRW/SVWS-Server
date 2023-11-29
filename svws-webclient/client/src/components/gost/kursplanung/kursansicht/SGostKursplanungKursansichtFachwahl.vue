@@ -66,7 +66,7 @@
 					</template>
 				</div>
 				<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
-					<svws-ui-checkbox :disabled="!allowRegeln" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, Boolean($event))" class="my-auto" />
+					<svws-ui-checkbox headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, Boolean($event))" class="my-auto" />
 				</div>
 				<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 					<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">

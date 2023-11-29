@@ -138,6 +138,7 @@ import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
 import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
 import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
 import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
+import { SchulEintrag } from '../core/data/kataloge/SchulEintrag';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
 import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
 import { SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
@@ -4471,36 +4472,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}
-	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Kursklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<GostKursklausur>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
-	 *
-	 * @returns Die Liste der Kursklausuren.
-	 */
-	public async getGostKlausurenKursklausurenJahrgang(schema : string, abiturjahr : number) : Promise<List<GostKursklausur>> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}"
-			.replace(/{schema\s*(:[^}]+)?}/g, schema)
-			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString());
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<GostKursklausur>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgangHalbjahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
 	 *
 	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
@@ -4521,6 +4492,38 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKursklausurenJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKursklausur>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKursklausur.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenKursklausurenJahrgangSchuljahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Kursklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKursklausur>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Kursklausuren.
+	 */
+	public async getGostKlausurenKursklausurenJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKursklausur>> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
@@ -4866,6 +4869,38 @@ export class ApiServer extends BaseApi {
 	 */
 	public async getGostKlausurenKlausurtermineJahrgangHalbjahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
 		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostKlausurtermin>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostKlausurtermin.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenKlausurtermineJahrgangSchuljahr für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Kurstermine eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Klausurtermine.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostKlausurtermin>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurtermine auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Klausurtermine.
+	 */
+	public async getGostKlausurenKlausurtermineJahrgangSchuljahr(schema : string, abiturjahr : number, halbjahr : number) : Promise<List<GostKlausurtermin>> {
+		const path = "/db/{schema}/gost/klausuren/termine/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^}]+)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^}]+)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^}]+)?}/g, halbjahr.toString());
@@ -9859,6 +9894,201 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchulen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen
+	 *
+	 * Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getSchulen(schema : string) : Promise<List<SchulEintrag>> {
+		const path = "/db/{schema}/schule/schulen"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchuleAusKatalog für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/{id : \d+}
+	 *
+	 * Gibt den Eintrag im schulspezifischen Katalog der Schulen zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Eintrag im schulspezifischen Katalog der Schulen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Katalog anzusehen.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Eintrag im schulspezifischen Katalog der Schulen
+	 */
+	public async getSchuleAusKatalog(schema : string, id : number) : Promise<SchulEintrag> {
+		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return SchulEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchSchuleAusKatalog für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/{id : \d+}
+	 *
+	 * Passt den Eintrag des schulspezifischen Kataloges der Schulen mit der angebenen ID an. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von Katalog-Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten zu ändern.
+	 *   Code 404: Kein Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchulEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchSchuleAusKatalog(data : Partial<SchulEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const body : string = SchulEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchuleVonKatalog für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/{id : \d+}
+	 *
+	 * aus dem schulspezifischen Katalog der Schulen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Eintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Kein Eintrag vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Eintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteSchuleVonKatalog(schema : string, id : number) : Promise<SchulEintrag> {
+		const path = "/db/{schema}/schule/schulen/{id : \\d+}"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema)
+			.replace(/{id\s*(:[^}]+)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return SchulEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addSchuleZuKatalog für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/create
+	 *
+	 * Erstellt einen neuen Eintrag für den schulspezifischen Katalog der Schulen und gibt das zugehörige Objekt zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten eines Katalogs besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Eintrag wurde erfolgreich hinzugefügt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchulEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Eintrag für die Schule anzulegen.
+	 *   Code 404: Die Katalogdaten wurden nicht gefunden
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<SchulEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Eintrag wurde erfolgreich hinzugefügt.
+	 */
+	public async addSchuleZuKatalog(data : Partial<SchulEintrag>, schema : string) : Promise<SchulEintrag> {
+		const path = "/db/{schema}/schule/schulen/create"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = SchulEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchulEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchulenVonKatalog für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/delete/multiple
+	 *
+	 * Entfernt mehrere Einträge aus dem schulspezifischen Katalog der Schulen.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Bearbeiten von Katalogen hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Einträge wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Katalog zu bearbeiten.
+	 *   Code 404: Räume nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Einträge wurde erfolgreich entfernt.
+	 */
+	public async deleteSchulenVonKatalog(data : List<number>, schema : string) : Promise<List<SchulEintrag>> {
+		const path = "/db/{schema}/schule/schulen/delete/multiple"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const body : string = "[" + data.toArray().map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getSchulenMitKuerzel für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/schulen/kuerzel
+	 *
+	 * Erstellt eine Liste aller in dem schul-spezifischen Katalog vorhanden Schulen, welche ein Kürzel gesetzt haben. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste von Katalog-Einträgen
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SchulEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
+	 *   Code 404: Keine Katalog-Einträge gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste von Katalog-Einträgen
+	 */
+	public async getSchulenMitKuerzel(schema : string) : Promise<List<SchulEintrag>> {
+		const path = "/db/{schema}/schule/schulen/kuerzel"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SchulEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getSchuleStammdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/stammdaten
 	 *
 	 * Liest die Stammdaten der Schule zum angegebenen Schema aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schuldaten besitzt.
@@ -11746,6 +11976,46 @@ export class ApiServer extends BaseApi {
 		const path = "/status/alive";
 		const text : string = await super.getText(path);
 		return text;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode isAlivePrivileged für den Zugriff auf die URL https://{hostname}/status/alive/privileged
+	 *
+	 * Eine Test-Methode zum Prüfen, ob die Privileged-API des Serves erreichbar ist oder nicht.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Server ist über die Privileged API erreichbar!
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Boolean
+	 *
+	 * @returns Der Server ist über die Privileged API erreichbar!
+	 */
+	public async isAlivePrivileged() : Promise<boolean | null> {
+		const path = "/status/alive/privileged";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return (text === "true");
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getServerDBRevision für den Zugriff auf die URL https://{hostname}/status/db/revision
+	 *
+	 * Gibt Datenbank-Revision zurück, welche der SVWS-Server unterstützt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Datenbank-Revision
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: Long
+	 *
+	 * @returns Die Datenbank-Revision
+	 */
+	public async getServerDBRevision() : Promise<number | null> {
+		const path = "/status/db/revision";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return parseFloat(JSON.parse(text));
 	}
 
 

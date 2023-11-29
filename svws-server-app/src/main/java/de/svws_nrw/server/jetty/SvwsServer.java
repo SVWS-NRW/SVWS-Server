@@ -307,7 +307,7 @@ public final class SvwsServer {
 	 */
 	private void addAPIApplications() {
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
-		addApplication(RestAppServer.class, "/db/*", "/config/*", "/status/*", "/api/*", "/openapi/server.json", "/openapi/server.yaml");
+		addApplication(RestAppServer.class, RestAppServer.getPathSpecification());
 		addApplication(RestAppClient.class, "/*");
 		addApplication(RestAppDav.class, "/dav/*");
 		addApplication(RestAppDebug.class, RestAppDebug.getPathSpecification());

@@ -1,11 +1,5 @@
 package de.svws_nrw.data.schild3.reporting;
 
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ArrayList;
-
 import de.svws_nrw.base.annotations.SchildReportingDate;
 import de.svws_nrw.base.annotations.SchildReportingMemo;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle;
@@ -22,6 +16,12 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 
 /**
@@ -316,14 +316,6 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
     }
 
 
-	/**
-	 * Ermöglicht das initialisieren der Map mit den Datenquellen außerhalb eines API-Calls
-	 */
-	public static void initMapDatenquellen() {
-		getMapDatenquellen();
-	}
-
-
     /**
      * Erstellt die Liste der im SVWS-Server verfügbaren Datenquellen. An dieser Stelle
      * müssen einzelnen Data-Objekte des svws-openapi- Projektes erzeugt werden.
@@ -334,13 +326,8 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	private static LinkedHashMap<String, DataSchildReportingDatenquelle<?, ?>> getMapDatenquellen() {
         if (datenquellen == null) {
             datenquellen = new LinkedHashMap<>();
-            new DataSchildReportingDatenquelleSchuelerlernabschnitte();
-            new DataSchildReportingDatenquelleSchuelerleistungsdaten();
-			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungGrunddaten();
-			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungSummen();
-			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFachwahlen();
-			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungFehler();
-			new DataSchildReportingDatenquelleSchuelerGOStLaufbahnplanungHinweise();
+            new DataSchildReportingDatenquelleSchuelerLernabschnitte();
+            new DataSchildReportingDatenquelleSchuelerLeistungsdaten();
 			new DataSchildReportingDatenquelleSchuelerSprachpruefungen();
         }
         return datenquellen;

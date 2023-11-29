@@ -1,15 +1,8 @@
-import type { JavaEnum } from '../../../java/lang/JavaEnum';
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { LehrerKatalogAnrechnungsgrundEintrag } from '../../../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
 
-export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<LehrerAnrechnungsgrund> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class LehrerAnrechnungsgrund extends JavaEnum<LehrerAnrechnungsgrund> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<LehrerAnrechnungsgrund> = [];
@@ -457,9 +450,7 @@ export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<Lehre
 	 * @param historie   die Historie des Anrechnungsgrundes, welches ein Array von {@link LehrerKatalogAnrechnungsgrundEintrag} ist
 	 */
 	private constructor(name : string, ordinal : number, historie : Array<LehrerKatalogAnrechnungsgrundEintrag>) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		LehrerAnrechnungsgrund.all_values_by_ordinal.push(this);
 		LehrerAnrechnungsgrund.all_values_by_name.set(name, this);
 		this.historie = historie;
@@ -515,67 +506,6 @@ export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<Lehre
 	}
 
 	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public toString() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof LehrerAnrechnungsgrund))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : LehrerAnrechnungsgrund) : number {
-		return this.__ordinal - other.__ordinal;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values
@@ -592,7 +522,7 @@ export class LehrerAnrechnungsgrund extends JavaObject implements JavaEnum<Lehre
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : LehrerAnrechnungsgrund | null {
-		const tmp : LehrerAnrechnungsgrund | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

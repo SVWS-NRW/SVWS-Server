@@ -793,7 +793,11 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
+		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.SequencedMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
+	}
+
+	public reversed() : NavigableMap<K, V> {
+		return this.descendingMap();
 	}
 
 	public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {

@@ -52,6 +52,11 @@ class Api {
 		return this.conn.username;
 	}
 
+	/** Gibt an, ob der Benutzer Root-Privilegien hat */
+	get hasRootPrivileges() : boolean {
+		return this.conn.hasRootPrivileges;
+	}
+
 	/**
 	 * Setzt den Hostnamen des SVWS-Server für den Verbindungsaufbau.
 	 *

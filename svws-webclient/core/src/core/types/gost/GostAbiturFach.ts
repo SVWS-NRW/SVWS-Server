@@ -1,13 +1,6 @@
-import type { JavaEnum } from '../../../java/lang/JavaEnum';
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaEnum } from '../../../java/lang/JavaEnum';
 
-export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFach> {
-
-	/** the name of the enumeration value */
-	readonly __name : string;
-
-	/** the ordinal value for the enumeration value */
-	readonly __ordinal : number;
+export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 
 	/** an array containing all values of this enumeration */
 	static readonly all_values_by_ordinal : Array<GostAbiturFach> = [];
@@ -58,9 +51,7 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param beschreibung   die textuelle Beschreibung der Abiturfachart
 	 */
 	private constructor(name : string, ordinal : number, id : number, kuerzel : string, beschreibung : string) {
-		super();
-		this.__name = name;
-		this.__ordinal = ordinal;
+		super(name, ordinal);
 		GostAbiturFach.all_values_by_ordinal.push(this);
 		GostAbiturFach.all_values_by_name.set(name, this);
 		this.id = id;
@@ -74,7 +65,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param id    die ID der Abiturfachart
 	 *
 	 * @return die Abiturfachart oder null falls die ID ungültig ist
-	 *
 	 */
 	public static fromID(id : number | null) : GostAbiturFach | null {
 		if (id === null)
@@ -104,7 +94,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param strID    die ID der Abiturfachart (als String)
 	 *
 	 * @return die Abiturfachart oder null, falls die ID ungültig ist
-	 *
 	 */
 	public static fromIDString(strID : string | null) : GostAbiturFach | null {
 		if (strID === null)
@@ -134,7 +123,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @param kuerzel    das Kürzel der Abiturfachart
 	 *
 	 * @return die Abiturfachart oder null, falls das Kürzel ungültig ist
-	 *
 	 */
 	public static fromKuerzel(kuerzel : string | null) : GostAbiturFach | null {
 		switch (kuerzel) {
@@ -161,58 +149,6 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	}
 
 	/**
-	 * Returns the name of this enumeration value.
-	 *
-	 * @returns the name
-	 */
-	public name() : string {
-		return this.__name;
-	}
-
-	/**
-	 * Returns the ordinal value of this enumeration value.
-	 *
-	 * @returns the ordinal value
-	 */
-	public ordinal() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Returns true if this and the other enumeration values are equal.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns true if they are equal and false otherwise
-	 */
-	public equals(other : JavaObject) : boolean {
-		if (!(other instanceof GostAbiturFach))
-			return false;
-		return this === other;
-	}
-
-	/**
-	 * Returns the ordinal value as hashcode, since the ordinal value is unique.
-	 *
-	 * @returns the ordinal value as hashcode
-	 */
-	public hashCode() : number {
-		return this.__ordinal;
-	}
-
-	/**
-	 * Compares this enumeration value with the other enumeration value by their ordinal value.
-	 *
-	 * @param other   the other enumeration value
-	 *
-	 * @returns a negative, zero or postive value as this enumeration value is less than, equal to
-	 *          or greater than the other enumeration value
-	 */
-	public compareTo(other : GostAbiturFach) : number {
-		return this.__ordinal - other.__ordinal;
-	}
-
-	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values
@@ -229,7 +165,7 @@ export class GostAbiturFach extends JavaObject implements JavaEnum<GostAbiturFac
 	 * @returns the enumeration values or null
 	 */
 	public static valueOf(name : string) : GostAbiturFach | null {
-		const tmp : GostAbiturFach | undefined = this.all_values_by_name.get(name);
+		const tmp = this.all_values_by_name.get(name);
 		return (!tmp) ? null : tmp;
 	}
 

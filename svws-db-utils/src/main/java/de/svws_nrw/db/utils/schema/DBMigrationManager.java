@@ -482,6 +482,18 @@ public final class DBMigrationManager {
 	}
 
 
+	/** Eine Menge von Tabellen  */
+	private static final Set<String> zentralKatalogeGemeinsam = Set.of(
+		"K_ErzieherArt".toLowerCase(),
+		"K_Religion".toLowerCase(),
+		"K_Staat".toLowerCase(),
+		"K_Ort".toLowerCase(),
+		"K_Ortsteil".toLowerCase(),
+		"K_Verkehrssprachen".toLowerCase(),
+		"K_Kindergarten".toLowerCase()
+	);
+
+
 	/**
 	 * Liest alle Daten aus der Tabelle aus. Die Daten werden anhand
 	 * der Schulnummer aus dem Attribut {@link DBMigrationManager.schulNr}
@@ -553,7 +565,7 @@ public final class DBMigrationManager {
 				}
 				if ((filterSchulNummer != null) && spaltenIst.contains("SchulnrEigner")) {
 					jpql += ((!pkSpalten.isEmpty()) ? " AND " : " WHERE ") +  "(e.SchulnrEigner = " + filterSchulNummer + "";
-					if (!"Users".equals(tab.name()) && (!"Logins".equals(tab.name())))
+					if (zentralKatalogeGemeinsam.contains(tab.name().toLowerCase()))
 						jpql += " OR e.SchulnrEigner = 0";
 					jpql += ")";
 				}
