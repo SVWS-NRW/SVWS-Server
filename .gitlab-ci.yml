@@ -43,7 +43,8 @@ publish:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
-        - job: build
+        - job: build_linux
+        - job: build_windows
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
@@ -54,10 +55,7 @@ publish:
         #- ./gradlew :deployment:docker:dockerPushAllDockerhub
         #- ./gradlew :deployment:githubRelease
         - ls ./artifacts
-    when: on_success
-    dependencies:
-        - build_linux
-        - build_windows
+
 build_linux:
     stage: build_linux
     rules:
