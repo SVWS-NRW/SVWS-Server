@@ -1,3 +1,3 @@
 export interface LadeDatenProps {
-	importLaufbahnplanung: (data: FormData) => Promise<boolean>;
+	importLaufbahnplanung: (data: FormData) => Promise<void>;
 }

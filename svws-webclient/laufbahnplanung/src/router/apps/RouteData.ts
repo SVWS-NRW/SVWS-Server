@@ -6,6 +6,8 @@ import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
 import type { ApiFile, GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
 import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung} from "@core";
+import { RouteManager } from "../RouteManager";
+import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 
 
 interface RouteState {
@@ -353,16 +355,16 @@ export class RouteData {
 		return { data, name };
 	}
 
-	importLaufbahnplanung = async (formData: FormData): Promise<boolean> => {
+	importLaufbahnplanung = async (formData: FormData) => {
 		try {
 			const gzData = formData.get("data");
 			if (!(gzData instanceof File))
-				return false;
+				return;
 			const ds = new DecompressionStream("gzip");
 			const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
 			const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
 			await this.ladeDaten(laufbahnplanungsdaten);
-			return true;
+			await RouteManager.doRoute(routeLaufbahnplanung.name);
 		} catch (e) {
 			throw new UserNotificationException(e instanceof Error ? e.message : "Unbekannter Fehler aufgetreten.");
 		}

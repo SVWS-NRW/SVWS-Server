@@ -5,15 +5,20 @@
 				<h2 class="text-headline"> {{ schueler.nachname }}, {{ schueler.vorname }} </h2>
 				Jahrgang {{ gostJahrgangsdaten.jahrgang }} ({{ gostJahrgangsdaten.bezeichnung }})
 			</div>
-			<div class="flex-none">
-				<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
+			<div class="flex flex-col gap-2">
+				<div class="flex gap-3">
+					<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
+					<a href="https://www.svws.nrw.de/faq/impressum"> <svws-ui-button type="secondary"> Impressum </svws-ui-button> </a>
+					<a href="#"> <svws-ui-button type="secondary"> Datenschutz </svws-ui-button> </a>
+				</div>
+				<span>{{ version }}</span>
 			</div>
 		</div>
 	</div>
 	<svws-ui-sub-nav>
 		<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-download-2-line />Exportieren</svws-ui-button>
 		<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-upload-2-line /> Importieren…</svws-ui-button>
-		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="importLaufbahnplanung" />
+		<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="import_laufbahnplanung" />
 		<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
 		<svws-ui-button type="danger" title="Planung wiederherstellen" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 		<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
@@ -40,6 +45,7 @@
 
 	import type { LaufbahnplanungOberstufeProps } from "./LaufbahnplanungOberstufeProps";
 	import { computed, onMounted, ref } from "vue";
+	import { version } from '../../version';
 
 	const props = defineProps<LaufbahnplanungOberstufeProps>();
 
@@ -88,6 +94,11 @@
 		link.target = "_blank";
 		link.click();
 		URL.revokeObjectURL(link.href);
+	}
+
+	async function import_laufbahnplanung(formData: FormData) {
+		await props.importLaufbahnplanung(formData);
+		return true;
 	}
 
 	// Check if component is mounted
