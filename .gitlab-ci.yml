@@ -130,10 +130,6 @@ build:
         when: always
         reports:
             junit: ./**/build/test-results/test/**/TEST-*.xml
-        paths:
-            - "./build/**"
-            - "./**/build/**"
-        expire_in: "1 days"
 
 sonarqube_analysis:
     stage: analyze
