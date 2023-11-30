@@ -21,7 +21,6 @@ interface RouteState {
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	zwischenspeicher: Abiturdaten | undefined;
 	view: RouteNode<any, any>;
 }
@@ -39,7 +38,6 @@ export class RouteData {
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
-		mapFachkombinationen: new Map(),
 		zwischenspeicher: undefined,
 		view: routeLadeDaten
 	}
@@ -93,10 +91,6 @@ export class RouteData {
 		schuleStammdaten.bezeichnung1 = daten.schulBezeichnung1;
 		schuleStammdaten.bezeichnung2 = daten.schulBezeichnung2;
 		schuleStammdaten.bezeichnung3 = daten.schulBezeichnung3;
-		// Lade die Fachkombinationen
-		const mapFachkombinationen = new Map();
-		for (const fk of daten.fachkombinationen)
-			mapFachkombinationen.set(fk.id, fk);
 		// Lade die Jahrgangsinformationen
 		const gostJahrgang = new GostJahrgang();
 		gostJahrgang.abiturjahr = daten.abiturjahr;
@@ -116,6 +110,7 @@ export class RouteData {
 		gostJahrgangsdaten.textMailversand = null;
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
 		const faecherManager = new GostFaecherManager(daten.faecher);
+		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
 		// Erstelle das Schüler-Objekt für die Anzeige
@@ -163,7 +158,6 @@ export class RouteData {
 		this.setPatchedDefaultState({
 			schuleStammdaten,
 			auswahl: schueler,
-			mapFachkombinationen,
 			gostJahrgang,
 			gostJahrgangsdaten,
 			faecherManager,
@@ -189,8 +183,8 @@ export class RouteData {
 		daten.hatZusatzkursSW = this._state.value.gostJahrgangsdaten.hatZusatzkursSW;
 		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
 		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
-		for (const fk of this._state.value.mapFachkombinationen)
-			daten.fachkombinationen.add(fk[1]);
+		for (const fk of this._state.value.faecherManager.getFachkombinationen())
+			daten.fachkombinationen.add(fk);
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
@@ -235,10 +229,6 @@ export class RouteData {
 
 	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
 		return this._state.value.gostBelegpruefungErgebnis;
-	}
-
-	get mapFachkombinationen(): Map<number, GostJahrgangFachkombination> {
-		return this._state.value.mapFachkombinationen;
 	}
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
