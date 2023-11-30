@@ -12,6 +12,11 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	public id : number = 0;
 
 	/**
+	 * Die ID des Schüler verschlüsselt
+	 */
+	public idEnc : string = "";
+
+	/**
 	 * Der Vorname des Schülers
 	 */
 	public vorname : string = "";
@@ -61,6 +66,9 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		if (typeof obj.id === "undefined")
 			 throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
+		if (typeof obj.idEnc === "undefined")
+			 throw new Error('invalid json format, missing attribute idEnc');
+		result.idEnc = obj.idEnc;
 		if (typeof obj.vorname === "undefined")
 			 throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
@@ -88,6 +96,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	public static transpilerToJSON(obj : GostLaufbahnplanungDatenSchueler) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id + ',';
+		result += '"idEnc" : ' + JSON.stringify(obj.idEnc!) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
 		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht!) + ',';
@@ -126,6 +135,9 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		let result = '{';
 		if (typeof obj.id !== "undefined") {
 			result += '"id" : ' + obj.id + ',';
+		}
+		if (typeof obj.idEnc !== "undefined") {
+			result += '"idEnc" : ' + JSON.stringify(obj.idEnc!) + ',';
 		}
 		if (typeof obj.vorname !== "undefined") {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
