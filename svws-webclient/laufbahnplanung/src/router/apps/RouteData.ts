@@ -351,7 +351,7 @@ export class RouteData {
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
 		const compressedStream = rawData.pipeThrough(new CompressionStream('gzip'))
 		const data = await new Response(compressedStream).blob();
-		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}-${this.auswahl.id}.lp`;
+		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}_${this.auswahl.id}.lp`;
 		return { data, name };
 	}
 
