@@ -4,7 +4,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
-import type { ApiFile, GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
+import type { ApiFile, GostSchuelerFachwahl} from "@core";
 import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung} from "@core";
 import { RouteManager } from "../RouteManager";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
@@ -13,6 +13,7 @@ import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 interface RouteState {
 	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
+	schuelerIDEncrypted: string;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
 	faecherManager: GostFaecherManager | undefined;
@@ -30,6 +31,7 @@ export class RouteData {
 	private static _defaultState : RouteState = {
 		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
+		schuelerIDEncrypted: '',
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
 		faecherManager: undefined,
@@ -158,6 +160,7 @@ export class RouteData {
 		this.setPatchedDefaultState({
 			schuleStammdaten,
 			auswahl: schueler,
+			schuelerIDEncrypted: planungsdaten.idEnc,
 			gostJahrgang,
 			gostJahrgangsdaten,
 			faecherManager,
@@ -188,6 +191,7 @@ export class RouteData {
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
+		s.idEnc = this._state.value.schuelerIDEncrypted;
 		s.vorname = this._state.value.auswahl.vorname;
 		s.nachname = this._state.value.auswahl.nachname;
 		s.geschlecht = this._state.value.auswahl.geschlecht;
