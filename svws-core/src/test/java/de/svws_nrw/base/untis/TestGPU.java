@@ -33,4 +33,22 @@ class TestGPU {
 		}
 	}
 
+
+	/**
+	 * Tests zum Einlesen von GPU002-Dateien
+	 */
+	@Test
+	void testGPU002() {
+		try {
+			final Path path = ResourceUtils.getFile(PFAD_DATEN + "GPU002.txt");
+			final String strGPU002 = Files.readString(path);
+			final List<UntisGPU002> unterrichte = UntisGPU002.readCSV(strGPU002);
+			for (final UntisGPU002 unterricht : unterrichte)
+				System.out.println(unterricht.idUnterricht + " -> " + unterricht.wochenTyp + " " + unterricht.klasseKuerzel + " " + unterricht.fachKuerzel + " " + unterricht.lehrerKuerzel);
+		} catch (final Exception e) {
+			fail(e);
+		}
+	}
+
+
 }
