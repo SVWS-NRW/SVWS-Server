@@ -4,7 +4,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'com.github.jk1:gradle-license-report:2.0'
+		classpath 'com.github.jk1:gradle-license-report:2.5'
 	}
 }
 
@@ -12,6 +12,7 @@ plugins {
 	id 'maven-publish'
 	id 'distribution'
 	id 'java'
+	id 'com.github.jk1.dependency-license-report' version '2.5'
 }
 
 def downloadDir = "$projectDir/download"
@@ -27,10 +28,12 @@ ext.svws_version = version
 
 ext.base_url = "https://svws.nrw.de/uploads/media/svws-server-downloads/"
 
-ext.jdk_version = "17.0.5"
+ext.jdk = "21"
+ext.jdk_version = "21.0.1"
+ext.jdk_fix = "12"
 //ext.jdk_win_url = "https://download.java.net/java/GA/jdk${jdk_version}/e482c34c86bd4bf8b56c0b35558996b9/10/GPL/openjdk-${jdk_version}_windows-x64_bin.zip"
 //ext.jdk_win_url = "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.5%2B8/OpenJDK17U-jdk_x64_windows_hotspot_17.0.5_8.zip"
-ext.jdk_win_url = "${base_url}jdk/${jdk_version}/jdk-${jdk_version}-win.zip"
+ext.jdk_win_url = "https://github.com/adoptium/temurin${jdk}-binaries/releases/download/jdk-${jdk_version}+${jdk_fix}/OpenJDK${jdk}U-jdk_x64_windows_hotspot_${jdk_version}_${jdk_fix}.zip"
 
 ext.mariadb_version = "10.6.10"
 //ext.mariadb_win_url = "https://mirror.netcologne.de/mariadb/mariadb-${mariadb_version}/winx64-packages/mariadb-${mariadb_version}-winx64.zip"
@@ -93,6 +96,8 @@ repositories {
 	mavenCentral()
 }
 
+configurations.implementation.setCanBeResolved(true)
+
 dependencies {
 	implementation project(':svws-server-app')
 }
@@ -152,7 +157,7 @@ task downloadJarsAll(type: Copy) {
 	doLast {
 		file("download/svws-" + project.version + "/run_server.cmd").text =
 			'@echo off' + System.lineSeparator() +
-				'.\\java\\bin\\java.exe --class-path svws-server/*' + ' de.svws_nrw.server.jetty.Main' +
+                '.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' + 
 				System.lineSeparator() +
 				'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
 				'IF %exitcode% EQU 42 (' + System.lineSeparator() +
@@ -166,7 +171,7 @@ task downloadJarsAll(type: Copy) {
 				')'
 		file("download/svws-" + project.version + "/run_server.sh").text =
 			'#!/bin/sh' + '\n' +
-				'java.exe --class-path "' + "svws-server/*" + '" de.svws_nrw.server.jetty.Main' +
+				'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' + 
 				System.lineSeparator()
 		file("download/svws-" + project.version + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
@@ -178,8 +183,8 @@ task downloadJarsAll(type: Copy) {
 				"set dbhost=%7" + System.lineSeparator() +
 				"set dbport=%8" + System.lineSeparator() +
 				"set dbms=%9" + System.lineSeparator() +
-				".\\java\\bin\\java.exe --class-path " + "svws-server/*"+ " de.svws_nrw.config.app.SVWSConfigFileWriter --dbms %dbms% --output %outputfile% --clientpath %clientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
-	}
+				".\\java\\bin\\java.exe --class-path " + configurations.implementation.collect{ t -> "svws-server/" + t.getName() }.join(';') + " de.svws_nrw.config.app.SVWSConfigFileWriter --dbms %dbms% --output %outputfile% --clientpath %clientpath% --loggingpath %loggingpath% --temppath %temppath% --keystorepath %keystorepath% --keystorepassword %keystorepassword% --dbhost %dbhost% --dbport %dbport% --noschema"
+			}
 }
 
 
@@ -374,7 +379,7 @@ task copyInstallerScript(type:Copy) {
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
-				jdk_version: jdk_version,
+				jdk_version: jdk_version + "+" + jdk_fix, 
 				windowsservicewrapper_version: windowsservicewrapper_version,
 				curl_version: curl_version,
 				schild2_access_password: getSchild2AccessPassword(),
@@ -387,7 +392,7 @@ task copyInstallerScript(type:Copy) {
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
-				jdk_version: jdk_version,
+				jdk_version: jdk_version + "+" + jdk_fix, 
 				windowsservicewrapper_version: windowsservicewrapper_version,
 				curl_version: curl_version,
 				schild2_access_password: getSchild2AccessPassword(),
