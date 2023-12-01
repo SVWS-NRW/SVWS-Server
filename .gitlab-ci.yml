@@ -90,6 +90,7 @@ build_windows:
         - ./gradlew :deployment:windows-installer:doZip
         - mkdir artifacts
         - copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts\
+        - dir artifacts
     artifacts:
         paths:
             - artifacts/
