@@ -53,7 +53,8 @@ publish:
         #- ./gradlew signJar publishReleaseAllAndCloseSonatype
         #- ./gradlew :deployment:docker:dockerPushAllDockerhub
         #- ./gradlew :deployment:githubRelease
-        - ls ./artifacts
+        - ls ./artifacts_windows
+        - ls ./artifacts_linux
 
 build_linux:
     stage: build_linux
@@ -67,11 +68,11 @@ build_linux:
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
         - ./gradlew :deployment:linux-installer:buildLinuxInstaller
-        - mkdir artifacts
-        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts
+        - mkdir artifacts_linux
+        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
     artifacts:
         paths:
-            - artifacts/
+            - artifacts_linux/
     when: on_success
 
 build_windows:
@@ -88,12 +89,11 @@ build_windows:
     script:
         - ./deployment/setupVersion.ps1
         - ./gradlew :deployment:windows-installer:doZip
-        - mkdir artifacts
-        - copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts\
-        - dir artifacts
+        - mkdir artifacts_windows
+        - copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
     artifacts:
         paths:
-            - artifacts/
+            - artifacts_windows/
     when: on_success
 
 integration-tests:
