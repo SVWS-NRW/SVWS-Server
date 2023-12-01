@@ -12,7 +12,6 @@ plugins {
 	id 'maven-publish'
 	id 'distribution'
 	id 'java'
-	id 'com.github.jk1.dependency-license-report' version '2.5'
 }
 
 def downloadDir = "$projectDir/download"
@@ -157,7 +156,7 @@ task downloadJarsAll(type: Copy) {
 	doLast {
 		file("download/svws-" + project.version + "/run_server.cmd").text =
 			'@echo off' + System.lineSeparator() +
-                '.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' + 
+                '.\\java\\bin\\java.exe --class-path ' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(';') + ' de.svws_nrw.server.jetty.Main' +
 				System.lineSeparator() +
 				'set exitcode=%ERRORLEVEL%' + System.lineSeparator() +
 				'IF %exitcode% EQU 42 (' + System.lineSeparator() +
@@ -171,7 +170,7 @@ task downloadJarsAll(type: Copy) {
 				')'
 		file("download/svws-" + project.version + "/run_server.sh").text =
 			'#!/bin/sh' + '\n' +
-				'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' + 
+				'java.exe --class-path "' + configurations.implementation.collect{ t -> 'svws-server/' + t.getName() }.join(':') + '" de.svws_nrw.server.jetty.Main' +
 				System.lineSeparator()
 		file("download/svws-" + project.version + "/config_writer.cmd").text =
 			"set outputfile=%1" + System.lineSeparator() +
@@ -379,7 +378,7 @@ task copyInstallerScript(type:Copy) {
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
-				jdk_version: jdk_version + "+" + jdk_fix, 
+				jdk_version: jdk_version + "+" + jdk_fix,
 				windowsservicewrapper_version: windowsservicewrapper_version,
 				curl_version: curl_version,
 				schild2_access_password: getSchild2AccessPassword(),
@@ -392,7 +391,7 @@ task copyInstallerScript(type:Copy) {
 				svws_client_version: svws_version,
 				svws_server_version: svws_version,
 				mariadb_version: mariadb_version,
-				jdk_version: jdk_version + "+" + jdk_fix, 
+				jdk_version: jdk_version + "+" + jdk_fix,
 				windowsservicewrapper_version: windowsservicewrapper_version,
 				curl_version: curl_version,
 				schild2_access_password: getSchild2AccessPassword(),
