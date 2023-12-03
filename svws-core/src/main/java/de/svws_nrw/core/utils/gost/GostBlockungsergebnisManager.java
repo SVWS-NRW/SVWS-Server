@@ -1203,6 +1203,27 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
+	 * <br>Hinweis: Die Sortierung wird mit {@link #kursSetSortierungFachKursartNummer()} und {@link #kursSetSortierungKursartFachNummer()} definiert.
+	 * <br>Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
+	 * @return die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
+	 */
+	public @NotNull List<@NotNull GostBlockungsergebnisKurs> getOfSchuelerKursmengeSortiert(final long idSchueler) {
+		final List<@NotNull GostBlockungsergebnisKurs> list = new ArrayList<>();
+		list.addAll(DeveloperNotificationException.ifMapGetIsNull(_map_schuelerID_kurse, idSchueler));
+
+		if (_fachartmenge_sortierung == 1)
+			list.sort(_kursComparator_kursart_fach_kursnummer);
+		else
+			list.sort(_kursComparator_fach_kursart_kursnummer);
+
+		return list;
+	}
+
+	/**
 	 * Liefert die Menge aller Kurse des Schülers mit Kollisionen.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.

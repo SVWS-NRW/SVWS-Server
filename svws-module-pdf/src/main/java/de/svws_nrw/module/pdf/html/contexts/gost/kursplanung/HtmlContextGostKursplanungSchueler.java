@@ -76,7 +76,7 @@ public final class HtmlContextGostKursplanungSchueler extends HtmlContext {
 		// Schule hat eine gym. Oberstufe? pruefeSchuleMitGOSt wirft eine NOT_FOUND-Exception, wenn die Schule keine GOSt hat.
 		try {
 			DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		} catch (WebApplicationException ex) {
+		} catch (final WebApplicationException ex) {
 			throw OperationError.NOT_FOUND.exception("Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
@@ -113,12 +113,12 @@ public final class HtmlContextGostKursplanungSchueler extends HtmlContext {
 		// Liste der Kursplanungsschüler, die auf Basis der Schüler-IDs und deren belegter Kurse erstellt wird.
 		kursplanungSchueler = new ArrayList<>();
 
+		ergebnisManager.kursSetSortierungKursartFachNummer();
 		for (final SchuelerStammdaten schueler : sortiertSchueler) {
 			// Liste der Kurse des aktuellen Schülers initialisieren.
 			final List<RepGostKursplanungSchuelerKurs> schuelerKurse = new ArrayList<>();
 
 			// Sortiere und bestimme die IDs aller Kurse des Schülers
-			ergebnisManager.kursSetSortierungKursartFachNummer();
 			final List<Long> schuelerKursIDs = ergebnisManager.getOfSchuelerKursmenge(schueler.id).stream().map(k -> k.id).toList();
 
 			// Ermittle die Daten der Kurse des Schülers
