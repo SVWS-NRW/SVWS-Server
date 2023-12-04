@@ -50,8 +50,8 @@ publish:
         - cat dockerlogin.txt | docker login --username svwsnrw --password-stdin
         - chmod +x ./deployment/setupVersion.sh
         - ./deployment/setupVersion.sh
-        - ./gradlew signJar publishReleaseAllAndCloseSonatype
-        - ./gradlew :deployment:docker:dockerPushAllDockerhub
+        #- ./gradlew signJar publishReleaseAllAndCloseSonatype
+        #- ./gradlew :deployment:docker:dockerPushAllDockerhub
         - ls ./artifacts_windows
         - ls ./artifacts_linux
         - ./gradlew :deployment:githubRelease

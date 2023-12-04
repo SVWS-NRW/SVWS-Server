@@ -28,7 +28,7 @@ githubRelease {
 	body  "v${project.version}"
 	draft true
 	prerelease true
-	releaseAssets  "./artifacts_linux/distributions/install-${project.version}.sh", "./artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "./artifacts_linux/SVWS-Server-Installer-win.zip"
+	releaseAssets  "../../../../artifacts_linux/distributions/install-${project.version}.sh", "../../../../artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "../../../../artifacts_windows/SVWS-Server-Installer-win.zip"
 	allowUploadToExisting.set true
 	overwrite true
 	dryRun false
