@@ -970,8 +970,7 @@ export class StundenplanManager extends JavaObject {
 		const jahrBis : number = infoBis[6];
 		const kwVon : number = infoVon[5];
 		const kwBis : number = infoBis[5];
-		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
-		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon === jahrBis) && (kwVon > kwBis));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + this._stundenplanGueltigAb! + "' ist größer als das End-Datum '" + this._stundenplanGueltigBis! + "'!", (jahrVon > jahrBis) || ((jahrVon === jahrBis) && (kwVon > kwBis)));
 		for (let jahr : number = jahrVon; jahr <= jahrBis; jahr++) {
 			const von : number = (jahr === jahrVon) ? kwVon : 1;
 			const bis : number = (jahr === jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);

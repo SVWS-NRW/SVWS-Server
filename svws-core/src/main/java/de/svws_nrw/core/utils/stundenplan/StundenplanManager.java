@@ -939,8 +939,7 @@ public class StundenplanManager {
 		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
 		final int kwVon = infoVon[5]; // 5 = kalenderwoche
 		final int kwBis = infoBis[5]; // 5 = kalenderwoche
-		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
-		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon == jahrBis) && (kwVon > kwBis));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + _stundenplanGueltigAb + "' ist größer als das End-Datum '" + _stundenplanGueltigBis + "'!", (jahrVon > jahrBis) || ((jahrVon == jahrBis) && (kwVon > kwBis)));
 
 		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
 			final int von = (jahr == jahrVon) ? kwVon : 1;
