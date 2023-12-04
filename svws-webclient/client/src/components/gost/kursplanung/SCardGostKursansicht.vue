@@ -115,7 +115,8 @@
 								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
+								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
+								:on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
 				</template>
@@ -130,7 +131,8 @@
 								:add-regel="addRegel" :remove-regel="removeRegel" :patch-regel="patchRegel" :update-kurs-schienen-zuordnung="updateKursSchienenZuordnung"
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
-								:drag-data-kurs-schiene="() => dragDataKursSchiene" :on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
+								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
+								:on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
 				</template>
@@ -145,7 +147,7 @@
 <script setup lang="ts">
 
 	import type { ComputedRef, Ref, WritableComputedRef } from "vue";
-	import { computed, onMounted, ref } from "vue";
+	import { computed, onMounted, ref, toRaw } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
 	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
@@ -279,7 +281,6 @@
 		}
 	}
 
-
 	const dragDataKursartSchiene = ref<{ schiene: GostBlockungSchiene } | undefined>(undefined);
 
 	const modalRegelKursartSchienen = ref();
@@ -303,6 +304,7 @@
 
 
 	const dragDataKursSchiene = ref<SGostKursplanungKursansichtDragData>(undefined);
+	const dropDataKursSchiene = ref<SGostKursplanungKursansichtDragData>(undefined);
 
 	const modal_regel_kurse = ref();
 	const modal_combine_kurse = ref();
@@ -310,11 +312,16 @@
 
 	function dragKursSchiene(data: SGostKursplanungKursansichtDragData) {
 		dragDataKursSchiene.value = data;
+		dropDataKursSchiene.value = undefined;
 	}
 
 	async function dropKursSchiene(zone: SGostKursplanungKursansichtDragData) {
 		if ((zone === undefined) || (dragDataKursSchiene.value === undefined))
 			return;
+		if (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id)) {
+			dropDataKursSchiene.value = zone;
+			return;
+		}
 		if (dragDataKursSchiene.value.kurs.id !== zone.kurs.id) {
 			const schienen = props.getErgebnismanager().getOfKursSchienenmenge(zone.kurs.id);
 			if (schienen.contains(zone.schiene))
@@ -333,5 +340,31 @@
 		}
 	}
 
+	const isSelectedKurse = computed(() => {
+		const k1 = dragDataKursSchiene.value?.kurs;
+		const k2 = dropDataKursSchiene.value?.kurs;
+		if (k1 === undefined || k2 === undefined)
+			return [];
+		let goon = false;
+		const range = [];
+		const list = props.kurssortierung.value === 'fach'
+			? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
+			: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
+		const iK1 = list.indexOf(toRaw(k1));
+		const iK2 = list.indexOf(toRaw(k2));
+		const kMin = iK1 <= iK2 ? k1 : k2;
+		const kMax = iK2 > iK1 ? k2 : k1;
+		for (const k of list) {
+			if (k.id === kMin.id)
+				goon = true;
+			if (k.id === kMax.id) {
+				range.push(k);
+				break;
+			}
+			if (goon)
+				range.push(k);
+		}
+		return range;
+	})
 
 </script>

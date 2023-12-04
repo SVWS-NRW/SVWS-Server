@@ -94,6 +94,7 @@
 							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
 							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
+							'bg-green-400/50': isSelected(schiene, kurs),
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
 						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
@@ -117,12 +118,11 @@
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
 						<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
+							draggable="true" @dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})"
 							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
-							<template v-if="dragDataKursSchiene() !== undefined">
-								<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs.id === kurs.id) && isKursDropZone(kurs, schiene).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
-							</template>
-							<div v-if="(dragDataKursSchiene() === undefined) && istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
-							<div v-if="allowRegeln && (dragDataKursSchiene() === undefined) && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
+							<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs?.id === kurs.id) && isKursDropZone(kurs, schiene).value && (dropDataKursSchiene() === undefined)" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
+							<div v-if="(dragDataKursSchiene() === undefined) && (istKursGesperrtInSchiene(kurs, schiene).value)" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
+							<div v-if="(dragDataKursSchiene() === undefined) && (!istKursGesperrtInSchiene(kurs, schiene).value) && allowRegeln" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
 						</div>
 					</div>
 				</template>
@@ -159,6 +159,22 @@
 		} else {
 			filter.reset();
 		}
+	}
+
+	function isSelected(schiene: GostBlockungsergebnisSchiene, k3: GostBlockungKurs) {
+		const s1 = props.dragDataKursSchiene()?.schiene;
+		const s2 = props.dropDataKursSchiene()?.schiene;
+		const s3 = props.getErgebnismanager().getSchieneG(schiene.id);
+		if (s1 === undefined || s2 === undefined)
+			return false;
+		const schieneDrag = props.getErgebnismanager().getSchieneG(s1.id);
+		const schieneDrop = props.getErgebnismanager().getSchieneG(s2.id);
+		const sMin = Math.min(schieneDrag.nummer, schieneDrop.nummer);
+		const sMax = Math.max(schieneDrag.nummer, schieneDrop.nummer);
+		if (s3.nummer >= sMin && s3.nummer <= sMax) {
+			return props.isSelectedKurse.includes(k3);
+		}
+		return false;
 	}
 
 	async function add_kurs(art: GostKursart) {
@@ -300,21 +316,21 @@
 
 	const istDraggedKursInAndererSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
-		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id !== schiene.id);
+		return (dragData !== undefined) && (dragData.kurs?.id === kurs.id) && (dragData.schiene.id !== schiene.id);
 	});
 
 	const istDraggedKursInSchiene = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
-		return (dragData !== undefined) && (dragData.kurs.id === kurs.id) && (dragData.schiene.id === schiene.id);
+		return (dragData !== undefined) && (dragData.kurs?.id === kurs.id) && (dragData.schiene.id === schiene.id);
 	});
 
 	const isKursDropZone = (kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) => computed<boolean>(() => {
 		const dragData = props.dragDataKursSchiene();
 		if (dragData === undefined)
 			return false;
-		if ((istZugeordnetKursSchiene(kurs, schiene).value) && ((dragData.kurs.id === kurs.id) || (dragData.fachId !== props.fachwahlen.id)))
+		if ((istZugeordnetKursSchiene(kurs, schiene).value) && ((dragData.kurs?.id === kurs.id) || (dragData.fachId !== props.fachwahlen.id)))
 			return false;
-		if (!props.allowRegeln && (dragData.kurs.id !== kurs.id))
+		if (!props.allowRegeln && (dragData.kurs?.id !== kurs.id))
 			return false;
 		if (props.getDatenmanager().kursGetIstVerbotenInSchiene(kurs.id, schiene.id))
 			return false;
