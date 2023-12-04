@@ -58,18 +58,42 @@ public final class DataKursliste extends DataManager<Long> {
 		eintrag.lehrer = k.Lehrer_ID;
 		eintrag.sortierung = k.Sortierung == null ? 32000 : k.Sortierung;
 		eintrag.istSichtbar = k.Sichtbar;
+		if ((k.Schienen != null) && (!k.Schienen.isBlank())) {
+			for (final String strSchiene : k.Schienen.split(",")) {
+				if ("".equals(strSchiene.trim()))
+					continue;
+				try {
+					eintrag.schienen.add(Integer.parseInt(strSchiene.trim()));
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// ignore exception
+				}
+			}
+		}
 		return eintrag;
 	};
 
 
-	private @NotNull List<@NotNull KursListeEintrag> getKursListenFuerAbschnitt() {
-    	final @NotNull List<@NotNull DTOKurs> kurse = (abschnitt == null)
+	/**
+	 * Bestimmt die Liste der Kurse für den angegeben Abschnitt. Ist dieser Abschnitt null, so werden die Kurse
+	 * aller Abschnitte zurückgegeben.
+	 *
+	 * @param conn                     die Datenbankverbindung
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
+	 * @param mitSchuelerInfo          gibt an, ob die KurslistenEinträge die Information zu Schülern beinhalten soll
+	 *
+	 * @return die Liste der Kurse
+	 */
+	public static @NotNull List<@NotNull KursListeEintrag> getKursListenFuerAbschnitt(final DBEntityManager conn,
+			final Long idSchuljahresabschnitt, final boolean mitSchuelerInfo) {
+    	final @NotNull List<@NotNull DTOKurs> kurse = (idSchuljahresabschnitt == null)
     		? conn.queryAll(DTOKurs.class)
-    		: conn.queryNamed("DTOKurs.schuljahresabschnitts_id", abschnitt, DTOKurs.class);
+    		: conn.queryNamed("DTOKurs.schuljahresabschnitts_id", idSchuljahresabschnitt, DTOKurs.class);
     	if (kurse.isEmpty())
     		return new ArrayList<>();
     	// Erstelle die Liste der Kurse
     	final List<KursListeEintrag> daten = kurse.stream().map(dtoMapper).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+    	if (!mitSchuelerInfo)
+    		return daten;
     	// Ergänze die Liste der Schüler in den Kursen
     	final List<Long> kursIDs = daten.stream().map(k -> k.id).toList();
     	final List<DTOKursSchueler> listKursSchueler =
@@ -100,7 +124,7 @@ public final class DataKursliste extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final @NotNull List<@NotNull KursListeEintrag> daten = getKursListenFuerAbschnitt();
+		final @NotNull List<@NotNull KursListeEintrag> daten = getKursListenFuerAbschnitt(conn, abschnitt, true);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

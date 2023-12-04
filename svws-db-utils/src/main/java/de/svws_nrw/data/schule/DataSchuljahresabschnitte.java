@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -76,9 +77,30 @@ public final class DataSchuljahresabschnitte extends DataManager<Long> {
     	return abschnitte.stream().map(dtoMapper).sorted(dataComparator).toList();
 	}
 
+	/**
+	 * Ermittelt den Schuljahresabschnitt für die angegebene ID. Existiert kein Schuljahresabschnitt, so
+	 * wird null zurückgegeben.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param id     die ID des Schuljahresabschnitts
+	 *
+	 * @return der Schuljahresabschnitt
+	 */
+	public static Schuljahresabschnitt getByID(final DBEntityManager conn, final long id) {
+		final DTOSchuljahresabschnitte abschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, id);
+		if (abschnitt == null)
+			return null;
+		return dtoMapper.apply(abschnitt);
+	}
+
 	@Override
 	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
+		if (id == null)
+			throw OperationError.BAD_REQUEST.exception("Die ID des Abschnitts darf nicht null sein.");
+		final Schuljahresabschnitt daten = getByID(conn, id);
+		if (daten == null)
+			throw OperationError.NOT_FOUND.exception("Es wurde kein Schuljahresabschnitt mit der ID %d gefunden.".formatted(id));
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

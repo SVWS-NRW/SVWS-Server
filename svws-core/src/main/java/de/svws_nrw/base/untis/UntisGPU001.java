@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
  * Untis-Datenaustausch-Formates und enthält damit eine Beschreibung des
  * Stundenplans.
  */
-public class UntisGPU001 {
+public final class UntisGPU001 {
 
 	/** Eine numerische ID, welche den Unterricht eindeutig identifiziert (z.B. 42) */
 	public long idUnterricht;
@@ -77,6 +77,13 @@ public class UntisGPU001 {
 		try (MappingIterator<UntisGPU001> it = reader.readValues(csvData)) {
 			return it.readAll();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Unterricht[id=" + idUnterricht + ", klasse=" + klasseKuerzel + ", lehrer="
+				+ lehrerKuerzel + ", fach/kurs=" + fachKuerzel + ", raum=" + raumKuerzel + ", wochentag="
+				+ wochentag + ", stunde=" + stunde + "]";
 	}
 
 }

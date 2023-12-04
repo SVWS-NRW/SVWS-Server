@@ -50,6 +50,17 @@ public final class DataKursdaten extends DataManager<Long> {
 		daten.lehrer = kurs.Lehrer_ID;
 		daten.sortierung = kurs.Sortierung == null ? 32000 : kurs.Sortierung;
 		daten.istSichtbar = kurs.Sichtbar;
+		if ((kurs.Schienen != null) && (!kurs.Schienen.isBlank())) {
+			for (final String strSchiene : kurs.Schienen.split(",")) {
+				if ("".equals(strSchiene.trim()))
+					continue;
+				try {
+					daten.schienen.add(Integer.parseInt(strSchiene.trim()));
+				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+					// ignore exception
+				}
+			}
+		}
 		return daten;
 	};
 

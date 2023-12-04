@@ -10,11 +10,13 @@ import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanRaum;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtRaum;
 import de.svws_nrw.db.utils.OperationError;
@@ -104,6 +106,32 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Ermittelt zu Stundenplans mit der angegebenen ID und dem Raumkürzel den zugehörigen
+	 * Raumeintrag in der Datenbank. Existiert ein solcher noch nicht, so wird ein neuer Raum mit Standardinformationen erzeugt.
+	 *
+	 * @param conn                die Datenbankverbindung
+	 * @param idStundenplan       die ID des Stundenplans
+	 * @param kuerzel             das Kürzel des Raums
+	 *
+	 * @return der Zeitrastereintrag
+	 */
+	public static StundenplanRaum getOrCreateRaum(final @NotNull DBEntityManager conn, final long idStundenplan, final String kuerzel) {
+		final List<DTOStundenplanRaum> raeume = conn.queryList("SELECT e FROM DTOStundenplanRaum e WHERE e.Stundenplan_ID = ?1 AND e.Kuerzel = ?2", DTOStundenplanRaum.class, idStundenplan, kuerzel);
+		final DTOStundenplanRaum raum;
+		if (raeume.isEmpty()) {
+			final long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
+			raum = new DTOStundenplanRaum(id, idStundenplan, kuerzel, kuerzel, 30);
+			conn.transactionPersist(raum);
+			conn.transactionFlush();
+			return dtoMapper.apply(raum);
+		}
+		if (raeume.size() == 1)
+			return dtoMapper.apply(raeume.get(0));
+		throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehrfach-Einträge für das Kürzel %s im Stundenplan mit der ID %d.".formatted(kuerzel, idStundenplan));
+	}
+
+
 	@Override
 	public Response getList() {
 		final List<StundenplanRaum> daten = getRaeume(conn, this.stundenplanID);
@@ -173,6 +201,22 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	public Response addMultiple(final InputStream is) {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanRaum.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Kopiert die Räume des allgemeinen Katalogs zu den Räumen des angegebenen Stundenplans hinzu. Dabei wird die
+	 * angegebene Datenbankverbingung genutzt, welche eine offene Transaktion haben muss.
+	 *
+	 * @param conn             die Datenbankverbindung
+	 * @param dtoStundenplan   das DTO des Stundenplans
+	 * @param raeume           die hinzuzufügenden Räume
+	 */
+	public static void addRaeume(final @NotNull DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<Raum> raeume) {
+		long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
+		for (final Raum raum : raeume)
+			conn.transactionPersist(new DTOStundenplanRaum(id++, dtoStundenplan.ID, raum.kuerzel, raum.beschreibung, raum.groesse));
+		conn.transactionFlush();
 	}
 
 

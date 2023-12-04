@@ -53,6 +53,9 @@ public class KursDaten {
 	/** Die Schüler des Kurses. */
 	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
 
+	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
+	public @NotNull List<@NotNull Integer> schienen = new ArrayList<>();
+
 
 	// TODO Weitere Daten
 }
