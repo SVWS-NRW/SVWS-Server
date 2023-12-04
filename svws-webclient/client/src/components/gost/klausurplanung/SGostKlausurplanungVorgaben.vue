@@ -116,10 +116,11 @@
 
 <script setup lang="ts">
 
-	import type { GostFach } from "@core";
 	import type { Ref , WritableComputedRef } from 'vue'
-	import {ArrayList, GostKlausurvorgabe, ZulaessigesFach} from "@core";
 	import { computed, ref, onMounted } from 'vue';
+	import type { DataTableColumn } from "@ui";
+	import type { GostFach } from "@core";
+	import {ArrayList, GostKlausurvorgabe, ZulaessigesFach} from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
@@ -196,7 +197,7 @@
 		isMounted.value = true;
 	});
 
-	const cols = [
+	const cols: DataTableColumn[] = [
 		{key: 'idFach', label: 'Fach', span: 1.25, sortable: true},
 		{key: 'kursart', label: 'Kursart', span: 0.5, sortable: true},
 		{key: 'quartal', label: 'Quartal', span: 0.5, sortable: true},
