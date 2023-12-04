@@ -79,6 +79,7 @@ public final class DataUntis {
 		// Erstelle den neuen Stundenplan
 		final long idStundenplan = conn.transactionGetNextID(DTOStundenplan.class);
 		final DTOStundenplan dtoStundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, beschreibung, wochentyp);
+		dtoStundenplan.Ende = "%04d-%02d-%02d".formatted(schuljahresabschnitt.schuljahr + 1, 7, 31);
 		conn.transactionPersist(dtoStundenplan);
 		conn.transactionFlush();
 		// Übertrage den Katalog der Räume
