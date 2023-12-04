@@ -101,7 +101,7 @@ dependencies {
 	implementation project(':svws-server-app')
 }
 
-
+/*
 publishing {
 	repositories {
 		maven {
@@ -136,7 +136,7 @@ publishing {
 		}
 	}
 }
-
+*/
 
 task printDependencies2 {
 	group = 'svws'
