@@ -2,8 +2,10 @@ package de.svws_nrw.data.datenaustausch;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -98,6 +100,7 @@ public final class DataUntis {
         long next_kid = conn.transactionGetNextID(DTOStundenplanUnterrichtKlasse.class);
         long next_rid = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
         long next_sid = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
+        final Set<Long> setUnterrichtIDs = new HashSet<>();
         for (final UntisGPU001 u : unterrichte) {
         	logger.logLn("-> Importiere Unterricht: " + u.toString());
 			// Bestimme den Zeitraster-Eintrag des neuen Stundenplans
@@ -113,6 +116,11 @@ public final class DataUntis {
 			if (lehrer == null) {
 				logger.logLn(2, "[Fehler] - Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
 				throw OperationError.NOT_FOUND.exception("Der Lehrer mit dem Kürzel %s konnte nicht in der Datenbank gefunden werden.".formatted(u.lehrerKuerzel));
+			}
+			// Prüfe, ob die Unterichts-ID aus der Datei schon mit einem früheren Datensatz bearbeitet wurde
+			if (!setUnterrichtIDs.add(u.idUnterricht)) {
+				logger.logLn(2, "Unterricht mit der ID %d wurde bereits hinzugefügt. Überspringe diesen Eintrag...".formatted(u.idUnterricht));
+				continue;
 			}
 			// Prüfe, ob es sich um Kursunterricht handelt
 			final KursListeEintrag kurs = mapKurseByKuerzelUndJahrgang.getOrNull(u.fachKuerzel, klasse.Jahrgang_ID);
