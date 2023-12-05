@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: Monorepo-Workspace",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.8.2-SNAPSHOT",
+	"version": "0.8.2",
 	"workspaces": [
 		"svws-webclient/core",
 		"svws-webclient/core-test",
