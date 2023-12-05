@@ -192,6 +192,7 @@ export class ApiSchemaPrivileged extends BaseApi {
 	 *     - Rückgabe-Typ: SchuleInfo
 	 *   Code 400: Das angegebene Schema ist kein SVWS-Schema
 	 *   Code 403: Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.
+	 *   Code 404: Es wurden keine Schul-Informationen in dem SVWS-Schema gefunden.
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *

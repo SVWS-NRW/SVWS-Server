@@ -143,6 +143,7 @@ public class APISchemaPrivileged {
     	content = @Content(mediaType = "application/json", schema = @Schema(implementation = SchuleInfo.class)))
 	@ApiResponse(responseCode = "400", description = "Das angegebene Schema ist kein SVWS-Schema")
 	@ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um die Schul-Informationen abzufragen.")
+	@ApiResponse(responseCode = "404", description = "Es wurden keine Schul-Informationen in dem SVWS-Schema gefunden.")
     public SchuleInfo getSchuleInfo(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 			return DBUtilsSchema.getSchuleInfo(conn, schemaname);

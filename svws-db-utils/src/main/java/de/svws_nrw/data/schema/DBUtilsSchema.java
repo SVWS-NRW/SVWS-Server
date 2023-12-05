@@ -174,6 +174,9 @@ public final class DBUtilsSchema {
 		final DBSchemaVersion version = status.getVersion();
 		if (version == null) // Kein gültiges SVWS-Schema, prüfe das nächste Schema...
 			throw OperationError.BAD_REQUEST.exception("Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
+		final SchuleInfo schuleInfo = status.getSchuleInfo();
+		if (schuleInfo == null)
+			throw OperationError.NOT_FOUND.exception("Das Schema %s ist noch nicht mit den Informationen einer Schule initialisiert".formatted(schemaname));
 		return status.getSchuleInfo();
     }
 
