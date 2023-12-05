@@ -1,0 +1,26 @@
+{
+  "erfolgreich": false,
+  "fehlercodes": [
+    {
+      "code": "ZK_18",
+      "art": "BELEGUNG",
+      "beschreibung": "Im Anschluss an zwei Zusatzkursbelegungen darf das Fach nicht weiter belegt werden."
+    },
+    {
+      "code": "ZK_17",
+      "art": "SCHULSPEZIFISCH",
+      "beschreibung": "Der Beginn des Zusatzkurses in Sozialwissenschaften entspricht nicht der Einstellung in diesem Jahrgang."
+    },
+    {
+      "code": "NW_FS_13_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+    },
+    {
+      "code": "ANZ_11_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+    }
+  ],
+  "log": []
+}

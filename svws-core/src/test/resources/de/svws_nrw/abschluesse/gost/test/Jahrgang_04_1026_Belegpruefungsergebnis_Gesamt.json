@@ -1,0 +1,36 @@
+{
+  "erfolgreich": false,
+  "fehlercodes": [
+    {
+      "code": "LI_IV_10",
+      "art": "BELEGUNG",
+      "beschreibung": "Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden."
+    },
+    {
+      "code": "LI_IV_11",
+      "art": "BELEGUNG",
+      "beschreibung": "Es darf nur eins der Fächer Literatur, IP oder VP belegt werden. (Schulen mit genehmigtem musisch-künstlerischem Schwerpunkt müssen betroffene Schüler in SchILD-NRW manuell zulassen)."
+    },
+    {
+      "code": "NW_FS_13_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+    },
+    {
+      "code": "ANZ_22_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Bei der Wahl eines Musik-Grundkurses als Abiturfach sind maximal 6 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) in der Qualifikationsphase anrechenbar."
+    },
+    {
+      "code": "ANZ_20_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "In der Qualifikationsphase können sind nur maximal zwei im literarisch-künstlerischen Fachbereich anrechenbar."
+    },
+    {
+      "code": "ANZ_11_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+    }
+  ],
+  "log": []
+}
