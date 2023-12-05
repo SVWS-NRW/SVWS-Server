@@ -160,7 +160,7 @@
 			rowStart = (zbeginn - beginn.value) / 5;
 			rowEnd = (zende - beginn.value) / 5;
 		}
-		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
+		return "grid-row-start: " + Math.round(rowStart + 1) + "; grid-row-end: " + Math.round(rowEnd + 1) + "; grid-column: 1;";
 	}
 
 	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
@@ -172,7 +172,7 @@
 			rowStart = (pause.beginn - beginn.value) / 5;
 			rowEnd = (pause.ende - beginn.value) / 5;
 		}
-		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
+		return "grid-row-start: " + Math.round(rowStart + 1) + "; grid-row-end: " + Math.round(rowEnd + 1) + "; grid-column: 1;";
 	}
 
 	async function addWochentag() {
