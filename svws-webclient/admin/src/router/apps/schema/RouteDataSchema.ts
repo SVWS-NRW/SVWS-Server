@@ -63,10 +63,10 @@ export class RouteDataSchema {
 		const listSchema : List<string> = await api.privileged.getSchemaListe();
 		listSchema.sort(<Comparator<string>>{ compare(s1 : string, s2 : string) { return JavaString.compareToIgnoreCase(s1, s2); } });
 		for (const s of listSchema)
-			mapSchema.set(s, this.getEmpty(s));
+			mapSchema.set(s.toLocaleLowerCase(), this.getEmpty(s));
 		const listSVWSSchema : List<SchemaListeEintrag> = await api.privileged.getSVWSSchemaListe();
 		for (const s of listSVWSSchema)
-			mapSchema.set(s.name, s);
+			mapSchema.set(s.name.toLocaleLowerCase(), s);
 		let auswahl : SchemaListeEintrag | undefined = undefined;
 		if (mapSchema.size > 0) {
 			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname);
