@@ -24,6 +24,10 @@ public class GostLaufbahnplanungDatenSchueler {
 	@Schema(description = "Die eindeutige ID des Schülers.", example = "4711")
 	public long id;
 
+	/** Die ID des Schüler verschlüsselt */
+	@Schema(description = "Die ID des Schüler verschlüsselt.", example = "4711")
+	public @NotNull String idEnc = "";
+
 	/** Der Vorname des Schülers */
 	@Schema(description = "Der Vorname des Schülers.", example = "Max")
 	public @NotNull String vorname = "";

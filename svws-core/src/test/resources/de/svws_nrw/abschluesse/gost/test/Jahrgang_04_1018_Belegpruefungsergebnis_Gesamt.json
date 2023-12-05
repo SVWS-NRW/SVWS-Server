@@ -1,0 +1,21 @@
+{
+  "erfolgreich": true,
+  "fehlercodes": [
+    {
+      "code": "NW_FS_13_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+    },
+    {
+      "code": "ANZ_23_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "In der Qualifikationsphase sind, wenn Musik nicht als Abiturfach gewählt wird, maximal 5 Kurse Musik-Kurse (Musik, vokal- oder instrumentalpraktischer Grundkurs) anrechenbar."
+    },
+    {
+      "code": "ANZ_11_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+    }
+  ],
+  "log": []
+}

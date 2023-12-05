@@ -67,11 +67,42 @@ class TestStundenplanManagerRandomized {
 	/**
 	 * Diese Klasse testet den {@link StundenplanManager} mit randomisierten Daten.
 	 */
-	@DisplayName("TestStundenplanManagerRandomized")
+	@DisplayName("testAllRandomized")
 	@Test
-	void testAll() {
+	void testAllRandomized() {
 		for (int runden = 1; runden <= 1024; runden *= 2)
 			testeMehrereRunden(runden);
+
+	}
+
+	/**
+	 * Diese Klasse testet den {@link StundenplanManager} mit deterministischen Daten.
+	 */
+	@DisplayName("testAllDeterministic")
+	@Test
+	void testAllDeterministic() {
+		test_gueltig_bis();
+	}
+
+	private static void test_gueltig_bis() {
+		final @NotNull StundenplanKomplett komplett = new StundenplanKomplett();
+		komplett.daten.gueltigAb = "2022-03-15";
+		komplett.daten.gueltigBis = "2022-07-15";
+
+		final @NotNull StundenplanManager m1 = new StundenplanManager(komplett);
+		assertEquals("2022-07-15", m1.getGueltigBis());
+
+		komplett.daten.gueltigAb = "2022-07-15";
+		komplett.daten.gueltigBis = "";
+		final @NotNull StundenplanManager m2 = new StundenplanManager(komplett);
+		assertEquals("2022-07-31", m2.getGueltigBis());
+
+		komplett.daten.gueltigAb = "2022-09-15";
+		komplett.daten.gueltigBis = "";
+		final @NotNull StundenplanManager m3 = new StundenplanManager(komplett);
+		assertEquals("2023-07-31", m3.getGueltigBis());
+
+		// komplett.daten.gueltigBis = null; // TODO Fall: NULL
 	}
 
 	private static void testeMehrereRunden(final int runden) {

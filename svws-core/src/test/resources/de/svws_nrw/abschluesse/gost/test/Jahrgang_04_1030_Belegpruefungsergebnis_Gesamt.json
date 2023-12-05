@@ -1,0 +1,31 @@
+{
+  "erfolgreich": false,
+  "fehlercodes": [
+    {
+      "code": "LI_IV_11",
+      "art": "BELEGUNG",
+      "beschreibung": "Es darf nur eins der Fächer Literatur, IP oder VP belegt werden. (Schulen mit genehmigtem musisch-künstlerischem Schwerpunkt müssen betroffene Schüler in SchILD-NRW manuell zulassen)."
+    },
+    {
+      "code": "NW_FS_13_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Da von EF.1 bis Q2.2 weniger als zwei Fremdsprachen schriftlich belegt wurden, liegt ausschließlich ein naturwissenschaftlicher Schwerpunkt vor."
+    },
+    {
+      "code": "ANZ_21_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Bei der Wahl eines Musik-Leistungskurse sind vokal- und instrumentalpraktische Kurse nicht in der Qualifikationsphase nicht anrechenbar."
+    },
+    {
+      "code": "ANZ_20_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "In der Qualifikationsphase können sind nur maximal zwei im literarisch-künstlerischen Fachbereich anrechenbar."
+    },
+    {
+      "code": "ANZ_11_INFO",
+      "art": "HINWEIS",
+      "beschreibung": "Die Stundenbandbreite sollte pro Halbjahr 32 bis 36 Stunden betragen, um eine gleichmäßige Stundenbelastung zu gewährleisten."
+    }
+  ],
+  "log": []
+}

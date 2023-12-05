@@ -1126,6 +1126,25 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
+	 * <br>Hinweis: Die Sortierung wird mit {@link #kursSetSortierungFachKursartNummer()} und {@link #kursSetSortierungKursartFachNummer()} definiert.
+	 * <br>Wirft eine Exception, wenn der ID kein Schüler zugeordnet ist.
+	 *
+	 * @param  idSchueler Die Datenbank-ID des Schülers.
+	 *
+	 * @return die sortierte Menge aller Kurse, die dem Schüler zugeordnet sind.
+	 */
+	public getOfSchuelerKursmengeSortiert(idSchueler : number) : List<GostBlockungsergebnisKurs> {
+		const list : List<GostBlockungsergebnisKurs> | null = new ArrayList();
+		list.addAll(DeveloperNotificationException.ifMapGetIsNull(this._map_schuelerID_kurse, idSchueler));
+		if (this._fachartmenge_sortierung === 1)
+			list.sort(this._kursComparator_kursart_fach_kursnummer);
+		else
+			list.sort(this._kursComparator_fach_kursart_kursnummer);
+		return list;
+	}
+
+	/**
 	 * Liefert die Menge aller Kurse des Schülers mit Kollisionen.
 	 *
 	 * @param  idSchueler Die Datenbank-ID des Schülers.

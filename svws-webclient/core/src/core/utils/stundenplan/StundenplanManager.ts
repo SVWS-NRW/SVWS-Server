@@ -26,6 +26,7 @@ import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
+import { Exception } from '../../../java/lang/Exception';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { StundenplanAufsichtsbereich } from '../../../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum';
@@ -451,7 +452,7 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
 			this._stundenplanGueltigAb = daten.gueltigAb;
-			this._stundenplanGueltigBis = daten.gueltigBis;
+			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
@@ -468,11 +469,26 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
 			this._stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
-			this._stundenplanGueltigBis = stundenplanKomplett.daten.gueltigBis;
+			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
 			this._stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 			DeveloperNotificationException.ifTrue("Stundenplan.id != StundenplanUnterrichtsverteilung.id", stundenplanKomplett.daten.id !== stundenplanKomplett.unterrichtsverteilung.id);
 			this.initAll(stundenplanKomplett.daten.kalenderwochenZuordnung, stundenplanKomplett.unterrichtsverteilung.faecher, stundenplanKomplett.daten.jahrgaenge, stundenplanKomplett.daten.zeitraster, stundenplanKomplett.daten.raeume, stundenplanKomplett.daten.pausenzeiten, stundenplanKomplett.daten.aufsichtsbereiche, stundenplanKomplett.unterrichtsverteilung.lehrer, stundenplanKomplett.unterrichtsverteilung.schueler, stundenplanKomplett.daten.schienen, stundenplanKomplett.unterrichtsverteilung.klassen, stundenplanKomplett.unterrichtsverteilung.klassenunterricht, stundenplanKomplett.pausenaufsichten, stundenplanKomplett.unterrichtsverteilung.kurse, stundenplanKomplett.unterrichte);
 		} else throw new Error('invalid method overload');
+	}
+
+	private static init_gueltig_bis(gueltigAb : string, gueltigBis : string | null) : string {
+		const infoVon : Array<number> = DateUtils.extractFromDateISO8601(gueltigAb);
+		if (gueltigBis !== null) {
+			try {
+				DateUtils.extractFromDateISO8601(gueltigBis);
+				return gueltigBis;
+			} catch(ex) {
+				// empty block
+			}
+		}
+		const jahrAb : number = infoVon[0];
+		const monatAb : number = infoVon[1];
+		return (monatAb <= 7 ? jahrAb : jahrAb + 1) + "-07-31";
 	}
 
 	private initAll(listKWZ : List<StundenplanKalenderwochenzuordnung>, listFach : List<StundenplanFach>, listJahrgang : List<StundenplanJahrgang>, listZeitraster : List<StundenplanZeitraster>, listRaum : List<StundenplanRaum>, listPausenzeit : List<StundenplanPausenzeit>, listAufsichtsbereich : List<StundenplanAufsichtsbereich>, listLehrer : List<StundenplanLehrer>, listSchueler : List<StundenplanSchueler>, listSchiene : List<StundenplanSchiene>, listKlasse : List<StundenplanKlasse>, listKlassenunterricht : List<StundenplanKlassenunterricht>, listPausenaufsicht : List<StundenplanPausenaufsicht>, listKurs : List<StundenplanKurs>, listUnterricht : List<StundenplanUnterricht>) : void {
@@ -954,8 +970,7 @@ export class StundenplanManager extends JavaObject {
 		const jahrBis : number = infoBis[6];
 		const kwVon : number = infoVon[5];
 		const kwBis : number = infoBis[5];
-		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
-		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon === jahrBis) && (kwVon > kwBis));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + this._stundenplanGueltigAb! + "' ist größer als das End-Datum '" + this._stundenplanGueltigBis! + "'!", (jahrVon > jahrBis) || ((jahrVon === jahrBis) && (kwVon > kwBis)));
 		for (let jahr : number = jahrVon; jahr <= jahrBis; jahr++) {
 			const von : number = (jahr === jahrVon) ? kwVon : 1;
 			const bis : number = (jahr === jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);

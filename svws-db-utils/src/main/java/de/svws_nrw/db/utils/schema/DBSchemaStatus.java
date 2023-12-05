@@ -170,8 +170,10 @@ public final class DBSchemaStatus {
 	 * @return die Informationen zu der Schule
 	 */
 	private SchuleInfo leseSchuleInfo(final DBEntityManager conn) {
+		if ((conn.getDBDriver() != DBDriver.MARIA_DB) && (conn.getDBDriver() != DBDriver.MYSQL))
+			return null;
 		try {
-			final List<Object[]> results = conn.query("SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM %s.EigeneSchule".formatted(schemaName));
+			final List<Object[]> results = conn.query("SELECT ID, SchulNr, SchulformKrz, Bezeichnung1, Bezeichnung2, Bezeichnung3, Strassenname, HausNr, HausNrZusatz, PLZ, Ort FROM `%s`.`EigeneSchule`".formatted(schemaName));
 			if (results.isEmpty())
 				return null;
 			if (results.size() > 1)

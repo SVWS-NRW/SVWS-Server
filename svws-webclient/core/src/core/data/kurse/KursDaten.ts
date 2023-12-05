@@ -50,6 +50,11 @@ export class KursDaten extends JavaObject {
 	 */
 	public schueler : List<Schueler> = new ArrayList();
 
+	/**
+	 * Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde
+	 */
+	public schienen : List<number> = new ArrayList();
+
 
 	public constructor() {
 		super();
@@ -91,6 +96,11 @@ export class KursDaten extends JavaObject {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+			for (const elem of obj.schienen) {
+				result.schienen?.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -123,6 +133,18 @@ export class KursDaten extends JavaObject {
 				const elem = obj.schueler.get(i);
 				result += Schueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schienen) {
+			result += '"schienen" : []';
+		} else {
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem;
+				if (i < obj.schienen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -178,6 +200,20 @@ export class KursDaten extends JavaObject {
 					const elem = obj.schueler.get(i);
 					result += Schueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schienen !== "undefined") {
+			if (!obj.schienen) {
+				result += '"schienen" : []';
+			} else {
+				result += '"schienen" : [ ';
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
+					result += elem;
+					if (i < obj.schienen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

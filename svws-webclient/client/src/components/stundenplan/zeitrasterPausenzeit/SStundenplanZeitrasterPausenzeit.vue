@@ -13,8 +13,7 @@
 <script setup lang="ts">
 
 	import type { StundenplanZeitrasterPausenzeitProps } from "./SStundenplanZeitrasterPausenzeitProps";
-	import { StundenplanPausenzeit} from "@core";
-	import { Wochentag, StundenplanZeitraster } from "@core";
+	import { Wochentag, StundenplanZeitraster, StundenplanPausenzeit } from "@core";
 	import { computed } from "vue";
 
 	const props = defineProps<StundenplanZeitrasterPausenzeitProps>();

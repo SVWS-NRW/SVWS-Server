@@ -97,7 +97,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt ANZ_20_INFO */
 	ANZ_20_INFO("ANZ_20_INFO", GostBelegungsfehlerArt.HINWEIS,
-			"In der Qualifikationsphase können sind nur maximal zwei im literarisch-künstlerischen Fachbereich anrechenbar.",
+			"In der Qualifikationsphase sind nur maximal zwei Kurse in einem Ersatzfach des literarisch-künstlerischen Fachbereichs anrechenbar.",
 			null),
 
 	/** BelegungsfehlerArt ANZ_21_INFO */
@@ -307,7 +307,7 @@ public enum GostBelegungsfehler {
 
 	/** BelegungsfehlerArt LI_IV_10 */
 	LI_IV_10("LI_IV_10", GostBelegungsfehlerArt.BELEGUNG,
-			"Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren belegt werden.",
+			"Die Fächer Literatur, instrumentalpraktischer bzw. vokalpraktischer Grundkurs dürfen maximal in zwei aufeinanderfolgenden Halbjahren in der Qualifikationsphase belegt werden.",
 			null),
 
 	/** BelegungsfehlerArt LI_IV_11 */

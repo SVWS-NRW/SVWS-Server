@@ -34,7 +34,7 @@ public final class DataLehrerliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrer} in einen Core-DTO {@link LehrerListeEintrag}.
 	 */
-	private final Function<DTOLehrer, LehrerListeEintrag> dtoMapper = (final DTOLehrer l) -> {
+	private static final Function<DTOLehrer, LehrerListeEintrag> dtoMapper = (final DTOLehrer l) -> {
 		final LehrerListeEintrag eintrag = new LehrerListeEintrag();
 		eintrag.id = l.ID;
 		eintrag.kuerzel = l.Kuerzel;
@@ -52,7 +52,7 @@ public final class DataLehrerliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Vergleichen/Sortieren der Core-DTOs {@link LehrerListeEintrag}.
 	 */
-	private final Comparator<LehrerListeEintrag> dataComparator = (a, b) -> {
+	private static final Comparator<LehrerListeEintrag> dataComparator = (a, b) -> {
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
 		if ((a.kuerzel == null) && (b.kuerzel != null))
 			return -1;
@@ -82,12 +82,25 @@ public final class DataLehrerliste extends DataManager<Long> {
 		return result;
 	};
 
-	@Override
-	public Response getAll() {
+
+	/**
+	 * Bestimmt die Liste aller Lehrer.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 *
+	 * @return die Liste der Lehrer
+	 */
+	public static List<LehrerListeEintrag> getLehrerListe(final DBEntityManager conn) {
     	final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
     	if (lehrer == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final List<LehrerListeEintrag> daten = lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
+    		throw OperationError.NOT_FOUND.exception("Es wurden keine Lehrer in der Datenbank gefunden.");
+    	return lehrer.stream().map(dtoMapper).sorted(dataComparator).toList();
+	}
+
+
+	@Override
+	public Response getAll() {
+    	final List<LehrerListeEintrag> daten = getLehrerListe(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

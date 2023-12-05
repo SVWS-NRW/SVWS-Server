@@ -41,6 +41,11 @@ export class KursListeEintrag extends JavaObject {
 	public schueler : List<Schueler> = new ArrayList();
 
 	/**
+	 * Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde
+	 */
+	public schienen : List<number> = new ArrayList();
+
+	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
 	 */
 	public sortierung : number = 0;
@@ -85,6 +90,11 @@ export class KursListeEintrag extends JavaObject {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+			for (const elem of obj.schienen) {
+				result.schienen?.add(elem);
+			}
+		}
 		if (typeof obj.sortierung === "undefined")
 			 throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -121,6 +131,18 @@ export class KursListeEintrag extends JavaObject {
 				const elem = obj.schueler.get(i);
 				result += Schueler.transpilerToJSON(elem);
 				if (i < obj.schueler.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (!obj.schienen) {
+			result += '"schienen" : []';
+		} else {
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem;
+				if (i < obj.schienen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
@@ -172,6 +194,20 @@ export class KursListeEintrag extends JavaObject {
 					const elem = obj.schueler.get(i);
 					result += Schueler.transpilerToJSON(elem);
 					if (i < obj.schueler.size() - 1)
+						result += ',';
+				}
+				result += ' ]' + ',';
+			}
+		}
+		if (typeof obj.schienen !== "undefined") {
+			if (!obj.schienen) {
+				result += '"schienen" : []';
+			} else {
+				result += '"schienen" : [ ';
+				for (let i = 0; i < obj.schienen.size(); i++) {
+					const elem = obj.schienen.get(i);
+					result += elem;
+					if (i < obj.schienen.size() - 1)
 						result += ',';
 				}
 				result += ' ]' + ',';

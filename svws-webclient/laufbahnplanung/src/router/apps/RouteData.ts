@@ -4,7 +4,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLadeDaten } from "~/router/apps/RouteLadeDaten";
 
-import type { ApiFile, GostJahrgangFachkombination, GostSchuelerFachwahl} from "@core";
+import type { ApiFile, GostSchuelerFachwahl} from "@core";
 import { AbiturdatenManager, Abiturdaten, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungDaten, SchuelerListeEintrag, UserNotificationException, AbiturFachbelegung, GostHalbjahr, AbiturFachbelegungHalbjahr, DeveloperNotificationException, GostKursart, SchuleStammdaten, GostLaufbahnplanungDatenSchueler, GostLaufbahnplanungDatenFachbelegung} from "@core";
 import { RouteManager } from "../RouteManager";
 import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
@@ -13,6 +13,7 @@ import { routeLaufbahnplanung } from "./RouteLaufbahnplanung";
 interface RouteState {
 	schuleStammdaten: SchuleStammdaten;
 	auswahl: SchuelerListeEintrag | undefined;
+	schuelerIDEncrypted: string;
 	abiturdaten: Abiturdaten | undefined;
 	abiturdatenManager: AbiturdatenManager | undefined;
 	faecherManager: GostFaecherManager | undefined;
@@ -21,7 +22,6 @@ interface RouteState {
 	gostBelegpruefungErgebnis: GostBelegpruefungErgebnis;
 	gostJahrgang: GostJahrgang;
 	gostJahrgangsdaten: GostJahrgangsdaten;
-	mapFachkombinationen: Map<number, GostJahrgangFachkombination>;
 	zwischenspeicher: Abiturdaten | undefined;
 	view: RouteNode<any, any>;
 }
@@ -31,6 +31,7 @@ export class RouteData {
 	private static _defaultState : RouteState = {
 		schuleStammdaten: new SchuleStammdaten(),
 		auswahl: undefined,
+		schuelerIDEncrypted: '',
 		abiturdaten: undefined,
 		abiturdatenManager: undefined,
 		faecherManager: undefined,
@@ -39,7 +40,6 @@ export class RouteData {
 		gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 		gostJahrgang: new GostJahrgang(),
 		gostJahrgangsdaten: new GostJahrgangsdaten(),
-		mapFachkombinationen: new Map(),
 		zwischenspeicher: undefined,
 		view: routeLadeDaten
 	}
@@ -93,10 +93,6 @@ export class RouteData {
 		schuleStammdaten.bezeichnung1 = daten.schulBezeichnung1;
 		schuleStammdaten.bezeichnung2 = daten.schulBezeichnung2;
 		schuleStammdaten.bezeichnung3 = daten.schulBezeichnung3;
-		// Lade die Fachkombinationen
-		const mapFachkombinationen = new Map();
-		for (const fk of daten.fachkombinationen)
-			mapFachkombinationen.set(fk.id, fk);
 		// Lade die Jahrgangsinformationen
 		const gostJahrgang = new GostJahrgang();
 		gostJahrgang.abiturjahr = daten.abiturjahr;
@@ -116,6 +112,7 @@ export class RouteData {
 		gostJahrgangsdaten.textMailversand = null;
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
 		const faecherManager = new GostFaecherManager(daten.faecher);
+		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
 		// Erstelle das Schüler-Objekt für die Anzeige
@@ -163,7 +160,7 @@ export class RouteData {
 		this.setPatchedDefaultState({
 			schuleStammdaten,
 			auswahl: schueler,
-			mapFachkombinationen,
+			schuelerIDEncrypted: planungsdaten.idEnc,
 			gostJahrgang,
 			gostJahrgangsdaten,
 			faecherManager,
@@ -189,11 +186,12 @@ export class RouteData {
 		daten.hatZusatzkursSW = this._state.value.gostJahrgangsdaten.hatZusatzkursSW;
 		daten.beginnZusatzkursSW = this._state.value.gostJahrgangsdaten.beginnZusatzkursSW;
 		daten.textBeratungsbogen = this._state.value.gostJahrgangsdaten.textBeratungsbogen;
-		for (const fk of this._state.value.mapFachkombinationen)
-			daten.fachkombinationen.add(fk[1]);
+		for (const fk of this._state.value.faecherManager.getFachkombinationen())
+			daten.fachkombinationen.add(fk);
 		daten.faecher.addAll(this._state.value.faecherManager.faecher());
 		const s = new GostLaufbahnplanungDatenSchueler();
 		s.id = this._state.value.auswahl.id;
+		s.idEnc = this._state.value.schuelerIDEncrypted;
 		s.vorname = this._state.value.auswahl.vorname;
 		s.nachname = this._state.value.auswahl.nachname;
 		s.geschlecht = this._state.value.auswahl.geschlecht;
@@ -235,10 +233,6 @@ export class RouteData {
 
 	get gostBelegpruefungErgebnis(): GostBelegpruefungErgebnis {
 		return this._state.value.gostBelegpruefungErgebnis;
-	}
-
-	get mapFachkombinationen(): Map<number, GostJahrgangFachkombination> {
-		return this._state.value.mapFachkombinationen;
 	}
 
 	get gostBelegpruefungsArt(): 'ef1' | 'gesamt' | 'auto' {
@@ -351,7 +345,7 @@ export class RouteData {
 			throw new UserNotificationException("Unerwarteter Fehler beim Erstellen der Export-Daten aufgetreten.");
 		const compressedStream = rawData.pipeThrough(new CompressionStream('gzip'))
 		const data = await new Response(compressedStream).blob();
-		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}-${this.auswahl.id}.lp`;
+		const name = `Laufbahnplanung_${this.gostJahrgangsdaten.abiturjahr}_${this.gostJahrgangsdaten.jahrgang}_${this.auswahl.nachname}_${this.auswahl.vorname}_${this.auswahl.id}.lp`;
 		return { data, name };
 	}
 

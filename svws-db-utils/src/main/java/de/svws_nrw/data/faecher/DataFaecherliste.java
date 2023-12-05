@@ -31,7 +31,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link FaecherListeEintrag}.
 	 */
-	private final Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (final DTOFach f) -> {
+	private static final Function<DTOFach, FaecherListeEintrag> dtoMapperFach = (final DTOFach f) -> {
 		final FaecherListeEintrag daten = new FaecherListeEintrag();
 		daten.id = f.ID;
 		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
@@ -43,12 +43,25 @@ public final class DataFaecherliste extends DataManager<Long> {
 		return daten;
 	};
 
-	@Override
-	public Response getAll() {
+
+	/**
+	 * Bestimmt die Liste aller Fächer.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 *
+	 * @return die Liste der Fächer
+	 */
+	public static List<FaecherListeEintrag> getFaecherListe(final DBEntityManager conn) {
     	final List<DTOFach> faecher = conn.queryAll(DTOFach.class);
     	if (faecher == null)
-    		return OperationError.NOT_FOUND.getResponse();
-    	final List<FaecherListeEintrag> daten = faecher.stream().map(dtoMapperFach::apply).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+    		throw OperationError.NOT_FOUND.exception("Es wurden keine Fächer in der Datenbank gefunden.");
+    	return faecher.stream().map(dtoMapperFach::apply).sorted((a, b) -> Long.compare(a.sortierung, b.sortierung)).toList();
+	}
+
+
+	@Override
+	public Response getAll() {
+    	final List<FaecherListeEintrag> daten = getFaecherListe(conn);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

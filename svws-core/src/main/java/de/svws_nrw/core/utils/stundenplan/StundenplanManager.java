@@ -309,7 +309,7 @@ public class StundenplanManager {
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
 		_stundenplanGueltigAb = daten.gueltigAb;
-		_stundenplanGueltigBis = daten.gueltigBis;
+		_stundenplanGueltigBis = init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 		_stundenplanBezeichnung = daten.bezeichnungStundenplan;
 
 		// Spezialfall: "unterrichtsverteilung" ist NULL
@@ -354,7 +354,7 @@ public class StundenplanManager {
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
 		_stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
-		_stundenplanGueltigBis = stundenplanKomplett.daten.gueltigBis;
+		_stundenplanGueltigBis = init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
 		_stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
 
 		// Spezielle Prüfungen.
@@ -375,6 +375,25 @@ public class StundenplanManager {
 				stundenplanKomplett.pausenaufsichten,
 				stundenplanKomplett.unterrichtsverteilung.kurse,
 				stundenplanKomplett.unterrichte);
+	}
+
+	private static @NotNull String init_gueltig_bis(final @NotNull String gueltigAb, final String gueltigBis) {
+		final @NotNull int[] infoVon = DateUtils.extractFromDateISO8601(gueltigAb);
+
+		// Wenn "gueltigBis" valide ist, dann übernehmen...
+		if (gueltigBis != null) {
+			try {
+				DateUtils.extractFromDateISO8601(gueltigBis);
+				return gueltigBis;
+			} catch (@SuppressWarnings("unused") final Exception ex) {
+				// nichts
+			}
+		}
+
+		// ... andernfalls, einen Default-Wert nehmen --> Letzter Tag im Schuljahr --> = 31.7.XXXX
+		final int jahrAb = infoVon[0];
+		final int monatAb = infoVon[1];
+		return (monatAb <= 7 ? jahrAb : jahrAb + 1) + "-07-31";
 	}
 
 	private void initAll(final @NotNull List<@NotNull StundenplanKalenderwochenzuordnung> listKWZ,
@@ -920,14 +939,13 @@ public class StundenplanManager {
 		final int jahrBis = infoBis[6]; // 6 = kalenderwochenjahr
 		final int kwVon = infoVon[5]; // 5 = kalenderwoche
 		final int kwBis = infoBis[5]; // 5 = kalenderwoche
-		DeveloperNotificationException.ifTrue("jahrVon > jahrBis", jahrVon > jahrBis);
-		DeveloperNotificationException.ifTrue("(jahrVon == jahrBis) && (kwVon > kwBis)", (jahrVon == jahrBis) && (kwVon > kwBis));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + _stundenplanGueltigAb + "' ist größer als das End-Datum '" + _stundenplanGueltigBis + "'!", (jahrVon > jahrBis) || ((jahrVon == jahrBis) && (kwVon > kwBis)));
 
 		for (int jahr = jahrVon; jahr <= jahrBis; jahr++) {
 			final int von = (jahr == jahrVon) ? kwVon : 1;
 			final int bis = (jahr == jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
 			for (int kw = von; kw <= bis; kw++)
-				if (!_kwz_by_jahr_and_kw.contains(jahr, kw)) { // Überschreibe Original - Objekte der DB nicht!
+				if (!_kwz_by_jahr_and_kw.contains(jahr, kw)) { // Überschreibe Original-Objekte der DB nicht!
 					final @NotNull StundenplanKalenderwochenzuordnung kwz = new StundenplanKalenderwochenzuordnung();
 					kwz.id = -1;
 					kwz.jahr = jahr;

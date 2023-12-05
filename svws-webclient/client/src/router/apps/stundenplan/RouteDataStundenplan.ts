@@ -51,7 +51,7 @@ export class RouteDataStundenplan {
 
 	public async setView(view: RouteNode<any,any>) {
 		if (routeStundenplan.children.includes(view))
-			this.setPatchedState({ view: view });
+			this.setPatchedState({ view });
 		else
 			throw new Error("Diese für die Stundenpläne gewählte Ansicht wird nicht unterstützt.");
 	}
@@ -322,7 +322,7 @@ export class RouteDataStundenplan {
 		const list: List<StundenplanZeitraster> = new ArrayList();
 		for (const z of zeitraster)
 			list.add(z);
-		const res = await api.server.patchStundenplanZeitrasterEintraege(list, api.schema);
+		await api.server.patchStundenplanZeitrasterEintraege(list, api.schema);
 		this.stundenplanManager.zeitrasterPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
@@ -334,14 +334,13 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const listID = new ArrayList<number>()
-		for (const zeitraster of multi) {
+		for (const zeitraster of multi)
 			listID.add(zeitraster.id);
-		}
 		const list = await api.server.deleteStundenplanZeitrasterEintraege(listID, api.schema, id);
 		this.stundenplanManager.zeitrasterRemoveAll(list);
 		if ((this.selected instanceof StundenplanZeitraster && list.contains(this.selected))
-		|| (typeof this.selected === 'number')
-		|| (this.selected instanceof Wochentag))
+			|| (typeof this.selected === 'number')
+			|| (this.selected instanceof Wochentag))
 			this._state.value.selected = undefined;
 		this.commit();
 		api.status.stop();
@@ -353,9 +352,8 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const listKatalogeintraege: List<Partial<StundenplanZeitraster>> = await api.server.getZeitraster(api.schema);
-		for (const item of listKatalogeintraege) {
+		for (const item of listKatalogeintraege)
 			delete item.id;
-		}
 		await api.server.addStundenplanZeitrasterEintraege(listKatalogeintraege, api.schema, id);
 		// kein Aufruf an den Manager notwendig, da wir die Route nun neu laden
 		api.status.stop();
@@ -384,7 +382,7 @@ export class RouteDataStundenplan {
 				list.add(datum);
 			}
 		}
-		api.server.patchStundenplanUnterrichte(list, api.schema);
+		await api.server.patchStundenplanUnterrichte(list, api.schema);
 		this.stundenplanManager.unterrichtPatchAttributesAll(list);
 		this.commit();
 		api.status.stop();
@@ -396,9 +394,8 @@ export class RouteDataStundenplan {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		api.status.start();
 		const listID = new ArrayList<number>();
-		for (const unterricht of unterrichte) {
+		for (const unterricht of unterrichte)
 			listID.add(unterricht.id);
-		}
 		const list = await api.server.deleteStundenplanUnterrichte(listID, api.schema, id);
 		this.stundenplanManager.unterrichtRemoveAll(list);
 		if (this.selected instanceof StundenplanUnterricht && list.contains(this.selected))

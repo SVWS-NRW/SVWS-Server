@@ -13,6 +13,7 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanZeitraster;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.validation.constraints.NotNull;
@@ -74,6 +75,34 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 			daten.add(dtoMapper.apply(z));
 		return daten;
 	}
+
+
+	/**
+	 * Ermittelt zu dem Tupel (wochentag, unterrichtsstunde) des Stundenplans mit der ID idStundenplan den zugehörigen
+	 * Zeitrastereintrag in der Datenbank. Existiert ein solcher noch nicht, so wird ein neue Eintrag mit leeren Zeiten erzeugt.
+	 *
+	 * @param conn                die Datenbankverbindung
+	 * @param idStundenplan       die ID des Stundenplans
+	 * @param wochentag           der Wochentag
+	 * @param unterrichtsstunde   die Unterrichtsstunde
+	 *
+	 * @return der Zeitrastereintrag
+	 */
+	public static StundenplanZeitraster getOrCreateZeitrasterEintrag(final @NotNull DBEntityManager conn, final long idStundenplan, final int wochentag, final int unterrichtsstunde) {
+		final List<DTOStundenplanZeitraster> eintraege = conn.queryList("SELECT e FROM DTOStundenplanZeitraster e WHERE e.Stundenplan_ID = ?1 AND e.Tag = ?2 AND e.Stunde = ?3", DTOStundenplanZeitraster.class, idStundenplan, wochentag, unterrichtsstunde);
+		final DTOStundenplanZeitraster eintrag;
+		if (eintraege.isEmpty()) {
+			final long id = conn.transactionGetNextID(DTOStundenplanZeitraster.class);
+			eintrag = new DTOStundenplanZeitraster(id, idStundenplan, wochentag, unterrichtsstunde, 430 + unterrichtsstunde * 50, 475 + unterrichtsstunde * 50);
+			conn.transactionPersist(eintrag);
+			conn.transactionFlush();
+		} else if (eintraege.size() == 1) {
+			eintrag = eintraege.get(0);
+		} else
+			throw OperationError.INTERNAL_SERVER_ERROR.exception("Mehrfach-Einträge für die Kombination Wochentag %d und Stunde %d im Stundenplan mit der ID %d.".formatted(wochentag, unterrichtsstunde, idStundenplan));
+		return dtoMapper.apply(eintrag);
+	}
+
 
 	@Override
 	public Response getList() {
@@ -154,6 +183,22 @@ public final class DataStundenplanZeitraster extends DataManager<Long> {
 	public Response addMultiple(final InputStream is) {
 		DataStundenplan.getDTOStundenplan(conn, stundenplanID);   // Prüfe, on der Stundenplan existiert
 		return super.addBasicMultiple(is, DTOStundenplanZeitraster.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
+	}
+
+
+	/**
+	 * Kopiert die Zeitrastereinträge des allgemeinen Katalogs zu den Zeitrastereinträgen des angegebenen Stundenplans hinzu.
+	 * Dabei wird die angegebene Datenbankverbingung genutzt, welche eine offene Transaktion haben muss.
+	 *
+	 * @param conn             die Datenbankverbindung
+	 * @param dtoStundenplan   das DTO des Stundenplans
+	 * @param eintraege        die hinzuzufügenden Zeitraster-Einträge
+	 */
+	public static void addZeitraster(final @NotNull DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<StundenplanZeitraster> eintraege) {
+		long id = conn.transactionGetNextID(DTOStundenplanZeitraster.class);
+		for (final StundenplanZeitraster eintrag : eintraege)
+			conn.transactionPersist(new DTOStundenplanZeitraster(id++, dtoStundenplan.ID, eintrag.wochentag, eintrag.unterrichtstunde, eintrag.stundenbeginn, eintrag.stundenende));
+		conn.transactionFlush();
 	}
 
 

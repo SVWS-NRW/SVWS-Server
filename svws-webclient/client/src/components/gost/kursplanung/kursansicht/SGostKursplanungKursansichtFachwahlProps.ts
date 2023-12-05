@@ -30,7 +30,9 @@ export interface SGostKursplanungKursansichtFachwahlProps {
 	kursart: GostKursart;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	allowRegeln: boolean;
+	isSelectedKurse: GostBlockungKurs[];
 	dragDataKursSchiene: () => SGostKursplanungKursansichtDragData;
+	dropDataKursSchiene: () => SGostKursplanungKursansichtDragData;
 	onDragKursSchiene: (data: SGostKursplanungKursansichtDragData) => void;
 	onDropKursSchiene: (zone: SGostKursplanungKursansichtDragData) => Promise<void>;
 }

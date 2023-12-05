@@ -14,8 +14,8 @@
 			<svws-ui-button type="secondary" v-if="revisionUpToDate" @click="upgradeSchema" title="Schema auf aktuelle Revision hochsetzen"> <i-ri-speed-line /> Revision auf {{ revision }} setzen </svws-ui-button>
 			<div v-if="eintrag.isTainted">Achtung, auch nach dem Hochsetzen auf die aktuelle Revision bleibt das Schema „Tainted“.</div>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="weiteres" class="opacity-50">
-			Weitere Funktionen
+		<svws-ui-content-card title="Admin-Benutzer">
+			<svws-ui-table :columns="cols" :items="admins()" />
 		</svws-ui-content-card>
 	</div>
 </template>
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 
 	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
+	import type { DataTableColumn } from "@ui";
 	import { computed } from "vue";
 
 	const props = defineProps<SchemaUebersichtProps>();
@@ -35,6 +36,11 @@
 			return false;
 		return revServer !== eintrag.value.revision;
 	})
+
+	const cols: DataTableColumn[] = [
+		{ key: "anzeigename", label: "Name", span: 3 },
+		{ key: "name", label: "Benutzername", span: 1, sortable: true },
+	];
 
 	async function inConfig() {}
 

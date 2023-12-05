@@ -388,5 +388,4 @@ public final class DateUtils {
 		return result;
 	}
 
-
 }

@@ -81,6 +81,8 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			final StundenplanListeEintrag e = dtoMapper.apply(s);
 			e.schuljahr = a.Jahr;
 			e.abschnitt = a.Abschnitt;
+			if (e.gueltigBis == null)
+				e.gueltigBis = "%04d-%02d-%02d".formatted(a.Jahr + 1, 7, 31);
 			daten.add(e);
 		}
 		return daten.stream().sorted((a, b) -> {

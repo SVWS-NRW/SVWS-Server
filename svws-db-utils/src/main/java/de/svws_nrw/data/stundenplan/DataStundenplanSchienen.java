@@ -3,11 +3,15 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.core.data.kurse.KursListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.data.DataBasicMapper;
@@ -117,6 +121,29 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 			return OperationError.NOT_FOUND.getResponse("Es wurde keine Schiene eines Stundenplans mit der ID %d gefunden.".formatted(id));
 		final StundenplanSchiene daten = dtoMapper.apply(schiene);
         return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Ermittel die Schienen, welche in der Kursliste definiert sind und erzeugt dafür Einträge für den Stundenplan.
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param kurse           die Liste der Kurse
+	 */
+	public static void addSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursListeEintrag> kurse) {
+		final Set<Pair<Long, Integer>> setJahrgangsSchienen = new HashSet<>();
+		for (final KursListeEintrag kurs : kurse)
+			for (final long idJahrgang : kurs.idJahrgaenge)
+				for (final int schiene : kurs.schienen)
+					setJahrgangsSchienen.add(new Pair<>(idJahrgang, schiene));
+		long id = conn.transactionGetNextID(DTOStundenplanSchienen.class);
+		for (final Pair<Long, Integer> s : setJahrgangsSchienen) {
+			final DTOStundenplanSchienen dto = new DTOStundenplanSchienen(id++, idStundenplan, s.b, "Schiene " + s.b);
+			dto.Jahrgang_ID = s.a;
+			conn.transactionPersist(dto);
+		}
+		conn.transactionFlush();
 	}
 
 

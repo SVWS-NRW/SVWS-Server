@@ -7,6 +7,8 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
+import de.svws_nrw.data.datenaustausch.DataUntis;
+import de.svws_nrw.data.datenaustausch.UntisGPU001MultipartBody;
 import de.svws_nrw.data.gost.DataKurs42;
 import de.svws_nrw.data.gost.DataLupo;
 import de.svws_nrw.db.Benutzer;
@@ -131,5 +133,34 @@ public class APIGostDatenaustausch {
 	    	return DataKurs42.importZip(conn, multipart);
     	}
     }
+
+
+    /**
+     * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der i, Untis-Format GPU001.txt vorliegt.
+     *
+     * @param multipart     Die GPU001.txt
+     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden sollen
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation
+     */
+    @POST
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Path("/untis/import/gpu001")
+    @Operation(summary = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.",
+               description = "Importiert den Untis-Stundenplan aus der übergebenen GPU001.txt in das Schema mit dem angegebenen Namen.")
+    @ApiResponse(responseCode = "200", description = "Der Log vom Import des Untis-Stundenplans",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "409", description = "Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.",
+    			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+    @ApiResponse(responseCode = "403", description = "Der Benutzer hat keine Berechtigung, um den Untis-Stundenplan zu importieren.")
+    public Response importStundenplanUntisGPU001(@PathParam("schema") final String schemaname,
+    		@RequestBody(description = "Die Textdatei GPU001.txt", required = true, content =
+			@Content(mediaType = MediaType.MULTIPART_FORM_DATA)) @MultipartForm final UntisGPU001MultipartBody multipart,
+    		@Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> DataUntis.importGPU001(conn, multipart),
+        		request, ServerMode.STABLE, BenutzerKompetenz.IMPORT_EXPORT_DATEN_IMPORTIEREN);
+    }
+
 
 }
