@@ -16,6 +16,7 @@ import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.OperationError;
 import jakarta.ws.rs.WebApplicationException;
@@ -84,6 +85,9 @@ public final class DataStundenplan extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
 		if (stundenplan == null)
 			return null;
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, stundenplan.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			return null;
 		final List<StundenplanZeitraster> zeitraster = DataStundenplanZeitraster.getZeitraster(conn, id);
 		final List<StundenplanRaum> raeume = DataStundenplanRaeume.getRaeume(conn, id);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, id);
@@ -96,7 +100,11 @@ public final class DataStundenplan extends DataManager<Long> {
 		daten.id = stundenplan.ID;
 		daten.idSchuljahresabschnitt = stundenplan.Schuljahresabschnitts_ID;
 		daten.gueltigAb = stundenplan.Beginn;
-		daten.gueltigBis = stundenplan.Ende;
+		if (stundenplan.Ende == null) {
+			daten.gueltigBis = "%04d-%02d-%02d".formatted(schuljahresabschnitt.Jahr + 1, 7, 31);
+		} else {
+			daten.gueltigBis = stundenplan.Ende;
+		}
 		daten.bezeichnungStundenplan = stundenplan.Beschreibung;
 		daten.wochenTypModell = stundenplan.WochentypModell;
 		daten.zeitraster.addAll(zeitraster);
