@@ -1,18 +1,25 @@
 <template>
 	<div class="page--content page--content--full">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+			<svws-ui-sub-nav>
+				<div class="ml-4 flex gap-0.5 items-center leading-none">
+					<div class="text-button font-bold mr-1 -mt-px">Klasse:</div>
+					<svws-ui-select headless title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" autocomplete
+						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="() => 0"
+						type="transparent" />
+					<div class="text-button font-bold mr-1 -mt-px">Wochentyp:</div>
+					<svws-ui-select headless title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
+						class="print:hidden" type="transparent"
+						:disabled="wochentypen().size() <= 0"
+						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
+				</div>
+			</svws-ui-sub-nav>
+		</Teleport>
 		<template v-if="props.stundenplanManager().klasseGetMengeAsList().isEmpty()">
 			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
 		<template v-else>
 			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined)" class="flex flex-col justify-start mb-auto svws-table-offset">
-				<svws-ui-input-wrapper class="mb-10">
-					<svws-ui-select title="Klasse" v-model="klasse" :items="stundenplanManager().klasseGetMengeAsList()" :item-text="(i: StundenplanKlasse) => i.kuerzel" autocomplete
-						:item-filter="(i: StundenplanKlasse[], text: string)=> i.filter(k=>k.kuerzel.includes(text.toLocaleLowerCase()))" :item-sort="()=>0" />
-					<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
-						class="print:hidden"
-						:disabled="wochentypen().size() <= 0"
-						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
-				</svws-ui-input-wrapper>
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
