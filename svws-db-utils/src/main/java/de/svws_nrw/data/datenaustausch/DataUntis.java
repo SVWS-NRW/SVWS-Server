@@ -23,6 +23,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.data.faecher.DataFaecherliste;
 import de.svws_nrw.data.kataloge.DataKatalogRaeume;
 import de.svws_nrw.data.kataloge.DataKatalogZeitraster;
@@ -78,6 +79,16 @@ public final class DataUntis {
 		for (final KursListeEintrag kurs : kurse)
 			for (final long idJahrgang : kurs.idJahrgaenge)
 				mapKurseByKuerzelUndJahrgang.put(kurs.kuerzel, idJahrgang, kurs);
+		// Prüfe den Beginn des Stundenplan - ist dieser evtl. nach dem Schuljahr des angegebenen Schuljahresabschnitts?
+		final int schuljahr = DateUtils.getSchuljahrFromDateISO8601(beginn);
+		if (schuljahr > schuljahresabschnitt.schuljahr) {
+			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+			throw OperationError.CONFLICT.exception("Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+		}
+		if (schuljahr < schuljahresabschnitt.schuljahr) {
+			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+			throw OperationError.CONFLICT.exception("Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+		}
 		// Erstelle den neuen Stundenplan
 		final long idStundenplan = conn.transactionGetNextID(DTOStundenplan.class);
 		final DTOStundenplan dtoStundenplan = new DTOStundenplan(idStundenplan, idSchuljahresabschnitt, beginn, beschreibung, wochentyp);
