@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanManager, StundenplanZeitraster} from "@core";
-	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach } from "@core";
+	import type { StundenplanManager } from "@core";
+	import { ArrayList, DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster } from "@core";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
@@ -42,7 +42,8 @@
 		if (start === null)
 			return;
 		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
-		const zeitraster = props.item.clone() as StundenplanZeitraster;
+		const zeitraster = new StundenplanZeitraster();
+		Object.assign(zeitraster, props.item);
 		zeitraster.stundenbeginn = stundenbeginn;
 		const list = new ArrayList<StundenplanZeitraster>();
 		list.add(zeitraster);
@@ -53,7 +54,8 @@
 		if (ende === null)
 			return;
 		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
-		const zeitraster = props.item.clone() as StundenplanZeitraster;
+		const zeitraster = new StundenplanZeitraster();
+		Object.assign(zeitraster, props.item);
 		zeitraster.stundenende = stundenende;
 		const list = new ArrayList<StundenplanZeitraster>();
 		list.add(zeitraster);
