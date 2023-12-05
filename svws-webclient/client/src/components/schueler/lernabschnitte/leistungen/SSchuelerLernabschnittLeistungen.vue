@@ -20,6 +20,9 @@
 								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
+							<span>{{ row.source.kursart }}</span>
+						</div>
+						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="props.manager().lehrerGetMenge()" :item-text="lehrer => (lehrer === null) ? '—' : lehrer.kuerzel + ' (' + lehrer.nachname + ', ' + lehrer.vorname + ')'"
 								:model-value="manager().lehrerGetByLeistungIdOrNull(row.source.id)"
 								@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, row.source.id)"
@@ -79,6 +82,7 @@
 	const cols = [
 		{ key: "fachID", label: "Fach", span: 0.75, sortable: false, minWidth: 14 },
 		{ key: "kursID", label: "Kurs", span: 0.75, sortable: false, minWidth: 14 },
+		{ key: "kursart", label: "Kursart", span: 0.25, sortable: false, minWidth: 5 },
 		{ key: "lehrerID", label: "Lehrer", span: 1, sortable: false, minWidth: 20 },
 		{ key: "noteQuartal", label: "Quartalsnote", tooltip: "Quartalsnote", span: 0.25, sortable: false },
 		{ key: "note", label: "Note", span: 0.25, sortable: false },
