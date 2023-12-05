@@ -22,7 +22,7 @@
 			</div>
 		</template>
 		<template #modalActions>
-			<template v-if="status !== undefined">
+			<template v-if="status === undefined">
 				<svws-ui-button type="secondary" @click="close" :disabled="loading"> Abbrechen </svws-ui-button>
 				<svws-ui-button type="secondary" @click="add" :disabled="schema.length === 0 || user.length === 0 || loading"> Schema anlegen </svws-ui-button>
 			</template>
