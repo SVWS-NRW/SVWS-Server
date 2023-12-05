@@ -19,12 +19,22 @@
 			</svws-ui-button>
 		</svws-ui-content-card>
 	</div>
+	<Teleport to=".svws-schule-datenauschtausch-header-target" v-if="isMounted">
+		<span class="inline-block mr-3">Datenaustausch mit Schulbewerbung.de</span>
+		<br>
+		<span class="opacity-50 flex"><i-ri-download2-line /><i-ri-upload2-line /></span>
+	</Teleport>
 </template>
 
 <script setup lang="ts">
 
+	import { ref, onMounted } from 'vue';
+
 	import type { SchuleDatenaustauschSchulbewerbungProps } from './SSchuleDatenaustauschSchulbewerbungProps';
 	const props = defineProps<SchuleDatenaustauschSchulbewerbungProps>();
+
+	const isMounted = ref(false);
+	onMounted(() => isMounted.value = true);
 
 	function doImport() {
 		console.log("Der Import von Schulbewerbung.de ist noch nicht implementiert.");
