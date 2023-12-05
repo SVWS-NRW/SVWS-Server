@@ -14,7 +14,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<unknown, RouteLehrer> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";
 	}

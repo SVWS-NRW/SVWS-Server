@@ -14,7 +14,7 @@ export class RouteSchuelerLernabschnittZeugnisdruck extends RouteNode<unknown, R
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.zeugnisdruck", "zeugnisdruck", SSchuelerLernabschnittAllgmein);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeugnisdruck";
 		super.children = [

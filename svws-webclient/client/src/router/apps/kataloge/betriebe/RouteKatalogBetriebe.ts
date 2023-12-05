@@ -216,7 +216,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 
 	public constructor(){
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.betriebe", "/kataloge/betriebe/:id(\\d+)?", SBetriebeApp, new RouteDataKatalogBetriebe());
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));

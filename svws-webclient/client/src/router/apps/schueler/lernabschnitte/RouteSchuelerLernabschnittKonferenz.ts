@@ -14,7 +14,7 @@ export class RouteSchuelerLernabschnittKonferenz extends RouteNode<unknown, Rout
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.konferenz", "konferenz", SSchuelerLernabschnittAllgmein);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Konferenz";
 		super.children = [

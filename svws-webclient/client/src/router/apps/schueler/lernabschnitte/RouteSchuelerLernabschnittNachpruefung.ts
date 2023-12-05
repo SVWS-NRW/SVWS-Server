@@ -14,7 +14,7 @@ export class RouteSchuelerLernabschnittNachpruefung extends RouteNode<unknown, R
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.nachpruefung", "nachpruefung", SSchuelerLernabschnittAllgmein);
-		super.mode = ServerMode.STABLE;
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Nachprüfung";
 		super.children = [
