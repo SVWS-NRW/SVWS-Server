@@ -1,8 +1,9 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
-import { KursartKatalogEintrag } from '../../../core/data/kurse/KursartKatalogEintrag';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { KursartKatalogEintrag } from '../../../core/data/kurse/KursartKatalogEintrag';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Arrays } from '../../../java/util/Arrays';
@@ -414,7 +415,12 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	/**
 	 * Die Informationen zu den Kombinationen aus Schulformen und -gliederungen, wo die Kursart zulässig ist
 	 */
-	private zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+	private readonly zulaessig : Array<ArrayList<Pair<Schulform | null, Schulgliederung | null>>>;
+
+	/**
+	 * Die Zuordnung der speziellen Kursarten zu den allgemeinen Kursarten
+	 */
+	private static readonly _mapByAllgemein : HashMap<string, List<ZulaessigeKursart>> = new HashMap();
 
 	/**
 	 * Erzeugt eine zulässige Kursart in der Aufzählung.
@@ -466,6 +472,22 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 				if (s.daten !== null)
 					ZulaessigeKursart._mapKuerzel.put(s.daten.kuerzel, s);
 		return ZulaessigeKursart._mapKuerzel;
+	}
+
+	private static getMapByAllgemeinemKuerzel() : HashMap<string, List<ZulaessigeKursart>> {
+		if (ZulaessigeKursart._mapByAllgemein.size() === 0) {
+			for (const k of ZulaessigeKursart.values()) {
+				if ((k.daten !== null) && (k.daten.kuerzelAllg !== null)) {
+					let list : List<ZulaessigeKursart> | null = ZulaessigeKursart._mapByAllgemein.get(k.daten.kuerzelAllg);
+					if (list === null) {
+						list = new ArrayList();
+						ZulaessigeKursart._mapByAllgemein.put(k.daten.kuerzelAllg, list);
+					}
+					list.add(k);
+				}
+			}
+		}
+		return ZulaessigeKursart._mapByAllgemein;
 	}
 
 	/**
@@ -523,6 +545,20 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	 */
 	public static getByASDKursart(kursart : string | null) : ZulaessigeKursart | null {
 		return ZulaessigeKursart.getMapByKuerzel().get(kursart);
+	}
+
+	/**
+	 * Bestimmt die Liste der möglichen speziellen Kursarten für die angegebene allgemeine Kursart
+	 *
+	 * @param allgKursart   die allgemeine Kursart
+	 *
+	 * @return die Liste der möglichen speziellen Kursarten
+	 */
+	public static getByAllgemeinerKursart(allgKursart : string) : List<ZulaessigeKursart> {
+		const result : List<ZulaessigeKursart> | null = ZulaessigeKursart.getMapByAllgemeinemKuerzel().get(allgKursart);
+		if (result === null)
+			throw new DeveloperNotificationException("Die allgemeine Kursart " + allgKursart! + " existiert nicht.")
+		return result;
 	}
 
 	/**
