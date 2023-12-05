@@ -136,10 +136,10 @@ public class APIGostDatenaustausch {
 
 
     /**
-     * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der i, Untis-Format GPU001.txt vorliegt.
+     * Die OpenAPI-Methode für den Import eines einfachen Untis-Stundenplans, der im Untis-Format GPU001.txt vorliegt.
      *
      * @param multipart     Die GPU001.txt
-     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden sollen
+     * @param schemaname    Name des Schemas, in welches der Untis-Stundenplan importiert werden soll
      * @param request       die Informationen zur HTTP-Anfrage
      *
      * @return Rückmeldung, ob die Operation erfolgreich war mit dem Log der Operation

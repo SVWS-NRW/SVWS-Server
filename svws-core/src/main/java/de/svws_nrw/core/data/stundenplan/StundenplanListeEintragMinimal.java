@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
  * Sie liefert die Minimalinformationen zum Erzeugen eines neuen Stundenplans für eine Liste von Stundenplänen.
  */
 @XmlRootElement
-@Schema(description = "die Minimalinformationen für einen neunen Eintrag in der Liste von Stundenplänen.")
+@Schema(description = "die Minimalinformationen für einen neuen Eintrag in der Liste von Stundenplänen.")
 @TranspilerDTO
 public class StundenplanListeEintragMinimal {
 
