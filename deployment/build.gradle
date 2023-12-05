@@ -23,7 +23,7 @@ githubRelease {
 	repo "SVWS-Server"
 	tagName "v${project.version}"
 	targetCommitish "dev"
-	releaseName "v${project.version}"
+	releaseName "Release v${project.version}"
 	generateReleaseNotes false
 	body  "v${project.version}"
 	draft true
