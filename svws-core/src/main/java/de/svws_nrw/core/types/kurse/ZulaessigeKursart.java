@@ -1028,11 +1028,20 @@ public enum ZulaessigeKursart {
 	private static @NotNull HashMap<@NotNull String, @NotNull List<@NotNull ZulaessigeKursart>> getMapByAllgemeinemKuerzel() {
 		if (_mapByAllgemein.size() == 0) {
 			for (final ZulaessigeKursart k : ZulaessigeKursart.values()) {
-				if ((k.daten != null) && (k.daten.kuerzelAllg != null)) {
-					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(k.daten.kuerzelAllg);
+				if (k.daten != null) {
+					final @NotNull String allgKursart = (k.daten.kuerzelAllg != null) ? k.daten.kuerzelAllg : "";
+					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(allgKursart);
 					if (list == null) {
 						list = new ArrayList<>();
-						_mapByAllgemein.put(k.daten.kuerzelAllg, list);
+						_mapByAllgemein.put(allgKursart, list);
+					}
+					list.add(k);
+				}
+				if (k.daten.kuerzelAllg == null) {
+					List<@NotNull ZulaessigeKursart> list = _mapByAllgemein.get(k.daten.kuerzel);
+					if (list == null) {
+						list = new ArrayList<>();
+						_mapByAllgemein.put(k.daten.kuerzel, list);
 					}
 					list.add(k);
 				}

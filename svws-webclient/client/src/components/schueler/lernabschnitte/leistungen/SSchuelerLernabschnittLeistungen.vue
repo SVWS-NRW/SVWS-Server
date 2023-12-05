@@ -20,7 +20,15 @@
 								class="w-full" headless />
 						</div>
 						<div class="svws-ui-td" role="cell">
-							<span>{{ row.source.kursart }}</span>
+							<template v-if="(manager().kursGetByLeistungIdOrNull(row.source.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(manager().kursGetByLeistungIdOrNull(row.source.id)!.kursartAllg).size() === 1">
+								<span>{{ row.source.kursart }}</span>
+							</template>
+							<template v-else>
+								<svws-ui-select title="—" :items="ZulaessigeKursart.getByAllgemeinerKursart(manager().kursGetByLeistungIdOrNull(row.source.id)!.kursartAllg)" :item-text="zk => zk.daten.kuerzel"
+									:model-value="ZulaessigeKursart.getByASDKursart(row.source.kursart)"
+									@update:model-value="value => patchLeistung({ kursart: ((value === null) || (value === undefined)) ? null : value.daten.kuerzel }, row.source.id)"
+									class="w-full" headless />
+							</template>
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select title="—" :items="props.manager().lehrerGetMenge()" :item-text="lehrer => (lehrer === null) ? '—' : lehrer.kuerzel + ' (' + lehrer.nachname + ', ' + lehrer.vorname + ')'"
@@ -74,7 +82,7 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { Note } from "@core";
+	import { Note, ZulaessigeKursart } from "@core";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();

@@ -42,6 +42,10 @@ public class KursListeEintrag {
 	@Schema(description = "die ID des Kurslehrers", example = "42")
 	public Long lehrer;
 
+	/** Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird. */
+	@Schema(description = "die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird", example = "GK")
+	public @NotNull String kursartAllg = "";
+
 	/** Die Schüler des Kurses. */
 	public @NotNull List<@NotNull Schueler> schueler = new ArrayList<>();
 

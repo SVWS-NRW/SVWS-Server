@@ -36,6 +36,11 @@ export class KursListeEintrag extends JavaObject {
 	public lehrer : number | null = null;
 
 	/**
+	 * Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
+	 */
+	public kursartAllg : string = "";
+
+	/**
 	 * Die Schüler des Kurses.
 	 */
 	public schueler : List<Schueler> = new ArrayList();
@@ -85,6 +90,9 @@ export class KursListeEintrag extends JavaObject {
 			 throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		result.lehrer = typeof obj.lehrer === "undefined" ? null : obj.lehrer === null ? null : obj.lehrer;
+		if (typeof obj.kursartAllg === "undefined")
+			 throw new Error('invalid json format, missing attribute kursartAllg');
+		result.kursartAllg = obj.kursartAllg;
 		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
 			for (const elem of obj.schueler) {
 				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
@@ -123,6 +131,7 @@ export class KursListeEintrag extends JavaObject {
 		}
 		result += '"idFach" : ' + obj.idFach + ',';
 		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		if (!obj.schueler) {
 			result += '"schueler" : []';
 		} else {
@@ -184,6 +193,9 @@ export class KursListeEintrag extends JavaObject {
 		}
 		if (typeof obj.lehrer !== "undefined") {
 			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		}
+		if (typeof obj.kursartAllg !== "undefined") {
+			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
 		}
 		if (typeof obj.schueler !== "undefined") {
 			if (!obj.schueler) {

@@ -477,11 +477,20 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 	private static getMapByAllgemeinemKuerzel() : HashMap<string, List<ZulaessigeKursart>> {
 		if (ZulaessigeKursart._mapByAllgemein.size() === 0) {
 			for (const k of ZulaessigeKursart.values()) {
-				if ((k.daten !== null) && (k.daten.kuerzelAllg !== null)) {
-					let list : List<ZulaessigeKursart> | null = ZulaessigeKursart._mapByAllgemein.get(k.daten.kuerzelAllg);
+				if (k.daten !== null) {
+					const allgKursart : string = (k.daten.kuerzelAllg !== null) ? k.daten.kuerzelAllg : "";
+					let list : List<ZulaessigeKursart> | null = ZulaessigeKursart._mapByAllgemein.get(allgKursart);
 					if (list === null) {
 						list = new ArrayList();
-						ZulaessigeKursart._mapByAllgemein.put(k.daten.kuerzelAllg, list);
+						ZulaessigeKursart._mapByAllgemein.put(allgKursart, list);
+					}
+					list.add(k);
+				}
+				if (k.daten.kuerzelAllg === null) {
+					let list : List<ZulaessigeKursart> | null = ZulaessigeKursart._mapByAllgemein.get(k.daten.kuerzel);
+					if (list === null) {
+						list = new ArrayList();
+						ZulaessigeKursart._mapByAllgemein.put(k.daten.kuerzel, list);
 					}
 					list.add(k);
 				}
