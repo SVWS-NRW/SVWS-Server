@@ -136,6 +136,8 @@
 	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
 
 	function validatorEmail(value: string) {
+		if (value === '')
+			return true;
 		return (
 			// eslint-disable-next-line no-useless-escape
 			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
