@@ -3,8 +3,9 @@
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
-				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
+				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung="importLaufbahnplanung" />
+				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
@@ -20,7 +21,8 @@
 				</div>
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			</div>
-			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden." clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols">
+			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
+				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols" selectable v-model="auswahl">
 				<template #header(linkToSchueler)>
 					<i-ri-group-line />
 				</template>
@@ -87,6 +89,7 @@
 
 	const _showModalImport = ref<boolean>(false);
 	const showModalImport = () => _showModalImport;
+	const auswahl = ref<GostBelegpruefungsErgebnisse[]>([]);
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if ((!filterFehler.value) && (!filterExterne.value))
@@ -185,6 +188,20 @@
 			for (const s of filtered.value)
 				list.add(s.schueler.id);
 		const { data, name } = await props.getPdfLaufbahnplanung(title, list, detaillevel);
+		const link = document.createElement("a");
+		link.href = URL.createObjectURL(data);
+		link.download = name;
+		link.target = "_blank";
+		link.click();
+		URL.revokeObjectURL(link.href);
+	}
+
+	async function export_laufbahnplanung() {
+		const list = new ArrayList<number>();
+		const arr = auswahl.value.length > 0 ? auswahl.value : filtered.value;
+		for (const s of arr)
+			list.add(s.schueler.id);
+		const { data, name } = await props.exportLaufbahnplanung(list);
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;

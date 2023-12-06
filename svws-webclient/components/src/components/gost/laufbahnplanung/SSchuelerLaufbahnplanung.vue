@@ -95,7 +95,6 @@
 	async function export_laufbahnplanung() {
 		const { data, name } = await props.exportLaufbahnplanung();
 		const link = document.createElement("a");
-		console.log(data, name)
 		link.href = URL.createObjectURL(data);
 		link.download = name;
 		link.target = "_blank";

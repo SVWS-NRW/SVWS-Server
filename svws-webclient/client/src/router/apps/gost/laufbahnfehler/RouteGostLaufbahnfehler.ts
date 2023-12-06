@@ -75,6 +75,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			gotoLaufbahnplanung: this.data.gotoLaufbahnplanung,
 			importLaufbahnplanung: this.data.importLaufbahnplanung,
+			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
 			getPdfLaufbahnplanung: this.data.getPdfLaufbahnplanung,
 			resetFachwahlenAlle: this.data.resetFachwahlenAlle,
 			abiturjahr: this.data.abiturjahr,

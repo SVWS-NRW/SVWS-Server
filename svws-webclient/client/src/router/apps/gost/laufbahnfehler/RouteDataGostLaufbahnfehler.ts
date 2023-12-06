@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { GostBelegpruefungsErgebnisse, List} from "@core";
+import type { ApiFile, GostBelegpruefungsErgebnisse, List} from "@core";
 import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
@@ -91,6 +91,13 @@ export class RouteDataGostLaufbahnfehler  {
 			api.status.stop();
 			return result;
 		}
+	}
+
+	exportLaufbahnplanung = async (schueler: List<number>): Promise<ApiFile> => {
+		api.status.start();
+		const res = await api.server.exportGostSchuelerLaufbahnplanungen(schueler, api.schema);
+		api.status.stop();
+		return res;
 	}
 
 	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number) => {
