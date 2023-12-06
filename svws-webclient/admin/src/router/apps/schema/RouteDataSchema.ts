@@ -69,7 +69,7 @@ export class RouteDataSchema {
 			mapSchema.set(s.name.toLocaleLowerCase(), s);
 		let auswahl : SchemaListeEintrag | undefined = undefined;
 		if (mapSchema.size > 0) {
-			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname);
+			auswahl = schemaname === undefined ? undefined : mapSchema.get(schemaname.toLocaleLowerCase());
 			if (auswahl === undefined)
 				auswahl = mapSchema.values().next().value;
 		}
@@ -90,15 +90,17 @@ export class RouteDataSchema {
 	 * @param schema   das ausgewählte Schema
 	 */
 	public async setSchema(schema: SchemaListeEintrag | undefined) {
-		if (schema === this._state.value.auswahl)
-			return;
 		if ((schema === undefined) || (this.mapSchema.size === 0))
 			return;
-		const auswahl = this.mapSchema.has(schema.name) ? schema : undefined;
+		const auswahl = this.mapSchema.has(schema.name.toLocaleLowerCase()) ? schema : undefined;
 		let schuleInfo = undefined;
 		let admins: List<BenutzerListeEintrag> = new ArrayList();
 		if (auswahl !== undefined && auswahl.revision > 0) {
-			schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			try {
+				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
+			} catch (e) {
+				console.log("Die Information zur Schule konnte nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
+			}
 			if (auswahl.revision === this.revision)
 				admins = await api.privileged.getSchemaAdmins(auswahl.name);
 		}
@@ -176,7 +178,7 @@ export class RouteDataSchema {
 		api.status.start();
 		for (const schema of this.auswahlGruppe) {
 			await api.privileged.destroySchema(schema.name);
-			this.mapSchema.delete(schema.name);
+			this.mapSchema.delete(schema.name.toLocaleLowerCase());
 		}
 		api.status.stop();
 		if (this.auswahl && this.auswahlGruppe.includes(this.auswahl))
@@ -190,7 +192,7 @@ export class RouteDataSchema {
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
-				this.mapSchema.set(item.name, item);
+				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
 				this.setPatchedState({mapSchema: this.mapSchema});
 				await this.gotoSchema(item);
 				break;
@@ -205,7 +207,7 @@ export class RouteDataSchema {
 		const list = await api.privileged.getSVWSSchemaListe();
 		for (const item of list)
 			if (item.name === schema) {
-				this.mapSchema.set(item.name, item);
+				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
 				this.setPatchedState({mapSchema: this.mapSchema});
 				await this.gotoSchema(item);
 				break;
@@ -338,6 +340,15 @@ export class RouteDataSchema {
 		} catch(error) {
 			console.warn(`Das Initialiseren des Schemas mit der Schild 2-Datenbank ist fehlgeschlagen.`);
 		}
+		api.status.stop();
+		return result;
+	}
+
+	initSchema = async (schulnummer: number) => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		const result = new SimpleOperationResponse() //= await api.privileged.initSchemaToCurrent(schulnummer, this.auswahl.name);
 		api.status.stop();
 		return result;
 	}
