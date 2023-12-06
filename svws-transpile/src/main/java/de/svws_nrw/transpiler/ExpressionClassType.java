@@ -126,6 +126,11 @@ public final class ExpressionClassType extends ExpressionType {
 						result.typeVariables.add(ExpressionTypeVar.getExpressionTypeVariable(transpiler, tv));
 						continue;
 					}
+					if (elemType instanceof final PrimitiveType pt) {
+						result.typeVariables.add(ExpressionTypeVar.getWildcardExpressionTypeVariable());
+						result.typeArguments.add(new ExpressionArrayType(ExpressionType.getExpressionType(transpiler, pt), dim));
+						continue;
+					}
 					throw new TranspilerException("Transpiler Error: Array type Argument of kind " + elemType.getKind() + " not supported.");
 				}
 			}
