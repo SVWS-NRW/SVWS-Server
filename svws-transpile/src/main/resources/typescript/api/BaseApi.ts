@@ -197,6 +197,10 @@ export class BaseApi {
 		return this.postTextBasedToBinary(path, 'application/json', 'application/pdf', body);
 	}
 
+	public async postJSONtoZIP(path : string, body : string | null) : Promise<ApiFile> {
+		return this.postTextBasedToBinary(path, 'application/json', 'application/zip', body);
+	}
+
 	protected async patchTextBased(path : string, mimetype : string, body : string) : Promise<void> {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };

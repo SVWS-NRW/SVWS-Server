@@ -1,5 +1,6 @@
 package de.svws_nrw.data.gost;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
@@ -416,6 +419,45 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.ID);
 		return JSONMapper.gzipFileResponseFromObject(daten, filename);
 	}
+
+
+	/**
+	 * Erstellt Export-Dateien mit den Laufbahnplanungsdaten der
+	 * angegebenen Schüler zur Bearbeitung in einem externen Tool.
+	 * Die Dateien werden in einer ZIP-Datei gebündelt.
+	 *
+	 * @param ids   die ID der Schüler
+	 *
+	 * @return die Response mit der ZIP-Datei mit den GZip-Komprimierten Laufbahnplanungs-Dateien
+	 */
+	public Response exportGZip(final List<Long> ids) {
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final List<DTOSchueler> dtos = conn.queryNamed("DTOSchueler.primaryKeyQuery.multiple", ids, DTOSchueler.class);
+		if (dtos.size() != ids.size())
+			throw OperationError.NOT_FOUND.exception();
+		final String zipname = "Laufbahnplanungen.zip";
+		final byte[] zipdata;
+        try {
+        	try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+	        	try (ZipOutputStream zos = new ZipOutputStream(baos)) {
+					for (final DTOSchueler dtoSchueler : dtos) {
+						final GostLaufbahnplanungDaten daten = getLaufbahnplanungsdaten(dtoSchueler);
+						final String filename = "Laufbahnplanung_%d_%s_%s_%s_%d.lp".formatted(daten.abiturjahr, daten.jahrgang, dtoSchueler.Nachname, dtoSchueler.Vorname, dtoSchueler.ID);
+						final byte[] filedata = JSONMapper.gzipByteArrayFromObject(daten);
+						zos.putNextEntry(new ZipEntry(filename));
+				        zos.write(filedata);
+						zos.closeEntry();
+					}
+			        baos.flush();
+	        	}
+				zipdata = baos.toByteArray();
+			}
+		} catch (@SuppressWarnings("unused") final IOException | CompressionException e) {
+			throw OperationError.INTERNAL_SERVER_ERROR.exception();
+		}
+		return Response.ok(zipdata).header("Content-Disposition", "attachment; filename=\"" + zipname + "\"").build();
+	}
+
 
 	/**
 	 * Erstellt den Export mit den Laufbahnplanungsdaten des

@@ -458,6 +458,14 @@ public final class ApiMethod {
 					sb.append("\t\tconst result : ApiFile = await super.postJSONtoPDF(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 					sb.append("\t\treturn result;" + System.lineSeparator());
 				}
+			} else if ((this.produces == ApiMimeType.ZIP) && (this.consumes == ApiMimeType.APPLICATION_JSON)) {
+				if (returnResponse.content == null) {
+					sb.append("\t\tawait super.postJSON(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+					sb.append("\t\treturn;" + System.lineSeparator());
+				} else {
+					sb.append("\t\tconst result : ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+					sb.append("\t\treturn result;" + System.lineSeparator());
+				}
 			} else if ((this.produces == ApiMimeType.APPLICATION_JSON) && (this.consumes == ApiMimeType.MULTIPART_FORM_DATA)) {
 				sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");" + System.lineSeparator());
 				final String datatype = (returnResponse.content.isArrayType) ? returnResponse.content.arrayElementType : returnResponse.content.datatype;
