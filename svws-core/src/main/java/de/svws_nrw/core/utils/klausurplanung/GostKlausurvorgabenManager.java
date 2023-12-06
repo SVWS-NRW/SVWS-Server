@@ -271,9 +271,10 @@ public class GostKlausurvorgabenManager {
 	public @NotNull List<@NotNull GostKlausurvorgabe> vorgabeGetMengeByHalbjahrAndQuartal(final @NotNull GostHalbjahr halbjahr, final int quartal) {
 		if (quartal == 0) {
 			List<@NotNull GostKlausurvorgabe> vorgaben = new ArrayList<>();
-			for (@NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
-				vorgaben.addAll(vQuartal);
-			}
+			if (_vorgabenmenge_by_halbjahr_and_quartal.containsKey1(halbjahr.id))
+				for (@NotNull List<@NotNull GostKlausurvorgabe> vQuartal : _vorgabenmenge_by_halbjahr_and_quartal.getNonNullValuesOfKey1AsList(halbjahr.id)) {
+					vorgaben.addAll(vQuartal);
+				}
 			return vorgaben;
 		}
 		List<@NotNull GostKlausurvorgabe> vorgaben = _vorgabenmenge_by_halbjahr_and_quartal.getOrNull(halbjahr.id, quartal);
