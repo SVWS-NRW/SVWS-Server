@@ -1,7 +1,7 @@
 import { shallowRef } from "vue";
 
-import type { GostBelegpruefungsErgebnisse, List } from "@core";
-import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt} from "@core";
+import type { GostBelegpruefungsErgebnisse, List} from "@core";
+import { ArrayList, DeveloperNotificationException, GostBelegpruefungsArt, OpenApiError, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -71,6 +71,27 @@ export class RouteDataGostLaufbahnfehler  {
 
 	gotoLaufbahnplanung = async (idSchueler: number) =>
 		await RouteManager.doRoute(routeSchuelerLaufbahnplanung.getRoute(idSchueler));
+
+
+	importLaufbahnplanung = async (data: FormData): Promise<SimpleOperationResponse> => {
+		api.status.start();
+		try {
+			const res = await api.server.importGostSchuelerLaufbahnplanungen(data, api.schema);
+			api.status.stop();
+			return res;
+		} catch(e) {
+			if ((e instanceof OpenApiError) && (e.response != null) && ((e.response.status === 400) || (e.response.status === 409))) {
+				const json : string = await e.response.text();
+				return SimpleOperationResponse.transpilerFromJSON(json);
+			}
+			const result = new SimpleOperationResponse();
+			result.log.add("Fehler bei der Server-Anfrage. ");
+			if (e instanceof Error)
+				result.log.add("  " + e.message);
+			api.status.stop();
+			return result;
+		}
+	}
 
 	getPdfLaufbahnplanung = async(title: string, list: List<number>, detaillevel: number) => {
 		try {

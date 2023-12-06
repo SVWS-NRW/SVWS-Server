@@ -3,6 +3,8 @@
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
 				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
+				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
+				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung="importLaufbahnplanung" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
@@ -82,6 +84,9 @@
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
 		{key: 'ergebnis', label: 'Fehler', tooltip: 'Anzahl der Fehler insgesamt', fixedWidth: 3.5, align: 'right', sortable: true},
 	];
+
+	const _showModalImport = ref<boolean>(false);
+	const showModalImport = () => _showModalImport;
 
 	const filtered: ComputedRef<List<GostBelegpruefungsErgebnisse>> = computed(()=>{
 		if ((!filterFehler.value) && (!filterExterne.value))

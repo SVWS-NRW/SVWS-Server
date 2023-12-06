@@ -2,7 +2,7 @@
 	<svws-ui-modal :show="show" size="small">
 		<template #modalTitle>Laufbahnplanungsdaten importieren</template>
 		<template #modalContent>
-			<input type="file" accept=".lp" @change="import_file" :disabled="loading">
+			<input type="file" accept=".lp" :multiple="multiple" @change="import_file" :disabled="loading">
 			<svws-ui-spinner :spinning="loading" />
 			<br>{{
 				status === false
@@ -20,11 +20,14 @@
 
 <script setup lang="ts">
 
-	import { type Ref, ref } from 'vue';
+	import type { Ref } from 'vue';
+	import { ref } from 'vue';
+	import type { SimpleOperationResponse } from '@core';
 
 	const props = defineProps<{
 		show: () => Ref<boolean>;
-		importLaufbahnplanung: (data: FormData) => Promise<boolean>;
+		importLaufbahnplanung: (data: FormData) => Promise<boolean|SimpleOperationResponse>;
+		multiple?: boolean;
 	}>();
 
 	const status = ref<boolean | undefined>(undefined);
@@ -34,13 +37,12 @@
 		const target = event.target as HTMLInputElement;
 		if (!target.files?.length)
 			return;
-		const file = target.files.item(0);
-		if (!file)
-			return;
-		loading.value = true;
 		const formData = new FormData();
-		formData.append("data", file);
-		status.value = await props.importLaufbahnplanung(formData);
+		for (let i = 0; i < target.files.length; i++)
+			formData.append("data", target.files[i]);
+		loading.value = true;
+		const res = await props.importLaufbahnplanung(formData);
+		status.value = typeof res === 'boolean' ? res : res.success;
 		loading.value = false;
 		if (status.value === true)
 			props.show().value = false;
