@@ -5229,6 +5229,34 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode importGostSchuelerLaufbahnplanungen für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/laufbahnplanung/import
+	 *
+	 * Importiert die Laufbahndaten aus den übergebenen Laufbahnplanungsdatein
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Log vom Import der Laufbahndaten
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 403: Der Benutzer hat keine Berechtigung, um die Laufbahndaten zu importieren.
+	 *   Code 409: Es ist ein Fehler beim Import aufgetreten. Ein Log vom Import wird zurückgegeben.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {FormData} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Log vom Import der Laufbahndaten
+	 */
+	public async importGostSchuelerLaufbahnplanungen(data : FormData, schema : string) : Promise<SimpleOperationResponse> {
+		const path = "/db/{schema}/gost/laufbahnplanung/import"
+			.replace(/{schema\s*(:[^}]+)?}/g, schema);
+		const result : string = await super.postMultipart(path, data);
+		const text = result;
+		return SimpleOperationResponse.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostLupoExportMDBFuerJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/lupo/export/mdb/jahrgang/{jahrgang}
 	 *
 	 * Exportiert die Laufbahndaten für den übergebenen Jahrgang in eine LuPO-Lehrerdatei.

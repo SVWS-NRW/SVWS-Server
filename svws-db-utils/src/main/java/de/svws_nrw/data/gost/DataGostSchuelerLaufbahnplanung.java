@@ -1,5 +1,6 @@
 package de.svws_nrw.data.gost;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.Collator;
@@ -13,6 +14,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.base.crypto.AES;
@@ -671,6 +675,74 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			logger.logLn("Keine Änderungen für den Schüler mit der ID " + dtoSchueler.ID + " gegenüber der Datenbank in der Datei enthalten.");
 		}
 		return true;
+	}
+
+
+	/**
+	 * Importiert die Daten des Schülers mit der angegebenen ID aus den übergebenen
+	 * Laufbahnplanungsdatein.
+	 *
+	 * @param multipart   die Laufbahnplanungsdatein als GZIP-Komprimierte JSONs
+	 *
+	 * @return die HTTP-Response mit dem Log
+	 */
+	public Response importGZip(final MultipartFormDataInput multipart) {
+		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		// Erstelle den Logger
+		final Logger logger = new Logger();
+		final LogConsumerList log = new LogConsumerList();
+		logger.addConsumer(log);
+		logger.addConsumer(new LogConsumerConsole());
+		boolean success = true;
+		final List<InputPart> l = multipart.getFormDataMap().get("data");
+		// Gehe die Dateien durch und führe jeweils dein Import durch
+		for (int i = 0; i < l.size(); i++) {
+			final byte[] daten;
+			try (InputStream input = l.get(i).getBody()) {
+				daten = input.readAllBytes();
+			} catch (final IOException e) {
+				logger.log("Eine lp-Datei konnte nicht eingelesen werden: " + e.getMessage());
+				success = false;
+				break;
+			}
+			// Entpacke die ZIP-Datei
+			GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
+			try {
+				laufbahnplanungsdaten = JSONMapper.toObjectGZip(daten, GostLaufbahnplanungDaten.class);
+			} catch (final CompressionException e) {
+				logger.log("Fehler beim Öffnen der Datei.");
+				logger.log("Fehlernachricht: " + e.getMessage());
+				break;
+			}
+			if (laufbahnplanungsdaten.schueler.size() != 1) {
+				logger.log("Es wurde keiner oder mehr als ein Schüler-Eintrag in der lp-Datei gefunden. Dies ist nicht zulässig");
+				success = false;
+				break;
+			}
+			// Prüfe, ob der Schüler überhaupt existiert
+			final long idSchueler = laufbahnplanungsdaten.schueler.get(0).id;
+			final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+			if (dtoSchueler == null) {
+				logger.log("Der Schüler mit der ID %d wurde nicht in der Datenbank gefunden.".formatted(idSchueler));
+				success = false;
+				break;
+			}
+			// Importiere die Daten...
+			if (!doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger)) {
+				success = false;
+				break;
+			}
+		}
+		// Prüfe, ob ggf. ein Rollback nötig ist
+		if (!success)
+			conn.transactionRollbackOrThrow();
+		// Führe den Import durch und erstelle die Response mit dem Log
+		final SimpleOperationResponse daten = new SimpleOperationResponse();
+		daten.success = success;
+		logger.logLn("Import " + (daten.success ? "erfolgreich." : "fehlgeschlagen."));
+		daten.log = log.getStrings();
+		return Response.status(daten.success ? Status.OK : Status.CONFLICT).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 
