@@ -31,7 +31,7 @@ githubRelease {
 	releaseAssets  "../../../../artifacts_linux/distributions/install-${project.version}.sh", "../../../../artifacts_linux/distributions/linux-installer-${project.version}.tar.gz", "../../../../artifacts_windows/SVWS-Server-Installer-win.zip"
 	allowUploadToExisting.set true
 	overwrite true
-	dryRun false
+	dryRun true
 	apiEndpoint "https://api.github.com"
 	client
 }
