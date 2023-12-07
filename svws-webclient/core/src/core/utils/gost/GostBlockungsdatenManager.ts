@@ -1143,6 +1143,54 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID < 0), oder gelöscht (ID >= 0) werden sollen.
+	 *
+	 * @param list      Die aktuelle sortierte Liste der GUI.
+	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.
+	 * @param kursB     Der erste oder der letzte Kurs der Auswahl.
+	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
+	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
+	 *
+	 * @return eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID < 0), oder gelöscht (ID >= 0) werden sollen.
+	 */
+	public regelGetListeToggleSperrung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
+		const regeln : List<GostBlockungRegel> = new ArrayList();
+		let aktiv : boolean = false;
+		const min : number = Math.min(schieneA.nummer, schieneB.nummer);
+		const max : number = Math.max(schieneA.nummer, schieneB.nummer);
+		for (const kurs of list) {
+			if ((kurs as unknown === kursA as unknown) || (kurs as unknown === kursB as unknown))
+				aktiv = !aktiv;
+			if (!aktiv)
+				continue;
+			for (let nr : number = min; nr <= max; nr++)
+				regeln.add(this.regelGetRegelOrDummyKursGesperrtInSchiene(kurs.id, nr));
+		}
+		return regeln;
+	}
+
+	/**
+	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID = -1), falls die Regel nicht existiert.
+	 *
+	 * @param idKurs     Die Datenbank-ID des Kurses.
+	 * @param nrSchiene  Die Nummer der Schiene.
+	 *
+	 * @return die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID = -1), falls die Regel nicht existiert.
+	 */
+	public regelGetRegelOrDummyKursGesperrtInSchiene(idKurs : number, nrSchiene : number) : GostBlockungRegel {
+		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
+		const regel : GostBlockungRegel | null = this._map_multikey_regeln.get(key);
+		if (regel !== null)
+			return regel;
+		const regelDummy : GostBlockungRegel = new GostBlockungRegel();
+		regelDummy.id = -1;
+		regelDummy.typ = GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ;
+		regelDummy.parameter.add(idKurs);
+		regelDummy.parameter.add(nrSchiene as number);
+		return regelDummy;
+	}
+
+	/**
 	 * Liefert TRUE, falls die Regel mit der übergebenen ID existiert.
 	 *
 	 * @param idRegel  Die Datenbank-ID der Regel.
