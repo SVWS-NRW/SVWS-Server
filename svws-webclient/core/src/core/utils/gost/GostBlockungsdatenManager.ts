@@ -1151,7 +1151,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @param schieneA  Die erste oder letzte Schiene der Auswahl.
 	 * @param schieneB  Die erste oder letzte Schiene der Auswahl.
 	 *
-	 * @return eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID < 0), oder gelöscht (ID >= 0) werden sollen.
+	 * @return eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
 	 */
 	public regelGetListeToggleSperrung(list : List<GostBlockungKurs>, kursA : GostBlockungKurs, kursB : GostBlockungKurs, schieneA : GostBlockungSchiene, schieneB : GostBlockungSchiene) : List<GostBlockungRegel> {
 		const regeln : List<GostBlockungRegel> = new ArrayList();
@@ -1170,7 +1170,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID = -1), falls die Regel nicht existiert.
+	 * Liefert die Regel, welche den Kurs in einer Schiene gesperrt hat, oder die Dummy-Regel (ID negativ), falls die Regel nicht existiert.
 	 *
 	 * @param idKurs     Die Datenbank-ID des Kurses.
 	 * @param nrSchiene  Die Nummer der Schiene.
