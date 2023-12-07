@@ -81,7 +81,7 @@ build_windows:
         - job: build
     tags:
         - windows
-    image: eclipse-temurin:21
+    image: svwsnrw/dockerrunner-win
     script:
         - ./deployment/setupVersion.ps1
         - ./gradlew --build-cache build -Penvironment=build
