@@ -116,6 +116,7 @@
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
+								:selected-do="selectedDo"
 								:on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
@@ -132,6 +133,7 @@
 								:patch-kurs="patchKurs" :add-kurs="addKurs" :remove-kurs="removeKurs" :add-kurs-lehrer="addKursLehrer"
 								:remove-kurs-lehrer="removeKursLehrer" :add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs"
 								:drag-data-kurs-schiene="() => dragDataKursSchiene" :drop-data-kurs-schiene="()=>dropDataKursSchiene" :is-selected-kurse="isSelectedKurse"
+								:selected-do="selectedDo"
 								:on-drag-kurs-schiene="dragKursSchiene" :on-drop-kurs-schiene="dropKursSchiene" />
 						</template>
 					</template>
@@ -150,7 +152,7 @@
 	import { computed, onMounted, ref, toRaw } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { GostBlockungKurs, GostBlockungKursLehrer, GostBlockungRegel, GostBlockungSchiene, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, LehrerListeEintrag, List } from "@core";
-	import { GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
+	import { ArrayList, DeveloperNotificationException, GostKursart, GostStatistikFachwahlHalbjahr, ZulaessigesFach } from "@core";
 	import type { SGostKursplanungKursansichtDragData } from "./kursansicht/SGostKursplanungKursansichtFachwahlProps";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 	import type { Config } from "~/components/Config";
@@ -316,8 +318,11 @@
 	}
 
 	async function dropKursSchiene(zone: SGostKursplanungKursansichtDragData) {
-		if ((zone === undefined) || (dragDataKursSchiene.value === undefined))
+		if ((zone === undefined) || (dragDataKursSchiene.value === undefined)) {
+			if (dropDataKursSchiene.value !== undefined)
+				dropDataKursSchiene.value = undefined;
 			return;
+		}
 		if (!props.getErgebnismanager().getOfKursOfSchieneIstZugeordnet(dragDataKursSchiene.value.kurs.id, dragDataKursSchiene.value.schiene.id)) {
 			dropDataKursSchiene.value = zone;
 			return;
@@ -366,5 +371,32 @@
 		}
 		return range;
 	})
+
+	async function selectedDo(action: 'fixieren'|'sperren') {
+		if (dragDataKursSchiene.value === undefined || dropDataKursSchiene.value === undefined)
+			throw new DeveloperNotificationException("Es wurden keine gültigen Daten für diese Aktion gefunden");
+		const list = props.kurssortierung.value === 'fach'
+			? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
+			: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
+		const k1 = dragDataKursSchiene.value.kurs;
+		const k2 = dropDataKursSchiene.value.kurs;
+		const s1 = props.getErgebnismanager().getSchieneG(dragDataKursSchiene.value.schiene.id);
+		const s2 = props.getErgebnismanager().getSchieneG(dropDataKursSchiene.value.schiene.id);
+		let regeln: List<GostBlockungRegel> = new ArrayList();
+		switch (action) {
+			case 'fixieren':
+				regeln = props.getDatenmanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2);
+				break;
+			case 'sperren':
+				regeln = props.getDatenmanager().regelGetListeToggleSperrung(list, k1, k2, s1, s2);
+				break;
+			default:
+				break;
+		}
+		console.log(regeln)
+		dragDataKursSchiene.value = undefined;
+		dropDataKursSchiene.value = undefined;
+		return regeln;
+	}
 
 </script>

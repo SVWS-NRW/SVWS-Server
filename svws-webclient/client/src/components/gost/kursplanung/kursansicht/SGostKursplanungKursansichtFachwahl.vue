@@ -90,40 +90,51 @@
 					<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 					<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 						:class="{
-							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value,
-							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value,
+							'bg-white/50': istDraggedKursInAndererSchiene(kurs, schiene).value && !isSelected(schiene, kurs),
+							'bg-white text-black/25': istDraggedKursInSchiene(kurs, schiene).value && !isSelected(schiene, kurs),
 							'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
 							'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
+							'cursor-grabbing': dragDataKursSchiene() !== undefined && dropDataKursSchiene()=== undefined,
+							'cursor-pointer': dragDataKursSchiene() === undefined || dropDataKursSchiene() !== undefined,
 							'bg-green-400/50': isSelected(schiene, kurs),
 						}"
 						@dragover="if (isKursDropZone(kurs, schiene).value) $event.preventDefault();"
-						@drop="onDropKursSchiene({kurs, schiene, fachId: fachwahlen.id})">
+						@drop="drop({kurs, schiene, fachId: fachwahlen.id}, index)">
 						<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
 						<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value" :key="kurs.id"
-							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black cursor-grab p-px"
+							class="select-none w-full h-full rounded-sm flex items-center justify-center relative group text-black p-px cursor-grab"
 							:class="{
-								'cursor-grabbing': dragDataKursSchiene() !== undefined,
 								'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 								'bg-white/50': !istKursAusgewaehlt(kurs).value,
-							}"
+							}" ref="cellRefs"
 							@dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" @dragend="onDragKursSchiene(undefined)" @click="toggleKursAusgewaehlt(kurs)">
 							{{ getSchuelerAnzahl(kurs.id) }}
 							<span class="group-hover:bg-white rounded-sm w-3 absolute top-1/2 transform -translate-y-1/2 left-0" v-if="!istKursFixiertInSchiene(kurs, schiene).value">
 								<i-ri-draggable class="w-4 -ml-0.5 text-black opacity-40 group-hover:opacity-100 group-hover:text-black" />
 							</span>
-							<div class="icon cursor-pointer group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
+							<div class="icon group absolute right-0.5 text-sm" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
 								<i-ri-pushpin-fill v-if="istKursFixiertInSchiene(kurs, schiene).value" class="inline-block group-hover:opacity-75" />
 								<i-ri-pushpin-line v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="inline-block opacity-25 group-hover:opacity-100" />
 							</div>
 						</div>
 						<!-- ... ansonsten ist er nicht draggable -->
-						<div v-else class="cursor-pointer w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
-							draggable="true" @dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})"
-							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
+						<div v-else class=" w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
+							draggable="true" @dragstart.stop="onDragKursSchiene({kurs, schiene, fachId: fachwahlen.id})" ref="cellRefs"
+							:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value, }">
 							<div v-if="(dragDataKursSchiene() !== undefined) && (dragDataKursSchiene()?.kurs?.id === kurs.id) && isKursDropZone(kurs, schiene).value && (dropDataKursSchiene() === undefined)" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
 							<div v-if="(dragDataKursSchiene() === undefined) && (istKursGesperrtInSchiene(kurs, schiene).value)" class="icon"><i-ri-lock-2-line class="inline-block !opacity-100" /></div>
 							<div v-if="(dragDataKursSchiene() === undefined) && (!istKursGesperrtInSchiene(kurs, schiene).value) && allowRegeln" class="icon"><i-ri-lock-2-line class="inline-block !opacity-0 group-hover:!opacity-25" /></div>
 						</div>
+						<template v-if="dropDataKursSchiene()?.kurs.id === kurs.id && dropDataKursSchiene()?.schiene.id === schiene.id">
+							<svws-ui-tooltip :force-open="true" :show-arrow="false">
+								<template #content>
+									<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
+									<svws-ui-button size="small" type="transparent" @click="selectedDo('sperren')">Alle Kurse sperren/entsperren</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="selectedDo('fixieren')">Alle Kurse fixieren/lösen</svws-ui-button>
+									<svws-ui-button size="small" type="transparent" @click="selectionAbort">Abbrechen</svws-ui-button>
+								</template>
+							</svws-ui-tooltip>
+						</template>
 					</div>
 				</template>
 			</div>
@@ -140,10 +151,24 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
+	import type { SGostKursplanungKursansichtDragData, SGostKursplanungKursansichtFachwahlProps } from "./SGostKursplanungKursansichtFachwahlProps";
 	import type { GostBlockungKurs, LehrerListeEintrag, GostBlockungsergebnisKurs, List, GostBlockungsergebnisSchiene } from "@core";
 	import { ZulaessigesFach , GostBlockungRegel, GostKursart, GostKursblockungRegelTyp} from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
+
+	const cellRefs = ref([]);
+	const selectedRef = ref(null);
+
+	async function drop(obj: SGostKursplanungKursansichtDragData, index: number) {
+		selectedRef.value = cellRefs.value[index];
+		await props.onDropKursSchiene(obj);
+	}
+
+	async function selectionAbort() {
+		selectedRef.value = null;
+		props.onDragKursSchiene(undefined);
+		await props.onDropKursSchiene(undefined);
+	}
 
 	const props = defineProps<SGostKursplanungKursansichtFachwahlProps>();
 
