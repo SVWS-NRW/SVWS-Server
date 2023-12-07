@@ -52,9 +52,9 @@ publish:
         - ./deployment/setupVersion.sh
         #- ./gradlew signJar publishReleaseAllAndCloseSonatype
         #- ./gradlew :deployment:docker:dockerPushAllDockerhub
-        - ls -d $PWD/artifacts_windows -lah
-        - ls -d $PWD/artifacts_linux/distributions -lah
-        #- ./gradlew :deployment:githubRelease
+        - ls -dlah $PWD/artifacts_windows
+        - ls -dlah $PWD/artifacts_linux/distributions
+        - ./gradlew :deployment:githubRelease
 
 build_linux:
     stage: build_linux
