@@ -378,8 +378,8 @@
 		const list = props.kurssortierung.value === 'fach'
 			? props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer()
 			: props.getDatenmanager().kursGetListeSortiertNachKursartFachNummer()
-		const k1 = dragDataKursSchiene.value.kurs;
-		const k2 = dropDataKursSchiene.value.kurs;
+		const k1 = toRaw(dragDataKursSchiene.value.kurs);
+		const k2 = toRaw(dropDataKursSchiene.value.kurs);
 		const s1 = props.getErgebnismanager().getSchieneG(dragDataKursSchiene.value.schiene.id);
 		const s2 = props.getErgebnismanager().getSchieneG(dropDataKursSchiene.value.schiene.id);
 		let regeln: List<GostBlockungRegel> = new ArrayList();
