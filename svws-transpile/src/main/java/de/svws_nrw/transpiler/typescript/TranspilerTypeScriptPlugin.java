@@ -274,8 +274,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final ExpressionTree initializer = node.getInitializer();
 		if (initializer == null)
 			return "%s %s : %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false));
-		String strInitializer = convertExpression(initializer);
 		final ExpressionType typeInitializer = transpiler.getExpressionType(initializer);
+		if (initializer instanceof final SwitchExpressionTree set) {
+			final String strInitializer = convertSwitchExpression(set, node.getName().toString());
+			return "%s %s : %s;".formatted(strTsLet, node.getName(), typeNode.transpile(false))
+				+ System.lineSeparator() + getIndent() + "%s".formatted(strInitializer);
+		}
+		String  strInitializer = convertExpression(initializer);
 		if ((node.getType().getKind() == Kind.PRIMITIVE_TYPE) && (typeInitializer instanceof ExpressionClassType) && (typeInitializer.isPrimitiveOrBoxedPrimitive()))
 			strInitializer += strTsValueOf;
 		return "%s %s : %s = %s".formatted(isFinal ? strTsConst : strTsLet, node.getName(),  typeNode.transpile(false), strInitializer);
@@ -712,16 +717,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	/**
 	 * Transpiles the switch expression.
 	 *
-	 * @param node   the switch expression tree node
+	 * @param node            the switch expression tree node
+	 * @param switchVarName   der Variablenname, welcher im switch verwendet werden soll
 	 *
 	 * @return the transpiled switch expression
 	 */
-	public String convertSwitchExpression(final SwitchExpressionTree node) {
-		final String tmpVar = "_sevar_" + node.hashCode();
+	public String convertSwitchExpression(final SwitchExpressionTree node, final String switchVarName) {
+		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + node.hashCode();
 		final String tmpExprVar = "_seexpr_" + node.hashCode();
 		final StringBuilder sb = new StringBuilder();
-		sb.append("let ").append(tmpVar).append(";").append(System.lineSeparator());
-		sb.append(getIndent()).append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
+		if (switchVarName == null)
+			sb.append("let ").append(tmpVar).append(" : any;").append(System.lineSeparator()).append(getIndent());
+		sb.append("const ").append(tmpExprVar).append(" = ").append(convertExpression(node.getExpression())).append(";");
 		boolean first = true;
 		for (final CaseTree ct : node.getCases()) {
 			if (ct.getCaseKind() == CaseKind.STATEMENT)
@@ -757,7 +764,36 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent());
 						sb.append("}");
 					}
-					case final ConstantCaseLabelTree cclt -> throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					case final ConstantCaseLabelTree cclt -> {
+						if ((node.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree swit))) {
+							final VariableTree varNode = transpiler.getDeclaration(swit);
+							final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
+							if (first) {
+								sb.append(System.lineSeparator()).append(getIndent());
+								first = false;
+							} else {
+								sb.append(" else ");
+							}
+							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString()).append(") {");
+							indentC++;
+							final boolean isBlock = ct.getBody() instanceof BlockTree;
+							sb.append(System.lineSeparator());
+							if (!isBlock)
+								sb.append(getIndent()).append(tmpVar).append(" = ");
+							switch (ct.getBody()) {
+								case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+								case final StatementTree st -> sb.append(convertStatement(st, true));
+								case final ExpressionTree et -> sb.append(convertExpression(et));
+								default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
+							}
+							indentC--;
+							if (!isBlock)
+								sb.append(";").append(System.lineSeparator());
+							sb.append(getIndent());
+							sb.append("}");
+						} else
+							throw new TranspilerException("Transpiler Error: Constant Case Label Tree not yet supported");
+					}
 					case final DefaultCaseLabelTree dclt -> { /* Der Default Case muss immer der letzte in TS sein */ }
 					default -> throw new TranspilerException("Transpiler Error: Unkown Case Label Tree of Kind " + clt.getKind());
 				}
@@ -777,7 +813,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						if (!isBlock)
 							sb.append(getIndent()).append(tmpVar).append(" = ");
 						switch (ct.getBody()) {
-							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpExprVar));
+							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
 							case final StatementTree st -> sb.append(convertStatement(st, true));
 							case final ExpressionTree et -> sb.append(convertExpression(et));
 							default -> throw new TranspilerException("Transpiler Exception: Body Type not yet supported");
@@ -822,7 +858,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case final TypeCastTree tc -> convertTypeCast(tc);
 			case final LambdaExpressionTree le -> convertLambdaExpression(le);
 			case final InstanceOfTree io -> convertInstanceOf(io);
-			case final SwitchExpressionTree se -> convertSwitchExpression(se);
+			case final SwitchExpressionTree se -> convertSwitchExpression(se, null);
 			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
 		};
 	}

@@ -36,6 +36,22 @@ public class Utils {
 	}
 
 	/**
+	 * Testet das Transpilieren einer Switch-Anweisungen
+	 *
+	 * @param sf   eine Schulform
+	 *
+	 * @return ein String
+	 */
+	public static String switchByTyp(final @NotNull Schulform sf) {
+		final @NotNull String value = switch (sf) {
+			case GY -> sf.daten(2018).kuerzel;
+			case GE -> sf.daten(2018).kuerzel;
+			default -> "none";
+		};
+		return value;
+	}
+
+	/**
 	 * Testet das Transpilieren der neuen Switch-Pattern-Anweisungen
 	 *
 	 * @param data   ein Basis-Typ für das Testen

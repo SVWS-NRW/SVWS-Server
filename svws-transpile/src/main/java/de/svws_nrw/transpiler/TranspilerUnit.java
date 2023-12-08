@@ -46,6 +46,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -677,10 +678,13 @@ public final class TranspilerUnit {
 
 		// check whether its a case tree in a switch expression
 		final TreePath parent = path.getParentPath();
-		if ((parent.getLeaf() instanceof ConstantCaseLabelTree) && (parent.getParentPath().getLeaf() instanceof CaseTree) && ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st)
-				&& ((st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it))))) {
-			return getIdentifierType(it);
+		if ((parent.getLeaf() instanceof ConstantCaseLabelTree) && (parent.getParentPath().getLeaf() instanceof CaseTree)) {
+			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchTree st) && (st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it)))
+				return getIdentifierType(it);
+			if ((parent.getParentPath().getParentPath().getLeaf() instanceof final SwitchExpressionTree st) && (st.getExpression() instanceof final ParenthesizedTree pt) && ((pt.getExpression() instanceof final IdentifierTree it)))
+				return getIdentifierType(it);
 		}
+
 
 		// TODO check for annotation identifier types
 		final Element element = transpiler.getElement(node);
