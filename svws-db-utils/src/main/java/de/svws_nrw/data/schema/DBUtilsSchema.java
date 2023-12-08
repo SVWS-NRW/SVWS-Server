@@ -182,14 +182,15 @@ public final class DBUtilsSchema {
 
 
     /**
-     * Ermittelt die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema
+     * Prüfe, ob das Schema ein aktuelles SVWS-Schema ist und gibt den zugehörigen Datenbank-Benutzer
+     * für den Zugriff auf das SVWS-Schea zurück.
      *
-     * @param conn         die Datenbankverbindung
+     * @param conn         die usprüngliche Datenbankverbindung zu dem Information-Schema
      * @param schemaname   der Name des Schemas
      *
-     * @return die Informationen zu den administrativen Benutzern in dem SVWS-Schema
+     * @return der Datenbank-Benutzer für die neue Verbindung
      */
-    public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) {
+    public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname) {
     	final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn);
     	SchemaListeEintrag schema = null;
     	for (final SchemaListeEintrag s : schemata) {
@@ -205,27 +206,39 @@ public final class DBUtilsSchema {
     		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist nicht aktuell (%d).".formatted(schemaname, schema.revision));
     	if (schema.revision > rev.revision)
     		throw OperationError.BAD_REQUEST.exception("Das SVWS-Schema %s ist neuer (%d) als die vom Server unterstützte Version (%d).".formatted(schemaname, schema.revision, rev.revision));
-
     	try {
-			final Benutzer neu = conn.getUser().connectTo(schemaname);
-			try (DBEntityManager schemaConn = neu.getEntityManager()) {
-		    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryNamed("DTOViewBenutzerdetails.istadmin", true, DTOViewBenutzerdetails.class);
-		    	final List<BenutzerListeEintrag> result = new ArrayList<>();
-		    	for (final DTOViewBenutzerdetails admin : admins) {
-		    		final BenutzerListeEintrag b = new BenutzerListeEintrag();
-		    		b.id = admin.ID;
-		    		b.typ = admin.Typ.id;
-		    		b.typID = admin.TypID;
-		    		b.anzeigename = admin.AnzeigeName;
-		    		b.name = admin.Benutzername;
-		    		b.istAdmin = admin.IstAdmin;
-		    		b.idCredentials = admin.credentialID;
-		    		result.add(b);
-		    	}
-		    	return result;
-			}
+			return conn.getUser().connectTo(schemaname);
 		} catch (@SuppressWarnings("unused") final DBException e) {
 			throw OperationError.INTERNAL_SERVER_ERROR.exception("Fehler beim Zugriff auf das SVWS-Schema %s.".formatted(schemaname));
+		}
+    }
+
+
+    /**
+     * Ermittelt die Informationen zu den administrativen Benutzern in einem aktuellen SVWS-Schema
+     *
+     * @param conn         die Datenbankverbindung
+     * @param schemaname   der Name des Schemas
+     *
+     * @return die Informationen zu den administrativen Benutzern in dem SVWS-Schema
+     */
+    public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) {
+		final Benutzer neu = getBenutzerFuerSVWSSchema(conn, schemaname);
+		try (DBEntityManager schemaConn = neu.getEntityManager()) {
+	    	final List<DTOViewBenutzerdetails> admins = schemaConn.queryNamed("DTOViewBenutzerdetails.istadmin", true, DTOViewBenutzerdetails.class);
+	    	final List<BenutzerListeEintrag> result = new ArrayList<>();
+	    	for (final DTOViewBenutzerdetails admin : admins) {
+	    		final BenutzerListeEintrag b = new BenutzerListeEintrag();
+	    		b.id = admin.ID;
+	    		b.typ = admin.Typ.id;
+	    		b.typID = admin.TypID;
+	    		b.anzeigename = admin.AnzeigeName;
+	    		b.name = admin.Benutzername;
+	    		b.istAdmin = admin.IstAdmin;
+	    		b.idCredentials = admin.credentialID;
+	    		result.add(b);
+	    	}
+	    	return result;
 		}
     }
 

@@ -203,6 +203,35 @@ public final class DBBenutzerUtils {
 		return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
 	}
 
+
+	/**
+	 * Führt die übergebene Aufgabe auf der Datenbank aus und gibt bei Erfolg die Response der Aufgabe zurück.
+	 * Hierbei wird die übergebene {@link DBEntityManager}-Instanz wird für den Datenbankzugriff genutzt.
+	 *
+	 * Wichtig: Eine Transaktion für die Aufgabe wird erzeugt und von dieser Methode gehandhabt!
+	 *
+	 * @param task          die auszuführende Aufgabe
+	 * @param conn          die Datenbank-Verbindung
+	 *
+	 * @return die Response zu der Aufgabe
+	 */
+	public static Response runWithTransaction(final Function<DBEntityManager, Response> task, final DBEntityManager conn) {
+		try {
+			conn.transactionBegin();
+			final Response response = task.apply(conn);
+			conn.transactionCommitOrThrow();
+			return response;
+		} catch (final Exception e) {
+			if (e instanceof final WebApplicationException webAppException)
+				return webAppException.getResponse();
+			return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollbackOrThrow();
+		}
+	}
+
+
 	/**
 	 * Führt die übergebene Aufgabe auf der Datenbank aus und gibt bei Erfolg die Response der Aufgabe zurück.
 	 * Hierfür wird der aktuelle SVWS-Benutzer anhand des HTTP-Requests ermittelt und überprüft, ob der
@@ -221,19 +250,7 @@ public final class DBBenutzerUtils {
 	public static Response runWithTransaction(final Function<DBEntityManager, Response> task, final HttpServletRequest request,
 			final ServerMode mode, final BenutzerKompetenz... kompetenzen) {
 		try (DBEntityManager conn = getDBConnection(request, mode, kompetenzen)) {
-			try {
-				conn.transactionBegin();
-				final Response response = task.apply(conn);
-				conn.transactionCommitOrThrow();
-				return response;
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.exception(e).getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollbackOrThrow();
-			}
+			return runWithTransaction(task, conn);
 		}
 	}
 
@@ -258,19 +275,7 @@ public final class DBBenutzerUtils {
 	public static Response runWithTransactionAllowSelf(final Function<DBEntityManager, Response> task, final HttpServletRequest request,
 			final ServerMode mode, final long user_id, final BenutzerKompetenz... kompetenzen) {
 		try (DBEntityManager conn = getDBConnectionAllowSelf(request, mode, user_id, kompetenzen)) {
-			try {
-				conn.transactionBegin();
-				final Response response = task.apply(conn);
-				conn.transactionCommitOrThrow();
-				return response;
-			} catch (final Exception e) {
-				if (e instanceof final WebApplicationException webAppException)
-					return webAppException.getResponse();
-				return OperationError.INTERNAL_SERVER_ERROR.getResponse();
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollbackOrThrow();
-			}
+			return runWithTransaction(task, conn);
 		}
 	}
 

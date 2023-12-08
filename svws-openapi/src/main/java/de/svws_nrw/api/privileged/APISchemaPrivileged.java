@@ -11,6 +11,7 @@ import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.data.schule.SchuleInfo;
+import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -22,6 +23,7 @@ import de.svws_nrw.data.schema.APITempDBFile;
 import de.svws_nrw.data.schema.DBUtilsSchema;
 import de.svws_nrw.data.schema.DataMigration;
 import de.svws_nrw.data.schema.DataSQLite;
+import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -1125,6 +1127,39 @@ public class APISchemaPrivileged {
 		content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
     public Response updateSchemaToCurrent(@PathParam("schema") final String schemaname, @Context final HttpServletRequest request) {
     	return updateSchema(schemaname, -1, request);
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für das Initialisieren des Schema mit einer Schulnummer.
+     * Es wird vorausgesetzt, dass bisher keine Schulnummer in dem Schema festgelegt wurde
+     * und dass es sich um ein SVWS-Schema handelt.
+     *
+     * @param schema       das SVWS-Datenbankschema, in welchem die Schule angelegt wird
+     * @param schulnummer  die Schulnummer
+     * @param request      die Informationen zur HTTP-Anfrage
+     *
+     * @return die HTTP-Antwort mit den neuen Schulstammdaten
+     */
+    @POST
+    @Path("/api/schema/create/{schema}/init/{schulnummer : \\d+}")
+    @Operation(summary = "Legt die Daten für eine neue Schule in einem SVWS-Schema an und gibt anschließend die Schulstammdaten zurück.",
+    description = "Legt die Daten für eine neue Schule in einem SVWS-Schema an und gibt anschließend die Schulstammdaten zurück."
+    		    + "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Schule besitzt.")
+    @ApiResponse(responseCode = "200", description = "Die Schule wurde erfolgreich angelegt.",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON,
+            schema = @Schema(implementation = SchuleStammdaten.class)))
+    @ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Schule anzulegen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schule mit der angegebenen Schulnummer gefunden")
+    @ApiResponse(responseCode = "409", description = "Fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde, dies ist z.B. der Fall, falls zuvor schon eine Schule angelegt wurde.")
+    @ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+    public Response initSchemaMitSchule(@PathParam("schema") final String schema, @PathParam("schulnummer") final int schulnummer, @Context final HttpServletRequest request) {
+    	return DBBenutzerUtils.runWithTransaction(conn -> {
+    		final Benutzer schemaUser = DBUtilsSchema.getBenutzerFuerSVWSSchema(conn, schema);
+    		try (DBEntityManager conn2 = schemaUser.getEntityManager()) {
+    			return DBBenutzerUtils.runWithTransaction(c2 -> new DataSchuleStammdaten(c2).init(schulnummer), conn2);
+    		}
+    	}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
     }
 
 }
