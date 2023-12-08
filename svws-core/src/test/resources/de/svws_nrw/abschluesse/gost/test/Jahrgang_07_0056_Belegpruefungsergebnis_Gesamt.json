@@ -24,6 +24,10 @@
     "code" : "STD_11_INFO",
     "art" : "HINWEIS",
     "beschreibung" : "Der Pflichtunterricht darf nur in begründeten Ausnahmefällen 102 Stunden unterschreiten."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

@@ -8,6 +8,10 @@
     "code" : "IGF_10",
     "art" : "BELEGUNG",
     "beschreibung" : "Inhaltsgleiche Fächer dürfen nur einmal belegt werden."
+  }, {
+    "code" : "WAEHLBARKEIT_1",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."
   } ],
   "log" : [ ]
 }

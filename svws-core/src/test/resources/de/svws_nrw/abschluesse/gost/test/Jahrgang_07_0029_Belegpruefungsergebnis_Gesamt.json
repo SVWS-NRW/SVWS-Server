@@ -4,6 +4,10 @@
     "code" : "FS_17",
     "art" : "SCHRIFTLICHKEIT",
     "beschreibung" : "Neu einsetzende Fremdsprachen dürfen nicht als Leistungskurs belegt werden."
+  }, {
+    "code" : "WAEHLBARKEIT_3",
+    "art" : "SCHULSPEZIFISCH",
+    "beschreibung" : "Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist."
   } ],
   "log" : [ ]
 }
