@@ -419,7 +419,14 @@
 				wahl.halbjahre[hj] = "S";
 				break;
 			case "S":
-				wahl.halbjahre[hj] = "LK";
+				if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[hj] = "AT";
+					else
+						wahl.halbjahre[hj] = null;
+				} else { // in der Q-Phase als LK möglich, allerdings nicht im Fachbereich des literarisch-künstlerischen Bereichs
+					wahl.halbjahre[hj] = "LK";
+				}
 				break;
 			case "LK": {
 				wahl.halbjahre[hj] = null
@@ -962,23 +969,25 @@
 </script>
 
 <style lang="postcss" scoped>
-.data-table__tr {
-  --background-color: #ffffff;
 
-  .data-table__td {
-    background-color: var(--background-color);
-  }
+	.data-table__tr {
+		--background-color: #ffffff;
 
-  &.svws-background-on-hover {
-    .data-table__td {
-      @apply bg-transparent;
-    }
+		.data-table__td {
+			background-color: var(--background-color);
+		}
 
-    &:hover {
-      .data-table__td {
-        background-color: var(--background-color);
-      }
-    }
-  }
-}
+		&.svws-background-on-hover {
+			.data-table__td {
+				@apply bg-transparent;
+			}
+
+			&:hover {
+				.data-table__td {
+					background-color: var(--background-color);
+				}
+			}
+		}
+	}
+
 </style>

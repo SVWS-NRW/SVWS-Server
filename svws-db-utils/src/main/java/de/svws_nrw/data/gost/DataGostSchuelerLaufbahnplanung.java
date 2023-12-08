@@ -43,6 +43,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
@@ -227,8 +228,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		}
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
-				|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
-				|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
+				|| (fw.equals("LK") && !halbjahr.istEinfuehrungsphase() && !GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach.StatistikFach.daten.kuerzelASD))
+				|| (fw.equals("ZK") && !halbjahr.istEinfuehrungsphase())
+				|| (fw.equals("AT") && "SP".equals(fach.StatistikFach.daten.kuerzelASD));
 		if (!valid)
 			throw OperationError.CONFLICT.exception();
 		return fw;
