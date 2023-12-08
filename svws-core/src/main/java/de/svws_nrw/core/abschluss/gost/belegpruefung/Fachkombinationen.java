@@ -14,12 +14,12 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse gruppiert alle Belegprüfungen für einen Schüler für die Prüfung der EF1 bzw.
- * für die Gesamtprüfungen, welche im Fach Deutsch durchgeführt werden.
+ * für die Gesamtprüfungen, welche in Bezug auf die schulspezifischen Fachkombinationen durchgeführt werden.
  */
 public final class Fachkombinationen extends GostBelegpruefung {
 
 	/**
-	 * Erstellt eine neue Belegprüfung für das Fach Deutsch.
+	 * Erstellt eine neue Belegprüfung für die schulspezifischen Fachkombinationen.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)

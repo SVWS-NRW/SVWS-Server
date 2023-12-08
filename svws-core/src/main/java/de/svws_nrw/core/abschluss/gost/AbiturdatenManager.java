@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch;
+import de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion;
@@ -131,6 +132,8 @@ public class AbiturdatenManager {
 		pruefungen.add(new Allgemeines(this, pruefungsArt));
 		// Die Prüfung von schulspezifischen Fachkombinationen
 		pruefungen.add(new Fachkombinationen(this, pruefungsArt));
+		// Die Prüfung der schulspezifischen Wählbarkeit von Fächern
+		pruefungen.add(new FachWaehlbar(this, pruefungsArt));
 		return pruefungen;
 	}
 

@@ -548,7 +548,27 @@ public enum GostBelegungsfehler {
 	/** BelegungsfehlerArt KOMBI_2 */
 	KOMBI_2("KOMBI_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
 			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.",
-			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt.");
+			"Es wurde eine in diesem Jahrgang geforderte Fächerkombination nicht erfüllt."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_0 */
+	WAEHLBARKEIT_0("WAEHLBARKEIT_0", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht als Fach der gymnsialen Oberstufe vorhanden ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_1 */
+	WAEHLBARKEIT_1("WAEHLBARKEIT_1", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist.",
+			"Es wurde ein Fach gewählt, welches in diesem Jahrgang nicht wählbar ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_2 */
+	WAEHLBARKEIT_2("WAEHLBARKEIT_2", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist.",
+			"Es wurde ein Fach als Grundkurs im Abitur gewählt, welches in diesem Jahrgang nicht als Grundkurs im Abitur wählbar ist."),
+
+	/** BelegungsfehlerArt WAEHLBARKEIT_3 */
+	WAEHLBARKEIT_3("WAEHLBARKEIT_3", GostBelegungsfehlerArt.SCHULSPEZIFISCH,
+			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.",
+			"Es wurde ein Fach als Leistungskurs im Abitur gewählt, welches in diesem Jahrgang nicht als Leistungskurs im Abitur wählbar ist.");
 
 
 	/** Der eindeutige Code des Belegungsfehlers */

@@ -13,7 +13,7 @@ export class Fachkombinationen extends GostBelegpruefung {
 
 
 	/**
-	 * Erstellt eine neue Belegprüfung für das Fach Deutsch.
+	 * Erstellt eine neue Belegprüfung für die schulspezifischen Fachkombinationen.
 	 *
 	 * @param manager        der Daten-Manager für die Abiturdaten
 	 * @param pruefungsArt   die Art der durchzuführenden Prüfung (z.B. EF.1 oder GESAMT)
