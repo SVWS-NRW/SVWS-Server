@@ -96,6 +96,16 @@
 			'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
 		}" @click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
+			<span v-if="abi_wahl && !istMoeglichAbi" class="absolute -right-0">
+				<svws-ui-tooltip :color="'danger'">
+					<svws-ui-button type="icon" size="small">
+						<i-ri-close-line @click="deleteFachwahlAbitur()" />
+					</svws-ui-button>
+					<template #content>
+						Löschen (Nicht als Abiturfach wählbar)
+					</template>
+				</svws-ui-tooltip>
+			</span>
 		</div>
 	</div>
 </template>
@@ -368,6 +378,12 @@
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.halbjahre[halbjahr.id] = null;
 		onUpdateWahl(wahl, props.fach.id);
+	}
+
+	function deleteFachwahlAbitur() {
+		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
+		wahl.abiturFach = null;
+		onUpdateWahl(wahl);
 	}
 
 	function stepper_manuellAbi() : void {
