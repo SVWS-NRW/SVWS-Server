@@ -84,7 +84,7 @@ public enum Note {
 	NICHT_ERTEILT(22, 4020, null, "NE", "(nicht erteilt)", "--------------------", null, null),
 
 	/** Der Noteneintrag "kein Unterricht wegen Lehrermangel" mit dem Wert LM.*/
-	LEHRERMANGEL(23, 9000, null, "LM", "(kein Unterricht wegen Lehrermangel)", "--------------------", null, null),
+	LEHRERMANGEL(23, 9000, null, "LM", "(kein Unterricht wegen Lehrermangels)", "--------------------", null, null),
 
 	/** Der Noteneintrag "abgemeldet" mit dem Wert AM.*/
 	ABGEMELDET(24, 2000, null, "AM", "(abgemeldet)", "--------------------", null, null);
