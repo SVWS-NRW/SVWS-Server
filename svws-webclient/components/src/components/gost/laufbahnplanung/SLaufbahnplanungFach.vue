@@ -446,11 +446,22 @@
 
 	function setEF1Wahl(wahl: GostSchuelerFachwahl): void {
 		switch (wahl.halbjahre[GostHalbjahr.EF1.id]) {
-			case null: wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S"; break;
-			case "S":  wahl.halbjahre[GostHalbjahr.EF1.id] = "M"; break;
-			case "M":  wahl.halbjahre[GostHalbjahr.EF1.id] = null; break;
+			case null:
+				wahl.halbjahre[GostHalbjahr.EF1.id] = ist_VTF.value || ist_PJK.value ? "M" : "S";
+				break;
+			case "S":
+				wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
+				break;
+			case "M":
+				if (GostFachbereich.SPORT.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
+				else
+					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				break;
+			case "AT":
+				wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				break;
 		}
-		// TODO AT für Sport !!!
 	}
 
 
@@ -463,11 +474,14 @@
 				wahl.halbjahre[GostHalbjahr.EF2.id] = "M";
 				break;
 			case "M":
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
-				if (GostFachbereich.SPORT.hat(props.fach)) wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				if (GostFachbereich.SPORT.hat(props.fach))
+					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+				else
+					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
 				break;
 			case "AT":
 				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				break;
 		}
 	}
 
@@ -513,16 +527,32 @@
 				break;
 			}
 			case "M":  {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)
-				else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [null, null, null, null, null, null];
-				else
-					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				} else if ((identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', 'M', 'M']) || identicalArray(wahl.halbjahre, ['M', 'M', 'M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre = ["AT", "AT", "AT", "AT", "AT", "AT"];
+					else
+						wahl.halbjahre = [null, null, null, null, null, null];
+				} else {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[GostHalbjahr.EF1.id] = "AT";
+					else
+						wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				}
 				break;
 			}
-			// TODO AT für Sport !!!
+			case "AT": {
+				if (wahl.abiturFach !== null) {
+					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
+				} else if (identicalArray(wahl.halbjahre, ["AT", "AT", "AT", "AT", "AT", "AT"])) {
+					wahl.halbjahre = [null, null, null, null, null, null];
+				} else {
+					wahl.halbjahre[GostHalbjahr.EF1.id] = null;
+				}
+				break;
+			}
 		}
 	}
 
@@ -552,19 +582,31 @@
 				break;
 			}
 			case "M": {
-				if (wahl.abiturFach !== null)
+				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
-				else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
+				} else if ((identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, [null, null, null, null])
 					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', 'M', 'M'])
-					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value))
-					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
-				if (GostFachbereich.SPORT.hat(props.fach))
-					wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+					|| identicalArrayIgnoreFirstAndSecond(wahl.halbjahre, ['M', 'M', null, null])) && !(ist_VTF.value || ist_PJK.value)) {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre = [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"];
+					else
+						wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
+				} else {
+					if (GostFachbereich.SPORT.hat(props.fach))
+						wahl.halbjahre[GostHalbjahr.EF2.id] = "AT";
+					else
+						wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				}
 				break;
 			}
 			case "AT": {
-				wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				if (wahl.abiturFach !== null) {
+					wahl.halbjahre[GostHalbjahr.EF2.id] = 'S';
+				} else if (identicalArray(wahl.halbjahre, [wahl.halbjahre[0], "AT", "AT", "AT", "AT", "AT"])) {
+					wahl.halbjahre = [wahl.halbjahre[0], null, null, null, null, null];
+				} else {
+					wahl.halbjahre[GostHalbjahr.EF2.id] = null;
+				}
 			}
 		}
 	}
