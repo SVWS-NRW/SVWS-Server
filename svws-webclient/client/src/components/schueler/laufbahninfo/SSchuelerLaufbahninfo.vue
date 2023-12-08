@@ -4,15 +4,23 @@
 			Hier werden zukünftig die Informationen zu den Abschlüssen und Berechtigungen an der aktuellen Schule angezeigt.
 		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
-			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge">
+			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
-					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungVonAbschnitt" @change="belegungVonAbschnitt => patchSprachbelegung({belegungVonAbschnitt: Number(belegungVonAbschnitt), sprache: rowData.sprache})" headless />
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
+						<span class="opacity-50">/</span>
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 1}">2</span>
+					</div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
 					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungVonJahrgang" @change="belegungVonJahrgang => patchSprachbelegung({belegungVonJahrgang, sprache: rowData.sprache})" headless />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
-					<svws-ui-text-input type="number" :valid="abschnitt" :model-value="rowData.belegungBisAbschnitt" @change="belegungBisAbschnitt => patchSprachbelegung({belegungBisAbschnitt: Number(belegungBisAbschnitt), sprache: rowData.sprache})" headless />
+					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 2}">1</span>
+						<span class="opacity-50">/</span>
+						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 1}">2</span>
+					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
 					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungBisJahrgang" @change="belegungBisJahrgang => patchSprachbelegung({belegungBisJahrgang, sprache: rowData.sprache})" headless />
@@ -21,14 +29,18 @@
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
 					<svws-ui-checkbox v-else-if="rowData.sprache === 'H'" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
 					<template v-else-if="rowData.sprache === 'L'">
-						<svws-ui-checkbox v-model="hatKleinesLatinum" headless title="Kleines Latinum">Kleines Latinum</svws-ui-checkbox>
-						<svws-ui-checkbox v-model="hatLatinum" headless title="Latinum">Latinum</svws-ui-checkbox>
+						<svws-ui-select headless :items="sprachen" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
 					</template>
 					<template v-else>
-						<svws-ui-select title="Referenzniveau" headless :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @change="(referenzniveau: Sprachreferenzniveau) => patchSprachbelegung({referenzniveau: referenzniveau.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="(i: Sprachreferenzniveau)=>i.name()" />
+						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="itemText" />
 					</template>
 				</template>
 				<!--  -->
+				<template #actions>
+					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
+					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
+					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><ri-calculator-line /></svws-ui-button>
+				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
@@ -45,10 +57,12 @@
 
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn, InputDataType } from "@ui";
-	import { computed } from 'vue';
+	import { computed, ref } from 'vue';
 	import { Sprachreferenzniveau } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
+
+	const auswahl = ref([]);
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
 		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache" },
@@ -76,10 +90,11 @@
 		{ key: "note", label: "Note", tooltip: "Prüfungsnote", minWidth: 6 },
 	];
 
-	function abschnitt(item: InputDataType) {
-		if (typeof item !== 'number')
-			return false;
-		return (item < 1 || item > 2)
+	function itemText(item: Sprachreferenzniveau) {
+		const name = item.name();
+		if (name.length === 2)
+			return name;
+		return name.slice(0, 2) + "/" + name.slice(2);
 	}
 
 	function jahrgang(item: InputDataType) {
@@ -88,24 +103,37 @@
 		return (Number(item) < 0 || Number(item) > 13)
 	}
 
-	const hatKleinesLatinum = computed<boolean>({
-		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'L')
-					return sprache.hatKleinesLatinum;
-			return false;
-		},
-		set: (hatKleinesLatinum) => void props.patchSprachbelegung({hatKleinesLatinum, sprache: 'L'})
-	});
+	const sprachen = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
+	const latinum = computed(()=> {
+		if (hatKleinesLatinum.value)
+			return sprachen[0];
+		if (hatLatinum.value)
+			return sprachen[1];
+		return
+	})
 
-	const hatLatinum = computed<boolean>({
-		get: () => {
-			for (const sprache of props.sprachbelegungen())
-				if (sprache.sprache === 'L')
-					return sprache.hatLatinum;
-			return false;
-		},
-		set: (hatLatinum) => void props.patchSprachbelegung({hatLatinum, sprache: 'L'})
+	async function patchLatinum(item:any) {
+		console.log(item)
+		if (item === undefined)
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: false, sprache: 'L'});
+		if (item === sprachen[0])
+			await props.patchSprachbelegung({hatKleinesLatinum: true, hatLatinum: false, sprache: 'L'});
+		if (item === sprachen[1])
+			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: true, sprache: 'L'});
+	}
+
+	const hatKleinesLatinum = computed<boolean>(() => {
+		for (const sprache of props.sprachbelegungen())
+			if (sprache.sprache === 'L')
+				return sprache.hatKleinesLatinum;
+		return false;
+	})
+
+	const hatLatinum = computed<boolean>(() => {
+		for (const sprache of props.sprachbelegungen())
+			if (sprache.sprache === 'L')
+				return sprache.hatLatinum;
+		return false;
 	});
 
 	const hatGraecum = computed<boolean>({
@@ -128,4 +156,14 @@
 		set: (hatHebraicum) => void props.patchSprachbelegung({hatHebraicum, sprache: 'H'})
 	});
 
+	async function remove() {
+		for (const sprache of auswahl.value)
+			await props.removeSprachbelegung(sprache);
+	}
+	async function suchen() {
+		//lösche Sprache
+	}
+	async function ermitteln() {
+		//lösche Sprache
+	}
 </script>
