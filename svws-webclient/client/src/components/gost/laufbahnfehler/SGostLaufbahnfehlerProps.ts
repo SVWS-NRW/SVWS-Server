@@ -1,4 +1,4 @@
-import type { ApiFile, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, List, SimpleOperationResponse } from "@core";
+import type { ApiFile, GostBelegpruefungsArt, GostBelegpruefungsErgebnisse, GostJahrgangsdaten, List, SimpleOperationResponse } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { Config } from "~/components/Config";
 
@@ -12,6 +12,6 @@ export interface GostLaufbahnfehlerProps {
 	exportLaufbahnplanung: (schueler: List<number>) => Promise<ApiFile>;
 	getPdfLaufbahnplanung: (title: string, list: List<number>, detaillevel: number) => Promise<ApiFile>;
 	resetFachwahlenAlle: () => Promise<void>;
-	abiturjahr: number;
+	jahrgangsdaten: () => GostJahrgangsdaten;
 	apiStatus: ApiStatus;
 }

@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
 			<svws-ui-sub-nav>
-				<s-modal-gost-laufbahnfehler-alle-fachwahlen-loeschen @delete="resetFachwahlenAlle" />
+				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><i-ri-download-2-line /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung="importLaufbahnplanung" />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><i-ri-upload-2-line />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>

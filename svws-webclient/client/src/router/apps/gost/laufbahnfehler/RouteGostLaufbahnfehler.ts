@@ -78,7 +78,7 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 			exportLaufbahnplanung: this.data.exportLaufbahnplanung,
 			getPdfLaufbahnplanung: this.data.getPdfLaufbahnplanung,
 			resetFachwahlenAlle: this.data.resetFachwahlenAlle,
-			abiturjahr: this.data.abiturjahr,
+			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			apiStatus: api.status,
 		};
 	}
