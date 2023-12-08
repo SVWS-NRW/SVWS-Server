@@ -45,11 +45,11 @@ export class RouteDataSchuelerLaufbahninfo {
 	}
 
 	get sprachbelegungen(): List<Sprachbelegung> {
-		return this._state.value.sprachbelegungen;
+		return new ArrayList(this._state.value.sprachbelegungen);
 	}
 
 	get sprachpruefungen(): List<Sprachpruefung> {
-		return this._state.value.sprachpruefungen;
+		return new ArrayList(this._state.value.sprachpruefungen);
 	}
 
 	public async auswahlSchueler(auswahl: SchuelerListeEintrag | null) {
