@@ -12,6 +12,7 @@ import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.data.schule.SchuleStammdaten;
+import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
@@ -23,6 +24,7 @@ import de.svws_nrw.data.schema.APITempDBFile;
 import de.svws_nrw.data.schema.DBUtilsSchema;
 import de.svws_nrw.data.schema.DataMigration;
 import de.svws_nrw.data.schema.DataSQLite;
+import de.svws_nrw.data.schule.DataKatalogSchulen;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
@@ -125,6 +127,27 @@ public class APISchemaPrivileged {
     	try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KEINE)) {
 			return DTOInformationSchema.queryNames(conn);
     	}
+    }
+
+
+    /**
+     * Die OpenAPI-Methode für die Abfrage des Schulen-Kataloges.
+     *
+     * @param request       die Informationen zur HTTP-Anfrage
+     *
+     * @return die Liste der Schulen
+     */
+    @GET
+    @Path("/api/schema/liste/kataloge/schulen")
+    @Operation(summary = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulen.",
+               description = "Erstellt eine Liste aller in dem Katalog vorhandenen Schulen.")
+    @ApiResponse(responseCode = "200", description = "Eine Liste von Schulen-Katalog-Einträgen",
+                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulenKatalogEintrag.class))))
+    @ApiResponse(responseCode = "403", description = "Der angegebene Benutzer besitzt nicht die Rechte, um den Katalog anzusehen.")
+    @ApiResponse(responseCode = "404", description = "Keine Schulen-Katalog-Einträge gefunden")
+    public Response getAllgemeinenKatalogSchulen(@Context final HttpServletRequest request) {
+        DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
+        return (new DataKatalogSchulen()).getAll();
     }
 
 
