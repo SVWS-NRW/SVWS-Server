@@ -416,7 +416,7 @@
 				wahl.halbjahre[hj] = "M";
 				break;
 			case "M":
-				if (ist_VTF.value || ist_PJK.value)
+				if (ist_VTF.value || ist_PJK.value || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach)))
 					wahl.halbjahre[hj] = null;
 				else
 					wahl.halbjahre[hj] = "S";
@@ -649,7 +649,7 @@
 				wahl.halbjahre[GostHalbjahr.Q11.id] = (GostFachbereich.DEUTSCH.hat(props.fach) || GostFachbereich.MATHEMATIK.hat(props.fach)) ? "S" : "M";
 				break;
 			case "M":
-				if ((ist_VTF.value || ist_PJK.value))
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
 					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
 				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
 					wahl.halbjahre[GostHalbjahr.Q11.id] = null;
@@ -807,7 +807,7 @@
 				}
 				break;
 			case "M":
-				if ((ist_VTF.value || ist_PJK.value))
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
 				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
 					wahl.halbjahre[GostHalbjahr.Q12.id] = null;
@@ -895,7 +895,7 @@
 				}
 				break;
 			case "M":
-				if ((ist_VTF.value || ist_PJK.value))
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
 				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
 					wahl.halbjahre[GostHalbjahr.Q21.id] = null;
@@ -966,7 +966,7 @@
 				}
 				break;
 			case "M":
-				if ((ist_VTF.value || ist_PJK.value))
+				if (ist_VTF.value || ist_PJK.value || GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 				else if (GostFachbereich.SPORT.hat(props.fach) && !props.fach.istMoeglichAbiGK && !props.fach.istMoeglichAbiLK)
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
