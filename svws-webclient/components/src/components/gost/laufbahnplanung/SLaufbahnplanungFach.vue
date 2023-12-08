@@ -416,7 +416,10 @@
 				wahl.halbjahre[hj] = "M";
 				break;
 			case "M":
-				wahl.halbjahre[hj] = "S";
+				if (ist_VTF.value || ist_PJK.value)
+					wahl.halbjahre[hj] = null;
+				else
+					wahl.halbjahre[hj] = "S";
 				break;
 			case "S":
 				if ((hj <= 1) || (GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(props.fach))) {
