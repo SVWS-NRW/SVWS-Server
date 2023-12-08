@@ -6,7 +6,7 @@
 					<i-ri-loop-right-line />
 					Modus: <span>{{ istManuellerModus ? 'manuell' : 'normal' }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="resetFachwahlen" />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen="resetFachwahlen" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">

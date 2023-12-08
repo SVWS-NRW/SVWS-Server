@@ -25,7 +25,7 @@
 			<i-ri-loop-right-line />
 			Modus: <span>{{ modus }}</span>
 		</svws-ui-button>
-		<s-modal-laufbahnplanung-kurswahlen-loeschen @delete="resetFachwahlen" />
+		<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
 	</svws-ui-sub-nav>
 	<div class="page--content page--content--full min-w-fit gap-x-8 2xl:gap-x-16 relative">
 		<div class="flex-grow">
