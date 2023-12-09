@@ -18,6 +18,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanSchueler;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.utils.ListUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -757,19 +758,7 @@ public final class StundenplanManagerDummy {
 	 * @throws DeveloperNotificationException  falls das Zeitraster bereits existiert.
 	 */
 	public void zeitrasterAdd(final @NotNull StundenplanZeitraster zeitraster) throws DeveloperNotificationException {
-		// check
-		DeveloperNotificationException.ifTrue("(zeit.unterrichtstunde < 0) || (zeit.unterrichtstunde > 29)", (zeitraster.unterrichtstunde < 0) || (zeitraster.unterrichtstunde > 29));
-		if ((zeitraster.stundenbeginn != null) && (zeitraster.stundenende != null)) {
-			final int beginn = zeitraster.stundenbeginn;
-			final int ende = zeitraster.stundenende;
-			DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
-		}
-		for (final @NotNull StundenplanZeitraster z : _zeitrastermap.values())
-			if ((z.wochentag == zeitraster.wochentag) && (z.unterrichtstunde == zeitraster.unterrichtstunde))
-				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!");
-
-		// add
-		DeveloperNotificationException.ifMapPutOverwrites(_zeitrastermap, zeitraster.id, zeitraster);
+		zeitrasterAddAll(ListUtils.create1(zeitraster));
 	}
 
 
@@ -779,18 +768,29 @@ public final class StundenplanManagerDummy {
 	 * @param list  Die Menge der Zeitraster, welche hinzugefügt werden soll.
 	 */
 	public void zeitrasterAddAll(final @NotNull List<@NotNull StundenplanZeitraster> list) {
+		final @NotNull HashSet<@NotNull String> setOfWochentagStundeAlt = new HashSet<>();
+		for (final @NotNull StundenplanZeitraster z : _zeitrastermap.values())
+			setOfWochentagStundeAlt.add(z.wochentag + ";" + z.unterrichtstunde);
+
 		// check
 		final @NotNull HashSet<@NotNull Long> setOfIDs = new HashSet<>();
-		for (final @NotNull StundenplanZeitraster zeitraster : list) {
-			if (_zeitrastermap.containsKey(zeitraster.id))
-				throw new DeveloperNotificationException("zeitrasterAddAll: Zeitraster-ID existiert bereits!");
-			if (!setOfIDs.add(zeitraster.id))
-				throw new DeveloperNotificationException("zeitrasterAddAll: Doppelte Zeitraster-ID in 'list'!");
+		final @NotNull HashSet<@NotNull String> setOfWochentagStundeNeu = new HashSet<>();
+		for (final @NotNull StundenplanZeitraster z : list) {
+			DeveloperNotificationException.ifTrue("(z.unterrichtstunde < 0) || (z.unterrichtstunde > 29)", (z.unterrichtstunde < 0) || (z.unterrichtstunde > 29));
+			if ((z.stundenbeginn != null) && (z.stundenende != null)) {
+				final int beginn = z.stundenbeginn;
+				final int ende = z.stundenende;
+				DeveloperNotificationException.ifTrue("beginn >= ende", beginn >= ende);
+			}
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", _zeitrastermap.containsKey(z.id));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " doppelt in der Liste!", !setOfIDs.add(z.id));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!", !setOfWochentagStundeNeu.add(z.wochentag + ";" + z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + " doppelt in der Liste!", !setOfWochentagStundeAlt.add(z.wochentag + ";" + z.unterrichtstunde));
 		}
 
 		// add
-		for (final @NotNull StundenplanZeitraster zeitraster : list)
-			zeitrasterAdd(zeitraster);
+		for (final @NotNull StundenplanZeitraster z : list)
+			_zeitrastermap.put(z.id, z);
 	}
 
 	/**

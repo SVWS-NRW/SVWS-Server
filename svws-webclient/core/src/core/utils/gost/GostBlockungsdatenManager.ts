@@ -1143,7 +1143,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID < 0), oder gelöscht (ID >= 0) werden sollen.
+	 * Liefert eine Liste von Regeln, welche beim Button "ToggleSperrung" erstellt (ID negativ), oder gelöscht (ID positiv) werden sollen.
 	 *
 	 * @param list      Die aktuelle sortierte Liste der GUI.
 	 * @param kursA     Der erste oder der letzte Kurs der Auswahl.

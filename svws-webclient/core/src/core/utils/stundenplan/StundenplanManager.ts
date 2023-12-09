@@ -1329,37 +1329,28 @@ export class StundenplanManager extends JavaObject {
 		}
 	}
 
-	private aufsichtsbereichAddOhneUpdate(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		StundenplanManager.aufsichtsbereichCheck(aufsichtsbereich);
-		DeveloperNotificationException.ifMapPutOverwrites(this._aufsichtsbereich_by_id, aufsichtsbereich.id, aufsichtsbereich);
+	private aufsichtsbereichAddAllOhneUpdate(list : List<StundenplanAufsichtsbereich>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const aufsichtsbereich of list) {
+			StundenplanManager.aufsichtsbereichCheckAttributes(aufsichtsbereich);
+			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " existiert bereits!", this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id));
+			DeveloperNotificationException.ifTrue("aufsichtsbereichAddAllOhneUpdate: ID=" + aufsichtsbereich.id + " doppelt in der Liste!", !setOfIDs.add(aufsichtsbereich.id));
+		}
+		for (const aufsichtsbereich of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._aufsichtsbereich_by_id, aufsichtsbereich.id, aufsichtsbereich);
 	}
 
 	/**
 	 * Fügt ein {@link StundenplanAufsichtsbereich}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
 	 * @param aufsichtsbereich  Das {@link StundenplanAufsichtsbereich}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public aufsichtsbereichAdd(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
-		this.update_all();
-	}
-
-	private aufsichtsbereichAddAllOhneUpdate(listAufsichtsbereich : List<StundenplanAufsichtsbereich>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const aufsichtsbereich of listAufsichtsbereich) {
-			if (this._aufsichtsbereich_by_id.containsKey(aufsichtsbereich.id))
-				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Aufsichtsbereich-ID existiert bereits!")
-			if (!setOfIDs.add(aufsichtsbereich.id))
-				throw new DeveloperNotificationException("aufsichtsbereichAddAllOhneUpdate: Doppelte Aufsichtsbereich-ID in 'list'!")
-		}
-		for (const aufsichtsbereich of listAufsichtsbereich)
-			this.aufsichtsbereichAddOhneUpdate(aufsichtsbereich);
+		this.aufsichtsbereichAddAll(ListUtils.create1(aufsichtsbereich));
 	}
 
 	/**
 	 * Fügt alle {@link StundenplanAufsichtsbereich}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanAufsichtsbereich|), da aufsichtsbereichUpdate() aufgerufen wird.
 	 *
 	 * @param listAufsichtsbereich  Die Menge der {@link StundenplanAufsichtsbereich}-Objekte, welche hinzugefügt werden soll.
 	 */
@@ -1368,7 +1359,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static aufsichtsbereichCheck(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
+	private static aufsichtsbereichCheckAttributes(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
 		DeveloperNotificationException.ifInvalidID("aufsicht.id", aufsichtsbereich.id);
 		DeveloperNotificationException.ifStringIsBlank("aufsicht.kuerzel", aufsichtsbereich.kuerzel);
 	}
@@ -1406,7 +1397,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param aufsichtsbereich  Das neue {@link StundenplanAufsichtsbereich}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public aufsichtsbereichPatchAttributes(aufsichtsbereich : StundenplanAufsichtsbereich) : void {
-		StundenplanManager.aufsichtsbereichCheck(aufsichtsbereich);
+		StundenplanManager.aufsichtsbereichCheckAttributes(aufsichtsbereich);
 		DeveloperNotificationException.ifMapRemoveFailes(this._aufsichtsbereich_by_id, aufsichtsbereich.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._aufsichtsbereich_by_id, aufsichtsbereich.id, aufsichtsbereich);
 		this.update_all();
@@ -1471,9 +1462,15 @@ export class StundenplanManager extends JavaObject {
 		return DateUtils.gibDatumDesWochentagsOfJahrAndKalenderwoche(kwz.jahr, kwz.kw, wochentag.id);
 	}
 
-	private fachAddOhneUpdate(fach : StundenplanFach) : void {
-		StundenplanManager.fachCheck(fach);
-		DeveloperNotificationException.ifMapPutOverwrites(this._fach_by_id, fach.id, fach);
+	private fachAddAllOhneUpdate(list : List<StundenplanFach>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const fach of list) {
+			StundenplanManager.fachCheckAttributes(fach);
+			DeveloperNotificationException.ifTrue("fachAddAllOhneUpdate: ID=" + fach.id + " existiert bereits!", this._fach_by_id.containsKey(fach.id));
+			DeveloperNotificationException.ifTrue("fachAddAllOhneUpdate: ID=" + fach.id + " doppelt in der Liste!", !setOfIDs.add(fach.id));
+		}
+		for (const fach of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._fach_by_id, fach.id, fach);
 	}
 
 	/**
@@ -1483,20 +1480,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param fach  Das {@link StundenplanFach}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public fachAdd(fach : StundenplanFach) : void {
-		this.fachAddOhneUpdate(fach);
-		this.update_all();
-	}
-
-	private fachAddAllOhneUpdate(listFach : List<StundenplanFach>) : void {
-		const fachIDs : HashSet<number> = new HashSet();
-		for (const fach of listFach) {
-			if (this._fach_by_id.containsKey(fach.id))
-				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Fach-ID existiert bereits!")
-			if (!fachIDs.add(fach.id))
-				throw new DeveloperNotificationException("fachAddAllOhneUpdate: Doppelte Fach-ID in der Liste!")
-		}
-		for (const fach of listFach)
-			this.fachAddOhneUpdate(fach);
+		this.fachAddAll(ListUtils.create1(fach));
 	}
 
 	/**
@@ -1510,7 +1494,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static fachCheck(fach : StundenplanFach) : void {
+	private static fachCheckAttributes(fach : StundenplanFach) : void {
 		DeveloperNotificationException.ifInvalidID("fach.id", fach.id);
 		DeveloperNotificationException.ifStringIsBlank("fach.kuerzel", fach.kuerzel);
 	}
@@ -1536,37 +1520,28 @@ export class StundenplanManager extends JavaObject {
 		return this._fachmenge_sortiert;
 	}
 
-	private jahrgangAddOhneUpdate(jahrgang : StundenplanJahrgang) : void {
-		StundenplanManager.jahrgangCheck(jahrgang);
-		DeveloperNotificationException.ifMapPutOverwrites(this._jahrgang_by_id, jahrgang.id, jahrgang);
+	private jahrgangAddAllOhneUpdate(list : List<StundenplanJahrgang>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const jahrgang of list) {
+			StundenplanManager.jahrgangCheckAttributes(jahrgang);
+			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " existiert bereits!", this._jahrgang_by_id.containsKey(jahrgang.id));
+			DeveloperNotificationException.ifTrue("jahrgangAddAllOhneUpdate: ID=" + jahrgang.id + " doppelt in der Liste!", !setOfIDs.add(jahrgang.id));
+		}
+		for (const jahrgang of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._jahrgang_by_id, jahrgang.id, jahrgang);
 	}
 
 	/**
 	 * Fügt ein {@link StundenplanJahrgang}-Objekt hinzu.
-	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
 	 *
 	 * @param jahrgang  Das {@link StundenplanJahrgang}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public jahrgangAdd(jahrgang : StundenplanJahrgang) : void {
-		this.jahrgangAddOhneUpdate(jahrgang);
-		this.update_all();
-	}
-
-	private jahrgangAddAllOhneUpdate(listJahrgang : List<StundenplanJahrgang>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const jahrgang of listJahrgang) {
-			if (this._jahrgang_by_id.containsKey(jahrgang.id))
-				throw new DeveloperNotificationException("jahrgangAddAll: Jahrgang-ID existiert bereits!")
-			if (!setOfIDs.add(jahrgang.id))
-				throw new DeveloperNotificationException("jahrgangAddAll: Doppelte Jahrgang-ID in 'list'!")
-		}
-		for (const jahrgang of listJahrgang)
-			this.jahrgangAddOhneUpdate(jahrgang);
+		this.jahrgangAddAll(ListUtils.create1(jahrgang));
 	}
 
 	/**
 	 * Fügt alle {@link StundenplanJahrgang}-Objekte hinzu.
-	 * <br>Laufzeit: O(|StundenplanJahrgang|), da jahrgangUpdate() aufgerufen wird.
 	 *
 	 * @param listJahrgang  Die Menge der {@link StundenplanJahrgang}-Objekte, welche hinzugefügt werden soll.
 	 */
@@ -1575,7 +1550,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static jahrgangCheck(jahrgang : StundenplanJahrgang) : void {
+	private static jahrgangCheckAttributes(jahrgang : StundenplanJahrgang) : void {
 		DeveloperNotificationException.ifInvalidID("jahrgang.id", jahrgang.id);
 		DeveloperNotificationException.ifStringIsBlank("jahrgang.kuerzel", jahrgang.kuerzel);
 	}
@@ -1626,7 +1601,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param jahrgang  Das neue {@link StundenplanJahrgang}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public jahrgangPatchAttributes(jahrgang : StundenplanJahrgang) : void {
-		StundenplanManager.jahrgangCheck(jahrgang);
+		StundenplanManager.jahrgangCheckAttributes(jahrgang);
 		DeveloperNotificationException.ifMapRemoveFailes(this._jahrgang_by_id, jahrgang.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._jahrgang_by_id, jahrgang.id, jahrgang);
 		this.update_all();
@@ -1664,9 +1639,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private kalenderwochenzuordnungAddOhneUpdate(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungCheck(kwz, true);
-		DeveloperNotificationException.ifMapPutOverwrites(this._kwz_by_id, kwz.id, kwz);
+	private kalenderwochenzuordnungAddAllOhneUpdate(list : List<StundenplanKalenderwochenzuordnung>) : void {
+		const setOfIDs : HashSet<string> = new HashSet();
+		for (const kwz of list) {
+			this.kalenderwochenzuordnungCheck(kwz, true);
+			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " existiert bereits!", this._kwz_by_jahr_and_kw.contains(kwz.jahr, kwz.kw));
+			DeveloperNotificationException.ifTrue("kalenderwochenzuordnungAddAllOhneUpdate: JAHR=" + kwz.jahr + ", KW=" + kwz.kw + " doppelt in der Liste!", !setOfIDs.add(kwz.jahr + ";" + kwz.kw));
+		}
+		for (const kwz of list)
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
 	}
 
 	/**
@@ -1675,13 +1656,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param kwz  Das {@link StundenplanKalenderwochenzuordnung}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public kalenderwochenzuordnungAdd(kwz : StundenplanKalenderwochenzuordnung) : void {
-		this.kalenderwochenzuordnungAddOhneUpdate(kwz);
-		this.update_all();
-	}
-
-	private kalenderwochenzuordnungAddAllOhneUpdate(listKWZ : List<StundenplanKalenderwochenzuordnung>) : void {
-		for (const kwz of listKWZ)
-			this.kalenderwochenzuordnungAddOhneUpdate(kwz);
+		this.kalenderwochenzuordnungAddAll(ListUtils.create1(kwz));
 	}
 
 	/**
@@ -1902,9 +1877,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private klasseAddOhneUpdate(klasse : StundenplanKlasse) : void {
-		this.klasseCheck(klasse);
-		DeveloperNotificationException.ifMapPutOverwrites(this._klasse_by_id, klasse.id, klasse);
+	private klasseAddAllOhneUpdate(list : List<StundenplanKlasse>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const klasse of list) {
+			this.klasseCheckAttributes(klasse);
+			DeveloperNotificationException.ifTrue("klasseAddAllOhneUpdate: ID=" + klasse.id + " existiert bereits!", this._klasse_by_id.containsKey(klasse.id));
+			DeveloperNotificationException.ifTrue("klasseAddAllOhneUpdate: ID=" + klasse.id + " doppelt in der Liste!", !setOfIDs.add(klasse.id));
+		}
+		for (const klasse of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._klasse_by_id, klasse.id, klasse);
 	}
 
 	/**
@@ -1913,13 +1894,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param klasse  Das {@link StundenplanKlasse}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public klasseAdd(klasse : StundenplanKlasse) : void {
-		this.klasseAddOhneUpdate(klasse);
-		this.update_all();
-	}
-
-	private klasseAddAllOhneUpdate(listKlasse : List<StundenplanKlasse>) : void {
-		for (const klasse of listKlasse)
-			this.klasseAddOhneUpdate(klasse);
+		this.klasseAddAll(ListUtils.create1(klasse));
 	}
 
 	/**
@@ -1932,7 +1907,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private klasseCheck(klasse : StundenplanKlasse) : void {
+	private klasseCheckAttributes(klasse : StundenplanKlasse) : void {
 		DeveloperNotificationException.ifInvalidID("klasse.id", klasse.id);
 		DeveloperNotificationException.ifStringIsBlank("klasse.kuerzel", klasse.kuerzel);
 		for (const idJahrgang of klasse.jahrgaenge)
@@ -1994,7 +1969,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param klasse  Das neue {@link StundenplanKlasse}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public klassePatchAttributes(klasse : StundenplanKlasse) : void {
-		this.klasseCheck(klasse);
+		this.klasseCheckAttributes(klasse);
 		DeveloperNotificationException.ifMapRemoveFailes(this._klasse_by_id, klasse.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._klasse_by_id, klasse.id, klasse);
 		this.update_all();
@@ -2029,9 +2004,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private klassenunterrichtAddOhneUpdate(klassenunterricht : StundenplanKlassenunterricht) : void {
-		this.klassenunterrichtCheck(klassenunterricht);
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._klassenunterricht_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
+	private klassenunterrichtAddAllOhneUpdate(list : List<StundenplanKlassenunterricht>) : void {
+		const setOfIDs : HashSet<string> = new HashSet();
+		for (const klassenunterricht of list) {
+			this.klassenunterrichtCheckAttributes(klassenunterricht);
+			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: KLASSE=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " existiert bereits!", this._klassenunterricht_by_idKlasse_and_idFach.contains(klassenunterricht.idKlasse, klassenunterricht.idFach));
+			DeveloperNotificationException.ifTrue("klassenunterrichtAddAllOhneUpdate: ID=" + klassenunterricht.idKlasse + ", FACH=" + klassenunterricht.idFach + " doppelt in der Liste!", !setOfIDs.add(klassenunterricht.idKlasse + ";" + klassenunterricht.idFach));
+		}
+		for (const klassenunterricht of list)
+			DeveloperNotificationException.ifMap2DPutOverwrites(this._klassenunterricht_by_idKlasse_and_idFach, klassenunterricht.idKlasse, klassenunterricht.idFach, klassenunterricht);
 	}
 
 	/**
@@ -2040,13 +2021,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param klassenunterricht  Das {@link StundenplanKlassenunterricht}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public klassenunterrichtAdd(klassenunterricht : StundenplanKlassenunterricht) : void {
-		this.klassenunterrichtAddOhneUpdate(klassenunterricht);
-		this.update_all();
-	}
-
-	private klassenunterrichtAddAllOhneUpdate(listKlassenunterricht : List<StundenplanKlassenunterricht>) : void {
-		for (const klassenunterricht of listKlassenunterricht)
-			this.klassenunterrichtAddOhneUpdate(klassenunterricht);
+		this.klassenunterrichtAddAll(ListUtils.create1(klassenunterricht));
 	}
 
 	/**
@@ -2059,7 +2034,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private klassenunterrichtCheck(klassenunterricht : StundenplanKlassenunterricht) : void {
+	private klassenunterrichtCheckAttributes(klassenunterricht : StundenplanKlassenunterricht) : void {
 		DeveloperNotificationException.ifMapNotContains("_klasse_by_id", this._klasse_by_id, klassenunterricht.idKlasse);
 		DeveloperNotificationException.ifMapNotContains("_fach_by_id", this._fach_by_id, klassenunterricht.idFach);
 		for (const idSchiene of klassenunterricht.schienen)
@@ -2271,9 +2246,15 @@ export class StundenplanManager extends JavaObject {
 		return -(Math.round(-d * 100.0)) / 100.0;
 	}
 
-	private kursAddOhneUpdate(kurs : StundenplanKurs) : void {
-		this.kursCheck(kurs);
-		DeveloperNotificationException.ifMapPutOverwrites(this._kurs_by_id, kurs.id, kurs);
+	private kursAddAllOhneUpdate(list : List<StundenplanKurs>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const kurs of list) {
+			this.kursCheckAttributes(kurs);
+			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " existiert bereits!", this._kurs_by_id.containsKey(kurs.id));
+			DeveloperNotificationException.ifTrue("kursAddAllOhneUpdate: ID=" + kurs.id + " doppelt in der Liste!", !setOfIDs.add(kurs.id));
+		}
+		for (const kurs of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._kurs_by_id, kurs.id, kurs);
 	}
 
 	/**
@@ -2282,13 +2263,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param kurs  Das {@link StundenplanKurs}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public kursAdd(kurs : StundenplanKurs) : void {
-		this.kursAddOhneUpdate(kurs);
-		this.update_all();
-	}
-
-	private kursAddAllOhneUpdate(listKurs : List<StundenplanKurs>) : void {
-		for (const kurs of listKurs)
-			this.kursAddOhneUpdate(kurs);
+		this.kursAddAll(ListUtils.create1(kurs));
 	}
 
 	/**
@@ -2301,7 +2276,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private kursCheck(kurs : StundenplanKurs) : void {
+	private kursCheckAttributes(kurs : StundenplanKurs) : void {
 		DeveloperNotificationException.ifInvalidID("kurs.id", kurs.id);
 		DeveloperNotificationException.ifStringIsBlank("kurs.bezeichnung", kurs.bezeichnung);
 		DeveloperNotificationException.ifSmaller("kurs.wochenstunden", kurs.wochenstunden, 0);
@@ -2532,7 +2507,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param kurs  Das neue {@link StundenplanKurs}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public kursPatchAttributtes(kurs : StundenplanKurs) : void {
-		this.kursCheck(kurs);
+		this.kursCheckAttributes(kurs);
 		DeveloperNotificationException.ifMapRemoveFailes(this._kurs_by_id, kurs.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._kurs_by_id, kurs.id, kurs);
 		this.update_all();
@@ -2565,9 +2540,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private lehrerAddOhneUpdate(lehrer : StundenplanLehrer) : void {
-		this.lehrerCheck(lehrer);
-		DeveloperNotificationException.ifMapPutOverwrites(this._lehrer_by_id, lehrer.id, lehrer);
+	private lehrerAddAllOhneUpdate(list : List<StundenplanLehrer>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const lehrer of list) {
+			this.lehrerCheckAttributes(lehrer);
+			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " existiert bereits!", this._lehrer_by_id.containsKey(lehrer.id));
+			DeveloperNotificationException.ifTrue("lehrerAddAllOhneUpdate: ID=" + lehrer.id + " doppelt in der Liste!", !setOfIDs.add(lehrer.id));
+		}
+		for (const lehrer of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._lehrer_by_id, lehrer.id, lehrer);
 	}
 
 	/**
@@ -2576,23 +2557,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param lehrer  Das {@link StundenplanLehrer}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public lehrerAdd(lehrer : StundenplanLehrer) : void {
-		this.lehrerAddOhneUpdate(lehrer);
-		this.update_all();
-	}
-
-	private lehrerAddAllOhneUpdate(listLehrer : List<StundenplanLehrer>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const lehrer of listLehrer) {
-			if (this._lehrer_by_id.containsKey(lehrer.id))
-				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Lehrer-ID existiert bereits!")
-			if (!setOfIDs.add(lehrer.id))
-				throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Doppelte Lehrer-ID in 'list'!")
-			for (const idFach of lehrer.faecher)
-				if (!this._fach_by_id.containsKey(idFach))
-					throw new DeveloperNotificationException("lehrerAddAllOhneUpdate: Fach-ID der Lehrkraft existiert nicht!")
-		}
-		for (const lehrer of listLehrer)
-			this.lehrerAddOhneUpdate(lehrer);
+		this.lehrerAddAll(ListUtils.create1(lehrer));
 	}
 
 	/**
@@ -2605,7 +2570,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private lehrerCheck(lehrer : StundenplanLehrer) : void {
+	private lehrerCheckAttributes(lehrer : StundenplanLehrer) : void {
 		DeveloperNotificationException.ifInvalidID("lehrer.id", lehrer.id);
 		DeveloperNotificationException.ifStringIsBlank("lehrer.kuerzel", lehrer.kuerzel);
 		DeveloperNotificationException.ifStringIsBlank("lehrer.nachname", lehrer.nachname);
@@ -2667,7 +2632,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param lehrer  Das neue {@link StundenplanLehrer}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public lehrerPatchAttributes(lehrer : StundenplanLehrer) : void {
-		this.lehrerCheck(lehrer);
+		this.lehrerCheckAttributes(lehrer);
 		DeveloperNotificationException.ifMapRemoveFailes(this._lehrer_by_id, lehrer.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._lehrer_by_id, lehrer.id, lehrer);
 		this.update_all();
@@ -2713,9 +2678,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private pausenaufsichtAddOhneUpdate(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtCheck(pausenaufsicht);
-		DeveloperNotificationException.ifMapPutOverwrites(this._pausenaufsicht_by_id, pausenaufsicht.id, pausenaufsicht);
+	private pausenaufsichtAddAllOhneUpdate(list : List<StundenplanPausenaufsicht>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const pausenaufsicht of list) {
+			this.pausenaufsichtCheckAttributes(pausenaufsicht);
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " existiert bereits!", this._pausenaufsicht_by_id.containsKey(pausenaufsicht.id));
+			DeveloperNotificationException.ifTrue("pausenaufsichtAddAllOhneUpdate: ID=" + pausenaufsicht.id + " doppelt in der Liste!", !setOfIDs.add(pausenaufsicht.id));
+		}
+		for (const pausenaufsicht of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._pausenaufsicht_by_id, pausenaufsicht.id, pausenaufsicht);
 	}
 
 	/**
@@ -2724,13 +2695,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param pausenaufsicht  Das {@link StundenplanPausenaufsicht}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public pausenaufsichtAdd(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
-		this.update_all();
-	}
-
-	private pausenaufsichtAddAllOhneUpdate(listPausenaufsicht : List<StundenplanPausenaufsicht>) : void {
-		for (const pausenaufsicht of listPausenaufsicht)
-			this.pausenaufsichtAddOhneUpdate(pausenaufsicht);
+		this.pausenaufsichtAddAll(ListUtils.create1(pausenaufsicht));
 	}
 
 	/**
@@ -2743,7 +2708,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private pausenaufsichtCheck(pausenaufsicht : StundenplanPausenaufsicht) : void {
+	private pausenaufsichtCheckAttributes(pausenaufsicht : StundenplanPausenaufsicht) : void {
 		DeveloperNotificationException.ifInvalidID("pausenaufsicht.id", pausenaufsicht.id);
 		DeveloperNotificationException.ifMapNotContains("_map_idLehrer_zu_lehrer", this._lehrer_by_id, pausenaufsicht.idLehrer);
 		DeveloperNotificationException.ifMapNotContains("_map_idPausenzeit_zu_pausenzeit", this._pausenzeit_by_id, pausenaufsicht.idPausenzeit);
@@ -2888,7 +2853,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param pausenaufsicht  Das neue {@link StundenplanPausenaufsicht}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public pausenaufsichtPatchAttributes(pausenaufsicht : StundenplanPausenaufsicht) : void {
-		this.pausenaufsichtCheck(pausenaufsicht);
+		this.pausenaufsichtCheckAttributes(pausenaufsicht);
 		DeveloperNotificationException.ifMapRemoveFailes(this._pausenaufsicht_by_id, pausenaufsicht.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._pausenaufsicht_by_id, pausenaufsicht.id, pausenaufsicht);
 		this.update_all();
@@ -2909,9 +2874,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private pausenzeitAddOhneUpdate(pausenzeit : StundenplanPausenzeit) : void {
-		StundenplanManager.pausenzeitCheck(pausenzeit);
-		DeveloperNotificationException.ifMapPutOverwrites(this._pausenzeit_by_id, pausenzeit.id, pausenzeit);
+	private pausenzeitAddAllOhneUpdate(list : List<StundenplanPausenzeit>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const pausenzeit of list) {
+			StundenplanManager.pausenzeitCheckAttributes(pausenzeit);
+			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " existiert bereits!", this._pausenzeit_by_id.containsKey(pausenzeit.id));
+			DeveloperNotificationException.ifTrue("pausenzeitAddAllOhneUpdate: ID=" + pausenzeit.id + " doppelt in der Liste!", !setOfIDs.add(pausenzeit.id));
+		}
+		for (const pausenzeit of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._pausenzeit_by_id, pausenzeit.id, pausenzeit);
 	}
 
 	/**
@@ -2920,13 +2891,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param pausenzeit  Das {@link StundenplanPausenzeit}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public pausenzeitAdd(pausenzeit : StundenplanPausenzeit) : void {
-		this.pausenzeitAddOhneUpdate(pausenzeit);
+		this.pausenzeitAddAll(ListUtils.create1(pausenzeit));
 		this.update_all();
-	}
-
-	private pausenzeitAddAllOhneUpdate(listPausenzeit : List<StundenplanPausenzeit>) : void {
-		for (const pausenzeit of listPausenzeit)
-			this.pausenzeitAddOhneUpdate(pausenzeit);
 	}
 
 	/**
@@ -2939,7 +2905,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static pausenzeitCheck(pausenzeit : StundenplanPausenzeit) : void {
+	private static pausenzeitCheckAttributes(pausenzeit : StundenplanPausenzeit) : void {
 		DeveloperNotificationException.ifInvalidID("pause.id", pausenzeit.id);
 		Wochentag.fromIDorException(pausenzeit.wochentag);
 		if ((pausenzeit.beginn !== null) && (pausenzeit.ende !== null))
@@ -3196,7 +3162,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param pausenzeit  Das neue {@link StundenplanPausenzeit}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public pausenzeitPatchAttributes(pausenzeit : StundenplanPausenzeit) : void {
-		StundenplanManager.pausenzeitCheck(pausenzeit);
+		StundenplanManager.pausenzeitCheckAttributes(pausenzeit);
 		DeveloperNotificationException.ifMapRemoveFailes(this._pausenzeit_by_id, pausenzeit.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._pausenzeit_by_id, pausenzeit.id, pausenzeit);
 		this.update_all();
@@ -3229,9 +3195,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private raumAddOhneUpdate(raum : StundenplanRaum) : void {
-		StundenplanManager.raumCheck(raum);
-		DeveloperNotificationException.ifMapPutOverwrites(this._raum_by_id, raum.id, raum);
+	private raumAddAllOhneUpdate(list : List<StundenplanRaum>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const raum of list) {
+			StundenplanManager.raumCheckAttributes(raum);
+			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " existiert bereits!", this._raum_by_id.containsKey(raum.id));
+			DeveloperNotificationException.ifTrue("raumAddAllOhneUpdate: ID=" + raum.id + " doppelt in der Liste!", !setOfIDs.add(raum.id));
+		}
+		for (const raum of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._raum_by_id, raum.id, raum);
 	}
 
 	/**
@@ -3240,20 +3212,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param raum  Das {@link StundenplanRaum}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public raumAdd(raum : StundenplanRaum) : void {
-		this.raumAddOhneUpdate(raum);
+		this.raumAddAll(ListUtils.create1(raum));
 		this.update_all();
-	}
-
-	private raumAddAllOhneUpdate(listRaum : List<StundenplanRaum>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const raum of listRaum) {
-			if (this._raum_by_id.containsKey(raum.id))
-				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Raum-ID existiert bereits!")
-			if (!setOfIDs.add(raum.id))
-				throw new DeveloperNotificationException("raumAddAllOhneUpdate: Doppelte Raum-ID in 'list'!")
-		}
-		for (const raum of listRaum)
-			this.raumAddOhneUpdate(raum);
 	}
 
 	/**
@@ -3266,7 +3226,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static raumCheck(raum : StundenplanRaum) : void {
+	private static raumCheckAttributes(raum : StundenplanRaum) : void {
 		DeveloperNotificationException.ifInvalidID("raum.id", raum.id);
 		DeveloperNotificationException.ifStringIsBlank("raum.kuerzel", raum.kuerzel);
 		DeveloperNotificationException.ifTrue("raum.groesse < 0", raum.groesse < 0);
@@ -3307,7 +3267,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param raum  Das neue {@link StundenplanRaum}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public raumPatchAttributes(raum : StundenplanRaum) : void {
-		StundenplanManager.raumCheck(raum);
+		StundenplanManager.raumCheckAttributes(raum);
 		DeveloperNotificationException.ifMapRemoveFailes(this._raum_by_id, raum.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._raum_by_id, raum.id, raum);
 		this.update_all();
@@ -3347,9 +3307,15 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private schieneAddOhneUpdate(schiene : StundenplanSchiene) : void {
-		this.schieneCheck(schiene);
-		DeveloperNotificationException.ifMapPutOverwrites(this._schiene_by_id, schiene.id, schiene);
+	private schieneAddAllOhneUpdate(list : List<StundenplanSchiene>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const schiene of list) {
+			this.schieneCheckAttributes(schiene);
+			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " existiert bereits!", this._schiene_by_id.containsKey(schiene.id));
+			DeveloperNotificationException.ifTrue("schieneAddAllOhneUpdate: ID=" + schiene.id + " doppelt in der Liste!", !setOfIDs.add(schiene.id));
+		}
+		for (const schiene of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._schiene_by_id, schiene.id, schiene);
 	}
 
 	/**
@@ -3358,13 +3324,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param schiene  Das {@link StundenplanSchiene}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public schieneAdd(schiene : StundenplanSchiene) : void {
-		this.schieneAddOhneUpdate(schiene);
-		this.update_all();
-	}
-
-	private schieneAddAllOhneUpdate(listSchiene : List<StundenplanSchiene>) : void {
-		for (const schiene of listSchiene)
-			this.schieneAddOhneUpdate(schiene);
+		this.schieneAddAll(ListUtils.create1(schiene));
 	}
 
 	/**
@@ -3377,7 +3337,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private schieneCheck(schiene : StundenplanSchiene) : void {
+	private schieneCheckAttributes(schiene : StundenplanSchiene) : void {
 		DeveloperNotificationException.ifInvalidID("schiene.id", schiene.id);
 		DeveloperNotificationException.ifTrue("schiene.nummer <= 0", schiene.nummer <= 0);
 		DeveloperNotificationException.ifStringIsBlank("schiene.bezeichnung", schiene.bezeichnung);
@@ -3496,9 +3456,15 @@ export class StundenplanManager extends JavaObject {
 		DeveloperNotificationException.ifMapRemoveFailes(this._schiene_by_id, idSchiene);
 	}
 
-	private schuelerAddOhneUpdate(schueler : StundenplanSchueler) : void {
-		StundenplanManager.schuelerCheck(schueler);
-		DeveloperNotificationException.ifMapPutOverwrites(this._schueler_by_id, schueler.id, schueler);
+	private schuelerAddAllOhneUpdate(list : List<StundenplanSchueler>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const schueler of list) {
+			StundenplanManager.schuelerCheckAttributes(schueler);
+			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " existiert bereits!", this._schueler_by_id.containsKey(schueler.id));
+			DeveloperNotificationException.ifTrue("schuelerAddAllOhneUpdate: ID=" + schueler.id + " doppelt in der Liste!", !setOfIDs.add(schueler.id));
+		}
+		for (const schueler of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._schueler_by_id, schueler.id, schueler);
 	}
 
 	/**
@@ -3507,20 +3473,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param schueler  Das {@link StundenplanSchueler}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public schuelerAdd(schueler : StundenplanSchueler) : void {
-		this.schuelerAddOhneUpdate(schueler);
-		this.update_all();
-	}
-
-	private schuelerAddAllOhneUpdate(listSchueler : List<StundenplanSchueler>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const lehrer of listSchueler) {
-			if (this._schueler_by_id.containsKey(lehrer.id))
-				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Schüler-ID existiert bereits!")
-			if (!setOfIDs.add(lehrer.id))
-				throw new DeveloperNotificationException("schuelerAddAllOhneUpdate: Doppelte Schüler-ID in 'list'!")
-		}
-		for (const schueler of listSchueler)
-			this.schuelerAddOhneUpdate(schueler);
+		this.schuelerAddAll(ListUtils.create1(schueler));
 	}
 
 	/**
@@ -3533,7 +3486,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private static schuelerCheck(schueler : StundenplanSchueler) : void {
+	private static schuelerCheckAttributes(schueler : StundenplanSchueler) : void {
 		DeveloperNotificationException.ifInvalidID("schueler.id", schueler.id);
 		DeveloperNotificationException.ifStringIsBlank("schueler.nachname", schueler.nachname);
 		DeveloperNotificationException.ifStringIsBlank("schueler.vorname", schueler.vorname);
@@ -3743,9 +3696,15 @@ export class StundenplanManager extends JavaObject {
 		return this._stundenplanID;
 	}
 
-	private unterrichtAddOhneUpdate(u : StundenplanUnterricht) : void {
-		this.unterrichtCheck(u);
-		DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
+	private unterrichtAddAllOhneUpdate(list : List<StundenplanUnterricht>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		for (const u of list) {
+			this.unterrichtCheckAttributes(u);
+			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " existiert bereits!", this._unterricht_by_id.containsKey(u.id));
+			DeveloperNotificationException.ifTrue("unterrichtAddAllOhneUpdate: ID=" + u.id + " doppelt in der Liste!", !setOfIDs.add(u.id));
+		}
+		for (const u of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
 	}
 
 	/**
@@ -3754,13 +3713,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param unterricht  Das {@link StundenplanUnterricht}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public unterrichtAdd(unterricht : StundenplanUnterricht) : void {
-		this.unterrichtAddOhneUpdate(unterricht);
-		this.update_all();
-	}
-
-	private unterrichtAddAllOhneUpdate(listUnterricht : List<StundenplanUnterricht>) : void {
-		for (const unterricht of listUnterricht)
-			this.unterrichtAddOhneUpdate(unterricht);
+		this.unterrichtAddAll(ListUtils.create1(unterricht));
 	}
 
 	/**
@@ -3773,7 +3726,7 @@ export class StundenplanManager extends JavaObject {
 		this.update_all();
 	}
 
-	private unterrichtCheck(u : StundenplanUnterricht) : void {
+	private unterrichtCheckAttributes(u : StundenplanUnterricht) : void {
 		DeveloperNotificationException.ifInvalidID("u.id", u.id);
 		DeveloperNotificationException.ifMapNotContains("_zeitraster_by_id", this._zeitraster_by_id, u.idZeitraster);
 		DeveloperNotificationException.ifTrue("u.wochentyp > stundenplanWochenTypModell", u.wochentyp > this._stundenplanWochenTypModell);
@@ -4367,12 +4320,12 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 * Liefert TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 *
 	 * @param u  Der {@link StundenplanUnterricht}, welcher verschoben werden soll.
 	 * @param z  Das {@link StundenplanZeitraster}, wohin verschoben werden soll.
 	 *
-	 * @return TRUE, falls ein Unterricht in ein bestimmten Zeitraster verschoben werden darf.
+	 * @return TRUE, falls ein Unterricht in ein bestimmtes Zeitraster verschoben werden darf.
 	 */
 	public unterrichtIstVerschiebenErlaubt(u : StundenplanUnterricht, z : StundenplanZeitraster) : boolean {
 		for (const partner of DeveloperNotificationException.ifMapGetIsNull(this._unterrichtmenge_by_idUnterricht, u.id))
@@ -4399,7 +4352,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param u  Das neue {@link StundenplanUnterricht}-Objekt, dessen Attribute kopiert werden.
 	 */
 	public unterrichtPatchAttributes(u : StundenplanUnterricht) : void {
-		this.unterrichtCheck(u);
+		this.unterrichtCheckAttributes(u);
 		DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, u.id);
 		DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
 		this.update_all();
@@ -4413,7 +4366,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public unterrichtPatchAttributesAll(list : List<StundenplanUnterricht>) : void {
 		for (const u of list)
-			this.unterrichtCheck(u);
+			this.unterrichtCheckAttributes(u);
 		for (const u of list) {
 			DeveloperNotificationException.ifMapRemoveFailes(this._unterricht_by_id, u.id);
 			DeveloperNotificationException.ifMapPutOverwrites(this._unterricht_by_id, u.id, u);
@@ -4500,12 +4453,18 @@ export class StundenplanManager extends JavaObject {
 		return sBeginn! + "–" + sEnde! + " Uhr";
 	}
 
-	private zeitrasterAddOhneUpdate(zeitraster : StundenplanZeitraster) : void {
-		for (const z of this._zeitraster_by_id.values())
-			if ((z.wochentag === zeitraster.wochentag) && (z.unterrichtstunde === zeitraster.unterrichtstunde))
-				throw new DeveloperNotificationException("Es gibt bereits ein Zeitraster am Tag " + zeitraster.wochentag + " und Stunde " + zeitraster.unterrichtstunde + "!")
-		StundenplanManager.zeitrasterCheck(zeitraster);
-		DeveloperNotificationException.ifMapPutOverwrites(this._zeitraster_by_id, zeitraster.id, zeitraster);
+	private zeitrasterAddAllOhneUpdate(list : List<StundenplanZeitraster>) : void {
+		const setOfIDs : HashSet<number> = new HashSet();
+		const setOfWochentagStunde : HashSet<string> = new HashSet();
+		for (const z of list) {
+			StundenplanManager.zeitrasterCheck(z);
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " existiert bereits!", this._zeitraster_by_id.containsKey(z.id));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE=" + z.unterrichtstunde + " existiert bereits!", this._zeitraster_by_wochentag_and_stunde.contains(z.wochentag, z.unterrichtstunde));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: ID=" + z.id + " doppelt in der Liste!", !setOfIDs.add(z.id));
+			DeveloperNotificationException.ifTrue("zeitrasterAddAllOhneUpdate: WOCHENTAG=" + z.wochentag + ", STUNDE= doppelt in der Liste!", !setOfWochentagStunde.add(z.wochentag + ";" + z.unterrichtstunde));
+		}
+		for (const z of list)
+			DeveloperNotificationException.ifMapPutOverwrites(this._zeitraster_by_id, z.id, z);
 	}
 
 	/**
@@ -4514,20 +4473,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param zeitraster  Das {@link StundenplanZeitraster}-Objekt, welches hinzugefügt werden soll.
 	 */
 	public zeitrasterAdd(zeitraster : StundenplanZeitraster) : void {
-		this.zeitrasterAddOhneUpdate(zeitraster);
-		this.update_all();
-	}
-
-	private zeitrasterAddAllOhneUpdate(listZeitraster : List<StundenplanZeitraster>) : void {
-		const setOfIDs : HashSet<number> = new HashSet();
-		for (const zeitraster of listZeitraster) {
-			if (this._zeitraster_by_id.containsKey(zeitraster.id))
-				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Zeitraster-ID existiert bereits!")
-			if (!setOfIDs.add(zeitraster.id))
-				throw new DeveloperNotificationException("zeitrasterAddAllOhneUpdate: Doppelte Zeitraster-ID in 'list'!")
-		}
-		for (const zeitraster of listZeitraster)
-			this.zeitrasterAddOhneUpdate(zeitraster);
+		this.zeitrasterAddAll(ListUtils.create1(zeitraster));
 	}
 
 	/**
