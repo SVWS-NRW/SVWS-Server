@@ -364,7 +364,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.Fachgruppe', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.fach.Fachgruppe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

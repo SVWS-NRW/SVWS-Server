@@ -234,7 +234,7 @@ export class SchulabschlussAllgemeinbildend extends JavaEnum<SchulabschlussAllge
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

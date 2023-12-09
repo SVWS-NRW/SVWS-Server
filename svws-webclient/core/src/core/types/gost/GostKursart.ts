@@ -378,7 +378,7 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostKursart', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

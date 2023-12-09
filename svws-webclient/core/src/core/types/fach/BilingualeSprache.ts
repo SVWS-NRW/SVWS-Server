@@ -253,7 +253,7 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.BilingualeSprache', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.fach.BilingualeSprache', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

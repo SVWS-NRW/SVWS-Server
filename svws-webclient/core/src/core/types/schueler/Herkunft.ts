@@ -505,7 +505,7 @@ export class Herkunft extends JavaEnum<Herkunft> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schueler.Herkunft', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schueler.Herkunft', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

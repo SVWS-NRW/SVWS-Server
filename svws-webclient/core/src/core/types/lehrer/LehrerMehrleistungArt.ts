@@ -148,7 +148,7 @@ export class LehrerMehrleistungArt extends JavaEnum<LehrerMehrleistungArt> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerMehrleistungArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

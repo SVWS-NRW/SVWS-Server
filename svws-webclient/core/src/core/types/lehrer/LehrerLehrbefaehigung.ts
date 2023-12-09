@@ -668,7 +668,7 @@ export class LehrerLehrbefaehigung extends JavaEnum<LehrerLehrbefaehigung> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigung', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

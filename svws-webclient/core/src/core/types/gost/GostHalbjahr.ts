@@ -1,6 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
-import type { Comparable } from '../../../java/lang/Comparable';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { List } from '../../../java/util/List';
@@ -492,7 +491,7 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Comparable', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

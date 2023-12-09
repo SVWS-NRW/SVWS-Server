@@ -1695,7 +1695,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.ZulaessigesFach', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.fach.ZulaessigesFach', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

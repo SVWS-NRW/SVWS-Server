@@ -94,7 +94,7 @@ export class KAOAZusatzmerkmaleOptionsarten extends JavaEnum<KAOAZusatzmerkmaleO
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmaleOptionsarten', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmaleOptionsarten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

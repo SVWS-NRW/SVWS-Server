@@ -108,7 +108,7 @@ export class SprachBelegungSekI extends JavaEnum<SprachBelegungSekI> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

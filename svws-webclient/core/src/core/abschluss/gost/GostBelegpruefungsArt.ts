@@ -91,7 +91,7 @@ export class GostBelegpruefungsArt extends JavaEnum<GostBelegpruefungsArt> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungsArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -692,6 +692,40 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Returns the list of default methods of the specified class
+	 * tree node of kind INTERFACE.
+	 *
+	 * @param node   the class tree node of kind INTERFACE
+	 *
+	 * @return the list of default methods of the class tree node
+	 */
+	public static List<MethodTree> getDefaultMethods(final ClassTree node) {
+		if (node.getKind() != Tree.Kind.INTERFACE)
+			throw new TranspilerException("Transpiler Error: Transpiler.getDefaultMethods darf nur bei Interfaces verwendet werden.");
+		return node.getMembers().stream()
+				.filter(member -> (member instanceof final MethodTree mt) && (mt.getModifiers().getFlags().contains(Modifier.DEFAULT)))
+				.map(MethodTree.class::cast).toList();
+	}
+
+
+	/**
+	 * Returns the list of non default methods of the specified class
+	 * tree node of kind INTERFACE.
+	 *
+	 * @param node   the class tree node of kind INTERFACE
+	 *
+	 * @return the list of non-default methods of the class tree node
+	 */
+	public static List<MethodTree> getNonDefaultMethods(final ClassTree node) {
+		if (node.getKind() != Tree.Kind.INTERFACE)
+			throw new TranspilerException("Transpiler Error: Transpiler.getDefaultMethods darf nur bei Interfaces verwendet werden.");
+		return node.getMembers().stream()
+				.filter(member -> (member instanceof final MethodTree mt) && (!mt.getModifiers().getFlags().contains(Modifier.DEFAULT)))
+				.map(MethodTree.class::cast).toList();
+	}
+
+
+	/**
 	 * Returns the list of all methods - including constructors - of the class
 	 * tree node.
 	 *

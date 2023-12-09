@@ -1191,7 +1191,7 @@ export class Nationalitaeten extends JavaEnum<Nationalitaeten> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Nationalitaeten', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Nationalitaeten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

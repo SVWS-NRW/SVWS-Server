@@ -129,7 +129,7 @@ export class LehrerZugangsgrund extends JavaEnum<LehrerZugangsgrund> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerZugangsgrund', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerZugangsgrund', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

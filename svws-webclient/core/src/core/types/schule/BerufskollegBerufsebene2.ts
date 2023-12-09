@@ -577,7 +577,7 @@ export class BerufskollegBerufsebene2 extends JavaEnum<BerufskollegBerufsebene2>
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.BerufskollegBerufsebene2', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegBerufsebene2', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

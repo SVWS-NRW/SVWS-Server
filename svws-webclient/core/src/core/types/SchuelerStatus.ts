@@ -191,7 +191,7 @@ export class SchuelerStatus extends JavaEnum<SchuelerStatus> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.SchuelerStatus', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.SchuelerStatus', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

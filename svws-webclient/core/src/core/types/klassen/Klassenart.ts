@@ -222,7 +222,7 @@ export class Klassenart extends JavaEnum<Klassenart> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.klassen.Klassenart', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.klassen.Klassenart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

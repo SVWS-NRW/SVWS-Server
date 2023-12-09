@@ -168,7 +168,7 @@ export class LehrerRechtsverhaeltnis extends JavaEnum<LehrerRechtsverhaeltnis> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerRechtsverhaeltnis', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerRechtsverhaeltnis', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -190,7 +190,7 @@ export class Geschlecht extends JavaEnum<Geschlecht> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.Geschlecht', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.Geschlecht', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

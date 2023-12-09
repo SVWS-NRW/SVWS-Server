@@ -201,7 +201,7 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

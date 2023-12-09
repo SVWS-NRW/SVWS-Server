@@ -176,7 +176,7 @@ export class KursFortschreibungsart extends JavaEnum<KursFortschreibungsart> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.KursFortschreibungsart', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.KursFortschreibungsart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -705,7 +705,7 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

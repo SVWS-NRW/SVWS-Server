@@ -78,7 +78,7 @@ export class LogLevel extends JavaEnum<LogLevel> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

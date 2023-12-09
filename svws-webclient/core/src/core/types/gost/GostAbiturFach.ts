@@ -170,7 +170,7 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostAbiturFach', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostAbiturFach', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

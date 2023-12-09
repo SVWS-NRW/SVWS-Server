@@ -100,7 +100,7 @@ export class GostBelegungsfehlerArt extends JavaEnum<GostBelegungsfehlerArt> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

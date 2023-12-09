@@ -118,7 +118,7 @@ export class Kindergartenbesuch extends JavaEnum<Kindergartenbesuch> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.Kindergartenbesuch', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.Kindergartenbesuch', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

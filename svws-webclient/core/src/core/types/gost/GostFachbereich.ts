@@ -254,7 +254,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostFachbereich', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostFachbereich', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

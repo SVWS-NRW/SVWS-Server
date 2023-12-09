@@ -597,7 +597,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

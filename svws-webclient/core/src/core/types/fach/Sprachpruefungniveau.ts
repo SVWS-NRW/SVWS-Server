@@ -149,7 +149,7 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -119,7 +119,7 @@ export class BerufskollegBildungsgangTyp extends JavaEnum<BerufskollegBildungsga
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schule.BerufskollegBildungsgangTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schule.BerufskollegBildungsgangTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -81,7 +81,7 @@ export class SchildReportingAttributTyp extends JavaEnum<SchildReportingAttribut
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

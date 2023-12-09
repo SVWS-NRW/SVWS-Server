@@ -1707,7 +1707,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				getIndent(),
 				"return obj as ",
 				node.getSimpleName(),
-				convertTypeParameters(node.getTypeParameters(), true),
+				convertTypeParameters(node.getTypeParameters(), false),
 				";"
 			));
 		sb.append(System.lineSeparator());
@@ -1734,7 +1734,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		String strInstanceOfTypes = unit.superTypes.stream().collect(Collectors.joining("', '", "'", "'"));
 		if (node.getKind() == Kind.ENUM)
-			strInstanceOfTypes += ", 'java.lang.Enum'";
+			strInstanceOfTypes += ", 'java.lang.Enum', 'java.lang.Comparable'";
 		result += getIndent() + "return [" + strInstanceOfTypes + "].includes(name);" + System.lineSeparator();
 		indentC--;
 		result += getIndent() + "}" + System.lineSeparator();
@@ -2315,7 +2315,18 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(node.getSimpleName());
 		sb.append(" extends JavaEnum<");
 		sb.append(node.getSimpleName());
-		sb.append("> {");
+		sb.append(">");
+		final List<? extends Tree> implClause = node.getImplementsClause();
+		if (!implClause.isEmpty()) {
+			sb.append(" implements ");
+			for (int i = 0; i < implClause.size(); i++) {
+				final TypeNode typeNode = new TypeNode(this, implClause.get(i), false, false);
+				sb.append(typeNode.transpile(false));
+				if (i < implClause.size() - 1)
+					sb.append(", ");
+			}
+		}
+		sb.append(" {");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
 
@@ -2410,6 +2421,70 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
+
+		indentC--;
+		sb.append(getIndent());
+		sb.append("}");
+		sb.append(System.lineSeparator());
+		appendCast(sb, node);
+	}
+
+
+	/**
+	 * Transpiles the interface.
+	 *
+	 * @param sb       the StringBuilder where the output is written to
+	 * @param node     the class to be transpiled
+	 */
+	public void transpileInterface(final StringBuilder sb, final ClassTree node) {
+		sb.append(getIndent());
+		sb.append("export ");
+		sb.append("interface ");
+		sb.append(node.getSimpleName());
+		sb.append(convertTypeParameters(node.getTypeParameters(), true));
+		sb.append(" extends ");
+		if (node.getExtendsClause() == null)
+			sb.append("JavaObject");
+		else {
+			final TypeNode typeNode = new TypeNode(this, node.getExtendsClause(), false, false);
+			sb.append(typeNode.transpile(false));
+		}
+		sb.append(" {");
+		sb.append(System.lineSeparator());
+		sb.append(System.lineSeparator());
+		indentC++;
+
+		// Generate Attributes
+		for (final VariableTree attribute : transpiler.getAttributes(node)) {
+			sb.append(convertAttribute(attribute, null));
+			sb.append(System.lineSeparator());
+		}
+		sb.append(System.lineSeparator());
+
+		// Generate Code for non-default methods
+		final List<MethodNode> methods = Transpiler.getNonDefaultMethods(node).stream()
+			.map(method -> new MethodNode(this, node, method, getIndent()))
+			.toList();
+		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
+		for (final MethodNode method : methods) {
+			final String methodName = method.getName();
+			final List<MethodNode> methodList = mapMethods.get(methodName);
+			if (methodList == null)
+				continue;
+			if (mapMethods.get(methodName).size() == 1) {
+				method.print(sb, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			} else {
+				MethodNode.setCommonAccessModifier(methodList);
+				mapMethods.remove(methodName);
+				for (final MethodNode m : methodList) {
+					m.printHead(sb);
+					sb.append(System.lineSeparator());
+				}
+				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			}
+		}
 
 		indentC--;
 		sb.append(getIndent());
@@ -2603,6 +2678,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					transpileClass(sb, classTree);
 				} else if (classTree.getKind() == Tree.Kind.ENUM) {
 					transpileEnum(sb, classTree);
+				} else if (classTree.getKind() == Tree.Kind.INTERFACE) {
+					transpileInterface(sb, classTree);
 				}
 				final String data = sb.toString();
 				final String imports = getImports(transpilerUnit, strIgnoreJavaPackagePrefix, data);

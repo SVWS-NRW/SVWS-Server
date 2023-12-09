@@ -114,7 +114,7 @@ export class GostBesondereLernleistung extends JavaEnum<GostBesondereLernleistun
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

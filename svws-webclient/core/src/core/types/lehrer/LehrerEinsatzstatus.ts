@@ -133,7 +133,7 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.lehrer.LehrerEinsatzstatus', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.lehrer.LehrerEinsatzstatus', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

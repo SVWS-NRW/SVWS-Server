@@ -204,7 +204,7 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

@@ -69,7 +69,7 @@ export class GostFremdsprachenart extends JavaEnum<GostFremdsprachenart> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }

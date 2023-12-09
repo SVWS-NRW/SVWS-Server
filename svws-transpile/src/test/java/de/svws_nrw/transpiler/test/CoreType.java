@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  * @param <T> der Typ des Katalog-Eintrags des implementierenden Core-Types
  * @param <U> der Typ des implementierenden Core-Types
  */
-public interface CoreType<T extends CoreTypeData, U extends Enum<U> & CoreType<T, U>> {
+public interface CoreType<@NotNull T extends @NotNull CoreTypeData, @NotNull U extends @NotNull Enum<@NotNull U> & @NotNull CoreType<@NotNull T, @NotNull U>> {
 
 	/**
 	 * Gibt den Manager des Core-Types zurück.
@@ -19,8 +19,8 @@ public interface CoreType<T extends CoreTypeData, U extends Enum<U> & CoreType<T
 	 * @return der Manager
 	 */
 	@SuppressWarnings("unchecked")
-	default CoreTypeEnumDataManager<T, U> getManager() {
-		return CoreTypeEnumDataManager.getManager((@NotNull Class<U>) this.getClass());
+	default @NotNull CoreTypeEnumDataManager<@NotNull T, @NotNull U> getManager() {
+		return CoreTypeEnumDataManager.getManager((@NotNull Class<@NotNull U>) this.getClass());
 	}
 
 
@@ -33,7 +33,7 @@ public interface CoreType<T extends CoreTypeData, U extends Enum<U> & CoreType<T
 	 */
 	@SuppressWarnings("unchecked")
 	default T daten(final int schuljahr) {
-		return getManager().getEintragBySchuljahrUndWert(schuljahr, (U) this);
+		return getManager().getEintragBySchuljahrUndWert(schuljahr, (@NotNull U) this);
 	}
 
 
@@ -44,7 +44,7 @@ public interface CoreType<T extends CoreTypeData, U extends Enum<U> & CoreType<T
 	 */
 	@SuppressWarnings("unchecked")
 	default @NotNull List<@NotNull T> historie() {
-		return getManager().getHistorieByWert((U) this);
+		return getManager().getHistorieByWert((@NotNull U) this);
 	}
 
 }

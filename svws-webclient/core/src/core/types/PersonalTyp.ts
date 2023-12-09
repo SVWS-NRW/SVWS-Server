@@ -168,7 +168,7 @@ export class PersonalTyp extends JavaEnum<PersonalTyp> {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.core.types.PersonalTyp', 'java.lang.Enum'].includes(name);
+		return ['de.svws_nrw.core.types.PersonalTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
 
 }
