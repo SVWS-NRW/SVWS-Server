@@ -2124,6 +2124,40 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Transpiles the class methods.
+	 *
+	 * @param sb           the StringBuilder where the output is written to
+	 * @param node         the class to be transpiled
+	 * @param methodNodes  the class methods to be transpiled
+	 */
+	public void transpileClassMethods(final StringBuilder sb, final ClassTree node, final List<MethodTree> methodNodes) {
+		final List<MethodNode> methods = methodNodes.stream()
+			.map(method -> new MethodNode(this, node, method, getIndent()))
+			.toList();
+		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
+		for (final MethodNode method : methods) {
+			final String methodName = method.getName();
+			final List<MethodNode> methodList = mapMethods.get(methodName);
+			if (methodList == null)
+				continue;
+			if (mapMethods.get(methodName).size() == 1) {
+				method.print(sb, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			} else {
+				MethodNode.setCommonAccessModifier(methodList);
+				mapMethods.remove(methodName);
+				for (final MethodNode m : methodList) {
+					m.printHead(sb);
+					sb.append(System.lineSeparator());
+				}
+				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
+				sb.append(System.lineSeparator());
+			}
+		}
+	}
+
+
+	/**
 	 * Transpiles the class.
 	 *
 	 * @param sb       the StringBuilder where the output is written to
@@ -2186,29 +2220,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		// Generate Methods
-		final List<MethodNode> methods = Transpiler.getMethods(node).stream()
-			.map(method -> new MethodNode(this, node, method, getIndent()))
-			.toList();
-		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		for (final MethodNode method : methods) {
-			final String methodName = method.getName();
-			final List<MethodNode> methodList = mapMethods.get(methodName);
-			if (methodList == null)
-				continue;
-			if (mapMethods.get(methodName).size() == 1) {
-				method.print(sb, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			} else {
-				MethodNode.setCommonAccessModifier(methodList);
-				mapMethods.remove(methodName);
-				for (final MethodNode m : methodList) {
-					m.printHead(sb);
-					sb.append(System.lineSeparator());
-				}
-				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			}
-		}
+		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
@@ -2365,28 +2377,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		}
 
 		// Generate Methods
-		final List<MethodNode> methods = Transpiler.getMethods(node).stream()
-				.map(method -> new MethodNode(this, node, method, getIndent()))
-				.toList();
-		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		for (final MethodNode method : methods) {
-			final String methodName = method.getName();
-			final List<MethodNode> methodList = mapMethods.get(methodName);
-			if (methodList == null)
-				continue;
-			if (mapMethods.get(methodName).size() == 1) {
-				method.print(sb, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			} else {
-				mapMethods.remove(methodName);
-				for (final MethodNode m : methodList) {
-					m.printHead(sb);
-					sb.append(System.lineSeparator());
-				}
-				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			}
-		}
+		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
 		sb.append(
 			"""
@@ -2462,29 +2453,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(System.lineSeparator());
 
 		// Generate Code for non-default methods
-		final List<MethodNode> methods = Transpiler.getNonDefaultMethods(node).stream()
-			.map(method -> new MethodNode(this, node, method, getIndent()))
-			.toList();
-		final Map<String, List<MethodNode>> mapMethods = methods.stream().collect(Collectors.groupingBy(MethodNode::getName));
-		for (final MethodNode method : methods) {
-			final String methodName = method.getName();
-			final List<MethodNode> methodList = mapMethods.get(methodName);
-			if (methodList == null)
-				continue;
-			if (mapMethods.get(methodName).size() == 1) {
-				method.print(sb, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			} else {
-				MethodNode.setCommonAccessModifier(methodList);
-				mapMethods.remove(methodName);
-				for (final MethodNode m : methodList) {
-					m.printHead(sb);
-					sb.append(System.lineSeparator());
-				}
-				MethodNode.printImplementation(sb, getIndent(), methodList, "" + node.getSimpleName());
-				sb.append(System.lineSeparator());
-			}
-		}
+		transpileClassMethods(sb, node, Transpiler.getNonDefaultMethods(node));
 
 		indentC--;
 		sb.append(getIndent());
