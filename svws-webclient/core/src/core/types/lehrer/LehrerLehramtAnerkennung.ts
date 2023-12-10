@@ -142,6 +142,10 @@ export class LehrerLehramtAnerkennung extends JavaEnum<LehrerLehramtAnerkennung>
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerLehramtAnerkennung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.lehrer.LehrerLehramtAnerkennung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

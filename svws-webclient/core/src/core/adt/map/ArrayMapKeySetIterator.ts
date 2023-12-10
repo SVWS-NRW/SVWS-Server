@@ -66,6 +66,10 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 		this._current = null;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapKeySetIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.ArrayMapKeySetIterator'].includes(name);
 	}

@@ -213,6 +213,10 @@ export class Religion extends JavaEnum<Religion> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Religion';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Religion', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

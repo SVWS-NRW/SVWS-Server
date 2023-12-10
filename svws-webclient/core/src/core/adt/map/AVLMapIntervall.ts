@@ -53,6 +53,10 @@ export class AVLMapIntervall<K> extends JavaObject {
 		return "[" + sFrom! + ", " + this.fromInc + ", " + sTo! + ", " + this.toInc + "]";
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapIntervall';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapIntervall'].includes(name);
 	}

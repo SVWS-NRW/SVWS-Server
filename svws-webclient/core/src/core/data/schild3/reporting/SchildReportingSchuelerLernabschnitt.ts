@@ -82,6 +82,10 @@ export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLernabschnitt'].includes(name);
 	}

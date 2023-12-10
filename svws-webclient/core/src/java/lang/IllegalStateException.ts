@@ -2,6 +2,10 @@ import { RuntimeException } from "../../java/lang/RuntimeException";
 
 export class IllegalStateException extends RuntimeException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.IllegalStateException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.IllegalStateException',

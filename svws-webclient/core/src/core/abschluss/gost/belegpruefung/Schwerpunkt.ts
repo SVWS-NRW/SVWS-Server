@@ -56,6 +56,10 @@ export class Schwerpunkt extends GostBelegpruefung {
 		this.addFehler(GostBelegungsfehler.NW_FS_10);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
 	}

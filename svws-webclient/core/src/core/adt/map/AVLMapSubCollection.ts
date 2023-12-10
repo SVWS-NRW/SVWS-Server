@@ -101,6 +101,10 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		this._sub.clear();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubCollection';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'java.lang.Iterable', 'de.svws_nrw.core.adt.map.AVLMapSubCollection'].includes(name);
 	}

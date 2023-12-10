@@ -32,6 +32,10 @@ export class GostFachwahl extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostFachwahl';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostFachwahl'].includes(name);
 	}

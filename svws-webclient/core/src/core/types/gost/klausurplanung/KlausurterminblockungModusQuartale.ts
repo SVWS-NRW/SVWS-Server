@@ -107,6 +107,10 @@ export class KlausurterminblockungModusQuartale extends JavaEnum<Klausurterminbl
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

@@ -37,6 +37,10 @@ export class ENMJahrgang extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMJahrgang';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMJahrgang'].includes(name);
 	}

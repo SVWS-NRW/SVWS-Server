@@ -27,6 +27,10 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung'].includes(name);
 	}

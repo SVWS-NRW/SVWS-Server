@@ -17,6 +17,10 @@ export class DBSchemaListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.db.DBSchemaListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.db.DBSchemaListeEintrag'].includes(name);
 	}

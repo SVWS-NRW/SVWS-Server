@@ -100,6 +100,10 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		this._map.clear();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapCollection';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollection', 'java.util.Collection', 'java.lang.Iterable'].includes(name);
 	}

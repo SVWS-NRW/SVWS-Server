@@ -49,6 +49,10 @@ export class StundenplanblockungManagerRaum extends JavaObject {
 		this._kuerzel = pKuerzel;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaum';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaum'].includes(name);
 	}

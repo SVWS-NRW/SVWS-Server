@@ -261,6 +261,10 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		return tmpList;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schueler.SchuelerListeManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schueler.SchuelerListeManager'].includes(name);
 	}

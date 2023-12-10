@@ -69,6 +69,10 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.jahrgang.JahrgangsKatalogEintrag'].includes(name);
 	}

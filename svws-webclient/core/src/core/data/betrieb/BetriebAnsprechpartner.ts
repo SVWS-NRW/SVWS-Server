@@ -57,6 +57,10 @@ export class BetriebAnsprechpartner extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner'].includes(name);
 	}

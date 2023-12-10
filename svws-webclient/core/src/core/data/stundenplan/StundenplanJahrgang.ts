@@ -22,6 +22,10 @@ export class StundenplanJahrgang extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.StundenplanJahrgang';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanJahrgang'].includes(name);
 	}

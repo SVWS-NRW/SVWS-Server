@@ -137,6 +137,10 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag'].includes(name);
 	}

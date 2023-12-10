@@ -27,6 +27,10 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten'].includes(name);
 	}

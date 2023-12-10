@@ -200,6 +200,10 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.AllgemeineMerkmale';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

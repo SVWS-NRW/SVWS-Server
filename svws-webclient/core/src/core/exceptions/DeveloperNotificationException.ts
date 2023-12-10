@@ -492,6 +492,10 @@ export class DeveloperNotificationException extends RuntimeException {
 			throw new DeveloperNotificationException("Das Array '" + arrayName! + "' darf nicht leer sein!")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.exceptions.DeveloperNotificationException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Throwable', 'de.svws_nrw.core.exceptions.DeveloperNotificationException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}

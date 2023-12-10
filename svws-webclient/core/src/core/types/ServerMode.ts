@@ -101,6 +101,10 @@ export class ServerMode extends JavaEnum<ServerMode> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.ServerMode';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.ServerMode', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

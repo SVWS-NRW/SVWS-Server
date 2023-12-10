@@ -255,6 +255,10 @@ export class BerufskollegFachklassenManager extends JavaObject {
 		return this._katalog;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager'].includes(name);
 	}

@@ -44,6 +44,10 @@ export class StundenplanKlassenunterricht extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht'].includes(name);
 	}

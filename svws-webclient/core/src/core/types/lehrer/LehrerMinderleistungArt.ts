@@ -207,6 +207,10 @@ export class LehrerMinderleistungArt extends JavaEnum<LehrerMinderleistungArt> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.lehrer.LehrerMinderleistungArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

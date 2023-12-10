@@ -62,6 +62,10 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy6';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy6', 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}

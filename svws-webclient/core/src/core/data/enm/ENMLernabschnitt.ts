@@ -58,6 +58,10 @@ export class ENMLernabschnitt extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMLernabschnitt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLernabschnitt'].includes(name);
 	}

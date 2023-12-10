@@ -60,6 +60,10 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 		return 0;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.LongArrayKey';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.adt.LongArrayKey'].includes(name);
 	}

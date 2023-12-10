@@ -22,6 +22,10 @@ export class JavaByte extends JavaObject {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Byte';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Byte',

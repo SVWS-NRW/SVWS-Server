@@ -57,6 +57,10 @@ export class ENMSprachenfolge extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMSprachenfolge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMSprachenfolge'].includes(name);
 	}

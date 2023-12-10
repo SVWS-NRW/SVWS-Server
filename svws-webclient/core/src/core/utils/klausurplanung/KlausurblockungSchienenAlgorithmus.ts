@@ -76,6 +76,10 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 		return dynDaten.gibErzeugeOutput();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmus'].includes(name);
 	}

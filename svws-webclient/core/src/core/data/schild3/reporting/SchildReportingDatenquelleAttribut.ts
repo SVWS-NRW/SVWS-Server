@@ -22,6 +22,10 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut'].includes(name);
 	}

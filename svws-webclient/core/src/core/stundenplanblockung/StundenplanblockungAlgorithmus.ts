@@ -12,6 +12,10 @@ export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungM
 		return pInput;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}

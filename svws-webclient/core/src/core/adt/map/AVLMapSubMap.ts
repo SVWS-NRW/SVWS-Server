@@ -792,6 +792,10 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 		return new AVLMapSubKeySet(this._createMap(from, fromInc, to, toInc, asc));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubMap';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.SequencedMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}

@@ -58,6 +58,10 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.KU_MU_10);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch'].includes(name);
 	}

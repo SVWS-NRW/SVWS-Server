@@ -76,6 +76,9 @@ export class HashSetIterator<E> extends JavaObject implements JavaIterator<E> {
 			action.accept(this.next());
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashSetIterator';
+	}
 
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [

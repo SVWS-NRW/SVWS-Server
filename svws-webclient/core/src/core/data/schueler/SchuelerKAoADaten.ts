@@ -57,6 +57,10 @@ export class SchuelerKAoADaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.SchuelerKAoADaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerKAoADaten'].includes(name);
 	}

@@ -50,6 +50,10 @@ export class SchildReportingDatenquelle extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle'].includes(name);
 	}

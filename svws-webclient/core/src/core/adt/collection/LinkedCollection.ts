@@ -623,6 +623,10 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		return this.find(index).setValue(element);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.collection.LinkedCollection';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}

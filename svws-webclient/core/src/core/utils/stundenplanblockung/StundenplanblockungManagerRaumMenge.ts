@@ -107,6 +107,10 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 		return this._menge.size();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaumMenge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerRaumMenge'].includes(name);
 	}

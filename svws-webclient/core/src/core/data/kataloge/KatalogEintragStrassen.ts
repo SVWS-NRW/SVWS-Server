@@ -27,6 +27,10 @@ export class KatalogEintragStrassen extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kataloge.KatalogEintragStrassen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEintragStrassen'].includes(name);
 	}

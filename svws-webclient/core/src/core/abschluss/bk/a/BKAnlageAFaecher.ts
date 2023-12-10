@@ -24,6 +24,10 @@ export class BKAnlageAFaecher extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher'].includes(name);
 	}

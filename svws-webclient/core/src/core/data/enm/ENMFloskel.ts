@@ -34,6 +34,10 @@ export class ENMFloskel extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMFloskel';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMFloskel'].includes(name);
 	}

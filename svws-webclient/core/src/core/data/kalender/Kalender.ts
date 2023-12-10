@@ -55,6 +55,10 @@ export class Kalender extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kalender.Kalender';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kalender.Kalender'].includes(name);
 	}

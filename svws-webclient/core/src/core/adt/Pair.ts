@@ -44,6 +44,10 @@ export class Pair<A, B> extends JavaObject {
 		return JavaObject.getTranspilerHashCode(this.a) ^ ((this.b === null) ? 0 : JavaObject.getTranspilerHashCode(this.b));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.Pair';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.Pair'].includes(name);
 	}

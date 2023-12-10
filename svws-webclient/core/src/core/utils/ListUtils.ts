@@ -127,6 +127,10 @@ export class ListUtils extends JavaObject {
 		return list;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.ListUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.ListUtils'].includes(name);
 	}

@@ -27,6 +27,10 @@ export class GostKlausurraum extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum'].includes(name);
 	}

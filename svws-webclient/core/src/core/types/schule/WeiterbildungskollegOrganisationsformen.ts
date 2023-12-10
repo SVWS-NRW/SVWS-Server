@@ -105,6 +105,10 @@ export class WeiterbildungskollegOrganisationsformen extends JavaEnum<Weiterbild
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

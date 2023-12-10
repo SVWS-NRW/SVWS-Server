@@ -129,6 +129,10 @@ export class ENMDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMDaten'].includes(name);
 	}

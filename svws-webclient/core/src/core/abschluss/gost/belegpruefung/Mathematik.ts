@@ -46,6 +46,10 @@ export class Mathematik extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.M_11);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Mathematik';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Mathematik'].includes(name);
 	}

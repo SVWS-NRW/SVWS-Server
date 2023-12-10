@@ -311,6 +311,10 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.Foerderschwerpunkt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.Foerderschwerpunkt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

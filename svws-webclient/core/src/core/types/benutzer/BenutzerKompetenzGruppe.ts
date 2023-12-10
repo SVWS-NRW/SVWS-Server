@@ -197,6 +197,10 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

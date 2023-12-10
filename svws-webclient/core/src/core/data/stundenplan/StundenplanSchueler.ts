@@ -27,6 +27,10 @@ export class StundenplanSchueler extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.StundenplanSchueler';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanSchueler'].includes(name);
 	}

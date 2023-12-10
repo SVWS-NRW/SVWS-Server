@@ -91,6 +91,10 @@ export class KursblockungAlgorithmusKSchuelervorschlag extends KursblockungAlgor
 		return false;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKSchuelervorschlag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKSchuelervorschlag', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}

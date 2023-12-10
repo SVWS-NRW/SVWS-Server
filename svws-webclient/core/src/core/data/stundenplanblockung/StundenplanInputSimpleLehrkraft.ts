@@ -17,6 +17,10 @@ export class StundenplanInputSimpleLehrkraft extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleLehrkraft';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleLehrkraft'].includes(name);
 	}

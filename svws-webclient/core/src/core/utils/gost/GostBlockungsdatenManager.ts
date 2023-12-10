@@ -1707,6 +1707,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 		return this._compKurs_fach_kursart_kursnummer;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostBlockungsdatenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}

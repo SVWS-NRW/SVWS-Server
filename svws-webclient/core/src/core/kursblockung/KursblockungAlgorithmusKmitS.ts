@@ -68,6 +68,10 @@ export class KursblockungAlgorithmusKmitS extends KursblockungAlgorithmusK {
 		return false;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKmitS';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKmitS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}

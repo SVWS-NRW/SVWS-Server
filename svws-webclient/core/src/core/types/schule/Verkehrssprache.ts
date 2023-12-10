@@ -2475,6 +2475,10 @@ export class Verkehrssprache extends JavaEnum<Verkehrssprache> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Verkehrssprache';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Verkehrssprache', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

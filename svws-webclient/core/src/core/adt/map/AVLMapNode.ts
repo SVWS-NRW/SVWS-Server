@@ -85,6 +85,10 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 		throw new UnsupportedOperationException()
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapNode';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Map.Entry', 'de.svws_nrw.core.adt.map.AVLMapNode'].includes(name);
 	}

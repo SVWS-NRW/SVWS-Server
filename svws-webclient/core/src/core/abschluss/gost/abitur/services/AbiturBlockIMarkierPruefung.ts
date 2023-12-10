@@ -22,6 +22,10 @@ export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten | null, boo
 		return ergebnis;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierPruefung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierPruefung', 'de.svws_nrw.core.Service'].includes(name);
 	}

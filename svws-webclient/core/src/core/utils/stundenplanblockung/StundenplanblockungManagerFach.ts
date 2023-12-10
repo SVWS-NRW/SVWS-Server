@@ -41,6 +41,10 @@ export class StundenplanblockungManagerFach extends JavaObject {
 		return this._id;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFach';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFach'].includes(name);
 	}

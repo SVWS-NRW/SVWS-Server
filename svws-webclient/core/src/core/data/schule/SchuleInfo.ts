@@ -47,6 +47,10 @@ export class SchuleInfo extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.SchuleInfo';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.SchuleInfo'].includes(name);
 	}

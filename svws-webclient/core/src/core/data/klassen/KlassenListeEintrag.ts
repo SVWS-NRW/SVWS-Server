@@ -50,6 +50,10 @@ export class KlassenListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.klassen.KlassenListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.klassen.KlassenListeEintrag'].includes(name);
 	}

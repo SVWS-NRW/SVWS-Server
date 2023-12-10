@@ -2,6 +2,10 @@ import { RuntimeException } from './RuntimeException';
 
 export class NullPointerException extends RuntimeException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.NullPointerException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.NullPointerException',

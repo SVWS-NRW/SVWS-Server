@@ -15,6 +15,10 @@ export class SchuelerblockungOutput extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput'].includes(name);
 	}

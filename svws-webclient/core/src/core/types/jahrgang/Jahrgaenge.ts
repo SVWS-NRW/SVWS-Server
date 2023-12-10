@@ -778,6 +778,10 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.jahrgang.Jahrgaenge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.jahrgang.Jahrgaenge', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

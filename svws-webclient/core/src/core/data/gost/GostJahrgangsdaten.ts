@@ -71,6 +71,10 @@ export class GostJahrgangsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostJahrgangsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangsdaten'].includes(name);
 	}

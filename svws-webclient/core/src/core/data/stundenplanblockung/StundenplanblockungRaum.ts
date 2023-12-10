@@ -17,6 +17,10 @@ export class StundenplanblockungRaum extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRaum';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRaum'].includes(name);
 	}

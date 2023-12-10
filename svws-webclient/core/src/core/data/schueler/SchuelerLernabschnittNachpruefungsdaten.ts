@@ -20,6 +20,10 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten'].includes(name);
 	}

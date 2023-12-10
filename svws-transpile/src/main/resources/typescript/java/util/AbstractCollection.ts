@@ -191,6 +191,10 @@ export abstract class AbstractCollection<E> extends JavaObject implements Collec
     }
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.AbstractCollection';
+	}
+
     public isTranspiledInstanceOf(name : string): boolean {
     	return [
     		'java.util.AbstractCollection',

@@ -1009,6 +1009,10 @@ export class GostKursklausurManager extends JavaObject {
 		return !(klausur.startzeit === null || termin === null || termin.startzeit === null || JavaObject.equalsTranspiler(termin.startzeit, (klausur.startzeit)));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.GostKursklausurManager'].includes(name);
 	}

@@ -30,6 +30,10 @@ export class GostBlockungKursAufteilung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBlockungKursAufteilung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungKursAufteilung'].includes(name);
 	}

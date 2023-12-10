@@ -189,6 +189,10 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubKeySet';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.map.AVLMapSubKeySet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}

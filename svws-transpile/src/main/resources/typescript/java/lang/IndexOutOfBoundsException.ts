@@ -2,6 +2,10 @@ import { RuntimeException } from "../../java/lang/RuntimeException";
 
 export class IndexOutOfBoundsException extends RuntimeException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.IndexOutOfBoundsException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.IndexOutOfBoundsException',

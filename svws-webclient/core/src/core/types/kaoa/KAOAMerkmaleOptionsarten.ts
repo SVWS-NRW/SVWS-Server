@@ -66,6 +66,10 @@ export class KAOAMerkmaleOptionsarten extends JavaEnum<KAOAMerkmaleOptionsarten>
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOAMerkmaleOptionsarten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kaoa.KAOAMerkmaleOptionsarten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

@@ -57,6 +57,10 @@ export class Map3DUtils extends JavaObject {
 		return setNeu;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.Map3DUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map3DUtils'].includes(name);
 	}

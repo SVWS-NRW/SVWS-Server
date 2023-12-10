@@ -2,6 +2,10 @@ import { RuntimeException } from "./RuntimeException";
 
 export class UnsupportedOperationException extends RuntimeException {
 
+	public transpilerCanonicalName(): string {
+		return 'java.lang.UnsupportedOperationException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.UnsupportedOperationException',

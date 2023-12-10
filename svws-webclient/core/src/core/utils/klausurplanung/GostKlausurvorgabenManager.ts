@@ -300,6 +300,10 @@ export class GostKlausurvorgabenManager extends JavaObject {
 		return vorgabenSchuljahr.get(listIndex - 1);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.GostKlausurvorgabenManager'].includes(name);
 	}

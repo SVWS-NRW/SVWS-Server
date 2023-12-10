@@ -58,6 +58,10 @@ export class Allgemeines extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.IGF_10);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines'].includes(name);
 	}

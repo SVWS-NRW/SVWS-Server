@@ -104,6 +104,10 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 		return this._menge.size();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge'].includes(name);
 	}

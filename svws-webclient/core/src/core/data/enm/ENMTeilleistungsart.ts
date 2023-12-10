@@ -27,6 +27,10 @@ export class ENMTeilleistungsart extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMTeilleistungsart';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMTeilleistungsart'].includes(name);
 	}

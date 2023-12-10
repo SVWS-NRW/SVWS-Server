@@ -59,6 +59,10 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 		throw new UnsupportedOperationException("remove")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.collection.LinkedCollectionIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionIterator'].includes(name);
 	}

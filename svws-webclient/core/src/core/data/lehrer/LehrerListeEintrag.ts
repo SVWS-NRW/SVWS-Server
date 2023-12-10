@@ -57,6 +57,10 @@ export class LehrerListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerListeEintrag'].includes(name);
 	}

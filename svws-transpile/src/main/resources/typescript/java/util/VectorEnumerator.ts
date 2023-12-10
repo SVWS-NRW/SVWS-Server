@@ -22,6 +22,10 @@ export class VectorEnumerator<E> implements Enumeration<E> {
 		throw new NoSuchElementException("Vector Enumeration");
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.VectorEnumerator';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.VectorEnumerator',

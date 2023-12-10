@@ -27,6 +27,10 @@ export class AdressbuchEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.adressbuch.AdressbuchEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}

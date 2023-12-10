@@ -517,6 +517,10 @@ export class ENMDatenManager extends JavaObject {
 		// empty block
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.enm.ENMDatenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.enm.ENMDatenManager'].includes(name);
 	}

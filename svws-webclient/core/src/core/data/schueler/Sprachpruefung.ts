@@ -72,6 +72,10 @@ export class Sprachpruefung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.Sprachpruefung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.Sprachpruefung'].includes(name);
 	}

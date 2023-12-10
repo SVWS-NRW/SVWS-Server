@@ -130,6 +130,10 @@ export class HashMapCollection<K, V> implements Collection<V> {
 		return res;
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashMapCollection';
+	}
+
 	isTranspiledInstanceOf(name: string): boolean {
 		throw new UnsupportedOperationException();
 	}

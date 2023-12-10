@@ -35,6 +35,10 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 	 */
 	public abstract berechne(pZeitEnde : number) : void;
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusAbstract';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}

@@ -197,6 +197,10 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOABerufsfeld';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kaoa.KAOABerufsfeld', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

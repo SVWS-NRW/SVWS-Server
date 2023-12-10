@@ -37,6 +37,10 @@ export class MigrateBody extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.db.MigrateBody';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.db.MigrateBody'].includes(name);
 	}

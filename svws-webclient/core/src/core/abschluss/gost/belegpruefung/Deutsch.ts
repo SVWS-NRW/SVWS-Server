@@ -46,6 +46,10 @@ export class Deutsch extends GostBelegpruefung {
 			this.addFehler(GostBelegungsfehler.D_11);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch'].includes(name);
 	}

@@ -24,6 +24,10 @@ export class SchuleAbschnitte extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.SchuleAbschnitte';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.SchuleAbschnitte'].includes(name);
 	}

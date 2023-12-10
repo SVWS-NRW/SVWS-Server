@@ -97,6 +97,10 @@ export class FachDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.fach.FachDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.fach.FachDaten'].includes(name);
 	}

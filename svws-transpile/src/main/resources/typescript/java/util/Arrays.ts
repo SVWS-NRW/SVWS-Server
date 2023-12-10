@@ -67,6 +67,10 @@ export class Arrays extends JavaObject {
 	}
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.Arrays';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.Arrays',

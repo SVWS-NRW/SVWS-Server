@@ -166,6 +166,10 @@ export class KursManager extends JavaObject {
 		return result;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.KursManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.KursManager'].includes(name);
 	}

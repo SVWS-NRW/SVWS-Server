@@ -133,6 +133,10 @@ export class LehrerLeitungsfunktion extends JavaEnum<LehrerLeitungsfunktion> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

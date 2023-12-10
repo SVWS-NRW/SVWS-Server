@@ -35,6 +35,10 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 	 */
 	public abstract berechne(pZeitEnde : number) : void;
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}

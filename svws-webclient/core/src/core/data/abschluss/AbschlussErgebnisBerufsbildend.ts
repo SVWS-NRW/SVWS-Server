@@ -33,6 +33,10 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend'].includes(name);
 	}

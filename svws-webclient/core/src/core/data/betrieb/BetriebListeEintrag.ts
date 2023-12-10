@@ -52,6 +52,10 @@ export class BetriebListeEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.betrieb.BetriebListeEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.betrieb.BetriebListeEintrag'].includes(name);
 	}

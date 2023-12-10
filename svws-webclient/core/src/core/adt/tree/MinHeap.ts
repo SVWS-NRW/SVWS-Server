@@ -531,6 +531,10 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		return this._modCount;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.tree.MinHeap';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
 	}

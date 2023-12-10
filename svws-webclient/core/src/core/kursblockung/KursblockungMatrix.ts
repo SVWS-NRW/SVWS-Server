@@ -415,6 +415,10 @@ export class KursblockungMatrix extends JavaObject {
 		return this.cols;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungMatrix';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungMatrix'].includes(name);
 	}

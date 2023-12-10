@@ -79,6 +79,10 @@ export class GostKursklausur extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur'].includes(name);
 	}

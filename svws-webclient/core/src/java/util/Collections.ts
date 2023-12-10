@@ -22,6 +22,17 @@ export class Collections extends JavaObject {
 		return Collections.EMPTY_LIST as List<T>;
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.Collections';
+	}
+
+	public isTranspiledInstanceOf(name : string): boolean {
+		return [
+			'java.util.Collections',
+			'java.lang.Object'
+		].includes(name);
+	}
+
 }
 
 

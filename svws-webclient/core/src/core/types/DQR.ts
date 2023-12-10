@@ -93,6 +93,10 @@ export class DQR extends JavaEnum<DQR> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.DQR';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.DQR', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

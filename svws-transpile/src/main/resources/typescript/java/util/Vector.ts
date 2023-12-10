@@ -491,6 +491,11 @@ export class Vector<E> extends AbstractList<E> implements List<E>, RandomAccess,
 		}
 	}
 
+
+	public transpilerCanonicalName(): string {
+		return 'java.util.Vector';
+	}
+
 	/**
      * Returns whether given string is included in list of class tree
      *

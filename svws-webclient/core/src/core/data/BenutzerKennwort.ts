@@ -17,6 +17,10 @@ export class BenutzerKennwort extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.BenutzerKennwort';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.BenutzerKennwort'].includes(name);
 	}

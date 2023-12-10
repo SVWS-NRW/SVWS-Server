@@ -52,6 +52,10 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 		return this.log;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.Service';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service'].includes(name);
 	}

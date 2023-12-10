@@ -299,6 +299,10 @@ export class HerkunftBildungsgang extends JavaEnum<HerkunftBildungsgang> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.HerkunftBildungsgang';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.HerkunftBildungsgang', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

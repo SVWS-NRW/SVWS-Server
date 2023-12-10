@@ -301,6 +301,10 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 		return true;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.AttributMitAuswahl';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AttributMitAuswahl'].includes(name);
 	}

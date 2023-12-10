@@ -68,6 +68,10 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 		this._current = null;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator'].includes(name);
 	}

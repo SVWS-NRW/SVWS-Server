@@ -411,6 +411,10 @@ export class GostFaecherManager extends JavaObject {
 		return JavaObject.equalsTranspiler("VX", (fach.kuerzel));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostFaecherManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFaecherManager'].includes(name);
 	}

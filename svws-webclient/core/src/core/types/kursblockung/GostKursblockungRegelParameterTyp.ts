@@ -65,6 +65,10 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

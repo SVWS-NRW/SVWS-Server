@@ -210,6 +210,10 @@ export class AbiFaecher extends GostBelegpruefung {
 		return this.mapAbiturFachbelegungen === null ? null : this.mapAbiturFachbelegungen.get(abifach);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}

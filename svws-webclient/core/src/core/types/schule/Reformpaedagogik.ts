@@ -240,6 +240,10 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schule.Reformpaedagogik';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Reformpaedagogik', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

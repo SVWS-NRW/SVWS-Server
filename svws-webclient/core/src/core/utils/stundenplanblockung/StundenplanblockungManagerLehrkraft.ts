@@ -63,6 +63,10 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 		this._kuerzel = pKuerzel;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraft';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLehrkraft'].includes(name);
 	}

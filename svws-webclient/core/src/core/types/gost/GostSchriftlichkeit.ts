@@ -66,6 +66,10 @@ export class GostSchriftlichkeit extends JavaEnum<GostSchriftlichkeit> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.gost.GostSchriftlichkeit';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostSchriftlichkeit', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

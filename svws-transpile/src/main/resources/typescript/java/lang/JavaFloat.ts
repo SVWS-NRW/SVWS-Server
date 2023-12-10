@@ -22,6 +22,10 @@ export class JavaFloat extends JavaObject {
 		return a === b ? 0 : (a < b) ? -1 : 1;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Float';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Float',

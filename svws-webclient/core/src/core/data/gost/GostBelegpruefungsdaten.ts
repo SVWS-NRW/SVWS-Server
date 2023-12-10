@@ -33,6 +33,10 @@ export class GostBelegpruefungsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBelegpruefungsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsdaten'].includes(name);
 	}

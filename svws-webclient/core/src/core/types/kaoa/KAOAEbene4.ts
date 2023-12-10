@@ -238,6 +238,10 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOAEbene4';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kaoa.KAOAEbene4', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

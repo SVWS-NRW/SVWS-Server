@@ -404,6 +404,10 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.Herkunftsarten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.Herkunftsarten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

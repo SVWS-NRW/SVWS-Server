@@ -25,6 +25,10 @@ export class UserNotificationException extends RuntimeException {
 			throw new UserNotificationException(pBeschreibung)
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.exceptions.UserNotificationException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'java.lang.Exception', 'de.svws_nrw.core.exceptions.UserNotificationException', 'java.io.Serializable'].includes(name);
 	}

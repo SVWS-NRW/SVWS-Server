@@ -61,6 +61,10 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 		return false;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}

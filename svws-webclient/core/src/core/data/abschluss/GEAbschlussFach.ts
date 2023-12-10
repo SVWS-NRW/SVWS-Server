@@ -42,6 +42,10 @@ export class GEAbschlussFach extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.abschluss.GEAbschlussFach';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.abschluss.GEAbschlussFach'].includes(name);
 	}

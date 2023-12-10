@@ -15,6 +15,10 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'].includes(name);
 	}

@@ -267,6 +267,10 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 		return this.liste.getOrException(this._datenToId.apply(this._daten));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.AuswahlManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager'].includes(name);
 	}

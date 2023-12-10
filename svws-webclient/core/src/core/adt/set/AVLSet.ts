@@ -217,6 +217,10 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.set.AVLSet';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}

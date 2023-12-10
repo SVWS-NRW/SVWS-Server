@@ -196,6 +196,10 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.logger.LogConsumerList';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerList'].includes(name);
 	}

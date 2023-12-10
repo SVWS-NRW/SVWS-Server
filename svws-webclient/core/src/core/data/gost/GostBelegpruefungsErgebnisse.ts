@@ -19,6 +19,10 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse'].includes(name);
 	}

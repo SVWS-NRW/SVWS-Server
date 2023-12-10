@@ -105,6 +105,10 @@ export class SchuljahresAbschnittsManager extends JavaObject {
 					return "";
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schule.SchuljahresAbschnittsManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.SchuljahresAbschnittsManager'].includes(name);
 	}

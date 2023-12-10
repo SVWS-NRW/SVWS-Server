@@ -124,6 +124,10 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		this._map.clear();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapKeySet';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'java.util.Set', 'de.svws_nrw.core.adt.map.ArrayMapKeySet', 'java.lang.Iterable'].includes(name);
 	}

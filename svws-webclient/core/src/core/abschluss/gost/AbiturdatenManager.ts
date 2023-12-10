@@ -1759,6 +1759,10 @@ export class AbiturdatenManager extends JavaObject {
 		return anzahl;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.AbiturdatenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.AbiturdatenManager'].includes(name);
 	}

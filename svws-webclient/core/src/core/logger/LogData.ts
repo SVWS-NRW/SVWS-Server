@@ -122,6 +122,10 @@ export class LogData extends JavaObject implements Comparable<LogData | null> {
 		return super.equals((obj));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.logger.LogData';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.logger.LogData'].includes(name);
 	}

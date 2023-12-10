@@ -65,4 +65,19 @@ export abstract class AbstractSet<E> extends AbstractCollection<E> implements Ja
 		return modified;
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.AbstractSet';
+	}
+
+    public isTranspiledInstanceOf(name : string): boolean {
+    	return [
+			'java.util.AbstractSet',
+			'java.util.JavaSet',
+    		'java.util.AbstractCollection',
+    		'java.util.Collection',
+    		'java.lang.Iterable',
+    		'java.lang.Object'
+    	].includes(name);
+    }
+
 }

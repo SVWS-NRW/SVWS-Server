@@ -93,6 +93,10 @@ export class FachWaehlbar extends GostBelegpruefung {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}

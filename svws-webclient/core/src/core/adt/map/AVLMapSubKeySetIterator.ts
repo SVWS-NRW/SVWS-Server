@@ -56,6 +56,10 @@ export class AVLMapSubKeySetIterator<K, V> extends JavaObject implements JavaIte
 		this._current = null;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubKeySetIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubKeySetIterator', 'java.util.Iterator'].includes(name);
 	}

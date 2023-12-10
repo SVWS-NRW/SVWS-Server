@@ -22,6 +22,10 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion'].includes(name);
 	}

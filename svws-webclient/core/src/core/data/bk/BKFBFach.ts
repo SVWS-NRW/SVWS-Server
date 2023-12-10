@@ -40,6 +40,10 @@ export class BKFBFach extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.bk.BKFBFach';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKFBFach'].includes(name);
 	}

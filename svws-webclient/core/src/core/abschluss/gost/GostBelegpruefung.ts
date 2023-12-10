@@ -137,6 +137,10 @@ export abstract class GostBelegpruefung extends JavaObject {
 		return fehler;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}

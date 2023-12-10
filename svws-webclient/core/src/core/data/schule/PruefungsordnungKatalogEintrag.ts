@@ -105,6 +105,10 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag'].includes(name);
 	}

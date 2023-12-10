@@ -22,6 +22,10 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerFachrichtungEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerFachrichtungEintrag'].includes(name);
 	}

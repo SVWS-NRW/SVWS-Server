@@ -81,6 +81,10 @@ export class Stundenplan extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.Stundenplan';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.Stundenplan'].includes(name);
 	}

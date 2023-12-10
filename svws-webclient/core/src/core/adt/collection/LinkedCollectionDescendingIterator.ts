@@ -59,6 +59,10 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 		throw new UnsupportedOperationException("remove")
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator'].includes(name);
 	}

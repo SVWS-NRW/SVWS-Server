@@ -164,6 +164,10 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kaoa.KAOAKategorie';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kaoa.KAOAKategorie', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

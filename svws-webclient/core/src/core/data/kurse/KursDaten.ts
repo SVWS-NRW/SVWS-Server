@@ -65,6 +65,10 @@ export class KursDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kurse.KursDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kurse.KursDaten'].includes(name);
 	}

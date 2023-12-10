@@ -285,6 +285,10 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 	}
 
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashMap';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.HashMap',

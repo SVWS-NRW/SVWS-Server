@@ -66,6 +66,10 @@ export class ArrayMapCollectionIterator<K, V> extends JavaObject implements Java
 		this._current = null;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapCollectionIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollectionIterator', 'java.util.Iterator'].includes(name);
 	}

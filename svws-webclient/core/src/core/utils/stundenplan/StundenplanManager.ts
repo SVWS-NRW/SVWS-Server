@@ -5218,6 +5218,10 @@ export class StundenplanManager extends JavaObject {
 		this.zeitrasterRemoveAll(MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, wochentagEnumID));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplan.StundenplanManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}

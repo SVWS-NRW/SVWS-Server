@@ -65,6 +65,10 @@ export class Fachkombinationen extends GostBelegpruefung {
 			this.pruefeHatFachkombination(kombi, ...GostHalbjahr.values());
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}

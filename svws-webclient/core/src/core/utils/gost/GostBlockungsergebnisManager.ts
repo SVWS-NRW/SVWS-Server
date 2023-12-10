@@ -2735,6 +2735,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		logger.modifyIndent(-4);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager'].includes(name);
 	}

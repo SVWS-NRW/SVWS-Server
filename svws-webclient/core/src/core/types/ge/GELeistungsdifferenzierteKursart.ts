@@ -105,6 +105,10 @@ export class GELeistungsdifferenzierteKursart extends JavaEnum<GELeistungsdiffer
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

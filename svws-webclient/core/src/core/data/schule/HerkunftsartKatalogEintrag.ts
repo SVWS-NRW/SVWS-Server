@@ -69,6 +69,10 @@ export class HerkunftsartKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag'].includes(name);
 	}

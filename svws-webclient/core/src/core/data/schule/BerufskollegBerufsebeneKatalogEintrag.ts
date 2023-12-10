@@ -73,6 +73,10 @@ export class BerufskollegBerufsebeneKatalogEintrag extends JavaObject {
 		} else throw new Error('invalid method overload');
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag'].includes(name);
 	}

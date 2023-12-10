@@ -190,6 +190,10 @@ export class BenutzergruppenManager extends JavaObject {
 		this._setKompetenzen.remove(kompetenz.daten.id);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.benutzer.BenutzergruppenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzergruppenManager'].includes(name);
 	}

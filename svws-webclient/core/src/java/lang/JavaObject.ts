@@ -54,6 +54,10 @@ export abstract class JavaObject implements TranspiledObject {
 		return JSON.stringify(this, prepareAttributeOrderForStringify());
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.Object';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.Object'

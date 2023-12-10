@@ -348,6 +348,10 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 		return list;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.HashMap4D';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap4D'].includes(name);
 	}

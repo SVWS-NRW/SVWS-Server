@@ -59,6 +59,10 @@ export class AdressenUtils extends JavaObject {
 		return name! + " " + hausNummer.trim()! + zusatz.trim()!;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.AdressenUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AdressenUtils'].includes(name);
 	}

@@ -774,6 +774,10 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenDynDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klausurplanung.KlausurblockungSchienenDynDaten'].includes(name);
 	}

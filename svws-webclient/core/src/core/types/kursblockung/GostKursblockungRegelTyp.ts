@@ -279,6 +279,10 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

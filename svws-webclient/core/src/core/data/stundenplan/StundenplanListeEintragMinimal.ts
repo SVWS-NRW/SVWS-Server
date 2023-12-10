@@ -22,6 +22,10 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal'].includes(name);
 	}

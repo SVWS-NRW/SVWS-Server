@@ -217,6 +217,10 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenListeEint
 		return tmpList;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.klassen.KlassenListeManager'].includes(name);
 	}

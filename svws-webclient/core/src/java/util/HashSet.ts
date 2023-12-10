@@ -79,6 +79,9 @@ export class HashSet<E> extends AbstractSet<E> implements JavaSet<E>, Cloneable,
 		} else throw new Error('invalid method overload');
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashSet';
+	}
 
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [

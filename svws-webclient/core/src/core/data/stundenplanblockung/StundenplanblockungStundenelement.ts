@@ -22,6 +22,10 @@ export class StundenplanblockungStundenelement extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungStundenelement';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungStundenelement'].includes(name);
 	}

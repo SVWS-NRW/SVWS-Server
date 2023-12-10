@@ -27,6 +27,10 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdatenAnrechnungsstunden'].includes(name);
 	}

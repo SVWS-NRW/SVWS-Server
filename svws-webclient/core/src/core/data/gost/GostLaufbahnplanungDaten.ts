@@ -94,6 +94,10 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDaten'].includes(name);
 	}

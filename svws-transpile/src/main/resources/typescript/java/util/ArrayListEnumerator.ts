@@ -23,6 +23,10 @@ export class ArrayListEnumerator<E> implements Enumeration<E> {
 		throw new NoSuchElementException("ArrayList Enumeration");
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.ArrayListEnumerator';
+	}
+
 	public isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.util.ArrayListEnumerator',

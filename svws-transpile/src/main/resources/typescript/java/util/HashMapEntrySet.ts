@@ -97,4 +97,8 @@ export class HashMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMap
 		return this._map[Symbol.iterator]();
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.HashMapEntrySet';
+	}
+	
 }

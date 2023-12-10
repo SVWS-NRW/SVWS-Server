@@ -591,6 +591,10 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.kurse.ZulaessigeKursart';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kurse.ZulaessigeKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

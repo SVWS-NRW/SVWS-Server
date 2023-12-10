@@ -23,6 +23,10 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutputFachwahlZuKurs'].includes(name);
 	}

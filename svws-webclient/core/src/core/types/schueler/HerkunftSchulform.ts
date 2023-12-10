@@ -160,6 +160,10 @@ export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.schueler.HerkunftSchulform';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.HerkunftSchulform', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

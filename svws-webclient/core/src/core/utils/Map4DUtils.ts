@@ -61,6 +61,10 @@ export class Map4DUtils extends JavaObject {
 		return setNeu;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.Map4DUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map4DUtils'].includes(name);
 	}

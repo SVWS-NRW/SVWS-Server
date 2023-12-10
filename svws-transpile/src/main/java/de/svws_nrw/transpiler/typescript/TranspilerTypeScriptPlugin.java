@@ -1719,6 +1719,28 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Appends a method that returns the classes canonical name for simulating
+	 * part of Javas refelction API.
+	 *
+	 * @param node   the class tree node
+	 *
+	 * @return the transpilerCanonicalName method code as a String
+	 */
+	public String appendTranspilerCanonicalName(final ClassTree node) {
+		String result = getIndent() + "transpilerCanonicalName(): string {" + System.lineSeparator();
+		indentC++;
+		if (transpiler.getElement(node) instanceof final TypeElement te) {
+			result += getIndent() + "return '" + te.getQualifiedName() + "';" + System.lineSeparator();
+		} else {
+			throw new TranspilerException("Transpiler Error: Type Element expected.");
+		}
+		indentC--;
+		result += getIndent() + "}" + System.lineSeparator();
+		return result;
+	}
+
+
+	/**
 	 * Appends a method to the transpiled class code for simulating the Java instanceof
 	 * operator. This is required to support instanceof checks on interfaces that
 	 * are not available in typescript since the underlying javascript does not
@@ -2222,6 +2244,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// Generate Methods
 		transpileClassMethods(sb, node, Transpiler.getMethods(node));
 
+		sb.append(appendTranspilerCanonicalName(node));
+		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
 
@@ -2410,6 +2434,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 		// TODO Typescript code for Iterable (see transpileClass - public [Symbol.iterator](): Iterator ...)
 
+		sb.append(appendTranspilerCanonicalName(node));
+		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
 

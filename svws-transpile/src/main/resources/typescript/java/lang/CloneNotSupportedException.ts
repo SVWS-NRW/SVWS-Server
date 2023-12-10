@@ -2,6 +2,10 @@ import { RuntimeException } from './RuntimeException';
 
 export class CloneNotSupportedException extends RuntimeException {
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.CloneNotSupportedException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.CloneNotSupportedException',

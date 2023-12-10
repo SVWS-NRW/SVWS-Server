@@ -77,6 +77,10 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostLeistungenFachbelegung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLeistungenFachbelegung'].includes(name);
 	}

@@ -55,6 +55,10 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 		this._current = null;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator'].includes(name);
 	}

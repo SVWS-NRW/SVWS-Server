@@ -17,6 +17,10 @@ export class GostSchuelerFachwahl extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostSchuelerFachwahl';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostSchuelerFachwahl'].includes(name);
 	}

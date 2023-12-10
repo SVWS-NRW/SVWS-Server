@@ -22,6 +22,10 @@ export class CoreTypeData extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.CoreTypeData';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.CoreTypeData'].includes(name);
 	}

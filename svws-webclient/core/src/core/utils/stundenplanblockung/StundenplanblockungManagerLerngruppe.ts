@@ -166,6 +166,10 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 		pFa._menge_gr.remove(this);
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppe'].includes(name);
 	}

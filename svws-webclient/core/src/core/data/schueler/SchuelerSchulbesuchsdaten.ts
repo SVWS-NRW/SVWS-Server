@@ -136,6 +136,10 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten'].includes(name);
 	}

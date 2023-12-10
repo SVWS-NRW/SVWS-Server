@@ -22,6 +22,10 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt'].includes(name);
 	}

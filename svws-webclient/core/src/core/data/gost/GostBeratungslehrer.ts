@@ -27,6 +27,10 @@ export class GostBeratungslehrer extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.gost.GostBeratungslehrer';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBeratungslehrer'].includes(name);
 	}

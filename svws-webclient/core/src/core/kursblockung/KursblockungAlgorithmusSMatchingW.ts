@@ -78,6 +78,10 @@ export class KursblockungAlgorithmusSMatchingW extends KursblockungAlgorithmusS 
 		return cmp > 0;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSMatchingW';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSMatchingW'].includes(name);
 	}

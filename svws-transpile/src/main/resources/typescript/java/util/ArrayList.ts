@@ -491,6 +491,10 @@ export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 		}
 	}
 
+	public transpilerCanonicalName(): string {
+		return 'java.util.ArrayList';
+	}
+
 	/**
      * Returns whether given string is included in list of class tree
      *

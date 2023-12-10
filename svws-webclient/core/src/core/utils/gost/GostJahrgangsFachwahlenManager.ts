@@ -219,6 +219,10 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 		return new ArrayList();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager'].includes(name);
 	}

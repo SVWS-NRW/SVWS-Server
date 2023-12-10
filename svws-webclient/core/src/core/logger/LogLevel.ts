@@ -77,6 +77,10 @@ export class LogLevel extends JavaEnum<LogLevel> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.logger.LogLevel';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}

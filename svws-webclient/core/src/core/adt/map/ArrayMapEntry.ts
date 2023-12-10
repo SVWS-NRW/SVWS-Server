@@ -55,6 +55,10 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 		throw new UnsupportedOperationException()
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.adt.map.ArrayMapEntry';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapEntry', 'java.util.Map.Entry'].includes(name);
 	}

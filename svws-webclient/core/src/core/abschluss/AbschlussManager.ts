@@ -207,6 +207,10 @@ export class AbschlussManager extends JavaObject {
 		return true;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.AbschlussManager';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.AbschlussManager'].includes(name);
 	}

@@ -6,6 +6,10 @@ export class ArrayIndexOutOfBoundsException extends IndexOutOfBoundsException {
 		super(typeof param === "undefined" ? "" : (typeof param === "number" ? "Array index out of range: " + param : param));
 	}
 
+	transpilerCanonicalName(): string {
+		return 'java.lang.ArrayIndexOutOfBoundsException';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return [
 			'java.lang.ArrayIndexOutOfBoundsException',

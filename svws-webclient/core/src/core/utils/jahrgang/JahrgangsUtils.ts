@@ -148,6 +148,10 @@ export class JahrgangsUtils extends JavaObject {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.jahrgang.JahrgangsUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.jahrgang.JahrgangsUtils'].includes(name);
 	}

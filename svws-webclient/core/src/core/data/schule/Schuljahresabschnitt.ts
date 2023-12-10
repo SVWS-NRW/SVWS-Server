@@ -22,6 +22,10 @@ export class Schuljahresabschnitt extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schule.Schuljahresabschnitt';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.Schuljahresabschnitt'].includes(name);
 	}

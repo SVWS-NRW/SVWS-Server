@@ -536,6 +536,10 @@ export class SprachendatenUtils extends JavaObject {
 		}
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.utils.schueler.SprachendatenUtils';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}

@@ -52,6 +52,10 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnung';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnung'].includes(name);
 	}

@@ -110,6 +110,10 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 		return prognose;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.ge.ServicePrognose';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.ge.ServicePrognose', 'de.svws_nrw.core.Service'].includes(name);
 	}

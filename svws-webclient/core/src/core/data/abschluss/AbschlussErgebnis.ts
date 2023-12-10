@@ -28,6 +28,10 @@ export class AbschlussErgebnis extends JavaObject {
 		super();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.data.abschluss.AbschlussErgebnis';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.abschluss.AbschlussErgebnis'].includes(name);
 	}

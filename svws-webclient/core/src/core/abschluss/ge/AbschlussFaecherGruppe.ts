@@ -218,6 +218,10 @@ export class AbschlussFaecherGruppe extends JavaObject {
 		return sb.toString();
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
 	}

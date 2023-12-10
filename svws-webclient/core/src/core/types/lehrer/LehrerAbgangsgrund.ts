@@ -138,6 +138,10 @@ export class LehrerAbgangsgrund extends JavaEnum<LehrerAbgangsgrund> {
 		return (!tmp) ? null : tmp;
 	}
 
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund';
+	}
+
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
