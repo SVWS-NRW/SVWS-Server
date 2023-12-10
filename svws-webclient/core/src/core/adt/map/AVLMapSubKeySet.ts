@@ -76,7 +76,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		return this._sub.bcRemoveKeyReturnBool(o);
 	}
 
-	public containsAll(c : Collection<unknown>) : boolean {
+	public containsAll(c : Collection<any>) : boolean {
 		return this._sub.bcContainsAllKeys(c);
 	}
 
@@ -84,11 +84,11 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		return this._sub.bcAddAllKeys(c);
 	}
 
-	public retainAll(c : Collection<unknown>) : boolean {
+	public retainAll(c : Collection<any>) : boolean {
 		return this._sub.bcRetainAllKeys(c);
 	}
 
-	public removeAll(c : Collection<unknown>) : boolean {
+	public removeAll(c : Collection<any>) : boolean {
 		return this._sub.bcRemoveAllKeys(c);
 	}
 

@@ -399,7 +399,7 @@ public class TypeNode {
 
 	private String transpileWildcard(final WildcardTree node) {
 		return switch (node.getKind()) {
-			case UNBOUNDED_WILDCARD -> "unknown";
+			case UNBOUNDED_WILDCARD -> "any";
 			case SUPER_WILDCARD -> {
 				final TypeNode boundNode = new TypeNode(plugin, node.getBound(), decl, false);
 				// TODO Partial is not really correct - try to find a better solution
