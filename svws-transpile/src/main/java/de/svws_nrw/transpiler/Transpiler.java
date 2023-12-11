@@ -1228,6 +1228,18 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Returns whether a default modifier is associated with the tree node.
+	 *
+	 * @param node   the tree node
+	 *
+	 * @return true if the tree node has a default modifier and false otherwise
+	 */
+	public boolean hasDefaultModifier(final Tree node) {
+		return getModifier(node).contains(Modifier.DEFAULT);
+	}
+
+
+	/**
 	 * Retrieves the java compiler element for the tree node or null if none exists.
 	 *
 	 * @param node   the tree node

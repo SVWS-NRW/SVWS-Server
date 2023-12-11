@@ -2486,8 +2486,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append("}");
 		sb.append(System.lineSeparator());
 		sb.append(System.lineSeparator());
-		// TODO Generate Code for default methods
-		// TODO transpileClassMethods(sb, node, Transpiler.getDefaultMethods(node));
+		// Generate Code for default methods
+		transpileClassMethods(sb, node, Transpiler.getDefaultMethods(node));
 		appendCast(sb, node);
 	}
 

@@ -52,6 +52,9 @@ public final class MethodNode {
 	/** specifies whether the method is static or not */
 	private final boolean isStatic;
 
+	/** specifies whether the method is a default method of an interface or not */
+	private final boolean isDefault;
+
 	/** the methods access modifier */
 	private String accessModifier;
 
@@ -90,6 +93,7 @@ public final class MethodNode {
 		this.comment = formatComment(this.plugin.getTranspiler().getComment(method));
 		this.accessModifier = this.plugin.getTranspiler().getAccessModifier(method);
 		this.isStatic = this.plugin.getTranspiler().hasStaticModifier(method);
+		this.isDefault = this.plugin.getTranspiler().hasDefaultModifier(method);
 		final List<? extends VariableTree> tmpParameters = method.getParameters();
 		for (int i = 0; i < tmpParameters.size(); i++) {
 			final VariableNode varNode = new VariableNode(plugin, tmpParameters.get(i));
@@ -622,22 +626,30 @@ public final class MethodNode {
 
 		sb.append(indent);
 
-		// the methods access modifier
-		if (!"".equals(accessModifier)) {
-			sb.append(accessModifier);
-			sb.append(" ");
+		if (isDefault) {
+			sb.append("export function ");
+			sb.append(plugin.getTranspiler().getFullClassName(_class).replace('.', '_'));
+			sb.append("_");
+			sb.append(name);
+			sb.append(plugin.convertTypeParameters(_class.getTypeParameters(), true));
+		} else {
+			// the methods access modifier
+			if (!"".equals(accessModifier)) {
+				sb.append(accessModifier);
+				sb.append(" ");
+			}
+
+			// the abstract modifier
+			if (body == null)
+				sb.append("abstract ");
+
+			// the static modifier
+			if (isStatic)
+				sb.append("static ");
+
+			// the methods name
+			sb.append(name);
 		}
-
-		// the abstract modifier
-		if (body == null)
-			sb.append("abstract ");
-
-		// the static modifier
-		if (isStatic)
-			sb.append("static ");
-
-		// the methods name
-		sb.append(name);
 
 		// the type parameter list
 		sb.append(plugin.convertTypeParameters(method.getTypeParameters(), true));

@@ -33,7 +33,7 @@ public interface CoreType<@NotNull T extends @NotNull CoreTypeData, @NotNull U e
 	 */
 	@SuppressWarnings("unchecked")
 	default T daten(final int schuljahr) {
-		return getManager().getEintragBySchuljahrUndWert(schuljahr, (@NotNull U) this);
+		return this.getManager().getEintragBySchuljahrUndWert(schuljahr, (@NotNull U) this);
 	}
 
 
@@ -44,7 +44,7 @@ public interface CoreType<@NotNull T extends @NotNull CoreTypeData, @NotNull U e
 	 */
 	@SuppressWarnings("unchecked")
 	default @NotNull List<@NotNull T> historie() {
-		return getManager().getHistorieByWert((@NotNull U) this);
+		return this.getManager().getHistorieByWert((@NotNull U) this);
 	}
 
 }
