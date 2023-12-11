@@ -12,6 +12,9 @@
 						class="print:hidden" type="transparent"
 						:disabled="wochentypen().size() <= 0"
 						:item-text="(wt: number) => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
+					<svws-ui-button type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
+						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
+					</svws-ui-button>
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
@@ -109,6 +112,7 @@
 
 	const _klasse = ref<StundenplanKlasse | undefined>(undefined);
 	const wochentyp = ref<number>(-1);
+	const doppelstundenModus = ref<boolean>(true);
 
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
@@ -184,7 +188,16 @@
 		if ((dragData.value instanceof StundenplanKlassenunterricht) && (zone instanceof StundenplanZeitraster)) {
 			const klassen = new ArrayList<number>();
 			klassen.add(dragData.value.idKlasse);
-			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen}]);
+			const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen };
+			const arr = [];
+			arr.push(stunde);
+			if (doppelstundenModus.value === true) {
+				const next = props.stundenplanManager().getZeitrasterNext(zone);
+				if (next)
+					arr.push({ idZeitraster: next.id, wochentyp: wochentyp.value, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
+			}
+			await props.addUnterrichtKlasse(arr);
+			return;
 		}
 		// Fall StundenplanUnterricht -> undefined
 		if ((dragData.value instanceof StundenplanUnterricht) && (zone === undefined))
@@ -195,7 +208,15 @@
 			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
 			for (const schueler of listSchueler)
 				klassen.add(schueler.idKlasse);
-			return await props.addUnterrichtKlasse([{ idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer}]);
+			const stunde = { idZeitraster: zone.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer };
+			const arr = [];
+			arr.push(stunde);
+			if (doppelstundenModus.value === true) {
+				const next = props.stundenplanManager().getZeitrasterNext(zone);
+				if (next)
+					arr.push({ idZeitraster: next.id, wochentyp: wochentyp.value, idKurs: dragData.value.id, idFach: dragData.value.idFach, klassen: new ArrayList(klassen), schienen: dragData.value.schienen, lehrer: dragData.value.lehrer });
+			}
+			return await props.addUnterrichtKlasse(arr);
 		}
 		// TODO Fall StundenplanZeitraster -> undefined
 		// TODO Fall StundenplanPausenaufsicht -> StundenplanPausenzeit
