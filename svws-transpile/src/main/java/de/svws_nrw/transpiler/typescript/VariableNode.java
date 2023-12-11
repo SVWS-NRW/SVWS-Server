@@ -1,11 +1,19 @@
 package de.svws_nrw.transpiler.typescript;
 
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
+
 import com.sun.source.tree.VariableTree;
+
+import de.svws_nrw.transpiler.Transpiler;
 
 /**
  * This class is used to store the information of transpiled java method parameters.
  */
 public class VariableNode {
+
+	/** the {@link VariableElement} object of the java compiler */
+	private final VariableElement varElem;
 
 	/** the {@link VariableTree} object of the java compiler */
 	private final VariableTree variable;
@@ -31,11 +39,32 @@ public class VariableNode {
 	 */
 	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableTree variable) {
 		this.variable = variable;
+		this.varElem = null;
 		this.isVarArg = variable.toString().contains("...");
 		this.isStatic = plugin.getTranspiler().hasStaticModifier(variable);
 		this.isFinal = plugin.getTranspiler().hasFinalModifier(variable);
 		final boolean isNotNull = isVarArg || plugin.getTranspiler().hasNotNullAnnotation(variable);
 		this.typeNode = new TypeNode(plugin, variable.getType(), true, isNotNull);
+		if (this.isVarArg)
+			this.typeNode.setIsVarArg();
+	}
+
+
+	/**
+	 * Creates a new variable with transpiled variable information.
+	 *
+	 * @param plugin    the {@link TranspilerTypeScriptPlugin} used
+	 * @param varElem   the {@link VariableElement} object of the java compiler
+	 * @param isVarArg  specifies whether this variable node is a methods var arg parameter
+	 */
+	public VariableNode(final TranspilerTypeScriptPlugin plugin, final VariableElement varElem, final boolean isVarArg) {
+		this.variable = null;
+		this.varElem = varElem;
+		this.isVarArg = isVarArg;
+		this.isStatic = varElem.getModifiers().contains(Modifier.STATIC);
+		this.isFinal = varElem.getModifiers().contains(Modifier.FINAL);
+		final boolean isNotNull = isVarArg || Transpiler.hasNotNullAnnotation(varElem);
+		this.typeNode = new TypeNode(plugin, varElem.asType(), true, isNotNull);
 		if (this.isVarArg)
 			this.typeNode.setIsVarArg();
 	}
@@ -109,12 +138,22 @@ public class VariableNode {
 
 
 	/**
+	 * Gibt den Namen der Variable zurück.
+	 *
+	 * @return der Name der Variable
+	 */
+	public String getName() {
+		return (variable == null) ? varElem.getSimpleName().toString() : variable.getName().toString();
+	}
+
+
+	/**
 	 * Returns the transpiled code of this node.
 	 *
 	 * @return the transpiled code
 	 */
 	public String transpile() {
-		return "%s%s : %s".formatted(this.isVarArg ? "..." : "", "" + variable.getName(), this.transpileType());
+		return "%s%s : %s".formatted(this.isVarArg ? "..." : "", "" + this.getName(), this.transpileType());
 	}
 
 

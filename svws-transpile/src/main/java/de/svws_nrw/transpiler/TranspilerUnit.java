@@ -4,12 +4,14 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
@@ -93,6 +95,9 @@ public final class TranspilerUnit {
 
 	/** a map with a mapping from a member select tree to the invoked method */
 	public final Map<MemberSelectTree, ExecutableElement> allInvokedMethods = new HashMap<>();
+
+	/** a set with all default methods of interfaces implemented by this unit (except this unit is an interface) */
+	public final Set<ExecutableElement> allDefaultMethodsToBeImplemented = new LinkedHashSet<>();
 
 	/** a list with all identifiers with the tree path that are visited */
 	public final List<AbstractMap.SimpleEntry<IdentifierTree, TreePath>> allIdentifier = new ArrayList<>();
@@ -458,7 +463,9 @@ public final class TranspilerUnit {
 				} else {
 					methodElements.add(method);
 				}
-				if (!isUnitElement &&  (childPath != null)) {
+				if (this.getElement().getKind() != ElementKind.INTERFACE && method.isDefault())
+					allDefaultMethodsToBeImplemented.add(method);
+				if (!isUnitElement && (childPath != null)) {
 					// register method
 					final MethodTree methodTree = (MethodTree) childPath.getLeaf();
 					Set<Tree> scopes = this.allLocalMethods.get(methodName);

@@ -19,6 +19,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -873,6 +874,53 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Checks whether the annotation list contains a Not Null annotation from the
+	 * jakartax.validation package.
+	 *
+	 * @param annotations   the list of annotation nodes
+	 *
+	 * @return true if the list contains a not null annotation
+	 */
+	public static boolean hasNotNullAnnotation(final List<? extends AnnotationMirror> annotations) {
+		if (annotations != null) {
+			for (final AnnotationMirror annotation : annotations) {
+				if ((annotation.getAnnotationType().asElement() instanceof final TypeElement te) && (te.getKind() == ElementKind.ANNOTATION_TYPE)
+						&& ("jakarta.validation.constraints.NotNull".equals(te.getQualifiedName().toString())))
+						return true;
+			}
+		}
+		return false;
+	}
+
+
+	/**
+	 * Checks whether the type mirror has a Not Null annotation from the
+	 * jakartax.validation package assigned.
+	 *
+	 * @param type   the type mirror
+	 *
+	 * @return true if is has a not null annotation assigned
+	 */
+	public static boolean hasNotNullAnnotation(final TypeMirror type) {
+		return hasNotNullAnnotation(type.getAnnotationMirrors());
+	}
+
+
+	/**
+	 * Checks whether the element has a Not Null annotation from the
+	 * jakartax.validation package assigned.
+	 *
+	 * @param elem   the element
+	 *
+	 * @return true if is has a not null annotation assigned
+	 */
+	public static boolean hasNotNullAnnotation(final Element elem) {
+		return hasNotNullAnnotation(elem.getAnnotationMirrors());
+	}
+
+
+
+	/**
 	 * Checks whether the variable has a Not Null annotation from the
 	 * jakartax.validation package assigned.
 	 *
@@ -1461,9 +1509,24 @@ public final class Transpiler extends AbstractProcessor {
 		final String superTypeName = ((ExpressionClassType) superType).getFullQualifiedName();
 		final String classTypeWithoutTypeArgs = ((ExpressionClassType) classType).getFullQualifiedName();
 		final TypeElement te = elementUtils.getTypeElement(classTypeWithoutTypeArgs);
+		return checkForSuperclass(te, superTypeName);
+	}
+
+
+
+	/**
+	 * Checks whether the type element has the specified super type, either a class type
+	 * or an interface type
+	 *
+	 * @param te                   the type element
+	 * @param superFullQualified   the full qualified name of the super type
+	 *
+	 * @return -1 on error or a positive value signaling the depth in the super class / interface tree
+	 */
+	public int checkForSuperclass(final TypeElement te, final String superFullQualified) {
 		if (te == null)
 			return -1;
-		if (te.toString().equals(superTypeName))
+		if (te.toString().equals(superFullQualified))
 			return 0;
 		// check all interfaces of the class
 		final LinkedCollection<TypeMirror> interfaces = new LinkedCollection<>();
@@ -1472,7 +1535,7 @@ public final class Transpiler extends AbstractProcessor {
 			final TypeMirror interfaceType = interfaces.removeFirst();
 			final Element interfaceElement = typeUtils.asElement(interfaceType);
 			if (interfaceElement instanceof final TypeElement ite) {
-				if (ite.toString().equals(superTypeName))
+				if (ite.toString().equals(superFullQualified))
 					return 1;
 				interfaces.addAll(ite.getInterfaces());
 			}
@@ -1480,7 +1543,7 @@ public final class Transpiler extends AbstractProcessor {
 //		for (TypeMirror interfaceType : te.getInterfaces()) {
 //			Element interfaceElement = typeUtils.asElement(interfaceType);
 //			if (interfaceElement instanceof TypeElement ite) {
-//				if (ite.toString().equals(superTypeName))
+//				if (ite.toString().equals(superFullQualified))
 //					return 1;
 //			} else continue;
 //		}
@@ -1490,11 +1553,11 @@ public final class Transpiler extends AbstractProcessor {
 		while (superClass.getKind() != TypeKind.NONE) {
 			final Element superElement = typeUtils.asElement(superClass);
 			if (superElement instanceof final TypeElement ste) {
-				if (ste.toString().equals(superTypeName))
+				if (ste.toString().equals(superFullQualified))
 					return i;
 				for (final TypeMirror interfaceType : ste.getInterfaces()) {
 					final Element interfaceElement = typeUtils.asElement(interfaceType);
-					if ((interfaceElement instanceof final TypeElement ite) &&  (ite.toString().equals(superTypeName)))
+					if ((interfaceElement instanceof final TypeElement ite) &&  (ite.toString().equals(superFullQualified)))
 						return i + 1;
 				}
 				superClass = ste.getSuperclass();
@@ -1502,7 +1565,7 @@ public final class Transpiler extends AbstractProcessor {
 			} else
 				break;
 		}
-		if ("java.lang.Object".equals(superTypeName))
+		if ("java.lang.Object".equals(superFullQualified))
 			return i;
 		return -1;
 	}

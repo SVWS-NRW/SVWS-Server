@@ -2184,6 +2184,47 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Konvertiert die Parameter des übergebenen Methode nach Typescript
+	 *
+	 * @param method   die zu konvertierende Methode
+	 *
+	 * @return die Methoden-Parameter als String
+	 */
+	public String convertDefaultMethodParameters(final ExecutableElement method) {
+		String result = "";
+		final var params = method.getParameters();
+		for (int i = 0; i < params.size(); i++) {
+			final var param = params.get(i);
+			if (!"".equals(result))
+				result += ", ";
+			result += (new VariableNode(this, param, method.isVarArgs())).transpile();
+		}
+		return result;
+	}
+
+
+	/**
+	 * Erzeugt den Code für die Verwendung von Default-Methoden innerhalb der Klasse
+	 *
+	 * @param sb           the StringBuilder where the output is written to
+	 * @param node         the class or enum to be transpiled
+	 */
+	public void transpileDefaultMethodImplementations(final StringBuilder sb, final ClassTree node) {
+		final Set<ExecutableElement> methods = transpiler.getTranspilerUnit(node).allDefaultMethodsToBeImplemented;
+		for (final ExecutableElement method : methods) {
+			final String methodName = method.getSimpleName().toString();
+			final String methodParams = convertDefaultMethodParameters(method);
+			final String returnType = (new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method))).transpile(false);
+			// TODO Type Parameters
+			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnType).append(" {").append(System.lineSeparator());
+			sb.append(getIndent()).append("}").append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+			sb.append(System.lineSeparator());
+		}
+	}
+
+
+	/**
 	 * Transpiles the class.
 	 *
 	 * @param sb       the StringBuilder where the output is written to
@@ -2435,6 +2476,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			%1$s}
 			""".formatted(getIndent(), node.getSimpleName())
 		).append(System.lineSeparator());
+
+		transpileDefaultMethodImplementations(sb, node);
 
 		// TODO Typescript code for Iterable (see transpileClass - public [Symbol.iterator](): Iterator ...)
 
