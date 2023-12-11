@@ -426,6 +426,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled member select statement
 	 */
 	public String convertMemberSelect(final MemberSelectTree node) {
+		if ("class".equals(node.getIdentifier().toString())) {
+			transpiler.getTranspilerUnit(node).imports.put("Class", "java.lang");
+			return "new Class<" + node.getExpression().toString() + ">(" + node.getExpression().toString() + ".prototype)";
+		}
 		final String result = switch (node.getExpression().toString()) {
 			case strBoolean -> switch (node.getIdentifier().toString()) {
 				case "parseBoolean" -> "JavaBoolean.parseBoolean";
@@ -723,8 +727,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled switch expression
 	 */
 	public String convertSwitchExpression(final SwitchExpressionTree node, final String switchVarName) {
-		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + node.hashCode();
-		final String tmpExprVar = "_seexpr_" + node.hashCode();
+		final String tmpVar = (switchVarName != null) ? switchVarName : "_sevar_" + node.toString().hashCode();
+		final String tmpExprVar = "_seexpr_" + node.toString().hashCode();
 		final StringBuilder sb = new StringBuilder();
 		if (switchVarName == null)
 			sb.append("let ").append(tmpVar).append(" : any;").append(System.lineSeparator()).append(getIndent());
@@ -1178,7 +1182,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			}
 		}
 		if (node.getExpression() instanceof final SwitchExpressionTree set)
-			return converted + "return _sevar_" + set.hashCode() + ";";
+			return converted + "return _sevar_" + set.toString().hashCode() + ";";
 		return "return %s;".formatted(converted);
 	}
 
