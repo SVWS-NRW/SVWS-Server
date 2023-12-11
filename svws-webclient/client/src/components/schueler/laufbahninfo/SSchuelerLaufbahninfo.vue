@@ -39,12 +39,17 @@
 					<svws-ui-button @click="remove" type="trash" :disabled="auswahl.length === 0" />
 					<svws-ui-button @click="suchen" type="icon" title="Diese Sprache in den Leistungsdaten suchen und Beginn und Ende aktualisieren" :disabled="auswahl.length === 0"> <i-ri-search-line /></svws-ui-button>
 					<svws-ui-button @click="ermitteln" type="icon" title="Das GER/Latinum anhand aller Daten ermitteln" :disabled="auswahl.length === 0"><i-ri-calculator-line /></svws-ui-button>
+					<svws-ui-button @click="hinzufuegen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
 			<svws-ui-input-wrapper>
-				<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen">
+				<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
+					<template #actions>
+						<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
+						<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+					</template>
 					<!-- -->
 				</svws-ui-table>
 			</svws-ui-input-wrapper>
@@ -57,11 +62,12 @@
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn, InputDataType } from "@ui";
 	import { computed, ref } from 'vue';
-	import { Sprachreferenzniveau } from '@core';
+	import { Sprachbelegung, Sprachpruefung, Sprachreferenzniveau } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
 	const auswahl = ref([]);
+	const auswahlPr = ref([]);
 
 	const colsSprachenfolge: Array<DataTableColumn> = [
 		{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache" },
@@ -157,9 +163,24 @@
 			await props.removeSprachbelegung(sprache);
 	}
 	async function suchen() {
-		//lösche Sprache
+		//suche Sprache
 	}
 	async function ermitteln() {
-		//lösche Sprache
+		//ermittel Sprache
+	}
+
+	async function hinzufuegen() {
+		const data = new Sprachbelegung();
+		await props.addSprachbelegung(data);
+	}
+
+	async function hinzufuegenPruefungen() {
+		const data = new Sprachpruefung();
+		await props.addSprachpruefung(data);
+	}
+
+	async function removePruefungen() {
+		for (const pruefung of auswahlPr.value)
+			await props.removeSprachpruefung(pruefung);
 	}
 </script>

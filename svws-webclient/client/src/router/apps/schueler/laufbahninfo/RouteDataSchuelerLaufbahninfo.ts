@@ -64,10 +64,10 @@ export class RouteDataSchuelerLaufbahninfo {
 			const sprachbelegungen = await api.server.getSchuelerSprachbelegungen(api.schema, auswahl.id);
 			const sprachpruefungen = await api.server.getSchuelerSprachpruefungen(api.schema, auswahl.id);
 			this.setPatchedState({ auswahl, sprachbelegungen, sprachpruefungen })
-			api.status.stop();
 		} catch(error) {
 			throw new Error("Die Laufbahninformationen konnten nicht eingeholt werden.")
 		}
+		api.status.stop();
 	}
 
 	getSprachbelegung(data: Partial<Sprachbelegung>) : Sprachbelegung | null {
