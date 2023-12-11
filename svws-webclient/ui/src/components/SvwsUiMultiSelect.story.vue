@@ -12,21 +12,25 @@
 						:headless="state.headless"
 						:statistics="state.statistics"
 						:disabled="state.disabled"
+						:autocomplete="state.autocomplete"
 						class="col-span-full" />
 					<svws-ui-spacing :size="2" />
 					<svws-ui-multi-select label="Relevant für die Statistik"
 						:items="items"
 						:item-text="item => item.text"
 						v-model="modelValueStatistik"
+						:autocomplete="state.autocomplete"
 						statistics />
 					<svws-ui-multi-select label="Disabled"
 						:items="items"
 						:item-text="item => item.text"
+						:autocomplete="state.autocomplete"
 						v-model="modelValueDisabled" disabled />
 					<svws-ui-spacing />
 					<svws-ui-multi-select label="Headless z. B. in der Tabelle"
 						:items="items"
 						:item-text="item => item.text"
+						:autocomplete="state.autocomplete"
 						v-model="modelValueHeadlessUndefined" headless />
 					<svws-ui-multi-select label="Headless z. B. in der Tabelle"
 						:items="items"
@@ -47,6 +51,7 @@
 				<HstCheckbox v-model="state.headless" title="headless" />
 				<HstCheckbox v-model="state.statistics" title="statistics" />
 				<HstCheckbox v-model="state.disabled" title="disabled" />
+				<HstCheckbox v-model="state.autocomplete" title="autocomplete" />
 			</template>
 		</Variant>
 	</Story>
@@ -61,7 +66,8 @@
 		label: 'Label für die Komponente',
 		headless: false,
 		statistics: false,
-		disabled: false
+		disabled: false,
+		autocomplete: false,
 	});
 
 	const items = reactive<{id: number, text: string}[]>([
