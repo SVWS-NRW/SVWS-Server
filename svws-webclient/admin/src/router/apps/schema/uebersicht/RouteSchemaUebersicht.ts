@@ -32,7 +32,7 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 			migrateSchema: routeSchema.data.migrateSchema,
 			upgradeSchema: routeSchema.data.upgradeSchema,
 			initSchema: routeSchema.data.initSchema,
-			schuleInfo: routeSchema.data.schuleInfo,
+			schuleInfo: () => routeSchema.data.schuleInfo,
 			revision: routeSchema.data.revision,
 		};
 	}

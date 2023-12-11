@@ -30,18 +30,18 @@ export class FachWaehlbar extends GostBelegpruefung {
 		if (fbHalbjahr === null)
 			return;
 		let istwaehlbar : boolean;
-		const _seexpr_724190002 = (halbjahr);
-		if (_seexpr_724190002 === GostHalbjahr.EF1) {
+		const _seexpr_276184776 = (halbjahr);
+		if (_seexpr_276184776 === GostHalbjahr.EF1) {
 			istwaehlbar = fach.istMoeglichEF1;
-		} else if (_seexpr_724190002 === GostHalbjahr.EF2) {
+		} else if (_seexpr_276184776 === GostHalbjahr.EF2) {
 			istwaehlbar = fach.istMoeglichEF2;
-		} else if (_seexpr_724190002 === GostHalbjahr.Q11) {
+		} else if (_seexpr_276184776 === GostHalbjahr.Q11) {
 			istwaehlbar = fach.istMoeglichQ11;
-		} else if (_seexpr_724190002 === GostHalbjahr.Q12) {
+		} else if (_seexpr_276184776 === GostHalbjahr.Q12) {
 			istwaehlbar = fach.istMoeglichQ12;
-		} else if (_seexpr_724190002 === GostHalbjahr.Q21) {
+		} else if (_seexpr_276184776 === GostHalbjahr.Q21) {
 			istwaehlbar = fach.istMoeglichQ21;
-		} else if (_seexpr_724190002 === GostHalbjahr.Q22) {
+		} else if (_seexpr_276184776 === GostHalbjahr.Q22) {
 			istwaehlbar = fach.istMoeglichQ22;
 		} else {
 			istwaehlbar = false;

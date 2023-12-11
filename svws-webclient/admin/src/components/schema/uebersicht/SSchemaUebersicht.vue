@@ -2,10 +2,10 @@
 	<div class="page--content">
 		<svws-ui-content-card v-if="eintrag !== undefined" title="Schema verwalten">
 			<svws-ui-input-wrapper>
-				<template v-if="schuleInfo === undefined">
+				<template v-if="schuleInfo() === undefined">
 					<div class="flex gap-3">
 						<svws-ui-input-number placeholder="Schulnummer" v-model="schulnummer" :min="100000" :max="999999" />
-						<svws-ui-button :disabled="schulnummer !== null && schulnummer > 100000" type="secondary" @click="init"><svws-ui-spinner :spinning="loading" /> Mit Schulnummer initialisieren</svws-ui-button>
+						<svws-ui-button :disabled="schulnummer === null || schulnummer < 100000" type="secondary" @click="init"><svws-ui-spinner :spinning="loading" /> Mit Schulnummer initialisieren</svws-ui-button>
 					</div>
 				</template>
 				<template v-if="eintrag.isInConfig === false">

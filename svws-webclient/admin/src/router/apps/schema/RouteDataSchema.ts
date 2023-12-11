@@ -348,7 +348,9 @@ export class RouteDataSchema {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
-		const result = new SimpleOperationResponse() //= await api.privileged.initSchemaToCurrent(schulnummer, this.auswahl.name);
+		const result = await api.privileged.initSchemaMitSchule(this.auswahl.name, schulnummer);
+		const schuleInfo = await api.privileged.getSchuleInfo(this.auswahl.name);
+		this.setPatchedState({ schuleInfo });
 		api.status.stop();
 		return result;
 	}
