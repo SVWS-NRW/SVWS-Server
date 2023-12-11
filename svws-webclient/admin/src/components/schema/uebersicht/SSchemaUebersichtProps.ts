@@ -1,4 +1,4 @@
-import type { ApiFile, BenutzerListeEintrag, SchemaListeEintrag, SimpleOperationResponse, List, SchuleInfo, SchuleStammdaten } from "@core";
+import type { ApiFile, BenutzerListeEintrag, SchemaListeEintrag, SimpleOperationResponse, List, SchuleInfo, SchuleStammdaten, SchulenKatalogEintrag } from "@core";
 
 export interface SchemaUebersichtProps {
 	data: () => SchemaListeEintrag | undefined;
@@ -10,4 +10,5 @@ export interface SchemaUebersichtProps {
 	initSchema: (schulnummer: number) => Promise<SchuleStammdaten>;
 	revision: number | null;
 	schuleInfo: () => SchuleInfo | undefined;
+	schulen: () => List<SchulenKatalogEintrag>;
 }

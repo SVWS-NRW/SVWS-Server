@@ -1,6 +1,6 @@
 import { shallowRef } from "vue";
 
-import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo } from "@core";
+import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo, SchulenKatalogEintrag } from "@core";
 import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
@@ -16,6 +16,7 @@ interface RouteStateSchema {
 	mapSchema: Map<string, SchemaListeEintrag>;
 	revision: number | null;
 	schuleInfo: SchuleInfo | undefined;
+	schulen: List<SchulenKatalogEintrag>;
 	admins: List<BenutzerListeEintrag>;
 	view: RouteNode<any, any>;
 }
@@ -28,6 +29,7 @@ export class RouteDataSchema {
 		mapSchema: new Map(),
 		revision: null,
 		schuleInfo: undefined,
+		schulen: new ArrayList<SchulenKatalogEintrag>(),
 		admins: new ArrayList<BenutzerListeEintrag>(),
 		view: routeSchemaUebersicht,
 	};
@@ -94,17 +96,19 @@ export class RouteDataSchema {
 			return;
 		const auswahl = this.mapSchema.has(schema.name.toLocaleLowerCase()) ? schema : undefined;
 		let schuleInfo = undefined;
+		let schulen: List<SchulenKatalogEintrag> = new ArrayList();
 		let admins: List<BenutzerListeEintrag> = new ArrayList();
 		if (auswahl !== undefined && auswahl.revision > 0) {
 			try {
 				schuleInfo = await api.privileged.getSchuleInfo(auswahl.name);
 			} catch (e) {
 				console.log("Die Information zur Schule konnte nicht gefunden werden, biete Möglichkeit zur Initialisierung mit Schulnummer.")
+				schulen = await api.privileged.getAllgemeinenKatalogSchulen();
 			}
 			if (auswahl.revision === this.revision)
 				admins = await api.privileged.getSchemaAdmins(auswahl.name);
 		}
-		this.setPatchedState({ auswahl, schuleInfo, admins });
+		this.setPatchedState({ auswahl, schuleInfo, admins, schulen });
 	}
 
 	public async setView(view: RouteNode<any,any>) {
@@ -152,6 +156,10 @@ export class RouteDataSchema {
 
 	get schuleInfo(): SchuleInfo | undefined {
 		return this._state.value.schuleInfo;
+	}
+
+	get schulen(): List<SchulenKatalogEintrag> {
+		return this._state.value.schulen;
 	}
 
 	gotoSchema = async (value: SchemaListeEintrag | undefined) => {

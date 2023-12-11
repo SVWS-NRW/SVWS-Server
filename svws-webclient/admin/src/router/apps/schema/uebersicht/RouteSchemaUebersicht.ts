@@ -33,6 +33,7 @@ export class RouteSchemaUebersicht extends RouteNode<unknown, RouteSchema> {
 			upgradeSchema: routeSchema.data.upgradeSchema,
 			initSchema: routeSchema.data.initSchema,
 			schuleInfo: () => routeSchema.data.schuleInfo,
+			schulen: () => routeSchema.data.schulen,
 			revision: routeSchema.data.revision,
 		};
 	}

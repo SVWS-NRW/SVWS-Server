@@ -4,8 +4,8 @@
 			<svws-ui-input-wrapper>
 				<template v-if="schuleInfo() === undefined">
 					<div class="flex gap-3">
-						<svws-ui-input-number placeholder="Schulnummer" v-model="schulnummer" :min="100000" :max="999999" />
-						<svws-ui-button :disabled="schulnummer === null || schulnummer < 100000" type="secondary" @click="init"><svws-ui-spinner :spinning="loading" /> Mit Schulnummer initialisieren</svws-ui-button>
+						<svws-ui-select title="Schulen nach Schulnummer und Ort suchen" v-model="schule" :items="schulen()" :item-text="i=> `${i.SchulNr}: ${i.ABez1 ?? ''} ${i.ABez2 ?? ''} ${i.ABez3 ?? ''}`" autocomplete :item-filter="schulen_filter" />
+						<svws-ui-button :disabled="schule == undefined" type="secondary" @click="init"><svws-ui-spinner :spinning="loading" /> Mit Schulnummer initialisieren</svws-ui-button>
 					</div>
 				</template>
 				<template v-if="eintrag.isInConfig === false">
@@ -33,11 +33,12 @@
 	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
 	import type { DataTableColumn } from "@ui";
 	import { computed, ref } from "vue";
+	import type { SchulenKatalogEintrag } from "@core";
 
 	const props = defineProps<SchemaUebersichtProps>();
 
 	const eintrag = computed(()=> props.data());
-	const schulnummer = ref<number|null>(null);
+	const schule = ref<SchulenKatalogEintrag>()
 	const loading = ref<boolean>(false);
 
 	const revisionUpToDate = computed<boolean>(()=> {
@@ -65,10 +66,51 @@
 	}
 
 	async function init() {
-		if (schulnummer.value === null)
+		if (schule.value === undefined)
 			return;
 		loading.value = true;
-		await props.initSchema(schulnummer.value);
+		await props.initSchema(Number(schule.value.SchulNr));
 		loading.value = false;
 	}
+
+	/** Der Filter für Schulen */
+	const schulen_filter = (items: SchulenKatalogEintrag[], search: string): SchulenKatalogEintrag[] => {
+		// Teilmatch Schulnummer
+		const nrmatch = search.match(/\d+/);
+		const nr = nrmatch ? nrmatch[0] : undefined;
+		//Teilmatch Name
+		const ort = search.replace(/\d+\s*/, "").trim();
+		if (!nr && !ort) {
+			return items;
+		}
+		if (!nr) {
+			return items.filter((item: SchulenKatalogEintrag) => {
+				if (item && item.Ort !== null) {
+					return item.Ort
+						.toLocaleLowerCase("de-DE")
+						.startsWith(ort.toLocaleLowerCase("de-DE"));
+				}
+				return false;
+			});
+		} else if (!ort) {
+			return items.filter(item => {
+				if (item.SchulNr) {
+					return item.SchulNr.includes(nr);
+				}
+				return false;
+			});
+		} else {
+			return items.filter(item => {
+				if (item.SchulNr && item.Ort) {
+					return (
+						item.SchulNr.includes(nr) &&
+						item.Ort
+							.toLocaleLowerCase("de-DE")
+							.startsWith(ort.toLocaleLowerCase("de-DE"))
+					);
+				}
+				return false;
+			});
+		}
+	};
 </script>
