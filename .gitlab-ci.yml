@@ -90,9 +90,9 @@ build_windows:
         - c:/tmp/download-secure-files-windows-amd64.exe
         - Add-Content -Path ".\gradle.properties" -Value (Get-Content -Path ".\gradle_secure.properties")
         - dir /builds/svws/SVWS-Server/
-        #- ./gradlew :deployment:windows-installer:doZip
-        #- mkdir artifacts_windows
-        #- copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
+        - ./gradlew :deployment:windows-installer:doZip
+        - mkdir artifacts_windows
+        - copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
     artifacts:
         paths:
             - artifacts_windows/
