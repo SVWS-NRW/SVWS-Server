@@ -44,15 +44,13 @@
 			</svws-ui-table>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen" class="col-span-full">
-			<svws-ui-input-wrapper>
-				<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
-					<template #actions>
-						<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
-						<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
-					</template>
-					<!-- -->
-				</svws-ui-table>
-			</svws-ui-input-wrapper>
+			<svws-ui-table :items="sprachpruefungen()" :columns="colsSprachpruefungen" selectable v-model="auswahlPr">
+				<template #actions>
+					<svws-ui-button @click="removePruefungen" type="trash" :disabled="auswahlPr.length === 0" />
+					<svws-ui-button @click="hinzufuegenPruefungen" type="icon" title="Eine neue Sprache hinzufügen"><i-ri-add-line /></svws-ui-button>
+				</template>
+				<!-- -->
+			</svws-ui-table>
 		</svws-ui-content-card>
 	</div>
 </template>

@@ -23,6 +23,7 @@ import { RouteDataKataloge } from "~/router/apps/kataloge/RouteDataKataloge";
 
 import type { KatalogeAuswahlProps } from "~/components/kataloge/SKatalogeAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import { routeKatalogSchulen } from "./schulen/RouteKatalogSchulen";
 
 
 const SKatalogeAuswahl = () => import("~/components/kataloge/SKatalogeAuswahl.vue")
@@ -48,7 +49,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 			routeKatalogPausenzeiten,
 			routeKatalogZeitraster,
 			routeKatalogBetriebe,
-			// TODO { title: "Haltestellen", value: "haltestellen" },
+			routeKatalogSchulen,
 		];
 		super.defaultChild = undefined;
 	}

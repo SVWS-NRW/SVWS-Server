@@ -9,28 +9,28 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
-import { routeKatalogFachDaten } from "~/router/apps/kataloge/faecher/RouteKatalogFachDaten";
+import { routeKatalogSchuleDaten } from "~/router/apps/kataloge/schulen/RouteKatalogSchuleDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppProps";
-import type { FaecherAuswahlProps } from "~/components/kataloge/faecher/SFaecherAuswahlProps";
-import { RouteDataKatalogFaecher } from "./RouteDataKatalogFaecher";
+import type { SchulenAppProps } from "~/components/kataloge/schulen/SSchulenAppProps";
+import type { SchulenAuswahlProps } from "~/components/kataloge/schulen/SSchulenAuswahlProps";
+import { RouteDataKatalogSchulen } from "./RouteDataKatalogSchulen";
 
-const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
-const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
+const SSchulenAuswahl = () => import("~/components/kataloge/schulen/SSchulenAuswahl.vue")
+const SSchulenApp = () => import("~/components/kataloge/schulen/SSchulenApp.vue")
 
-export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, RouteApp> {
+export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher", "/kataloge/faecher/:id(\\d+)?", SFaecherApp, new RouteDataKatalogFaecher());
-		super.mode = ServerMode.STABLE;
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.schulen", "/kataloge/schulen/:id(\\d+)?", SSchulenApp, new RouteDataKatalogSchulen());
+		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
-		super.text = "Fächer";
-		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
+		super.text = "Schulen";
+		super.setView("liste", SSchulenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogFachDaten
+			routeKatalogSchuleDaten
 		];
-		super.defaultChild = routeKatalogFachDaten;
+		super.defaultChild = routeKatalogSchuleDaten;
 	}
 
 	public async enter(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
@@ -50,7 +50,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 				return this.getRoute(this.data.auswahl.id);
 			}
 			else if (eintrag)
-				await this.data.setEintrag(eintrag);
+				this.data.setEintrag(eintrag);
 		}
 		if (to.name === this.name && this.data.auswahl !== undefined)
 			return this.getRoute(this.data.auswahl.id);
@@ -60,10 +60,12 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 		return { name: this.defaultChild!.name, params: { id }};
 	}
 
-	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
+	public getAuswahlProps(to: RouteLocationNormalized): SchulenAuswahlProps {
 		return {
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: this.data.mapKatalogeintraege,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
+			removeEintraege: this.data.removeEintraege,
+			addEintrag: this.data.addEintrag,
 			abschnitte: api.mapAbschnitte.value,
 			aktAbschnitt: routeApp.data.aktAbschnitt.value,
 			aktSchulabschnitt: api.schuleStammdaten.idSchuljahresabschnitt,
@@ -73,7 +75,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 		};
 	}
 
-	public getProps(to: RouteLocationNormalized): FaecherAppProps {
+	public getProps(to: RouteLocationNormalized): SchulenAppProps {
 		return {
 			auswahl: this.data.auswahl,
 			// Props für die Navigation
@@ -107,4 +109,4 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	}
 }
 
-export const routeKatalogFaecher = new RouteKatalogFaecher();
+export const routeKatalogSchulen = new RouteKatalogSchulen();
