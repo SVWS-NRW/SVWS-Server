@@ -85,6 +85,8 @@ build_windows:
     script:
         - ./deployment/setupVersion.ps1
         - c:/build/download-secure-files-windows-amd64.exe
+        - type .secure_files\gradle_secure.properties
+        - c:/tmp/signtool/signtool.exe
         #- ./gradlew :deployment:windows-installer:doZip
         #- mkdir artifacts_windows
         #- copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
