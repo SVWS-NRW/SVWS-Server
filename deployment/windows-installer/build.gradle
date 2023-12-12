@@ -372,7 +372,7 @@ task copyInstallerScript(type:Copy) {
 	from("${projectDir}/innosetup/") {
 		include "*.iss"
 		filteringCharset = 'ISO-8859-1'
-		if (System.getenv("SVWS_SIGNTOOL_PATH") && System.getenv("SVWS_CERTIFICATE_PATH") && System.getenv("SVWS_CERTIFICATE_PASSWORD")) {
+		if (System.getenv("SVWS_SIGNTOOL_PATH") && jarsign_keystoreFile && jarsign_keystorepass) {
 			filter(ReplaceTokens, tokens: [
 				version: project.version,
 				svws_client_version: svws_version,
@@ -430,8 +430,8 @@ task buildPrepare {
 
 
 task buildCreateInstaller(type:Exec) {
-	if (System.getenv("SVWS_SIGNTOOL_PATH") && System.getenv("SVWS_CERTIFICATE_PATH") && System.getenv("SVWS_CERTIFICATE_PASSWORD")) {
-		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + System.getenv("SVWS_CERTIFICATE_PATH")  + " /p " + System.getenv("SVWS_CERTIFICATE_PASSWORD") + ' -tr http://timestamp.digicert.com -td sha256 \$f'
+	if (System.getenv("SVWS_SIGNTOOL_PATH") && jarsign_keystoreFile && jarsign_keystorepass) {
+		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss", "/Ssigntool=" + System.getenv("SVWS_SIGNTOOL_PATH") + " sign /fd sha256 /f " + jarsign_keystoreFile  + " /p " + jarsign_keystorepass + ' -tr http://timestamp.digicert.com -td sha256 \$f'
 	} else {
 		commandLine "cmd", "/c", "${buildDir}/inno/app/iscc.exe", "SVWS_Installer_full.iss"
 	}

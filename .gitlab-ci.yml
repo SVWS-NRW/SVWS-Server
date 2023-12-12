@@ -83,6 +83,7 @@ build_windows:
         - windows
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
+        SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool'
     image: svwsnrw/dockerrunner-win
     script:
         - ./deployment/setupVersion.ps1
