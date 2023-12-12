@@ -769,6 +769,11 @@ public final class DBMigrationManager {
 		if (daten.Schulform != null) {
 			schulform = Schulform.getByKuerzel(daten.Schulform);
 		}
+		// Passe ggf. die Anzahl der Abschnitte bei WBKs an
+		if (daten.SchulformNr.equals(Schulform.WB.daten.nummer) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
+				logger.logLn(LogLevel.ERROR, "Passe die Anzahl der Abschnitte am Witerbildungskolleg an. Es gibt hier im Jahr 2 Abschnitte, wobei jeder Abschnitt als Jahrgangsstufe zählt.");
+				daten.AnzahlAbschnitte = 2;
+		}
 		schuleAnzahlAbschnitte = daten.AnzahlAbschnitte;
 		return true;
 	}
