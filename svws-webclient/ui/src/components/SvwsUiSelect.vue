@@ -161,7 +161,7 @@
 			data.value = undefined;
 	}
 
-	const selectedItem = computed<Item | null | undefined>({
+	const selectedItem = computed<SelectDataType>({
 		get: () => data.value,
 		set: (item) => updateData(item, false)
 	});
@@ -175,7 +175,7 @@
 
 	const hasSelected = computed(() => (selectedItem.value !== null) && (selectedItem.value !== undefined));
 
-	function selectItem(item: Item | null | undefined) {
+	function selectItem(item: SelectDataType) {
 		selectedItem.value = item;
 		if (props.autocomplete)
 			searchText.value = "";

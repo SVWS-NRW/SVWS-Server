@@ -5,6 +5,9 @@
 		</svws-ui-todo>
 		<svws-ui-content-card title="Sprachenfolge" class="">
 			<svws-ui-table :items="sprachbelegungen()" :columns="colsSprachenfolge" selectable v-model="auswahl">
+				<template #cell(sprache)="{ rowData }">
+					<svws-ui-select title="Sprache" headless :removable="true" :model-value="rowData.sprache" @update:model-value="sprache=>sprache && patchSprachbelegung({sprache})" :items="sprachen" :item-text="i=>i" />
+				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
 					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
@@ -29,7 +32,7 @@
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
 					<svws-ui-checkbox v-else-if="rowData.sprache === 'H'" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
 					<template v-else-if="rowData.sprache === 'L'">
-						<svws-ui-select headless :items="sprachen" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
+						<svws-ui-select headless :items="latein" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
 					</template>
 					<template v-else>
 						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="itemText" />
@@ -60,7 +63,7 @@
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
 	import type { DataTableColumn, InputDataType } from "@ui";
 	import { computed, ref } from 'vue';
-	import { Sprachbelegung, Sprachpruefung, Sprachreferenzniveau } from '@core';
+	import { Sprachbelegung, Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
@@ -90,6 +93,8 @@
 		{ key: "sprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
 	];
 
+	const sprachen = ZulaessigesFach.getListFremdsprachenKuerzelAtomar();
+
 	function itemText(item: Sprachreferenzniveau) {
 		const name = item.name();
 		if (name.length === 2)
@@ -103,12 +108,12 @@
 		return (Number(item) < 0 || Number(item) > 13)
 	}
 
-	const sprachen = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
+	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
 	const latinum = computed(()=> {
 		if (hatKleinesLatinum.value)
-			return sprachen[0];
+			return latein[0];
 		if (hatLatinum.value)
-			return sprachen[1];
+			return latein[1];
 		return
 	})
 
@@ -116,9 +121,9 @@
 		console.log(item)
 		if (item === undefined)
 			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: false, sprache: 'L'});
-		if (item === sprachen[0])
+		if (item === latein[0])
 			await props.patchSprachbelegung({hatKleinesLatinum: true, hatLatinum: false, sprache: 'L'});
-		if (item === sprachen[1])
+		if (item === latein[1])
 			await props.patchSprachbelegung({hatKleinesLatinum: false, hatLatinum: true, sprache: 'L'});
 	}
 
