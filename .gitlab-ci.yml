@@ -89,10 +89,10 @@ build_windows:
         - ./deployment/setupVersion.ps1
         - c:/build/download-secure-files-windows-amd64.exe
         - type gradle_secure.properties >> gradle.properties
-        - echo %SVWS_SIGNTOOL_PATH%
-        - ./gradlew :deployment:windows-installer:doZip
-        - mkdir artifacts_windows
-        - copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
+        - type gradle.properties
+        #- ./gradlew :deployment:windows-installer:doZip
+        #- mkdir artifacts_windows
+        #- copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
     artifacts:
         paths:
             - artifacts_windows/
