@@ -54,6 +54,7 @@ export class RouteSchuelerLaufbahninfo extends RouteNode<RouteDataSchuelerLaufba
 			patchSprachpruefung: this.data.patchSprachpruefung,
 			addSprachpruefung: this.data.addSprachpruefung,
 			removeSprachpruefung: this.data.removeSprachpruefung,
+			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
 		};
 	}
 

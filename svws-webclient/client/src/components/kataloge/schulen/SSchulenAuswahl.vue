@@ -33,7 +33,7 @@
 
 	const cols = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
-		{ key: "name", label: "Bezeichnung", sortable: true, span: 3 }
+		{ key: "kurzbezeichnung", label: "Bezeichnung", sortable: true, span: 4 }
 	];
 
 	async function remove() {

@@ -15,7 +15,7 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" />
 				</template>
 				<template #filterAdvanced>
-					<svws-ui-multi-select v-model="filterStatus" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />
+					<svws-ui-multi-select v-model="filterStatus" title="Status" :items="schuelerListeManager().schuelerstatus.list()" :item-text="text_status" class="col-span-full" />
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="text" :item-filter="find" />

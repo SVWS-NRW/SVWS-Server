@@ -8,6 +8,9 @@
 				<template #cell(sprache)="{ rowData }">
 					<svws-ui-select title="Sprache" headless :removable="true" :model-value="rowData.sprache" @update:model-value="sprache=>sprache && patchSprachbelegung({sprache})" :items="sprachen" :item-text="i=>i" />
 				</template>
+				<template #cell(reihenfolge)="{ rowData }">
+					<svws-ui-input-number title="Reihenfolge" headless :removable="true" :model-value="rowData.reihenfolge" @update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge, sprache: rowData.sprache})" :min="1" :max="9" />
+				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
 					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
@@ -16,7 +19,7 @@
 					</div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
-					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungVonJahrgang" @change="belegungVonJahrgang => patchSprachbelegung({belegungVonJahrgang, sprache: rowData.sprache})" headless />
+					<svws-ui-select title="Von Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
 					<div class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1, sprache: rowData.sprache})">
@@ -26,7 +29,7 @@
 					</div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-text-input type="text" :valid="jahrgang" :model-value="rowData.belegungBisJahrgang" @change="belegungBisJahrgang => patchSprachbelegung({belegungBisJahrgang, sprache: rowData.sprache})" headless />
+					<svws-ui-select title="Bis Jahrgang" headless :removable="true" :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)" @update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungBisJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache})" :items="Jahrgaenge.get(schuelerListeManager().schulform())" :item-text="i=>i?.daten.kuerzel || ''" />
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<svws-ui-checkbox v-if="rowData.sprache === 'G'" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
@@ -35,7 +38,7 @@
 						<svws-ui-select headless :items="latein" :model-value="latinum" :item-text="i => i.text" @update:model-value="patchLatinum" :removable="true" />
 					</template>
 					<template v-else>
-						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.name(), sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="itemText" />
+						<svws-ui-select title="Referenzniveau" headless :removable="true" :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten.kuerzel ?? null, sprache: rowData.sprache})" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
 					</template>
 				</template>
 				<template #actions>
@@ -61,9 +64,9 @@
 <script setup lang="ts">
 
 	import type { SchuelerLaufbahninfoProps } from './SchuelerLaufbahninfoProps';
-	import type { DataTableColumn, InputDataType } from "@ui";
+	import type { DataTableColumn } from "@ui";
 	import { computed, ref } from 'vue';
-	import { Sprachbelegung, Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach } from '@core';
+	import { Sprachbelegung, Sprachpruefung, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge } from '@core';
 
 	const props = defineProps<SchuelerLaufbahninfoProps>();
 
@@ -93,20 +96,12 @@
 		{ key: "sprache", label: "An Stelle von", tooltip: "Die durch die Prüfung ersetzte Sprache", minWidth: 4 },
 	];
 
-	const sprachen = ZulaessigesFach.getListFremdsprachenKuerzelAtomar();
+	const sprachen = computed(()=> {
+		const liste = ZulaessigesFach.getListFremdsprachenKuerzelAtomar();
+		return liste;
+		//TODO sprachbelegungen rausfiltern und ist Muttersprache etc. !istHKFS, !istErsatzPflichtFS
 
-	function itemText(item: Sprachreferenzniveau) {
-		const name = item.name();
-		if (name.length === 2)
-			return name;
-		return name.slice(0, 2) + "/" + name.slice(2);
-	}
-
-	function jahrgang(item: InputDataType) {
-		if (typeof item !== 'string')
-			return false;
-		return (Number(item) < 0 || Number(item) > 13)
-	}
+	})
 
 	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
 	const latinum = computed(()=> {
