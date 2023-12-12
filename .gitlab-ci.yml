@@ -81,12 +81,14 @@ build_windows:
         - job: build
     tags:
         - windows
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
     image: svwsnrw/dockerrunner-win
     script:
         - ./deployment/setupVersion.ps1
         - c:/build/download-secure-files-windows-amd64.exe
-        - type .secure_files\gradle_secure.properties
-        - c:/tmp/signtool/signtool.exe
+        - type gradle_secure.properties >> gradle.properties
+        - echo %SVWS_SIGNTOOL_PATH%
         #- ./gradlew :deployment:windows-installer:doZip
         #- mkdir artifacts_windows
         #- copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
