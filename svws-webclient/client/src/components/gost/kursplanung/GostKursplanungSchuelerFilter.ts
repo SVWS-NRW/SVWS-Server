@@ -1,6 +1,6 @@
 import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart } from "@core";
 import type { Ref } from "vue";
-import { ArrayList } from "@core";
+import { ArrayList, Geschlecht, GostSchriftlichkeit } from "@core";
 import { computed, ref } from "vue";
 
 
@@ -87,43 +87,18 @@ export class GostKursplanungSchuelerFilter {
 	})
 
 	public statistics = computed(() => {
-		if (this.fach !== undefined) {
-			if (this.kursart !== undefined)
-				return {
-					m: this.ergebnismanager().getOfFachartAnzahlSchuelerMaennlich(this.fach, this.kursart.id),
-					w: this.ergebnismanager().getOfFachartAnzahlSchuelerWeiblich(this.fach, this.kursart.id),
-					d: this.ergebnismanager().getOfFachartAnzahlSchuelerDivers(this.fach, this.kursart.id),
-					x: this.ergebnismanager().getOfFachartAnzahlSchuelerOhneAngabe(this.fach, this.kursart.id),
-					schriftlich: this.ergebnismanager().getOfFachartAnzahlSchuelerSchriftlich(this.fach, this.kursart.id),
-					muendlich: this.ergebnismanager().getOfFachartAnzahlSchuelerMuendlich(this.fach, this.kursart.id),
-				}
-			else
-				return {
-					m: this.ergebnismanager().getOfFachAnzahlSchuelerMaennlich(this.fach),
-					w: this.ergebnismanager().getOfFachAnzahlSchuelerWeiblich(this.fach),
-					d: this.ergebnismanager().getOfFachAnzahlSchuelerDivers(this.fach),
-					x: this.ergebnismanager().getOfFachAnzahlSchuelerOhneAngabe(this.fach),
-					schriftlich: this.ergebnismanager().getOfFachAnzahlSchuelerSchriftlich(this.fach),
-					muendlich: this.ergebnismanager().getOfFachAnzahlSchuelerMuendlich(this.fach),
-				}
-		}	else if (this.kurs !== undefined)
-			return {
-				m: this.ergebnismanager().getOfKursAnzahlSchuelerMaennlich(this.kurs.id),
-				w: this.ergebnismanager().getOfKursAnzahlSchuelerWeiblich(this.kurs.id),
-				d: this.ergebnismanager().getOfKursAnzahlSchuelerDivers(this.kurs.id),
-				x: this.ergebnismanager().getOfKursAnzahlSchuelerOhneAngabe(this.kurs.id),
-				schriftlich: this.ergebnismanager().getOfKursAnzahlSchuelerSchriftlich(this.kurs.id),
-				muendlich: this.ergebnismanager().getOfKursAnzahlSchuelerMuendlich(this.kurs.id),
-			}
-		else
-			return {
-				m: this.ergebnismanager().getOfSchuelerAnzahlMaennlich(),
-				w: this.ergebnismanager().getOfSchuelerAnzahlWeiblich(),
-				d: this.ergebnismanager().getOfSchuelerAnzahlDivers(),
-				x: this.ergebnismanager().getOfSchuelerAnzahlOhneAngabe(),
-				schriftlich: 0,
-				muendlich: 0,
-			}
+		const kurs = this.kurs?.id || -1;
+		const fach = this.fach || -1;
+		const kursart = this.kursart?.id || -1;
+		const konfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
+		return {
+			m: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.M, null),
+			w: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.W, null),
+			d: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.D, null),
+			x: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.X, null),
+			schriftlich: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', null, GostSchriftlichkeit.SCHRIFTLICH),
+			muendlich: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', null, GostSchriftlichkeit.MUENDLICH),
+		}
 	})
 
 	public reset() {
