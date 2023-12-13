@@ -1,0 +1,1 @@
+.\mariadb\bin\mariadb-install-db.exe --datadir=%1 --service=%2 --password=%3 --port=%4

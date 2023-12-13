@@ -9,6 +9,7 @@
 # https://gradle.org/
 # https://github.com/gradle/gradle
 
+
 image: svwsnrw/dockerrunner:21
 
 # Disable the Gradle daemon for Continuous Integration servers as correctness
@@ -26,15 +27,12 @@ cache: &global_cache
         - .gradle_user
         - .gradle
 
-before_script:
-    - export GRADLE_USER_HOME=`pwd`/.gradle_user
-    - ./gradlew --version
-    - java --version
-
 stages:
     - build
     - integration-tests
     - analyze
+    - build_linux
+    - build_windows
     - publish
 
 publish:
@@ -45,7 +43,8 @@ publish:
     variables:
         SECURE_FILES_DOWNLOAD_PATH: '/'
     needs:
-        - job: build
+        - job: build_linux
+        - job: build_windows
     script:
         - curl --silent "https://gitlab.com/gitlab-org/incubation-engineering/mobile-devops/download-secure-files/-/raw/main/installer" | bash
         - cat gradle_secure.properties >> gradle.properties
@@ -54,15 +53,61 @@ publish:
         - ./deployment/setupVersion.sh
         - ./gradlew signJar publishReleaseAllAndCloseSonatype
         - ./gradlew :deployment:docker:dockerPushAllDockerhub
-        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - ls -dlah $PWD/artifacts_windows
+        - ls -dlah $PWD/artifacts_linux/distributions
         - ./gradlew :deployment:githubRelease
+
+build_linux:
+    stage: build_linux
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    needs:
+        - job: build
+    script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew :deployment:linux-installer:buildLinuxInstaller
+        - mkdir artifacts_linux
+        - cp -r ./deployment/linux-installer/build/distributions/ ./artifacts_linux
+    artifacts:
+        paths:
+            - artifacts_linux/
+    when: on_success
+
+build_windows:
+    stage: build_windows
+    rules:
+        - if: '$CI_COMMIT_TAG =~ /^v\d+\.\d+(\.\d+)?$/'
+    needs:
+        - job: build
+    tags:
+        - windows
+    variables:
+        SECURE_FILES_DOWNLOAD_PATH: '/'
+        SVWS_SIGNTOOL_PATH: 'c:\tmp\signtool\signtool'
+    image: svwsnrw/dockerrunner-win
+    script:
+        - ./deployment/setupVersion.ps1
+        - c:/tmp/download-secure-files-windows-amd64.exe
+        - Add-Content -Path ".\gradle.properties" -Value (Get-Content -Path ".\gradle_secure.properties")
+        - dir /builds/svws/SVWS-Server/
+        - ./gradlew :deployment:windows-installer:doZip
+        - mkdir artifacts_windows
+        #- copy .\deployment\windows-installer\build\SVWS-Server-Installer-win.zip .\artifacts_windows\
+        - copy .\deployment\windows-installer\build\output\win64-installer* .\artifacts_windows\
+    artifacts:
+        paths:
+            - artifacts_windows/
     when: on_success
 
 integration-tests:
     dependencies:
         - build
     stage: integration-tests
-    script: ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
+    script:
+        - chmod +x ./deployment/setupVersion.sh
+        - ./deployment/setupVersion.sh
+        - ./gradlew --build-cache testing:integrationTest --stacktrace -Penvironment=testing -PMDB_PASSWORD=$MDB_PASSWORD -PMariaDB_ROOT_PASSWORD=$MariaDB_ROOT_PASSWORD -PMariaDB_PASSWORD=$MariaDB_PASSWORD -PSVWS_TLS_KEYSTORE_PASSWORD=$SVWS_TLS_KEYSTORE_PASSWORD -PMariaDB_USER=$MariaDB_USER
     cache:
         <<: *global_cache
         policy: pull
@@ -91,6 +136,7 @@ build:
             - "./build/**"
             - "./**/build/**"
         expire_in: "1 days"
+
 
 sonarqube_analysis:
     stage: analyze

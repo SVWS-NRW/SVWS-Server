@@ -1,0 +1,6 @@
+Es werden jetzt alle benötigten Dateien entpackt.
+
+Danach werden alle Dienste registriert und gestartet.
+
+Dies kann unter Umständen einige Zeit dauern!
+Bitte schalten Sie den Rechner in dieser Zeit nicht aus.

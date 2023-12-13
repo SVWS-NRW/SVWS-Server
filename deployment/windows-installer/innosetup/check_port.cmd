@@ -1,0 +1,1 @@
+netstat -p TCP -an | findstr "0.0:%1" >nul 2>&1
